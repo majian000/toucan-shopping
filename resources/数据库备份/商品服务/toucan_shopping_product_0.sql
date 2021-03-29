@@ -11,11 +11,63 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 29/03/2021 14:32:23
+ Date: 29/03/2021 16:25:57
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for t_attribute_key
+-- ----------------------------
+DROP TABLE IF EXISTS `t_attribute_key`;
+CREATE TABLE `t_attribute_key`  (
+  `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `category_id` bigint(0) NOT NULL COMMENT '所属类别',
+  `attribute_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '属性名',
+  `attribute_sort` bigint(0) NULL DEFAULT NULL COMMENT '排序',
+  `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `app_code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '所属应用',
+  `create_user_id` bigint(0) NOT NULL COMMENT '创建人ID',
+  `delete_status` tinyint(0) NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品属性名表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of t_attribute_key
+-- ----------------------------
+INSERT INTO `t_attribute_key` VALUES (1, 4, '内存', 0, '2021-01-04 15:06:37', NULL, 0, 0);
+INSERT INTO `t_attribute_key` VALUES (2, 4, '颜色', 1, '2021-01-04 15:06:49', NULL, 0, 0);
+INSERT INTO `t_attribute_key` VALUES (3, 5, '内存', 0, '2021-01-04 15:07:13', NULL, 0, 0);
+INSERT INTO `t_attribute_key` VALUES (4, 5, '颜色', 1, '2021-01-04 15:07:26', NULL, 0, 0);
+
+-- ----------------------------
+-- Table structure for t_attribute_value
+-- ----------------------------
+DROP TABLE IF EXISTS `t_attribute_value`;
+CREATE TABLE `t_attribute_value`  (
+  `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `attribute_key_id` bigint(0) NOT NULL COMMENT '所属属性KEY',
+  `attribute_value` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '属性名',
+  `attribute_sort` bigint(0) NULL DEFAULT NULL COMMENT '排序',
+  `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `app_code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '所属应用',
+  `create_user_id` bigint(0) NOT NULL COMMENT '创建人ID',
+  `delete_status` tinyint(0) NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品属性值表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of t_attribute_value
+-- ----------------------------
+INSERT INTO `t_attribute_value` VALUES (1, 1, '8G', 0, '2021-01-04 15:08:35', NULL, 0, 0);
+INSERT INTO `t_attribute_value` VALUES (2, 1, '12G', 1, '2021-01-04 15:08:43', NULL, 0, 0);
+INSERT INTO `t_attribute_value` VALUES (4, 3, '8G+128G', 1, '2021-01-04 15:09:13', NULL, 0, 0);
+INSERT INTO `t_attribute_value` VALUES (5, 3, '8G+256G', 2, '2021-01-04 15:09:22', NULL, 0, 0);
+INSERT INTO `t_attribute_value` VALUES (6, 2, '蓝色', 0, '2021-01-04 15:09:40', NULL, 0, 0);
+INSERT INTO `t_attribute_value` VALUES (7, 2, '黑色', 1, '2021-01-04 15:09:52', NULL, 0, 0);
+INSERT INTO `t_attribute_value` VALUES (8, 4, '亮黑色', 0, '2021-01-04 15:10:08', NULL, 0, 0);
+INSERT INTO `t_attribute_value` VALUES (9, 4, '8号色', 1, '2021-01-04 15:10:24', NULL, 0, 0);
 
 -- ----------------------------
 -- Table structure for t_product
