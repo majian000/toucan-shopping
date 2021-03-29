@@ -7,13 +7,12 @@ import com.toucan.shopping.center.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.center.user.export.constant.SmsTypeConstant;
 import com.toucan.shopping.center.user.export.constant.UserLoginConstant;
 import com.toucan.shopping.center.user.export.constant.UserRegistConstant;
-import com.toucan.shopping.center.user.export.entity.User;
 import com.toucan.shopping.center.user.export.entity.UserMobilePhone;
 import com.toucan.shopping.center.user.export.vo.UserLoginVO;
 import com.toucan.shopping.center.user.export.vo.UserRegistVO;
 import com.toucan.shopping.center.user.export.vo.UserSmsVO;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.*;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.lock.redis.RedisLock;
@@ -21,7 +20,6 @@ import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.common.vo.ResultVO;
 import com.toucan.shopping.web.controller.BaseController;
 import com.toucan.shopping.web.redis.UserRegistRedisKey;
-import com.toucan.shopping.center.user.export.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -65,7 +62,7 @@ public class UserController extends BaseController {
     private FeignUserService feignUserService;
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
 
     /**
@@ -87,7 +84,7 @@ public class UserController extends BaseController {
         try {
             UserRegistVO userRegistVO = new UserRegistVO();
             userRegistVO.setMobilePhone(mobilePhone);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(blackBird.getAppCode(), userRegistVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userRegistVO);
             resultObjectVO = feignUserService.findByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.SUCCESS.intValue()==ResultObjectVO.FAILD.intValue())
             {

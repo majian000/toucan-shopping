@@ -5,30 +5,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.area.api.feign.service.FeignAdminAreaService;
 import com.toucan.shopping.area.api.feign.service.FeignUserAreaService;
 import com.toucan.shopping.area.api.feign.service.FeignUserBannerService;
-import com.toucan.shopping.area.export.entity.Area;
 import com.toucan.shopping.area.export.entity.Banner;
-import com.toucan.shopping.area.export.vo.AreaVO;
 import com.toucan.shopping.area.export.vo.BannerVO;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
-import com.toucan.shopping.web.redis.AreaRedisKey;
 import com.toucan.shopping.web.redis.BannerRedisKey;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +40,7 @@ public class IndexController {
     private FeignAdminAreaService feignAdminAreaService;
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -100,7 +92,7 @@ public class IndexController {
             if(bannersRedisObject==null) {
                 BannerVO bannerVO = new BannerVO();
                 bannerVO.setAreaCodeArray(new String[]{"110000"});
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(blackBird.getAppCode(), bannerVO);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), bannerVO);
                 ResultObjectVO resultObjectVO = feignUserBannerService.queryList(SignUtil.sign(requestJsonVO), requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Banner.class);

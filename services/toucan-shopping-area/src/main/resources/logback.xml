@@ -4,12 +4,12 @@
     <contextName>logback</contextName>
 
     <springProfile name="dev">
-        <property name="log.path" value="D:/log/dev/black_bird_shopping/black_bird_shopping_area" />
+        <property name="log.path" value="D:/log/dev/toucan_shopping/toucan_shopping_area" />
     </springProfile>
 
 
     <springProfile name="prod">
-        <property name="log.path" value="D:/log/prod/black_bird_shopping/black_bird_shopping_area" />
+        <property name="log.path" value="D:/log/prod/toucan_shopping/toucan_shopping_area" />
     </springProfile>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

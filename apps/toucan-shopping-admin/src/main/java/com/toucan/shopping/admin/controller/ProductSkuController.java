@@ -3,7 +3,7 @@ package com.toucan.shopping.admin.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
@@ -29,7 +29,7 @@ public class ProductSkuController {
     private FeignAdminProductSkuService feignAdminProductSkuService;
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
     /**
      * 保存SKU
@@ -57,7 +57,7 @@ public class ProductSkuController {
         }
         try {
             productSku.setCreateUserId(1L);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByAdmin(blackBird.getAppCode(), "", productSku);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByAdmin(toucan.getAppCode(), "", productSku);
             resultObjectVO = feignAdminProductSkuService.saveSku(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
         }catch(Exception e)
         {

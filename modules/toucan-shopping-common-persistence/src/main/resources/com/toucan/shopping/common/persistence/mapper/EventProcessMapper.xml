@@ -15,7 +15,7 @@
     </resultMap>
 
     <select id="queryList" resultMap="eventMessageProcessMap" parameterType="com.toucan.shopping.common.persistence.entity.EventProcess">
-        select sep.* from bbs_event_process sep
+        select sep.* from t_event_process sep
         <where>
             1=1
 
@@ -50,7 +50,7 @@
 
 
     <select id="queryFaildListByBefore" resultMap="eventMessageProcessMap" parameterType="java.util.Date">
-        select sep.* from bbs_event_process sep
+        select sep.* from t_event_process sep
         where 1=1 and sep.status=0
          <![CDATA[
             and sep.create_date<=#{date}
@@ -58,19 +58,19 @@
     </select>
 
     <select id="findById" resultMap="eventMessageProcessMap" parameterType="java.lang.Long">
-        select sep.* from bbs_event_process sep
+        select sep.* from t_event_process sep
             where 1=1 and sep.id = #{id}
     </select>
 
 
     <update id="updateStatus"  parameterType="com.toucan.shopping.common.persistence.entity.EventPublish">
-        update bbs_event_process  set status=#{status} where id = #{id}
+        update t_event_process  set status=#{status} where id = #{id}
     </update>
 
 
 
     <insert id="insert" parameterType="com.toucan.shopping.common.persistence.entity.EventProcess" useGeneratedKeys="true" keyProperty="id" >
-        insert into bbs_event_process(business_id,status,payload,transaction_id,table_name,remark,type,create_date)
+        insert into t_event_process(business_id,status,payload,transaction_id,table_name,remark,type,create_date)
          values(#{businessId},#{status},#{payload},#{transactionId},#{tableName},#{remark},#{type},#{createDate})
 
     </insert>

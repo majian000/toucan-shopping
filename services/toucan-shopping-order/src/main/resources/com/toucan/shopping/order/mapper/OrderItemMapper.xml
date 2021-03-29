@@ -29,7 +29,7 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.order.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
-        insert into bbs_order_item(user_id,order_no,order_id,sku_uuid,delivery_status,seller_status,buyer_status,
+        insert into t_order_item(user_id,order_no,order_id,sku_uuid,delivery_status,seller_status,buyer_status,
         product_num,product_price,order_item_amount,delivery_money,delivery_receive_time,delivery_finish_time,
         seller_finish_time,buyer_finish_time,remark,create_date,app_code,create_user_id,delete_status)
 

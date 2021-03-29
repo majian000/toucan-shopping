@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.category.export.vo.CategoryVO;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,7 +35,7 @@ public class IndexController {
     private final long CATEGORY_KEY_MILLISECOND=1000*60*60*8;
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
     @Autowired
     private FeignCategoryService feignCategoryService;
@@ -57,7 +53,7 @@ public class IndexController {
     @ResponseBody
     public ResultObjectVO queryCategoryList(){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        String categoryKey = blackBird.getAppCode()+"_index_categorys";
+        String categoryKey = toucan.getAppCode()+"_index_categorys";
         try {
             Object CategoryTreeObject = stringRedisTemplate.opsForValue().get(categoryKey);
             if(CategoryTreeObject!=null)
@@ -65,7 +61,7 @@ public class IndexController {
                 resultObjectVO.setData(JSONArray.parseArray(String.valueOf(CategoryTreeObject), CategoryVO.class));
                 return resultObjectVO;
             }
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(blackBird.getAppCode(),"","","");
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),"","","");
             resultObjectVO=feignCategoryService.queryCategoryTree(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultVO.SUCCESS.intValue())
             {

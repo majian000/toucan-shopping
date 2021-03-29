@@ -4,7 +4,6 @@ package com.toucan.shopping.starter.center.user.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.auth.user.Auth;
 import com.toucan.shopping.center.user.api.feign.service.FeignUserService;
-import com.toucan.shopping.center.user.export.entity.User;
 import com.toucan.shopping.center.user.export.vo.UserLoginVO;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.spring.context.SpringContextHolder;
@@ -13,7 +12,7 @@ import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.common.vo.ResultVO;
 import com.toucan.shopping.common.wrapper.RequestWrapper;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
     @Autowired
     private SpringContextHolder springContextHolder;
@@ -64,8 +63,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                         //拿到用户中心服务
                         FeignUserService feignUserService = springContextHolder.getBean(FeignUserService.class);
                         if (authAnnotation.login()) {
-                            logger.info("权限HTTP请求头为" + blackBird.getUserCenter().getHttpBbsAuthHeader());
-                            String authHeader = request.getHeader(blackBird.getUserCenter().getHttpBbsAuthHeader());
+                            logger.info("权限HTTP请求头为" + toucan.getUserCenter().getHttpBbsAuthHeader());
+                            String authHeader = request.getHeader(toucan.getUserCenter().getHttpBbsAuthHeader());
                             //ajax请求
                             if (authAnnotation.requestType() == Auth.REQUEST_JSON) {
                                 //JSON类型请求
@@ -74,7 +73,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 logger.info("recive param " + jsonBody);
 
                                 if (StringUtils.isEmpty(authHeader)) {
-                                    logger.warn("权限请求头为空 " + blackBird.getUserCenter().getHttpBbsAuthHeader() + " : " + authHeader);
+                                    logger.warn("权限请求头为空 " + toucan.getUserCenter().getHttpBbsAuthHeader() + " : " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("访问失败,请检查请求权限参数");
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
@@ -120,7 +119,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 queryUserLogin.setLoginToken(lt);
 
 
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(),uid,queryUserLogin);
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
                                 ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
                                         || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
@@ -136,7 +135,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                             if (authAnnotation.requestType() == Auth.REQUEST_FORM) {
                                 if (StringUtils.isEmpty(authHeader)) {
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + blackBird.getUserCenter().getLoginPage());
+                                            + request.getContextPath() + "/" + toucan.getUserCenter().getLoginPage());
                                     return false;
                                 }
 
@@ -154,7 +153,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + blackBird.getUserCenter().getLoginPage());
+                                            + request.getContextPath() + "/" + toucan.getUserCenter().getLoginPage());
                                     return false;
                                 }
 
@@ -164,13 +163,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 queryUserLogin.setId(Long.parseLong(uid));
                                 queryUserLogin.setLoginToken(lt);
 
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(),uid,queryUserLogin);
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
                                 ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
                                         || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
                                     logger.info("登录验证失败 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + blackBird.getUserCenter().getLoginPage());
+                                            + request.getContextPath() + "/" + toucan.getUserCenter().getLoginPage());
                                     return false;
                                 }
                             }
@@ -187,7 +186,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 }
                 if (authAnnotation.requestType() == Auth.REQUEST_FORM) {
                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                            + request.getContextPath() + "/" + blackBird.getUserCenter().getLoginPage());
+                            + request.getContextPath() + "/" + toucan.getUserCenter().getLoginPage());
                 }
 
                 return false;

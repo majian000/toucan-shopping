@@ -13,7 +13,7 @@
 
 
     <select id="findListByEntity" resultMap="adminAppMap" parameterType="com.toucan.shopping.center.admin.auth.entity.AdminApp">
-        select * from bbs_sa_admin_app saa
+        select * from t_sa_admin_app saa
         <where>
             1=1
             <if test="id!=null">
@@ -32,13 +32,13 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.center.admin.auth.entity.AdminApp" useGeneratedKeys="true" keyProperty="id" >
-        insert into bbs_sa_admin_app(admin_id,app_code,create_date,delete_status,create_admin_id)
+        insert into t_sa_admin_app(admin_id,app_code,create_date,delete_status,create_admin_id)
         values(#{adminId},#{appCode},#{createDate},#{deleteStatus},#{createAdminId})
     </insert>
 
 
     <update id="deleteByAppCode" parameterType="java.lang.String">
-        update bbs_sa_admin_app set delete_status=1 where app_code = #{appCode}
+        update t_sa_admin_app set delete_status=1 where app_code = #{appCode}
     </update>
 
 </mapper>

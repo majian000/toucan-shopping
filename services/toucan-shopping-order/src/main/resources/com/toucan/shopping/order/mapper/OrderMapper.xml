@@ -26,7 +26,7 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.order.entity.Order" useGeneratedKeys="true" keyProperty="id" >
-        insert into bbs_order(order_no,user_id,order_amount,pay_amount,total_amount,
+        insert into t_order(order_no,user_id,order_amount,pay_amount,total_amount,
         pay_status,trade_status,pay_type,pay_method,outer_trade_no,best_date,pay_date,remark,create_date,app_code,create_user_id,delete_status)
 
          values(#{orderNo},#{userId},#{orderAmount},#{payAmount},#{totalAmount},#{payStatus},
@@ -35,17 +35,17 @@
     </insert>
 
     <update id="finishOrder" parameterType="com.toucan.shopping.order.entity.Order">
-        update bbs_order set pay_status=1 , outer_trade_no=#{outerTradeNo} , pay_date=#{payDate}  where order_no=#{orderNo} and user_id=#{userId} and delete_status=0
+        update t_order set pay_status=1 , outer_trade_no=#{outerTradeNo} , pay_date=#{payDate}  where order_no=#{orderNo} and user_id=#{userId} and delete_status=0
     </update>
 
 
     <update id="cancelOrder" parameterType="com.toucan.shopping.order.entity.Order">
-        update bbs_order set trade_status=2 ,pay_status=4  where order_no=#{orderNo} and app_code=#{appCode} and delete_status=0
+        update t_order set trade_status=2 ,pay_status=4  where order_no=#{orderNo} and app_code=#{appCode} and delete_status=0
     </update>
 
 
     <select id="queryOrderListByPayTimeout" resultMap="orderMap" parameterType="com.toucan.shopping.order.entity.Order">
-        select bo.* from bbs_order bo
+        select bo.* from t_order bo
         where 1=1 and bo.delete_status=0 and bo.pay_method=1 and bo.app_code=#{appCode} and pay_status=0 and trade_status=0
          <![CDATA[
             and bo.create_date<#{createDate}

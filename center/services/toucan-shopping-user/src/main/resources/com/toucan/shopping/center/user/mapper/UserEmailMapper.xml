@@ -13,7 +13,7 @@
 
 
     <select id="findListByEntity" resultMap="userEmailMap" parameterType="com.toucan.shopping.center.user.entity.UserEmail">
-        select * from bbs_user_email bu
+        select * from t_user_email bu
         <where>
             1=1
             <if test="id!=null">
@@ -32,7 +32,7 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.center.user.entity.UserEmail" keyProperty="id" >
-        insert into bbs_user_email(id,email,userMainId,create_date,delete_status)
+        insert into t_user_email(id,email,userMainId,create_date,delete_status)
         values(#{id},#{email},#{user_main_id},#{createDate},#{deleteStatus})
     </insert>
 

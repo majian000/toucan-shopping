@@ -30,7 +30,7 @@ eureka:
 
 
 
-black-bird:
+toucan:
   machine-id: 2201 #机器编码
   app-code: 10001002 #用户中心 应用编码
   #雪花算法ID相关

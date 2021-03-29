@@ -17,7 +17,7 @@
     </resultMap>
 
     <select id="queryList" resultMap="productSkuMap" parameterType="java.util.Map">
-        select sps.* from bbs_product_sku sps
+        select sps.* from t_product_sku sps
         <where>
             1=1
 
@@ -39,21 +39,21 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.product.entity.ProductSku" useGeneratedKeys="true" keyProperty="id" >
-        insert into bbs_product_sku(product_id,attributes,price,product_uuid,uuid,remark,status,create_date,app_code,create_user_id)
+        insert into t_product_sku(product_id,attributes,price,product_uuid,uuid,remark,status,create_date,app_code,create_user_id)
         values(#{productId},#{attributes},#{price},#{productUuid},#{uuid},#{remark},#{status},#{createDate},#{appCode},#{createUserId})
     </insert>
 
     <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">
-        select * from bbs_product_sku where id=#{skuId} for update
+        select * from t_product_sku where id=#{skuId} for update
     </select>
 
 
     <select id="queryById" resultMap="productSkuMap" parameterType="java.lang.Long">
-        select * from bbs_product_sku where id=#{skuId} and delete_status=0
+        select * from t_product_sku where id=#{skuId} and delete_status=0
     </select>
 
 
     <select id="queryByUuid" resultMap="productSkuMap" parameterType="java.lang.String">
-        select * from bbs_product_sku where uuid=#{uuid} and delete_status=0
+        select * from t_product_sku where uuid=#{uuid} and delete_status=0
     </select>
 </mapper>

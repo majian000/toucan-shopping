@@ -13,7 +13,7 @@
 
 
     <select id="findListByEntity" resultMap="userMap" parameterType="com.toucan.shopping.center.user.entity.User">
-        select * from bbs_user bu
+        select * from t_user bu
         <where>
             1=1
             <if test="id!=null">
@@ -26,16 +26,16 @@
 
 
     <select id="findById" resultMap="userMap" parameterType="java.lang.Long">
-        select * from bbs_user bu where 1=1 and bu.id = #{id} and bu.delete_status = 0
+        select * from t_user bu where 1=1 and bu.id = #{id} and bu.delete_status = 0
     </select>
 
 
     <insert id="insert" parameterType="com.toucan.shopping.center.user.entity.User" keyProperty="id" >
-        insert into bbs_user(id,password,enable_status,create_date,delete_status)
+        insert into t_user(id,password,enable_status,create_date,delete_status)
         values(#{id},#{password},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="deleteById" parameterType="java.lang.Long">
-        update bbs_user set delete_status=1 where id =#{id}
+        update t_user set delete_status=1 where id =#{id}
     </update>
 </mapper>

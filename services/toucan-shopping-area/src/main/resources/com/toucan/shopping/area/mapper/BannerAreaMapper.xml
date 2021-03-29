@@ -16,7 +16,7 @@
     </resultMap>
 
     <select id="queryList" resultMap="bannerAreaMap" parameterType="com.toucan.shopping.area.vo.BannerAreaVO">
-        select baa.* from bbs_banner_area baa
+        select baa.* from t_banner_area baa
         <where>
             1=1
 
@@ -41,14 +41,14 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.area.entity.BannerArea"  keyProperty="id" >
-        insert into bbs_banner_area(id,banner_id,area_code,create_date,update_date,app_code,create_admin_id,update_admin_id)
+        insert into t_banner_area(id,banner_id,area_code,create_date,update_date,app_code,create_admin_id,update_admin_id)
         values(#{id},#{bannerId},#{areaCode},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
     </insert>
 
 
 
     <update id="deleteByBannerId">
-        update bbs_banner_area  set delete_status=1 where banner_id=#{bannerId}  and delete_status=0
+        update t_banner_area  set delete_status=1 where banner_id=#{bannerId}  and delete_status=0
     </update>
 
 

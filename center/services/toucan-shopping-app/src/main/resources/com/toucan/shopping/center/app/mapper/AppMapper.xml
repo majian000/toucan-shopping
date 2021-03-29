@@ -18,7 +18,7 @@
 
 
     <select id="findListByEntity" resultMap="appMap" parameterType="com.toucan.shopping.center.app.entity.App">
-        select * from bbs_app ba
+        select * from t_app ba
         <where>
             1=1
             <if test="id!=null">
@@ -40,7 +40,7 @@
 
 
     <select id="queryListPage" resultMap="appMap" parameterType="com.toucan.shopping.center.app.entity.App">
-        select ba.* from bbs_app ba left join bbs_sa_admin_app bsaa on ba.code = bsaa.app_code
+        select ba.* from t_app ba left join t_sa_admin_app bsaa on ba.code = bsaa.app_code
         <if test="deleteStatus!=null">
             and bsaa.delete_status = #{deleteStatus}
         </if>
@@ -66,19 +66,19 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.center.app.entity.App" useGeneratedKeys="true" keyProperty="id" >
-        insert into bbs_app(name,remark,code,create_admin_id,enable_status,create_date,delete_status)
+        insert into t_app(name,remark,code,create_admin_id,enable_status,create_date,delete_status)
         values(#{name},#{remark},#{code},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.center.app.entity.App">
-        update bbs_app set  name=#{name},code=#{code},update_date=#{updateDate},
+        update t_app set  name=#{name},code=#{code},update_date=#{updateDate},
          update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
          remark=#{remark}
           where id = #{id}
     </update>
 
     <update id="deleteById" parameterType="java.lang.Integer">
-        update bbs_app set delete_status=1 where id = #{id}
+        update t_app set delete_status=1 where id = #{id}
     </update>
 
 </mapper>

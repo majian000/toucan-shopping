@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.HttpParamUtil;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
@@ -41,7 +41,7 @@ public class OrderController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
     @Autowired
     private FeignProductSkuService feignProductSkuService;
@@ -86,7 +86,7 @@ public class OrderController {
         logger.info("支付订单: param:"+ JSONObject.toJSONString(payVo));
 
         try {
-            String appCode = blackBird.getAppCode();
+            String appCode = toucan.getAppCode();
             //调用第三方,传进去callback接口
             payService.orderPay(null);
         }catch(Exception e)
@@ -142,18 +142,18 @@ public class OrderController {
                                 order.setPayStatus(1);
                                 order.setTradeStatus(3);
                                 order.setOuterTradeNo("支付宝交易流水号");
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(),payVo.getUserId(),order);
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),payVo.getUserId(),order);
                                 //完成订单
-                                resultObjectVO = feignOrderService.finish(SignUtil.sign(blackBird.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
+                                resultObjectVO = feignOrderService.finish(SignUtil.sign(toucan.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
 
                                 if(resultObjectVO.getCode().intValue()== ResultVO.SUCCESS.intValue()) {
-                                    String appCode = blackBird.getAppCode();
+                                    String appCode = toucan.getAppCode();
                                     QueryOrderVo queryOrderVo = new QueryOrderVo();
                                     queryOrderVo.setUserId(payVo.getUserId());
                                     queryOrderVo.setOrderNo(payVo.getOrderNo());
 
-                                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(), payVo.getUserId(), queryOrderVo);
-                                    resultObjectVO = feignOrderService.querySkuUuidsByOrderNo(SignUtil.sign(blackBird.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
+                                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), payVo.getUserId(), queryOrderVo);
+                                    resultObjectVO = feignOrderService.querySkuUuidsByOrderNo(SignUtil.sign(toucan.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
 
                                     if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
                                         //实扣库存对象

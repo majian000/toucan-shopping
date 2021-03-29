@@ -5,12 +5,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * 黑鸟自定义配置
+ * 大嘴鸟自定义配置
  */
 @Data
 @ConfigurationProperties(prefix = "toucan")
 @Component
-public class BlackBird {
+public class Toucan {
 
     /**
      * 应用编码

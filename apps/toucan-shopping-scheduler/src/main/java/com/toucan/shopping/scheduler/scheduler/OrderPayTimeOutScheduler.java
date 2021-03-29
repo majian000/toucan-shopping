@@ -3,9 +3,8 @@ package com.toucan.shopping.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.DateUtils;
-import com.toucan.shopping.product.export.util.ProductRedisKeyUtil;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
@@ -13,7 +12,6 @@ import com.toucan.shopping.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.order.export.entity.Order;
 import com.toucan.shopping.product.export.entity.ProductSku;
 import com.toucan.shopping.stock.api.feign.service.FeignProductSkuStockService;
-import com.toucan.shopping.stock.export.util.StockRedisKeyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +39,7 @@ public class OrderPayTimeOutScheduler {
 
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -62,8 +60,8 @@ public class OrderPayTimeOutScheduler {
         try {
             Order order = new Order();
             order.setCreateDate(DateUtils.advanceSecond(DateUtils.currentDate(), 60 * 30));
-            order.setAppCode(blackBird.getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(), null, order);
+            order.setAppCode(toucan.getAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), null, order);
             ResultObjectVO resultObjectVO = feignOrderService.queryOrderByPayTimeOut(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
@@ -72,19 +70,19 @@ public class OrderPayTimeOutScheduler {
                 {
                     for(Order faildOrder:orders)
                     {
-                        faildOrder.setAppCode(blackBird.getAppCode());
-                        requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(), null, faildOrder);
+                        faildOrder.setAppCode(toucan.getAppCode());
+                        requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), null, faildOrder);
                         //取消订单
                         resultObjectVO = feignOrderService.cancel(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
                         if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
                         {
                             //恢复预扣库存
-                            requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(), faildOrder.getUserId(), faildOrder);
+                            requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), faildOrder.getUserId(), faildOrder);
                             resultObjectVO = feignOrderService.querySkuUuidsByOrderNo(SignUtil.sign(requestJsonVO.getAppCode(),requestJsonVO.getEntityJson()),requestJsonVO);
                             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
                             {
                                 List<ProductSku> productSkus = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ProductSku.class);
-                                requestJsonVO = RequestJsonVOGenerator.generatorByUser(blackBird.getAppCode(), faildOrder.getUserId(), productSkus);
+                                requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), faildOrder.getUserId(), productSkus);
                                 resultObjectVO = feignProductSkuStockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                                 if(resultObjectVO.getCode().intValue()==ResultObjectVO.FAILD.intValue())
                                 {

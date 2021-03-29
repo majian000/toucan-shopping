@@ -15,7 +15,7 @@
 
 
     <select id="findListByEntity" resultMap="adminMap" parameterType="com.toucan.shopping.center.admin.auth.entity.Admin">
-        select * from bbs_sa_admin saa
+        select * from t_sa_admin saa
         <where>
             1=1
             <if test="id!=null">
@@ -31,7 +31,7 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.center.admin.auth.entity.Admin" useGeneratedKeys="true" keyProperty="id" >
-        insert into bbs_sa_admin(username,password,admin_id,enable_status,create_date,delete_status,create_admin_id,remark)
+        insert into t_sa_admin(username,password,admin_id,enable_status,create_date,delete_status,create_admin_id,remark)
         values(#{username},#{password},#{adminId},#{enableStatus},#{createDate},#{deleteStatus},#{createAdminId},#{remark})
     </insert>
 

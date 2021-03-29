@@ -6,7 +6,7 @@ import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.common.persistence.entity.EventProcess;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
-import com.toucan.shopping.common.properties.BlackBird;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.DateUtils;
 import com.toucan.shopping.product.export.util.ProductRedisKeyUtil;
 import com.toucan.shopping.common.util.SignUtil;
@@ -45,7 +45,7 @@ public class ProductController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private BlackBird blackBird;
+    private Toucan toucan;
 
     @Autowired
     private FeignProductSkuService feignProductSkuService;
@@ -101,7 +101,7 @@ public class ProductController {
         //订单号
         String orderNo= orderNoService.generateOrderNo();
         String globalTransactionId = UUID.randomUUID().toString().replace("-","");
-        String appCode = blackBird.getAppCode();
+        String appCode = toucan.getAppCode();
 
         try {
             for(ProductSku productSku : buyVo.getProductSkuList())

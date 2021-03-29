@@ -16,7 +16,7 @@
     </resultMap>
 
     <select id="queryAllList" resultMap="productMap" parameterType="com.toucan.shopping.product.entity.Product">
-        select * from bbs_product
+        select * from t_product
     </select>
 
 </mapper>

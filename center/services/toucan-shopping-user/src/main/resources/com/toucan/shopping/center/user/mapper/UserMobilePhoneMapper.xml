@@ -13,7 +13,7 @@
 
 
     <select id="findListByEntity" resultMap="userMobilePhoneMap" parameterType="com.toucan.shopping.center.user.entity.UserMobilePhone">
-        select * from bbs_user_mobile_phone bu
+        select * from t_user_mobile_phone bu
         <where>
             1=1
             <if test="id!=null">
@@ -33,11 +33,11 @@
 
 
     <select id="findListByMobilePhone" resultMap="userMobilePhoneMap" parameterType="java.lang.String">
-        select * from bbs_user_mobile_phone bu where  1=1  and bu.mobile_phone = #{mobilePhone}  and bu.delete_status = 0
+        select * from t_user_mobile_phone bu where  1=1  and bu.mobile_phone = #{mobilePhone}  and bu.delete_status = 0
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.center.user.entity.UserMobilePhone" keyProperty="id" >
-        insert into bbs_user_mobile_phone(id,mobile_phone,user_main_id,create_date,delete_status)
+        insert into t_user_mobile_phone(id,mobile_phone,user_main_id,create_date,delete_status)
         values(#{id},#{mobilePhone},#{userMainId},#{createDate},#{deleteStatus})
     </insert>
 

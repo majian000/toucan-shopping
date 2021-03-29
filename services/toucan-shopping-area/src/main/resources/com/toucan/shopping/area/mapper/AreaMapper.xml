@@ -22,7 +22,7 @@
     </resultMap>
 
     <select id="queryList" resultMap="areaMap" parameterType="com.toucan.shopping.area.entity.Area">
-        select ba.* from bbs_area ba
+        select ba.* from t_area ba
         <where>
             1=1
 
@@ -56,30 +56,30 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.area.entity.Area" useGeneratedKeys="true" keyProperty="id" >
-        insert into bbs_area(code,parent_code,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
+        insert into t_area(code,parent_code,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
         values(#{code},#{parentCode},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
     </insert>
 
 
     <select id="queryById" resultMap="areaMap" parameterType="java.lang.Long">
-        select * from bbs_area where id=#{id} and delete_status=0
+        select * from t_area where id=#{id} and delete_status=0
     </select>
 
 
     <update id="deleteById">
-        update bbs_area  set delete_status=1 where id=#{id} and app_code=#{appCode}  and delete_status=0
+        update t_area  set delete_status=1 where id=#{id} and app_code=#{appCode}  and delete_status=0
     </update>
 
 
     <update id="update" parameterType="com.toucan.shopping.area.entity.Area">
-        update bbs_area set code=#{code},parent_code=#{parentCode},province=#{province},city=#{city},area=#{area},area_sort=#{areaSort}
+        update t_area set code=#{code},parent_code=#{parentCode},province=#{province},city=#{city},area=#{area},area_sort=#{areaSort}
         ,type=#{type},remark=#{remark},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>
 
     <select id="queryByParentCode" resultMap="areaMap" >
-        select ba.* from bbs_area bc
+        select ba.* from t_area bc
          where 1=1 and ba.parent_code=#{parentCode}  and ba.app_code=#{appCode} and ba.delete_status=0 order by ba.category_sort desc
 
     </select>
