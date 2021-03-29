@@ -2,6 +2,12 @@ spring:
   profiles:
     active: dev
 
+
+logging:
+  config: classpath:logback-spring.xml
+
+
+
 ---
 spring:
   profiles: prod

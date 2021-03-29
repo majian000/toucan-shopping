@@ -4,6 +4,11 @@ spring:
   main:
     allow-bean-definition-overriding: true #名称重复直接覆盖
 
+
+
+logging:
+  config: classpath:logback-spring.xml
+
 ---
 spring:
   profiles: prod
