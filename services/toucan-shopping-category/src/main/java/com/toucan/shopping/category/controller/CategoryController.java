@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.category.entity.Category;
 import com.toucan.shopping.category.service.CategoryService;
+import com.toucan.shopping.category.vo.CategoryVO;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultListVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/category/user")
 public class CategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -34,20 +35,29 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/tree",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/tree/area/code",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryCategoryTree(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryCategoryTreeByAreaCode(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
         {
-            logger.info("请求参数为空");
+            logger.warn("请求参数为空");
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
             return resultObjectVO;
         }
         try {
-            resultObjectVO.setData(categoryService.queryTree());
+            CategoryVO categoryVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),CategoryVO.class);
+            if(StringUtils.isEmpty(categoryVO.getAreaCode()))
+            {
+                logger.warn("地区编码为空 {} ",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("地区编码为空!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(categoryService.queryTree(categoryVO.getAreaCode()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

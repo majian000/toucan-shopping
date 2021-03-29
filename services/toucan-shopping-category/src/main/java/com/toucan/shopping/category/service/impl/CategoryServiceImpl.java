@@ -1,7 +1,10 @@
 package com.toucan.shopping.category.service.impl;
 
 import com.toucan.shopping.category.entity.Category;
+import com.toucan.shopping.category.entity.CategoryArea;
+import com.toucan.shopping.category.mapper.CategoryAreaMapper;
 import com.toucan.shopping.category.mapper.CategoryMapper;
+import com.toucan.shopping.category.service.CategoryAreaService;
 import com.toucan.shopping.category.service.CategoryService;
 import com.toucan.shopping.category.vo.CategoryVO;
 import org.apache.commons.beanutils.BeanUtils;
@@ -23,10 +26,10 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    private CategoryAreaMapper categoryAreaMapper;
 
     @Override
-    public List<Category> queryList(Category category) {
+    public List<Category> queryList(CategoryVO category) {
         return categoryMapper.queryList(category);
     }
 
@@ -62,37 +65,53 @@ public class CategoryServiceImpl implements CategoryService {
     /**
      * 拿到指定应用的类别树
      */
-    public List<CategoryVO> queryTree() throws Exception {
-        List<Category> categoryList =this.findByParentId(-1L);
+    public List<CategoryVO> queryTree(String areaCode) throws Exception {
         List<CategoryVO> categoryVoList=new ArrayList<CategoryVO>();
-        if(CollectionUtils.isNotEmpty(categoryList))
+        //拿到所有关联关系
+        List<CategoryArea> categoryAreas = categoryAreaMapper.queryListByAreaCode(areaCode);
+        if(CollectionUtils.isNotEmpty(categoryAreas))
         {
-            for(Category category:categoryList)
+            Long[] categoryIdArray = new Long[categoryAreas.size()];
+            for(int i=0;i<categoryAreas.size();i++)
             {
-                CategoryVO categoryVO = new CategoryVO();
-                BeanUtils.copyProperties(categoryVO,category);
-                categoryVoList.add(categoryVO);
-                setChildrenByParentId(categoryVO);
+                categoryIdArray[i]=categoryAreas.get(i).getCategoryId();
+            }
+            CategoryVO categoryVO = new CategoryVO();
+            categoryVO.setIdArray(categoryIdArray);
+            //拿到地区下关联所有类别
+            List<Category> categoryList =this.queryList(categoryVO);
+            if(CollectionUtils.isNotEmpty(categoryList))
+            {
+                //先查出顶级节点
+                for(Category category:categoryList)
+                {
+                    if(category.getParentId()==-1L)
+                    {
+                        CategoryVO rootCategoryVO = new CategoryVO();
+                        BeanUtils.copyProperties(rootCategoryVO,category);
+                        categoryVoList.add(rootCategoryVO);
+                        //开始填充下级节点
+                        setChildrenByParentId(rootCategoryVO,categoryList);
+                    }
+                }
             }
         }
         return categoryVoList;
     }
 
 
-    @Override
-    public void setChildrenByParentId(CategoryVO categoryVO) throws InvocationTargetException, IllegalAccessException {
-        List<Category> childrenCategoryList = this.findByParentId(categoryVO.getId());
-        if(CollectionUtils.isNotEmpty(childrenCategoryList))
+    public void setChildrenByParentId(CategoryVO categoryVO,List<Category> categoryList) throws InvocationTargetException, IllegalAccessException {
+        if(CollectionUtils.isNotEmpty(categoryList))
         {
             List<CategoryVO> childrenCategoryVoList = new ArrayList<CategoryVO>();
-            for(Category category:childrenCategoryList)
+            for(Category category:categoryList)
             {
                 CategoryVO childCategoryVo = new CategoryVO();
                 BeanUtils.copyProperties(childCategoryVo,category);
-                if(category!=null&&category.getId()!=null) {
-                    setChildrenByParentId(childCategoryVo);
+                if(category!=null&&categoryVO.getId().longValue() == category.getParentId().longValue()) {
+                    childrenCategoryVoList.add(childCategoryVo);
+                    setChildrenByParentId(childCategoryVo,categoryList);
                 }
-                childrenCategoryVoList.add(childCategoryVo);
             }
             categoryVO.setChildren(childrenCategoryVoList);
         }

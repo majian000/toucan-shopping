@@ -1,6 +1,7 @@
 package com.toucan.shopping.category.mapper;
 
 import com.toucan.shopping.category.entity.Category;
+import com.toucan.shopping.category.vo.CategoryVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Map;
 @Mapper
 public interface CategoryMapper {
 
-    List<Category> queryList(Category category);
+    List<Category> queryList(CategoryVO category);
 
 
     int insert(Category category);

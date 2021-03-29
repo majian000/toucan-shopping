@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface CategoryService {
 
-    List<Category> queryList(Category category);
+    List<Category> queryList(CategoryVO category);
 
     /**
      * 保存实体
@@ -35,11 +35,6 @@ public interface CategoryService {
      * 填充类别树
      * @return
      */
-    List<CategoryVO> queryTree()  throws Exception;
+    List<CategoryVO> queryTree(String areaCode)  throws Exception;
 
-    /**
-     * 填充类别子节点
-     * @param categoryVO
-     */
-    void setChildrenByParentId(CategoryVO categoryVO) throws InvocationTargetException, IllegalAccessException;
 }

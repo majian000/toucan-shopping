@@ -33,6 +33,14 @@
             </if>
 
 
+            <if test="idArray!=null ">
+                and bc.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+
             <if test="name!=null and name!=''">
                 and bc.name = #{name}
             </if>

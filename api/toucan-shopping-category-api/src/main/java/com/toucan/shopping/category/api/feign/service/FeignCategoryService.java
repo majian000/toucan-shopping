@@ -20,7 +20,7 @@ public interface FeignCategoryService {
     ResultObjectVO queryByIdList(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
-    @RequestMapping(value = "/query/tree",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/query/tree/area/code",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO queryCategoryTree(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 

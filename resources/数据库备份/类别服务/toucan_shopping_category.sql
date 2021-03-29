@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 29/03/2021 14:13:02
+ Date: 29/03/2021 18:21:35
 */
 
 SET NAMES utf8mb4;
@@ -41,7 +41,12 @@ CREATE TABLE `t_category`  (
 -- ----------------------------
 -- Records of t_category
 -- ----------------------------
-INSERT INTO `t_category` VALUES (323, -1, '零食', 1, 0, 1, NULL, '类别备注', '2021-03-29 10:58:51', NULL, NULL, NULL, 0);
+INSERT INTO `t_category` VALUES (324, -1, '家用电器', 1, 0, 1, 'www.baidu.com', '类别备注', '2021-03-29 16:46:12', NULL, NULL, NULL, 0);
+INSERT INTO `t_category` VALUES (325, 324, '电视', 1, 0, 1, 'www.163com', '类别备注', '2021-03-29 16:46:51', NULL, NULL, NULL, 0);
+INSERT INTO `t_category` VALUES (326, 325, '超薄电视', 1, 0, 1, 'www.taobao.com', '类别备注', '2021-03-29 16:47:12', NULL, NULL, NULL, 0);
+INSERT INTO `t_category` VALUES (327, -1, '手机;运营商;数码', 1, 0, 1, 'www.taobao.com;www.jd.com;www.163.com', NULL, '2021-03-29 17:01:52', NULL, NULL, NULL, 0);
+INSERT INTO `t_category` VALUES (328, 327, '手机通讯', 1, 0, 1, 'www.taobao.com', NULL, '2021-03-29 17:03:24', NULL, NULL, NULL, 0);
+INSERT INTO `t_category` VALUES (329, 328, '手机', 1, 0, 1, 'www.taobao.com', NULL, '2021-03-29 17:05:04', NULL, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for t_category_area
@@ -50,7 +55,7 @@ DROP TABLE IF EXISTS `t_category_area`;
 CREATE TABLE `t_category_area`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `category_id` bigint(0) NOT NULL COMMENT '类别主键',
-  `area_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '地区编码',
+  `area_code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '地区编码',
   `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `create_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '创建人ID',
@@ -62,5 +67,7 @@ CREATE TABLE `t_category_area`  (
 -- ----------------------------
 -- Records of t_category_area
 -- ----------------------------
+INSERT INTO `t_category_area` VALUES (1, 324, '110000', '2021-03-29 17:15:22', NULL, NULL, NULL, 0);
+INSERT INTO `t_category_area` VALUES (2, 325, '110000', '2021-03-29 17:16:24', NULL, NULL, NULL, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

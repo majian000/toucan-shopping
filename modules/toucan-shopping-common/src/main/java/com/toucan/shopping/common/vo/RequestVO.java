@@ -27,7 +27,7 @@ public class RequestVO {
     private String userId;
 
     /**
-     * 默认版本1.0
+     * 默认版本1.0,可以通过这个字段兼容低版本应用
      */
     private Integer version = 1;
 

@@ -16,9 +16,18 @@ public class CategoryVO {
     private String name; //类别名称
     private Long categorySort; //排序
     private String createDate; //创建时间
-    private String appCode; //所属应用
     private Long createUserId; //创建人ID
 
+    private String areaCode; //地区编码
+    private Integer type; //类型 1:pc端 2:移动端
+
+    /**
+     * 删除状态 0未删除 1已删除
+     */
+    private Short deleteStatus;
+
     private List<CategoryVO> children;
+
+    private Long[] idArray; //ID数组
 
 }

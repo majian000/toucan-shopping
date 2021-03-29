@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.category.entity.Category;
 import com.toucan.shopping.category.service.CategoryService;
+import com.toucan.shopping.category.vo.CategoryVO;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.common.vo.ResultVO;
@@ -66,7 +67,7 @@ public class AdminCategoryController {
                 return resultObjectVO;
             }
 
-            Category queryCategory = new Category();
+            CategoryVO queryCategory = new CategoryVO();
             queryCategory.setName(category.getName());
             queryCategory.setDeleteStatus((short)0);
 
@@ -135,7 +136,7 @@ public class AdminCategoryController {
                 return resultObjectVO;
             }
 
-            Category queryCategory = new Category();
+            CategoryVO queryCategory = new CategoryVO();
             queryCategory.setName(category.getName());
             queryCategory.setDeleteStatus((short)0);
 
@@ -200,7 +201,7 @@ public class AdminCategoryController {
                 return resultObjectVO;
             }
 
-            Category queryCategory = new Category();
+            CategoryVO queryCategory = new CategoryVO();
             queryCategory.setId(category.getId());
             queryCategory.setDeleteStatus((short)0);
 
