@@ -15,6 +15,7 @@ public class Category {
     private Long parentId; //上级类别
     private String name; //类别名称
     private Integer type; //类型 1:pc端 2:移动端
+    private String icon; //图标
     private Long categorySort; //排序
     private Date createDate; //创建时间
     private Date updateDate; //创建时间

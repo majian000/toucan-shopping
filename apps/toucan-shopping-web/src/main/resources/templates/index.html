@@ -53,7 +53,31 @@
             <div class="nav_t">全部商品分类</div>
             <div class="leftNav">
                 <ul>
-                    <li>
+                    <#list categorys as category>
+                         <li>
+                            <div class="fj">
+                                <span class="n_img"><span></span><img src="${category.icon}" /></span>
+                                <span class="fl">${category.name}</span>
+                            </div>
+                            <div class="zj">
+                                <#list category.children as cc>
+                                    <div class="zj_l">
+                                        <div class="zj_l_c">
+                                            <h2>${cc.name}</h2>
+                                            <#list cc.children as ccc>
+                                                <a href="#">${ccc.name}</a>|
+                                             </#list>
+                                        </div>
+                                    </div>
+                                </#list>
+                                <div class="zj_r">
+                                    <a href="#"><img src="${basePath}/static/images/n_img1.jpg" width="236" height="200" /></a>
+                                    <a href="#"><img src="${basePath}/static/images/n_img2.jpg" width="236" height="200" /></a>
+                                </div>
+                            </div>
+                         </li>
+                    </#list>
+                    <!--<li>
                         <div class="fj">
                             <span class="n_img"><span></span><img src="${basePath}/static/images/nav1.png" /></span>
                             <span class="fl"><a href="#">进口食品</a>、<a >生鲜</a></span>
@@ -288,7 +312,7 @@
                                 <a href="#"><img src="${basePath}/static/images/n_img2.jpg" width="236" height="200" /></a>
                             </div>
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </div>

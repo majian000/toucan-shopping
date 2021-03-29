@@ -1,10 +1,8 @@
 package com.toucan.shopping.category.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.category.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.category.export.entity.Category;
+import com.toucan.shopping.category.api.feign.service.FeignCategoryUserService;
 import com.toucan.shopping.common.vo.RequestJsonVO;
-import com.toucan.shopping.common.vo.ResultListVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
@@ -15,14 +13,14 @@ import org.springframework.stereotype.Component;
  * 商品服务
  */
 @Component
-public class FeignCategoryServiceFallbackFactory implements FallbackFactory<FeignCategoryService> {
+public class FeignCategoryServiceFallbackFactory implements FallbackFactory<FeignCategoryUserService> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FeignCategoryService create(Throwable throwable) {
+    public FeignCategoryUserService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
-        return new FeignCategoryService(){
+        return new FeignCategoryUserService(){
 
 
             @Override
@@ -34,7 +32,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryUserService queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("创建类别失败");
                 return resultObjectVO;
@@ -49,14 +47,14 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService queryByIdList faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryUserService queryByIdList faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("创建类别失败");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryCategoryTree(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryCategoryTreeByAreaCode(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -64,9 +62,9 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService queryCategoryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryUserService queryCategoryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("创建类别失败");
+                resultObjectVO.setMsg("查询类别失败");
                 return resultObjectVO;
             }
         };

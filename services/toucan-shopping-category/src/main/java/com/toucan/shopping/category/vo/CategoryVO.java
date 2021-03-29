@@ -17,6 +17,7 @@ public class CategoryVO {
     private Long categorySort; //排序
     private String createDate; //创建时间
     private Long createUserId; //创建人ID
+    private String icon; //图标
 
     private String areaCode; //地区编码
     private Integer type; //类型 1:pc端 2:移动端

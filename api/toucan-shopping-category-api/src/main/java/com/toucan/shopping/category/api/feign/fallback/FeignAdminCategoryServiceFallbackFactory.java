@@ -1,30 +1,26 @@
 package com.toucan.shopping.category.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.category.api.feign.service.FeignAdminCategoryService;
-import com.toucan.shopping.category.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.category.export.entity.Category;
+import com.toucan.shopping.category.api.feign.service.FeignCategoryAdminService;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * 商品服务
  */
 @Component
-public class FeignAdminCategoryServiceFallbackFactory implements FallbackFactory<FeignAdminCategoryService> {
+public class FeignAdminCategoryServiceFallbackFactory implements FallbackFactory<FeignCategoryAdminService> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FeignAdminCategoryService create(Throwable throwable) {
+    public FeignCategoryAdminService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
-        return new FeignAdminCategoryService(){
+        return new FeignCategoryAdminService(){
 
             @Override
             public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
@@ -35,7 +31,7 @@ public class FeignAdminCategoryServiceFallbackFactory implements FallbackFactory
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminCategoryService save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryAdminService save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("创建类别失败");
                 return resultObjectVO;
@@ -50,7 +46,7 @@ public class FeignAdminCategoryServiceFallbackFactory implements FallbackFactory
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminCategoryService queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryAdminService queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("创建类别失败");
                 return resultObjectVO;
@@ -65,7 +61,7 @@ public class FeignAdminCategoryServiceFallbackFactory implements FallbackFactory
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminCategoryService queryByIdList faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryAdminService queryByIdList faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("创建类别失败");
                 return resultObjectVO;

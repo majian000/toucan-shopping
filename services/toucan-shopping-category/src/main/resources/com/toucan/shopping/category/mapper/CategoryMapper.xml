@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="parent_id" jdbcType="BIGINT" property="parentId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -51,8 +52,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.category.entity.Category" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_category(parent_id,name,type,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{parentId},#{name},#{type},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_category(parent_id,icon,name,type,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{parentId},#{icon},#{name},#{type},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 
@@ -67,7 +68,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.category.entity.Category">
-        update t_category set name=#{name},remark=#{remark},type=#{type},
+        update t_category set name=#{name},remark=#{remark},type=#{type},icon=#{icon},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>
