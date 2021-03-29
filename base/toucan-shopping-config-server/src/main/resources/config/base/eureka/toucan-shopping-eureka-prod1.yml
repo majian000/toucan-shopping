@@ -1,0 +1,25 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: toucan-shopping-eureka1 #应用名称
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: 127.0.0.1:8761    #使用IP地址注册
+  client:
+    registerWithEureka: true  #注册自己
+    fetchRegistry: false #要不要去注册中心获取其他服务的地址
+    serviceUrl:
+      defaultZone: http://localhost8762:8762/eureka,http://localhost8763:8763/eureka
+  server:
+    enableSelfPreservation: false #开启保护机制
+    evictionIntervalTimerInMs: 1000 #心跳发送
+management:
+  endpoint:
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"

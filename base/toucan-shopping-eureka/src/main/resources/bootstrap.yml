@@ -1,0 +1,50 @@
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles: prod1
+  application:
+    name: toucan-shopping-eureka
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: prod1
+
+---
+spring:
+  profiles: prod2
+  application:
+    name: toucan-shopping-eureka
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: prod2
+
+
+---
+spring:
+  profiles: prod3
+  application:
+    name: toucan-shopping-eureka
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: prod3
+
+
+---
+spring:
+  profiles: dev
+  application:
+    name: toucan-shopping-eureka
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: dev
+

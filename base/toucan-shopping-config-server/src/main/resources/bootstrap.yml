@@ -1,0 +1,42 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: toucan-shopping-config-server #应用名称
+  cloud:
+    config:
+      server:
+        git: #github配置,注意:切换成git时要修改下面path为最新(最新路径为native)
+          uri: https://github.com/majian000/toucan-shopping
+          search-paths: "base/toucan-shopping-config-server/src/main/resources/config/services/eureka,\
+                        base/toucan-shopping-config-server/src/main/resources/config/services/product,\
+                        base/toucan-shopping-config-server/src/main/resources/config/services/order,\
+                        base/toucan-shopping-config-server/src/main/resources/config/apps/web,\
+                        base/toucan-shopping-config-server/src/main/resources/config/services/gateway"
+          username:
+          password:
+        native:  #本地配置
+          search-locations: "classpath:/config,\
+                            classpath:/config/base/gateway,\
+                            classpath:/config/base/eureka,\
+                            classpath:/config/services/order,\
+                            classpath:/config/services/product,\
+                            classpath:/config/services/secondKill,\
+                            classpath:/config/services/category,\
+                            classpath:/config/services/area,\
+                            classpath:/config/services/stock,\
+                            classpath:/config/center/services/user,\
+                            classpath:/config/center/services/app,\
+                            classpath:/config/apps/shopping/web,\
+                            classpath:/config/apps/scheduler,\
+                            classpath:/config/apps/shopping/admin,"
+
+  profiles:
+    active: native
+
+#security:
+#  basic:
+#    enabled: true
+#  user:
+#    name: blackbird
+#    password: 123456

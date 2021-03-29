@@ -1,0 +1,46 @@
+#========================后台管理端 开发环境====================================
+
+server:
+  port: 8086
+  servlet:
+    context-path: /toucan-shopping-admin
+spring:
+  application:
+    name: toucan-shopping-admin #应用名称
+  zipkin: #链路追踪
+    enabled: true
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+  thymeleaf:
+    enabled: true
+    encoding: utf-8  #编码
+    prefix: classpath:/templates/
+    cache: false
+    mode: HTML
+    suffix: .html
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+

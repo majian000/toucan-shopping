@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.order.mapper.OrderItemMapper">
+
+    <resultMap id="orderItemMap" type="com.toucan.shopping.order.entity.OrderItem" >
+        <id property="id" jdbcType="BIGINT"  column="id" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="order_id" jdbcType="INTEGER" property="orderId" />
+        <result column="sku_uuid" jdbcType="VARCHAR" property="skuUuid" />
+        <result column="delivery_status" jdbcType="SMALLINT" property="deliveryStatus" />
+        <result column="seller_status" jdbcType="SMALLINT" property="sellerStatus" />
+        <result column="buyer_status" jdbcType="SMALLINT" property="buyerStatus" />
+        <result column="product_num" jdbcType="INTEGER" property="productNum" />
+        <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+        <result column="order_item_amount" jdbcType="DECIMAL" property="orderItemAmount" />
+        <result column="delivery_money" jdbcType="DECIMAL" property="deliveryMoney" />
+        <result column="delivery_receive_time" jdbcType="TIMESTAMP" property="deliveryReceiveTime" />
+        <result column="delivery_finish_time" jdbcType="TIMESTAMP" property="deliveryFinishTime" />
+        <result column="seller_finish_time" jdbcType="TIMESTAMP" property="sellerFinishTime" />
+        <result column="buyer_finish_time" jdbcType="TIMESTAMP" property="buyerFinishTime" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.order.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
+        insert into bbs_order_item(user_id,order_no,order_id,sku_uuid,delivery_status,seller_status,buyer_status,
+        product_num,product_price,order_item_amount,delivery_money,delivery_receive_time,delivery_finish_time,
+        seller_finish_time,buyer_finish_time,remark,create_date,app_code,create_user_id,delete_status)
+
+         values(#{userId},#{orderNo},#{orderId},#{skuUuid},#{deliveryStatus},#{sellerStatus},#{buyerStatus},
+         #{productNum},#{productPrice},#{orderItemAmount},#{deliveryMoney},#{deliveryReceiveTime},#{deliveryFinishTime},
+         #{sellerFinishTime},#{buyerFinishTime},#{remark},#{createDate},#{appCode},#{createUserId},#{deleteStatus})
+
+    </insert>
+
+</mapper>

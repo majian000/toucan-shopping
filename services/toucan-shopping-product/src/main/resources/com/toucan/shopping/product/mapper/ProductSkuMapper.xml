@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.product.mapper.ProductSkuMapper">
+
+    <resultMap id="productSkuMap" type="com.toucan.shopping.product.entity.ProductSku" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="attributes" jdbcType="VARCHAR" property="attributes" />
+        <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+        <result column="product_uuid" jdbcType="VARCHAR" property="productUuid" />
+        <result column="price" jdbcType="DOUBLE" property="price" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="status" jdbcType="SMALLINT" property="status" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+    <select id="queryList" resultMap="productSkuMap" parameterType="java.util.Map">
+        select sps.* from bbs_product_sku sps
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and sps.id = #{id}
+            </if>
+
+            <if test="status!=null">
+                 and sps.status = #{status}
+            </if>
+
+            <if test="appCode!=null">
+                and sps.app_code = #{appCode}
+            </if>
+
+            and sps.delete_status = 0
+
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.toucan.shopping.product.entity.ProductSku" useGeneratedKeys="true" keyProperty="id" >
+        insert into bbs_product_sku(product_id,attributes,price,product_uuid,uuid,remark,status,create_date,app_code,create_user_id)
+        values(#{productId},#{attributes},#{price},#{productUuid},#{uuid},#{remark},#{status},#{createDate},#{appCode},#{createUserId})
+    </insert>
+
+    <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">
+        select * from bbs_product_sku where id=#{skuId} for update
+    </select>
+
+
+    <select id="queryById" resultMap="productSkuMap" parameterType="java.lang.Long">
+        select * from bbs_product_sku where id=#{skuId} and delete_status=0
+    </select>
+
+
+    <select id="queryByUuid" resultMap="productSkuMap" parameterType="java.lang.String">
+        select * from bbs_product_sku where uuid=#{uuid} and delete_status=0
+    </select>
+</mapper>

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--在这里继承了spring boot -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.0.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <description>大嘴鸟商城</description>
+
+    <groupId>com.toucan.shopping</groupId>
+    <artifactId>toucan-shopping</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+
+    <modules>
+        <!-- =======================公共基础模块=========================-->
+
+        <!--公共模块 -->
+        <module>modules/toucan-shopping-common</module>
+        <!--web公共模块 -->
+        <module>modules/toucan-shopping-common-web</module>
+        <!--公共模块 持久化 -->
+        <module>modules/toucan-shopping-common-persistence</module>
+        <!--权限注解 -->
+        <module>modules/toucan-shopping-auth</module>
+        <!-- 分布式锁-->
+        <module>modules/toucan-shopping-lock-redis</module>
+        <!-- 订单编号生成 -->
+        <module>modules/toucan-shopping-order-no</module>
+
+        <!-- ===============================================-->
+
+
+        <!-- =======================基础服务层=========================-->
+        <!--服务中心-->
+        <module>base/toucan-shopping-eureka</module>
+        <!-- 配置中心服务端-->
+        <module>base/toucan-shopping-config-server</module>
+        <!--网关服务 -->
+        <module>base/toucan-shopping-gateway</module>
+        <!-- ===============================================-->
+
+
+
+        <!-- =======================业务服务层=========================-->
+        <!--订单服务 -->
+        <module>services/toucan-shopping-order</module>
+        <!--商品服务 -->
+        <module>services/toucan-shopping-product</module>
+        <!--秒杀服务 -->
+        <module>services/toucan-shopping-second-kill</module>
+        <!--类别服务 -->
+        <module>services/toucan-shopping-category</module>
+        <!--库存服务 -->
+        <module>services/toucan-shopping-stock</module>
+        <!--地区编码服务 -->
+        <module>services/toucan-shopping-area</module>
+
+
+
+        <!--商品导出 -->
+        <module>export/toucan-shopping-product-export</module>
+        <!--订单导出 -->
+        <module>export/toucan-shopping-order-export</module>
+        <!--商品导出 -->
+        <module>export/toucan-shopping-category-export</module>
+        <!--用户中心导出 -->
+        <module>center/export/toucan-shopping-user-export</module>
+        <!--权限中心导出 -->
+        <module>center/export/toucan-shopping-admin-auth-export</module>
+        <!--应用中心导出 -->
+        <module>center/export/toucan-shopping-app-export</module>
+        <!--库存导出 -->
+        <module>export/toucan-shopping-stock-export</module>
+        <!--地区编码导出 -->
+        <module>export/toucan-shopping-area-export</module>
+
+
+        <!--商品服务API -->
+        <module>api/toucan-shopping-product-api</module>
+        <!--订单服务API -->
+        <module>api/toucan-shopping-order-api</module>
+        <!--类别服务API -->
+        <module>api/toucan-shopping-category-api</module>
+        <!--用户中心API -->
+        <module>center/api/toucan-shopping-user-api</module>
+        <!--管理权限中心API -->
+        <module>center/api/toucan-shopping-admin-auth-api</module>
+        <!--应用中心API -->
+        <module>center/api/toucan-shopping-app-api</module>
+        <!--库存API -->
+        <module>api/toucan-shopping-stock-api</module>
+        <!--地区编码API -->
+        <module>api/toucan-shopping-area-api</module>
+
+
+
+        <!--用户中心服务 -->
+        <module>center/services/toucan-shopping-user</module>
+        <!--管理员权限中心 -->
+        <module>center/services/toucan-shopping-admin-auth</module>
+        <!--应用中心 -->
+        <module>center/services/toucan-shopping-app</module>
+
+        <!-- ===============================================-->
+
+
+        <!-- =======================应用层=========================-->
+        <!--处理前端请求 -->
+        <module>apps/toucan-shopping-web</module>
+
+        <!--后台管理端 -->
+        <module>apps/toucan-shopping-admin</module>
+        
+        <!--用户权限中心管理界面 -->
+        <module>apps/toucan-shopping-user-center-web</module>
+
+        <!--定时任务调度-->
+        <module>apps/toucan-shopping-scheduler</module>
+        <!-- ===============================================-->
+
+
+        <!-- =====================插件层====================== -->
+        <module>center/stater/toucan-shopping-user-spring-boot-starter</module>
+        <!-- ===============================================-->
+
+
+
+
+
+    </modules>
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>1.18.8</version>
+        </dependency>
+
+        <!--JSON解析 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.56</version>
+        </dependency>
+
+
+        <!-- 对象属性拷贝 -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+
+
+        <!--apache 公共包 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- 我们的包-->
+            <dependency>
+                <groupId>com.toucan.shopping.common</groupId>
+                <artifactId>toucan-shopping-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.common</groupId>
+                <artifactId>toucan-shopping-common-web</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.common</groupId>
+                <artifactId>toucan-shopping-common-persistence</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.common</groupId>
+                <artifactId>toucan-shopping-auth</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.starter</groupId>
+                <artifactId>toucan-shopping-user-center-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.common</groupId>
+                <artifactId>toucan-shopping-lock-redis</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.export</groupId>
+                <artifactId>toucan-shopping-product-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.api</groupId>
+                <artifactId>toucan-shopping-product-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.export</groupId>
+                <artifactId>toucan-shopping-product-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.api</groupId>
+                <artifactId>toucan-shopping-order-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.export</groupId>
+                <artifactId>toucan-shopping-order-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.center.api</groupId>
+                <artifactId>toucan-shopping-user-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.center.api</groupId>
+                <artifactId>toucan-shopping-admin-auth-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.center.export</groupId>
+                <artifactId>toucan-shopping-user-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.center.api</groupId>
+                <artifactId>toucan-shopping-app-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.center.export</groupId>
+                <artifactId>toucan-shopping-app-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.center.export</groupId>
+                <artifactId>toucan-shopping-admin-auth-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.export</groupId>
+                <artifactId>toucan-shopping-stock-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.common</groupId>
+                <artifactId>toucan-shopping-order-no</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.export</groupId>
+                <artifactId>toucan-shopping-category-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.api</groupId>
+                <artifactId>toucan-shopping-category-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.api</groupId>
+                <artifactId>toucan-shopping-stock-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.export</groupId>
+                <artifactId>toucan-shopping-area-export</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.api</groupId>
+                <artifactId>toucan-shopping-area-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.starter</groupId>
+                <artifactId>toucan-shopping-user-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR8</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+
+
+</project>
