@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 29/03/2021 17:11:00
+ Date: 30/03/2021 15:40:38
 */
 
 SET NAMES utf8mb4;
@@ -3682,7 +3682,7 @@ CREATE TABLE `t_banner`  (
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '标题',
   `img_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '图片路径',
   `click_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '点击路径',
-  `position` smallint(0) NULL DEFAULT NULL COMMENT '类型 0:首页顶部',
+  `position` smallint(0) NULL DEFAULT NULL COMMENT '类型 0:首页顶部 1:栏目左侧',
   `banner_sort` bigint(0) UNSIGNED NULL DEFAULT 0 COMMENT '排序',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
   `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',

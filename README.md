@@ -102,6 +102,9 @@
     端口号:8095
     新闻资讯服务
     
+    8.services/toucan-shopping-column
+    端口号:8096
+    栏目服务
     
 ##### 中心服务层
     

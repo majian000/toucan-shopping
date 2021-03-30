@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: dev
+
+
+logging:
+  config: classpath:logback-spring.xml
+
+
+---
+spring:
+  profiles: prod
+  application:
+    name: toucan-shopping-column
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: prod
+
+
+---
+spring:
+  profiles: dev
+  application:
+    name: toucan-shopping-column
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: dev
+

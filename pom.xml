@@ -66,6 +66,8 @@
         <module>services/toucan-shopping-stock</module>
         <!--地区编码服务 -->
         <module>services/toucan-shopping-area</module>
+        <!-- 栏目服务 -->
+        <module>services/toucan-shopping-column</module>
 
 
 

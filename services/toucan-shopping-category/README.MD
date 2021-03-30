@@ -5,11 +5,12 @@
     
 
 #### 依赖服务
-1.toucan-shopping-config-server
+
+##### toucan-shopping-config-server
 
     配置中心
     
-2.toucan-shopping-eureka
+##### toucan-shopping-eureka
     
     服务注册中心
 

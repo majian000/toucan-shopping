@@ -19,7 +19,7 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8081/eureka
 
-black-bird:
+toucan:
   app-code: 10000001 #自定义应用编码
   user-center:
     enabled: true

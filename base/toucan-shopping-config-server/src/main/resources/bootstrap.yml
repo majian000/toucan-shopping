@@ -24,6 +24,7 @@ spring:
                             classpath:/config/services/secondKill,\
                             classpath:/config/services/category,\
                             classpath:/config/services/area,\
+                            classpath:/config/services/column,\
                             classpath:/config/services/stock,\
                             classpath:/config/center/services/user,\
                             classpath:/config/center/services/app,\
