@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.category.mapper.CategoryAreaMapper">
+<mapper namespace="com.toucan.shopping.category.mapper.CategoryImgMapper">
 
-    <resultMap id="categoryAreaMap" type="com.toucan.shopping.category.entity.CategoryArea" >
+    <resultMap id="categoryImgMap" type="com.toucan.shopping.category.entity.CategoryImg" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
-        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="src" jdbcType="VARCHAR" property="src" />
+        <result column="type" jdbcType="INTEGER" property="type" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="create_admin_id" jdbcType="BIGINT" property="createAdminId" />
@@ -13,8 +14,8 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
     </resultMap>
 
-    <select id="queryList" resultMap="categoryAreaMap" parameterType="com.toucan.shopping.category.entity.CategoryArea">
-        select bc.* from t_category_area bc
+    <select id="queryList" resultMap="categoryImgMap" parameterType="com.toucan.shopping.category.entity.CategoryImg">
+        select bc.* from t_category_img bc
         <where>
             1=1
 
@@ -26,9 +27,10 @@
                  and bc.category_id = #{categoryId}
             </if>
 
-            <if test="areaCode!=null and areaCode!=''">
-                and bc.area_code = #{areaCode}
+            <if test="showStatus!=null">
+                and bc.show_status = #{showStatus}
             </if>
+
 
 
             and bc.delete_status = 0
@@ -37,24 +39,24 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.category.entity.CategoryArea" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_category_area(category_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
+        insert into t_category_img(category_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
         values(#{categoryId},#{areaCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 
-    <select id="queryById" resultMap="categoryAreaMap" parameterType="java.lang.Long">
-        select * from t_category_area where id=#{id} and delete_status=0
+    <select id="queryById" resultMap="categoryImgMap" parameterType="java.lang.Long">
+        select * from t_category_img where id=#{id} and delete_status=0
     </select>
 
 
     <update id="deleteById">
-        update t_category_area  set delete_status=1 where id=#{id}   and delete_status=0
+        update t_category_img  set delete_status=1 where id=#{id}   and delete_status=0
     </update>
 
 
 
-    <select id="queryListByAreaCode" resultMap="categoryAreaMap" parameterType="java.lang.String">
-        select bc.* from t_category_area bc where 1=1 and bc.area_code = #{areaCode} and bc.delete_status = 0
+    <select id="queryListByCategoryId" resultMap="categoryImgMap" parameterType="java.lang.Long">
+        select bc.* from t_category_img bc where 1=1 and bc.category_id = #{categoryId} and bc.delete_status = 0
     </select>
 
 

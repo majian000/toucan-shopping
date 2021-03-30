@@ -5,20 +5,17 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 商品类别
+ * 商品类别图片
  *
  * @author majian
  */
 @Data
-public class Category {
+public class CategoryImg {
     private Long id; //主键
-    private Long parentId; //上级类别
-    private String name; //类别名称
+    private Long categoryId; //所属类别
+    private String src; //图片路径
     private Integer type; //类型 1:pc端 2:移动端
-    private String icon; //图标
     private Long categorySort; //排序
-    private Integer showStatus; //显示状态 0隐藏 1显示
-    private String href; //点击类别跳转路径
     private Date createDate; //创建时间
     private Date updateDate; //创建时间
     private Long createAdminId; //创建人ID

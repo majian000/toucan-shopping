@@ -1,5 +1,6 @@
 package com.toucan.shopping.category.vo;
 
+import com.toucan.shopping.category.entity.CategoryImg;
 import lombok.Data;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public class CategoryVO {
     private String createDate; //创建时间
     private Long createUserId; //创建人ID
     private String icon; //图标
+    private Integer showStatus; //显示状态 0隐藏 1显示
+    private String href; //点击类别跳转路径
 
     private String areaCode; //地区编码
     private Integer type; //类型 1:pc端 2:移动端
@@ -28,6 +31,8 @@ public class CategoryVO {
     private Short deleteStatus;
 
     private List<CategoryVO> children;
+
+    private List<CategoryImg> categoryImgs;
 
     private Long[] idArray; //ID数组
 

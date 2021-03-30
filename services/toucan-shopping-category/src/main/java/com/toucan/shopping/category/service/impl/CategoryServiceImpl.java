@@ -3,6 +3,7 @@ package com.toucan.shopping.category.service.impl;
 import com.toucan.shopping.category.entity.Category;
 import com.toucan.shopping.category.entity.CategoryArea;
 import com.toucan.shopping.category.mapper.CategoryAreaMapper;
+import com.toucan.shopping.category.mapper.CategoryImgMapper;
 import com.toucan.shopping.category.mapper.CategoryMapper;
 import com.toucan.shopping.category.service.CategoryAreaService;
 import com.toucan.shopping.category.service.CategoryService;
@@ -27,6 +28,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryAreaMapper categoryAreaMapper;
+
+    @Autowired
+    private CategoryImgMapper categoryImgMapper;
 
     @Override
     public List<Category> queryList(CategoryVO category) {
@@ -78,6 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
             }
             CategoryVO categoryVO = new CategoryVO();
             categoryVO.setIdArray(categoryIdArray);
+            categoryVO.setShowStatus(1);
             //拿到地区下关联所有类别
             List<Category> categoryList =this.queryList(categoryVO);
             if(CollectionUtils.isNotEmpty(categoryList))
@@ -89,6 +94,8 @@ public class CategoryServiceImpl implements CategoryService {
                     {
                         CategoryVO rootCategoryVO = new CategoryVO();
                         BeanUtils.copyProperties(rootCategoryVO,category);
+                        //设置类别广告图片
+                        rootCategoryVO.setCategoryImgs(categoryImgMapper.queryListByCategoryId(rootCategoryVO.getId()));
                         categoryVoList.add(rootCategoryVO);
                         //开始填充下级节点
                         setChildrenByParentId(rootCategoryVO,categoryList);
