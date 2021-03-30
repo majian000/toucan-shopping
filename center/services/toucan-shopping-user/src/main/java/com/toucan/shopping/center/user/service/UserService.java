@@ -1,7 +1,9 @@
 package com.toucan.shopping.center.user.service;
 
 
+import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.center.user.entity.User;
+import com.toucan.shopping.center.user.page.UserPageInfo;
 
 import java.util.List;
 
@@ -23,4 +25,12 @@ public interface UserService {
      * @return
      */
     public int addUserToAppCode(String mobile, String appCode);
+
+
+    /**
+     * 查询列表页
+     * @param appPageInfo
+     * @return
+     */
+    PageInfo<User> queryListPage(UserPageInfo appPageInfo);
 }

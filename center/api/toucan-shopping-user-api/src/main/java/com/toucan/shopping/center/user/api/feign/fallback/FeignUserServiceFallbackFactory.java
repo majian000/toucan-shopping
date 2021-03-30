@@ -100,6 +100,21 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 resultObjectVO.setMsg("超时请重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO list(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.list失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
         };
     }
 }

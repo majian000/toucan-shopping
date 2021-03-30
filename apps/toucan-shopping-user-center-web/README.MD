@@ -6,5 +6,5 @@
         
 ### 用户中心界面
     
-    需要启动center/toucan-shopping-user-center
-    访问地址 localhost:8088/toucan-shopping-user-center-web/login
+    需要启动center/services/toucan-shopping-user
+    访问地址 localhost:8088/login

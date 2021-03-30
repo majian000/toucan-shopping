@@ -1,7 +1,10 @@
 package com.toucan.shopping.center.user.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.center.user.entity.User;
 import com.toucan.shopping.center.user.mapper.UserMapper;
+import com.toucan.shopping.center.user.page.UserPageInfo;
 import com.toucan.shopping.center.user.service.UserService;
 //import com.owl.jdbc.aop.annotation.DataSourceSelector;
 //import com.owl.jdbc.enums.DataSourceType;
@@ -47,5 +50,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public int addUserToAppCode(String mobile, String appCode) {
         return 0;
+    }
+
+    @Override
+    public PageInfo<User> queryListPage(UserPageInfo appPageInfo) {
+        PageHelper.startPage(appPageInfo.getPage(), appPageInfo.getSize());
+        List<User> apps = userMapper.queryListPage(appPageInfo);
+        PageInfo<User> pageInfo = new PageInfo<>(apps);
+        return pageInfo;
     }
 }

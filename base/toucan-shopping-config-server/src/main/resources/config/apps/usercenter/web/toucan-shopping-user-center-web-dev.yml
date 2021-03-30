@@ -3,7 +3,7 @@
 server:
   port: 8088
   servlet:
-    context-path: /toucan-shopping-user-center-web
+    context-path: /
 spring:
   application:
     name: toucan-shopping-user-center-web #应用名称

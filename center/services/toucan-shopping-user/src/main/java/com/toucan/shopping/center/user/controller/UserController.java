@@ -6,6 +6,7 @@ import com.toucan.shopping.center.user.constant.UserLoginConstant;
 import com.toucan.shopping.center.user.constant.UserRegistConstant;
 import com.toucan.shopping.center.user.entity.UserDetail;
 import com.toucan.shopping.center.user.entity.UserMobilePhone;
+import com.toucan.shopping.center.user.page.UserPageInfo;
 import com.toucan.shopping.common.generator.IdGenerator;
 import com.toucan.shopping.center.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.center.user.redis.UserCenterRegistRedisKey;
@@ -417,6 +418,49 @@ public class UserController {
         return resultObjectVO;
     }
 
+
+
+
+
+
+    /**
+     * 查询列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserPageInfo userPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserPageInfo.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+
+
+            resultObjectVO.setData(userService.queryListPage(userPageInfo));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  main:
+    allow-bean-definition-overriding: true #名称重复直接覆盖
 
 
 logging:

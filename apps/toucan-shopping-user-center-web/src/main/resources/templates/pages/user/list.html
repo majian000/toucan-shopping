@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>黑鸟商城 - 用户应用权限中心</title>
+    <title>用户中心</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -43,8 +43,8 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <!--<button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>-->
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 停用 </button>
             </div>
         </script>
 
@@ -52,7 +52,7 @@
 
         <script type="text/html" id="appTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">停用</a>
         </script>
 
     </div>
@@ -66,7 +66,7 @@
 
         table.render({
             elem: '#appTable',
-            url: "[[@{/}]]app/app/list/page",
+            url: "[[@{/}]]user/list",
             method:'POST',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter',  {
@@ -78,8 +78,9 @@
                 [
                 {type: "checkbox", width: 50},
                 {field: 'id', width: 80, title: 'ID'},
-                {field: 'name', width: 240, title: '名称'},
-                {field: 'code', width: 240, title: '编码'},
+                {field: 'mobilePhone', width: 240, title: '手机号'},
+                {field: 'email', width: 240, title: '邮箱'},
+                {field: 'email', width: 240, title: '邮箱'},
                 {field: 'enableStatus', width: 80, title: '状态',
                     templet: function (row) {
                     if(row.enableStatus == "1"){

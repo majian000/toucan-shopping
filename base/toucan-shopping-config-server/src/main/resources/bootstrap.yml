@@ -29,6 +29,7 @@ spring:
                             classpath:/config/center/services/user,\
                             classpath:/config/center/services/app,\
                             classpath:/config/apps/shopping/web,\
+                            classpath:/config/apps/usercenter/web,\
                             classpath:/config/apps/scheduler,\
                             classpath:/config/apps/shopping/admin,"
 

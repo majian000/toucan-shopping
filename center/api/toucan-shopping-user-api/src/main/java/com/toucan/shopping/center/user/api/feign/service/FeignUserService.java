@@ -61,5 +61,14 @@ public interface FeignUserService {
     ResultObjectVO findByMobilePhone(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 列表分页
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO list(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 
 }
