@@ -16,6 +16,7 @@ public class ColumnSkuCategory {
     private String href; //点击类别跳转连接
     private Long columnId; //栏目主键
     private Integer position; //位置 1:栏目顶部 2:栏目左侧
+    private Integer categorySort; //排序 降序
     private Date createDate; //创建时间
     private Date updateDate; //创建时间
     private String appCode; //所属应用

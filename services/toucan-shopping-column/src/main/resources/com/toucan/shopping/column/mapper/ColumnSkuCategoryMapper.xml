@@ -8,6 +8,7 @@
         <result column="href" jdbcType="VARCHAR" property="href" />
         <result column="position" jdbcType="INTEGER" property="position" />
         <result column="column_id" jdbcType="BIGINT" property="columnId" />
+        <result column="category_sort" jdbcType="BIGINT" property="categorySort" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />

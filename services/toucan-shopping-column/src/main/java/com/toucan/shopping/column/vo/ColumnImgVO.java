@@ -5,18 +5,19 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 栏目VO
+ * 栏目图片VO
  *
  * @author majian
  */
 @Data
-public class ColumnSkuCategoryVO {
+public class ColumnImgVO {
     private Long id; //主键
-    private String name; //类别名称
-    private String href; //点击类别跳转连接
     private Long columnId; //栏目主键
-    private Integer position; //位置 1:栏目顶部 2:栏目左侧
-    private Integer categorySort; //排序 降序
+    private String src; //图片地址
+    private Integer type; //类型 1:pc端 2:移动端
+    private Integer imgSort; //排序 降序
+    private Integer showStatus; //显示状态 0隐藏 1显示
+    private String href; //点击跳转路径
     private Date createDate; //创建时间
     private Date updateDate; //创建时间
     private String appCode; //所属应用
