@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * 大嘴鸟自定义配置
+ * 自定义配置
  */
 @Data
 @ConfigurationProperties(prefix = "toucan")
@@ -29,5 +29,7 @@ public class Toucan {
     private Integer datacenterId;
 
     private UserCenter userCenter;
+
+    private UserCenterScheduler userCenterScheduler;
 
 }

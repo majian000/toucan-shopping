@@ -39,6 +39,9 @@
         <!-- 订单编号生成 -->
         <module>modules/toucan-shopping-order-no</module>
 
+        <!--用户中心操作es -->
+        <module>center/modules/toucan-shopping-user-es</module>
+
         <!-- ===============================================-->
 
 
@@ -130,6 +133,9 @@
 
         <!--定时任务调度-->
         <module>apps/toucan-shopping-scheduler</module>
+
+        <!--用户中心任务调度 -->
+        <module>apps/toucan-shopping-user-scheduler</module>
         <!-- ===============================================-->
 
 
@@ -359,6 +365,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.starter</groupId>
                 <artifactId>toucan-shopping-user-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.common</groupId>
+                <artifactId>toucan-shopping-user-es</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

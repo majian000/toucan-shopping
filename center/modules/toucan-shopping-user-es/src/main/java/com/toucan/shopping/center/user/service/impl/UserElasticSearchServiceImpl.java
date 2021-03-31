@@ -1,10 +1,10 @@
 package com.toucan.shopping.center.user.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.center.user.constant.UserCacheElasticSearchConstant;
+import com.toucan.shopping.center.user.export.constant.UserCacheElasticSearchConstant;
+import com.toucan.shopping.center.user.export.vo.UserElasticSearchVO;
 import com.toucan.shopping.center.user.service.UserElasticSearchService;
-import com.toucan.shopping.center.user.vo.UserElasticSearchVO;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;

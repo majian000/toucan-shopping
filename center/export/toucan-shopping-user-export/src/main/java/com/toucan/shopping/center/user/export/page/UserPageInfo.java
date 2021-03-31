@@ -45,6 +45,24 @@ public class UserPageInfo {
 
 
     /**
+     * 手机号,分表用 表下标 = mobilePhone%2
+     */
+    private String mobilePhone;
+
+
+
+    /**
+     * 用户名,分表用hash(username)
+     */
+    private String username;
+
+    /**
+     * 邮箱,分表用
+     */
+    private String email;
+
+
+    /**
      * 启用状态 0:禁用 1启用
      */
     private Short enableStatus;
@@ -66,6 +84,9 @@ public class UserPageInfo {
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
+
+
+    private Long[] idArray; //ID数组
 
 
     //前台传入

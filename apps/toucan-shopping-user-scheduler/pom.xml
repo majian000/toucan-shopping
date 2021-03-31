@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>toucan-shopping</artifactId>
+        <groupId>com.toucan.shopping</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <description>用户中心任务调度端</description>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.toucan.shopping.apps</groupId>
+    <artifactId>toucan-shopping-user-scheduler</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+
+
+    <dependencies>
+        <!-- 集成对web支持-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <!--对Open Feign方式调用支持 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!--增加hystrix支持熔断 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+
+        <!--使用配置中心 客户端-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+        <!-- 健康监控 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--集成redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+
+        <!--kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+
+
+        <!-- 我们的包-->
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-lock-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.api</groupId>
+            <artifactId>toucan-shopping-product-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.api</groupId>
+            <artifactId>toucan-shopping-order-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.export</groupId>
+            <artifactId>toucan-shopping-product-export</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.export</groupId>
+            <artifactId>toucan-shopping-order-export</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-order-no</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.api</groupId>
+            <artifactId>toucan-shopping-category-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.api</groupId>
+            <artifactId>toucan-shopping-stock-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.export</groupId>
+            <artifactId>toucan-shopping-stock-export</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-user-es</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.center.api</groupId>
+            <artifactId>toucan-shopping-user-api</artifactId>
+        </dependency>
+    </dependencies>
+
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.toucan.shopping.scheduler.app.WebApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
+    </build>
+
+</project>

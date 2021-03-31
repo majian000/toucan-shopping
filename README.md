@@ -138,6 +138,9 @@
     端口号:8092
     商城调度任务端
 
+    4.apps/toucan-shopping-user-scheduler
+    端口号:8097
+    用户中心任务调度
 
     
     

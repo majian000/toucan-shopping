@@ -142,6 +142,10 @@
             <groupId>com.toucan.shopping.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-user-es</artifactId>
+        </dependency>
 
     </dependencies>
 

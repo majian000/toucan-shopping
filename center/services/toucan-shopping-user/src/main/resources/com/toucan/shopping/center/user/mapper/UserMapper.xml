@@ -30,8 +30,17 @@
         select tu.id,tu.enable_status from t_user tu
         <where>
             1=1 and tu.delete_status = 0
+
+            <if test="idArray!=null ">
+                and tu.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
         </where>
 
+        order by tu.id desc
     </select>
 
 

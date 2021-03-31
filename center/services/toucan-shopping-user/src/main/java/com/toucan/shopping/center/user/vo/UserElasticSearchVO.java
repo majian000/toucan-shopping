@@ -1,9 +1,7 @@
 package com.toucan.shopping.center.user.vo;
 
-import com.toucan.shopping.center.user.entity.UserApp;
-import com.toucan.shopping.center.user.constant.UserCacheElasticSearchConstant;
+import com.toucan.shopping.center.user.export.entity.UserApp;
 import lombok.Data;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.Date;
 import java.util.List;

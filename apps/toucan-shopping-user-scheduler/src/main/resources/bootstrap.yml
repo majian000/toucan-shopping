@@ -1,0 +1,34 @@
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-bean-definition-overriding: true #名称重复直接覆盖
+
+
+
+logging:
+  config: classpath:logback-spring.xml
+
+
+---
+spring:
+  profiles: prod
+  application:
+    name: toucan-shopping-user-scheduler
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: prod
+
+
+---
+spring:
+  profiles: dev
+  application:
+    name: toucan-shopping-user-scheduler
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: dev

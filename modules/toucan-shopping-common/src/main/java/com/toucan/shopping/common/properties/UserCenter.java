@@ -3,7 +3,7 @@ package com.toucan.shopping.common.properties;
 import lombok.Data;
 
 /**
- * 黑鸟自定义配置
+ * 自定义配置
  */
 @Data
 public class UserCenter {

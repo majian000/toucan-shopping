@@ -171,8 +171,8 @@ public class UserController {
                 return resultObjectVO;
             }
 
-//            for(int i=0;i<100000;i++) {
-//                userRegistVO.setMobilePhone("18701"+ RandomUtil.random(6));
+//            for(int i=0;i<500000;i++) {
+//                userRegistVO.setMobilePhone(RandomUtil.random(11));
                 //查询手机号是否已注册
                 List<UserMobilePhone> userEntityList = userMobilePhoneService.findListByMobilePhone(userRegistVO.getMobilePhone());
                 if (!CollectionUtils.isEmpty(userEntityList)) {

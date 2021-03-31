@@ -1,6 +1,7 @@
 package com.toucan.shopping.center.user.service;
 
-import com.toucan.shopping.center.user.vo.UserElasticSearchVO;
+
+import com.toucan.shopping.center.user.export.vo.UserElasticSearchVO;
 
 import java.util.List;
 

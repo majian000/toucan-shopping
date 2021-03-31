@@ -42,14 +42,14 @@ public class ElasticSearchUserCache implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         logger.info(" 缓存用户信息到ElasticSearch ........");
         //TODO:增加分页,开启线程做初始化
-        List<User> userList = userService.findListByEntity(null);
-        if(CollectionUtils.isNotEmpty(userList))
-        {
-            for(User user:userList){
-                UserElasticSearchVO esUserVO = new UserElasticSearchVO();
-                BeanUtils.copyProperties(esUserVO,user);
-                esUserService.save(esUserVO);
-            }
-        }
+//        List<User> userList = userService.findListByEntity(null);
+//        if(CollectionUtils.isNotEmpty(userList))
+//        {
+//            for(User user:userList){
+//                UserElasticSearchVO esUserVO = new UserElasticSearchVO();
+//                BeanUtils.copyProperties(esUserVO,user);
+//                esUserService.save(esUserVO);
+//            }
+//        }
     }
 }
