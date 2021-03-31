@@ -60,12 +60,12 @@ public class UserEsCacheThread extends Thread {
         try {
             if (toucan.getUserCenterScheduler().isInitEsCache()) {
                 logger.info(" 缓存用户信息到ElasticSearch ........");
-                int page=0;
+                int page=1;
                 PageInfo pageInfo = null;
                 do{
                     UserPageInfo query = new UserPageInfo();
                     query.setSize(1000);
-                    query.setLimit(page);
+                    query.setPage(page);
                     pageInfo = queryUserPage(query);
                     page++;
                     if(pageInfo!=null&&CollectionUtils.isNotEmpty(pageInfo.getList()))
@@ -75,7 +75,7 @@ public class UserEsCacheThread extends Thread {
                         {
                             UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
                             BeanUtils.copyProperties(userElasticSearchVO,user);
-
+                            logger.info("缓存用户 ID {} 到ES ",userElasticSearchVO.getId());
                             esUserService.save(userElasticSearchVO);
                         }
                     }

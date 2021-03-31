@@ -23,7 +23,7 @@ public class UserPageInfo {
     private int size;
 
     /**
-     * 每页显示数量
+     * 每页显示数量(前台控件用)
      */
     private int limit;
 
