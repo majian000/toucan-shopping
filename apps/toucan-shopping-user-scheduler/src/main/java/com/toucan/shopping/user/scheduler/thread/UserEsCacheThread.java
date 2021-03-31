@@ -73,7 +73,7 @@ public class UserEsCacheThread extends Thread {
                         String userListJson = JSONObject.toJSONString(pageInfo.getList());
                         List<User> userList = JSONArray.parseArray(userListJson,User.class);
 
-                        logger.info("缓存用户列表 到Elasticsearch ",userListJson);
+                        logger.info("缓存用户列表 到Elasticsearch {}",userListJson);
                         for(User user:userList)
                         {
                             UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
