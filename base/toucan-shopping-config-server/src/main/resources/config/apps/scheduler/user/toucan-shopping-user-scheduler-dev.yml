@@ -14,8 +14,13 @@ spring:
       sampler:
         #采样率 1全部采集
         probability: 1
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true #开启重试机制
 eureka:
   client:
+    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
     registerWithEureka: false
     serviceUrl:
       defaultZone: http://localhost:8081/eureka
@@ -38,6 +43,19 @@ hystrix:
       circuitBreaker:
         requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
 
+
+
+
+#开启饥饿加载
+ribbon:
+  OkToRetryOnAllOperations: true #开启重试机制
+  MaxAutoRetriesNextServer: 2 #重试其他实例最大重试次数
+  MaxAutoRetries: 1 #同一实例重试次数
+  ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
+  eager-load:
+    enabled: true
+    clients: "toucan-shopping-user,\
+              toucan-shopping-gateway"
 
 
 

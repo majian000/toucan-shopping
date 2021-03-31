@@ -48,9 +48,3 @@
     1.注册验证码
 
 
-
-
-#### elasticsearch介绍
-
-    1.查询所有初始化的用户
-    GET http://ES服务器地址:9200/user_index/_search

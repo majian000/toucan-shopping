@@ -13,3 +13,16 @@
     2.toucan-shopping-eureka
     
     服务注册中心
+
+
+
+
+
+#### elasticsearch介绍
+
+    1.查询所有初始化的用户
+    GET http://localhost:9200/user_index/_search
+    
+    
+    2.查询用户数量
+    GET http://localhost:9200/user_index/_count

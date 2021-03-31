@@ -36,6 +36,22 @@
     4.kafka_2.12-2.7.0
     5.elasticsearch-7.10.2
 
+##### 第三方配置
+
+###### 配置ElasticSearch
+
+    1.设置用户返回最大记录数
+    PUT http://localhost:9200/user_index/_settings
+    {
+      "index": {
+        "max_result_window": 2147483647
+      }
+    }
+
+###### 配置redis
+    
+    1.配置redis RDB
+
 ##### 数据库
 
     
