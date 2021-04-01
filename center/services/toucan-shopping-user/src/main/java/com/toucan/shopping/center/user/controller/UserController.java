@@ -2,11 +2,14 @@ package com.toucan.shopping.center.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.center.user.constant.UserLoginConstant;
 import com.toucan.shopping.center.user.constant.UserRegistConstant;
 import com.toucan.shopping.center.user.entity.UserDetail;
 import com.toucan.shopping.center.user.entity.UserMobilePhone;
+import com.toucan.shopping.center.user.entity.UserUserName;
 import com.toucan.shopping.center.user.page.UserPageInfo;
+import com.toucan.shopping.center.user.vo.UserVO;
 import com.toucan.shopping.common.generator.IdGenerator;
 import com.toucan.shopping.center.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.center.user.redis.UserCenterRegistRedisKey;
@@ -20,6 +23,7 @@ import com.toucan.shopping.lock.redis.RedisLock;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.common.vo.ResultVO;
 import com.toucan.shopping.center.user.entity.User;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -450,7 +455,54 @@ public class UserController {
             }
 
 
-            resultObjectVO.setData(userService.queryListPage(userPageInfo));
+            //查询用户主表
+            PageInfo<UserVO> pageInfo =  userService.queryListPage(userPageInfo);
+            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
+            {
+                Long[] userIdArray = new Long[pageInfo.getList().size()];
+
+                for(int i=0;i<pageInfo.getList().size();i++)
+                {
+                    userIdArray[i] = pageInfo.getList().get(i).getId();
+                }
+
+                //查询用户手机号关联表
+                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserId(userIdArray);
+                if(CollectionUtils.isNotEmpty(userMobilePhones))
+                {
+                    //设置用户对象中的手机号
+                    for(UserMobilePhone userMobilePhone:userMobilePhones)
+                    {
+                        for(UserVO userVO:pageInfo.getList())
+                        {
+                            if(userMobilePhone.getUserMainId().longValue()==userVO.getId().longValue())
+                            {
+                                userVO.setMobilePhone(userMobilePhone.getMobilePhone());
+                                continue;
+                            }
+                        }
+                    }
+                }
+                //查询用户用户名关联表
+                List<UserUserName> userUserNames = userUserNameService.queryListByUserId(userIdArray);
+                if(CollectionUtils.isNotEmpty(userUserNames))
+                {
+                    //设置用户用户名
+                    for(UserUserName userUserName:userUserNames)
+                    {
+                        for(UserVO userVO:pageInfo.getList())
+                        {
+                            if(userUserName.getUserMainId().longValue()==userVO.getId().longValue())
+                            {
+                                userVO.setUsername(userUserName.getUsername());
+                                continue;
+                            }
+                        }
+                    }
+
+                }
+            }
+            resultObjectVO.setData(pageInfo);
 
         }catch(Exception e)
         {

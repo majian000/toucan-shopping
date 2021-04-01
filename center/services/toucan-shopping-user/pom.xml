@@ -145,6 +145,12 @@
         <dependency>
             <groupId>com.toucan.shopping.common</groupId>
             <artifactId>toucan-shopping-user-es</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.toucan.shopping.center.export</groupId>
+                    <artifactId>toucan-shopping-user-export</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

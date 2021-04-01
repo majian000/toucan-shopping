@@ -15,10 +15,19 @@
     服务注册中心
 
 
+###### 配置ElasticSearch
+
+    1.设置用户返回最大记录数
+    PUT http://localhost:9200/user_index/_settings
+    {
+      "index": {
+        "max_result_window": 10000
+      }
+    }
 
 
 
-#### elasticsearch介绍
+#### Elasticsearch查询
 
     1.查询所有初始化的用户
     GET http://localhost:9200/user_index/_search

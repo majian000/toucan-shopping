@@ -12,6 +12,15 @@
     </resultMap>
 
 
+    <resultMap id="userVOMap" type="com.toucan.shopping.center.user.vo.UserVO" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
     <select id="findListByEntity" resultMap="userMap" parameterType="com.toucan.shopping.center.user.entity.User">
         select * from t_user bu
         <where>
@@ -26,7 +35,7 @@
 
 
 
-    <select id="queryListPage" resultMap="userMap" parameterType="com.toucan.shopping.center.user.page.UserPageInfo">
+    <select id="queryListPage" resultMap="userVOMap" parameterType="com.toucan.shopping.center.user.page.UserPageInfo">
         select tu.id,tu.enable_status from t_user tu
         <where>
             1=1 and tu.delete_status = 0

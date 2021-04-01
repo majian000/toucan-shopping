@@ -13,5 +13,6 @@ public interface UserUserNameMapper {
 
     List<UserUserName> findListByEntity(UserUserName userUserName);
 
+    List<UserUserName> queryListByUserId(Long[] userIdArray);
 
 }

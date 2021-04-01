@@ -8,6 +8,7 @@ import com.toucan.shopping.center.user.page.UserPageInfo;
 import com.toucan.shopping.center.user.service.UserService;
 //import com.owl.jdbc.aop.annotation.DataSourceSelector;
 //import com.owl.jdbc.enums.DataSourceType;
+import com.toucan.shopping.center.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,10 +54,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<User> queryListPage(UserPageInfo appPageInfo) {
+    public PageInfo<UserVO> queryListPage(UserPageInfo appPageInfo) {
         PageHelper.startPage(appPageInfo.getPage(), appPageInfo.getSize());
-        List<User> users = userMapper.queryListPage(appPageInfo);
-        PageInfo<User> pageInfo = new PageInfo<>(users);
+        List<UserVO> users = userMapper.queryListPage(appPageInfo);
+        PageInfo<UserVO> pageInfo = new PageInfo<>(users);
         return pageInfo;
     }
 }

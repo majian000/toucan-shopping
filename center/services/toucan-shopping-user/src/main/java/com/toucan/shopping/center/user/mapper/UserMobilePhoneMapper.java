@@ -17,5 +17,6 @@ public interface UserMobilePhoneMapper {
 
     List<UserMobilePhone> findListByMobilePhone(String mobilePhone);
 
+    List<UserMobilePhone> queryListByUserId(Long[] userIdArray);
 
 }

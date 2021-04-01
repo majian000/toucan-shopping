@@ -4,7 +4,7 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 80022
 Source Host           : localhost:3306
-Source Database       : black_bird_shopping_user_center
+Source Database       : toucan_shopping_user_center
 
 Target Server Type    : MYSQL
 Target Server Version : 80022

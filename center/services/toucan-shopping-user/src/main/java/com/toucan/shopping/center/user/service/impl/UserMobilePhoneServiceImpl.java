@@ -6,6 +6,7 @@ import com.toucan.shopping.center.user.mapper.UserEmailMapper;
 import com.toucan.shopping.center.user.mapper.UserMobilePhoneMapper;
 import com.toucan.shopping.center.user.service.UserEmailService;
 import com.toucan.shopping.center.user.service.UserMobilePhoneService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,5 +35,10 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
     @Override
     public int save(UserMobilePhone entity) {
         return userMobilePhoneMapper.insert(entity);
+    }
+
+    @Override
+    public List<UserMobilePhone> queryListByUserId(Long[] userIdArray) {
+        return userMobilePhoneMapper.queryListByUserId(userIdArray);
     }
 }

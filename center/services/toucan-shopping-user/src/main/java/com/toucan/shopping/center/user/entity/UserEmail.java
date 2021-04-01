@@ -12,19 +12,19 @@ public class UserEmail {
 
 
     /**
-     * 主键,分库用
+     * 主键
      */
     private Long id;
 
     /**
-     * 邮箱,分表用
+     * 邮箱
      */
     private String email;
 
 
 
     /**
-     * 用户主表ID
+     * 用户主表ID,分库分表
      */
     private Long userMainId;
 

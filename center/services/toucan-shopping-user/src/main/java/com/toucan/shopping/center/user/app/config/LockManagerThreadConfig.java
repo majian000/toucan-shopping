@@ -31,12 +31,10 @@ public class LockManagerThreadConfig {
     @Bean
     public RedisLockManagerThread redisLockManagerThread()
     {
-
-
         logger.info("初始化应用编码 RedisLockManagerThread(锁管理器).......");
 
         //设置全局锁表
-        RedisLockManagerThread.globalLockTable = "black_bird_shopping_"+RedisLockManagerThread.globalLockTable;
+        RedisLockManagerThread.globalLockTable = "toucan_shopping_"+RedisLockManagerThread.globalLockTable;
 
         RedisLockManagerThread lockManagerThread = new RedisLockManagerThread();
         lockManagerThread.setRedisLock(redisLock);

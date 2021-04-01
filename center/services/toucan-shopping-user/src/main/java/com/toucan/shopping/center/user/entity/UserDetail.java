@@ -11,7 +11,7 @@ import java.util.Date;
 public class UserDetail {
 
     /**
-     * 用该字段分库分表
+     * 主键
      */
     private Long id;
 

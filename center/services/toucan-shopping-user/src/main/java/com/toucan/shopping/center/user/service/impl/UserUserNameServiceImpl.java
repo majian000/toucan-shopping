@@ -30,4 +30,9 @@ public class UserUserNameServiceImpl implements UserUserNameService {
     public int save(UserUserName entity) {
         return userUserNameMapper.insert(entity);
     }
+
+    @Override
+    public List<UserUserName> queryListByUserId(Long[] userIdArray) {
+        return userUserNameMapper.queryListByUserId(userIdArray);
+    }
 }

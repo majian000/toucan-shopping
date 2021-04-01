@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class UserVO {
-    private Integer id;
+    private Long id;
 
 
     /**
@@ -21,6 +21,12 @@ public class UserVO {
      * 邮箱
      */
     private String email;
+
+
+    /**
+     * 用户名
+     */
+    private String username;
 
     /**
      * 密码

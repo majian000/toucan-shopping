@@ -4,6 +4,7 @@ package com.toucan.shopping.center.user.service;
 import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.center.user.entity.User;
 import com.toucan.shopping.center.user.page.UserPageInfo;
+import com.toucan.shopping.center.user.vo.UserVO;
 
 import java.util.List;
 
@@ -32,5 +33,5 @@ public interface UserService {
      * @param appPageInfo
      * @return
      */
-    PageInfo<User> queryListPage(UserPageInfo appPageInfo);
+    PageInfo<UserVO> queryListPage(UserPageInfo appPageInfo);
 }

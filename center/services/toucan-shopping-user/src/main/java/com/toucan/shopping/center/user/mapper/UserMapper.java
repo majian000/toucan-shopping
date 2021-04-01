@@ -2,6 +2,7 @@ package com.toucan.shopping.center.user.mapper;
 
 import com.toucan.shopping.center.user.entity.User;
 import com.toucan.shopping.center.user.page.UserPageInfo;
+import com.toucan.shopping.center.user.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,6 +20,6 @@ public interface UserMapper {
     List<User> findById(Long id);
 
 
-    List<User> queryListPage(UserPageInfo appPageInfo);
+    List<UserVO> queryListPage(UserPageInfo appPageInfo);
 
 }

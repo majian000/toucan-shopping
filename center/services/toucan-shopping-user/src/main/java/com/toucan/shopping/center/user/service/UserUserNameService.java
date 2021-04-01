@@ -14,4 +14,6 @@ public interface UserUserNameService {
 
     int save(UserUserName entity);
 
+
+    List<UserUserName> queryListByUserId(Long[] userIdArray);
 }

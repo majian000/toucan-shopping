@@ -25,7 +25,8 @@
 
 
 #### 安装教程
-
+    
+    要求java jdk 1.8.0_181及以上
     按顺序依次启动下面项目
 
 
@@ -44,7 +45,7 @@
     PUT http://localhost:9200/user_index/_settings
     {
       "index": {
-        "max_result_window": 2147483647
+        "max_result_window": 10000
       }
     }
 
@@ -55,16 +56,16 @@
 ##### 数据库
 
     
-    商城库 resources/ddl/black_bird_shopping.sql
+    商城库 resources/ddl/toucan_shopping.sql
     商城首页、轮播图相关等
     
-    订单库 resources/ddl/black_bird_shopping_order.sql
+    订单库 resources/ddl/toucan_shopping_order.sql
     主订单、子订单等
     
-    商品库 resources/ddl/black_bird_shopping_product.sql
+    商品库 resources/ddl/toucan_shopping_product.sql
     商品SPU、商品SKU等
     
-    库存   resources/ddl/black_bird_shopping_stock.sql
+    库存   resources/ddl/toucan_shopping_stock.sql
     商品库存等
     
     用户中心库 resources/用户中心

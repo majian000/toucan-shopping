@@ -15,4 +15,7 @@ public interface UserMobilePhoneService {
 
     int save(UserMobilePhone entity);
 
+
+    List<UserMobilePhone> queryListByUserId(Long[] userIdArray);
+
 }
