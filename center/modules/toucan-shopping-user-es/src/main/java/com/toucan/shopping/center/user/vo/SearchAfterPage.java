@@ -16,4 +16,9 @@ public class SearchAfterPage {
      * 当前页的sort vlaues
      */
     private Object[] sortValues;
+
+    /**
+     * 总条数
+     */
+    private Long total = 0L;
 }

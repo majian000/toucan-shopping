@@ -111,11 +111,34 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.size(size);
-        //设置查询条件
+        //设置模糊查询条件
         if(StringUtils.isNotEmpty(esUserVo.getKeyword())) {
             searchSourceBuilder.query(QueryBuilders.multiMatchQuery(esUserVo.getKeyword(),
                     "_id","mobilePhone","nickName","email","username","idCard"));
         }
+        //设置邮箱条件查询条件
+        if(StringUtils.isNotEmpty(esUserVo.getEmail()))
+        {
+            searchSourceBuilder.query(QueryBuilders.termQuery("email", esUserVo.getEmail()));
+        }
+        //设置手机号查询条件
+        if(StringUtils.isNotEmpty(esUserVo.getMobilePhone()))
+        {
+            searchSourceBuilder.query(QueryBuilders.termQuery("mobilePhone", esUserVo.getMobilePhone()));
+        }
+
+        //设置昵称查询条件
+        if(StringUtils.isNotEmpty(esUserVo.getNickName()))
+        {
+            searchSourceBuilder.query(QueryBuilders.termQuery("nickName", esUserVo.getNickName()));
+        }
+
+        //设置用户ID查询条件
+        if(esUserVo.getId()!=null)
+        {
+            searchSourceBuilder.query(QueryBuilders.termQuery("_id", esUserVo.getId()));
+        }
+
 
         //根据ID降序
         searchSourceBuilder.sort("_id", SortOrder.DESC);
@@ -130,6 +153,8 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
         SearchHits searchHits = searchResponse.getHits();
+        //设置总条数
+        searchAfterPage.setTotal(searchHits.getTotalHits().value);
         SearchHit[] searchHitsHits = searchHits.getHits();
         if(searchHitsHits!=null&&searchHitsHits.length>0) {
             for (SearchHit searchHit : searchHitsHits) {

@@ -15,6 +15,6 @@ public class TableVO {
 
     private int code;
     private String msg;
-    private Integer count;
+    private Long count;
     private List<Object> data;
 }

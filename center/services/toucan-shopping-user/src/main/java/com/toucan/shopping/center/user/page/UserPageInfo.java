@@ -1,6 +1,6 @@
 package com.toucan.shopping.center.user.page;
 
-import com.toucan.shopping.center.user.entity.UserApp;
+import com.toucan.shopping.center.user.export.entity.UserApp;
 import lombok.Data;
 
 import java.util.Date;
@@ -45,16 +45,22 @@ public class UserPageInfo {
 
 
     /**
-     * 手机号,分表用 表下标 = mobilePhone%2
+     * 手机号
      */
     private String mobilePhone;
 
 
 
     /**
-     * 用户名,分表用hash(username)
+     * 用户名
      */
     private String username;
+
+
+    /**
+     * 昵称
+     */
+    private String nickName;
 
     /**
      * 邮箱,分表用
@@ -96,6 +102,10 @@ public class UserPageInfo {
      */
     private String vcode;
 
+    /**
+     * 关键字 模糊查询 手机号、昵称、用户名、用户ID、邮箱、身份证号
+     */
+    private String keyword;
 
     /**
      * elasticsearch当前页末尾字段值

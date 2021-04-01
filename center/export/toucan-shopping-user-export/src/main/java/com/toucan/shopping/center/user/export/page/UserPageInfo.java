@@ -45,16 +45,22 @@ public class UserPageInfo {
 
 
     /**
-     * 手机号,分表用 表下标 = mobilePhone%2
+     * 手机号
      */
     private String mobilePhone;
 
 
 
     /**
-     * 用户名,分表用hash(username)
+     * 用户名
      */
     private String username;
+
+
+    /**
+     * 昵称
+     */
+    private String nickName;
 
     /**
      * 邮箱,分表用
