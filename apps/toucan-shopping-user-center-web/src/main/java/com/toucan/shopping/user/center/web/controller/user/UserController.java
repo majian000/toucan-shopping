@@ -78,6 +78,8 @@ public class UserController {
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generatorByAdmin(toucan.getAppCode(),"",userPageInfo);
             UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
+            userElasticSearchVO.setKeyword(userPageInfo.getKeyword());
+
             SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(userElasticSearchVO,userPageInfo.getLimit(),userPageInfo.getSortValues());
 //            ResultObjectVO resultObjectVO = feignUserService.list(SignUtil.sign(requestVo),requestVo);
 //            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)

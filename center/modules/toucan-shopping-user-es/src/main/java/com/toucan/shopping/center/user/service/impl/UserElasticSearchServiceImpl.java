@@ -69,7 +69,33 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         for(SearchHit searchHit:searchHitsHits) {
             String sourceString = searchHit.getSourceAsString();
             if (StringUtils.isNotEmpty(sourceString)){
-                logger.info("UserElasticSearchService queryList {}", sourceString);
+                logger.info("UserElasticSearchService queryListForFormSize {}", sourceString);
+                userElasticSearchVOS.add(JSONObject.parseObject(sourceString,UserElasticSearchVO.class));
+            }
+        }
+        return userElasticSearchVOS;
+    }
+
+    @Override
+    public List<UserElasticSearchVO> queryById(Long id) throws Exception{
+        List<UserElasticSearchVO> userElasticSearchVOS = new ArrayList<UserElasticSearchVO>();
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.size(10);
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("_id", id));
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            String sourceString = searchHit.getSourceAsString();
+            if (StringUtils.isNotEmpty(sourceString)){
+                logger.info("UserElasticSearchService queryById {}", sourceString);
                 userElasticSearchVOS.add(JSONObject.parseObject(sourceString,UserElasticSearchVO.class));
             }
         }
@@ -86,9 +112,11 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.size(size);
         //设置查询条件
-        if(StringUtils.isNotEmpty(esUserVo.getMobilePhone())) {
-            searchSourceBuilder.query(QueryBuilders.termQuery("mobilePhone", esUserVo.getMobilePhone()));
+        if(StringUtils.isNotEmpty(esUserVo.getKeyword())) {
+            searchSourceBuilder.query(QueryBuilders.multiMatchQuery(esUserVo.getKeyword(),
+                    "_id","mobilePhone","nickName","email","username","idCard"));
         }
+
         //根据ID降序
         searchSourceBuilder.sort("_id", SortOrder.DESC);
         //设置after
@@ -105,10 +133,9 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         SearchHit[] searchHitsHits = searchHits.getHits();
         if(searchHitsHits!=null&&searchHitsHits.length>0) {
             for (SearchHit searchHit : searchHitsHits) {
-
                 String sourceString = searchHit.getSourceAsString();
                 if (StringUtils.isNotEmpty(sourceString)) {
-                    logger.info("UserElasticSearchService queryList {}", sourceString);
+                    logger.info("UserElasticSearchService queryListForSearchAfter {}", sourceString);
                     userElasticSearchVOS.add(JSONObject.parseObject(sourceString, UserElasticSearchVO.class));
                 }
             }

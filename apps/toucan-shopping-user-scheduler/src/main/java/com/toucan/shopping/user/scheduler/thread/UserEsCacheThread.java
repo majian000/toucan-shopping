@@ -77,9 +77,13 @@ public class UserEsCacheThread extends Thread {
                         logger.info("缓存用户列表 到Elasticsearch {}",userListJson);
                         for(UserVO user:userList)
                         {
-                            UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
-                            BeanUtils.copyProperties(userElasticSearchVO,user);
-                            esUserService.save(userElasticSearchVO);
+                            List<UserElasticSearchVO> userElasticSearchVOS = esUserService.queryById(user.getId());
+                            //如果缓存不存在用户将缓存起来
+                            if(CollectionUtils.isEmpty(userElasticSearchVOS)) {
+                                UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
+                                BeanUtils.copyProperties(userElasticSearchVO, user);
+                                esUserService.save(userElasticSearchVO);
+                            }
                         }
                     }
                 }while(pageInfo!=null&& CollectionUtils.isNotEmpty(pageInfo.getList()));

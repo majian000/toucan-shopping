@@ -96,6 +96,10 @@ public class UserPageInfo {
      */
     private String vcode;
 
+    /**
+     * 关键字 模糊查询 手机号、昵称、用户名、用户ID、邮箱、身份证号
+     */
+    private String keyword;
 
     /**
      * elasticsearch当前页末尾字段值
