@@ -73,19 +73,24 @@ public class UserController {
         TableVO tableVO = new TableVO();
         try {
 
-            UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
+            UserElasticSearchVO query = new UserElasticSearchVO();
             //userElasticSearchVO.setKeyword(userPageInfo.getKeyword());
-            userElasticSearchVO.setMobilePhone(userPageInfo.getMobilePhone());
-            userElasticSearchVO.setNickName(userPageInfo.getNickName());
-            userElasticSearchVO.setEmail(userPageInfo.getEmail());
-            userElasticSearchVO.setId(userPageInfo.getId());
+            query.setMobilePhone(userPageInfo.getMobilePhone());
+            query.setNickName(userPageInfo.getNickName());
+            query.setEmail(userPageInfo.getEmail());
+            query.setId(userPageInfo.getId());
 
 
-            SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(userElasticSearchVO,userPageInfo.getLimit(),userPageInfo.getSortValues());
+            SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(query,userPageInfo.getLimit(),userPageInfo.getSortValues());
             if(CollectionUtils.isNotEmpty(searchAfterPage.getUserElasticSearchVOS()))
             {
                 tableVO.setCount(searchAfterPage.getTotal());
                 if(tableVO.getCount()>0) {
+                    //将long类型的ID转成字符串,解决前端丢失精度问题
+                    for(UserElasticSearchVO userElasticSearchVO:searchAfterPage.getUserElasticSearchVOS())
+                    {
+                        userElasticSearchVO.setUserId(String.valueOf(userElasticSearchVO.getId()));
+                    }
                     tableVO.setData((List) searchAfterPage.getUserElasticSearchVOS());
                 }
             }

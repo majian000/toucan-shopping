@@ -12,6 +12,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -110,35 +111,39 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
 
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+
         searchSourceBuilder.size(size);
         //设置模糊查询条件
-        if(StringUtils.isNotEmpty(esUserVo.getKeyword())) {
-            searchSourceBuilder.query(QueryBuilders.multiMatchQuery(esUserVo.getKeyword(),
-                    "_id","mobilePhone","nickName","email","username","idCard"));
-        }
+//        if(StringUtils.isNotEmpty(esUserVo.getKeyword())) {
+//            searchSourceBuilder.query(QueryBuilders.multiMatchQuery(esUserVo.getKeyword(),
+//                    "_id","mobilePhone","nickName","email","username","idCard"));
+//        }
         //设置邮箱条件查询条件
         if(StringUtils.isNotEmpty(esUserVo.getEmail()))
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("email", esUserVo.getEmail()));
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("email",esUserVo.getEmail()));
         }
         //设置手机号查询条件
         if(StringUtils.isNotEmpty(esUserVo.getMobilePhone()))
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("mobilePhone", esUserVo.getMobilePhone()));
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("mobilePhone", esUserVo.getMobilePhone()));
         }
 
         //设置昵称查询条件
         if(StringUtils.isNotEmpty(esUserVo.getNickName()))
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("nickName", esUserVo.getNickName()));
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("nickName", esUserVo.getNickName()));
         }
 
         //设置用户ID查询条件
         if(esUserVo.getId()!=null)
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("_id", esUserVo.getId()));
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("id", esUserVo.getId()));
         }
 
+        //设置查询条件组
+        searchSourceBuilder.query(boolQueryBuilder);
 
         //根据ID降序
         searchSourceBuilder.sort("_id", SortOrder.DESC);

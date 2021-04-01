@@ -1,5 +1,7 @@
 package com.toucan.shopping.center.user.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import lombok.Data;
 
 import java.util.Date;
@@ -9,8 +11,15 @@ import java.util.Date;
  */
 @Data
 public class UserVO {
+
+
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
+    /**
+     * long类型的id转成字符串
+     */
+    private String userId;
 
     /**
      * 手机号

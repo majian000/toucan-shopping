@@ -62,7 +62,7 @@
 
         <table class="layui-hide" id="appTable" lay-filter="appTableFilter"></table>
 
-        <script type="text/html" id="appTableBar">
+        <script type="text/html" id="userTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">停用</a>
         </script>
@@ -89,7 +89,7 @@
             cols: [
                 [
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 80, title: '用户ID'},
+                {field: 'userId', width: 180, title: '用户ID'},
                 {field: 'mobilePhone', width: 200, title: '手机号'},
                 {field: 'nickName', width: 240, title: '昵称'},
                 {field: 'email', width: 240, title: '邮箱'},
@@ -100,7 +100,7 @@
                     }
                     return "禁用"
                 }},
-                {title: '操作', minWidth: 150, toolbar: '#appTableBar', align: "center"}
+                {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
             ]
             ],
             limits: [100],
