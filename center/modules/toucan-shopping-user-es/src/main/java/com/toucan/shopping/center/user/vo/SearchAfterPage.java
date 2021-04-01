@@ -1,0 +1,19 @@
+package com.toucan.shopping.center.user.vo;
+
+import com.toucan.shopping.center.user.export.vo.UserElasticSearchVO;
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class SearchAfterPage {
+    /**
+     * 当前页数据
+     */
+    private List<UserElasticSearchVO> userElasticSearchVOS;
+
+    /**
+     * 当前页的sort vlaues
+     */
+    private Object[] sortValues;
+}

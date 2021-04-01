@@ -96,4 +96,10 @@ public class UserPageInfo {
      */
     private String vcode;
 
+
+    /**
+     * elasticsearch当前页末尾字段值
+     */
+    private String[] sortValues;
+
 }

@@ -5,6 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.center.app.export.entity.AppPageInfo;
 import com.toucan.shopping.center.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.center.user.export.page.UserPageInfo;
+import com.toucan.shopping.center.user.export.vo.UserElasticSearchVO;
+import com.toucan.shopping.center.user.service.UserElasticSearchService;
+import com.toucan.shopping.center.user.vo.SearchAfterPage;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.AuthHeaderUtil;
@@ -40,6 +44,9 @@ public class UserController {
     @Autowired
     private FeignUserService feignUserService;
 
+    @Autowired
+    private UserElasticSearchService userElasticSearchService;
+
 
     @Auth(verifyMethod = Auth.VERIFYMETHOD_USER_CENTER,requestType = Auth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -52,15 +59,15 @@ public class UserController {
 
 
     /**
-     * 查询应用列表
+     * 查询列表
      * @param request
-     * @param appPageInfo
+     * @param userPageInfo
      * @return
      */
     @Auth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, AppPageInfo appPageInfo)
+    public TableVO listPage(HttpServletRequest request, UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -69,19 +76,21 @@ public class UserController {
 //            appPageInfo.setAdminId(AuthHeaderUtil.getAdminId(authHeader));
 
 
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generatorByAdmin(toucan.getAppCode(),"",appPageInfo);
-            ResultObjectVO resultObjectVO = feignUserService.list(SignUtil.sign(requestVo),requestVo);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
-            {
-                if(resultObjectVO.getData()!=null)
-                {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
-                    tableVO.setCount(Integer.parseInt(String.valueOf(resultObjectDataMap.get("total"))));
-                    if(tableVO.getCount()>0) {
-                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
-                    }
-                }
-            }
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generatorByAdmin(toucan.getAppCode(),"",userPageInfo);
+            UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
+            SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(userElasticSearchVO,userPageInfo.getLimit(),userPageInfo.getSortValues());
+//            ResultObjectVO resultObjectVO = feignUserService.list(SignUtil.sign(requestVo),requestVo);
+//            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+//            {
+//                if(resultObjectVO.getData()!=null)
+//                {
+//                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+//                    tableVO.setCount(Integer.parseInt(String.valueOf(resultObjectDataMap.get("total"))));
+//                    if(tableVO.getCount()>0) {
+//                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
+//                    }
+//                }
+//            }
         }catch(Exception e)
         {
             tableVO.setMsg("请求失败,请重试");

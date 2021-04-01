@@ -18,13 +18,11 @@
 ### 用户服务
 
     1.发送注册验证码
-
     POST http://localhost:8087/sms/send
      { "mobile":"18701601892","type": 1 }
      
     
     2.注册
-
     POST http://localhost:8087/user/regist/mobile/phone
     HEADER Content-Type:application/json;charset=UTF-8
     {
