@@ -18,4 +18,7 @@ public interface UserDetailMapper {
 
     List<UserDetail> findById(Long id);
 
+    List<UserDetail> queryListByUserId(Long[] userIdArray);
+
+
 }

@@ -7,6 +7,7 @@ import com.toucan.shopping.center.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.center.user.export.entity.User;
 import com.toucan.shopping.center.user.export.page.UserPageInfo;
 import com.toucan.shopping.center.user.export.vo.UserElasticSearchVO;
+import com.toucan.shopping.center.user.export.vo.UserVO;
 import com.toucan.shopping.center.user.service.UserElasticSearchService;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.properties.Toucan;
@@ -71,10 +72,10 @@ public class UserEsCacheThread extends Thread {
                     if(pageInfo!=null&&CollectionUtils.isNotEmpty(pageInfo.getList()))
                     {
                         String userListJson = JSONObject.toJSONString(pageInfo.getList());
-                        List<User> userList = JSONArray.parseArray(userListJson,User.class);
+                        List<UserVO> userList = JSONArray.parseArray(userListJson,UserVO.class);
 
                         logger.info("缓存用户列表 到Elasticsearch {}",userListJson);
-                        for(User user:userList)
+                        for(UserVO user:userList)
                         {
                             UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
                             BeanUtils.copyProperties(userElasticSearchVO,user);

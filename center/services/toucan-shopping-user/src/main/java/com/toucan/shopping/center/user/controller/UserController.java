@@ -499,8 +499,31 @@ public class UserController {
                             }
                         }
                     }
-
                 }
+
+                //查询用户与用户详情关联
+                List<UserDetail> userDetails = userDetailService.queryListByUserId(userIdArray);
+                if(CollectionUtils.isNotEmpty(userDetails))
+                {
+                    //设置用户详情
+                    for(UserDetail userDetail:userDetails)
+                    {
+                        for(UserVO userVO:pageInfo.getList())
+                        {
+                            if(userDetail.getUserMainId().longValue()==userVO.getId().longValue())
+                            {
+                                userVO.setNickName(userDetail.getNickName());
+                                userVO.setTrueName(userDetail.getTrueName());
+                                userVO.setHeadSculpture(userDetail.getHeadSculpture());
+                                userVO.setIdCard(userDetail.getIdCard());
+                                userVO.setSex(userDetail.getSex());
+                                userVO.setType(userDetail.getType());
+                                continue;
+                            }
+                        }
+                    }
+                }
+
             }
             resultObjectVO.setData(pageInfo);
 

@@ -22,6 +22,12 @@ public class UserVO {
      */
     private String email;
 
+
+    /**
+     * 用户名
+     */
+    private String username;
+
     /**
      * 密码
      */
@@ -31,6 +37,38 @@ public class UserVO {
      * 确认密码
      */
     private String confirmPassword;
+
+    /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
+     * 真实姓名
+     */
+    private String trueName;
+
+    /**
+     * 头像
+     */
+    private String headSculpture;
+
+
+    /**
+     * 身份证
+     */
+    private String idCard;
+
+    /**
+     * 性别 0:女 1:男
+     */
+    private Short sex;
+
+    /**
+     * 用户类型 0:买家 1:卖家 2:既是买家又是卖家
+     */
+    private Short type;
+
 
     /**
      * 启用状态 0:禁用 1启用

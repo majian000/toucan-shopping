@@ -45,4 +45,9 @@ public class UserDetailServiceImpl implements UserDetailService {
         return userDetailMapper.findById(id);
     }
 
+    @Override
+    public List<UserDetail> queryListByUserId(Long[] userIdArray) {
+        return userDetailMapper.queryListByUserId(userIdArray);
+    }
+
 }
