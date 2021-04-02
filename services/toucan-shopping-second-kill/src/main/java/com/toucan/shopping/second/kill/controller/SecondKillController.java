@@ -6,8 +6,9 @@ import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.lock.redis.RedisLock;
-import com.toucan.shopping.common.message.MessageTopicConstant;
+import com.toucan.shopping.order.export.kafka.constant.OrderMessageTopicConstant;
 import com.toucan.shopping.order.export.message.CreateOrderMessage;
+import com.toucan.shopping.product.export.kafka.constant.ProductMessageTopicConstant;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
 import com.toucan.shopping.common.persistence.entity.EventPublish;
 import com.toucan.shopping.product.export.util.ProductRedisKeyUtil;
@@ -18,6 +19,7 @@ import com.toucan.shopping.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.product.export.entity.ProductBuy;
 import com.toucan.shopping.product.export.entity.ProductSku;
 import com.toucan.shopping.second.kill.service.SecondKillService;
+import com.toucan.shopping.stock.export.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.export.util.StockRedisKeyUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -253,10 +255,10 @@ public class SecondKillController {
 
 
                 //发送扣库存消息
-                kafkaTemplate.send(MessageTopicConstant.sk_inventory_reduction.name(),JSONObject.toJSONString(inventoryReductionMessage));
+                kafkaTemplate.send(StockMessageTopicConstant.sk_inventory_reduction.name(),JSONObject.toJSONString(inventoryReductionMessage));
 
                 //发送创建订单消息
-                kafkaTemplate.send(MessageTopicConstant.sk_create_order.name(),JSONObject.toJSONString(createOrderMessage));
+                kafkaTemplate.send(OrderMessageTopicConstant.sk_create_order.name(),JSONObject.toJSONString(createOrderMessage));
 
 
 

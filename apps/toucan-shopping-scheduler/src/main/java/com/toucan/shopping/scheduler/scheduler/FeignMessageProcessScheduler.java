@@ -2,7 +2,6 @@ package com.toucan.shopping.scheduler.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.common.persistence.entity.EventProcess;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
 import com.toucan.shopping.common.util.DateUtils;
@@ -13,6 +12,7 @@ import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.product.export.entity.ProductSku;
 import com.toucan.shopping.stock.api.feign.service.FeignProductSkuStockService;
+import com.toucan.shopping.stock.export.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.export.util.StockRedisKeyUtil;
 import com.toucan.shopping.stock.export.vo.RestoreStockVo;
 import org.slf4j.Logger;
@@ -67,7 +67,7 @@ public class FeignMessageProcessScheduler {
             for(EventProcess eventProcess : eventProcesses)
             {
                 //恢复库存
-                if(eventProcess.getType().equals(MessageTopicConstant.restore_stock.name())) {
+                if(eventProcess.getType().equals(StockMessageTopicConstant.restore_stock.name())) {
                     logger.info("远程服务重新调用 "+ eventProcess.getType()+" 内容:"+ eventProcess.getPayload());
                     ResultObjectVO resultObjectVO = feignProductSkuStockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
                     if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
@@ -75,7 +75,7 @@ public class FeignMessageProcessScheduler {
                         eventProcess.setStatus((short)1);
                         eventProcessService.updateStatus(eventProcess);
                     }
-                }else if(eventProcess.getType().equals(MessageTopicConstant.restore_redis_stock.name())) {  //恢复预扣库存
+                }else if(eventProcess.getType().equals(StockMessageTopicConstant.restore_redis_stock.name())) {  //恢复预扣库存
                     try {
                         RequestJsonVO requestJsonVO = JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class);
                         ResultObjectVO resultObjectVO = feignProductSkuStockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);

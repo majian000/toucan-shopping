@@ -59,6 +59,12 @@
         values(#{id},#{userMainId},#{nickName},#{trueName},#{headSculpture},#{idCard},#{sex},#{type},#{createDate},#{deleteStatus})
     </insert>
 
+
+
+    <insert id="update" parameterType="com.toucan.shopping.center.user.entity.UserDetail" keyProperty="id" >
+        update t_user_detail set nick_name=#{nickName} , head_sculpture=#{headSculpture} , sex=#{sex} where user_main_id=#{userMainId} and delete_status = 0
+    </insert>
+
     <update id="deleteById" parameterType="java.lang.Long">
         update t_user_detail set delete_status=1 where id =#{id}
     </update>

@@ -9,14 +9,11 @@ import com.toucan.shopping.center.user.entity.UserDetail;
 import com.toucan.shopping.center.user.entity.UserMobilePhone;
 import com.toucan.shopping.center.user.entity.UserUserName;
 import com.toucan.shopping.center.user.page.UserPageInfo;
-import com.toucan.shopping.center.user.vo.UserVO;
+import com.toucan.shopping.center.user.vo.*;
 import com.toucan.shopping.common.generator.IdGenerator;
 import com.toucan.shopping.center.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.center.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.center.user.service.*;
-import com.toucan.shopping.center.user.vo.UserLoginVO;
-import com.toucan.shopping.center.user.vo.UserRegistVO;
-import com.toucan.shopping.center.user.vo.UserResultVO;
 import com.toucan.shopping.common.util.*;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.lock.redis.RedisLock;
@@ -536,6 +533,11 @@ public class UserController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
 
 
 

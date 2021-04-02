@@ -2,11 +2,11 @@ package com.toucan.shopping.order.kafka.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.common.persistence.entity.EventProcess;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
 import com.toucan.shopping.order.entity.Order;
 import com.toucan.shopping.order.entity.OrderItem;
+import com.toucan.shopping.order.kafka.constant.OrderMessageTopicConstant;
 import com.toucan.shopping.order.message.CreateOrderMessage;
 import com.toucan.shopping.order.service.OrderItemService;
 import com.toucan.shopping.order.service.OrderService;
@@ -63,7 +63,7 @@ public class MessageProcessScheduler {
             {
                 logger.info("本地事务重新执行 "+ eventProcess.getType()+" 内容:"+ eventProcess.getPayload());
                 //扣库存
-                if(eventProcess.getType().equals(MessageTopicConstant.sk_create_order.name())) {
+                if(eventProcess.getType().equals(OrderMessageTopicConstant.sk_create_order.name())) {
                     try {
                         CreateOrderMessage createOrderMessage = JSONObject.parseObject(eventProcess.getPayload(), CreateOrderMessage.class);
                         //创建订单

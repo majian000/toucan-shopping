@@ -20,5 +20,6 @@ public interface UserDetailMapper {
 
     List<UserDetail> queryListByUserId(Long[] userIdArray);
 
+    int update(UserDetail entity);
 
 }

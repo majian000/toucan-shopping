@@ -38,11 +38,29 @@
     	"entityJson": "{\"loginUserName\":\"18701601892\",\"password\":\"123456\"}"
     }
 
+
+### 用户详情服务
+    
+    1.修改用户详情
+    POST http://localhost:8087/user/detail/update
+    HEADER Content-Type:application/json;charset=UTF-8 
+    {
+    	"appCode": "10001001",
+    	"entityJson": "{\"userMainId\":\"827213823088787470\",\"nickName\":\"一念之间\",\"sex\":\"1\"}"
+    }
+
+
+#### kafka消息
+    
+    1.用户修改消息
+    组名称:user_group
+    话题:user_modify
+    
+    
     
 
 
 #### Redis Key介绍
 
-    1.注册验证码
 
 

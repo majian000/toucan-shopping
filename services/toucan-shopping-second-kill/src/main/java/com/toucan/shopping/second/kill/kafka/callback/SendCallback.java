@@ -1,11 +1,13 @@
 package com.toucan.shopping.second.kill.kafka.callback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.message.MessageTopicConstant;
+import com.toucan.shopping.order.export.kafka.constant.OrderMessageTopicConstant;
 import com.toucan.shopping.order.export.message.CreateOrderMessage;
+import com.toucan.shopping.product.export.kafka.constant.ProductMessageTopicConstant;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
 import com.toucan.shopping.common.persistence.entity.EventPublish;
 import com.toucan.shopping.common.persistence.service.EventPublishService;
+import com.toucan.shopping.stock.export.kafka.constant.StockMessageTopicConstant;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,7 @@ public class SendCallback implements ProducerListener<String, Object> {
         logger.info(" send kafka message success topic:"+topic+" msgContent:"+String.valueOf(value));
         String messageJson= String.valueOf(value);
         //扣库存成功,修改本地消息状态为已发送
-        if(topic.equals(MessageTopicConstant.sk_inventory_reduction.name()))
+        if(topic.equals(StockMessageTopicConstant.sk_inventory_reduction.name()))
         {
             InventoryReductionMessage inventoryReductionMessage = JSONObject.parseObject(messageJson,InventoryReductionMessage.class);
             EventPublish eventPublish = eventPublishService.findById(Long.parseLong(inventoryReductionMessage.getLocalEventPublishId()));
@@ -34,7 +36,7 @@ public class SendCallback implements ProducerListener<String, Object> {
                 eventPublish.setStatus((short) 1); //已发送
                 eventPublishService.updateStatus(eventPublish);
             }
-        }else if(topic.equals(MessageTopicConstant.sk_create_order.name()))
+        }else if(topic.equals(OrderMessageTopicConstant.sk_create_order.name()))
         {
             CreateOrderMessage createOrderMessage = JSONObject.parseObject(messageJson,CreateOrderMessage.class);
             EventPublish eventPublish = eventPublishService.findById(Long.parseLong(createOrderMessage.getLocalEventPublishId()));
@@ -50,7 +52,7 @@ public class SendCallback implements ProducerListener<String, Object> {
         logger.warn(" send kafka message error topic:"+topic+" msgContent:"+String.valueOf(value));
 
         //扣库存失败,记录失败消息
-        if(topic.equals(MessageTopicConstant.sk_inventory_reduction.name()))
+        if(topic.equals(StockMessageTopicConstant.sk_inventory_reduction.name()))
         {
             logger.warn("resend kafka message  topic:"+topic+" msgContent:"+String.valueOf(value));
 

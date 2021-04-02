@@ -12,6 +12,8 @@ public interface UserDetailService {
 
     int save(UserDetail entity);
 
+    int update(UserDetail entity);
+
     int deleteById(Long id);
 
     List<UserDetail> findById(Long id);

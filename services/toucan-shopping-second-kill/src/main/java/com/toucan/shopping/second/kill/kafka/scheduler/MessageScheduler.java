@@ -1,12 +1,14 @@
 package com.toucan.shopping.second.kill.kafka.scheduler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.message.MessageTopicConstant;
+import com.toucan.shopping.order.export.kafka.constant.OrderMessageTopicConstant;
 import com.toucan.shopping.order.export.message.CreateOrderMessage;
+import com.toucan.shopping.product.export.kafka.constant.ProductMessageTopicConstant;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
 import com.toucan.shopping.common.persistence.entity.EventPublish;
 import com.toucan.shopping.common.persistence.service.EventPublishService;
 import com.toucan.shopping.common.util.DateUtils;
+import com.toucan.shopping.stock.export.kafka.constant.StockMessageTopicConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +54,11 @@ public class MessageScheduler {
             for(EventPublish eventPublish : eventPublishes)
             {
                 logger.info("消息重发 "+ eventPublish.getType()+" 内容:"+ eventPublish.getPayload());
-                if(eventPublish.getType().equals(MessageTopicConstant.sk_inventory_reduction.name())) {
+                if(eventPublish.getType().equals(StockMessageTopicConstant.sk_inventory_reduction.name())) {
                     InventoryReductionMessage inventoryReductionMessage = JSONObject.parseObject(eventPublish.getPayload(),InventoryReductionMessage.class);
                     inventoryReductionMessage.setLocalEventPublishId(String.valueOf(eventPublish.getId()));
                     kafkaTemplate.send(eventPublish.getType(), JSONObject.toJSONString(inventoryReductionMessage));
-                }else if(eventPublish.getType().equals(MessageTopicConstant.sk_create_order.name())) {
+                }else if(eventPublish.getType().equals(OrderMessageTopicConstant.sk_create_order.name())) {
                     CreateOrderMessage createOrderMessage = JSONObject.parseObject(eventPublish.getPayload(),CreateOrderMessage.class);
                     createOrderMessage.setLocalEventPublishId(String.valueOf(eventPublish.getId()));
                     kafkaTemplate.send(eventPublish.getType(), JSONObject.toJSONString(createOrderMessage));

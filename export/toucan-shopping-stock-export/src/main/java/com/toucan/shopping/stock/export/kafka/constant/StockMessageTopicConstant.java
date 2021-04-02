@@ -1,10 +1,8 @@
-package com.toucan.shopping.common.message;
+package com.toucan.shopping.stock.export.kafka.constant;
 
-public enum MessageTopicConstant {
+public enum StockMessageTopicConstant {
     //秒杀扣库存消息
     sk_inventory_reduction,
-    //秒杀创建订单消息
-    sk_create_order,
     //扣库存消息
     inventory_reduction,
     //预扣库存消息
@@ -13,6 +11,4 @@ public enum MessageTopicConstant {
     restore_stock,
     //还原预扣库存消息
     restore_redis_stock,
-    //创建订单消息
-    create_order;
 }

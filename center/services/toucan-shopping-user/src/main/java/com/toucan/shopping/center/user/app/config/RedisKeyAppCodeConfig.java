@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 
 /**
- * 锁管理器线程启动
+ * 配置静态类中应用编码
  */
 @Configuration
 public class RedisKeyAppCodeConfig {

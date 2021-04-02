@@ -2,11 +2,11 @@ package com.toucan.shopping.order.kafka.listener.sk;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.common.persistence.entity.EventProcess;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
 import com.toucan.shopping.order.entity.Order;
 import com.toucan.shopping.order.entity.OrderItem;
+import com.toucan.shopping.order.kafka.constant.OrderMessageTopicConstant;
 import com.toucan.shopping.order.message.CreateOrderMessage;
 import com.toucan.shopping.order.service.OrderItemService;
 import com.toucan.shopping.order.service.OrderService;
@@ -68,7 +68,7 @@ public class CreateOrderListener {
             eventProcess.setTransactionId(kafkaMessage.getGlobalTransactionId());
             eventProcess.setPayload(messageJsonString);
             eventProcess.setStatus((short)0); //待处理
-            eventProcess.setType(MessageTopicConstant.sk_create_order.name());
+            eventProcess.setType(OrderMessageTopicConstant.sk_create_order.name());
             eventProcessService.insert(eventProcess);
 
             //创建订单

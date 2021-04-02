@@ -1,6 +1,5 @@
 package com.toucan.shopping.scheduler.kafka.callback;
 
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.common.persistence.service.EventPublishService;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
@@ -26,12 +25,12 @@ public class SendCallback implements ProducerListener<String, Object> {
     public void onError(String topic, Integer partition, String key, Object value, Exception exception) {
         logger.warn(" send kafka message error topic:"+topic+" msgContent:"+String.valueOf(value));
 
-        //扣库存失败,记录失败消息
-        if(topic.equals(MessageTopicConstant.sk_inventory_reduction.name()))
-        {
-            logger.warn("resend kafka message  topic:"+topic+" msgContent:"+String.valueOf(value));
-
-        }
+//        //扣库存失败,记录失败消息
+//        if(topic.equals(MessageTopicConstant.sk_inventory_reduction.name()))
+//        {
+//            logger.warn("resend kafka message  topic:"+topic+" msgContent:"+String.valueOf(value));
+//
+//        }
     }
 
     @Override

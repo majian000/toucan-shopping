@@ -34,6 +34,11 @@ public class UserDetailServiceImpl implements UserDetailService {
         return userDetailMapper.insert(entity);
     }
 
+    @Override
+    public int update(UserDetail entity) {
+        return userDetailMapper.update(entity);
+    }
+
     @Transactional
     @Override
     public int deleteById(Long id) {

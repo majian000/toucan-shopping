@@ -1,6 +1,5 @@
 package com.toucan.shopping.user.scheduler.kafka.callback;
 
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
