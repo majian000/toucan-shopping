@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(value = 1)
-public class ElasticSearchUserCache implements ApplicationRunner {
+public class UserEsCacheThreadConfig implements ApplicationRunner {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

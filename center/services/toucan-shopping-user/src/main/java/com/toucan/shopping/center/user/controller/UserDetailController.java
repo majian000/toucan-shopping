@@ -4,7 +4,7 @@ package com.toucan.shopping.center.user.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.center.user.entity.UserDetail;
 import com.toucan.shopping.center.user.kafka.constant.UserMessageTopicConstant;
-import com.toucan.shopping.center.user.kafka.message.UserDetailMessage;
+import com.toucan.shopping.center.user.kafka.message.UserDetailModifyMessage;
 import com.toucan.shopping.center.user.service.*;
 import com.toucan.shopping.center.user.vo.*;
 import com.toucan.shopping.common.generator.IdGenerator;
@@ -104,10 +104,10 @@ public class UserDetailController {
             //发送消息通知用户调度中心更新es缓存
             if(row>=1)
             {
-                UserDetailMessage userDetailMessage = new UserDetailMessage();
-                BeanUtils.copyProperties(userDetailMessage,userDetail);
+                UserDetailModifyMessage userDetailModifyMessage = new UserDetailModifyMessage();
+                BeanUtils.copyProperties(userDetailModifyMessage,userDetail);
 
-                kafkaTemplate.send(UserMessageTopicConstant.user_detail_modify.name(),JSONObject.toJSONString(userDetailMessage));
+                kafkaTemplate.send(UserMessageTopicConstant.user_detail_modify.name(),JSONObject.toJSONString(userDetailModifyMessage));
             }
 
         }catch(Exception e)

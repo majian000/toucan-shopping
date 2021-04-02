@@ -7,7 +7,7 @@ import lombok.Data;
  * 用户修改消息
  */
 @Data
-public class UserDetailMessage extends UserDetailVO {
+public class UserDetailModifyMessage extends UserDetailVO {
 
 
 }

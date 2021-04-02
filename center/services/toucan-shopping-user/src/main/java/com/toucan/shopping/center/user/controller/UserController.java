@@ -8,7 +8,10 @@ import com.toucan.shopping.center.user.constant.UserRegistConstant;
 import com.toucan.shopping.center.user.entity.UserDetail;
 import com.toucan.shopping.center.user.entity.UserMobilePhone;
 import com.toucan.shopping.center.user.entity.UserUserName;
+import com.toucan.shopping.center.user.kafka.constant.UserMessageTopicConstant;
+import com.toucan.shopping.center.user.kafka.message.UserCreateMessage;
 import com.toucan.shopping.center.user.page.UserPageInfo;
+import com.toucan.shopping.center.user.queue.NewUserMessageQueue;
 import com.toucan.shopping.center.user.vo.*;
 import com.toucan.shopping.common.generator.IdGenerator;
 import com.toucan.shopping.center.user.redis.UserCenterLoginRedisKey;
@@ -27,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -75,6 +79,10 @@ public class UserController {
 
     @Autowired
     private UserDetailService userDetailService;
+
+
+    @Autowired
+    private NewUserMessageQueue newUserMessageQueue;
 
     @RequestMapping(value="/find/mobile/phone",produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -172,66 +180,74 @@ public class UserController {
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;
             }
+            //查询手机号是否已注册
+            List<UserMobilePhone> userEntityList = userMobilePhoneService.findListByMobilePhone(userRegistVO.getMobilePhone());
+            if (!CollectionUtils.isEmpty(userEntityList)) {
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("手机号码已注册!");
+            } else {
+                User user = new User();
+                user.setId(idGenerator.id());
+                user.setCreateDate(new Date());
+                user.setPassword(MD5Util.md5(userRegistVO.getPassword()));
+                user.setEnableStatus((short) 1);
+                user.setDeleteStatus((short) 0);
 
-//            for(int i=0;i<500000;i++) {
-//                userRegistVO.setMobilePhone(RandomUtil.random(11));
-                //查询手机号是否已注册
-                List<UserMobilePhone> userEntityList = userMobilePhoneService.findListByMobilePhone(userRegistVO.getMobilePhone());
-                if (!CollectionUtils.isEmpty(userEntityList)) {
+
+                //保存用户主表
+                int row = userService.save(user);
+                if (row < 1) {
+                    logger.warn("用户注册失败 {}", requestJsonVO.getEntityJson());
                     resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("手机号码已注册!");
+                    resultObjectVO.setMsg("注册失败,请重试!");
                 } else {
-                    User user = new User();
-                    user.setId(idGenerator.id());
-                    user.setCreateDate(new Date());
-                    user.setPassword(MD5Util.md5(userRegistVO.getPassword()));
-                    user.setEnableStatus((short) 1);
-                    user.setDeleteStatus((short) 0);
-
-
-                    //保存用户主表
-                    int row = userService.save(user);
+                    //保存用户手机子表
+                    UserMobilePhone userMobilePhone = new UserMobilePhone();
+                    userMobilePhone.setId(idGenerator.id());
+                    //设置手机号
+                    userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
+                    //设置用户主表ID
+                    userMobilePhone.setUserMainId(user.getId());
+                    userMobilePhone.setCreateDate(new Date());
+                    userMobilePhone.setDeleteStatus((short) 0);
+                    row = userMobilePhoneService.save(userMobilePhone);
                     if (row < 1) {
-                        logger.warn("用户注册失败 {}", requestJsonVO.getEntityJson());
+                        //修改用户主表数据删除状态
+                        userService.deleteById(user.getId());
+                        logger.warn("手机号注册失败 {}", requestJsonVO.getEntityJson());
                         resultObjectVO.setCode(UserResultVO.FAILD);
-                        resultObjectVO.setMsg("注册失败,请重试!");
+                        resultObjectVO.setMsg("手机号注册失败,请重试!");
                     } else {
-                        //保存用户手机子表
-                        UserMobilePhone userMobilePhone = new UserMobilePhone();
-                        userMobilePhone.setId(idGenerator.id());
-                        //设置手机号
-                        userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
-                        //设置用户主表ID
-                        userMobilePhone.setUserMainId(user.getId());
-                        userMobilePhone.setCreateDate(new Date());
-                        userMobilePhone.setDeleteStatus((short) 0);
-                        row = userMobilePhoneService.save(userMobilePhone);
-                        if (row < 1) {
-                            //修改用户主表数据删除状态
-                            userService.deleteById(user.getId());
-                            logger.warn("手机号注册失败 {}", requestJsonVO.getEntityJson());
-                            resultObjectVO.setCode(UserResultVO.FAILD);
-                            resultObjectVO.setMsg("手机号注册失败,请重试!");
-                        } else {
-                            //保存用户昵称
-                            UserDetail userDetail = new UserDetail();
-                            userDetail.setId(idGenerator.id());
-                            userDetail.setUserMainId(user.getId());
-                            userDetail.setNickName("用户"+userRegistVO.getMobilePhone());
-                            userDetail.setSex((short)1);
-                            userDetail.setCreateDate(new Date());
-                            userDetail.setDeleteStatus((short) 0);
+                        //保存用户昵称
+                        UserDetail userDetail = new UserDetail();
+                        userDetail.setId(idGenerator.id());
+                        userDetail.setUserMainId(user.getId());
+                        userDetail.setNickName("用户"+userRegistVO.getMobilePhone());
+                        userDetail.setSex((short)1);
+                        userDetail.setCreateDate(new Date());
+                        userDetail.setDeleteStatus((short) 0);
 
-                            row = userDetailService.save(userDetail);
-                            if (row < 1) {
-                                logger.warn("保存默认用户昵称失败 {}",requestJsonVO.getEntityJson());
-                            }else {
-                                resultObjectVO.setData(userRegistVO);
-                            }
+                        row = userDetailService.save(userDetail);
+                        if (row < 1) {
+                            logger.warn("保存默认用户昵称失败 {}",requestJsonVO.getEntityJson());
+                        }else {
+                            resultObjectVO.setData(userRegistVO);
+
+                            //发送创建用户到缓存
+                            UserCreateMessage userCreateMessage = new UserCreateMessage();
+                            userCreateMessage.setId(user.getId());
+                            userCreateMessage.setEnableStatus(user.getEnableStatus());
+                            userCreateMessage.setMobilePhone(userMobilePhone.getMobilePhone());
+                            userCreateMessage.setNickName(userDetail.getNickName());
+                            userCreateMessage.setSex(userDetail.getSex());
+                            userCreateMessage.setDeleteStatus(user.getDeleteStatus());
+
+                            //放入队列
+                            newUserMessageQueue.push(userCreateMessage);
                         }
                     }
                 }
-//            }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
