@@ -52,9 +52,9 @@
 
 #### kafka消息
     
-    1.用户修改消息
+    1.用户详情修改
     组名称:user_group
-    话题:user_modify
+    话题:user_detail_modify
     
     
     

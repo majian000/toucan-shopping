@@ -1,10 +1,10 @@
 package com.toucan.shopping.stock.kafka.scheduler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
 import com.toucan.shopping.common.persistence.entity.EventProcess;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
+import com.toucan.shopping.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.service.ProductSkuStockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class MessageProcessScheduler {
             {
                 logger.info("本地事务重新执行 "+ eventProcess.getType()+" 内容:"+ eventProcess.getPayload());
                 //扣库存
-                if(eventProcess.getType().equals(MessageTopicConstant.sk_inventory_reduction.name())) {
+                if(eventProcess.getType().equals(StockMessageTopicConstant.sk_inventory_reduction.name())) {
                     try {
                         InventoryReductionMessage inventoryReductionMessage = JSONObject.parseObject(eventProcess.getPayload(), InventoryReductionMessage.class);
                         productSkuStockService.inventoryReduction(inventoryReductionMessage.getSkuUuid());

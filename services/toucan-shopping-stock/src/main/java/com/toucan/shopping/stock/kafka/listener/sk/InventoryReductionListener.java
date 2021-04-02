@@ -2,10 +2,10 @@ package com.toucan.shopping.stock.kafka.listener.sk;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.lock.redis.RedisLock;
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
 import com.toucan.shopping.common.persistence.entity.EventProcess;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
+import com.toucan.shopping.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.service.ProductSkuStockService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class InventoryReductionListener {
             eventProcess.setTransactionId(inventoryReductionMessage.getGlobalTransactionId());
             eventProcess.setPayload(messageJsonString);
             eventProcess.setStatus((short)0); //待处理
-            eventProcess.setType(MessageTopicConstant.sk_inventory_reduction.name());
+            eventProcess.setType(StockMessageTopicConstant.sk_inventory_reduction.name());
             eventProcessService.insert(eventProcess);
 
             //扣库存

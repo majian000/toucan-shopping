@@ -66,4 +66,4 @@ toucan:
     enabled: true
     name: toucan-shopping-user-center
   user-center-scheduler:
-    loop-es-cache: true #循环查询用户缓存到es
+    loop-es-cache: false #循环查询用户缓存到es

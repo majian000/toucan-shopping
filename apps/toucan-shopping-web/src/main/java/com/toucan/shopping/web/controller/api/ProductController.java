@@ -3,7 +3,6 @@ package com.toucan.shopping.web.controller.api;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.common.message.MessageTopicConstant;
 import com.toucan.shopping.common.persistence.entity.EventProcess;
 import com.toucan.shopping.common.persistence.service.EventProcessService;
 import com.toucan.shopping.common.properties.Toucan;
@@ -21,6 +20,7 @@ import com.toucan.shopping.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.product.export.entity.ProductSku;
 import com.toucan.shopping.stock.api.feign.service.FeignProductSkuStockService;
 import com.toucan.shopping.stock.export.entity.ProductSkuStock;
+import com.toucan.shopping.stock.export.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.export.vo.InventoryReductionVo;
 import com.toucan.shopping.stock.export.vo.RestoreStockVo;
 import com.toucan.shopping.web.vo.BuyResultVo;
@@ -214,7 +214,7 @@ public class ProductController {
                             eventProcess.setTransactionId(globalTransactionId);
                             eventProcess.setPayload(JSONObject.toJSONString(requestJsonVO));
                             eventProcess.setStatus((short) 0); //待处理
-                            eventProcess.setType(MessageTopicConstant.restore_redis_stock.name());
+                            eventProcess.setType(StockMessageTopicConstant.restore_redis_stock.name());
                             eventProcessService.insert(eventProcess);
 
                             restoreStock.add(eventProcess);
