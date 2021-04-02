@@ -22,13 +22,6 @@ public class SendCallback implements ProducerListener<String, Object> {
     @Override
     public void onError(String topic, Integer partition, String key, Object value, Exception exception) {
         logger.warn(" send kafka message error topic:"+topic+" msgContent:"+String.valueOf(value));
-
-        //扣库存失败,记录失败消息
-        if(topic.equals(MessageTopicConstant.sk_inventory_reduction.name()))
-        {
-            logger.warn("resend kafka message  topic:"+topic+" msgContent:"+String.valueOf(value));
-
-        }
     }
 
     @Override

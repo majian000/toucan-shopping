@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 public class UserCenterScheduler {
 
-    private boolean initEsCache = false;
+    private boolean loopEsCache = false;
 }

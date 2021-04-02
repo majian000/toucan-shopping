@@ -18,6 +18,7 @@ import com.toucan.shopping.common.vo.ResultVO;
 import lombok.Data;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,39 +59,58 @@ public class UserEsCacheThread extends Thread {
 
     @Override
     public void run() {
-        try {
-            if (toucan.getUserCenterScheduler().isInitEsCache()) {
-                logger.info(" 缓存用户信息到ElasticSearch ........");
-                int page=1;
-                PageInfo pageInfo = null;
-                do{
-                    UserPageInfo query = new UserPageInfo();
-                    query.setSize(1000);
-                    query.setPage(page);
-                    pageInfo = queryUserPage(query);
-                    page++;
-                    if(pageInfo!=null&&CollectionUtils.isNotEmpty(pageInfo.getList()))
-                    {
-                        String userListJson = JSONObject.toJSONString(pageInfo.getList());
-                        List<UserVO> userList = JSONArray.parseArray(userListJson,UserVO.class);
+        if (toucan.getUserCenterScheduler().isLoopEsCache()) {
+            while(true) {
+                try {
+                    logger.info(" 缓存用户信息到ElasticSearch ........");
+                    int page = 1;
+                    int size = 1000;
+                    PageInfo pageInfo = null;
+                    boolean isUpdate = false;
+                    do {
+                        logger.info(" 查询用户列表 页码:{} 每页显示 {} ", page, size);
+                        UserPageInfo query = new UserPageInfo();
+                        query.setSize(size);
+                        query.setPage(page);
+                        pageInfo = queryUserPage(query);
+                        page++;
+                        if (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList())) {
+                            String userListJson = JSONObject.toJSONString(pageInfo.getList());
+                            List<UserVO> userList = JSONArray.parseArray(userListJson, UserVO.class);
 
-                        logger.info("缓存用户列表 到Elasticsearch {}",userListJson);
-                        for(UserVO user:userList)
-                        {
-                            List<UserElasticSearchVO> userElasticSearchVOS = esUserService.queryById(user.getId());
-                            //如果缓存不存在用户将缓存起来
-                            if(CollectionUtils.isEmpty(userElasticSearchVOS)) {
-                                UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
-                                BeanUtils.copyProperties(userElasticSearchVO, user);
-                                esUserService.save(userElasticSearchVO);
+                            logger.info("缓存用户列表 到Elasticsearch {}", userListJson);
+                            for (UserVO user : userList) {
+                                isUpdate = false;
+                                List<UserElasticSearchVO> userElasticSearchVOS = esUserService.queryById(user.getId());
+                                //如果缓存不存在用户将缓存起来
+                                if (CollectionUtils.isEmpty(userElasticSearchVOS)) {
+                                    UserElasticSearchVO userElasticSearchVO = new UserElasticSearchVO();
+                                    BeanUtils.copyProperties(userElasticSearchVO, user);
+                                    esUserService.save(userElasticSearchVO);
+                                } else {
+                                    //判断用户昵称是否做了修改
+                                    UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                    if (!StringUtils.equals(userElasticSearchVO.getNickName(), user.getNickName())) {
+                                        userElasticSearchVO.setNickName(user.getNickName());
+                                        isUpdate = true;
+                                    }
+
+                                    if (isUpdate) {
+                                        logger.info(" 用户数据发生修改 更新缓存 用户ID:{}", userElasticSearchVO.getId());
+                                        esUserService.update(userElasticSearchVO);
+                                    }
+
+                                }
                             }
                         }
-                    }
-                }while(pageInfo!=null&& CollectionUtils.isNotEmpty(pageInfo.getList()));
+                    } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
+                    //休眠5秒
+                    this.sleep(10000);
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
         }
     }
 }

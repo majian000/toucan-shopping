@@ -14,6 +14,11 @@ public interface UserElasticSearchService {
      */
     void save(UserElasticSearchVO esUserVO);
 
+    /**
+     * 更新对象
+     * @param esUserVO
+     */
+    void update(UserElasticSearchVO esUserVO);
 
     /**
      * 查询列表 from size方式

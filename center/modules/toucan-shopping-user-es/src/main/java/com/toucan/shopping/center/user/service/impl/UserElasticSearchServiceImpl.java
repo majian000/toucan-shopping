@@ -9,8 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -41,6 +44,21 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         try {
             IndexRequest request = new IndexRequest(UserCacheElasticSearchConstant.USER_INDEX).id(String.valueOf(esUserVO.getId())).source(JSONObject.toJSONString(esUserVO), XContentType.JSON);
             restHighLevelClient.index(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(),e);
+        }
+
+    }
+
+    @Override
+    public void update(UserElasticSearchVO esUserVO) {
+        try {
+            UpdateRequest request = new UpdateRequest(UserCacheElasticSearchConstant.USER_INDEX,String.valueOf(esUserVO.getId()));
+            XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
+            updateBody.field("nickName",esUserVO.getNickName());
+            updateBody.endObject();
+            request.doc(updateBody);
+            restHighLevelClient.update(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
         }
