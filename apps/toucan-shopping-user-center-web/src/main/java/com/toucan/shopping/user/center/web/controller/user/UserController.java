@@ -84,7 +84,7 @@ public class UserController {
             SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(query,userPageInfo.getLimit(),userPageInfo.getSortValues());
             if(CollectionUtils.isNotEmpty(searchAfterPage.getUserElasticSearchVOS()))
             {
-                tableVO.setCount(searchAfterPage.getTotal());
+                tableVO.setCount(userElasticSearchService.queryCount(query));
                 if(tableVO.getCount()>0) {
                     //将long类型的ID转成字符串,解决前端丢失精度问题
                     for(UserElasticSearchVO userElasticSearchVO:searchAfterPage.getUserElasticSearchVOS())

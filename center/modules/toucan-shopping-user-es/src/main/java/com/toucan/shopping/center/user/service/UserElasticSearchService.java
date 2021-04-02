@@ -41,4 +41,12 @@ public interface UserElasticSearchService {
      * @return
      */
     SearchAfterPage queryListForSearchAfter(UserElasticSearchVO esUserVo, int size, Object[] searchAfter) throws Exception ;
+
+    /**
+     * 查询记录总数
+     * @param esUserVo
+     * @return
+     */
+    Long queryCount(UserElasticSearchVO esUserVo)  throws Exception ;
+
 }

@@ -12,6 +12,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -191,5 +193,42 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
             searchAfterPage.setSortValues(searchHitsHits[searchHitsHits.length-1].getSortValues());
         }
         return searchAfterPage;
+    }
+
+    @Override
+    public Long queryCount(UserElasticSearchVO esUserVo)  throws Exception {
+        CountRequest countRequest=new CountRequest(UserCacheElasticSearchConstant.USER_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+
+        //设置邮箱条件查询条件
+        if(StringUtils.isNotEmpty(esUserVo.getEmail()))
+        {
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("email",esUserVo.getEmail()));
+        }
+        //设置手机号查询条件
+        if(StringUtils.isNotEmpty(esUserVo.getMobilePhone()))
+        {
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("mobilePhone", esUserVo.getMobilePhone()));
+        }
+
+        //设置昵称查询条件
+        if(StringUtils.isNotEmpty(esUserVo.getNickName()))
+        {
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("nickName", esUserVo.getNickName()));
+        }
+
+        //设置用户ID查询条件
+        if(esUserVo.getId()!=null)
+        {
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("id", esUserVo.getId()));
+        }
+
+        //设置查询条件组
+        searchSourceBuilder.query(boolQueryBuilder);
+
+        CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
+        return response.getCount();
     }
 }
