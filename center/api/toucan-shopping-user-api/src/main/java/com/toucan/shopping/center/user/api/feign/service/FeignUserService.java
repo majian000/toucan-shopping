@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 用户服务
@@ -67,7 +68,7 @@ public interface FeignUserService {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO list(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
