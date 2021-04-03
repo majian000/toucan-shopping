@@ -68,7 +68,7 @@ public class UserController {
     @Auth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(UserPageInfo userPageInfo)
+    public TableVO listPage(HttpServletRequest request,UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -80,6 +80,13 @@ public class UserController {
             query.setEmail(userPageInfo.getEmail());
             query.setId(userPageInfo.getId());
 
+            if(userPageInfo.getPage()<=1)
+            {
+                request.getSession().removeAttribute("sortValue");
+            }
+            if(request.getSession().getAttribute("sortValue")!=null) {
+                userPageInfo.setSortValues(new String[]{String.valueOf(request.getSession().getAttribute("sortValue"))});
+            }
 
             SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(query,userPageInfo.getLimit(),userPageInfo.getSortValues());
             if(CollectionUtils.isNotEmpty(searchAfterPage.getUserElasticSearchVOS()))
@@ -92,6 +99,10 @@ public class UserController {
                         userElasticSearchVO.setUserId(String.valueOf(userElasticSearchVO.getId()));
                     }
                     tableVO.setData((List) searchAfterPage.getUserElasticSearchVOS());
+                    tableVO.setSortValues(searchAfterPage.getSortValues());
+                    if(searchAfterPage.getSortValues()!=null&&searchAfterPage.getSortValues().length>0) {
+                        request.getSession().setAttribute("sortValue", searchAfterPage.getSortValues()[0]);
+                    }
                 }
             }
         }catch(Exception e)

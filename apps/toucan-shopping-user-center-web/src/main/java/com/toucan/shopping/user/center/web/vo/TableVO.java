@@ -17,4 +17,10 @@ public class TableVO {
     private String msg;
     private Long count;
     private List<Object> data;
+
+
+    /**
+     * elasticsearch分页相关
+     */
+    private Object[] sortValues;
 }

@@ -168,7 +168,7 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         //根据ID降序
         searchSourceBuilder.sort("_id", SortOrder.DESC);
         //设置after
-        if(searchAfter!=null) {
+        if(searchAfter!=null&&searchAfter.length>0&&StringUtils.isNotEmpty(String.valueOf(searchAfter[0]))) {
             searchSourceBuilder.searchAfter(searchAfter);
         }
 
