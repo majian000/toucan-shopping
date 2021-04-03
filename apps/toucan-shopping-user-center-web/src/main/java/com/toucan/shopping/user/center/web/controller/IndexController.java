@@ -1,4 +1,4 @@
-package com.toucan.shopping.user.center.web.controller;
+package com.toucan.shopping.user.web.controller;
 
 
 import com.toucan.shopping.auth.admin.Auth;

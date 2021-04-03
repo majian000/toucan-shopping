@@ -1,4 +1,4 @@
-package com.toucan.shopping.user.center.web.util;
+package com.toucan.shopping.user.web.util;
 
 import org.apache.commons.lang.StringUtils;
 

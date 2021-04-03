@@ -85,29 +85,29 @@
             <artifactId>toucan-shopping-auth</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.center.api</groupId>
+            <groupId>com.toucan.shopping.api</groupId>
             <artifactId>toucan-shopping-user-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.center.api</groupId>
+            <groupId>com.toucan.shopping.api</groupId>
             <artifactId>toucan-shopping-app-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.center.export</groupId>
+            <groupId>com.toucan.shopping.export</groupId>
             <artifactId>toucan-shopping-app-export</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.center.export</groupId>
+            <groupId>com.toucan.shopping.export</groupId>
             <artifactId>toucan-shopping-user-export</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.center.api</groupId>
+            <groupId>com.toucan.shopping.api</groupId>
             <artifactId>toucan-shopping-admin-auth-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.center.export</groupId>
+            <groupId>com.toucan.shopping.export</groupId>
             <artifactId>toucan-shopping-admin-auth-export</artifactId>
         </dependency>
 
@@ -127,7 +127,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.user.center.web.app.UserCenterWebApplication</mainClass>
+                    <mainClass>com.toucan.shopping.user.web.app.UserCenterWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

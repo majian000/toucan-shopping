@@ -40,7 +40,7 @@
         <module>modules/toucan-shopping-order-no</module>
 
         <!--用户中心操作es -->
-        <module>center/modules/toucan-shopping-user-es</module>
+        <module>modules/toucan-shopping-user-es</module>
 
         <!-- ===============================================-->
 
@@ -81,11 +81,11 @@
         <!--商品导出 -->
         <module>export/toucan-shopping-category-export</module>
         <!--用户中心导出 -->
-        <module>center/export/toucan-shopping-user-export</module>
+        <module>export/toucan-shopping-user-export</module>
         <!--权限中心导出 -->
-        <module>center/export/toucan-shopping-admin-auth-export</module>
+        <module>export/toucan-shopping-admin-auth-export</module>
         <!--应用中心导出 -->
-        <module>center/export/toucan-shopping-app-export</module>
+        <module>export/toucan-shopping-app-export</module>
         <!--库存导出 -->
         <module>export/toucan-shopping-stock-export</module>
         <!--地区编码导出 -->
@@ -99,11 +99,11 @@
         <!--类别服务API -->
         <module>api/toucan-shopping-category-api</module>
         <!--用户中心API -->
-        <module>center/api/toucan-shopping-user-api</module>
+        <module>api/toucan-shopping-user-api</module>
         <!--管理权限中心API -->
-        <module>center/api/toucan-shopping-admin-auth-api</module>
+        <module>api/toucan-shopping-admin-auth-api</module>
         <!--应用中心API -->
-        <module>center/api/toucan-shopping-app-api</module>
+        <module>api/toucan-shopping-app-api</module>
         <!--库存API -->
         <module>api/toucan-shopping-stock-api</module>
         <!--地区编码API -->
@@ -112,11 +112,12 @@
 
 
         <!--用户中心服务 -->
-        <module>center/services/toucan-shopping-user</module>
+        <module>services/toucan-shopping-user</module>
         <!--管理员权限中心 -->
-        <module>center/services/toucan-shopping-admin-auth</module>
+        <module>services/toucan-shopping-admin-auth</module>
         <!--应用中心 -->
-        <module>center/services/toucan-shopping-app</module>
+        <module>services/toucan-shopping-app</module>
+
 
         <!-- ===============================================-->
 
@@ -128,8 +129,11 @@
         <!--后台管理端 -->
         <module>apps/toucan-shopping-admin</module>
         
-        <!--用户权限中心管理界面 -->
+        <!--用户中心界面 -->
         <module>apps/toucan-shopping-user-center-web</module>
+
+        <!--权限中心界面 -->
+        <module>apps/toucan-shopping-admin-auth-web</module>
 
         <!--定时任务调度-->
         <module>apps/toucan-shopping-scheduler</module>
@@ -140,7 +144,7 @@
 
 
         <!-- =====================插件层====================== -->
-        <module>center/stater/toucan-shopping-user-spring-boot-starter</module>
+        <module>stater/toucan-shopping-user-spring-boot-starter</module>
         <!-- ===============================================-->
 
 
@@ -270,42 +274,42 @@
 
 
             <dependency>
-                <groupId>com.toucan.shopping.center.api</groupId>
+                <groupId>com.toucan.shopping.api</groupId>
                 <artifactId>toucan-shopping-user-api</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.toucan.shopping.center.api</groupId>
+                <groupId>com.toucan.shopping.api</groupId>
                 <artifactId>toucan-shopping-admin-auth-api</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.toucan.shopping.center.export</groupId>
+                <groupId>com.toucan.shopping.export</groupId>
                 <artifactId>toucan-shopping-user-export</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.toucan.shopping.center.api</groupId>
+                <groupId>com.toucan.shopping.api</groupId>
                 <artifactId>toucan-shopping-app-api</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.toucan.shopping.center.export</groupId>
+                <groupId>com.toucan.shopping.export</groupId>
                 <artifactId>toucan-shopping-app-export</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.toucan.shopping.center.export</groupId>
+                <groupId>com.toucan.shopping.export</groupId>
                 <artifactId>toucan-shopping-admin-auth-export</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>

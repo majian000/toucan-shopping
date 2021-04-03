@@ -150,12 +150,16 @@
     3.apps/toucan-shopping-user-center-web
     端口号:8088
     用户中心界面
+    
+    4.apps/toucan-shopping-admin-auth-web
+    端口号:8098
+    权限中心界面
 
-    4.apps/toucan-shopping-scheduler
+    5.apps/toucan-shopping-scheduler
     端口号:8092
     商城调度任务端
 
-    4.apps/toucan-shopping-user-scheduler
+    6.apps/toucan-shopping-user-scheduler
     端口号:8097
     用户中心任务调度
 

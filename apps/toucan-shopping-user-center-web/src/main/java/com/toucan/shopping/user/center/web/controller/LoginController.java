@@ -1,18 +1,18 @@
-package com.toucan.shopping.user.center.web.controller;
+package com.toucan.shopping.user.web.controller;
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.center.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.center.admin.auth.export.entity.Admin;
+import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.admin.auth.export.entity.Admin;
 import com.toucan.shopping.common.util.GlobalUUID;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.util.VerifyCodeUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.common.vo.ResultVO;
-import com.toucan.shopping.user.center.web.util.VCodeUtil;
-import com.toucan.shopping.user.center.web.vo.admin.AdminVO;
+import com.toucan.shopping.user.web.util.VCodeUtil;
+import com.toucan.shopping.user.web.vo.admin.AdminVO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

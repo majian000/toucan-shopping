@@ -133,7 +133,7 @@
             <artifactId>toucan-shopping-user-es</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.center.api</groupId>
+            <groupId>com.toucan.shopping.api</groupId>
             <artifactId>toucan-shopping-user-api</artifactId>
         </dependency>
     </dependencies>

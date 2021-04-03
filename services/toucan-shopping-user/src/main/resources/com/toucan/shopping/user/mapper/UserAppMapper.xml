@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.user.mapper.UserAppMapper">
+
+    <resultMap id="userAppMap" type="com.toucan.shopping.user.entity.UserApp" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        
+    </resultMap>
+
+
+    <select id="findListByEntity" resultMap="userAppMap" parameterType="com.toucan.shopping.user.entity.UserApp">
+        select * from t_user_app bua
+        <where>
+            1=1
+            <if test="id!=null">
+                and bua.id = #{id}
+            </if>
+            <if test="userId!=null">
+                and bua.user_id = #{userId}
+            </if>
+            <if test="appCode!=null">
+                and bua.app_code = #{appCode}
+            </if>
+                and bua.delete_status = 0
+        </where>
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.user.entity.UserApp" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_user_app(user_id,app_code,create_date,delete_status)
+        values(#{userId},#{appCode},#{createDate},#{deleteStatus})
+    </insert>
+
+</mapper>

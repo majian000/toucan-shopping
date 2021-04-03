@@ -1,4 +1,4 @@
-package com.toucan.shopping.user.center.web.vo;
+package com.toucan.shopping.user.web.vo;
 
 import lombok.Data;
 

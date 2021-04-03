@@ -1,6 +1,6 @@
-package com.toucan.shopping.user.center.web.app.config;
+package com.toucan.shopping.user.web.app.config;
 
-import com.toucan.shopping.user.center.web.interceptor.PageNotFoundInterceptor;
+import com.toucan.shopping.user.web.interceptor.PageNotFoundInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.toucan.shopping.user.center.web.interceptor;
+package com.toucan.shopping.user.web.interceptor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;

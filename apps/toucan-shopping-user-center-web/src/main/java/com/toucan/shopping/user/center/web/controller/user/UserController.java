@@ -1,23 +1,16 @@
-package com.toucan.shopping.user.center.web.controller.user;
+package com.toucan.shopping.user.web.controller.user;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.auth.admin.Auth;
-import com.toucan.shopping.center.app.export.entity.AppPageInfo;
-import com.toucan.shopping.center.user.api.feign.service.FeignUserService;
-import com.toucan.shopping.center.user.export.page.UserPageInfo;
-import com.toucan.shopping.center.user.export.vo.UserElasticSearchVO;
-import com.toucan.shopping.center.user.service.UserElasticSearchService;
-import com.toucan.shopping.center.user.vo.SearchAfterPage;
-import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.app.export.entity.AppPageInfo;
+import com.toucan.shopping.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.user.export.page.UserPageInfo;
+import com.toucan.shopping.user.export.vo.UserElasticSearchVO;
+import com.toucan.shopping.user.service.UserElasticSearchService;
+import com.toucan.shopping.user.vo.SearchAfterPage;
 import com.toucan.shopping.common.properties.Toucan;
-import com.toucan.shopping.common.util.AuthHeaderUtil;
-import com.toucan.shopping.common.util.SignUtil;
-import com.toucan.shopping.common.vo.RequestJsonVO;
-import com.toucan.shopping.common.vo.ResultObjectVO;
-import com.toucan.shopping.user.center.web.vo.TableVO;
+import com.toucan.shopping.user.web.vo.TableVO;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/user")

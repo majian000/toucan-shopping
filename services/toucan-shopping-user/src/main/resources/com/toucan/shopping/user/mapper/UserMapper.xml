@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.user.mapper.UserMapper">
+
+    <resultMap id="userMap" type="com.toucan.shopping.user.entity.User" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
+
+    <resultMap id="userVOMap" type="com.toucan.shopping.user.vo.UserVO" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
+    <select id="findListByEntity" resultMap="userMap" parameterType="com.toucan.shopping.user.entity.User">
+        select * from t_user bu
+        <where>
+            1=1
+            <if test="id!=null">
+                and bu.id = #{id}
+            </if>
+                and bu.delete_status = 0
+        </where>
+
+    </select>
+
+
+
+    <select id="queryListPage" resultMap="userVOMap" parameterType="com.toucan.shopping.user.page.UserPageInfo">
+        select tu.id,tu.enable_status from t_user tu
+        <where>
+            1=1 and tu.delete_status = 0
+
+            <if test="idArray!=null ">
+                and tu.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+
+        order by tu.id desc
+    </select>
+
+
+    <select id="findById" resultMap="userMap" parameterType="java.lang.Long">
+        select * from t_user bu where 1=1 and bu.id = #{id} and bu.delete_status = 0
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.user.entity.User" keyProperty="id" >
+        insert into t_user(id,password,enable_status,create_date,delete_status)
+        values(#{id},#{password},#{enableStatus},#{createDate},#{deleteStatus})
+    </insert>
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_user set delete_status=1 where id =#{id}
+    </update>
+</mapper>

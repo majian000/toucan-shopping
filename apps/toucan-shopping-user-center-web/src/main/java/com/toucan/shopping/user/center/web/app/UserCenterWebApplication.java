@@ -1,4 +1,4 @@
-package com.toucan.shopping.user.center.web.app;
+package com.toucan.shopping.user.web.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

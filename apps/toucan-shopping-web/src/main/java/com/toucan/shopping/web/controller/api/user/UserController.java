@@ -2,15 +2,15 @@ package com.toucan.shopping.web.controller.api.user;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.center.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.center.user.api.feign.service.FeignUserService;
-import com.toucan.shopping.center.user.export.constant.SmsTypeConstant;
-import com.toucan.shopping.center.user.export.constant.UserLoginConstant;
-import com.toucan.shopping.center.user.export.constant.UserRegistConstant;
-import com.toucan.shopping.center.user.export.entity.UserMobilePhone;
-import com.toucan.shopping.center.user.export.vo.UserLoginVO;
-import com.toucan.shopping.center.user.export.vo.UserRegistVO;
-import com.toucan.shopping.center.user.export.vo.UserSmsVO;
+import com.toucan.shopping.user.api.feign.service.FeignSmsService;
+import com.toucan.shopping.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.user.export.constant.SmsTypeConstant;
+import com.toucan.shopping.user.export.constant.UserLoginConstant;
+import com.toucan.shopping.user.export.constant.UserRegistConstant;
+import com.toucan.shopping.user.export.entity.UserMobilePhone;
+import com.toucan.shopping.user.export.vo.UserLoginVO;
+import com.toucan.shopping.user.export.vo.UserRegistVO;
+import com.toucan.shopping.user.export.vo.UserSmsVO;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.*;
