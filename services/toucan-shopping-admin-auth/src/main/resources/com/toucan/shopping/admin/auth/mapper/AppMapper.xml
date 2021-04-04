@@ -27,7 +27,7 @@
             <if test="name!=null">
                 and ba.name = #{name}
             </if>
-            <if test="code!=null">
+            <if test="code!=null and code!=''">
                 and ba.code = #{code}
             </if>
             <if test="enableStatus!=null">
@@ -39,7 +39,7 @@
     </select>
 
 
-    <select id="queryListPage" resultMap="appMap" parameterType="com.toucan.shopping.admin.auth.entity.App">
+    <select id="queryListPage" resultMap="appMap" parameterType="com.toucan.shopping.admin.auth.page.AppPageInfo">
         select ba.* from t_app ba
         <where>
             1=1

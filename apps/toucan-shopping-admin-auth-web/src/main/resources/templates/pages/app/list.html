@@ -99,9 +99,12 @@
             cols: [
                 [
                 {type: "checkbox", width: 50},
-                {field: 'code', width: 180, title: '应用编码'},
                 {field: 'name', width: 180, title: '应用名称'},
+                {field: 'code', width: 180, title: '应用编码'},
                 {field: 'createDate', width: 180, title: '创建时间'},
+                {field: '', width: 180, title: '创建人'},
+                {field: 'updateDate', width: 180, title: '修改时间'},
+                {field: '', width: 180, title: '修改人'},
                 {field: 'enableStatus', width: 80, title: '状态',
                     templet: function (row) {
                     if(row.enableStatus == "1"){

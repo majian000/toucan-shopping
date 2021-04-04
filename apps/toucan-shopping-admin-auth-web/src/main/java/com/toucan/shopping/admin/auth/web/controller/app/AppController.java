@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.admin.auth.export.entity.App;
 import com.toucan.shopping.admin.auth.export.page.AdminPageInfo;
+import com.toucan.shopping.admin.auth.export.page.AppPageInfo;
 import com.toucan.shopping.admin.auth.export.vo.AppVO;
 import com.toucan.shopping.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.auth.admin.Auth;
@@ -100,7 +101,7 @@ public class AppController {
     @Auth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)
+    public TableVO listPage(HttpServletRequest request, AppPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

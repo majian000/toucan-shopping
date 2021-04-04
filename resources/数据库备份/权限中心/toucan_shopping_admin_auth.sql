@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80022
 File Encoding         : 65001
 
-Date: 2021-04-04 23:27:55
+Date: 2021-04-05 00:12:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,20 +23,25 @@ CREATE TABLE `t_app` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '部门名称',
   `code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用编码',
-  `create_date` datetime NOT NULL COMMENT '创建时间',
+  `enable_status` tinyint DEFAULT NULL COMMENT '启用状态 0:禁用 1启用',
   `delete_status` tinyint NOT NULL DEFAULT '0' COMMENT '删除状态 0未删除 1已删除',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
+  `create_date` datetime NOT NULL COMMENT '创建时间',
   `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
-  `enable_status` tinyint DEFAULT NULL COMMENT '启用状态 0:禁用 1启用',
+  `update_admin_id` varchar(32) DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='应用表';
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='应用表';
 
 -- ----------------------------
 -- Records of t_app
 -- ----------------------------
-INSERT INTO `t_app` VALUES ('3', '用户应用权限中心', '10001001', '2021-02-09 16:58:36', '1', '111', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('10', '用户中心', '10001002', '2021-02-12 14:34:25', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('11', '权限中心', '10001003', '2021-02-12 14:34:50', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('3', '用户应用权限中心', '10001001', '1', '1', '111', '2021-02-09 16:58:36', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_app` VALUES ('10', '用户中心', '10001002', '1', '0', '', '2021-02-12 14:34:25', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_app` VALUES ('11', '权限中心', '10001003', '1', '0', '', '2021-02-12 14:34:50', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_app` VALUES ('28', '11111111111111111111', '10001009', '1', '1', '123', '2021-04-04 23:41:52', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_app` VALUES ('29', 'black-bird-shopping', '11001010', '1', '1', '123', '2021-04-04 23:57:40', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_app` VALUES ('30', 'black-bird-shopping', '11001010', '1', '1', '123', '2021-04-04 23:58:41', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
 
 -- ----------------------------
 -- Table structure for t_sa_admin
