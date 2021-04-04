@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80022
 File Encoding         : 65001
 
-Date: 2021-04-04 22:45:25
+Date: 2021-04-04 23:27:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -36,21 +36,7 @@ CREATE TABLE `t_app` (
 -- ----------------------------
 INSERT INTO `t_app` VALUES ('3', '用户应用权限中心', '10001001', '2021-02-09 16:58:36', '1', '111', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
 INSERT INTO `t_app` VALUES ('10', '用户中心', '10001002', '2021-02-12 14:34:25', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('11', '权限中心', '10001003', '2021-02-12 14:34:50', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('12', 'black-bird-shopping-001', '11001001', '2021-02-13 17:35:01', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('13', '11001001', '11001002', '2021-02-13 17:36:08', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('14', '11001003', '11001003', '2021-02-13 17:37:09', '0', '11001003', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('15', '11001004', '11001004', '2021-02-13 17:38:43', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('16', '11001005', '11001005', '2021-02-13 17:38:58', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('17', '11001006', '11001006', '2021-02-13 17:39:09', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('18', '11001007', '11001007', '2021-02-13 17:39:16', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('19', '11001008', '11001008', '2021-02-13 17:39:26', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('20', '11001009', '11001009', '2021-02-13 17:39:35', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('21', '11001010', '11001010', '2021-02-13 17:39:43', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('22', '11001011', '11001011', '2021-02-13 17:40:06', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('23', '11001010', '11001010', '2021-02-14 10:38:57', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('24', '11001012', '11001012', '2021-02-14 10:39:06', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
-INSERT INTO `t_app` VALUES ('25', '11001013', '11001013', '2021-02-14 10:39:12', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('11', '权限中心', '10001003', '2021-02-12 14:34:50', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
 
 -- ----------------------------
 -- Table structure for t_sa_admin
