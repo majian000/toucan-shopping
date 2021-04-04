@@ -101,6 +101,7 @@
                 {type: "checkbox", width: 50},
                 {field: 'code', width: 180, title: '应用编码'},
                 {field: 'name', width: 180, title: '应用名称'},
+                {field: 'createDate', width: 180, title: '创建时间'},
                 {field: 'enableStatus', width: 80, title: '状态',
                     templet: function (row) {
                     if(row.enableStatus == "1"){
@@ -159,7 +160,7 @@
                     , data = checkStatus.data;
                 layer.confirm('确定删除应用?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/app/delete/ids",
+                        url:"[[@{/}]]app/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -209,7 +210,7 @@
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除该应用?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/app/delete/"+data.id,
+                        url:"[[@{/}]]app/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

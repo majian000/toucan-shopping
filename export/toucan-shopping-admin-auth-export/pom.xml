@@ -25,6 +25,10 @@
             <groupId>com.toucan.shopping.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
+        </dependency>
     </dependencies>
 
 

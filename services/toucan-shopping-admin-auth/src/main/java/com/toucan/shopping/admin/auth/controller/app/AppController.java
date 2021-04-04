@@ -95,14 +95,6 @@ public class AppController {
                 return resultObjectVO;
             }
 
-            //账号与应用关联
-            AdminApp adminApp = new AdminApp();
-            adminApp.setCreateAdminId(app.getCreateAdminId());
-            adminApp.setAppCode(app.getCode());
-            adminApp.setAdminId(app.getCreateAdminId());
-
-            adminAppService.save(adminApp);
-
             resultObjectVO.setData(app);
 
         }catch(Exception e)
@@ -277,13 +269,18 @@ public class AppController {
 
             //删除应用下所有关联
 
+            AdminApp queryAdminApp =new AdminApp();
+            queryAdminApp.setAppCode(appList.get(0).getCode());
 
-            row = adminAppService.deleteByAppCode(appList.get(0).getCode());
+            List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
+            if(!CollectionUtils.isEmpty(adminApps)) {
+                row = adminAppService.deleteByAppCode(appList.get(0).getCode());
 
-            if(row<=0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,删除应用下所有管理账户失败!");
-                return resultObjectVO;
+                if (row <= 0) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,删除应用下所有管理账户失败!");
+                    return resultObjectVO;
+                }
             }
 
             resultObjectVO.setData(app);
@@ -350,12 +347,18 @@ public class AppController {
                     }
 
                     //删除应用下所有关联
+                    AdminApp queryAdminApp =new AdminApp();
+                    queryAdminApp.setAppCode(appList.get(0).getCode());
 
-                    row  = adminAppService.deleteByAppCode(appEntityList.get(0).getCode());
-                    if(row<0) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,删除应用下所有管理账户失败!");
-                        return resultObjectVO;
+                    List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
+                    if(!CollectionUtils.isEmpty(adminApps)) {
+                        row = adminAppService.deleteByAppCode(appList.get(0).getCode());
+
+                        if (row <= 0) {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("请求失败,删除应用下所有管理账户失败!");
+                            return resultObjectVO;
+                        }
                     }
 
                 }
