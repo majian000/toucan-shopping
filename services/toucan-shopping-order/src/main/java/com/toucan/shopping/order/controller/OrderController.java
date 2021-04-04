@@ -53,7 +53,7 @@ public class OrderController {
      */
     @RequestMapping(value="/create",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO create(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO){
+    public ResultObjectVO create(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO){
 
         ResultObjectVO resultObjectVO = new ResultObjectVO(ResultVO.FAILD,"请重试");
         if(requestJsonVO!=null&& StringUtils.isNotEmpty(requestJsonVO.getEntityJson())) {

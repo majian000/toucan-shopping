@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  main:
+    allow-bean-definition-overriding: true #名称重复直接覆盖
 
 
 logging:
@@ -12,7 +14,7 @@ logging:
 spring:
   profiles: prod
   application:
-    name: toucan-shopping-user-center
+    name: toucan-shopping-admin-auth
   cloud:
     config: #指定配置中心服务端
       uri: http://localhost:9090
@@ -24,7 +26,7 @@ spring:
 spring:
   profiles: dev
   application:
-    name: toucan-shopping-user-center
+    name: toucan-shopping-admin-auth
   cloud:
     config: #指定配置中心服务端
       uri: http://localhost:9090

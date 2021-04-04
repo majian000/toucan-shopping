@@ -79,13 +79,13 @@ ribbon:
 toucan:
   machine-id: 2201 #机器编码
   app-code: 10001001 #自定义应用编码
-  user-center:
+  admin-auth:
     enabled: true
     name: toucan-shopping-user
     #HTTP权限请求头
     # 例如 后台管理端 Cookie:adminId=d10590b318544049ba2104d1f5517a7d;loginToken=d10590b318544049ba2104d1f5517a7d
     # 例如 商城C端 Cookie:uid=d10590b318544049ba2104d1f5517a7d;lt=d10590b318544049ba2104d1f5517a7d
-    http-bbs-auth-header: bbs-auth-header
+    http-toucan-auth-header: toucan-auth-header
     #当前项目登录页
     login-page: /page/user/login
     #拦截指定路径

@@ -14,7 +14,7 @@ public interface FeignAdminAreaService {
 
 
     @RequestMapping(value="/save",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultObjectVO save(@RequestHeader(value = "bbs-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
 }

@@ -44,6 +44,6 @@ hystrix:
 toucan:
   machine-id: 2201 #机器编码
   app-code: 10001001 #自定义应用编码
-  user-center:
+  admin-auth:
     enabled: true
-    name: toucan-shopping-user-center
+    name: toucan-shopping-admin-auth

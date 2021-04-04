@@ -42,7 +42,7 @@ public class ProductSkuController {
      */
     @RequestMapping(value="/shelves/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultListVO queryShelvesList(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultListVO queryShelvesList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         Map<String,Object> params=new HashMap<String,Object>();
         params.put("status",1);
@@ -105,7 +105,7 @@ public class ProductSkuController {
      */
     @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryByIdList(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)

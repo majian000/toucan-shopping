@@ -28,7 +28,7 @@ public class Toucan {
     //数据中心ID (0~31)
     private Integer datacenterId;
 
-    private UserCenter userCenter;
+    private AdminAuth adminAuth;
 
     private UserCenterScheduler userCenterScheduler;
 

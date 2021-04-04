@@ -62,8 +62,8 @@ ribbon:
 toucan:
   machine-id: 2201 #机器编码
   app-code: 10001001 #自定义应用编码
-  user-center:
+  admin-auth:
     enabled: true
-    name: toucan-shopping-user-center
-  user-center-scheduler:
+    name: toucan-shopping-admin-auth
+  admin-auth-scheduler:
     loop-es-cache: false #循环查询用户缓存到es

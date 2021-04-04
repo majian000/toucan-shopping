@@ -77,7 +77,7 @@ public class CategoryController {
      */
     @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryById(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -108,7 +108,7 @@ public class CategoryController {
      */
     @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryByIdList(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)

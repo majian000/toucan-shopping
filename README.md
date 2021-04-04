@@ -123,15 +123,17 @@
     端口号:8096
     栏目服务
     
-##### 中心服务层
-    
-    1.center/services/toucan-shopping-user-center
+    9.services/toucan-shopping-user-center
     端口号:8087
-    用户中心服务,使用请参考该项目目录下的README.MD
+    用户中心服务
     
-    2.center/services/toucan-shopping-app-center
+    10.services/toucan-shopping-app-center
     端口号:8091
-    应用中心服务,使用请参考该项目目录下的README.MD
+    应用中心服务
+    
+    11.services/toucan-shopping-app-center
+    端口号:8092
+    应用中心服务
 
 
 ##### 应用层  
@@ -171,6 +173,7 @@
 
     10001001 商城应用
     10001002 用户中心
+    10001003 权限中心
     
 
 #### 参与贡献

@@ -18,7 +18,7 @@ public interface FeignOrderService {
      * @return
      */
     @RequestMapping(value = "/create",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultObjectVO create(@RequestHeader("bbs-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO create(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 查询订单下所有skuuuid
@@ -27,7 +27,7 @@ public interface FeignOrderService {
      * @return
      */
     @RequestMapping(value="/querySkuUuids/orderNo",produces = "application/json;charset=UTF-8")
-    ResultObjectVO querySkuUuidsByOrderNo(@RequestHeader("bbs-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO querySkuUuidsByOrderNo(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 完成订单
@@ -36,7 +36,7 @@ public interface FeignOrderService {
      * @return
      */
     @RequestMapping(value="/finish",produces = "application/json;charset=UTF-8")
-    ResultObjectVO finish(@RequestHeader("bbs-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO finish(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 取消订单
@@ -44,7 +44,7 @@ public interface FeignOrderService {
      * @return
      */
     @RequestMapping(value="/cancel",produces = "application/json;charset=UTF-8")
-    ResultObjectVO cancel(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO cancel(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -54,5 +54,5 @@ public interface FeignOrderService {
      * @return
      */
     @RequestMapping(value="/query/pay/timeout",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryOrderByPayTimeOut(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryOrderByPayTimeOut(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 }

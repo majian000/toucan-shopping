@@ -18,6 +18,6 @@ public interface FeignSmsService {
      * @return
      */
     @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO send(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    public ResultObjectVO send(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

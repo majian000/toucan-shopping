@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-center-proxy/toucan-shopping-admin-auth-center/adminApp",fallbackFactory = FeignAdminServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminApp",fallbackFactory = FeignAdminServiceFallbackFactory.class)
 public interface FeignAdminAppService {
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")

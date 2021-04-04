@@ -1,4 +1,4 @@
-#========================权限中心界面 开发环境====================================
+#========================用户中心界面 开发环境====================================
 
 server:
   port: 8088
@@ -6,7 +6,7 @@ server:
     context-path: /
 spring:
   application:
-    name: toucan-shopping-user-center-web #应用名称
+    name: toucan-shopping-admin-auth-web #应用名称
   zipkin: #链路追踪
     enabled: true
     base-url: http://localhost:9411
@@ -20,14 +20,14 @@ eureka:
       defaultZone: http://localhost:8081/eureka
 
 toucan:
-  app-code: 10000001 #自定义应用编码
-  user-center:
+  app-code: 10001002 #自定义应用编码
+  admin-auth:
     enabled: true
-    name: toucan-shopping-user-center
+    name: toucan-shopping-admin-auth
     #HTTP权限请求头
     # 例如 后台管理端 Cookie:adminId=d10590b318544049ba2104d1f5517a7d;loginToken=d10590b318544049ba2104d1f5517a7d
     # 例如 商城C端 Cookie:userId=d10590b318544049ba2104d1f5517a7d;loginToken=d10590b318544049ba2104d1f5517a7d
-    http-bbs-auth-header: Cookie
+    http-toucan-auth-header: Cookie
     #当前项目登录页
     login-page: /login/page
     #拦截指定路径

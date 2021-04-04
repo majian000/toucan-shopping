@@ -81,4 +81,10 @@ spring:
             - Path=/toucan-shopping-area-proxy/**
           filters:
             - StripPrefix=1
+        - id: toucan-shopping-admin-auth-proxy
+          uri: lb://toucan-shopping-admin-auth
+          predicates:
+            - Path=/toucan-shopping-admin-auth-proxy/**
+          filters:
+            - StripPrefix=1
 

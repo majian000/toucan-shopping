@@ -55,7 +55,7 @@ public class AppController {
      */
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO save(@RequestHeader("bbs-user-center-atuh") String bbsUserCenterAtuh, @RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO save(@RequestHeader("toucan-admin-auth-atuh") String bbsUserCenterAtuh, @RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -134,7 +134,7 @@ public class AppController {
      */
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO update(@RequestHeader("bbs-user-center-atuh") String bbsUserCenterAtuh, @RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO update(@RequestHeader("toucan-admin-auth-atuh") String bbsUserCenterAtuh, @RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -214,7 +214,7 @@ public class AppController {
      */
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO listPage(@RequestHeader("bbs-user-center-atuh") String bbsUserCenterAtuh,@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO listPage(@RequestHeader("toucan-admin-auth-atuh") String bbsUserCenterAtuh,@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -261,7 +261,7 @@ public class AppController {
      */
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(@RequestHeader("bbs-user-center-atuh") String bbsUserCenterAtuh,@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteById(@RequestHeader("toucan-admin-auth-atuh") String bbsUserCenterAtuh,@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -363,7 +363,7 @@ public class AppController {
      */
     @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteByIds(@RequestHeader("bbs-user-center-atuh") String bbsUserCenterAtuh,@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIds(@RequestHeader("toucan-admin-auth-atuh") String bbsUserCenterAtuh,@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {

@@ -45,6 +45,6 @@ hystrix:
 
 toucan:
   app-code: 10001001 #自定义应用编码
-  user-center:
+  admin-auth:
     enabled: false
-    name: toucan-shopping-user-center
+    name: toucan-shopping-admin-auth

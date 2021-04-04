@@ -26,7 +26,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
         logger.warn(throwable.getMessage(),throwable);
         return new FeignProductSkuService(){
             @Override
-            public ResultListVO queryShelvesList(@RequestHeader("bbs-sign-header") String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultListVO queryShelvesList(@RequestHeader("toucan-sign-header") String signHeader, RequestJsonVO requestJsonVO) {
                 ResultListVO resultListVO = new ResultListVO();
                 if(requestJsonVO==null)
                 {

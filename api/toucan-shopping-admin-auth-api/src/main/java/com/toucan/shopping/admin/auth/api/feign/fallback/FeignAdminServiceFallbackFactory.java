@@ -24,7 +24,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
         return new FeignAdminService(){
 
             @Override
-            public ResultObjectVO login(RequestJsonVO requestVo) {
+            public ResultObjectVO login(String signHeader,RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {

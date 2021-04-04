@@ -26,11 +26,12 @@ spring:
                             classpath:/config/services/area,\
                             classpath:/config/services/column,\
                             classpath:/config/services/stock,\
-                            classpath:/config/center/services/user,\
-                            classpath:/config/center/services/app,\
+                            classpath:/config/services/user,\
+                            classpath:/config/services/app,\
+                            classpath:/config/services/admin/auth,\
                             classpath:/config/apps/shopping/web,\
-                            classpath:/config/apps/center/user/web,\
-                            classpath:/config/apps/center/admin/auth/web,\
+                            classpath:/config/apps/user/web,\
+                            classpath:/config/apps/admin/auth/web,\
                             classpath:/config/apps/scheduler/shopping,\
                             classpath:/config/apps/scheduler/user,\
                             classpath:/config/apps/shopping/admin,"

@@ -69,11 +69,6 @@
         </dependency>
 
 
-        <!--用户中心权限处理 -->
-        <dependency>
-            <groupId>com.toucan.shopping.starter</groupId>
-            <artifactId>toucan-shopping-user-spring-boot-starter</artifactId>
-        </dependency>
 
         <!-- 我们的包-->
         <dependency>
@@ -127,7 +122,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.user.web.app.UserCenterWebApplication</mainClass>
+                    <mainClass>UserCenterWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

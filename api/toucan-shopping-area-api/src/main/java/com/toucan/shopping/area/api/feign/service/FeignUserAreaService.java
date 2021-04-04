@@ -14,6 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignUserAreaService {
 
     @RequestMapping(value="/query/all",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryAll(@RequestHeader(value = "bbs-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAll(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

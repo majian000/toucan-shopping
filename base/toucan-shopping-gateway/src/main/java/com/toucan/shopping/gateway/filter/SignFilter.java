@@ -57,9 +57,9 @@ public class SignFilter implements GlobalFilter, Ordered {
                 return exchange.getResponse().writeWith(Mono.just(bodyDataBuffer));
             }
             HttpHeaders httpHeaders = request.getHeaders();
-            List<String> signVlaues = httpHeaders.getValuesAsList("bbs-sign-header");
+            List<String> signVlaues = httpHeaders.getValuesAsList("toucan-sign-header");
             if (CollectionUtils.isEmpty(signVlaues)) {
-                logger.warn(" bbs-sign-header 签名请求头为空 ");
+                logger.warn(" toucan-sign-header 签名请求头为空 ");
                 ResultVO resultVO = new ResultObjectVO(ResultVO.FAILD,"签名请求头为空");
                 DataBuffer bodyDataBuffer = exchange.getResponse().bufferFactory().wrap(JSONObject.toJSONString(resultVO).getBytes(StandardCharsets.UTF_8));
                 return exchange.getResponse().writeWith(Mono.just(bodyDataBuffer));
@@ -67,7 +67,7 @@ public class SignFilter implements GlobalFilter, Ordered {
             //调用传进来的签名
             String requestSign = signVlaues.get(0);
             if (StringUtils.isEmpty(requestSign)) {
-                logger.warn(" bbs-sign-header 签名请求头为空 ");
+                logger.warn(" toucan-sign-header 签名请求头为空 ");
                 ResultVO resultVO = new ResultObjectVO(ResultVO.FAILD,"签名请求头为空");
                 DataBuffer bodyDataBuffer = exchange.getResponse().bufferFactory().wrap(JSONObject.toJSONString(resultVO).getBytes(StandardCharsets.UTF_8));
                 return exchange.getResponse().writeWith(Mono.just(bodyDataBuffer));

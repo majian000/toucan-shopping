@@ -163,7 +163,7 @@ public class ProductSkuStockController {
      */
     @RequestMapping(method= RequestMethod.POST,value="/inventoryReduction",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO inventoryReduction(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO inventoryReduction(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO<>();
         if(requestJsonVO==null|| StringUtils.isEmpty(requestJsonVO.getEntityJson()))
@@ -300,7 +300,7 @@ public class ProductSkuStockController {
      */
     @RequestMapping(value="/query/sku/uuids",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryBySkuUuidList(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryBySkuUuidList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)

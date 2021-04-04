@@ -14,7 +14,7 @@ import java.util.Map;
 public interface FeignProductSkuService {
 
     @RequestMapping(value = "/shelves/list",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultListVO queryShelvesList(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody  RequestJsonVO requestJsonVO);
+    ResultListVO queryShelvesList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody  RequestJsonVO requestJsonVO);
 
 
     @RequestMapping(value = "/query/id",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
@@ -22,6 +22,6 @@ public interface FeignProductSkuService {
 
 
     @RequestMapping(value = "/query/ids",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryByIdList(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

@@ -6,7 +6,7 @@ import lombok.Data;
  * 自定义配置
  */
 @Data
-public class UserCenter {
+public class AdminAuth {
 
     /**
      * 用户中心名称
@@ -19,11 +19,11 @@ public class UserCenter {
     private boolean enabled = false;
 
     /**
-     * HTTP权限请求头,默认值为bbs-atuh-header
-     * 后台管理端 bbs-atuh-header:adminId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
-     * 或商城C端 bbs-atuh-header:userId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
+     * HTTP权限请求头,默认值为toucan-atuh-header
+     * 后台管理端 toucan-atuh-header:adminId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
+     * 或商城C端 toucan-atuh-header:userId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
      */
-    private String httpBbsAuthHeader = "bbs-atuh-header";
+    private String httpBbsAuthHeader = "toucan-atuh-header";
 
     /**
      * 默认登录页

@@ -13,7 +13,7 @@ public interface FeignAdminProductSkuService {
 
 
     @RequestMapping(value = "/save",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultObjectVO saveSku(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO saveSku(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
 }

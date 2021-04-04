@@ -38,7 +38,7 @@ public class AdminProductSkuController {
      */
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO saveSku(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO saveSku(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)

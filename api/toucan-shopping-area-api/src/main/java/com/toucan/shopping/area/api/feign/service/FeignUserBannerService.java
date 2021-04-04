@@ -14,6 +14,6 @@ public interface FeignUserBannerService {
 
 
     @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryList(@RequestHeader(value = "bbs-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

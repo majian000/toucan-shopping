@@ -14,7 +14,7 @@ logging:
 spring:
   profiles: prod
   application:
-    name: toucan-shopping-user-center-web
+    name: toucan-shopping-admin-auth-web
   cloud:
     config: #指定配置中心服务端
       uri: http://localhost:9090
@@ -26,7 +26,7 @@ spring:
 spring:
   profiles: dev
   application:
-    name: toucan-shopping-user-center-web
+    name: toucan-shopping-admin-auth-web
   cloud:
     config: #指定配置中心服务端
       uri: http://localhost:9090

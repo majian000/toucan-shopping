@@ -106,7 +106,7 @@ public class LoginController {
             requestVo.setAppCode(appCode);
             requestVo.setSign(SignUtil.sign(appCode, entityJson));
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAdminService.login(requestVo);
+            resultObjectVO = feignAdminService.login(requestVo.getSign(),requestVo);
             if(resultObjectVO.getCode()== ResultVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)

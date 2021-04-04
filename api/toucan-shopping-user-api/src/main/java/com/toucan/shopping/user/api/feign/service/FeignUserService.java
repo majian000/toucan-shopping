@@ -23,7 +23,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/regist/mobile/phone",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO registByMobilePhone(@RequestHeader("bbs-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    public ResultObjectVO registByMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 用户密码登录
@@ -31,7 +31,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/login/password",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO loginByPassword(@RequestHeader("bbs-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    public ResultObjectVO loginByPassword(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -50,7 +50,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping("/is/online")
-    ResultObjectVO isOnline(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
     /**
@@ -59,7 +59,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/find/mobile/phone",produces = "application/json;charset=UTF-8")
-    ResultObjectVO findByMobilePhone(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO findByMobilePhone(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -69,7 +69,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO list(@RequestHeader("bbs-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
 }
