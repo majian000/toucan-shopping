@@ -1,7 +1,7 @@
 package com.toucan.shopping.admin.auth.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;
@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * 管理员服务
+ * 应用服务
  */
 @Component
-public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAdminService> {
+public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppService> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FeignAdminService create(Throwable throwable) {
+    public FeignAppService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
-        return new FeignAdminService(){
+        return new FeignAppService(){
 
             @Override
-            public ResultObjectVO login(String signHeader,RequestJsonVO requestVo) {
+            public ResultObjectVO save(String toucanAdminAuth,RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -32,15 +32,14 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用用户中心登录服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求用户中心创建应用服务失败 params:"+ JSONObject.toJSON(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO queryLoginToken(String signHeader,RequestJsonVO requestVo) {
-
+            public ResultObjectVO update(String toucanAdminAuth, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -48,15 +47,14 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用用户中心查询登录Token服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求用户中心修改应用服务失败 params:"+ JSONObject.toJSON(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO isOnline(String signHeader,RequestJsonVO requestVo) {
-
+            public ResultObjectVO listPage(String toucanAdminAuth, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -64,15 +62,14 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用用户中心查询是否在线服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求用户中心查询应用服务失败 params:"+ JSONObject.toJSON(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
             }
 
             @Override
-            public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
-
+            public ResultObjectVO deleteById(String toucanAdminAuth, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -80,7 +77,22 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminService.list faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求用户中心删除应用服务失败 params:"+ JSONObject.toJSON(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO deleteByIds(String toucanAdminAuth, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("请求用户中心批量删除应用服务失败 params:"+ JSONObject.toJSON(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

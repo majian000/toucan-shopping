@@ -1,6 +1,8 @@
 package com.toucan.shopping.admin.auth.mapper;
 
 import com.toucan.shopping.admin.auth.entity.Admin;
+import com.toucan.shopping.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.admin.auth.vo.AdminVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,5 +16,7 @@ public interface AdminMapper {
     public List<Admin> findListByEntity(Admin admin);
 
 
+
+    List<AdminVO> queryListPage(AdminPageInfo adminPageInfo);
 
 }

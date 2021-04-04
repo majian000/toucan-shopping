@@ -14,6 +14,19 @@
     </resultMap>
 
 
+
+    <resultMap id="adminVOMap" type="com.toucan.shopping.admin.auth.vo.AdminVO" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="admin_id" jdbcType="VARCHAR" property="adminId" />
+
+    </resultMap>
+
+
     <select id="findListByEntity" resultMap="adminMap" parameterType="com.toucan.shopping.admin.auth.entity.Admin">
         select * from t_sa_admin saa
         <where>
@@ -29,6 +42,24 @@
 
     </select>
 
+
+
+    <select id="queryListPage" resultMap="adminVOMap" parameterType="com.toucan.shopping.admin.auth.page.AdminPageInfo">
+        select tu.* from t_sa_admin tu
+        <where>
+            1=1 and tu.delete_status = 0
+
+            <if test="idArray!=null ">
+                and tu.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+
+        order by tu.id desc
+    </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.admin.auth.entity.Admin" useGeneratedKeys="true" keyProperty="id" >
         insert into t_sa_admin(username,password,admin_id,enable_status,create_date,delete_status,create_admin_id,remark)

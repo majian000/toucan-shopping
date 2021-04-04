@@ -89,14 +89,6 @@
             <artifactId>toucan-shopping-user-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.api</groupId>
-            <artifactId>toucan-shopping-app-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.export</groupId>
-            <artifactId>toucan-shopping-app-export</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.toucan.shopping.export</groupId>
             <artifactId>toucan-shopping-user-export</artifactId>
         </dependency>

@@ -14,10 +14,20 @@ public interface FeignAdminService {
     ResultObjectVO login(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
     @PostMapping("/query/login/token")
-    ResultObjectVO queryLoginToken(@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryLoginToken(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
     @PostMapping("/is/online")
-    ResultObjectVO isOnline(@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 列表分页
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
 }

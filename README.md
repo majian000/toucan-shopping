@@ -127,13 +127,9 @@
     端口号:8087
     用户中心服务
     
-    10.services/toucan-shopping-app-center
-    端口号:8091
-    应用中心服务
-    
     11.services/toucan-shopping-app-center
-    端口号:8092
-    应用中心服务
+    端口号:8099
+    权限中心服务
 
 
 ##### 应用层  

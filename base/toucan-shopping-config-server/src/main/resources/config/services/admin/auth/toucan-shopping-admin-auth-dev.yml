@@ -1,7 +1,7 @@
 #========================权限中心 开发环境====================================
 
 server:
-  port: 8092
+  port: 8099
 spring:
   application:
     name: toucan-shopping-admin-auth #应用名称

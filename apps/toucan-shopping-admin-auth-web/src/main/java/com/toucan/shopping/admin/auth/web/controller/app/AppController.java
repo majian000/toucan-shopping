@@ -1,15 +1,16 @@
-package com.toucan.shopping.admin.auth.web.controller.admin;
+package com.toucan.shopping.admin.auth.web.controller.app;
 
 
 import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.admin.auth.export.page.AdminPageInfo;
-import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.admin.auth.web.vo.TableVO;
+import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
-import com.toucan.shopping.common.properties.Toucan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * 应用管理
+ */
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/app")
+public class AppController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -36,7 +41,7 @@ public class AdminController {
     private Toucan toucan;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private FeignAppService feignAppService;
 
 
 
@@ -44,7 +49,7 @@ public class AdminController {
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
-        return "pages/admin/list.html";
+        return "pages/app/list.html";
     }
 
 
@@ -63,7 +68,7 @@ public class AdminController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignAdminService.list(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignAppService.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)

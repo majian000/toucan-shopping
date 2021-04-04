@@ -22,9 +22,9 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">账号</label>
+                            <label class="layui-form-label">编码</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="code" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -42,9 +42,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="adminTable" lay-filter="adminTableFilter"></table>
+        <table class="layui-hide" id="appTable" lay-filter="appTableFilter"></table>
 
-        <script type="text/html" id="adminTableBar">
+        <script type="text/html" id="appTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
@@ -83,8 +83,8 @@
         }
 
         table.render({
-            elem: '#adminTable',
-            url: "[[@{/}]]admin/list",
+            elem: '#appTable',
+            url: "[[@{/}]]app/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -99,7 +99,8 @@
             cols: [
                 [
                 {type: "checkbox", width: 50},
-                {field: 'username', width: 180, title: '账号'},
+                {field: 'code', width: 180, title: '应用编码'},
+                {field: 'name', width: 180, title: '应用名称'},
                 {field: 'enableStatus', width: 80, title: '状态',
                     templet: function (row) {
                     if(row.enableStatus == "1"){
@@ -107,7 +108,7 @@
                     }
                     return "禁用"
                 }},
-                {title: '操作', minWidth: 150, toolbar: '#adminTableBar', align: "center"}
+                {title: '操作', minWidth: 150, toolbar: '#appTableBar', align: "center"}
             ]
             ],
             limits: [100],
@@ -126,7 +127,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('adminTable', {
+            table.reload('appTable', {
                 page: {
                     curr: 1
                 }
@@ -139,7 +140,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(adminTableFilter)', function (obj) {
+        table.on('toolbar(appTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加应用',
@@ -154,7 +155,7 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('adminTable')
+                var checkStatus = table.checkStatus('appTable')
                     , data = checkStatus.data;
                 layer.confirm('确定删除应用?', function (index) {
                     $.ajax({
@@ -166,7 +167,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('adminTable', {
+                            table.reload('appTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -184,11 +185,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(adminTableFilter)', function (obj) {
+        table.on('checkbox(appTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(adminTableFilter)', function (obj) {
+        table.on('tool(appTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
 
@@ -215,7 +216,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('adminTable', {
+                            table.reload('appTable', {
                                 page: {
                                     curr: 1
                                 }

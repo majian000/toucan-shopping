@@ -3,7 +3,10 @@ package com.toucan.shopping.admin.auth.service;
 
 
 
+import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.admin.auth.entity.Admin;
+import com.toucan.shopping.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.admin.auth.vo.AdminVO;
 
 import java.util.List;
 
@@ -21,6 +24,13 @@ public interface AdminService {
     boolean exists(String username);
 
 
+
+    /**
+     * 查询列表页
+     * @param appPageInfo
+     * @return
+     */
+    PageInfo<AdminVO> queryListPage(AdminPageInfo appPageInfo);
 
 
 }

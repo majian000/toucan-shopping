@@ -4,26 +4,39 @@
     "href": "welcome"
   },
   "logoInfo": {
-    "title": "用户中心",
+    "title": "权限中心",
     "image": "../images/logo.png",
     "href": ""
   },
   "menuInfo": [
     {
-      "title": "用户中心",
+      "title": "权限中心",
       "icon": "fa fa-address-book",
       "href": "",
       "target": "_self",
       "child": [
         {
-          "title": "用户管理",
+          "title": "系统管理",
           "href": "",
           "icon": "fa fa-window-maximize",
           "target": "_self",
           "child": [
             {
-              "title": "用户列表",
-              "href": "../user/listPage",
+              "title": "应用列表",
+              "href": "../app/listPage",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
+              "title": "账号列表",
+              "href": "../admin/listPage",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+
+            {
+              "title": "角色列表",
+              "href": "../role/listPage",
               "icon": "fa fa-list-alt",
               "target": "_self"
             }
