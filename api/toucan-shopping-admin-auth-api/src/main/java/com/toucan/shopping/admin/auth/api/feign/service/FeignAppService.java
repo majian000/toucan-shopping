@@ -35,7 +35,7 @@ public interface FeignAppService {
      * @param requestVo
      * @return
      */
-    @GetMapping("/list/page")
+    @RequestMapping(value = "/list/page",method = RequestMethod.POST)
     ResultObjectVO listPage(@RequestHeader("toucan-sign-header") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo);
 
 

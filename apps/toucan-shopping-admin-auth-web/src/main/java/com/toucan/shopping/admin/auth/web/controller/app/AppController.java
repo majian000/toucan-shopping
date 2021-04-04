@@ -1,9 +1,10 @@
 package com.toucan.shopping.admin.auth.web.controller.app;
 
 
-import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.admin.auth.api.feign.service.FeignAppService;
+import com.toucan.shopping.admin.auth.export.entity.App;
 import com.toucan.shopping.admin.auth.export.page.AdminPageInfo;
+import com.toucan.shopping.admin.auth.export.vo.AppVO;
 import com.toucan.shopping.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,6 +54,40 @@ public class AppController {
         return "pages/app/list.html";
     }
 
+
+
+    @Auth(verifyMethod = Auth.VERIFYMETHOD_USER_CENTER,requestType = Auth.REQUEST_FORM)
+    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
+    public String addPage()
+    {
+        return "pages/app/add.html";
+    }
+
+
+
+    /**
+     * 保存
+     * @param app
+     * @return
+     */
+    @Auth
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(@RequestBody App app)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            app.setCreateAdminId("-1");
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, App.class);
+            resultObjectVO = feignAppService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 

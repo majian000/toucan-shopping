@@ -51,7 +51,7 @@ public class AppController {
      */
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO save(@RequestHeader("toucan-admin-auth") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -125,7 +125,7 @@ public class AppController {
      */
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO update(@RequestHeader("toucan-admin-auth") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -175,7 +175,7 @@ public class AppController {
             }
 
             app.setUpdateDate(new Date());
-            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucanAdminAuth));
+            app.setUpdateAdminId(app.getUpdateAdminId());
             int row = appService.update(app);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -205,7 +205,7 @@ public class AppController {
      */
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO listPage(@RequestHeader("toucan-admin-auth") String toucanAdminAuth,@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -216,20 +216,6 @@ public class AppController {
 
         try {
             AppPageInfo appPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AppPageInfo.class);
-
-            if(StringUtils.isEmpty(requestVo.getAppCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(appPageInfo.getAdminId()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到管理账号ID");
-                return resultObjectVO;
-            }
-
             resultObjectVO.setData(appService.queryListPage(appPageInfo));
 
         }catch(Exception e)
@@ -252,7 +238,7 @@ public class AppController {
      */
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(@RequestHeader("toucan-admin-auth") String toucanAdminAuth,@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -281,20 +267,6 @@ public class AppController {
                 return resultObjectVO;
             }
 
-            //查询账号有应用是否存在关联
-            AdminApp adminAppQuery=new AdminApp();
-            adminAppQuery.setAppCode(appList.get(0).getCode());
-            adminAppQuery.setAdminId(AuthHeaderUtil.getAdminId(toucanAdminAuth));
-            adminAppQuery.setDeleteStatus((short)0);
-
-
-
-            List<AdminApp> adminApps = adminAppService.findListByEntity(adminAppQuery);
-            if (CollectionUtils.isEmpty(adminApps)) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有权限操作该应用!");
-                return resultObjectVO;
-            }
 
             int row = appService.deleteById(app.getId());
             if (row < 1) {
@@ -334,7 +306,7 @@ public class AppController {
      */
     @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteByIds(@RequestHeader("toucan-admin-auth") String toucanAdminAuth,@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -368,20 +340,6 @@ public class AppController {
                         continue;
                     }
 
-                    //查询账号有应用是否存在关联
-                    AdminApp adminAppQuery=new AdminApp();
-                    adminAppQuery.setAppCode(appEntityList.get(0).getCode());
-                    adminAppQuery.setAdminId(AuthHeaderUtil.getAdminId(toucanAdminAuth));
-                    adminAppQuery.setDeleteStatus((short)0);
-
-
-
-                    List<AdminApp> adminApps = adminAppService.findListByEntity(adminAppQuery);
-                    if (CollectionUtils.isEmpty(adminApps)) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,没有权限操作该应用!");
-                        return resultObjectVO;
-                    }
 
                     int row = appService.deleteById(app.getId());
                     if (row < 1) {

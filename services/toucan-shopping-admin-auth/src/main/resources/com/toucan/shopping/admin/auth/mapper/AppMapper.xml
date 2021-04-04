@@ -40,13 +40,7 @@
 
 
     <select id="queryListPage" resultMap="appMap" parameterType="com.toucan.shopping.admin.auth.entity.App">
-        select ba.* from t_app ba left join t_sa_admin_app bsaa on ba.code = bsaa.app_code
-        <if test="deleteStatus!=null">
-            and bsaa.delete_status = #{deleteStatus}
-        </if>
-        <if test="adminId!=null">
-            and bsaa.admin_id = #{adminId}
-        </if>
+        select ba.* from t_app ba
         <where>
             1=1
             <if test="name!=null and name!=''">
@@ -61,6 +55,7 @@
             <if test="deleteStatus!=null">
                 and ba.delete_status = #{deleteStatus}
             </if>
+            and ba.delete_status = 0
         </where>
 
     </select>

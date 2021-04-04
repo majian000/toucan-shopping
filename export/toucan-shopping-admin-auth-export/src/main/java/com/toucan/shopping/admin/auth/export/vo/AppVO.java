@@ -1,4 +1,4 @@
-package com.toucan.shopping.admin.auth.web.vo.app;
+package com.toucan.shopping.admin.auth.export.vo;
 
 import lombok.Data;
 

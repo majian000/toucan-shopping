@@ -71,4 +71,9 @@ public class AdminVO {
     private String loginToken;
 
 
+    /**
+     * 前台传入
+     */
+    private String vcode;
+
 }

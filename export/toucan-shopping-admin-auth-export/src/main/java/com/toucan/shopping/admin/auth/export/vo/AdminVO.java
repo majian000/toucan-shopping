@@ -1,15 +1,17 @@
-package com.toucan.shopping.admin.auth.web.vo.admin;
+package com.toucan.shopping.admin.auth.export.vo;
 
+import com.toucan.shopping.admin.auth.export.entity.AdminApp;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * 管理员
+ * 用户
  */
 @Data
 public class AdminVO {
+
     private Integer id;
 
 
@@ -57,7 +59,18 @@ public class AdminVO {
     private String adminId;
 
     /**
-     * 验证码
+     * 所属应用列表
+     */
+    private List<AdminApp> adminApps;
+
+    /**
+     * 登录token
+     */
+    private String loginToken;
+
+
+    /**
+     * 前台传入
      */
     private String vcode;
 
