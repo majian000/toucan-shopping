@@ -1,4 +1,4 @@
-package com.toucan.shopping.admin.auth.web.controller.user;
+package com.toucan.shopping.admin.auth.web.controller.admin;
 
 
 import com.toucan.shopping.auth.admin.Auth;
@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -46,7 +46,7 @@ public class UserController {
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
-        return "pages/user/list.html";
+        return "pages/admin/list.html";
     }
 
 
@@ -65,38 +65,6 @@ public class UserController {
         TableVO tableVO = new TableVO();
         try {
 
-            UserElasticSearchVO query = new UserElasticSearchVO();
-            //userElasticSearchVO.setKeyword(userPageInfo.getKeyword());
-            query.setMobilePhone(userPageInfo.getMobilePhone());
-            query.setNickName(userPageInfo.getNickName());
-            query.setEmail(userPageInfo.getEmail());
-            query.setId(userPageInfo.getId());
-
-            if(userPageInfo.getPage()<=1)
-            {
-                request.getSession().removeAttribute("sortValue");
-            }
-            if(request.getSession().getAttribute("sortValue")!=null) {
-                userPageInfo.setSortValues(new String[]{String.valueOf(request.getSession().getAttribute("sortValue"))});
-            }
-
-            SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(query,userPageInfo.getLimit(),userPageInfo.getSortValues());
-            if(CollectionUtils.isNotEmpty(searchAfterPage.getUserElasticSearchVOS()))
-            {
-                tableVO.setCount(userElasticSearchService.queryCount(query));
-                if(tableVO.getCount()>0) {
-                    //将long类型的ID转成字符串,解决前端丢失精度问题
-                    for(UserElasticSearchVO userElasticSearchVO:searchAfterPage.getUserElasticSearchVOS())
-                    {
-                        userElasticSearchVO.setUserId(String.valueOf(userElasticSearchVO.getId()));
-                    }
-                    tableVO.setData((List) searchAfterPage.getUserElasticSearchVOS());
-                    tableVO.setSortValues(searchAfterPage.getSortValues());
-                    if(searchAfterPage.getSortValues()!=null&&searchAfterPage.getSortValues().length>0) {
-                        request.getSession().setAttribute("sortValue", searchAfterPage.getSortValues()[0]);
-                    }
-                }
-            }
         }catch(Exception e)
         {
             tableVO.setMsg("请求失败,请重试");
