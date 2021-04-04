@@ -10,10 +10,47 @@ Target Server Type    : MYSQL
 Target Server Version : 80022
 File Encoding         : 65001
 
-Date: 2021-04-04 21:39:38
+Date: 2021-04-04 22:45:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for t_app
+-- ----------------------------
+DROP TABLE IF EXISTS `t_app`;
+CREATE TABLE `t_app` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '部门名称',
+  `code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用编码',
+  `create_date` datetime NOT NULL COMMENT '创建时间',
+  `delete_status` tinyint NOT NULL DEFAULT '0' COMMENT '删除状态 0未删除 1已删除',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
+  `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
+  `enable_status` tinyint DEFAULT NULL COMMENT '启用状态 0:禁用 1启用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='应用表';
+
+-- ----------------------------
+-- Records of t_app
+-- ----------------------------
+INSERT INTO `t_app` VALUES ('3', '用户应用权限中心', '10001001', '2021-02-09 16:58:36', '1', '111', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('10', '用户中心', '10001002', '2021-02-12 14:34:25', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('11', '权限中心', '10001003', '2021-02-12 14:34:50', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('12', 'black-bird-shopping-001', '11001001', '2021-02-13 17:35:01', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('13', '11001001', '11001002', '2021-02-13 17:36:08', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('14', '11001003', '11001003', '2021-02-13 17:37:09', '0', '11001003', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('15', '11001004', '11001004', '2021-02-13 17:38:43', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('16', '11001005', '11001005', '2021-02-13 17:38:58', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('17', '11001006', '11001006', '2021-02-13 17:39:09', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('18', '11001007', '11001007', '2021-02-13 17:39:16', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('19', '11001008', '11001008', '2021-02-13 17:39:26', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('20', '11001009', '11001009', '2021-02-13 17:39:35', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('21', '11001010', '11001010', '2021-02-13 17:39:43', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('22', '11001011', '11001011', '2021-02-13 17:40:06', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('23', '11001010', '11001010', '2021-02-14 10:38:57', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('24', '11001012', '11001012', '2021-02-14 10:39:06', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
+INSERT INTO `t_app` VALUES ('25', '11001013', '11001013', '2021-02-14 10:39:12', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '1');
 
 -- ----------------------------
 -- Table structure for t_sa_admin
