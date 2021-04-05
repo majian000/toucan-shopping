@@ -20,7 +20,7 @@ public @interface Auth {
 	 * 校验方式 0本地验证 1权限中心验证
 	 */
 	public static int VERIFYMETHOD_LOCAL =0;
-	public static int VERIFYMETHOD_USER_CENTER =1;
+	public static int VERIFYMETHOD_ADMIN_AUTH =1;
 
 	/**
 	 * 请求类型 0 json 1 form

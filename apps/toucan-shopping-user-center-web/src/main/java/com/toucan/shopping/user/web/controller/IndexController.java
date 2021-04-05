@@ -20,7 +20,7 @@ public class IndexController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_USER_CENTER,requestType = Auth.REQUEST_FORM)
+    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
     @RequestMapping(value = "/page",method = RequestMethod.GET)
     public String page()
     {
@@ -29,7 +29,7 @@ public class IndexController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_USER_CENTER,requestType = Auth.REQUEST_FORM)
+    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
     @RequestMapping(value = "/welcome",method = RequestMethod.GET)
     public String welcome()
     {

@@ -23,10 +23,10 @@ public class AuthInterceptorConfig implements WebMvcConfigurer {
     @Autowired
     private AuthInterceptor authInterceptor;
 
-    @Value("${toucan.user-path-patterns}")
+    @Value("${toucan.admin-auth.path-patterns}")
     private String pathPatterns;
 
-    @Value("${toucan.user-exclude-path-patterns}")
+    @Value("${toucan.admin-auth.exclude-path-patterns}")
     private String excludePathPatterns;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

@@ -56,11 +56,11 @@
 
         <dependency>
             <groupId>com.toucan.shopping.api</groupId>
-            <artifactId>toucan-shopping-user-api</artifactId>
+            <artifactId>toucan-shopping-admin-auth-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.export</groupId>
-            <artifactId>toucan-shopping-user-export</artifactId>
+            <artifactId>toucan-shopping-admin-auth-export</artifactId>
         </dependency>
     </dependencies>
 

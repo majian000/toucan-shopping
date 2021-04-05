@@ -2,17 +2,17 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.auth.user.Auth;
-import com.toucan.shopping.user.api.feign.service.FeignUserService;
-import com.toucan.shopping.user.export.vo.UserLoginVO;
+import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.admin.auth.export.entity.Admin;
+import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.spring.context.SpringContextHolder;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.common.vo.ResultVO;
 import com.toucan.shopping.common.wrapper.RequestWrapper;
-import com.toucan.shopping.common.properties.Toucan;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,9 +59,9 @@ public class AuthInterceptor implements HandlerInterceptor {
 
                 if (authAnnotation != null) {
                     //由用户中心做权限判断
-                    if (authAnnotation.verifyMethod() == Auth.VERIFYMETHOD_USER_CENTER) {
-                        //拿到用户中心服务
-                        FeignUserService feignUserService = springContextHolder.getBean(FeignUserService.class);
+                    if (authAnnotation.verifyMethod() == Auth.VERIFYMETHOD_ADMIN_AUTH) {
+                        //拿到权限中心服务
+                        FeignAdminService feignAdminService = springContextHolder.getBean(FeignAdminService.class);
                         if (authAnnotation.login()) {
                             logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
                             String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
@@ -88,39 +88,39 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                if (authHeader.indexOf("uid") == -1) {
-                                    logger.info("uid不能为空 " + jsonBody);
+                                if (authHeader.indexOf("aid") == -1) {
+                                    logger.info("aid不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.FAILD);
-                                    resultVO.setMsg("uid不能为空");
+                                    resultVO.setMsg("aid不能为空");
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
                                 String[] authHeaderArray = authHeader.split(";");
-                                String uid = "-1";
+                                String aid = "-1";
                                 String lt = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("uid=") != -1) {
-                                        uid = authHeaderArray[i].split("=")[1];
+                                    if (authHeaderArray[i].indexOf("aid=") != -1) {
+                                        aid = authHeaderArray[i].split("=")[1];
                                     }
                                     if (authHeaderArray[i].indexOf("lt=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
                                 }
-                                if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
+                                if (StringUtils.equals(aid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("请求头参数异常");
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                //在这里调用用户中心 判断登录
-                                UserLoginVO queryUserLogin = new UserLoginVO();
-                                queryUserLogin.setId(Long.parseLong(uid));
-                                queryUserLogin.setLoginToken(lt);
+                                //在这里调用权限中心 判断登录
+                                Admin queryAdminLogin = new Admin();
+                                queryAdminLogin.setAdminId(aid);
+                                queryAdminLogin.setLoginToken(lt);
 
 
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
-                                ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),aid,queryAdminLogin);
+                                ResultObjectVO resultObjectVO = feignAdminService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
                                         || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
                                     logger.info("登录验证失败 " + authHeader);
@@ -140,17 +140,17 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
                                 String[] authHeaderArray = authHeader.split(";");
-                                String uid = "-1";
+                                String aid = "-1";
                                 String lt = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("uid=") != -1) {
-                                        uid = authHeaderArray[i].split("=")[1];
+                                    if (authHeaderArray[i].indexOf("aid=") != -1) {
+                                        aid = authHeaderArray[i].split("=")[1];
                                     }
                                     if (authHeaderArray[i].indexOf("lt=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
                                 }
-                                if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
+                                if (StringUtils.equals(aid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
@@ -158,13 +158,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
 
-                                //在这里调用用户中心 判断登录
-                                UserLoginVO queryUserLogin = new UserLoginVO();
-                                queryUserLogin.setId(Long.parseLong(uid));
-                                queryUserLogin.setLoginToken(lt);
+                                //在这里调用权限中心 判断登录
+                                Admin queryAdminLogin = new Admin();
+                                queryAdminLogin.setAdminId(aid);
+                                queryAdminLogin.setLoginToken(lt);
 
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
-                                ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),aid,queryAdminLogin);
+                                ResultObjectVO resultObjectVO = feignAdminService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
                                         || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
                                     logger.info("登录验证失败 " + authHeader);

@@ -112,13 +112,13 @@ public class LoginController {
                 if(resultObjectVO.getData()!=null)
                 {
                     Admin admin = JSONObject.parseObject(JSON.toJSONString(resultObjectVO.getData()), Admin.class);
-                    Cookie adminIdCookie = new Cookie("adminId",admin.getAdminId());
+                    Cookie adminIdCookie = new Cookie("aid",admin.getAdminId());
                     adminIdCookie.setPath("/");
                     //1小时过期
                     adminIdCookie.setMaxAge(3600);
                     response.addCookie(adminIdCookie);
 
-                    Cookie loginTokenCookie = new Cookie("loginToken",admin.getLoginToken());
+                    Cookie loginTokenCookie = new Cookie("lt",admin.getLoginToken());
                     loginTokenCookie.setPath("/");
                     //1小时过期
                     loginTokenCookie.setMaxAge(3600);
