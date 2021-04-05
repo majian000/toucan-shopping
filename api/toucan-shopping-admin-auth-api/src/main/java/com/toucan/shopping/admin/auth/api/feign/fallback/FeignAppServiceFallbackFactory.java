@@ -84,6 +84,21 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
+            public ResultObjectVO findById(String toucanAdminAuth, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAppService.findById失败 params:"+ JSONObject.toJSON(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO deleteByIds(String toucanAdminAuth, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)

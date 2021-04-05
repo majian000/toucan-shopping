@@ -59,7 +59,7 @@ public class AppServiceImpl implements AppService {
 
     @Transactional
     @Override
-    public int deleteById(Integer id) {
+    public int deleteById(Long id) {
         return appMapper.deleteById(id);
     }
 

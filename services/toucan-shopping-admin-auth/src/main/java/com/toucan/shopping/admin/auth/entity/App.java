@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 public class App {
-    private Integer id;
+    private Long id;
 
 
     /**

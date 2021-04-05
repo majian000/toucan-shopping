@@ -220,7 +220,52 @@ public class AppController {
         return resultObjectVO;
     }
 
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
 
+        try {
+            App app = JSONObject.parseObject(requestVo.getEntityJson(),App.class);
+            if(app.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到应用ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该应用
+            App query=new App();
+            query.setId(app.getId());
+            List<App> appList = appService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(appList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,应用不存在!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(appList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

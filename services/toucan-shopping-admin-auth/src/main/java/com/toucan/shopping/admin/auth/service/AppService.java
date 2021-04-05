@@ -19,5 +19,5 @@ public interface AppService {
 
     PageInfo<App> queryListPage(AppPageInfo appPageInfo);
 
-    int deleteById(Integer id);
+    int deleteById(Long id);
 }

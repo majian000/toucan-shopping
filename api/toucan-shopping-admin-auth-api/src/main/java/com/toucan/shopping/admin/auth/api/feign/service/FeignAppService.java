@@ -48,6 +48,19 @@ public interface FeignAppService {
     @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo);
 
+
+
+
+    /**
+     * 根据ID查询
+     * @param toucanAdminAuth
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo);
+
+
     /**
      * 批量删除应用
      * @param toucanAdminAuth

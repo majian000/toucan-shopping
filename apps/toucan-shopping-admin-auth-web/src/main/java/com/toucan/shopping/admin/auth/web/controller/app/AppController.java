@@ -1,10 +1,10 @@
 package com.toucan.shopping.admin.auth.web.controller.app;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.admin.auth.export.entity.App;
-import com.toucan.shopping.admin.auth.export.page.AdminPageInfo;
 import com.toucan.shopping.admin.auth.export.page.AppPageInfo;
 import com.toucan.shopping.admin.auth.export.vo.AppVO;
 import com.toucan.shopping.admin.auth.web.vo.TableVO;
@@ -66,6 +66,33 @@ public class AppController {
     }
 
 
+    @Auth(verifyMethod = Auth.VERIFYMETHOD_USER_CENTER,requestType = Auth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            App app = new App();
+            app.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
+            ResultObjectVO resultObjectVO = feignAppService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<App> apps = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),App.class);
+                    if(!CollectionUtils.isEmpty(apps))
+                    {
+                        request.setAttribute("model",apps.get(0));
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/app/edit.html";
+    }
+
 
     /**
      * 保存
@@ -75,13 +102,38 @@ public class AppController {
     @Auth
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(@RequestHeader("Cookie") String cookie, @RequestBody App app)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody App app)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            app.setCreateAdminId(AuthHeaderUtil.getAdminId(cookie));
+            app.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
             resultObjectVO = feignAppService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 修改
+     * @param app
+     * @return
+     */
+    @Auth
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody App app)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
+            resultObjectVO = feignAppService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
@@ -136,7 +188,7 @@ public class AppController {
     @Auth
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,@RequestHeader("Cookie") String cookie,  @PathVariable String id)
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -147,8 +199,8 @@ public class AppController {
                 return resultObjectVO;
             }
             App app =new App();
-            app.setId(Integer.parseInt(id));
-            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(cookie));
+            app.setId(Long.parseLong(id));
+            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
             String entityJson = JSONObject.toJSONString(app);
             RequestJsonVO requestVo = new RequestJsonVO();
@@ -173,7 +225,7 @@ public class AppController {
     @Auth
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request,@RequestHeader("Cookie") String cookie, @RequestBody List<AppVO> appVOs)
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AppVO> appVOs)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

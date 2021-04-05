@@ -63,8 +63,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                         //拿到用户中心服务
                         FeignUserService feignUserService = springContextHolder.getBean(FeignUserService.class);
                         if (authAnnotation.login()) {
-                            logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpBbsAuthHeader());
-                            String authHeader = request.getHeader(toucan.getAdminAuth().getHttpBbsAuthHeader());
+                            logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
+                            String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
                             //ajax请求
                             if (authAnnotation.requestType() == Auth.REQUEST_JSON) {
                                 //JSON类型请求
@@ -73,7 +73,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 logger.info("recive param " + jsonBody);
 
                                 if (StringUtils.isEmpty(authHeader)) {
-                                    logger.warn("权限请求头为空 " + toucan.getAdminAuth().getHttpBbsAuthHeader() + " : " + authHeader);
+                                    logger.warn("权限请求头为空 " + toucan.getAdminAuth().getHttpToucanAuthHeader() + " : " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("访问失败,请检查请求权限参数");
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
