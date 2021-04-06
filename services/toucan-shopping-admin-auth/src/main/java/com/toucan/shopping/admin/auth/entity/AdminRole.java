@@ -22,7 +22,7 @@ public class AdminRole {
     /**
      * 所属角色
      */
-    private Integer roleId;
+    private Long roleId;
 
 
     /**
