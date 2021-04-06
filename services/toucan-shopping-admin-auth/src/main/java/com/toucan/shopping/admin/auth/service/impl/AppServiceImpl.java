@@ -51,9 +51,12 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public PageInfo<App> queryListPage(AppPageInfo appPageInfo) {
-        PageHelper.startPage(appPageInfo.getPage(), appPageInfo.getSize());
+        //PageHelper.startPage(appPageInfo.getPage(), appPageInfo.getSize());
+        appPageInfo.setSize(appPageInfo.getLimit());
+        appPageInfo.setLimit(appPageInfo.getPage()*appPageInfo.getSize()-appPageInfo.getSize());
         List<App> apps = appMapper.queryListPage(appPageInfo);
         PageInfo<App> pageInfo = new PageInfo<>(apps);
+        pageInfo.setTotal(16);
         return pageInfo;
     }
 

@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="my_rank" jdbcType="BIGINT" property="my_rank" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -18,45 +19,49 @@
 
 
     <select id="findListByEntity" resultMap="appMap" parameterType="com.toucan.shopping.admin.auth.entity.App">
-        select * from t_app ba
+        select * from t_app t
         <where>
             1=1
             <if test="id!=null">
-                and ba.id = #{id}
+                and t.id = #{id}
             </if>
             <if test="name!=null">
-                and ba.name = #{name}
+                and t.name = #{name}
             </if>
             <if test="code!=null and code!=''">
-                and ba.code = #{code}
+                and t.code = #{code}
             </if>
             <if test="enableStatus!=null">
-                and ba.enable_status = #{enableStatus}
+                and t.enable_status = #{enableStatus}
             </if>
-            and ba.delete_status = 0
+            and t.delete_status = 0
         </where>
 
     </select>
 
 
     <select id="queryListPage" resultMap="appMap" parameterType="com.toucan.shopping.admin.auth.page.AppPageInfo">
-        select ba.* from t_app ba
+        select RANK() OVER (
+        ORDER BY t.id desc
+        ) my_rank,t.* from t_app t
         <where>
             1=1
             <if test="name!=null and name!=''">
-                and ba.name like concat('%',#{name},'%')
+                and t.name like concat('%',#{name},'%')
             </if>
             <if test="code!=null and code!=''">
-                and ba.code like concat('%',#{code},'%')
+                and t.code like concat('%',#{code},'%')
             </if>
             <if test="enableStatus!=null">
-                and ba.enable_status = #{enableStatus}
+                and t.enable_status = #{enableStatus}
             </if>
             <if test="deleteStatus!=null">
-                and ba.delete_status = #{deleteStatus}
+                and t.delete_status = #{deleteStatus}
             </if>
-            and ba.delete_status = 0
+            and t.delete_status = 0
         </where>
+        order by my_rank desc
+         limit #{limit},#{size}
 
     </select>
 

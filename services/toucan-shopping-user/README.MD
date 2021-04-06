@@ -37,7 +37,11 @@
     	"appCode": "10001001",
     	"entityJson": "{\"loginUserName\":\"18701601892\",\"password\":\"123456\"}"
     }
-
+    
+    4.查询用户列表
+    POST http://localhost:8087/user/list
+    HEADER Content-Type:application/json;charset=UTF-8
+    
 
 ### 用户详情服务
     
