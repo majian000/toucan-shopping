@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 30/03/2021 18:50:06
+ Date: 07/04/2021 11:15:10
 */
 
 SET NAMES utf8mb4;
@@ -28,13 +28,13 @@ CREATE TABLE `t_column`  (
   `show_status` tinyint(0) NULL DEFAULT NULL COMMENT '显示状态 0隐藏 1显示',
   `position` smallint(0) NULL DEFAULT NULL COMMENT '栏目位置 1首页',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
-  `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_date` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `create_date` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_date` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `create_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '创建人ID',
   `update_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '修改人ID',
   `delete_status` tinyint(0) NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 333 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_column
@@ -48,13 +48,13 @@ CREATE TABLE `t_column_area`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `column_id` bigint(0) NOT NULL COMMENT '栏目主键',
   `area_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '地区编码',
-  `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_date` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `create_date` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_date` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `create_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '创建人ID',
   `update_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '修改人ID',
   `delete_status` tinyint(0) NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目地区表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目地区表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_column_area
@@ -70,13 +70,13 @@ CREATE TABLE `t_column_banner`  (
   `column_id` bigint(0) NOT NULL COMMENT '栏目主键',
   `position` smallint(0) NULL DEFAULT NULL COMMENT '位置 1:栏目左侧',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
-  `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_date` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `create_date` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_date` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `create_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '创建人ID',
   `update_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '修改人ID',
   `delete_status` tinyint(0) NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 333 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目轮播图关联表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目轮播图关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_column_banner
@@ -95,13 +95,13 @@ CREATE TABLE `t_column_img`  (
   `show_status` tinyint(0) NULL DEFAULT 1 COMMENT '显示状态 0隐藏 1显示',
   `href` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '点击跳转路径',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
-  `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_date` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `create_date` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_date` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `create_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '创建人ID',
   `update_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '修改人ID',
   `delete_status` tinyint(0) NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 332 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目图片表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目图片表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_column_img
@@ -119,13 +119,13 @@ CREATE TABLE `t_column_sku_category`  (
   `position` smallint(0) NULL DEFAULT NULL COMMENT '位置 1:栏目顶部 2:栏目左侧',
   `category_sort` bigint(0) NULL DEFAULT NULL COMMENT '类别排序',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
-  `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_date` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `create_date` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_date` datetime(6) NULL DEFAULT NULL COMMENT '修改时间',
   `create_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '创建人ID',
   `update_admin_id` bigint(0) NULL DEFAULT NULL COMMENT '修改人ID',
   `delete_status` tinyint(0) NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 333 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目推荐商品类别表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '栏目推荐商品类别表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_column_sku_category
