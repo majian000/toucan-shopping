@@ -1,23 +1,29 @@
 package com.toucan.shopping.admin.auth.web.controller.role;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.admin.auth.api.feign.service.FeignRoleService;
+import com.toucan.shopping.admin.auth.export.entity.Role;
 import com.toucan.shopping.admin.auth.export.page.AdminPageInfo;
+import com.toucan.shopping.admin.auth.export.vo.RoleVO;
 import com.toucan.shopping.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.common.properties.Toucan;
+import com.toucan.shopping.common.util.AuthHeaderUtil;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,7 +42,7 @@ public class RoleController {
     private Toucan toucan;
 
     @Autowired
-    private FeignAdminService feignAdminService;
+    private FeignRoleService feignRoleService;
 
 
 
@@ -44,9 +50,101 @@ public class RoleController {
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
-        return "pages/admin/list.html";
+        return "pages/role/list.html";
     }
 
+
+
+
+
+
+    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
+    public String addPage()
+    {
+        return "pages/role/add.html";
+    }
+
+
+
+    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            Role entity = new Role();
+            entity.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            ResultObjectVO resultObjectVO = feignRoleService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<Role> roles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Role.class);
+                    if(!CollectionUtils.isEmpty(roles))
+                    {
+                        request.setAttribute("model",roles.get(0));
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/role/edit.html";
+    }
+
+
+
+    /**
+     * 修改
+     * @param role
+     * @return
+     */
+    @Auth
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody Role role)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            role.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
+            resultObjectVO = feignRoleService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 保存
+     * @param entity
+     * @return
+     */
+    @Auth
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody Role entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignRoleService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 
@@ -63,7 +161,7 @@ public class RoleController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignAdminService.list(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignRoleService.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -82,6 +180,78 @@ public class RoleController {
             logger.warn(e.getMessage(),e);
         }
         return tableVO;
+    }
+
+
+
+    /**
+     * 删除应用
+     * @param request
+     * @return
+     */
+    @Auth
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            Role role =new Role();
+            role.setId(Long.parseLong(id));
+            role.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+
+            String entityJson = JSONObject.toJSONString(role);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignRoleService.deleteById(SignUtil.sign(requestVo),requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 删除应用
+     * @param request
+     * @return
+     */
+    @Auth
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<RoleVO> roleVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(roleVOS))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String entityJson = JSONObject.toJSONString(roleVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignRoleService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
     }
 
 
