@@ -1,7 +1,7 @@
 package com.toucan.shopping.user.service;
 
 
-import com.github.pagehelper.PageInfo;
+import com.toucan.shopping.common.page.PageInfo;
 import com.toucan.shopping.user.entity.User;
 import com.toucan.shopping.user.page.UserPageInfo;
 import com.toucan.shopping.user.vo.UserVO;

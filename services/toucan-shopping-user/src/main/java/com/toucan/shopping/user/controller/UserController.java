@@ -2,7 +2,7 @@ package com.toucan.shopping.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
+import com.toucan.shopping.common.page.PageInfo;
 import com.toucan.shopping.user.constant.UserLoginConstant;
 import com.toucan.shopping.user.constant.UserRegistConstant;
 import com.toucan.shopping.user.entity.UserDetail;

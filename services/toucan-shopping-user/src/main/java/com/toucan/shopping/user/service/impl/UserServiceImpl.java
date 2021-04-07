@@ -1,7 +1,6 @@
 package com.toucan.shopping.user.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.toucan.shopping.common.page.PageInfo;
 import com.toucan.shopping.user.entity.User;
 import com.toucan.shopping.user.mapper.UserMapper;
 import com.toucan.shopping.user.page.UserPageInfo;
@@ -54,7 +53,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageInfo<UserVO> queryListPage(UserPageInfo appPageInfo) {
-        PageHelper.startPage(appPageInfo.getPage(), appPageInfo.getSize());
         List<UserVO> users = userMapper.queryListPage(appPageInfo);
         PageInfo<UserVO> pageInfo = new PageInfo<>(users);
         return pageInfo;

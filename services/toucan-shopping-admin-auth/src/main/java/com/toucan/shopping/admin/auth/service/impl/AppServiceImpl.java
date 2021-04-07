@@ -1,11 +1,10 @@
 package com.toucan.shopping.admin.auth.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.admin.auth.entity.App;
 import com.toucan.shopping.admin.auth.mapper.AppMapper;
 import com.toucan.shopping.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.admin.auth.service.AppService;
+import com.toucan.shopping.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,12 +50,11 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public PageInfo<App> queryListPage(AppPageInfo appPageInfo) {
-        //PageHelper.startPage(appPageInfo.getPage(), appPageInfo.getSize());
         appPageInfo.setSize(appPageInfo.getLimit());
         appPageInfo.setLimit(appPageInfo.getPage()*appPageInfo.getSize()-appPageInfo.getSize());
         List<App> apps = appMapper.queryListPage(appPageInfo);
         PageInfo<App> pageInfo = new PageInfo<>(apps);
-        pageInfo.setTotal(16);
+        pageInfo.setTotal((long)16);
         return pageInfo;
     }
 

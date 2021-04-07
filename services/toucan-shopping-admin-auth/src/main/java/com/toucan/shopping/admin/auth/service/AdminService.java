@@ -1,12 +1,9 @@
 package com.toucan.shopping.admin.auth.service;
 
-
-
-
-import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.admin.auth.entity.Admin;
 import com.toucan.shopping.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.admin.auth.vo.AdminVO;
+import com.toucan.shopping.common.page.PageInfo;
 
 import java.util.List;
 

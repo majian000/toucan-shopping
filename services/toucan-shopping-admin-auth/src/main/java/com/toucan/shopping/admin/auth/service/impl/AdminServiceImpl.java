@@ -1,13 +1,12 @@
 package com.toucan.shopping.admin.auth.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.admin.auth.service.AdminService;
 import com.toucan.shopping.admin.auth.entity.Admin;
 import com.toucan.shopping.admin.auth.mapper.AdminMapper;
 import com.toucan.shopping.admin.auth.service.AdminService;
 import com.toucan.shopping.admin.auth.vo.AdminVO;
+import com.toucan.shopping.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +46,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public PageInfo<AdminVO> queryListPage(AdminPageInfo appPageInfo) {
-        PageHelper.startPage(appPageInfo.getPage(), appPageInfo.getSize());
         List<AdminVO> admins = adminMapper.queryListPage(appPageInfo);
         PageInfo<AdminVO> pageInfo = new PageInfo<>(admins);
         return pageInfo;

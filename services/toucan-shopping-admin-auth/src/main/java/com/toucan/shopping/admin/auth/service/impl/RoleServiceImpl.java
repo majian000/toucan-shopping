@@ -1,13 +1,12 @@
 package com.toucan.shopping.admin.auth.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.admin.auth.entity.Role;
 import com.toucan.shopping.admin.auth.entity.Role;
 import com.toucan.shopping.admin.auth.mapper.RoleMapper;
 import com.toucan.shopping.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.admin.auth.service.RoleService;
 import com.toucan.shopping.admin.auth.service.RoleService;
+import com.toucan.shopping.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +52,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public PageInfo<Role> queryListPage(RolePageInfo RolePageInfo) {
-        PageHelper.startPage(RolePageInfo.getPage(), RolePageInfo.getSize());
         List<Role> Roles = roleMapper.queryListPage(RolePageInfo);
         PageInfo<Role> pageInfo = new PageInfo<>(Roles);
         return pageInfo;
