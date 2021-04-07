@@ -40,7 +40,10 @@
     
     4.查询用户列表
     POST http://localhost:8087/user/list
-    HEADER Content-Type:application/json;charset=UTF-8
+    请求头
+    Content-Type:application/json;charset=UTF-8
+    请求体
+    {         "appCode": "10000001",         "entityJson": "{\"page\":1,\"limit\":10 }"     }
     
 
 ### 用户详情服务

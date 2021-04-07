@@ -26,7 +26,6 @@ public class App {
      */
     private Short enableStatus;
 
-    private Long my_rank;
 
     /**
      *编码

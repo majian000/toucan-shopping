@@ -6,14 +6,18 @@ import com.toucan.shopping.user.export.vo.UserElasticSearchVO;
 import com.toucan.shopping.user.service.UserElasticSearchService;
 import com.toucan.shopping.user.vo.SearchAfterPage;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -31,6 +35,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service("esUserService")
 public class UserElasticSearchServiceImpl implements UserElasticSearchService {
@@ -65,6 +71,37 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
             logger.warn(e.getMessage(),e);
         }
 
+    }
+
+    @Override
+    public boolean existsIndex() {
+        try {
+            GetAliasesRequest request = new GetAliasesRequest();
+            GetAliasesResponse getAliasesResponse = restHighLevelClient.indices().getAlias(request, RequestOptions.DEFAULT);
+            Map<String, Set<AliasMetadata>> map = getAliasesResponse.getAliases();
+            Set<String> indices = map.keySet();
+            for (String key : indices) {
+                if(key.toLowerCase().equals(UserCacheElasticSearchConstant.USER_INDEX))
+                {
+                    return true;
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return false;
+    }
+
+    @Override
+    public void createIndex() {
+        try {
+            CreateIndexRequest request = new CreateIndexRequest(UserCacheElasticSearchConstant.USER_INDEX);
+            restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
     }
 
     @Override

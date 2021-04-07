@@ -18,5 +18,7 @@ public interface AppMapper {
 
     List<App> queryListPage(AppPageInfo appPageInfo);
 
+    Long queryListPageCount(AppPageInfo appPageInfo);
+
     int deleteById(Long id);
 }

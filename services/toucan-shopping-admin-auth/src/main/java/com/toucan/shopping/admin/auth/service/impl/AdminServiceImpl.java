@@ -47,7 +47,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public PageInfo<AdminVO> queryListPage(AdminPageInfo appPageInfo) {
         List<AdminVO> admins = adminMapper.queryListPage(appPageInfo);
-        PageInfo<AdminVO> pageInfo = new PageInfo<>(admins);
+        PageInfo<AdminVO> pageInfo = new PageInfo();
+        pageInfo.setList(admins);
         return pageInfo;
     }
 

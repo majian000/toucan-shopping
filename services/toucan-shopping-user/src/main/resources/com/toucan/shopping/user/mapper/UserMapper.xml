@@ -21,6 +21,15 @@
 
     </resultMap>
 
+    <sql id="queryListPageWhere">
+        <if test="idArray!=null ">
+            and tu.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </sql>
+
     <select id="findListByEntity" resultMap="userMap" parameterType="com.toucan.shopping.user.entity.User">
         select * from t_user bu
         <where>
@@ -40,18 +49,26 @@
         <where>
             1=1 and tu.delete_status = 0
 
-            <if test="idArray!=null ">
-                and tu.id in
-                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
+            <include refid="queryListPageWhere" />
+
+        </where>
+        order by tu.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.user.page.UserPageInfo">
+        select count(*) from t_user tu
+        <where>
+            1=1 and tu.delete_status = 0
+
+            <include refid="queryListPageWhere" />
 
         </where>
 
-        order by tu.id desc
     </select>
-
 
     <select id="findById" resultMap="userMap" parameterType="java.lang.Long">
         select * from t_user bu where 1=1 and bu.id = #{id} and bu.delete_status = 0

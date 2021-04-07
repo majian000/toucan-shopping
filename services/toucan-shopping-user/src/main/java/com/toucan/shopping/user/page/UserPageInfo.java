@@ -1,7 +1,12 @@
 package com.toucan.shopping.user.page;
 
+import com.toucan.shopping.common.page.PageInfo;
+import com.toucan.shopping.user.entity.User;
 import com.toucan.shopping.user.export.entity.UserApp;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -10,24 +15,13 @@ import java.util.List;
  * 应用列表查询页
  */
 @Data
-public class UserPageInfo {
-
-    /**
-     * 页码
-     */
-    private int page;
-
-    /**
-     * 每页显示数量
-     */
-    private int size;
-
-    /**
-     * 每页显示数量(前台控件用)
-     */
-    private int limit;
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(callSuper = true)
+public class UserPageInfo extends PageInfo<User> {
 
 
+    // ===============查询条件===================
 
 
     /**
@@ -95,8 +89,6 @@ public class UserPageInfo {
     private Long[] idArray; //ID数组
 
 
-    //前台传入
-
     /**
      * 验证码
      */
@@ -111,5 +103,12 @@ public class UserPageInfo {
      * elasticsearch当前页末尾字段值
      */
     private String[] sortValues;
+
+
+    //==============================================
+
+
+
+
 
 }

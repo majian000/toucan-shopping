@@ -19,6 +19,9 @@
 
     1.设置用户返回最大记录数
     PUT http://localhost:9200/user_index/_settings
+    请求头
+    Content-Type:application/json
+    请求体
     {
       "index": {
         "max_result_window": 10000

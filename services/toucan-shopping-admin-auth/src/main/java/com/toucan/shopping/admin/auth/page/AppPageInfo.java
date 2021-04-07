@@ -1,27 +1,23 @@
 package com.toucan.shopping.admin.auth.page;
 
+import com.toucan.shopping.admin.auth.entity.App;
+import com.toucan.shopping.common.page.PageInfo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 应用列表查询页
  */
 @Data
-public class AppPageInfo {
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(callSuper = true)
+public class AppPageInfo extends PageInfo<App> {
 
-    /**
-     * 页码
-     */
-    private int page;
 
-    /**
-     * 每页显示数量
-     */
-    private int size;
-
-    /**
-     * 每页显示数量
-     */
-    private int limit;
+    // ===============查询条件===================
 
     /**
      * 所属管理员账号ID
@@ -50,4 +46,5 @@ public class AppPageInfo {
      */
     private String code;
 
+    //==============================================
 }

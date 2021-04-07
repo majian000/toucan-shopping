@@ -17,10 +17,6 @@ public class UserPageInfo {
      */
     private int page;
 
-    /**
-     * 每页显示数量
-     */
-    private int size;
 
     /**
      * 每页显示数量(前台控件用)

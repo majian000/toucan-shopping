@@ -22,4 +22,6 @@ public interface UserMapper {
 
     List<UserVO> queryListPage(UserPageInfo appPageInfo);
 
+    Long queryListPageCount(UserPageInfo appPageInfo);
+
 }

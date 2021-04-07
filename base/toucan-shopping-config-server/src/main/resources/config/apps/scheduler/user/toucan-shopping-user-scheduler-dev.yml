@@ -65,5 +65,5 @@ toucan:
   admin-auth:
     enabled: true
     name: toucan-shopping-admin-auth
-  admin-auth-scheduler:
-    loop-es-cache: false #循环查询用户缓存到es
+  user-center-scheduler:
+    loop-es-cache: true #循环查询用户缓存到es

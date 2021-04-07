@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.user.export.constant.UserCacheElasticSearchConstant;
 import com.toucan.shopping.user.export.entity.User;
 import com.toucan.shopping.user.export.page.UserPageInfo;
 import com.toucan.shopping.user.export.vo.UserElasticSearchVO;
@@ -63,13 +64,14 @@ public class UserEsCacheThread extends Thread {
                 try {
                     logger.info(" 缓存用户信息到ElasticSearch ........");
                     int page = 1;
-                    int size = 1000;
+                    int limit = 500;
                     PageInfo pageInfo = null;
                     boolean isUpdate = false;
+                    boolean existsIndex = false;
                     do {
-                        logger.info(" 查询用户列表 页码:{} 每页显示 {} ", page, size);
+                        logger.info(" 查询用户列表 页码:{} 每页显示 {} ", page, limit);
                         UserPageInfo query = new UserPageInfo();
-                        query.setSize(size);
+                        query.setLimit(limit);
                         query.setPage(page);
                         pageInfo = queryUserPage(query);
                         page++;
@@ -80,6 +82,13 @@ public class UserEsCacheThread extends Thread {
                             logger.info("缓存用户列表 到Elasticsearch {}", userListJson);
                             for (UserVO user : userList) {
                                 isUpdate = false;
+                                if(!existsIndex) {
+                                    //如果不存在索引就创建一个
+                                    while (!esUserService.existsIndex()) {
+                                        esUserService.createIndex();
+                                    }
+                                    existsIndex = true;
+                                }
                                 List<UserElasticSearchVO> userElasticSearchVOS = esUserService.queryById(user.getId());
                                 //如果缓存不存在用户将缓存起来
                                 if (CollectionUtils.isEmpty(userElasticSearchVOS)) {

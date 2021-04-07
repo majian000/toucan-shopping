@@ -21,6 +21,17 @@ public interface UserElasticSearchService {
     void update(UserElasticSearchVO esUserVO);
 
     /**
+     * 是否存在索引
+     * @return
+     */
+    boolean existsIndex();
+
+    /**
+     * 创建索引
+     */
+    void createIndex();
+
+    /**
      * 查询列表 from size方式
      * @param esUserVo
      * @return

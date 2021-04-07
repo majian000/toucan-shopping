@@ -6,7 +6,6 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="code" jdbcType="VARCHAR" property="code" />
-        <result column="my_rank" jdbcType="BIGINT" property="my_rank" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -16,6 +15,21 @@
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         
     </resultMap>
+
+    <sql id="queryListPageWhere">
+        <if test="name!=null and name!=''">
+            and t.name like concat('%',#{name},'%')
+        </if>
+        <if test="code!=null and code!=''">
+            and t.code like concat('%',#{code},'%')
+        </if>
+        <if test="enableStatus!=null">
+            and t.enable_status = #{enableStatus}
+        </if>
+        <if test="deleteStatus!=null">
+            and t.delete_status = #{deleteStatus}
+        </if>
+    </sql>
 
 
     <select id="findListByEntity" resultMap="appMap" parameterType="com.toucan.shopping.admin.auth.entity.App">
@@ -41,27 +55,30 @@
 
 
     <select id="queryListPage" resultMap="appMap" parameterType="com.toucan.shopping.admin.auth.page.AppPageInfo">
-        select RANK() OVER (
-        ORDER BY t.id desc
-        ) my_rank,t.* from t_app t
+        select t.* from t_app t
         <where>
             1=1
-            <if test="name!=null and name!=''">
-                and t.name like concat('%',#{name},'%')
-            </if>
-            <if test="code!=null and code!=''">
-                and t.code like concat('%',#{code},'%')
-            </if>
-            <if test="enableStatus!=null">
-                and t.enable_status = #{enableStatus}
-            </if>
-            <if test="deleteStatus!=null">
-                and t.delete_status = #{deleteStatus}
-            </if>
+
+            <include refid="queryListPageWhere" />
+
             and t.delete_status = 0
         </where>
-        order by my_rank desc
-         limit #{limit},#{size}
+        order by t.create_date desc
+        limit #{start},#{limit}
+
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.admin.auth.page.AppPageInfo">
+        select count(*) from t_app t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
 
     </select>
 
