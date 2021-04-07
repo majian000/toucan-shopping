@@ -1,7 +1,12 @@
 package com.toucan.shopping.admin.auth.page;
 
+import com.toucan.shopping.admin.auth.entity.Admin;
 import com.toucan.shopping.admin.auth.entity.AdminApp;
+import com.toucan.shopping.common.page.PageInfo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -10,23 +15,13 @@ import java.util.List;
  * 应用列表查询页
  */
 @Data
-public class AdminPageInfo {
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(callSuper = true)
+public class AdminPageInfo extends PageInfo<Admin> {
 
-    /**
-     * 页码
-     */
-    private int page;
 
-    /**
-     * 每页显示数量
-     */
-    private int size;
-
-    /**
-     * 每页显示数量(前台控件用)
-     */
-    private int limit;
-
+    // ===============查询条件===================
 
     private Integer id;
 
@@ -87,5 +82,6 @@ public class AdminPageInfo {
 
     private Long[] idArray; //ID数组
 
+    //==============================================
 
 }

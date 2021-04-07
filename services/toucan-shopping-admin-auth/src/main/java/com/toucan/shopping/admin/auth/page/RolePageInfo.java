@@ -1,32 +1,42 @@
 package com.toucan.shopping.admin.auth.page;
 
 import com.toucan.shopping.admin.auth.entity.Role;
+import com.toucan.shopping.common.page.PageInfo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 角色列表查询页
  */
 @Data
-public class RolePageInfo extends Role {
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(callSuper = true)
+public class RolePageInfo extends PageInfo<Role> {
+
+
+
+
+    // ===============查询条件===================
 
     /**
-     * 页码
+     * 角色名
      */
-    private int page;
+    private String name;
 
     /**
-     * 每页显示数量
+     * 启用状态 0:禁用 1启用
      */
-    private int size;
-
+    private Short enableStatus;
     /**
-     * 每页显示数量
+     * 所属应用
      */
-    private int limit;
+    private String appCode;
 
 
-
-
+    //==============================================
 
 
 }

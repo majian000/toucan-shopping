@@ -18,5 +18,7 @@ public interface RoleMapper {
 
     List<Role> queryListPage(RolePageInfo rolePageInfo);
 
+    Long queryListPageCount(RolePageInfo rolePageInfo);
+
     int deleteById(Long id);
 }

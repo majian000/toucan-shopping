@@ -18,17 +18,17 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">应用名称</label>
+        <label class="layui-form-label required">角色名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" maxlength="60" lay-reqtext="名称不能为空" placeholder="请输入应用名称" value="" class="layui-input">
-            <tip>填写应用的名称。</tip>
+            <input type="text" name="name" lay-verify="required" maxlength="60" lay-reqtext="名称不能为空" placeholder="请输入角色名称" value="" class="layui-input">
+            <tip>填写角色的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">应用编码</label>
         <div class="layui-input-block">
-            <input type="text" name="code" lay-verify="required" maxlength="8" lay-reqtext="应用编码不能为空" placeholder="请输入应用编码" value="" class="layui-input">
-            <tip>填写应用的编码。</tip>
+            <input type="text" name="appCode" lay-verify="required" maxlength="8" lay-reqtext="角色编码不能为空" placeholder="请输入角色编码" value="" class="layui-input">
+            <tip>填写角色的编码。</tip>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
@@ -54,7 +54,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/app/save}]]",
+                url:"[[@{/role/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

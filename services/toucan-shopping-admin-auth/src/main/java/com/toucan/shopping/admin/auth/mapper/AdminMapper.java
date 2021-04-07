@@ -15,8 +15,7 @@ public interface AdminMapper {
 
     public List<Admin> findListByEntity(Admin admin);
 
-
-
     List<AdminVO> queryListPage(AdminPageInfo adminPageInfo);
 
+    Long queryListPageCount(AdminPageInfo adminPageInfo);
 }

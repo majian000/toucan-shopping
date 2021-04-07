@@ -58,6 +58,7 @@
     </style>
 </head>
 <body>
+<span th:replace="common_page::common"></span>
 <div class="main-body">
     <div class="login-main">
         <div class="login-top">
@@ -80,7 +81,7 @@
 
                 <div id="validatePanel" class="item" style="width: 137px;">
                     <input type="text" name="vcode" placeholder="请输入验证码" maxlength="4">
-                    <img id="refreshCaptcha" class="validateImg"  th:src="@{/login/vcode}" >
+                    <img id="refreshCaptcha" class="validateImg"  th:src="@{/login/vcode}"  >
                 </div>
 
             </div>
@@ -153,7 +154,16 @@
             });
             return false;
         });
+
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",ctxPath+"/login/vcode?"+new Date().getTime());
+        });
+
+
+
     });
+
 </script>
 </body>
 </html>

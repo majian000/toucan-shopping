@@ -22,7 +22,7 @@
           "target": "_self",
           "child": [
             {
-              "title": "用户缓存列表",
+              "title": "用户缓存",
               "href": "../user/es/listPage",
               "icon": "fa fa-list-alt",
               "target": "_self"

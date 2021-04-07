@@ -58,6 +58,7 @@
     </style>
 </head>
 <body>
+<span th:replace="common_page::common"></span>
 <div class="main-body">
     <div class="login-main">
         <div class="login-top">
@@ -153,6 +154,12 @@
             });
             return false;
         });
+
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",ctxPath+"/login/vcode?"+new Date().getTime());
+        });
+
     });
 </script>
 </body>

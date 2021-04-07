@@ -5,7 +5,7 @@
     <resultMap id="roleMap" type="com.toucan.shopping.admin.auth.entity.Role" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="appCode" jdbcType="VARCHAR" property="appCode" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -17,6 +17,16 @@
     </resultMap>
 
 
+    <sql id="queryListPageWhere">
+
+        <if test="name!=null and name!=''">
+            and t.name like concat('%',#{name},'%')
+        </if>
+        <if test="enableStatus!=null">
+            and t.enable_status = #{enableStatus}
+        </if>
+    </sql>
+
     <select id="findListByEntity" resultMap="roleMap" parameterType="com.toucan.shopping.admin.auth.entity.Role">
         select * from t_sa_role t
         <where>
@@ -27,8 +37,8 @@
             <if test="name!=null">
                 and t.name = #{name}
             </if>
-            <if test="code!=null and code!=''">
-                and t.code = #{code}
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code = #{appCode}
             </if>
             <if test="enableStatus!=null">
                 and t.enable_status = #{enableStatus}
@@ -43,23 +53,31 @@
         select t.* from t_sa_role t
         <where>
             1=1
-            <if test="name!=null and name!=''">
-                and t.name like concat('%',#{name},'%')
-            </if>
-            <if test="enableStatus!=null">
-                and t.enable_status = #{enableStatus}
-            </if>
-            <if test="deleteStatus!=null">
-                and t.delete_status = #{deleteStatus}
-            </if>
+
+            <include refid="queryListPageWhere" />
+
             and t.delete_status = 0
         </where>
-
+        order by t.create_date desc
+        limit #{start},#{limit}
     </select>
 
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.admin.auth.page.RolePageInfo">
+        select count(*) from t_sa_role t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+    </select>
+
+
+
     <insert id="insert" parameterType="com.toucan.shopping.admin.auth.entity.Role" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_role(name,remark,code,create_admin_id,enable_status,create_date,delete_status)
-        values(#{name},#{remark},#{code},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_sa_role(name,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
+        values(#{name},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.admin.auth.entity.Role">

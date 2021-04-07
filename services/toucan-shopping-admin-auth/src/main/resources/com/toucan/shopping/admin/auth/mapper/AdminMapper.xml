@@ -26,6 +26,20 @@
 
     </resultMap>
 
+    <sql id="queryListPageWhere">
+
+        <if test="username!=null and username!='' ">
+            and tu.username  like concat('%',#{username},'%')
+
+        </if>
+        <if test="idArray!=null ">
+            and tu.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </sql>
+
 
     <select id="findListByEntity" resultMap="adminMap" parameterType="com.toucan.shopping.admin.auth.entity.Admin">
         select * from t_sa_admin saa
@@ -48,18 +62,23 @@
         select tu.* from t_sa_admin tu
         <where>
             1=1 and tu.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by tu.id desc
+        limit #{start},#{limit}
+    </select>
 
-            <if test="idArray!=null ">
-                and tu.id in
-                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
 
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.admin.auth.page.AdminPageInfo">
+        select count(*) from t_sa_admin tu
+        <where>
+            1=1 and tu.delete_status = 0
+
+            <include refid="queryListPageWhere" />
         </where>
 
-        order by tu.id desc
     </select>
+
 
     <insert id="insert" parameterType="com.toucan.shopping.admin.auth.entity.Admin" useGeneratedKeys="true" keyProperty="id" >
         insert into t_sa_admin(username,password,admin_id,enable_status,create_date,delete_status,create_admin_id,remark)

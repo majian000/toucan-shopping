@@ -167,7 +167,7 @@ public class RoleController {
                 if(resultObjectVO.getData()!=null)
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
                     }

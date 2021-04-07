@@ -14,10 +14,15 @@ spring:
       sampler:
         #采样率 1全部采集
         probability: 1
+
+
 eureka:
   client:
+    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+    registerWithEureka: false
     serviceUrl:
       defaultZone: http://localhost:8081/eureka
+
 
 toucan:
   app-code: 10001002 #自定义应用编码

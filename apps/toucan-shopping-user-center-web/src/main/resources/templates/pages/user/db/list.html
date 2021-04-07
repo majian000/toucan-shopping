@@ -99,7 +99,7 @@
             cols: [
                 [
                 {type: "checkbox", width: 50},
-                {field: 'userId', width: 180, title: '用户ID'},
+                {field: 'id', width: 180, title: '用户ID'},
                 {field: 'mobilePhone', width: 200, title: '手机号'},
                 {field: 'nickName', width: 240, title: '昵称'},
                 {field: 'email', width: 240, title: '邮箱'},
@@ -110,6 +110,13 @@
                     }
                     return "禁用"
                 }},
+                {field: 'sex', width: 80, title: '性别',
+                    templet: function (row) {
+                        if(row.sex == "1"){
+                            return "男"
+                        }
+                        return "女"
+                    }},
                 {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
             ]
             ],
