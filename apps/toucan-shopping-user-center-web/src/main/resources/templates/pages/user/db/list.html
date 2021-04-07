@@ -28,24 +28,6 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">手机号</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="mobilePhone" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">昵称</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="nickName" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">邮箱</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="email" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
@@ -131,16 +113,9 @@
                 {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
             ]
             ],
-            limits: [100],
-            limit: 100,
-            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
-                layout: ['limit', 'count', 'page', 'next'] //自定义分页布局
-                //,curr: 5 //设定初始在第 5 页
-                ,groups: 1 //只显示 1 个连续页码
-                ,first: false //不显示首页
-                ,last: false //不显示尾页
-
-            },
+            limits: [15,50,100,300],
+            limit: 15,
+            page: true,
             skin: 'line'
         });
 

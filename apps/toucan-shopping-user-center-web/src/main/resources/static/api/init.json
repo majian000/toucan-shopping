@@ -22,6 +22,12 @@
           "target": "_self",
           "child": [
             {
+              "title": "用户缓存列表",
+              "href": "../user/es/listPage",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
               "title": "用户列表",
               "href": "../user/listPage",
               "icon": "fa fa-list-alt",
