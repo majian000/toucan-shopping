@@ -88,6 +88,8 @@ public class UserPageInfo extends PageInfo<User> {
 
     private Long[] idArray; //ID数组
 
+    private Long[] userMainIdArray; //ID数组
+
 
     /**
      * 验证码

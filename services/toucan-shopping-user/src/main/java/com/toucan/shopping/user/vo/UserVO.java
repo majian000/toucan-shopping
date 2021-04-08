@@ -22,6 +22,17 @@ public class UserVO {
     private String userId;
 
     /**
+     * 用户ID
+     */
+    private Long userMainId;
+
+    /**
+     * 用户ID字符串
+     */
+    private String userMainIdString;
+
+
+    /**
      * 手机号
      */
     private String mobilePhone;

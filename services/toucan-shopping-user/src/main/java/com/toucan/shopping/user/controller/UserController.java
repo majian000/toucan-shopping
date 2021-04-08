@@ -189,6 +189,7 @@ public class UserController {
             } else {
                 User user = new User();
                 user.setId(idGenerator.id());
+                user.setUserMainId(idGenerator.id());
                 user.setCreateDate(new Date());
                 user.setPassword(MD5Util.md5(userRegistVO.getPassword()));
                 user.setEnableStatus((short) 1);
@@ -208,7 +209,7 @@ public class UserController {
                     //设置手机号
                     userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
                     //设置用户主表ID
-                    userMobilePhone.setUserMainId(user.getId());
+                    userMobilePhone.setUserMainId(user.getUserMainId());
                     userMobilePhone.setCreateDate(new Date());
                     userMobilePhone.setDeleteStatus((short) 0);
                     row = userMobilePhoneService.save(userMobilePhone);
@@ -222,7 +223,7 @@ public class UserController {
                         //保存用户昵称
                         UserDetail userDetail = new UserDetail();
                         userDetail.setId(idGenerator.id());
-                        userDetail.setUserMainId(user.getId());
+                        userDetail.setUserMainId(user.getUserMainId());
                         userDetail.setNickName("用户"+userRegistVO.getMobilePhone());
                         userDetail.setSex((short)1);
                         userDetail.setCreateDate(new Date());
@@ -237,6 +238,7 @@ public class UserController {
                             //发送创建用户到缓存
                             UserCreateMessage userCreateMessage = new UserCreateMessage();
                             userCreateMessage.setId(user.getId());
+                            userCreateMessage.setUserMainId(user.getUserMainId());
                             userCreateMessage.setEnableStatus(user.getEnableStatus());
                             userCreateMessage.setMobilePhone(userMobilePhone.getMobilePhone());
                             userCreateMessage.setNickName(userDetail.getNickName());
@@ -468,6 +470,26 @@ public class UserController {
                 return resultObjectVO;
             }
 
+            Long[] userMainIdArray = null;
+            //手机号查询,先查询手机号子表
+            if(StringUtils.isNotEmpty(userPageInfo.getMobilePhone()))
+            {
+                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(userPageInfo.getMobilePhone());
+                if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+                    userMainIdArray = new Long[userMobilePhones.size()];
+                    for (int i = 0; i < userMobilePhones.size(); i++) {
+                        userMainIdArray[i] = userMobilePhones.get(i).getUserMainId();
+                    }
+                }
+            }
+
+            //如果没有匹配到数据,设置一个不存在的ID
+            if(userMainIdArray==null)
+            {
+                userMainIdArray = new Long[]{2L};
+            }
+
+            userPageInfo.setUserMainIdArray(userMainIdArray);
 
             //查询用户主表
             PageInfo<UserVO> pageInfo =  userService.queryListPage(userPageInfo);
@@ -477,7 +499,7 @@ public class UserController {
 
                 for(int i=0;i<pageInfo.getList().size();i++)
                 {
-                    userIdArray[i] = pageInfo.getList().get(i).getId();
+                    userIdArray[i] = pageInfo.getList().get(i).getUserMainId();
                 }
 
                 //查询用户手机号关联表
@@ -524,7 +546,7 @@ public class UserController {
                     {
                         for(UserVO userVO:pageInfo.getList())
                         {
-                            if(userDetail.getUserMainId().longValue()==userVO.getId().longValue())
+                            if(userDetail.getUserMainId().longValue()==userVO.getUserMainId().longValue())
                             {
                                 userVO.setNickName(userDetail.getNickName());
                                 userVO.setTrueName(userDetail.getTrueName());

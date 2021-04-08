@@ -13,8 +13,9 @@ public interface UserMobilePhoneMapper {
 
     List<UserMobilePhone> findListByEntity(UserMobilePhone userMobilePhone);
 
-
     List<UserMobilePhone> findListByMobilePhone(String mobilePhone);
+
+    List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone);
 
     List<UserMobilePhone> queryListByUserId(Long[] userIdArray);
 

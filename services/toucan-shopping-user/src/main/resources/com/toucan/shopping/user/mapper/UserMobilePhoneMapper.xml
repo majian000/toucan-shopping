@@ -55,6 +55,11 @@
         select * from t_user_mobile_phone bu where  1=1  and bu.mobile_phone = #{mobilePhone}  and bu.delete_status = 0
     </select>
 
+
+    <select id="findListByMobilePhoneLike" resultMap="userMobilePhoneMap" parameterType="java.lang.String">
+        select * from t_user_mobile_phone bu where  1=1  and bu.mobile_phone like concat('%',#{mobilePhone},'%')  and bu.delete_status = 0
+    </select>
+
     <insert id="insert" parameterType="com.toucan.shopping.user.entity.UserMobilePhone" keyProperty="id" >
         insert into t_user_mobile_phone(id,mobile_phone,user_main_id,create_date,delete_status)
         values(#{id},#{mobilePhone},#{userMainId},#{createDate},#{deleteStatus})

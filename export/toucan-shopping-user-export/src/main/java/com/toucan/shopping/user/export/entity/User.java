@@ -10,8 +10,17 @@ import java.util.List;
  */
 @Data
 public class User {
+
+
+    /**
+     * 主键 雪花算法生成
+     */
     private Long id;
 
+    /**
+     * 用户ID,用该字段分库分表
+     */
+    private Long userMainId;
 
 
     /**

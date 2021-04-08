@@ -17,6 +17,10 @@ public class User {
      */
     private Long id;
 
+    /**
+     * 用户ID,用该字段分库分表
+     */
+    private Long userMainId;
 
 
     /**

@@ -27,6 +27,11 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
         return userMobilePhoneMapper.findListByMobilePhone(mobilePhone);
     }
 
+    @Override
+    public List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone) {
+        return userMobilePhoneMapper.findListByMobilePhoneLike(mobilePhone);
+    }
+
     @Transactional
     @Override
     public int save(UserMobilePhone entity) {

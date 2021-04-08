@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 07/04/2021 11:28:36
+ Date: 08/04/2021 18:46:44
 */
 
 SET NAMES utf8mb4;
@@ -23,6 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `t_user_0`;
 CREATE TABLE `t_user_0`  (
   `id` bigint(0) NOT NULL COMMENT '主键',
+  `user_main_id` bigint(0) NOT NULL COMMENT '用户主表ID',
   `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `enable_status` tinyint(0) NOT NULL DEFAULT 0 COMMENT '启用状态 0:禁用 1启用',
   `create_date` datetime(6) NOT NULL COMMENT '创建时间',
@@ -40,6 +41,7 @@ CREATE TABLE `t_user_0`  (
 DROP TABLE IF EXISTS `t_user_1`;
 CREATE TABLE `t_user_1`  (
   `id` bigint(0) NOT NULL COMMENT '主键',
+  `user_main_id` bigint(0) NOT NULL COMMENT '用户主表ID',
   `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `enable_status` tinyint(0) NOT NULL DEFAULT 0 COMMENT '启用状态 0:禁用 1启用',
   `create_date` datetime(6) NOT NULL COMMENT '创建时间',
@@ -62,7 +64,7 @@ CREATE TABLE `t_user_app`  (
   `create_date` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
   `delete_status` tinyint(0) NOT NULL DEFAULT 0 COMMENT '删除状态 0未删除 1已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1002 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户应用关联' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1003 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户应用关联' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of t_user_app

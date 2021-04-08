@@ -13,6 +13,8 @@ public interface UserMobilePhoneService {
 
     List<UserMobilePhone> findListByMobilePhone(String mobilePhone);
 
+    List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone);
+
     int save(UserMobilePhone entity);
 
 

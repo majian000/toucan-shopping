@@ -4,6 +4,7 @@
 
     <resultMap id="userMap" type="com.toucan.shopping.user.entity.User" >
         <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="password" jdbcType="VARCHAR" property="password" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -14,6 +15,7 @@
 
     <resultMap id="userVOMap" type="com.toucan.shopping.user.vo.UserVO" >
         <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="password" jdbcType="VARCHAR" property="password" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -22,12 +24,20 @@
     </resultMap>
 
     <sql id="queryListPageWhere">
-        <if test="idArray!=null ">
+        <if test="idArray!=null and idArray.length>0 ">
             and tu.id in
             <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
                 #{item}
             </foreach>
         </if>
+
+        <if test="userMainIdArray!=null and userMainIdArray.length>0 ">
+            and tu.user_main_id in
+            <foreach item="item" index="index" collection="userMainIdArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
     </sql>
 
     <select id="findListByEntity" resultMap="userMap" parameterType="com.toucan.shopping.user.entity.User">
@@ -45,14 +55,14 @@
 
 
     <select id="queryListPage" resultMap="userVOMap" parameterType="com.toucan.shopping.user.page.UserPageInfo">
-        select tu.id,tu.enable_status from t_user tu
+        select tu.* from t_user tu
         <where>
             1=1 and tu.delete_status = 0
 
             <include refid="queryListPageWhere" />
 
         </where>
-        order by tu.id desc
+        order by tu.user_main_id desc
         limit #{start},#{limit}
     </select>
 
@@ -76,8 +86,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.user.entity.User" keyProperty="id" >
-        insert into t_user(id,password,enable_status,create_date,delete_status)
-        values(#{id},#{password},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_user(id,user_main_id,password,enable_status,create_date,delete_status)
+        values(#{id},#{userMainId},#{password},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="deleteById" parameterType="java.lang.Long">
