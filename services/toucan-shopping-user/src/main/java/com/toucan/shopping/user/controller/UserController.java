@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -470,26 +471,38 @@ public class UserController {
                 return resultObjectVO;
             }
 
-            Long[] userMainIdArray = null;
+            List<Long> userMainIdLinkedList = new LinkedList();
+
             //手机号查询,先查询手机号子表
-            if(StringUtils.isNotEmpty(userPageInfo.getMobilePhone()))
-            {
+            if(StringUtils.isNotEmpty(userPageInfo.getMobilePhone())) {
                 List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(userPageInfo.getMobilePhone());
-                if(CollectionUtils.isNotEmpty(userMobilePhones)) {
-                    userMainIdArray = new Long[userMobilePhones.size()];
+                if (CollectionUtils.isNotEmpty(userMobilePhones)) {
                     for (int i = 0; i < userMobilePhones.size(); i++) {
-                        userMainIdArray[i] = userMobilePhones.get(i).getUserMainId();
+                        userMainIdLinkedList.add(userMobilePhones.get(i).getUserMainId());
                     }
+                }else if(userPageInfo.getUserMainId()!=null)
+                {
+                    userMainIdLinkedList.add(userPageInfo.getUserMainId());
+                }else{ //如果没有匹配到数据,设置一个不存在的ID
+                    userMainIdLinkedList.add(-1L);
                 }
             }
 
-            //如果没有匹配到数据,设置一个不存在的ID
-            if(userMainIdArray==null)
+            if(userPageInfo.getUserMainId()!=null)
             {
-                userMainIdArray = new Long[]{2L};
+                userMainIdLinkedList.add(userPageInfo.getUserMainId());
             }
 
-            userPageInfo.setUserMainIdArray(userMainIdArray);
+
+            //设置查询条件
+            if(CollectionUtils.isNotEmpty(userMainIdLinkedList))
+            {
+                Long[] userMainIdArray = new Long[userMainIdLinkedList.size()];
+                userMainIdLinkedList.toArray(userMainIdArray);
+
+                userPageInfo.setUserMainIdArray(userMainIdArray);
+            }
+
 
             //查询用户主表
             PageInfo<UserVO> pageInfo =  userService.queryListPage(userPageInfo);
@@ -499,6 +512,16 @@ public class UserController {
 
                 for(int i=0;i<pageInfo.getList().size();i++)
                 {
+                    UserVO userVo = pageInfo.getList().get(i);
+                    if(userVo.getUserMainId()!=null)
+                    {
+                        userVo.setUserMainIdString(String.valueOf(userVo.getUserMainId()));
+                    }
+                    if(userVo.getId()!=null)
+                    {
+                        userVo.setUserId(String.valueOf(userVo.getId()));
+                    }
+
                     userIdArray[i] = pageInfo.getList().get(i).getUserMainId();
                 }
 
@@ -511,7 +534,7 @@ public class UserController {
                     {
                         for(UserVO userVO:pageInfo.getList())
                         {
-                            if(userMobilePhone.getUserMainId().longValue()==userVO.getId().longValue())
+                            if(userMobilePhone.getUserMainId().longValue()==userVO.getUserMainId().longValue())
                             {
                                 userVO.setMobilePhone(userMobilePhone.getMobilePhone());
                                 continue;
@@ -528,7 +551,7 @@ public class UserController {
                     {
                         for(UserVO userVO:pageInfo.getList())
                         {
-                            if(userUserName.getUserMainId().longValue()==userVO.getId().longValue())
+                            if(userUserName.getUserMainId().longValue()==userVO.getUserMainId().longValue())
                             {
                                 userVO.setUsername(userUserName.getUsername());
                                 continue;

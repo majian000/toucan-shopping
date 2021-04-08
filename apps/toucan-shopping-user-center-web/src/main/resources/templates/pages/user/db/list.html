@@ -24,7 +24,13 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">用户ID</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="id" autocomplete="off" class="layui-input">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">手机号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="mobilePhone" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -99,7 +105,8 @@
             cols: [
                 [
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 180, title: '用户ID'},
+                {field: 'userId', width: 180, title: 'ID'},
+                {field: 'userMainIdString', width: 180, title: '用户ID'},
                 {field: 'mobilePhone', width: 200, title: '手机号'},
                 {field: 'nickName', width: 240, title: '昵称'},
                 {field: 'email', width: 240, title: '邮箱'},

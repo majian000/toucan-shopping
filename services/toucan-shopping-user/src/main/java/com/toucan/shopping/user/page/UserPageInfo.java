@@ -1,5 +1,7 @@
 package com.toucan.shopping.user.page;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.toucan.shopping.common.page.PageInfo;
 import com.toucan.shopping.user.entity.User;
 import com.toucan.shopping.user.export.entity.UserApp;
@@ -36,6 +38,11 @@ public class UserPageInfo extends PageInfo<User> {
      */
     private String password;
 
+
+    /**
+     * 用户ID
+     */
+    private Long userMainId;
 
 
     /**

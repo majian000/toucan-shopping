@@ -24,6 +24,7 @@ public class UserVO {
     /**
      * 用户ID
      */
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
     /**
