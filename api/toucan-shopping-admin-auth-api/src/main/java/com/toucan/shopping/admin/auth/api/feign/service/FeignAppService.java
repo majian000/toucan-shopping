@@ -71,5 +71,12 @@ public interface FeignAppService {
     ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 应用列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 }

@@ -220,6 +220,37 @@ public class AppController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 查询列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+        try {
+            App app = JSONObject.parseObject(requestVo.getEntityJson(), App.class);
+            resultObjectVO.setData(appService.findListByEntity(app));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 根据ID查询
      * @param requestVo

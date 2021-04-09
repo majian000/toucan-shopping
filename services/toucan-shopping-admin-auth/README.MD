@@ -17,12 +17,12 @@
 ### 管理权限服务
     1.管理员登录
     
-    POST http://localhost:8087/admin/login
+    POST http://localhost:8099/admin/login
     {"appCode":"10000001","entityJson":"{\"password\":\"123456\",\"username\":\"sa\"}","sign":"c10bc10b5ba92053797b2ae000d1d452"}
 
     2.添加管理员
 
-    POST http://localhost:8087/admin/save
+    POST http://localhost:8099/admin/save
     HEADER bbs-user-center-atuh:adminId=bb155acbf5ef43dcac9aa892274fadd5;loginToken=ef8ec700a3f04badae5e3cd100162d9e
     {"sign":"9bd190fac50df8d7212ee12df82cbd67","appCode":"10000001", "entityJson":"{\"username\":\"sa\",\"password\":\"123456\" }"}
    
@@ -33,7 +33,7 @@
 
     1.添加应用
     
-    POST http://localhost:8087/app/save
+    POST http://localhost:8099/app/save
     HEADER
         bbs-user-center-atuh:adminId=bb155acbf5ef43dcac9aa892274fadd5;loginToken=8b84093057c14d569fa94eb0bbdb19ac
         content-type:application/json;charset=UTF-8
@@ -42,7 +42,7 @@
     
     2.修改应用
     
-    POST http://localhost:8087/app/update
+    POST http://localhost:8099/app/update
     HEADER
     bbs-user-center-atuh:adminId=bb155acbf5ef43dcac9aa892274fadd5;loginToken=8b84093057c14d569fa94eb0bbdb19ac
         
@@ -56,7 +56,7 @@
 
     3.添加管理员账号到指定应用
 
-    POST http://localhost:8087/app/connect/admin
+    POST http://localhost:8099/app/connect/admin
     { "username":"sa",
       "adminApps":[
         {"adminId":"d10590b318544049ba2104d1f5517a7d","appCode":"10001001","createAdminId":"d10590b318544049ba2104d1f5517a7d"},
@@ -66,7 +66,7 @@
    
     4.添加用户账号到指定应用
 
-    POST http://localhost:8087/app/connect/user
+    POST http://localhost:8099/app/connect/user
     { "userId":"b0ec72880b894b09b5c803dd8fa78518",
       "userApps":[
         {"userId":"b0ec72880b894b09b5c803dd8fa78518","appCode":"10001001"},
@@ -83,3 +83,32 @@
         "appCode": "10000001",
         "entityJson": "{\"page\":1,\"limit\":10 }"
     }
+    
+    6.查询全部应用
+    POST http://localhost:8099/app/list
+    请求头
+    content-type:application/json;charset=UTF-8
+    请求体
+    {
+        "appCode": "10000001",
+        "entityJson": "{\"appCode\":\"10001001\"}"
+    }
+        
+        
+        
+        
+    
+### 角色服务
+    
+    POST http://localhost:8099/role/save
+    请求头
+    content-type:application/json;charset=UTF-8
+    请求体
+    {
+        "appCode": "10000001",
+        "entityJson": "{\"name\":\"角色1\",\"enableStatus\":1,\"appCode\":\"10001001\",\"createAdminId\":\"-1\" }"
+    }
+    
+    
+    
+    
