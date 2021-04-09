@@ -5,6 +5,7 @@
     <resultMap id="roleMap" type="com.toucan.shopping.admin.auth.entity.Role" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="role_id" jdbcType="VARCHAR" property="roleId" />
         <result column="appCode" jdbcType="VARCHAR" property="appCode" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -76,8 +77,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.admin.auth.entity.Role" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_role(name,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
-        values(#{name},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_sa_role(name,role_id,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
+        values(#{name},#{roleId},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.admin.auth.entity.Role">

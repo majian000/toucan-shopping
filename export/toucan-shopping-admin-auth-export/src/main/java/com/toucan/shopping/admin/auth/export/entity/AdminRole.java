@@ -21,7 +21,7 @@ public class AdminRole {
     /**
      * 所属角色
      */
-    private Long roleId;
+    private String roleId;
 
 
     /**

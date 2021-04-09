@@ -15,5 +15,6 @@ public interface AdminRoleMapper {
 
     int deleteByRoleId(Long roleId);
 
+    List<AdminRole> findListByAdminId(String adminId);
 
 }

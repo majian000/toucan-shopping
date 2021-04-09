@@ -19,6 +19,10 @@ public class RoleVO {
      */
     private String name;
 
+    /**
+     * 角色ID
+     */
+    private String roleId;
 
 
     /**

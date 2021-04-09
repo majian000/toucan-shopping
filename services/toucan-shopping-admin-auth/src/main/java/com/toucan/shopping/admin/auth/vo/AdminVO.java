@@ -56,7 +56,7 @@ public class AdminVO {
     private String createAdminId;
 
     /**
-     * 备注
+     * 管理员ID
      */
     private String adminId;
 

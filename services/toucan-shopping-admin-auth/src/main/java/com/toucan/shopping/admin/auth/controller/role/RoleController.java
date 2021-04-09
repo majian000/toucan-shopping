@@ -11,6 +11,8 @@ import com.toucan.shopping.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.admin.auth.service.AdminAppService;
 import com.toucan.shopping.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.admin.auth.service.RoleService;
+import com.toucan.shopping.admin.auth.vo.AdminVO;
+import com.toucan.shopping.common.util.GlobalUUID;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
 import com.toucan.shopping.common.vo.ResultVO;
@@ -72,6 +74,7 @@ public class RoleController {
             }
 
 
+            role.setRoleId(GlobalUUID.uuid());
             role.setCreateDate(new Date());
             role.setEnableStatus((short)1);
             role.setDeleteStatus((short)0);
@@ -242,6 +245,60 @@ public class RoleController {
 
 
     /**
+     * 根据ID查询所有角色
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/admin/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findListByAdminId(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminVO adminVO = JSONObject.parseObject(requestVo.getEntityJson(), AdminVO.class);
+            if(StringUtils.isEmpty(adminVO.getAdminId()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到AdminID");
+                return resultObjectVO;
+            }
+
+            List<AdminRole> adminRoles = adminRoleService.findListByAdminId(adminVO.getAdminId());
+
+            if(!CollectionUtils.isEmpty(adminRoles)) {
+                List<Role> roles = new ArrayList<>();
+                for(AdminRole adminRole:adminRoles)
+                {
+                    //查询是否存在该角色
+                    Role query = new Role();
+                    query.setRoleId(adminRole.getRoleId());
+                    List<Role> roleList = roleService.findListByEntity(query);
+                    if(!CollectionUtils.isEmpty(roleList))
+                    {
+                        roles.addAll(roleList);
+                    }
+                }
+                resultObjectVO.setData(roles);
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 删除指定角色
      * @param requestVo
      * @return
@@ -287,7 +344,7 @@ public class RoleController {
 
             //删除角色下所有关联
             AdminRole queryAdminRole =new AdminRole();
-            queryAdminRole.setRoleId(entity.getId());
+            queryAdminRole.setRoleId(roleList.get(0).getRoleId());
 
             List<AdminRole> adminRoles = adminRoleService.findListByEntity(queryAdminRole);
             if(!CollectionUtils.isEmpty(adminRoles)) {
@@ -365,7 +422,7 @@ public class RoleController {
 
                     //删除角色下所有关联
                     AdminRole queryAdminRole =new AdminRole();
-                    queryAdminRole.setRoleId(roleEntityList.get(0).getId());
+                    queryAdminRole.setRoleId(roleEntityList.get(0).getRoleId());
 
                     List<AdminRole> adminApps = adminRoleService.findListByEntity(queryAdminRole);
                     if(!CollectionUtils.isEmpty(adminApps)) {

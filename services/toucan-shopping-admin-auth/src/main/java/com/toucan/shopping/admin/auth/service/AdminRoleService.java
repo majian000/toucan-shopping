@@ -15,4 +15,6 @@ public interface AdminRoleService {
 
     int deleteByRoleId(Long roleId);
 
+    List<AdminRole> findListByAdminId(String adminId);
+
 }

@@ -33,4 +33,9 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     public int deleteByRoleId(Long roleId) {
         return adminRoleMapper.deleteByRoleId(roleId);
     }
+
+    @Override
+    public List<AdminRole> findListByAdminId(String adminId) {
+        return adminRoleMapper.findListByAdminId(adminId);
+    }
 }
