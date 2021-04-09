@@ -484,7 +484,7 @@ public class UserController {
                 {
                     userMainIdLinkedList.add(userPageInfo.getUserMainId());
                 }else{ //如果没有匹配到数据,设置一个不存在的ID
-                    userMainIdLinkedList.add(-1L);
+                    userMainIdLinkedList.add(1L);
                 }
             }
 
