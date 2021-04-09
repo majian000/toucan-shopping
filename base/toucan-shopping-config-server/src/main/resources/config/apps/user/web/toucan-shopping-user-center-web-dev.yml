@@ -24,6 +24,44 @@ eureka:
       defaultZone: http://localhost:8081/eureka
 
 
+
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 1200000
+        readTimeout: 1200000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1200000 #请求时间超过2分钟产生熔断
+      circuitBreaker:
+        requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
+
+
+
+#开启饥饿加载
+ribbon:
+  OkToRetryOnAllOperations: true #开启重试机制
+  MaxAutoRetriesNextServer: 2 #重试其他实例最大重试次数
+  MaxAutoRetries: 1 #同一实例重试次数
+  ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
+  eager-load:
+    enabled: true
+    clients: "toucan-shopping-user,\
+              toucan-shopping-gateway"
+
+
+
+
+
+
 toucan:
   app-code: 10001002 #自定义应用编码
   admin-auth:

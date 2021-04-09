@@ -7,9 +7,12 @@
         <property name="log.path" value="D:/log/dev/toucan_shopping/toucan_shopping_user_center" />
     </springProfile>
 
+    <springProfile name="test">
+        <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_user_center" />
+    </springProfile>
 
     <springProfile name="prod">
-        <property name="log.path" value="D:/log/prod/toucan_shopping/toucan_shopping_user_center" />
+        <property name="log.path" value="log/prod/toucan_shopping/toucan_shopping_user_center" />
     </springProfile>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -111,7 +114,13 @@
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
-            <appender-ref ref="DEBUG_FILE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <logger name="com.toucan.shopping" level="debug"/>
+        <root level="info">
+            <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>
 
