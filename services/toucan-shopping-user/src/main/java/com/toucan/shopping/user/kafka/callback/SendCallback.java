@@ -1,6 +1,5 @@
 package com.toucan.shopping.user.kafka.callback;
 
-import com.toucan.shopping.common.persistence.service.EventPublishService;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +12,6 @@ public class SendCallback implements ProducerListener<String, Object> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private EventPublishService eventPublishService;
 
     @Override
     public void onSuccess(String topic, Integer partition, String key, Object value, RecordMetadata recordMetadata) {

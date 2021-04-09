@@ -1,6 +1,6 @@
 package com.toucan.shopping.scheduler.kafka.scheduler;
 
-import com.toucan.shopping.common.persistence.service.EventPublishService;
+import com.toucan.shopping.common.persistence.event.service.EventPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

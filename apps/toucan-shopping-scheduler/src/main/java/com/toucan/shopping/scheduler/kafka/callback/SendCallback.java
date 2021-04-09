@@ -1,6 +1,6 @@
 package com.toucan.shopping.scheduler.kafka.callback;
 
-import com.toucan.shopping.common.persistence.service.EventPublishService;
+import com.toucan.shopping.common.persistence.event.service.EventPublishService;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

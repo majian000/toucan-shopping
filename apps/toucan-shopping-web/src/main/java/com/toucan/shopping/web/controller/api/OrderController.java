@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.common.persistence.service.EventProcessService;
+import com.toucan.shopping.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.common.properties.Toucan;
 import com.toucan.shopping.common.util.HttpParamUtil;
 import com.toucan.shopping.common.util.SignUtil;

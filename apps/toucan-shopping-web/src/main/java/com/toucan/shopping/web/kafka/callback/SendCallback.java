@@ -1,6 +1,6 @@
 package com.toucan.shopping.web.kafka.callback;
 
-import com.toucan.shopping.common.persistence.service.EventPublishService;
+import com.toucan.shopping.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.stock.export.kafka.constant.StockMessageTopicConstant;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;

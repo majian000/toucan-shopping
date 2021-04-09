@@ -1,10 +1,10 @@
 package com.toucan.shopping.stock.kafka.listener.sk;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.common.persistence.event.entity.EventProcess;
+import com.toucan.shopping.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.lock.redis.RedisLock;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
-import com.toucan.shopping.common.persistence.entity.EventProcess;
-import com.toucan.shopping.common.persistence.service.EventProcessService;
 import com.toucan.shopping.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.service.ProductSkuStockService;
 import org.apache.commons.lang3.StringUtils;

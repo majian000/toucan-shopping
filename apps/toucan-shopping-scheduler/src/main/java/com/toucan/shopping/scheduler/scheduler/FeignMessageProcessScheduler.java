@@ -2,8 +2,8 @@ package com.toucan.shopping.scheduler.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.persistence.entity.EventProcess;
-import com.toucan.shopping.common.persistence.service.EventProcessService;
+import com.toucan.shopping.common.persistence.event.entity.EventProcess;
+import com.toucan.shopping.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.common.util.DateUtils;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.product.export.util.ProductRedisKeyUtil;

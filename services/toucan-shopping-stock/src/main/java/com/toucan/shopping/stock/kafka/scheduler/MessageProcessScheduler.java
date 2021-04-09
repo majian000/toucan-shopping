@@ -1,9 +1,9 @@
 package com.toucan.shopping.stock.kafka.scheduler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.common.persistence.event.entity.EventProcess;
+import com.toucan.shopping.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
-import com.toucan.shopping.common.persistence.entity.EventProcess;
-import com.toucan.shopping.common.persistence.service.EventProcessService;
 import com.toucan.shopping.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.service.ProductSkuStockService;
 import org.slf4j.Logger;

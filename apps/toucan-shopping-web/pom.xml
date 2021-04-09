@@ -170,6 +170,10 @@
             <groupId>com.toucan.shopping.common</groupId>
             <artifactId>toucan-shopping-auth</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-common-persistence-event</artifactId>
+        </dependency>
 
     </dependencies>
 

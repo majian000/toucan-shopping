@@ -2,8 +2,8 @@ package com.toucan.shopping.order.kafka.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.common.persistence.entity.EventProcess;
-import com.toucan.shopping.common.persistence.service.EventProcessService;
+import com.toucan.shopping.common.persistence.event.entity.EventProcess;
+import com.toucan.shopping.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.order.entity.Order;
 import com.toucan.shopping.order.entity.OrderItem;
 import com.toucan.shopping.order.kafka.constant.OrderMessageTopicConstant;
