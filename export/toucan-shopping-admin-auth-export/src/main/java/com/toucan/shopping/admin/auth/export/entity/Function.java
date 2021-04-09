@@ -18,6 +18,11 @@ public class Function {
     private String name;
 
     /**
+     * 功能项ID
+     */
+    private String functionId;
+
+    /**
      * 连接
      */
     private String link;

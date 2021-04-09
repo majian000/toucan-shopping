@@ -15,12 +15,12 @@ public class RoleFunction {
     /**
      * 所属角色
      */
-    private Integer roleId;
+    private String roleId;
 
     /**
      * 所属菜单
      */
-    private Integer menuId;
+    private String functionId;
 
 
     /**
