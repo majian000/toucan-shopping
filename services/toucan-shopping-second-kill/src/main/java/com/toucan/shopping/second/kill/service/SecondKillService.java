@@ -1,8 +1,8 @@
 package com.toucan.shopping.second.kill.service;
 
+import com.toucan.shopping.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.order.export.message.CreateOrderMessage;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
-import com.toucan.shopping.common.persistence.entity.EventPublish;
 import com.toucan.shopping.product.export.entity.ProductSku;
 
 import java.util.List;

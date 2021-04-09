@@ -106,7 +106,10 @@
             <groupId>com.toucan.shopping.export</groupId>
             <artifactId>toucan-shopping-order-export</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.toucan.shopping.common</groupId>
+            <artifactId>toucan-shopping-common-persistence-event</artifactId>
+        </dependency>
 
 
     </dependencies>

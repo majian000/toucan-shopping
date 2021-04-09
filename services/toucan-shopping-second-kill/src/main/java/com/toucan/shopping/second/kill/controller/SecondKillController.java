@@ -3,6 +3,7 @@ package com.toucan.shopping.second.kill.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.common.util.SignUtil;
 import com.toucan.shopping.common.vo.RequestJsonVO;
 import com.toucan.shopping.lock.redis.RedisLock;
@@ -10,7 +11,6 @@ import com.toucan.shopping.order.export.kafka.constant.OrderMessageTopicConstant
 import com.toucan.shopping.order.export.message.CreateOrderMessage;
 import com.toucan.shopping.product.export.kafka.constant.ProductMessageTopicConstant;
 import com.toucan.shopping.product.export.message.InventoryReductionMessage;
-import com.toucan.shopping.common.persistence.entity.EventPublish;
 import com.toucan.shopping.product.export.util.ProductRedisKeyUtil;
 import com.toucan.shopping.common.vo.ResultListVO;
 import com.toucan.shopping.common.vo.ResultObjectVO;
