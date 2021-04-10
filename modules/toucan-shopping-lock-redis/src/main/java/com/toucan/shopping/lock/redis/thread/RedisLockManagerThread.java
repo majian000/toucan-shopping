@@ -4,6 +4,7 @@ import com.toucan.shopping.common.util.DateUtils;
 import com.toucan.shopping.lock.redis.RedisLock;
 import com.toucan.shopping.lock.redis.impl.RedisLockImpl;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -56,9 +57,10 @@ public class RedisLockManagerThread extends Thread {
                     while(lockKeyIterator.hasNext()) {
                         //拿到锁的创建时间
                         String lockKey = String.valueOf(lockKeyIterator.next());
+                        //如果对象为空 lockCreateTime的值将为"null"
                         String lockCreateTime =  String.valueOf(stringRedisTemplate.opsForHash().get(RedisLockManagerThread.globalLockTable, lockKey));
                         //如果这个锁已经很久没释放,将强制释放这个锁
-                        if(DateUtils.currentDate().getTime()-Long.parseLong(lockCreateTime)>= RedisLockManagerThread.lockTimeOutMillisecond)
+                        if("null".equals(lockCreateTime)||StringUtils.isEmpty(lockCreateTime)||DateUtils.currentDate().getTime()-Long.parseLong(lockCreateTime)>= RedisLockManagerThread.lockTimeOutMillisecond)
                         {
                             logger.info("删除超时锁 "+lockKey+ "创建时间"+lockCreateTime);
                             if(((RedisLockImpl)redisLock).getThreadHashMap().get(lockKey)!=null)
@@ -75,7 +77,7 @@ public class RedisLockManagerThread extends Thread {
                 }
                 //锁管理线程休眠
                 this.sleep(RedisLockManagerThread.redisManagerExecMillisecond);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 logger.warn(e.getMessage(),e);
             }
         }
