@@ -1,0 +1,38 @@
+#========================用户中心服务 开发环境====================================
+
+server:
+  port: 8087
+spring:
+  application:
+    name: toucan-shopping-user #应用名称
+  zipkin: #链路追踪
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+  mvc: #启动初始化servletdispatcher
+    servlet:
+      load-on-startup: 100
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 3 #3秒没发心跳将剔除
+    lease-renewal-interval-in-seconds: 1 #心跳1秒
+    prefer-ip-address: true
+    instance-id: 127.0.0.1:8087    #使用IP地址注册
+  client:
+    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka
+
+
+
+
+
+toucan:
+  machine-id: 2201 #机器编码
+  app-code: 10001002 #用户中心 应用编码
+  #雪花算法ID相关
+  workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  datacenterId: 0 #数据中心ID (0~31)

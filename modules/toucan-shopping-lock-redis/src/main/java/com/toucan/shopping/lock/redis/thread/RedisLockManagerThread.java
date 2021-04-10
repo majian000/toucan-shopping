@@ -69,7 +69,7 @@ public class RedisLockManagerThread extends Thread {
                             stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
 
                             //从锁表中删除这个锁
-                            stringRedisTemplate.opsForHash().delete(RedisLockManagerThread.globalLockTable,lockKey);
+                            stringRedisTemplate.opsForHash().delete(RedisLockManagerThread.globalLockTable,((Object)lockKey));
                         }
                     }
                 }
