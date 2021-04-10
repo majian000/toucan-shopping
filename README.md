@@ -1,6 +1,6 @@
 # 大嘴鸟电商平台
 
-    大嘴鸟电商平台(一款开源免费的电商网站,前身是黑鸟电商平台,这个电商平台的设计是目标是千万级的用户量) 采用技术spring cloud、spring config、lombok、eureka、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
+    巨嘴鸟电商平台(一款开源免费的电商网站,前身是黑鸟电商平台,这个电商平台的设计是目标是千万级的用户量) 采用技术spring cloud、spring config、lombok、eureka、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
 #### 介绍
     采用技术spring cloud、spring config、lombok、eureka、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
@@ -25,9 +25,32 @@
 
 #### 安装教程
     
-    要求java jdk 1.8.0_181及以上
+    建议java jdk 1.8.0_181及以上
     按顺序依次启动下面项目
 
+    xshell linux
+    1.1.配置中心
+    源码:base/toucan-shopping-config-server
+    启动:nohup java -jar toucan-shopping-config-server-1.0-SNAPSHOT.jar >console.out &
+    查看:ps aux|grep toucan-shopping-config-server
+
+    2.服务中心
+    源码:base/toucan-shopping-eureka
+    启动:nohup java -jar toucan-shopping-eureka-1.0-SNAPSHOT.jar >console.out &
+    查看:ps aux|grep toucan-shopping-eureka
+    
+    3.网关服务
+    源码:base/toucan-shopping-gateway
+    启动:nohup java -jar toucan-shopping-gateway-1.0-SNAPSHOT.jar >console.out &
+    查看:ps aux|grep toucan-shopping-gateway
+    
+    
+    4.用户服务
+    源码:services/toucan-shopping-user
+    启动:nohup java -jar toucan-shopping-user-1.0-SNAPSHOT.jar >console.out &
+    查看:ps aux|grep toucan-shopping-user
+    
+    
 
 ##### 依赖第三方
     1.mysql8
