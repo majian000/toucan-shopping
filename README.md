@@ -1,4 +1,4 @@
-# 大嘴鸟电商平台
+# 巨嘴鸟电商平台
 
     巨嘴鸟电商平台(一款开源免费的电商网站,前身是黑鸟电商平台,这个电商平台的设计是目标是千万级的用户量) 采用技术spring cloud、spring config、lombok、eureka、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
@@ -158,13 +158,13 @@
     
     1.apps/toucan-shopping-web
     端口号:8083
-    前端界面服务,使用请参考该项目目录下的README.MD
+    前端界面服务
 
 
 
     2.apps/toucan-shopping-admin
     端口号:8086
-    后台管理端,使用请参考该项目目录下的README.MD
+    后台管理端
 
 
     3.apps/toucan-shopping-user-center-web
