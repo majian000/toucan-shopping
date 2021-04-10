@@ -31,23 +31,23 @@
     xshell linux
     1.1.配置中心
     源码:base/toucan-shopping-config-server
-    启动:nohup java -jar toucan-shopping-config-server-1.0-SNAPSHOT.jar >console.out &
+    启动:nohup java -jar toucan-shopping-config-server-1.0-SNAPSHOT.jar &
     查看:ps aux|grep toucan-shopping-config-server
 
     2.服务中心
     源码:base/toucan-shopping-eureka
-    启动:nohup java -jar toucan-shopping-eureka-1.0-SNAPSHOT.jar >console.out &
+    启动:nohup java -jar toucan-shopping-eureka-1.0-SNAPSHOT.jar  &
     查看:ps aux|grep toucan-shopping-eureka
     
     3.网关服务
     源码:base/toucan-shopping-gateway
-    启动:nohup java -jar toucan-shopping-gateway-1.0-SNAPSHOT.jar >console.out &
+    启动:nohup java -jar toucan-shopping-gateway-1.0-SNAPSHOT.jar &
     查看:ps aux|grep toucan-shopping-gateway
     
     
     4.用户服务
     源码:services/toucan-shopping-user
-    启动:nohup java -jar toucan-shopping-user-1.0-SNAPSHOT.jar >console.out &
+    启动:nohup java -jar toucan-shopping-user-1.0-SNAPSHOT.jar  &
     查看:ps aux|grep toucan-shopping-user
     
     
