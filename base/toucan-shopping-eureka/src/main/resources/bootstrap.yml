@@ -48,3 +48,14 @@ spring:
       label: master
       profile: dev
 
+
+---
+spring:
+  profiles: prod
+  application:
+    name: toucan-shopping-eureka
+  cloud:
+    config: #指定配置中心服务端
+      uri: http://localhost:9090
+      label: master
+      profile: prod

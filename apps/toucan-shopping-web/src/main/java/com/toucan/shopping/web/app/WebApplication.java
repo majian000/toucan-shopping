@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableEurekaClient
-@MapperScan({"com.toucan.shopping.common.persistence.mapper"})
+@MapperScan({"com.toucan.shopping.common.persistence.event.mapper"})
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @ComponentScan("com.toucan.shopping")
 @EnableHystrix

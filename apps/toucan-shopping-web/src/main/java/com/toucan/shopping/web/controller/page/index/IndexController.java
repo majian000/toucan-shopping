@@ -157,7 +157,10 @@ public class IndexController {
             }
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
+
+            request.setAttribute("categorys", new ArrayList<CategoryVO>());
         }
+
     }
 
     @RequestMapping("/index")

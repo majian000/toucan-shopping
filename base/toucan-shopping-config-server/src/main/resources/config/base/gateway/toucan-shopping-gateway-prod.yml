@@ -1,0 +1,90 @@
+
+server:
+  port: 8089
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 1 #心跳1秒
+    lease-renewal-interval-in-seconds: 1 #心跳1秒
+    prefer-ip-address: true
+    instance-id: 127.0.0.1:8089    #使用IP地址注册
+  client:
+    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka
+
+
+#开启饥饿加载
+ribbon:
+  ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
+  eager-load:
+    enabled: true
+    clients: "toucan-shopping-category,\
+              toucan-shopping-order,\
+              toucan-shopping-product,\
+              toucan-shopping-stock"
+
+
+
+spring:
+  application:
+    name: toucan-shopping-gateway
+  zipkin: #链路追踪
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+  mvc: #启动初始化servletdispatcher
+    servlet:
+      load-on-startup: 100
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: toucan-shopping-product-proxy
+          uri: lb://toucan-shopping-product
+          predicates:
+            - Path=/toucan-shopping-product-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-order-proxy
+          uri: lb://toucan-shopping-order
+          predicates:
+            - Path=/toucan-shopping-order-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-user-proxy
+          uri: lb://toucan-shopping-user
+          predicates:
+            - Path=/toucan-shopping-user-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-category-proxy
+          uri: lb://toucan-shopping-category
+          predicates:
+            - Path=/toucan-shopping-category-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-stock-proxy
+          uri: lb://toucan-shopping-stock
+          predicates:
+            - Path=/toucan-shopping-stock-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-area-proxy
+          uri: lb://toucan-shopping-area
+          predicates:
+            - Path=/toucan-shopping-area-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-admin-auth-proxy
+          uri: lb://toucan-shopping-admin-auth
+          predicates:
+            - Path=/toucan-shopping-admin-auth-proxy/**
+          filters:
+            - StripPrefix=1
+
