@@ -14,7 +14,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <description>大嘴鸟商城</description>
+    <description>犀鸟商城</description>
 
     <groupId>com.toucan.shopping</groupId>
     <artifactId>toucan-shopping</artifactId>
