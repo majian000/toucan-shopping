@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.category.api.feign.service;
 
 import com.toucan.shopping.cloud.category.api.feign.fallback.FeignCategoryServiceFallbackFactory;
-import com.toucan.shopping.category.export.entity.Category;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;

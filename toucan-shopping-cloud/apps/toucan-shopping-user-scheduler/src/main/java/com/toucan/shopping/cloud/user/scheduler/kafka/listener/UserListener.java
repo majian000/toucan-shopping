@@ -1,10 +1,10 @@
 package com.toucan.shopping.cloud.user.scheduler.kafka.listener;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.user.export.kafka.message.UserCreateMessage;
-import com.toucan.shopping.user.export.kafka.message.UserDetailModifyMessage;
-import com.toucan.shopping.user.export.vo.UserElasticSearchVO;
-import com.toucan.shopping.user.service.UserElasticSearchService;
+import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
+import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;
+import com.toucan.shopping.modules.user.kafka.message.UserDetailModifyMessage;
+import com.toucan.shopping.modules.user.vo.UserElasticSearchVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

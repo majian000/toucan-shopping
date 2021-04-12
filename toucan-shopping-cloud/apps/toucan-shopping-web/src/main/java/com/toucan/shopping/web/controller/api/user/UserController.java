@@ -4,17 +4,18 @@ package com.toucan.shopping.web.controller.api.user;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
-import com.toucan.shopping.user.export.constant.SmsTypeConstant;
-import com.toucan.shopping.user.export.constant.UserLoginConstant;
-import com.toucan.shopping.user.export.constant.UserRegistConstant;
-import com.toucan.shopping.user.export.entity.UserMobilePhone;
-import com.toucan.shopping.user.export.vo.UserLoginVO;
-import com.toucan.shopping.user.export.vo.UserRegistVO;
-import com.toucan.shopping.user.export.vo.UserSmsVO;
+import com.toucan.shopping.modules.common.lock.redis.RedisLock;
+import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
+import com.toucan.shopping.modules.user.constant.UserLoginConstant;
+import com.toucan.shopping.modules.user.constant.UserRegistConstant;
+import com.toucan.shopping.modules.user.entity.UserMobilePhone;
+import com.toucan.shopping.modules.user.vo.UserLoginVO;
+import com.toucan.shopping.modules.user.vo.UserRegistVO;
+import com.toucan.shopping.modules.user.vo.UserSmsVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
-import com.toucan.shopping.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.web.controller.BaseController;
@@ -122,7 +123,7 @@ public class UserController extends BaseController {
 
             //保存生成验证码到缓存
             String code = NumberUtil.random(6);
-            userSmsVO.setMsg("[犀鸟电商]您于"+DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN)+"申请了手机号码注册,验证码是"+code);
+            userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN)+"申请了手机号码注册,验证码是"+code);
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
             resultObjectVO = feignSmsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);

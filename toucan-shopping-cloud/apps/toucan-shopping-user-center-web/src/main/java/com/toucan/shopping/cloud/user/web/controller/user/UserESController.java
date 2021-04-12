@@ -1,14 +1,14 @@
 package com.toucan.shopping.cloud.user.web.controller.user;
 
 
-import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.cloud.user.web.vo.TableVO;
-import com.toucan.shopping.user.export.page.UserPageInfo;
-import com.toucan.shopping.user.export.vo.UserElasticSearchVO;
-import com.toucan.shopping.user.service.UserElasticSearchService;
-import com.toucan.shopping.user.vo.SearchAfterPage;
+import com.toucan.shopping.modules.auth.admin.Auth;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
+import com.toucan.shopping.modules.user.es.vo.SearchAfterPage;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
+import com.toucan.shopping.modules.user.vo.UserElasticSearchVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package com.toucan.shopping.web.vo;
 
-import com.toucan.shopping.product.export.entity.ProductBuy;
-import com.toucan.shopping.product.export.entity.ProductSku;
+import com.toucan.shopping.modules.product.entity.ProductBuy;
+import com.toucan.shopping.modules.product.entity.ProductSku;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

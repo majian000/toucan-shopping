@@ -3,10 +3,10 @@ package com.toucan.shopping.cloud.admin.auth.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.admin.auth.export.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.cloud.admin.auth.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.admin.auth.export.entity.Admin;
+import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.util.VerifyCodeUtil;

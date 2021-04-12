@@ -117,7 +117,7 @@
             <artifactId>toucan-shopping-category-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
         <dependency>

@@ -1,7 +1,5 @@
 package com.toucan.shopping.web.controller.page.user;
 
-import com.toucan.shopping.auth.user.Auth;
-import com.toucan.shopping.user.export.vo.UserSmsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

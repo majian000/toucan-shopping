@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.user.scheduler.app.config;
 
 
-import com.toucan.shopping.user.export.page.UserPageInfo;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.cloud.user.scheduler.thread.UserEsCacheThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

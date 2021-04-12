@@ -67,11 +67,11 @@
 
         <!--我们的包 -->
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
         <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
     </dependencies>

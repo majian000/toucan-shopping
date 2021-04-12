@@ -2,8 +2,8 @@ package com.toucan.shopping.cloud.admin.auth.web.controller.admin;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.admin.auth.export.page.AdminPageInfo;
-import com.toucan.shopping.auth.admin.Auth;
+import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.modules.auth.admin.Auth;
 import com.toucan.shopping.cloud.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.util.SignUtil;

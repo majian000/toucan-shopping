@@ -11,6 +11,7 @@
 
     <description>权限中心starter</description>
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.toucan.shopping.cloud.starter</groupId>
     <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
     <version>1.0-SNAPSHOT</version>

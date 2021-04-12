@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.user.web.controller;
 
 
-import com.toucan.shopping.auth.admin.Auth;
+import com.toucan.shopping.modules.auth.admin.Auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

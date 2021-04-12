@@ -155,12 +155,7 @@
     <dependencyManagement>
         <dependencies>
 
-            <dependency>
-                <groupId>com.toucan.shopping.starter</groupId>
-                <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
+
 
 
 
@@ -220,7 +215,7 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.cloud.starter</groupId>
-                <artifactId>toucan-shopping-user-spring-boot-starter</artifactId>
+                <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

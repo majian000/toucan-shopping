@@ -1,6 +1,7 @@
 package com.toucan.shopping.web.service;
 
-import com.toucan.shopping.order.export.entity.Order;
+
+import com.toucan.shopping.modules.order.entity.Order;
 
 public interface PayService {
 

@@ -1,6 +1,6 @@
 package com.toucan.shopping.web.service.impl;
 
-import com.toucan.shopping.order.export.entity.Order;
+import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.web.service.PayService;
 import com.toucan.shopping.web.service.SecondKillService;
 import org.springframework.beans.factory.annotation.Autowired;

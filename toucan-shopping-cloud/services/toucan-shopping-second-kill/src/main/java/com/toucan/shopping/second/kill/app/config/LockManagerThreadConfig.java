@@ -1,8 +1,8 @@
 package com.toucan.shopping.second.kill.app.config;
 
 
-import com.toucan.shopping.lock.redis.RedisLock;
-import com.toucan.shopping.lock.redis.thread.RedisLockManagerThread;
+import com.toucan.shopping.modules.common.lock.redis.RedisLock;
+import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockManagerThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

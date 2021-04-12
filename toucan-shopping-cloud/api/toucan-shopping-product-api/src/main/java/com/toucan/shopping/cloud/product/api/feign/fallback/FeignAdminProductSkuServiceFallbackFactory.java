@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAdminProductSkuService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.product.export.entity.ProductSku;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

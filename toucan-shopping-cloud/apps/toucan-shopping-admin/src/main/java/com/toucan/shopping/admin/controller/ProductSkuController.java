@@ -10,7 +10,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAdminProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.product.export.entity.ProductSku;
+import com.toucan.shopping.modules.product.entity.ProductSku;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

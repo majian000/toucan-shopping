@@ -2,9 +2,9 @@ package com.toucan.shopping.cloud.user.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
-import com.toucan.shopping.user.export.entity.User;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.user.entity.User;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

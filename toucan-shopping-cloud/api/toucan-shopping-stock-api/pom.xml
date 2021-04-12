@@ -28,7 +28,7 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>

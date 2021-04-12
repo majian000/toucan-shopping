@@ -1,9 +1,9 @@
 package com.toucan.shopping.web.app.config;
 
 
+import com.toucan.shopping.modules.common.lock.redis.RedisLock;
+import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockManagerThread;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.lock.redis.RedisLock;
-import com.toucan.shopping.modules.lock.redis.thread.RedisLockManagerThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
