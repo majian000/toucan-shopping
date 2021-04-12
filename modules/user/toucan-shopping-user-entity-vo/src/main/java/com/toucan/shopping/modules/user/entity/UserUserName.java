@@ -11,18 +11,18 @@ import java.util.Date;
 public class UserUserName {
 
     /**
-     * 主键 分库用该
+     * 主键
      */
     private Long id;
 
 
     /**
-     * 用户名,分表用hash(username)
+     * 用户名
      */
     private String username;
 
     /**
-     * 用户主表ID
+     * 用户主表ID,分库分表
      */
     private Long userMainId;
 

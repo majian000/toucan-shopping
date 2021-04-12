@@ -30,7 +30,7 @@ public class OrderItem {
     private String remark; //订单备注 买家填写
     private Date createDate; //创建时间
     private String appCode; //所属应用
-    private Long createUserId; //创建人ID,可以由后台管理员创建
+    private String createUserId; //创建人ID,可以由后台管理员创建
 
     /**
      * 删除状态 0未删除 1已删除

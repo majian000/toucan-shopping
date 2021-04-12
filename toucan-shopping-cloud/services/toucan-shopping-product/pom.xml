@@ -67,29 +67,37 @@
 
         <!--我们自己的包 -->
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-lock-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-auth</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
             <artifactId>toucan-shopping-stock-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.product</groupId>
+            <artifactId>toucan-shopping-product-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.product</groupId>
+            <artifactId>toucan-shopping-product-service-dao</artifactId>
         </dependency>
 
     </dependencies>
@@ -103,7 +111,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.product.app.ProductServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.product.app.ProductServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

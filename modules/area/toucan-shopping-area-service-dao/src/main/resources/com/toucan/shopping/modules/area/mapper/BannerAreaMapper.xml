@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.area.mapper.BannerAreaMapper">
+
+    <resultMap id="bannerAreaMap" type="com.toucan.shopping.modules.area.entity.BannerArea" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="banner_id" jdbcType="BIGINT" property="bannerId" />
+        <result column="areaCode" jdbcType="VARCHAR" property="areaCode" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+    <select id="queryList" resultMap="bannerAreaMap" parameterType="com.toucan.shopping.modules.area.vo.BannerAreaVO">
+        select baa.* from t_banner_area baa
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and baa.id = #{id}
+            </if>
+
+
+            <if test="areaCode!=null and areaCode!='' ">
+                and baa.area_code = #{areaCode}
+            </if>
+
+            <if test="appCode!=null and appCode!='' ">
+                and baa.app_code = #{appCode}
+            </if>
+
+            and baa.delete_status = 0
+
+        </where>
+    </select>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.BannerArea"  keyProperty="id" >
+        insert into t_banner_area(id,banner_id,area_code,create_date,update_date,app_code,create_admin_id,update_admin_id)
+        values(#{id},#{bannerId},#{areaCode},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+    </insert>
+
+
+
+    <update id="deleteByBannerId">
+        update t_banner_area  set delete_status=1 where banner_id=#{bannerId}  and delete_status=0
+    </update>
+
+
+</mapper>

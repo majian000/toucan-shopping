@@ -119,7 +119,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.user.web.app.UserCenterWebApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.user.web.app.UserCenterWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -9,7 +9,16 @@ import java.util.Date;
  */
 @Data
 public class UserDetail {
+
+    /**
+     * 主键
+     */
     private Long id;
+
+    /**
+     * 昵称
+     */
+    private String nickName;
 
     /**
      * 真实姓名
@@ -21,15 +30,6 @@ public class UserDetail {
      */
     private String headSculpture;
 
-    /**
-     * 手机号
-     */
-    private String mobile;
-
-    /**
-     * 邮箱
-     */
-    private String email;
 
     /**
      * 身份证
@@ -37,9 +37,9 @@ public class UserDetail {
     private String idCard;
 
     /**
-     * 用户ID
+     * 用户ID,用该字段分库分表
      */
-    private Long userId;
+    private Long userMainId;
 
     /**
      * 性别 0:女 1:男

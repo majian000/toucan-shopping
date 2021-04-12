@@ -82,29 +82,39 @@
 -->
         <!--我们自己的包 -->
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-lock-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-auth</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.user</groupId>
             <artifactId>toucan-shopping-user-es</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.user</groupId>
+            <artifactId>toucan-shopping-user-entity-vo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.user</groupId>
+            <artifactId>toucan-shopping-user-service-dao</artifactId>
         </dependency>
 
     </dependencies>
@@ -118,7 +128,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.user.app.UserServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.user.app.UserServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

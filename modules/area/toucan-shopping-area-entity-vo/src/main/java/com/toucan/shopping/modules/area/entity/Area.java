@@ -17,8 +17,8 @@ public class Area {
     private String province; //省
     private String city; //市
     private String area; //区县
-    private Long areaSort; //排序
     private Short isMunicipality=0; //是否直辖市 0:否 1:是
+    private Long areaSort; //排序
     private Short type; //1省 2市 3区县
     private Date createDate; //创建时间
     private Date updateDate; //创建时间

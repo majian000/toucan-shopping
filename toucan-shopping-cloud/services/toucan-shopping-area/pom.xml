@@ -75,16 +75,24 @@
 
         <!-- 我们的包-->
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-lock-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.area</groupId>
+            <artifactId>toucan-shopping-area-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.area</groupId>
+            <artifactId>toucan-shopping-area-service-dao</artifactId>
         </dependency>
 
 
@@ -99,7 +107,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.area.app.AreaServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.modules.area.app.AreaServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

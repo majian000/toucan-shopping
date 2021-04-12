@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.category.mapper.CategoryAreaMapper">
+
+    <resultMap id="categoryAreaMap" type="com.toucan.shopping.modules.category.entity.CategoryArea" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="BIGINT" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="BIGINT" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+    <select id="queryList" resultMap="categoryAreaMap" parameterType="com.toucan.shopping.modules.category.entity.CategoryArea">
+        select bc.* from t_category_area bc
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and bc.id = #{id}
+            </if>
+
+            <if test="categoryId!=null">
+                 and bc.category_id = #{categoryId}
+            </if>
+
+            <if test="areaCode!=null and areaCode!=''">
+                and bc.area_code = #{areaCode}
+            </if>
+
+
+            and bc.delete_status = 0
+
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.category.entity.CategoryArea" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_category_area(category_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{categoryId},#{areaCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+    </insert>
+
+
+    <select id="queryById" resultMap="categoryAreaMap" parameterType="java.lang.Long">
+        select * from t_category_area where id=#{id} and delete_status=0
+    </select>
+
+
+    <update id="deleteById">
+        update t_category_area  set delete_status=1 where id=#{id}   and delete_status=0
+    </update>
+
+
+
+    <select id="queryListByAreaCode" resultMap="categoryAreaMap" parameterType="java.lang.String">
+        select bc.* from t_category_area bc where 1=1 and bc.area_code = #{areaCode} and bc.delete_status = 0
+    </select>
+
+
+</mapper>

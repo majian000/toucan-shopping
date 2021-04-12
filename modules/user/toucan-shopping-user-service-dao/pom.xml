@@ -17,7 +17,25 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-persistence</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-lock-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.user</groupId>
+            <artifactId>toucan-shopping-user-entity-vo</artifactId>
+        </dependency>
     </dependencies>
 
 

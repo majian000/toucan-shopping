@@ -24,5 +24,4 @@ public class InventoryReductionVo {
     private List<ProductSku> productSkuList;
 
 
-
 }

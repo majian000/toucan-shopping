@@ -29,7 +29,6 @@ public class UserRegistVO {
     private String confirmPassword;
 
 
-
     /**
      * 启用状态 0:禁用 1启用
      */

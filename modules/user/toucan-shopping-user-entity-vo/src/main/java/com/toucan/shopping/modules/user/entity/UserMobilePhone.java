@@ -11,19 +11,19 @@ import java.util.Date;
 public class UserMobilePhone {
 
     /**
-     * 主键,分库用
+     * 主键
      */
     private Long id;
 
 
     /**
-     * 手机号,分表用
+     * 手机号
      */
     private String mobilePhone;
 
 
     /**
-     * 用户主表ID
+     * 用户主表ID,分库分表
      */
     private Long userMainId;
 

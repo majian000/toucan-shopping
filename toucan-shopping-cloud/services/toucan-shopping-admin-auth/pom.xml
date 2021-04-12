@@ -84,6 +84,11 @@
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
+        </dependency>
+
     </dependencies>
 
 
@@ -97,7 +102,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.admin.auth.app.AdminAuthServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.admin.auth.app.AdminAuthServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

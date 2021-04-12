@@ -1,12 +1,9 @@
 package com.toucan.shopping.modules.product.entity;
 
-import com.toucan.shopping.modules.common.util.DateUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * 商品SKU
@@ -15,8 +12,6 @@ import java.util.Map;
  */
 @Data
 public class ProductSku {
-
-
     private Long id; //主键
     private String attributes; //商品所有属性
     private String productUuid; //SPU的UUID
@@ -27,10 +22,14 @@ public class ProductSku {
     private String appCode; //所属应用
     private Long createUserId; //创建人ID
 
-
     /**
-     * 业务相关字段
+     * 删除状态 0未删除 1已删除
      */
-    private Integer stockNum = 0;
+    private Short deleteStatus;
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date createDate; //创建时间
+
+    private Integer stockNum=0;
 
 }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.column.mapper.ColumnMapper">
+
+    <resultMap id="columnMap" type="com.toucan.shopping.column.entity.Column" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="position" jdbcType="INTEGER" property="position" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+    <select id="queryList" resultMap="columnMap" parameterType="com.toucan.shopping.column.vo.ColumnVO">
+        select tc.* from t_column tc
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and tc.id = #{id}
+            </if>
+
+
+            <if test="showStatus!=null">
+                and tc.show_status = #{showStatus}
+            </if>
+
+            <if test="idArray!=null ">
+                and tc.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+
+            and tc.delete_status = 0
+
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.toucan.shopping.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_column(title,type,show_status,position,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{title},#{type},#{showStatus},#{position},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+    </insert>
+
+
+    <select id="queryById" resultMap="columnMap" parameterType="java.lang.Long">
+        select * from t_column where id=#{id} and delete_status=0
+    </select>
+
+
+    <update id="deleteById">
+        update t_column  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
+    <update id="update" parameterType="com.toucan.shopping.column.entity.Column">
+        update t_column set title=#{title},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        update_admin_id=#{updateAdminId},update_date=#{updateDate}
+          where id=#{id}
+    </update>
+
+
+</mapper>

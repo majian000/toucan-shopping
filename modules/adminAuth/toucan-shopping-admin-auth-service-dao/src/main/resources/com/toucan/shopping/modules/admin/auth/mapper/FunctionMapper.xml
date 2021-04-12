@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.admin.auth.mapper.FunctionMapper">
+
+    <resultMap id="functionMap" type="com.toucan.shopping.modules.admin.auth.entity.Function" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="function_id" jdbcType="VARCHAR" property="functionId" />
+        <result column="appCode" jdbcType="VARCHAR" property="appCode" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="pid" jdbcType="INTEGER" property="pid" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        
+    </resultMap>
+
+
+    <sql id="queryListPageWhere">
+
+        <if test="name!=null and name!=''">
+            and t.name like concat('%',#{name},'%')
+        </if>
+        <if test="enableStatus!=null">
+            and t.enable_status = #{enableStatus}
+        </if>
+    </sql>
+
+    <select id="findListByEntity" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
+        select * from t_sa_function t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="name!=null">
+                and t.name = #{name}
+            </if>
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code = #{appCode}
+            </if>
+            <if test="enableStatus!=null">
+                and t.enable_status = #{enableStatus}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+    <select id="queryListPage" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo">
+        select t.* from t_sa_function t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+        order by t.create_date desc
+        limit #{start},#{limit}
+    </select>
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo">
+        select count(*) from t_sa_function t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+    </select>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_sa_function(pid,type,name,function_id,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
+        values(pid,#{type},#{name},#{FunctionId},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+    </insert>
+
+    <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
+        update t_sa_function set  name=#{name},code=#{code},update_date=#{updateDate},
+         update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
+         remark=#{remark}
+          where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="java.lang.Integer">
+        update t_sa_function set delete_status=1 where id = #{id}
+    </update>
+
+</mapper>

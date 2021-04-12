@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.area.mapper.AreaMapper">
+
+    <resultMap id="areaMap" type="com.toucan.shopping.modules.area.entity.Area" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="area" jdbcType="VARCHAR" property="area" />
+        <result column="area_sort" jdbcType="INTEGER" property="area_sort" />
+        <result column="is_municipality" jdbcType="INTEGER" property="isMunicipality" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+    <select id="queryList" resultMap="areaMap" parameterType="com.toucan.shopping.modules.area.entity.Area">
+        select ba.* from t_area ba
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and ba.id = #{id}
+            </if>
+
+            <if test="parentCode!=null">
+                 and ba.parent_code = #{parentCode}
+            </if>
+
+            <if test="province!=null and province!=''">
+                and ba.province = #{province}
+            </if>
+
+            <if test="city!=null and city!=''">
+                and ba.city = #{city}
+            </if>
+
+            <if test="area!=null and area!=''">
+                and ba.area = #{area}
+            </if>
+
+            <if test="appCode!=null and appCode!='' ">
+                and ba.app_code = #{appCode}
+            </if>
+
+            and ba.delete_status = 0
+
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Area" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_area(code,parent_code,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
+        values(#{code},#{parentCode},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+    </insert>
+
+
+    <select id="queryById" resultMap="areaMap" parameterType="java.lang.Long">
+        select * from t_area where id=#{id} and delete_status=0
+    </select>
+
+
+    <update id="deleteById">
+        update t_area  set delete_status=1 where id=#{id} and app_code=#{appCode}  and delete_status=0
+    </update>
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.area.entity.Area">
+        update t_area set code=#{code},parent_code=#{parentCode},province=#{province},city=#{city},area=#{area},area_sort=#{areaSort}
+        ,type=#{type},remark=#{remark},
+        update_admin_id=#{updateAdminId},update_date=#{updateDate}
+          where id=#{id}
+    </update>
+
+    <select id="queryByParentCode" resultMap="areaMap" >
+        select ba.* from t_area bc
+         where 1=1 and ba.parent_code=#{parentCode}  and ba.app_code=#{appCode} and ba.delete_status=0 order by ba.category_sort desc
+
+    </select>
+
+</mapper>
