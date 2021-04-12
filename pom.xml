@@ -52,13 +52,16 @@
         <module>modules/order/toucan-shopping-order-no</module>
         <!--商品实体和VO -->
         <module>modules/category/toucan-shopping-category-entity-vo</module>
-        <!--权限中心实体和VO -->
-        <module>modules/adminAuth/toucan-shopping-admin-auth-entity-vo</module>
         <!--库存实体和VO -->
         <module>modules/stock/toucan-shopping-stock-entity-vo</module>
         <!--地区编码实体和VO -->
         <module>modules/area/toucan-shopping-area-entity-vo</module>
 
+
+        <!--权限服务实体和VO -->
+        <module>modules/adminAuth/toucan-shopping-admin-auth-entity-vo</module>
+        <!--权限服务Service和Dao -->
+        <module>modules/adminAuth/toucan-shopping-admin-auth-service-dao</module>
         <!-- ===============================================-->
 
 
@@ -176,7 +179,7 @@
             </dependency>
 
             <dependency>
-                <groupId>com.toucan.shopping.modules.user</groupId>
+                <groupId>com.toucan.shopping.modules.order</groupId>
                 <artifactId>toucan-shopping-order-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
@@ -218,6 +221,14 @@
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
 
             <dependency>

@@ -1,7 +1,6 @@
 package com.toucan.shopping.user.scheduler.app.config;
 
 
-import com.toucan.shopping.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.user.export.page.UserPageInfo;
 import com.toucan.shopping.user.scheduler.thread.UserEsCacheThread;
 import org.slf4j.Logger;

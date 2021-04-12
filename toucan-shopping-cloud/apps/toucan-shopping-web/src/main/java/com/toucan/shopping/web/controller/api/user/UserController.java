@@ -2,8 +2,8 @@ package com.toucan.shopping.web.controller.api.user;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.user.api.feign.service.FeignSmsService;
-import com.toucan.shopping.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.user.export.constant.SmsTypeConstant;
 import com.toucan.shopping.user.export.constant.UserLoginConstant;
 import com.toucan.shopping.user.export.constant.UserRegistConstant;

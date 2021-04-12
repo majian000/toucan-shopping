@@ -3,7 +3,7 @@ package com.toucan.shopping.user.scheduler.thread;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.toucan.shopping.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.user.export.constant.UserCacheElasticSearchConstant;
 import com.toucan.shopping.user.export.entity.User;
 import com.toucan.shopping.user.export.page.UserPageInfo;

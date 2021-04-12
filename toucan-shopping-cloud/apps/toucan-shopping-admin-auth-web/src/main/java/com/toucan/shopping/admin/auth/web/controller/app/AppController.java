@@ -3,7 +3,7 @@ package com.toucan.shopping.admin.auth.web.controller.app;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.admin.auth.api.feign.service.FeignAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.admin.auth.export.entity.App;
 import com.toucan.shopping.admin.auth.export.page.AppPageInfo;
 import com.toucan.shopping.admin.auth.export.vo.AppVO;

@@ -2,7 +2,7 @@ package com.toucan.shopping.user.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.admin.auth.export.entity.Admin;
 import com.toucan.shopping.admin.auth.export.vo.AdminVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;

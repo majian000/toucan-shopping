@@ -2,7 +2,7 @@ package com.toucan.shopping.user.web.controller.user;
 
 
 import com.toucan.shopping.auth.admin.Auth;
-import com.toucan.shopping.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.user.export.page.UserPageInfo;
 import com.toucan.shopping.user.export.vo.UserElasticSearchVO;
 import com.toucan.shopping.user.service.UserElasticSearchService;

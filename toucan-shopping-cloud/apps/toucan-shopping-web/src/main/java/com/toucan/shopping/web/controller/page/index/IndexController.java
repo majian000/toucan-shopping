@@ -2,12 +2,12 @@ package com.toucan.shopping.web.controller.page.index;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.area.api.feign.service.FeignAdminAreaService;
-import com.toucan.shopping.area.api.feign.service.FeignUserAreaService;
-import com.toucan.shopping.area.api.feign.service.FeignUserBannerService;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignAdminAreaService;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignUserAreaService;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignUserBannerService;
 import com.toucan.shopping.area.export.entity.Banner;
 import com.toucan.shopping.area.export.vo.BannerVO;
-import com.toucan.shopping.category.api.feign.service.FeignCategoryUserService;
+import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryUserService;
 import com.toucan.shopping.category.export.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;

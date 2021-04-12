@@ -2,7 +2,7 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.admin.auth.export.entity.Admin;
 import com.toucan.shopping.auth.admin.Auth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;

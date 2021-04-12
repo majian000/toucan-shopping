@@ -11,7 +11,7 @@
 
     <description>权限中心starter</description>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.toucan.shopping.starter</groupId>
+    <groupId>com.toucan.shopping.cloud.starter</groupId>
     <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -40,17 +40,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-auth</artifactId>
         </dependency>
 
@@ -59,7 +59,7 @@
             <artifactId>toucan-shopping-admin-auth-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
         </dependency>
     </dependencies>

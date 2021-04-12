@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <description>配置文件服务</description>
-    <groupId>com.toucan.shopping.base</groupId>
+    <groupId>com.toucan.shopping.cloud.base</groupId>
     <artifactId>toucan-shopping-config-server</artifactId>
 
     <dependencies>
@@ -39,7 +39,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.config.server.app.ConfigServerApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.base.config.server.app.ConfigServerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

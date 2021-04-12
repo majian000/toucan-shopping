@@ -1,13 +1,9 @@
 package com.toucan.shopping.web.controller.page.user;
 
-import com.toucan.shopping.area.api.feign.service.FeignAdminAreaService;
 import com.toucan.shopping.auth.user.Auth;
-import com.toucan.shopping.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.user.export.vo.UserSmsVO;
-import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

@@ -32,7 +32,7 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.stock</groupId>
             <artifactId>toucan-shopping-stock-entity-vo</artifactId>
         </dependency>
     </dependencies>

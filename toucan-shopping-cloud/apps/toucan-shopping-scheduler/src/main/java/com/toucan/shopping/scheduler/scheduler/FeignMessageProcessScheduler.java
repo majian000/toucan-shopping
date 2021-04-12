@@ -1,6 +1,5 @@
 package com.toucan.shopping.scheduler.scheduler;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
@@ -9,9 +8,9 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.product.export.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.product.export.entity.ProductSku;
-import com.toucan.shopping.stock.api.feign.service.FeignProductSkuStockService;
+import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockService;
 import com.toucan.shopping.stock.export.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.stock.export.util.StockRedisKeyUtil;
 import com.toucan.shopping.stock.export.vo.RestoreStockVo;

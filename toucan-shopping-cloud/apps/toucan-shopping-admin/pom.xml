@@ -12,7 +12,7 @@
     <description>商城管理端</description>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.toucan.shopping.apps</groupId>
+    <groupId>com.toucan.shopping.cloud.apps</groupId>
     <artifactId>toucan-shopping-admin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -105,11 +105,11 @@
 
         <!-- 我们的包-->
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
         <dependency>
@@ -117,7 +117,7 @@
             <artifactId>toucan-shopping-product-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules</groupId>
+            <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-entity-vo</artifactId>
         </dependency>
 

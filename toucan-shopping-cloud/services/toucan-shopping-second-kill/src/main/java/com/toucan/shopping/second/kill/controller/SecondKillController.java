@@ -15,7 +15,7 @@ import com.toucan.shopping.product.export.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.product.export.entity.ProductBuy;
 import com.toucan.shopping.product.export.entity.ProductSku;
 import com.toucan.shopping.second.kill.service.SecondKillService;
