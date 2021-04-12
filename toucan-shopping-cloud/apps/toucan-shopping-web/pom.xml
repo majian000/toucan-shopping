@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>toucan-shopping-cloud</artifactId>
+        <groupId>com.toucan.shopping</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <description>商城web端</description>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.toucan.shopping.apps</groupId>
+    <artifactId>toucan-shopping-web</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+
+
+    <dependencies>
+        <!-- 集成对web支持-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <!--对Open Feign方式调用支持 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!-- 重试机制 -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+
+        <!--增加hystrix支持熔断 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+
+        <!--使用配置中心 客户端-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+        <!-- 健康监控 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--集成redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version>
+        </dependency>
+
+
+        <!--kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+
+        <!--sharding sphere -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+
+
+        <!--freemark -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+
+
+        <!-- 我们的包-->
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-common-persistence</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-lock-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-product-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-order-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-product-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-order-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-order-no</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-category-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-stock-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-stock-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-area-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-area-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-user-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-auth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules</groupId>
+            <artifactId>toucan-shopping-common-persistence-event</artifactId>
+        </dependency>
+
+    </dependencies>
+
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.toucan.shopping.web.app.WebApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
+    </build>
+
+</project>
