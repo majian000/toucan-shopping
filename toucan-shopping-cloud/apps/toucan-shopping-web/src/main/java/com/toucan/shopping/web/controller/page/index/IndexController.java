@@ -112,9 +112,11 @@ public class IndexController {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Banner.class);
                     //保存轮播图到redis
                     stringRedisTemplate.opsForValue().set(BannerRedisKey.getIndexBanner("110000"),JSONObject.toJSONString(resultObjectVO.getData()));
+                }else{
+                    banners = new ArrayList<Banner>();
                 }
             }else{
-                banners = JSONArray.parseArray(JSONObject.toJSONString(String.valueOf(bannersRedisObject)), Banner.class);
+                banners = JSONArray.parseArray(String.valueOf(bannersRedisObject), Banner.class);
             }
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
