@@ -96,6 +96,12 @@
         <module>toucan-shopping-cloud</module>
 
 
+        <!--  =================================前端模板 =================================-->
+        <!--商城客户端界面 -->
+        <module>front-templates/toucan-shopping-web-templates</module>
+
+        <!-- ===============================================-->
+
     </modules>
 
 
@@ -308,6 +314,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.user</groupId>
                 <artifactId>toucan-shopping-user-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.front.templates</groupId>
+                <artifactId>toucan-shopping-web-templates</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

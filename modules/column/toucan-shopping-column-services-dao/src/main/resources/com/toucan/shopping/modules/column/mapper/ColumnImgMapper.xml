@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toucan.shopping.modules.column.mapper.ColumnImgMapper">
 
-    <resultMap id="columnMap" type="com.toucan.shopping.column.entity.ColumnImg" >
+    <resultMap id="columnMap" type="com.toucan.shopping.modules.column.entity.ColumnImg" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="column_id" jdbcType="BIGINT" property="columnId" />
         <result column="src" jdbcType="VARCHAR" property="src" />
@@ -18,7 +18,7 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
     </resultMap>
 
-    <select id="queryList" resultMap="columnMap" parameterType="com.toucan.shopping.column.vo.ColumnVO">
+    <select id="queryList" resultMap="columnMap" parameterType="com.toucan.shopping.modules.column.vo.ColumnVO">
         select tc.* from t_column_img tc
         <where>
             1=1
@@ -45,7 +45,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.toucan.shopping.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
         insert into t_column_img(src,type,show_status,img_sort,href,remark,create_date,update_date,create_admin_id,update_admin_id)
         values(#{src},#{type},#{showStatus},#{imgSort},#{href},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
@@ -61,7 +61,7 @@
     </update>
 
 
-    <update id="update" parameterType="com.toucan.shopping.column.entity.Column">
+    <update id="update" parameterType="com.toucan.shopping.modules.column.entity.Column">
         update t_column_img set src=#{src},type=#{type},show_status=#{showStatus},img_sort=#{imgSort},href=#{href},remark=#{remark},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}

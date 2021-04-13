@@ -175,6 +175,11 @@
             <artifactId>toucan-shopping-common-persistence-event</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.front.templates</groupId>
+            <artifactId>toucan-shopping-web-templates</artifactId>
+        </dependency>
+
     </dependencies>
 
 

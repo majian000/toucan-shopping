@@ -118,12 +118,9 @@ public class IndexController {
             }
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
-        }
-
-        if(banners==null)
-        {
             banners = new ArrayList<Banner>();
         }
+
         request.setAttribute("banners",banners);
     }
 

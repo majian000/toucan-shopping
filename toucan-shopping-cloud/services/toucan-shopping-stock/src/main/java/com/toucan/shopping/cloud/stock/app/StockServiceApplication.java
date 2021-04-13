@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableDiscoveryClient
-@MapperScan({"com.toucan.shopping.modules.stock.mapper","com.toucan.shopping.modules.common.persistence.mapper"})
+@MapperScan({"com.toucan.shopping.modules.stock.mapper","com.toucan.shopping.modules.common.persistence.mapper","com.toucan.shopping.modules.common.persistence.event.mapper"})
 @ComponentScan("com.toucan.shopping")
 public class StockServiceApplication {
 
