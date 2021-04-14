@@ -97,8 +97,10 @@
 
 
         <!--  =================================前端模板 =================================-->
-        <!--商城客户端界面 -->
+        <!--商城客户端界面模板 -->
         <module>front-templates/toucan-shopping-web-templates</module>
+        <!--用户中心界面模板 -->
+        <module>front-templates/toucan-shopping-user-center-web-templates</module>
 
         <!-- ===============================================-->
 
@@ -321,6 +323,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.front.templates</groupId>
                 <artifactId>toucan-shopping-web-templates</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.front.templates</groupId>
+                <artifactId>toucan-shopping-user-center-web-templates</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
