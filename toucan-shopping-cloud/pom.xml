@@ -29,7 +29,7 @@
         <!--服务中心-->
         <module>base/toucan-shopping-eureka</module>
         <!-- 配置中心服务端-->
-        <module>base/toucan-shopping-config-server</module>
+        <module>base/toucan-shopping-cloud-config-server</module>
         <!--网关服务 -->
         <module>base/toucan-shopping-gateway</module>
         <!-- ===============================================-->

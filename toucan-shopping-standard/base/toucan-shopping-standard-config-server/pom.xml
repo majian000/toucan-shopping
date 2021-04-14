@@ -12,7 +12,7 @@
 
     <description>配置文件服务</description>
     <groupId>com.toucan.shopping.standard.base</groupId>
-    <artifactId>toucan-shopping-config-server</artifactId>
+    <artifactId>toucan-shopping-standard-config-server</artifactId>
 
     <dependencies>
 

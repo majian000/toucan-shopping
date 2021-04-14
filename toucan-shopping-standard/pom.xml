@@ -27,7 +27,7 @@
 
 
         <!--  =================================基础服务层 =================================-->
-        <module>base/toucan-shopping-config-server</module>
+        <module>base/toucan-shopping-standard-config-server</module>
 
         <!-- ===============================================-->
 

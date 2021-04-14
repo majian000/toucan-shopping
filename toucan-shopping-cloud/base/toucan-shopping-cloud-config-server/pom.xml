@@ -12,7 +12,7 @@
 
     <description>配置文件服务</description>
     <groupId>com.toucan.shopping.cloud.base</groupId>
-    <artifactId>toucan-shopping-config-server</artifactId>
+    <artifactId>toucan-shopping-cloud-config-server</artifactId>
 
     <dependencies>
 
