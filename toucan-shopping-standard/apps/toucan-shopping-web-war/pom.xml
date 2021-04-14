@@ -20,77 +20,10 @@
 
 
     <dependencies>
-        <!-- 集成对web支持-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-
-
-        <!--kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-
-
-        <!--freemark -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
-
-
-        <!-- 我们的包-->
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-persistence</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-lock-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.product</groupId>
-            <artifactId>toucan-shopping-product-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.order</groupId>
-            <artifactId>toucan-shopping-order-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.order</groupId>
-            <artifactId>toucan-shopping-order-no</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.stock</groupId>
-            <artifactId>toucan-shopping-stock-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.area</groupId>
-            <artifactId>toucan-shopping-area-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-auth</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-persistence-event</artifactId>
-        </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.front.templates</groupId>
-            <artifactId>toucan-shopping-web-templates</artifactId>
+            <groupId>com.toucan.shopping.standard.modules.apps</groupId>
+            <artifactId>toucan-shopping-web-common</artifactId>
         </dependency>
 
     </dependencies>

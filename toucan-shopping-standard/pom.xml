@@ -31,6 +31,12 @@
         <module>apps/toucan-shopping-web-war</module>
 
 
+        <!--  =================================公共模块层 =================================-->
+        <!--商城客户端公共类 -->
+        <module>modules/apps/toucan-shopping-web-common</module>
+
+        <!-- ===============================================-->
+
 
     </modules>
 
@@ -43,6 +49,14 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>com.toucan.shopping.standard.modules.apps</groupId>
+                <artifactId>toucan-shopping-web-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
 
         </dependencies>
