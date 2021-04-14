@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <!--在这里继承了spring boot -->
+    <!--在这里继承了顶级pom -->
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.RELEASE</version>
-        <relativePath/>
+        <artifactId>toucan-shopping</artifactId>
+        <groupId>com.toucan.shopping</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -25,7 +25,10 @@
 
     <modules>
 
-
+        <!--商城客户端 jar包版-->
+        <module>apps/toucan-shopping-web-jar</module>
+        <!--商城客户端 war包版-->
+        <module>apps/toucan-shopping-web-war</module>
 
 
 
