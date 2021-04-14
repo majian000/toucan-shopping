@@ -17,6 +17,8 @@ spring:
     name: toucan-shopping-admin-auth
   cloud:
     config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
       uri: http://localhost:9090
       label: master
       profile: prod
@@ -29,6 +31,8 @@ spring:
     name: toucan-shopping-admin-auth
   cloud:
     config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
       uri: http://localhost:9090
       label: master
       profile: dev

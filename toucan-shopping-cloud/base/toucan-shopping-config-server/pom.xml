@@ -23,10 +23,10 @@
         </dependency>
 
         <!--添加配置中心的安全保护依赖  -->
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 

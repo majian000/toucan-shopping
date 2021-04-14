@@ -9,6 +9,8 @@ spring:
     name: toucan-shopping-eureka
   cloud:
     config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
       uri: http://localhost:9090
       label: master
       profile: prod1
@@ -20,6 +22,8 @@ spring:
     name: toucan-shopping-eureka
   cloud:
     config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
       uri: http://localhost:9090
       label: master
       profile: prod2
@@ -32,6 +36,8 @@ spring:
     name: toucan-shopping-eureka
   cloud:
     config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
       uri: http://localhost:9090
       label: master
       profile: prod3
@@ -44,6 +50,8 @@ spring:
     name: toucan-shopping-eureka
   cloud:
     config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
       uri: http://localhost:9090
       label: master
       profile: dev
@@ -56,6 +64,8 @@ spring:
     name: toucan-shopping-eureka
   cloud:
     config: #指定配置中心服务端
+      username: toucan_sp #用户名
+      password: toucan_sp_0987 #密码
       uri: http://localhost:9090
       label: master
       profile: prod
