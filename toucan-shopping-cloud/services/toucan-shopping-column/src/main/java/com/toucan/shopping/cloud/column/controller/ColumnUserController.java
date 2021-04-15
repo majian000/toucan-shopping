@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.column.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.column.service.ColumnService;
+import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- * 用户端地区操作
+ * 用户端栏目操作
  */
 @RestController
 @RequestMapping("/column/user")
@@ -31,7 +32,7 @@ public class ColumnUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/area/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -51,8 +52,8 @@ public class ColumnUserController {
             return resultObjectVO;
         }
         try {
-//            List<AreaVO> areaVOS = areaService.queryTree(requestJsonVO.getAppCode());
-//            resultObjectVO.setData(areaVOS);
+            ColumnVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
+            resultObjectVO.setData(columnService.queryAreaColumnList(query.getAppCode(),query.getType(),query.getPosition()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -18,3 +18,10 @@
 
 #### 使用说明
 
+##### 查询指定区域下栏目列表
+    
+    POST http://localhost:8090/category/admin/save
+    请求头
+    Content-Type:application/json;charset=UTF-8
+    {"appCode":"10001001","entityJson":"{\"parentId\":\"-1\",\"name\":\"零食\",\"category_sort\":\"0\",\"type\":\"1\",\"remark\":\"类别备注\",\"createUserId\":\"-1\"}"}
+

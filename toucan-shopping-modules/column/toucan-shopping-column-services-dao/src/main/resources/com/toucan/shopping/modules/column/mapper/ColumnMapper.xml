@@ -5,8 +5,10 @@
     <resultMap id="columnMap" type="com.toucan.shopping.modules.column.entity.Column" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="column_sort" jdbcType="INTEGER" property="columnSort" />
         <result column="position" jdbcType="INTEGER" property="position" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -54,8 +56,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_column(title,type,show_status,position,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{title},#{type},#{showStatus},#{position},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_column(title,content,column_sort,type,show_status,position,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{title},#{content},#{columnSort},#{type},#{showStatus},#{position},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 
@@ -69,8 +71,15 @@
     </update>
 
 
+    <select id="queryAreaColumnList" resultMap="columnMap" >
+        select tc.* from t_column tc left join t_column_area tca on tc.id = tca.column_id
+         where tca.area_code=#{areaCode} and tc.type=#{type} and tc.position=#{position}
+        order by tc.column_sort desc
+    </select>
+
+
     <update id="update" parameterType="com.toucan.shopping.modules.column.entity.Column">
-        update t_column set title=#{title},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        update t_column set title=#{title},content=#{content},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>
