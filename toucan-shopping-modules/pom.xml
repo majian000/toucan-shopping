@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--在这里继承了顶级pom -->
+    <parent>
+        <artifactId>toucan-shopping</artifactId>
+        <groupId>com.toucan.shopping</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <description>犀鸟商城公共模块</description>
+
+    <groupId>com.toucan.shopping.modules</groupId>
+    <artifactId>toucan-shopping-modules</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+
+    <modules>
+
+        <!-- =======================公共基础模块=========================-->
+
+        <!--公共模块 -->
+        <module>common/toucan-shopping-common</module>
+        <!--web公共模块 -->
+        <module>common/toucan-shopping-common-web</module>
+        <!--公共模块 持久化 -->
+        <module>common/toucan-shopping-common-persistence</module>
+        <!--权限注解 -->
+        <module>common/toucan-shopping-auth</module>
+        <!-- 分布式锁-->
+        <module>common/toucan-shopping-lock-redis</module>
+        <!-- 公共事件持久层 -->
+        <module>common/toucan-shopping-common-persistence-event</module>
+
+        <!--用户中心操作es -->
+        <module>user/toucan-shopping-user-es</module>
+        <!--用户中心实体VO -->
+        <module>user/toucan-shopping-user-entity-vo</module>
+        <!--用户Service和DAO -->
+        <module>user/toucan-shopping-user-service-dao</module>
+
+
+        <!--地区编码实体和VO -->
+        <module>area/toucan-shopping-area-entity-vo</module>
+        <!--地区编码服务类和DAO -->
+        <module>area/toucan-shopping-area-service-dao</module>
+
+
+        <!--权限服务实体和VO -->
+        <module>adminAuth/toucan-shopping-admin-auth-entity-vo</module>
+        <!--权限服务Service和Dao -->
+        <module>adminAuth/toucan-shopping-admin-auth-service-dao</module>
+
+
+        <!--类别实体和VO -->
+        <module>category/toucan-shopping-category-entity-vo</module>
+        <!--类别服务Service和DAO -->
+        <module>category/toucan-shopping-category-service-dao</module>
+
+        <!--栏目实体和VO -->
+        <module>column/toucan-shopping-column-entity-vo</module>
+        <!--栏目服务Service和DAO -->
+        <module>column/toucan-shopping-column-services-dao</module>
+
+        <!--订单实体和VO -->
+        <module>order/toucan-shopping-order-entity-vo</module>
+        <!--订单Service和DAO -->
+        <module>order/toucan-shopping-order-service-dao</module>
+        <!-- 订单编号生成 -->
+        <module>order/toucan-shopping-order-no</module>
+
+
+        <!--商品实体和VO -->
+        <module>product/toucan-shopping-product-entity-vo</module>
+        <!--商品Service和DAO -->
+        <module>product/toucan-shopping-product-service-dao</module>
+
+
+        <!--库存实体和VO -->
+        <module>stock/toucan-shopping-stock-entity-vo</module>
+        <!--库存Service和DAO -->
+        <module>stock/toucan-shopping-stock-service-dao</module>
+
+
+        <!-- ===============================================-->
+
+    </modules>
+
+
+    <dependencies>
+
+
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- 我们的包-->
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-common-web</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-common-persistence</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-common-persistence-event</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-auth</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-lock-redis</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.user</groupId>
+                <artifactId>toucan-shopping-user-es</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-common-persistence-event</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.product</groupId>
+                <artifactId>toucan-shopping-product-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.order</groupId>
+                <artifactId>toucan-shopping-order-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.order</groupId>
+                <artifactId>toucan-shopping-order-no</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.user</groupId>
+                <artifactId>toucan-shopping-user-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.stock</groupId>
+                <artifactId>toucan-shopping-stock-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.category</groupId>
+                <artifactId>toucan-shopping-category-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.area</groupId>
+                <artifactId>toucan-shopping-area-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.category</groupId>
+                <artifactId>toucan-shopping-category-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.column</groupId>
+                <artifactId>toucan-shopping-column-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.column</groupId>
+                <artifactId>toucan-shopping-column-services-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.order</groupId>
+                <artifactId>toucan-shopping-order-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.product</groupId>
+                <artifactId>toucan-shopping-product-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.area</groupId>
+                <artifactId>toucan-shopping-area-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.user</groupId>
+                <artifactId>toucan-shopping-user-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.stock</groupId>
+                <artifactId>toucan-shopping-stock-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+
+
+
+
+</project>

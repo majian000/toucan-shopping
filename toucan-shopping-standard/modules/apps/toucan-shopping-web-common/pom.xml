@@ -44,19 +44,25 @@
 
 
         <!-- 我们的包-->
-        <dependency>
+        <!--<dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--<dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--<dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-lock-redis</artifactId>
-        </dependency>
-        <dependency>
+        </dependency>-->
+
+        <!--<dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
+        </dependency>-->
+
+        <!--<dependency>
             <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-entity-vo</artifactId>
         </dependency>
@@ -67,10 +73,6 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.order</groupId>
             <artifactId>toucan-shopping-order-no</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.stock</groupId>
@@ -127,7 +129,7 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.category</groupId>
             <artifactId>toucan-shopping-category-service-dao</artifactId>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 
