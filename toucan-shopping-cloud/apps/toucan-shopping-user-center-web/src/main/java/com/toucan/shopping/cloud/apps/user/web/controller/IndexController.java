@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.apps.user.web.controller;
 
 
-import com.toucan.shopping.modules.auth.admin.Auth;
+import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ public class IndexController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/page",method = RequestMethod.GET)
     public String page()
     {
@@ -29,7 +29,7 @@ public class IndexController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/welcome",method = RequestMethod.GET)
     public String welcome()
     {

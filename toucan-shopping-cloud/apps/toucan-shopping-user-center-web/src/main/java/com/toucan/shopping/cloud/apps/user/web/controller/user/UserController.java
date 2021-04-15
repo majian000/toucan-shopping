@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.user.web.controller.user;
 
 
 import com.toucan.shopping.cloud.apps.user.web.vo.TableVO;
-import com.toucan.shopping.modules.auth.admin.Auth;
+import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
@@ -43,7 +43,7 @@ public class UserController {
     private UserElasticSearchService userElasticSearchService;
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
@@ -58,7 +58,7 @@ public class UserController {
      * @param userPageInfo
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(HttpServletRequest request, UserPageInfo userPageInfo)

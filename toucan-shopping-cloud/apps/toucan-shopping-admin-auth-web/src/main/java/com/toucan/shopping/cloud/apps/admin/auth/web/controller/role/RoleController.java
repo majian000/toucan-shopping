@@ -8,7 +8,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.RoleVO;
-import com.toucan.shopping.modules.auth.admin.Auth;
+import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -45,7 +45,7 @@ public class RoleController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
@@ -57,7 +57,7 @@ public class RoleController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage()
     {
@@ -66,7 +66,7 @@ public class RoleController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -100,7 +100,7 @@ public class RoleController {
      * @param role
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO update(HttpServletRequest request,@RequestBody Role role)
@@ -126,7 +126,7 @@ public class RoleController {
      * @param entity
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody Role entity)
@@ -152,7 +152,7 @@ public class RoleController {
      * @param pageInfo
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)
@@ -188,7 +188,7 @@ public class RoleController {
      * @param request
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
@@ -226,7 +226,7 @@ public class RoleController {
      * @param request
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<RoleVO> roleVOS)

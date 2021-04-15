@@ -3,7 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.admin;
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
-import com.toucan.shopping.modules.auth.admin.Auth;
+import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.util.SignUtil;
@@ -40,7 +40,7 @@ public class AdminController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
@@ -55,7 +55,7 @@ public class AdminController {
      * @param pageInfo
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)

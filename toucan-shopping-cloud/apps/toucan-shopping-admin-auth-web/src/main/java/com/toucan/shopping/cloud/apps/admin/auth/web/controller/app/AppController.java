@@ -8,7 +8,7 @@ import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
-import com.toucan.shopping.modules.auth.admin.Auth;
+import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -49,7 +49,7 @@ public class AppController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
@@ -58,7 +58,7 @@ public class AppController {
 
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage()
     {
@@ -66,7 +66,7 @@ public class AppController {
     }
 
 
-    @Auth(verifyMethod = Auth.VERIFYMETHOD_ADMIN_AUTH,requestType = Auth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -99,7 +99,7 @@ public class AppController {
      * @param app
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody App app)
@@ -124,7 +124,7 @@ public class AppController {
      * @param app
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO update(HttpServletRequest request,@RequestBody App app)
@@ -150,7 +150,7 @@ public class AppController {
      * @param pageInfo
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(HttpServletRequest request, AppPageInfo pageInfo)
@@ -185,7 +185,7 @@ public class AppController {
      * @param request
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
@@ -222,7 +222,7 @@ public class AppController {
      * @param request
      * @return
      */
-    @Auth
+    @AdminAuth
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AppVO> appVOs)
