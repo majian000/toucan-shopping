@@ -24,9 +24,14 @@
             </if>
 
 
+            <if test="columnId!=null">
+                and tc.column_id = #{columnId}
+            </if>
+
             <if test="showStatus!=null">
                 and tc.show_status = #{showStatus}
             </if>
+
 
             <if test="idArray!=null ">
                 and tc.id in

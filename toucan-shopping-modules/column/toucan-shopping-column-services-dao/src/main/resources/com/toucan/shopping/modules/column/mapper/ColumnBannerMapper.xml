@@ -24,6 +24,9 @@
                 and tc.id = #{id}
             </if>
 
+            <if test="columnId!=null">
+                and tc.column_id = #{columnId}
+            </if>
 
             <if test="showStatus!=null">
                 and tc.show_status = #{showStatus}

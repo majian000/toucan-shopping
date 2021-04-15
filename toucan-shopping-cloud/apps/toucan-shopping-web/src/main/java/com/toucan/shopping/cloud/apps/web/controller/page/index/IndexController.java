@@ -173,6 +173,9 @@ public class IndexController {
 
         //查询类别列表
         queryCategorys(request);
+
+        //查询顶部栏目
+
         return "index";
     }
 

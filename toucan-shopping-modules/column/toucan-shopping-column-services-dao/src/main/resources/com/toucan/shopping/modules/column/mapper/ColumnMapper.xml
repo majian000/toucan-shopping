@@ -30,6 +30,16 @@
                 and tc.show_status = #{showStatus}
             </if>
 
+
+            <if test="type!=null">
+                and tc.type = #{type}
+            </if>
+
+
+            <if test="position!=null">
+                and tc.position = #{position}
+            </if>
+
             <if test="idArray!=null ">
                 and tc.id in
                 <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">

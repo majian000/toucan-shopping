@@ -4,6 +4,8 @@ spring:
   application:
     name: toucan-shopping-cloud-config-server #应用名称
   security: #配置认证
+    basic:
+      enabled: true
     user:
       name: toucan_sp #用户名
       password: toucan_sp_0987 #密码
