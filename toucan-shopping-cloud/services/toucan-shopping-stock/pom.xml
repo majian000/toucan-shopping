@@ -112,7 +112,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.stock.app.StockServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.stock.app.CloudStockServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

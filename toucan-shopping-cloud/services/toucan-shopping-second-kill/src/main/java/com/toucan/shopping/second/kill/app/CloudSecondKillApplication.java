@@ -15,10 +15,10 @@ import org.springframework.web.client.RestTemplate;
 @MapperScan({"com.toucan.shopping.modules.common.persistence.mapper"})
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @ComponentScan("com.toucan.shopping")
-public class SecondKillApplication {
+public class CloudSecondKillApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SecondKillApplication.class, args);
+        SpringApplication.run(CloudSecondKillApplication.class, args);
     }
 
 

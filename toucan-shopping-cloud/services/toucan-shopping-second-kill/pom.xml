@@ -127,7 +127,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.second.kill.app.SecondKillApplication</mainClass>
+                    <mainClass>com.toucan.shopping.second.kill.app.CloudSecondKillApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

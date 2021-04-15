@@ -104,7 +104,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.category.app.CategoryServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.category.app.CloudCategoryServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

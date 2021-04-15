@@ -11,10 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @MapperScan({"com.toucan.shopping.modules.category.mapper","com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScan("com.toucan.shopping")
-public class CategoryServiceApplication {
+public class CloudCategoryServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CategoryServiceApplication.class, args);
+        SpringApplication.run(CloudCategoryServiceApplication.class, args);
     }
 
 }

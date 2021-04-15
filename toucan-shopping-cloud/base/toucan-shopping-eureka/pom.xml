@@ -50,7 +50,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.base.eureka.app.EurekaServerApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.base.eureka.app.CloudEurekaServerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -11,9 +11,9 @@ import org.springframework.context.annotation.ComponentScan;
 @MapperScan({"com.toucan.shopping.modules.admin.auth.mapper",
         "com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScan("com.toucan.shopping")
-public class AdminAuthServiceApplication {
+public class CloudAdminAuthServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminAuthServiceApplication.class, args);
+        SpringApplication.run(CloudAdminAuthServiceApplication.class, args);
     }
 }

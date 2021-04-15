@@ -8,8 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan("com.toucan.shopping.gateway.filter")
-public class GatewayApplication {
+public class CloudGatewayApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class, args);
+        SpringApplication.run(CloudGatewayApplication.class, args);
     }
 }

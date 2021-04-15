@@ -107,7 +107,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.modules.area.app.AreaServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.area.app.CloudAreaServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
