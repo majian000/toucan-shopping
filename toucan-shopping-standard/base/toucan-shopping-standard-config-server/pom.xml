@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>toucan-shopping-cloud</artifactId>
+        <artifactId>toucan-shopping-standard</artifactId>
         <groupId>com.toucan.shopping</groupId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
@@ -13,6 +13,8 @@
     <description>配置文件服务</description>
     <groupId>com.toucan.shopping.standard.base</groupId>
     <artifactId>toucan-shopping-standard-config-server</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <dependencies>
 
