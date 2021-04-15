@@ -79,7 +79,7 @@ public class IndexController {
 //                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(blackBird.getAppCode(), "");
 //                ResultObjectVO resultObjectVO = feignUserAreaService.queryAll(SignUtil.sign(requestJsonVO), requestJsonVO);
 //                if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
-//                    areaJson = JSONObject.toJSONString(resultObjectVO.getCode());
+//                    areaJson = JSONObject.toJSONString(resultObjectVO.getData());
 //                    //保存地区树到redis
 //                    stringRedisTemplate.opsForValue().set(AreaRedisKey.getAreaKey(),areaJson);
 //                }

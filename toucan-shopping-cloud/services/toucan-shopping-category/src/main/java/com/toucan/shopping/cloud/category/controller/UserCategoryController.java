@@ -20,7 +20,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/category/user")
-public class CategoryController {
+public class UserCategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

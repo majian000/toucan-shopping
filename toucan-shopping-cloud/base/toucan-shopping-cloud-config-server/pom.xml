@@ -41,7 +41,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.base.config.server.app.ConfigServerApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.base.config.server.app.CloudConfigServerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
