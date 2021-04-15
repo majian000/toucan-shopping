@@ -146,7 +146,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.apps.user.scheduler.app.UserSchedulerApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.apps.user.scheduler.app.CloudUserSchedulerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -15,10 +15,10 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @ComponentScan("com.toucan.shopping")
 @EnableHystrix
-public class UserSchedulerApplication {
+public class CloudUserSchedulerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UserSchedulerApplication.class, args);
+        SpringApplication.run(CloudUserSchedulerApplication.class, args);
     }
 
 

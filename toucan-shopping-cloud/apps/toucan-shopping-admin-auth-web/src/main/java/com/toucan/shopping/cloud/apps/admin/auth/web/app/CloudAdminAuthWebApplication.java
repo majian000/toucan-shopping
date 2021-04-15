@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.user.web.app;
+package com.toucan.shopping.cloud.apps.admin.auth.web.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,9 +12,9 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan("com.toucan.shopping")
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @EnableHystrix
-public class UserCenterWebApplication {
+public class CloudAdminAuthWebApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UserCenterWebApplication.class, args);
+        SpringApplication.run(CloudAdminAuthWebApplication.class, args);
     }
 }

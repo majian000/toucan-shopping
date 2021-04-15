@@ -1,5 +1,6 @@
-package com.toucan.shopping.cloud.apps.admin.app;
+package com.toucan.shopping.cloud.apps.scheduler.app;
 
+import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,16 +12,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableEurekaClient
-@MapperScan({"com.toucan.shopping.modules.common.persistence.mapper"})
+@MapperScan({"com.toucan.shopping"})
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @ComponentScan("com.toucan.shopping")
 @EnableHystrix
-public class AdminApplication {
+public class CloudSchedulerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminApplication.class, args);
+        SpringApplication.run(CloudSchedulerApplication.class, args);
     }
 
 
