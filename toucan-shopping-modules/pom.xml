@@ -274,7 +274,6 @@
             </dependency>
 
 
-
             <dependency>
                 <groupId>com.toucan.shopping.modules.stock</groupId>
                 <artifactId>toucan-shopping-stock-service-dao</artifactId>

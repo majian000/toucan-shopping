@@ -107,7 +107,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>UserCenterWebApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.apps.admin.auth.web.app.AdminAuthWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
