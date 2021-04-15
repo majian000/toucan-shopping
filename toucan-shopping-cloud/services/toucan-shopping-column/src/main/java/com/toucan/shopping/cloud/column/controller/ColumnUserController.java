@@ -32,7 +32,7 @@ public class ColumnUserController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/area/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/area/query/list",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
     {
@@ -53,7 +53,7 @@ public class ColumnUserController {
         }
         try {
             ColumnVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
-            resultObjectVO.setData(columnService.queryAreaColumnList(query.getAppCode(),query.getType(),query.getPosition()));
+            resultObjectVO.setData(columnService.queryAreaColumnList(query.getAreaCode(),query.getType(),query.getPosition()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

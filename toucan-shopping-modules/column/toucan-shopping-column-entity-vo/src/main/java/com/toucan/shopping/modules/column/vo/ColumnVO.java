@@ -15,6 +15,11 @@ import java.util.List;
 public class ColumnVO extends Column {
 
 
+    /**
+     * 地区编码
+     */
+    private String areaCode;
+
     private Long[] idArray; //ID数组
 
 }
