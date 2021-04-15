@@ -22,29 +22,29 @@
 
     <dependencies>
         <!-- 集成对web支持-->
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>-->
+        </dependency>
 
 
 
         <!--kafka -->
-       <!-- <dependency>
+       <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
-        </dependency>-->
+        </dependency>
 
 
         <!--freemark -->
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
--->
+
 
         <!-- 我们的包-->
-        <!--<dependency>
+        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
@@ -55,9 +55,9 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-lock-redis</artifactId>
-        </dependency>-->
+        </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
@@ -129,7 +129,7 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.category</groupId>
             <artifactId>toucan-shopping-category-service-dao</artifactId>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 

@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Documented
 @Inherited
-public @interface Auth {
+public @interface AdminAuth {
 
 	/**
 	 * 校验方式 0本地验证 1权限中心验证

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
-@MapperScan({"com.toucan.shopping.modules.common.persistence.event.mapper"})
+@MapperScan({"com.toucan.shopping"})
 @ComponentScan("com.toucan.shopping")
 public class StandardWebApplication {
 

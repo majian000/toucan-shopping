@@ -4,7 +4,7 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
-import com.toucan.shopping.modules.auth.admin.Auth;
+import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.spring.context.SpringContextHolder;
@@ -53,20 +53,20 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
-            Auth authAnnotation = method.getAnnotation(Auth.class);
+            AdminAuth authAnnotation = method.getAnnotation(AdminAuth.class);
             try {
                 response.setCharacterEncoding(Charset.defaultCharset().name());
 
                 if (authAnnotation != null) {
                     //由用户中心做权限判断
-                    if (authAnnotation.verifyMethod() == Auth.VERIFYMETHOD_ADMIN_AUTH) {
+                    if (authAnnotation.verifyMethod() == AdminAuth.VERIFYMETHOD_ADMIN_AUTH) {
                         //拿到权限中心服务
                         FeignAdminService feignAdminService = springContextHolder.getBean(FeignAdminService.class);
                         if (authAnnotation.login()) {
                             logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
                             String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
                             //ajax请求
-                            if (authAnnotation.requestType() == Auth.REQUEST_JSON) {
+                            if (authAnnotation.requestType() == AdminAuth.REQUEST_JSON) {
                                 //JSON类型请求
                                 RequestWrapper RequestWrapper = new RequestWrapper((HttpServletRequest) request);
                                 String jsonBody = new String(RequestWrapper.body);
@@ -132,7 +132,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                             }
 
                             //如果是直接请求
-                            if (authAnnotation.requestType() == Auth.REQUEST_FORM) {
+                            if (authAnnotation.requestType() == AdminAuth.REQUEST_FORM) {
                                 if (StringUtils.isEmpty(authHeader)) {
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
@@ -178,13 +178,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                 }
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
-                if (authAnnotation.requestType() == Auth.REQUEST_JSON) {
+                if (authAnnotation.requestType() == AdminAuth.REQUEST_JSON) {
                     resultVO.setCode(ResultVO.FAILD);
                     resultVO.setMsg("操作失败,请检查传入参数");
                     response.setContentType("application/json");
                     response.getWriter().write(JSONObject.toJSONString(resultVO));
                 }
-                if (authAnnotation.requestType() == Auth.REQUEST_FORM) {
+                if (authAnnotation.requestType() == AdminAuth.REQUEST_FORM) {
                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
                 }
