@@ -24,4 +24,5 @@ public interface UserMapper {
 
     Long queryListPageCount(UserPageInfo appPageInfo);
 
+    int updateEnableStatus(Short enableStatus,Long userMainId);
 }

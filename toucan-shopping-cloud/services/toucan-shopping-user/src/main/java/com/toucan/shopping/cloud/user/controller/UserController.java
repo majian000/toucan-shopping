@@ -340,26 +340,28 @@ public class UserController {
                 resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
                 resultObjectVO.setMsg("登录失败,请先注册");
             }else {
-                String pwdMd5 = MD5Util.md5(userLogin.getPassword());
-                for (User userEntity : users) {
+                User userEntity = users.get(0);
+                //判断用户启用状态
+                if(userEntity.getEnableStatus().shortValue()==1) {
+                    String pwdMd5 = MD5Util.md5(userLogin.getPassword());
                     //登录成功 生成token
                     if (pwdMd5.equals(userEntity.getPassword())) {
-                        String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userEntity.getId()));
-                        String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getId()),requestJsonVO.getAppCode());
+                        String loginTokenGroupKey = UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userEntity.getId()));
+                        String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getId()), requestJsonVO.getAppCode());
                         //判断是否已有登录token,如果有将删除掉
                         if (stringRedisTemplate.opsForHash().keys(loginTokenGroupKey) != null) {
                             long deleteRows = 0;
                             int tryCount = 0;
                             do {
 
-                                deleteRows = stringRedisTemplate.opsForHash().delete(loginTokenGroupKey,loginTokenAppKey);
+                                deleteRows = stringRedisTemplate.opsForHash().delete(loginTokenGroupKey, loginTokenAppKey);
                                 tryCount++;
-                            } while (deleteRows<=0 && tryCount < 50);
+                            } while (deleteRows <= 0 && tryCount < 50);
                         }
 
                         String token = UUID.randomUUID().toString().replace("-", "");
                         stringRedisTemplate.opsForHash().put(loginTokenGroupKey,
-                                loginTokenAppKey,token);
+                                loginTokenAppKey, token);
                         //设置登录token1个小时超时
                         stringRedisTemplate.expire(loginTokenGroupKey,
                                 UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
@@ -371,6 +373,9 @@ public class UserController {
                         resultObjectVO.setData(userLogin);
 
                     }
+                }else{
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("登录失败,用户已被禁用");
                 }
             }
 

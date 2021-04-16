@@ -18,6 +18,7 @@ public interface UserService {
 
     List<User> findById(Long id);
 
+    int updateEnableStatus(Short enableStatus,Long userMainId);
 
     /**
      * 添加这个手机号到应用

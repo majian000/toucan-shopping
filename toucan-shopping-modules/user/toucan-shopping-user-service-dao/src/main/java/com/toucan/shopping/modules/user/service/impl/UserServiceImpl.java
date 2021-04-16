@@ -42,6 +42,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.findById(id);
     }
 
+    @Override
+    public int updateEnableStatus(Short enableStatus,Long userMainId) {
+        return userMapper.updateEnableStatus(enableStatus,userMainId);
+    }
+
 
     //    @DataSourceSelector
     @Override

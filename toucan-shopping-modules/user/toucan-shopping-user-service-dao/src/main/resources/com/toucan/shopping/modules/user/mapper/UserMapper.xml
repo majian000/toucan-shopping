@@ -93,4 +93,12 @@
     <update id="deleteById" parameterType="java.lang.Long">
         update t_user set delete_status=1 where id =#{id}
     </update>
+
+
+
+    <update id="updateEnableStatus" >
+        update t_user set enable_status=#{enableStatus} where user_main_id =#{userMainId} and delete_status=0
+    </update>
+
+
 </mapper>
