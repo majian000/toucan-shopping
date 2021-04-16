@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class Function {
-    private Integer id;
+    private Long id;
 
 
     /**
@@ -50,6 +50,11 @@ public class Function {
     private Date createDate;
 
     /**
+     * 修改时间
+     */
+    private Date updateDate;
+
+    /**
      * 备注
      */
     private String remark;
@@ -70,6 +75,12 @@ public class Function {
      * 创建人
      */
     private String createAdminId;
+
+
+    /**
+     * 修改人
+     */
+    private String updateAdminId;
 
 
 }
