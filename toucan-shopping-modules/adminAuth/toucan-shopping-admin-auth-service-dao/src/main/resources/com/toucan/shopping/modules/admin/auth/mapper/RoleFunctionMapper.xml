@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.admin.auth.mapper.RoleFunctionMapper">
+
+    <resultMap id="roleFunctionMap" type="com.toucan.shopping.modules.admin.auth.entity.RoleFunction" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="function_id" jdbcType="VARCHAR" property="functionId" />
+        <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        
+    </resultMap>
+
+
+    <select id="findListByEntity" resultMap="roleFunctionMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.RoleFunction">
+        select * from t_sa_role_function t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="adminId!=null">
+                and t.admin_id = #{adminId}
+            </if>
+            <if test="roleId!=null">
+                and t.role_id = #{roleId}
+            </if>
+            and t.delete_status =0
+        </where>
+
+    </select>
+
+
+
+    <select id="findListByAdminId" resultMap="roleFunctionMap" parameterType="java.lang.String">
+        select * from t_sa_role_function t where 1=1 and t.admin_id = #{adminId} and t.delete_status =0
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.RoleFunction" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_sa_role_function(function_id,role_id,app_code,create_date,delete_status,create_admin_id)
+        values(#{functionId},#{roleId},#{appCode},#{createDate},#{deleteStatus},#{createAdminId})
+    </insert>
+
+
+    <update id="deleteByRoleId" parameterType="java.lang.Long">
+        update t_sa_role_function set delete_status=1  where role_id = #{roleId}
+    </update>
+
+
+    <update id="deleteByFunctionId" parameterType="java.lang.Long">
+        update t_sa_role_function set delete_status=1  where function_id = #{functionId}
+    </update>
+
+</mapper>

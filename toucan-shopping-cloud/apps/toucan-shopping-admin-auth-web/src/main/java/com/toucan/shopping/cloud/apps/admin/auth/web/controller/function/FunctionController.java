@@ -52,7 +52,7 @@ public class FunctionController {
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page()
     {
-        return "pages/Function/list.html";
+        return "pages/function/list.html";
     }
 
 
@@ -64,7 +64,7 @@ public class FunctionController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage()
     {
-        return "pages/Function/add.html";
+        return "pages/function/add.html";
     }
 
 
@@ -93,7 +93,7 @@ public class FunctionController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/Function/edit.html";
+        return "pages/function/edit.html";
     }
 
 
