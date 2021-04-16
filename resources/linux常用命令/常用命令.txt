@@ -1,32 +1,32 @@
-½âÑ¹
+è§£å‹
 tar -zxvf jdk-8u281-linux-x64.tar.gz
 
 
-Æô¶¯redis
+å¯åŠ¨redis
 nohup ./redis-server redis.conf &
 
-²é¿´redisÆô¶¯×´Ì¬£º
+æŸ¥çœ‹rediså¯åŠ¨çŠ¶æ€ï¼š
 ps aux|grep redis
 
 
-²é¿´½ø³ÌÁĞ±í
+æŸ¥çœ‹è¿›ç¨‹åˆ—è¡¨
 ps aux
 
-É±ËÀ½ø³Ì
-kill -9 ½ø³ÌµÄpid
+æ€æ­»è¿›ç¨‹
+kill -9 è¿›ç¨‹çš„pid
 
 
-²é¿´½ø³ÌÄÚ´æ
-top -p ½ø³ÌµÄpid
+æŸ¥çœ‹è¿›ç¨‹å†…å­˜
+top -p è¿›ç¨‹çš„pid
 
 
-²é¿´Õ¼ÓÃCPU¸ßµÄ½ø³Ì
-top -p ½ø³ÌµÄpid -H
+æŸ¥çœ‹å ç”¨CPUé«˜çš„è¿›ç¨‹
+top -p è¿›ç¨‹çš„pid -H
 
 
-²é¿´javaÕ¼ÓÃÄÚ´æ¸ßµÄ¶ÔÏó
-jmap -histo:live ½ø³ÌµÄpid | head -n 100
+æŸ¥çœ‹javaå ç”¨å†…å­˜é«˜çš„å¯¹è±¡
+jmap -histo:live è¿›ç¨‹çš„pid | head -n 100
 
 
-²é¿´java½ø³Ì¶Ñ¿Õ¼ä
-jmap -heap ½ø³ÌµÄID
+æŸ¥çœ‹javaè¿›ç¨‹å †ç©ºé—´
+jmap -heap è¿›ç¨‹çš„ID
