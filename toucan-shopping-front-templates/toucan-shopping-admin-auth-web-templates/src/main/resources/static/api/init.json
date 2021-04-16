@@ -39,6 +39,12 @@
               "href": "../role/listPage",
               "icon": "fa fa-list-alt",
               "target": "_self"
+            },
+            {
+              "title": "功能项列表",
+              "href": "../function/listPage",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
             }
           ]
         }
