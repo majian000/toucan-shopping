@@ -42,7 +42,7 @@
 
     <select id="findAppListByAdminId" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.AdminApp">
         select ta.name,tsaa.* from t_app ta left join t_sa_admin_app tsaa on ta.code = tsaa.app_code
-           where 1=1 and tsaa.delete_status =0 and ta.delete_status = 0 and tsaa.admin_id = #{adminId}
+           where 1=1 and tsaa.delete_status =0 and ta.delete_status = 0 and ta.enable_status=1 and tsaa.admin_id = #{adminId}
 
     </select>
 

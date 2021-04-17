@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller;
 
 
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -38,6 +39,9 @@ public class CommonController {
     @Autowired
     private FeignAdminAppService feignAdminAppService;
 
+    @Autowired
+    private FeignFunctionService feignFunctionService;
+
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/select/app/list",method = RequestMethod.GET)
@@ -60,7 +64,25 @@ public class CommonController {
     }
 
 
-
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp query = new AdminApp();
+            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            return feignFunctionService.queryAppFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }
 

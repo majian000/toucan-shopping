@@ -41,7 +41,7 @@ public class Function {
     /**
      * 上级菜单 -1表示当前是顶级
      */
-    private Integer pid;
+    private Long pid;
 
     /**
      * 启用状态 0:禁用 1启用

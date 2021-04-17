@@ -24,15 +24,6 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">应用编码</label>
-        <div class="layui-input-block">
-            <select id="selectApp" name="appCode" lay-verify="required" lay-search="">
-                <option value="">请选择</option>
-                <option th:each="aa : ${adminAppVOS}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}">
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
         <label class="layui-form-label required">功能链接</label>
         <div class="layui-input-block">
             <input type="text" name="link" lay-verify="required" maxlength="255" lay-reqtext="链接不能为空" placeholder="请输入功能链接" value="" class="layui-input">
@@ -55,11 +46,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">上级功能</label>
         <div class="layui-input-block">
-            <input type="text" name="pid" id="selectPid" lay-verify="required"  placeholder="请选择上级功能" value="" class="layui-input" >
+            <input type="hidden" name="pid" id="pid">
+            <input type="hidden" name="appCode" id="appCode">
+            <input type="text"  id="selectPid" lay-verify="required"  placeholder="请选择上级功能" value="" class="layui-input" >
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">图标</label>
+        <label class="layui-form-label ">图标</label>
         <div class="layui-input-block">
             <input type="text" name="icon"  maxlength="60"  placeholder="请输入功能图标" value="" class="layui-input">
         </div>
@@ -91,10 +84,11 @@
             $ = layui.$;
         var index;
         var tree = layui.tree;
+        var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/role/save}]]",
+                url:"[[@{/function/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -119,38 +113,48 @@
 
 
         $("#selectPid").click(function(){
+            loadding = layer.load();
             index = layer.open({
                 title: '选择上级功能',
                 type: 1,
                 shade: 0.2,
                 maxmin:true,
                 shadeClose: true,
-                area: ['50%', '40%'],
-                content: "<div id='test1'></div>",
+                area: ['20%', '60%'],
+                content: "<div id='appFunctionTree'></div>",
                 success:function(layero){
-
-                    //渲染
-                    var inst1 = tree.render({
-                        elem: '#test1'  //绑定元素
-                        ,data: [{
-                            title: '江西' //一级菜单
-                            ,children: [{
-                                title: '南昌' //二级菜单
-                                ,children: [{
-                                    title: '高新区' //三级菜单
-                                    //…… //以此类推，可无限层级
-                                }]
-                            }]
-                        },{
-                            title: '陕西' //一级菜单
-                            ,children: [{
-                                title: '西安' //二级菜单
-                            }]
-                        }],
-                        click: function(obj){
-                            layer.close(index);
+                    $.ajax({
+                        url:"[[@{/}]]common/query/app/function/tree",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:null,
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                for(var i=0;i<data.data.length;i++)
+                                {
+                                    var node = data.data[i];
+                                    node.title=node.appCode+" "+node.title;
+                                }
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#appFunctionTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        $("#selectPid").val(obj.data.title);
+                                        $("#pid").val(obj.data.id);
+                                        $("#appCode").val(obj.data.appCode);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
                         }
                     });
+
                 }
             });
             $(window).on("resize", function () {

@@ -3,6 +3,8 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
 public interface FunctionService {
 
     List<Function> findListByEntity(Function entity);
+
+    List<FunctionTreeVO> queryTreeByAppCode(String appCode);
 
     int save(Function entity);
 

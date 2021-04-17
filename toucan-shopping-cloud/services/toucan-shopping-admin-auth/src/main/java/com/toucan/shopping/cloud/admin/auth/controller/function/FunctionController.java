@@ -2,12 +2,12 @@ package com.toucan.shopping.cloud.admin.auth.controller.function;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.admin.auth.entity.Function;
-import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
+import com.toucan.shopping.modules.admin.auth.entity.*;
 import com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo;
-import com.toucan.shopping.modules.admin.auth.service.FunctionService;
-import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
+import com.toucan.shopping.modules.admin.auth.service.*;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -36,6 +36,17 @@ public class FunctionController {
     @Autowired
     private FunctionService functionService;
 
+    @Autowired
+    private AppService appService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private AdminRoleService adminRoleService;
+
+    @Autowired
+    private AdminAppService adminAppService;
 
     @Autowired
     private RoleFunctionService roleFunctionService;
@@ -91,6 +102,52 @@ public class FunctionController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 查询应用权限列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAppFunctionTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminApp.class);
+            if(StringUtils.isEmpty(query.getAdminId()))
+            {
+                throw new IllegalArgumentException("adminId为空");
+            }
+
+            //当前用户下关联所有应用
+            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminId(query);
+            if(!CollectionUtils.isEmpty(adminApps))
+            {
+                List<AppFunctionTreeVO> appFunctionTreeVOS = new ArrayList<AppFunctionTreeVO>();
+                for(AdminAppVO adminAppVO : adminApps)
+                {
+                    AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                    appFunctionTreeVO.setId(-1L);
+                    appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
+                    appFunctionTreeVO.setTitle(adminAppVO.getName());
+                    appFunctionTreeVOS.add(appFunctionTreeVO);
+
+                    appFunctionTreeVO.setChildren(functionService.queryTreeByAppCode(adminAppVO.getAppCode()));
+
+                }
+                resultObjectVO.setData(appFunctionTreeVOS);
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

@@ -67,13 +67,21 @@ public interface FeignFunctionService {
 
     /**
      * 批量删除
-     * @param toucanAdminAuth
+     * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
-    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo);
+    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询应用以及下面所有功能树
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryAppFunctionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 }

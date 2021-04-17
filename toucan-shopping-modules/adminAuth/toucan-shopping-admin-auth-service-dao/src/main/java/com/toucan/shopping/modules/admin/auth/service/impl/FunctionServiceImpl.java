@@ -4,16 +4,26 @@ import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.mapper.FunctionMapper;
 import com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.FunctionService;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class FunctionServiceImpl implements FunctionService {
+
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private FunctionMapper functionMapper;
@@ -21,6 +31,49 @@ public class FunctionServiceImpl implements FunctionService {
     @Override
     public List<Function> findListByEntity(Function entity) {
         return functionMapper.findListByEntity(entity);
+    }
+
+
+    public void setChildren(List<FunctionVO> functionVOS,FunctionTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
+        for (FunctionVO functionVO : functionVOS) {
+            //为当前参数的子节点
+            if(functionVO.getPid().longValue()==currentNode.getId().longValue())
+            {
+                FunctionTreeVO functionTreeVO = new FunctionTreeVO();
+                functionTreeVO.setTitle(functionVO.getName());
+                BeanUtils.copyProperties(functionTreeVO, functionVO);
+                functionTreeVO.setChildren(new ArrayList<FunctionTreeVO>());
+                currentNode.getChildren().add(functionTreeVO);
+
+                //查找当前节点的子节点
+                setChildren(functionVOS,functionTreeVO);
+            }
+        }
+    }
+
+
+    @Override
+    public List<FunctionTreeVO> queryTreeByAppCode(String appCode) {
+        List<FunctionTreeVO> functionTreeVOS = new ArrayList<FunctionTreeVO>();
+        try {
+            List<FunctionVO> functionVOS = functionMapper.queryListByAppCode(appCode);
+            for (FunctionVO functionVO : functionVOS) {
+                if (functionVO.getPid().longValue() == -1L) {
+                    FunctionTreeVO functionTreeVO = new FunctionTreeVO();
+                    functionTreeVO.setTitle(functionVO.getName());
+                    BeanUtils.copyProperties(functionTreeVO, functionVO);
+                    functionTreeVO.setChildren(new ArrayList<FunctionTreeVO>());
+                    functionTreeVOS.add(functionTreeVO);
+
+                    //递归查找子节点
+                    setChildren(functionVOS,functionTreeVO);
+                }
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return functionTreeVOS;
     }
 
     @Transactional

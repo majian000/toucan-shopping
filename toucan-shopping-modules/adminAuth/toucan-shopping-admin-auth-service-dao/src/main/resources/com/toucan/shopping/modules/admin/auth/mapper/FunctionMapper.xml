@@ -6,10 +6,10 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="function_id" jdbcType="VARCHAR" property="functionId" />
-        <result column="appCode" jdbcType="VARCHAR" property="appCode" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="type" jdbcType="INTEGER" property="type" />
-        <result column="pid" jdbcType="INTEGER" property="pid" />
+        <result column="pid" jdbcType="BIGINT" property="pid" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
@@ -19,6 +19,22 @@
         
     </resultMap>
 
+    <resultMap id="functionVOMap" type="com.toucan.shopping.modules.admin.auth.vo.FunctionVO" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="function_id" jdbcType="VARCHAR" property="functionId" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="pid" jdbcType="BIGINT" property="pid" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+
+    </resultMap>
 
     <sql id="queryListPageWhere">
 
@@ -78,9 +94,37 @@
 
 
 
+    <select id="findListByEntity" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
+        select * from t_sa_function t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="name!=null">
+                and t.name = #{name}
+            </if>
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code = #{appCode}
+            </if>
+            <if test="enableStatus!=null">
+                and t.enable_status = #{enableStatus}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+
+    <select id="queryListByAppCode" resultMap="functionVOMap" parameterType="java.lang.String">
+        select * from t_sa_function t where  1=1 and t.app_code = #{appCode} and t.delete_status = 0
+    </select>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_function(pid,type,name,function_id,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
-        values(pid,#{type},#{name},#{FunctionId},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_sa_function(pid,type,name,link,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
+        values(#{pid},#{type},#{name},#{link},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
