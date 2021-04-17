@@ -123,7 +123,7 @@ public class RoleController {
      * @param role
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO update(HttpServletRequest request,@RequestBody Role role)
@@ -149,7 +149,7 @@ public class RoleController {
      * @param entity
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody Role entity)
@@ -175,7 +175,7 @@ public class RoleController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)
@@ -211,7 +211,7 @@ public class RoleController {
      * @param request
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
@@ -249,7 +249,7 @@ public class RoleController {
      * @param request
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<RoleVO> roleVOS)

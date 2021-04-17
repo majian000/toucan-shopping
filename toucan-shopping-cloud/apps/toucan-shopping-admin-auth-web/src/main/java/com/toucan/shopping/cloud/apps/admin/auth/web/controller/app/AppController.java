@@ -99,7 +99,7 @@ public class AppController {
      * @param app
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request, @RequestBody App app)
@@ -124,7 +124,7 @@ public class AppController {
      * @param app
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO update(HttpServletRequest request,@RequestBody App app)
@@ -150,7 +150,7 @@ public class AppController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(HttpServletRequest request, AppPageInfo pageInfo)
@@ -185,7 +185,7 @@ public class AppController {
      * @param request
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
@@ -222,7 +222,7 @@ public class AppController {
      * @param request
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AppVO> appVOs)

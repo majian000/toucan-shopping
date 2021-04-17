@@ -55,7 +55,7 @@ public class AdminController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)
