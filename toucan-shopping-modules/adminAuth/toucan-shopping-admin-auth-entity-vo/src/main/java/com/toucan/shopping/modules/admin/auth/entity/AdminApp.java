@@ -12,7 +12,7 @@ public class AdminApp {
     private Integer id;
 
     /**
-     * 用户ID
+     * 管理员ID
      */
     private String adminId;
 

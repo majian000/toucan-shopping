@@ -13,7 +13,7 @@ public class AuthHeaderUtil {
 
         }
 
-        String adminId = StringUtils.substringAfter(authHeader,"adminId=");
+        String adminId = StringUtils.substringAfter(authHeader,"aid=");
         if(adminId.indexOf(";")!=-1)
         {
             adminId=adminId.substring(0,adminId.indexOf(";"));

@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+
+    <span th:replace="common_page::common"></span>
 </head>
 <body>
 
@@ -22,9 +24,19 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">编码</label>
+                            <label class="layui-form-label">功能名称</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="code" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所属应用</label>
+                            <div class="layui-input-inline">
+                                <select id="selectApp" name="appCode" lay-verify="required" lay-search="">
+                                    <option value="">请选择</option>
+                                    <option th:each="aa : ${adminAppVOS}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}">
+                                </select>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -54,6 +66,8 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
+<script th:src="@{/js/common/selectApp.js}" charset="utf-8"></script>
+
 <script>
     layui.use(['form', 'table', 'treetable'], function () {
         var $ = layui.jquery,

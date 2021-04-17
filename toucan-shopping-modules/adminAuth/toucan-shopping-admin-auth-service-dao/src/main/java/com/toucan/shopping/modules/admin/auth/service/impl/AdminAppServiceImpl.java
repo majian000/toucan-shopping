@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.mapper.AdminAppMapper;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,11 @@ public class AdminAppServiceImpl implements AdminAppService {
     @Override
     public int deleteByAppCode(String appCode) {
         return adminAppMapper.deleteByAppCode(appCode);
+    }
+
+    @Override
+    public List<AdminAppVO> findAppListByAdminId(AdminApp query) {
+        return adminAppMapper.findAppListByAdminId(query);
     }
 
 

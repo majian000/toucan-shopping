@@ -3,10 +3,13 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.function;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
+import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -25,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,12 +50,31 @@ public class FunctionController {
     @Autowired
     private FeignFunctionService feignFunctionService;
 
+    @Autowired
+    private FeignAdminAppService feignAdminAppService;
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page()
+    public String page(HttpServletRequest request)
     {
+        try {
+            AdminApp query = new AdminApp();
+            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
+            ResultObjectVO resultObjectVO = feignAdminAppService.queryAppListByAdminId(SignUtil.sign(requestJsonVO), requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                List<AdminAppVO> adminAppVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminAppVO.class);
+                request.setAttribute("adminAppVOS",adminAppVOS);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("adminAppVOS",new ArrayList<AdminAppVO>());
+        }
         return "pages/function/list.html";
     }
 
