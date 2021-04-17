@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class AdminApp {
-    private Integer id;
+    private Long id;
 
     /**
      * 管理员ID

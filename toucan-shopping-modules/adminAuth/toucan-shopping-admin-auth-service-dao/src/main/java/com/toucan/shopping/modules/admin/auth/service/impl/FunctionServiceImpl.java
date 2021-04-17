@@ -2,7 +2,7 @@ package com.toucan.shopping.modules.admin.auth.service.impl;
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.mapper.FunctionMapper;
-import com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo;
+import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
@@ -102,9 +102,9 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
-    public PageInfo<Function> queryListPage(FunctionPageInfo queryPageInfo) {
+    public PageInfo<Function> queryListPage(FunctionTreeInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
-        FunctionPageInfo pageInfo = new FunctionPageInfo();
+        FunctionTreeInfo pageInfo = new FunctionTreeInfo();
         pageInfo.setList(functionMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(functionMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
@@ -114,6 +114,11 @@ public class FunctionServiceImpl implements FunctionService {
     @Override
     public int deleteById(Long id) {
         return functionMapper.deleteById(id);
+    }
+
+    @Override
+    public List<FunctionVO> queryListByAppCode(String appCode) {
+        return functionMapper.queryListByAppCode(appCode);
     }
 
 }

@@ -1,8 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.mapper;
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
-import com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo;
-import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,9 +17,9 @@ public interface FunctionMapper {
 
     List<Function> findListByEntity(Function function);
 
-    List<Function> queryListPage(FunctionPageInfo FunctionPageInfo);
+    List<Function> queryListPage(FunctionTreeInfo FunctionTreeInfo);
 
-    Long queryListPageCount(FunctionPageInfo FunctionPageInfo);
+    Long queryListPageCount(FunctionTreeInfo FunctionTreeInfo);
 
     int deleteById(Long id);
 

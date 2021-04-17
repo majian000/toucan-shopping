@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class FunctionPageInfo extends PageInfo<Function> {
+public class FunctionTreeInfo extends PageInfo<Function> {
 
 
 
@@ -54,6 +54,10 @@ public class FunctionPageInfo extends PageInfo<Function> {
      */
     private String appCode;
 
+    /**
+     * 管理员ID
+     */
+    private String adminId;
 
     //==============================================
 

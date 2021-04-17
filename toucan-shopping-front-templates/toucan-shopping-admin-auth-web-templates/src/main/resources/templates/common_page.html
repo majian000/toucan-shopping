@@ -5,6 +5,7 @@
 <div th:fragment="common">
     <script th:inline="javascript" type="text/javascript">
         var ctxPath  = [[@{/}]];
+        var basePath=[[${#httpServletRequest.getContextPath()}]];
     </script>
 
 </div>

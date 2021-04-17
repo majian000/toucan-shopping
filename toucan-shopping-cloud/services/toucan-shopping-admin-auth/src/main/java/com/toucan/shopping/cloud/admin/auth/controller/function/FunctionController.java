@@ -3,11 +3,11 @@ package com.toucan.shopping.cloud.admin.auth.controller.function;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.*;
-import com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo;
+import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -218,15 +218,15 @@ public class FunctionController {
 
 
     /**
-     * 查询列表分页
-     * @param requestVo
+     * 查询树表格
+     * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/app/function/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO queryAppFunctionTreeTable(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestVo==null||requestVo.getEntityJson()==null)
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,没有找到实体对象");
@@ -234,8 +234,49 @@ public class FunctionController {
         }
 
         try {
-            FunctionPageInfo FunctionPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), FunctionPageInfo.class);
-            resultObjectVO.setData(functionService.queryListPage(FunctionPageInfo));
+            FunctionTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionTreeInfo.class);
+            if(StringUtils.isEmpty(queryPageInfo.getAdminId()))
+            {
+                throw new IllegalArgumentException("adminId为空");
+            }
+
+            //查询账号下关联应用
+            AdminApp queryAdminApp = new AdminApp();
+            queryAdminApp.setAdminId(queryPageInfo.getAdminId());
+            queryAdminApp.setAppCode(queryPageInfo.getAppCode());
+
+            //当前用户下关联所有应用
+            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminId(queryAdminApp);
+            if(!CollectionUtils.isEmpty(adminApps))
+            {
+                List<Object> appFunctionTreeVOS = new ArrayList<Object>();
+                for(AdminAppVO adminAppVO : adminApps)
+                {
+                    AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                    appFunctionTreeVO.setId(adminAppVO.getId());
+                    appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
+                    appFunctionTreeVO.setName(adminAppVO.getName());
+                    appFunctionTreeVO.setPid(-1L);
+                    appFunctionTreeVOS.add(appFunctionTreeVO);
+
+                    //设置应用编码和功能项名称
+                    Function queryFunction = new Function();
+                    queryFunction.setAppCode(adminAppVO.getAppCode());
+                    queryFunction.setName(queryPageInfo.getName());
+                    List<Function>  functions = functionService.findListByEntity(queryFunction);
+                    for(Function function:functions)
+                    {
+                        //将-1替换成adminApp的id
+                        if(function.getPid().longValue()==-1)
+                        {
+                            function.setPid(appFunctionTreeVO.getId());
+                        }
+                    }
+                    appFunctionTreeVOS.addAll(functions);
+
+                }
+                resultObjectVO.setData(appFunctionTreeVOS);
+            }
 
         }catch(Exception e)
         {

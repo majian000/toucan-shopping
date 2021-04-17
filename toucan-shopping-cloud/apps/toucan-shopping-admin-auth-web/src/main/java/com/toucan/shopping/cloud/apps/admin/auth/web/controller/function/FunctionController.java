@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -178,36 +179,27 @@ public class FunctionController {
 
     /**
      * 查询列表
-     * @param pageInfo
+     * @param queryPageInfo
      * @return
      */
     @AdminAuth
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)
+    public ResultObjectVO listPage(HttpServletRequest request, FunctionTreeInfo queryPageInfo)
     {
-        TableVO tableVO = new TableVO();
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignFunctionService.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
-            {
-                if(resultObjectVO.getData()!=null)
-                {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    if(tableVO.getCount()>0) {
-                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
-                    }
-                }
-            }
+            queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
+            resultObjectVO = feignFunctionService.queryAppFunctionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
-            tableVO.setCode(TableVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
-        return tableVO;
+        return resultObjectVO;
     }
 
 

@@ -2,7 +2,7 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
-import com.toucan.shopping.modules.admin.auth.page.FunctionPageInfo;
+import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -21,7 +21,9 @@ public interface FunctionService {
 
     boolean exists(String name);
 
-    PageInfo<Function> queryListPage(FunctionPageInfo FunctionPageInfo);
+    PageInfo<Function> queryListPage(FunctionTreeInfo FunctionTreeInfo);
 
     int deleteById(Long id);
+
+    List<FunctionVO> queryListByAppCode(String appCode);
 }

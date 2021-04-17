@@ -146,6 +146,7 @@
                     if(data.code==0) {
                         layer.msg(data.msg);
 
+                        $("#refreshCaptcha").attr("src",basePath+"/login/vcode?"+new Date().getTime());
                         return false;
                     }
                     layer.msg('登录成功', function () {
@@ -158,7 +159,7 @@
 
 
         $("#refreshCaptcha").bind( 'click' ,function(){
-            $("#refreshCaptcha").attr("src",ctxPath+"/login/vcode?"+new Date().getTime());
+            $("#refreshCaptcha").attr("src",basePath+"/login/vcode?"+new Date().getTime());
         });
 
     });

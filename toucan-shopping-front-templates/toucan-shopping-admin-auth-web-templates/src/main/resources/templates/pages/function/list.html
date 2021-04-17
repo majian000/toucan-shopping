@@ -33,7 +33,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">所属应用</label>
                             <div class="layui-input-inline">
-                                <select id="selectApp" name="appCode" lay-verify="required" lay-search="">
+                                <select id="selectApp" name="appCode"  lay-search="">
                                     <option value="">请选择</option>
                                     <option th:each="aa : ${adminAppVOS}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}">
                                 </select>
@@ -54,7 +54,7 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="functionTreeTable" lay-filter="roleTableFilter"></table>
+        <table class="layui-hide" id="functionTreeTable" lay-filter="functionTreeTableFilter"></table>
 
         <!-- 操作列 -->
         <script type="text/html" id="functionTreeTableToolbar">
@@ -102,10 +102,10 @@
         treetable.render({
             treeColIndex: 1,
             treeSpid: -1,
-            treeIdName: 'authorityId',
-            treePidName: 'parentId',
+            treeIdName: 'id',
+            treePidName: 'pid',
             elem: '#functionTreeTable',
-            url: '[[@{/}]]api/menus.json',
+            url: '[[@{/}]]function/tree/table',
             toolbar: '#toolbarDemo',
             page: false,
             cols: [
@@ -125,14 +125,14 @@
                     }},
                 {
                     field: 'type', width: 80, align: 'center', templet: function (d) {
-                        if (d.type == 1) {
-                            return '<span class="layui-badge layui-bg-gray">按钮</span>';
-                        }
                         if (d.type == 0) {
                             return '<span class="layui-badge layui-bg-blue">目录</span>';
-                        } else {
+                        }else if (d.type == 1) {
                             return '<span class="layui-badge-rim">菜单</span>';
+                        }else  if (d.type == 2) {
+                            return '<span class="layui-badge layui-bg-gray">按钮</span>';
                         }
+                        return "应用"
                     }, title: '类型'
                 },
                 {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
@@ -147,11 +147,8 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('roleTable', {
-                page: {
-                    curr: 1
-                }
-                , where: data.field
+            treetable.reload('functionTreeTable', {
+                 where: data.field
             }, 'data');
 
             return false;
@@ -160,7 +157,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(roleTableFilter)', function (obj) {
+        table.on('toolbar(functionTreeTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加功能',
@@ -175,7 +172,7 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('roleTable')
+                var checkStatus = table.checkStatus('functionTreeTable')
                     , data = checkStatus.data;
                 layer.confirm('确定删除功能?', function (index) {
                     $.ajax({
@@ -187,12 +184,9 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('roleTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
+                            treetable.reload('functionTreeTable', {
+                                where: data.field
+                            }, 'data')
 
                         },
                         complete:function(data)
@@ -205,11 +199,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(roleTableFilter)', function (obj) {
+        table.on('checkbox(functionTreeTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(roleTableFilter)', function (obj) {
+        table.on('tool(functionTreeTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
 
@@ -236,12 +230,9 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('roleTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
+                            treetable.reload('functionTreeTable', {
+                                where: data.field
+                            }, 'data')
 
                         },
                         complete:function(data)

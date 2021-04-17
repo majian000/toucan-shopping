@@ -25,7 +25,7 @@ public class FeignFunctionServiceFallbackFactory implements FallbackFactory<Feig
         return new FeignFunctionService(){
 
             @Override
-            public ResultObjectVO save(String toucanAdminAuth,RequestJsonVO requestVo) {
+            public ResultObjectVO save(String signHeader,RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -40,7 +40,7 @@ public class FeignFunctionServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
-            public ResultObjectVO update(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -55,22 +55,23 @@ public class FeignFunctionServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
-            public ResultObjectVO listPage(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO queryAppFunctionTreeTable(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestVo==null)
+                if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignFunctionService.listPage faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignFunctionService.update faild sign {} params {} ",signHeader,JSONObject.toJSON(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
             }
 
+
             @Override
-            public ResultObjectVO deleteById(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -85,7 +86,7 @@ public class FeignFunctionServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
-            public ResultObjectVO findById(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
