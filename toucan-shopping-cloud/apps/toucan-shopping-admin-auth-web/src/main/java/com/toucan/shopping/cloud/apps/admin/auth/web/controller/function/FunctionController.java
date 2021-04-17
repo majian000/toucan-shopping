@@ -54,10 +54,7 @@ public class FunctionController {
     private FeignAdminAppService feignAdminAppService;
 
 
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
+    public void initSelectApp(HttpServletRequest request)
     {
         try {
             AdminApp query = new AdminApp();
@@ -75,18 +72,24 @@ public class FunctionController {
 
             request.setAttribute("adminAppVOS",new ArrayList<AdminAppVO>());
         }
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
+    public String page(HttpServletRequest request)
+    {
+        initSelectApp(request);
         return "pages/function/list.html";
     }
 
 
 
-
-
-
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage()
+    public String addPage(HttpServletRequest request)
     {
+        initSelectApp(request);
         return "pages/function/add.html";
     }
 

@@ -27,6 +27,11 @@ public class Function {
      */
     private String link;
 
+    /**
+     * 权限标识
+     */
+    private String permission;
+
 
     /**
      * 菜单类型 0目录 1菜单 2按钮
@@ -64,6 +69,11 @@ public class Function {
      * 所属应用
      */
     private String appCode;
+
+    /**
+     * 排序
+     */
+    private Long functionSort;
 
 
     /**

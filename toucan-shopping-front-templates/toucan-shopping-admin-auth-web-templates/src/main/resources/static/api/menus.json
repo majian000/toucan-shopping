@@ -5,7 +5,7 @@
   "data": [
     {
       "authorityId": 1,
-      "authorityName": "系统管理",
+      "name": "系统管理",
       "orderNumber": 1,
       "menuUrl": null,
       "menuIcon": "layui-icon-set",
@@ -18,7 +18,7 @@
     },
     {
       "authorityId": 2,
-      "authorityName": "用户管理",
+      "name": "用户管理",
       "orderNumber": 2,
       "menuUrl": "system/user",
       "menuIcon": null,
@@ -31,7 +31,7 @@
     },
     {
       "authorityId": 3,
-      "authorityName": "查询用户",
+      "name": "查询用户",
       "orderNumber": 3,
       "menuUrl": "",
       "menuIcon": "",
@@ -44,7 +44,7 @@
     },
     {
       "authorityId": 4,
-      "authorityName": "添加用户",
+      "name": "添加用户",
       "orderNumber": 4,
       "menuUrl": null,
       "menuIcon": null,
@@ -57,7 +57,7 @@
     },
     {
       "authorityId": 5,
-      "authorityName": "修改用户",
+      "name": "修改用户",
       "orderNumber": 5,
       "menuUrl": null,
       "menuIcon": null,
@@ -70,7 +70,7 @@
     },
     {
       "authorityId": 6,
-      "authorityName": "删除用户",
+      "name": "删除用户",
       "orderNumber": 6,
       "menuUrl": null,
       "menuIcon": null,
@@ -83,7 +83,7 @@
     },
     {
       "authorityId": 7,
-      "authorityName": "角色管理",
+      "name": "角色管理",
       "orderNumber": 7,
       "menuUrl": "system/role",
       "menuIcon": null,
@@ -96,7 +96,7 @@
     },
     {
       "authorityId": 8,
-      "authorityName": "查询角色",
+      "name": "查询角色",
       "orderNumber": 8,
       "menuUrl": "",
       "menuIcon": "",
@@ -109,7 +109,7 @@
     },
     {
       "authorityId": 9,
-      "authorityName": "添加角色",
+      "name": "添加角色",
       "orderNumber": 9,
       "menuUrl": "",
       "menuIcon": "",
@@ -122,7 +122,7 @@
     },
     {
       "authorityId": 10,
-      "authorityName": "修改角色",
+      "name": "修改角色",
       "orderNumber": 10,
       "menuUrl": "",
       "menuIcon": "",
@@ -135,7 +135,7 @@
     },
     {
       "authorityId": 11,
-      "authorityName": "删除角色",
+      "name": "删除角色",
       "orderNumber": 11,
       "menuUrl": "",
       "menuIcon": "",
@@ -148,7 +148,7 @@
     },
     {
       "authorityId": 12,
-      "authorityName": "角色权限管理",
+      "name": "角色权限管理",
       "orderNumber": 12,
       "menuUrl": "",
       "menuIcon": "",
@@ -161,7 +161,7 @@
     },
     {
       "authorityId": 13,
-      "authorityName": "权限管理",
+      "name": "权限管理",
       "orderNumber": 13,
       "menuUrl": "system/authorities",
       "menuIcon": null,
@@ -174,7 +174,7 @@
     },
     {
       "authorityId": 14,
-      "authorityName": "查询权限",
+      "name": "查询权限",
       "orderNumber": 14,
       "menuUrl": "",
       "menuIcon": "",
@@ -187,7 +187,7 @@
     },
     {
       "authorityId": 15,
-      "authorityName": "添加权限",
+      "name": "添加权限",
       "orderNumber": 15,
       "menuUrl": "",
       "menuIcon": "",
@@ -200,7 +200,7 @@
     },
     {
       "authorityId": 16,
-      "authorityName": "修改权限",
+      "name": "修改权限",
       "orderNumber": 16,
       "menuUrl": "",
       "menuIcon": "",
@@ -213,7 +213,7 @@
     },
     {
       "authorityId": 17,
-      "authorityName": "删除权限",
+      "name": "删除权限",
       "orderNumber": 17,
       "menuUrl": "",
       "menuIcon": "",
@@ -226,7 +226,7 @@
     },
     {
       "authorityId": 18,
-      "authorityName": "登录日志",
+      "name": "登录日志",
       "orderNumber": 18,
       "menuUrl": "system/loginRecord",
       "menuIcon": null,
@@ -239,7 +239,7 @@
     },
     {
       "authorityId": 19,
-      "authorityName": "查询登录日志",
+      "name": "查询登录日志",
       "orderNumber": 19,
       "menuUrl": "",
       "menuIcon": "",
