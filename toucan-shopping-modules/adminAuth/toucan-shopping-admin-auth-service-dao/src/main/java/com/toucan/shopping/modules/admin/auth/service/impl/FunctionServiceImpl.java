@@ -121,4 +121,15 @@ public class FunctionServiceImpl implements FunctionService {
         return functionMapper.queryListByAppCode(appCode);
     }
 
+    @Override
+    public void queryChildren(List<Function> children, Function query) {
+        List<Function> functions = functionMapper.findListByPid(query.getId());
+        children.addAll(functions);
+        for(Function function:functions)
+        {
+            queryChildren(children,function);
+        }
+    }
+
+
 }

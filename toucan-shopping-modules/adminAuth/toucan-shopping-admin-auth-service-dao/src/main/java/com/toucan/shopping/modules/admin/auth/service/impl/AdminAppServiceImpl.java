@@ -35,8 +35,8 @@ public class AdminAppServiceImpl implements AdminAppService {
     }
 
     @Override
-    public List<AdminAppVO> findAppListByAdminId(AdminApp query) {
-        return adminAppMapper.findAppListByAdminId(query);
+    public List<AdminAppVO> findAppListByAdminAppEntity(AdminApp query) {
+        return adminAppMapper.findAppListByAdminAppEntity(query);
     }
 
 

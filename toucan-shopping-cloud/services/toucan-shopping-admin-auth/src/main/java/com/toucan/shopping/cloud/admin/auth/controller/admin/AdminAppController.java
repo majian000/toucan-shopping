@@ -150,7 +150,7 @@ public class AdminAppController {
 
         try {
             AdminApp adminAppQuery = JSONObject.parseObject(requestVo.getEntityJson(),AdminApp.class);
-            List<AdminAppVO> adminAppVOs = adminAppService.findAppListByAdminId(adminAppQuery);
+            List<AdminAppVO> adminAppVOs = adminAppService.findAppListByAdminAppEntity(adminAppQuery);
             resultObjectVO.setData(adminAppVOs);
 
         }catch(Exception e)

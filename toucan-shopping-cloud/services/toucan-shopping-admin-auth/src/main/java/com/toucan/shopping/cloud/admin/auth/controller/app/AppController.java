@@ -408,8 +408,7 @@ public class AppController {
                     List<App> appEntityList = appService.findListByEntity(query);
                     if (CollectionUtils.isEmpty(appEntityList)) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setMsg("请求失败,应用不存在!");
+                        resultObjectVO.setMsg("请求失败,应用不存在!");
                         continue;
                     }
 
@@ -417,8 +416,7 @@ public class AppController {
                     int row = appService.deleteById(app.getId());
                     if (row < 1) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请求失败,请重试!");
                         continue;
                     }
 

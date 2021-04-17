@@ -21,12 +21,12 @@
         <fieldset class="table-search-fieldset">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                <form class="layui-form layui-form-pane" id="functionSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">功能名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="code" autocomplete="off" class="layui-input">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
@@ -59,7 +59,7 @@
         <!-- 操作列 -->
         <script type="text/html" id="functionTreeTableToolbar">
             <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
         </script>
 
     </div>
@@ -69,6 +69,7 @@
 <script th:src="@{/js/common/selectApp.js}" charset="utf-8"></script>
 
 <script>
+
     layui.use(['form', 'table', 'treetable'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -95,61 +96,65 @@
 
         function getFormParam()
         {
-            var formParam = $("#userSearchForm").serializeJson();
+            var formParam = $("#functionSearchForm").serializeJson();
             return formParam;
         }
 
-        treetable.render({
-            treeColIndex: 1,
-            treeSpid: -1,
-            treeIdName: 'id',
-            treePidName: 'pid',
-            elem: '#functionTreeTable',
-            url: '[[@{/}]]function/tree/table',
-            toolbar: '#toolbarDemo',
-            page: false,
-            cols: [
-                [
-                {type: "checkbox", width: 50},
-                {field: 'name',  title: '功能名称'},
-                {field: 'functionId',  title: '功能项ID'},
-                {field: 'link', title: '链接'},
-                {field: 'permission', title: '权限'},
-                {field: 'functionSort', title: '排序'},
-                {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
-                        if (d.enableStatus == 1) {
-                            return '启用';
-                        } else {
-                            return '禁用';
-                        }
-                    }},
-                {
-                    field: 'type', width: 80, align: 'center', templet: function (d) {
-                        if (d.type == 0) {
-                            return '<span class="layui-badge layui-bg-blue">目录</span>';
-                        }else if (d.type == 1) {
-                            return '<span class="layui-badge-rim">菜单</span>';
-                        }else  if (d.type == 2) {
-                            return '<span class="layui-badge layui-bg-gray">按钮</span>';
-                        }
-                        return "应用"
-                    }, title: '类型'
-                },
-                {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
-            ]
-            ],
-            done: function () {
-                layer.closeAll('loading');
-            }
-        });
+        function loadTreeTable()
+        {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: -1,
+                treeIdName: 'id',
+                treePidName: 'pid',
+                elem: '#functionTreeTable',
+                where:getFormParam(),
+                url: '[[@{/}]]function/tree/table',
+                toolbar: '#toolbarDemo',
+                page: false,
+                cols: [
+                    [
+                        {type: "checkbox", width: 50},
+                        {field: 'name',  title: '功能名称'},
+                        {field: 'functionId',  title: '功能项ID'},
+                        {field: 'link', title: '链接'},
+                        {field: 'permission', title: '权限'},
+                        {field: 'functionSort', title: '排序'},
+                        {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
+                                if (d.enableStatus == 1) {
+                                    return '启用';
+                                } else {
+                                    return '禁用';
+                                }
+                            }},
+                        {
+                            field: 'type', width: 80, align: 'center', templet: function (d) {
+                                if (d.type == 0) {
+                                    return '<span class="layui-badge layui-bg-blue">目录</span>';
+                                }else if (d.type == 1) {
+                                    return '<span class="layui-badge-rim">菜单</span>';
+                                }else  if (d.type == 2) {
+                                    return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                                }
+                                return '<span class="layui-badge layui-bg-black">应用</span>';
+                            }, title: '类型'
+                        },
+                        {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
+                    ]
+                ],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
 
+        }
+
+        loadTreeTable();
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            //执行搜索重载
-            treetable.reload('functionTreeTable', {
-                 where: data.field
-            }, 'data');
+            
+            loadTreeTable();
 
             return false;
         });
@@ -176,7 +181,7 @@
                     , data = checkStatus.data;
                 layer.confirm('确定删除功能?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/delete/ids",
+                        url:"[[@{/}]]function/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -184,9 +189,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            treetable.reload('functionTreeTable', {
-                                where: data.field
-                            }, 'data')
+                            loadTreeTable();
 
                         },
                         complete:function(data)
@@ -214,7 +217,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]app/editPage/'+data.id,
+                    content: '[[@{/}]]function/editPage/'+data.id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -223,16 +226,14 @@
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除该功能?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/delete/"+data.id,
+                        url:"[[@{/}]]function/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            treetable.reload('functionTreeTable', {
-                                where: data.field
-                            }, 'data')
+                            loadTreeTable();
 
                         },
                         complete:function(data)

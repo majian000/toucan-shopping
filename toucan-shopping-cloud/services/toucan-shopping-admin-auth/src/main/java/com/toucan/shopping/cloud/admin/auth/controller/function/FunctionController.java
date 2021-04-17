@@ -81,7 +81,6 @@ public class FunctionController {
 
             entity.setFunctionId(GlobalUUID.uuid());
             entity.setCreateDate(new Date());
-            entity.setEnableStatus((short)1);
             entity.setDeleteStatus((short)0);
             int row = functionService.save(entity);
             if (row < 1) {
@@ -123,7 +122,7 @@ public class FunctionController {
             }
 
             //当前用户下关联所有应用
-            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminId(query);
+            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(query);
             if(!CollectionUtils.isEmpty(adminApps))
             {
                 List<AppFunctionTreeVO> appFunctionTreeVOS = new ArrayList<AppFunctionTreeVO>();
@@ -133,6 +132,7 @@ public class FunctionController {
                     appFunctionTreeVO.setId(-1L);
                     appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
                     appFunctionTreeVO.setTitle(adminAppVO.getName());
+                    appFunctionTreeVO.setEnableStatus((short)1);
                     appFunctionTreeVOS.add(appFunctionTreeVO);
 
                     appFunctionTreeVO.setChildren(functionService.queryTreeByAppCode(adminAppVO.getAppCode()));
@@ -246,7 +246,7 @@ public class FunctionController {
             queryAdminApp.setAppCode(queryPageInfo.getAppCode());
 
             //当前用户下关联所有应用
-            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminId(queryAdminApp);
+            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(queryAdminApp);
             if(!CollectionUtils.isEmpty(adminApps))
             {
                 List<Object> appFunctionTreeVOS = new ArrayList<Object>();
@@ -257,6 +257,7 @@ public class FunctionController {
                     appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
                     appFunctionTreeVO.setName(adminAppVO.getName());
                     appFunctionTreeVO.setPid(-1L);
+                    appFunctionTreeVO.setEnableStatus((short)1);
                     appFunctionTreeVOS.add(appFunctionTreeVO);
 
                     //设置应用编码和功能项名称
@@ -363,38 +364,31 @@ public class FunctionController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该功能项
-            Function query=new Function();
-            query.setId(entity.getId());
-            List<Function> functionList = functionService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(functionList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,功能项不存在!");
-                return resultObjectVO;
-            }
+            List<Function> chidlren = new ArrayList<Function>();
+            functionService.queryChildren(chidlren,entity);
 
+            //把当前功能项添加进去,循环这个集合
+            chidlren.add(entity);
 
-            int row = functionService.deleteById(entity.getId());
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
-                return resultObjectVO;
-            }
-
-            //删除功能项下所有关联
-            RoleFunction queryRoleFunction =new RoleFunction();
-            queryRoleFunction.setFunctionId(functionList.get(0).getFunctionId());
-
-            List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
-            if(!CollectionUtils.isEmpty(roleFunction)) {
-                row = roleFunctionService.deleteByFunctionId(functionList.get(0).getId());
-
-                if (row <= 0) {
+            for(Function f:chidlren) {
+                //删除当前功能项
+                int row = functionService.deleteById(f.getId());
+                if (row < 1) {
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,删除功能项下所有角色关联失败!");
-                    return resultObjectVO;
+                    resultObjectVO.setMsg("请求失败,请重试!");
+                    continue;
                 }
+
+                //删除功能项下所有关联
+                RoleFunction queryRoleFunction = new RoleFunction();
+                queryRoleFunction.setFunctionId(f.getFunctionId());
+
+                List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
+                if (!CollectionUtils.isEmpty(roleFunction)) {
+                    row = roleFunctionService.deleteByFunctionId(f.getId());
+
+                }
+
             }
 
             resultObjectVO.setData(entity);
@@ -427,54 +421,45 @@ public class FunctionController {
         }
 
         try {
-            List<Function> FunctionList = JSONObject.parseArray(requestVo.getEntityJson(),Function.class);
-            if(CollectionUtils.isEmpty(FunctionList))
+            List<Function> functionList = JSONObject.parseArray(requestVo.getEntityJson(),Function.class);
+            if(CollectionUtils.isEmpty(functionList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,没有找到功能项ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(Function function:FunctionList) {
+            for(Function function:functionList) {
                 if(function.getId()!=null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(function);
 
-                    //查询是否存在该功能项
-                    Function query = new Function();
-                    query.setId(function.getId());
-                    List<Function> functionEntityList = functionService.findListByEntity(query);
-                    if (CollectionUtils.isEmpty(functionEntityList)) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setMsg("请求失败,功能项不存在!");
-                        continue;
-                    }
 
+                    List<Function> chidlren = new ArrayList<Function>();
+                    functionService.queryChildren(chidlren,function);
 
-                    int row = functionService.deleteById(function.getId());
-                    if (row < 1) {
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setMsg("请求失败,请重试!");
-                        continue;
-                    }
+                    //把当前功能项添加进去,循环这个集合
+                    chidlren.add(function);
 
-                    //删除功能项下所有关联
-                    RoleFunction queryRoleFunction =new RoleFunction();
-                    queryRoleFunction.setFunctionId(function.getFunctionId());
-
-                    List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
-                    if(!CollectionUtils.isEmpty(roleFunction)) {
-                        row = roleFunctionService.deleteByFunctionId(function.getId());
-
-                        if (row <= 0) {
+                    for(Function f:chidlren) {
+                        //删除当前功能项
+                        int row = functionService.deleteById(f.getId());
+                        if (row < 1) {
                             resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("请求失败,删除功能项下所有角色关联失败!");
-                            return resultObjectVO;
+                            resultObjectVO.setMsg("请求失败,请重试!");
+                            continue;
                         }
-                    }
 
+                        //删除功能项下所有关联
+                        RoleFunction queryRoleFunction = new RoleFunction();
+                        queryRoleFunction.setFunctionId(f.getFunctionId());
+
+                        List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
+                        if (!CollectionUtils.isEmpty(roleFunction)) {
+                            roleFunctionService.deleteByFunctionId(f.getId());
+                        }
+
+                    }
 
                 }
             }

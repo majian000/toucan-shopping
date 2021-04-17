@@ -25,5 +25,10 @@ public interface FunctionService {
 
     int deleteById(Long id);
 
+
     List<FunctionVO> queryListByAppCode(String appCode);
+
+
+    void queryChildren(List<Function> children,Function query);
+
 }

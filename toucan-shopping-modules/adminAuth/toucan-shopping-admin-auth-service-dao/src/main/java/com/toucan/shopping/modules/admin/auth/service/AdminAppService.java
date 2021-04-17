@@ -16,6 +16,5 @@ public interface AdminAppService {
 
     int deleteByAppCode(String appCode);
 
-    List<AdminAppVO> findAppListByAdminId(AdminApp query);
-
+    List<AdminAppVO> findAppListByAdminAppEntity(AdminApp query);
 }

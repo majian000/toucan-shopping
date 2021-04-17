@@ -53,7 +53,7 @@
             <if test="id!=null">
                 and t.id = #{id}
             </if>
-            <if test="name!=null">
+            <if test="name!=null and name!=''">
                 and t.name = #{name}
             </if>
             <if test="appCode!=null and appCode!=''">
@@ -100,6 +100,12 @@
     </select>
 
 
+
+    <select id="findListByPid" resultMap="functionVOMap" parameterType="java.lang.Long">
+        select * from t_sa_function t where  1=1 and t.pid = #{pid} and t.delete_status = 0
+    </select>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function" useGeneratedKeys="true" keyProperty="id" >
         insert into t_sa_function(pid,type,name,link,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
         values(#{pid},#{type},#{name},#{link},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
@@ -112,7 +118,7 @@
           where id = #{id}
     </update>
 
-    <update id="deleteById" parameterType="java.lang.Integer">
+    <update id="deleteById" parameterType="java.lang.Long">
         update t_sa_function set delete_status=1 where id = #{id}
     </update>
 

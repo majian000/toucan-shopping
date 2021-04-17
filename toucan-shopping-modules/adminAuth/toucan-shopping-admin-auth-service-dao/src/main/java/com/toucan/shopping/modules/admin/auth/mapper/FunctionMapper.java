@@ -24,4 +24,7 @@ public interface FunctionMapper {
     int deleteById(Long id);
 
     List<FunctionVO> queryListByAppCode(String appCode);
+
+
+    List<Function> findListByPid(Long pid);
 }

@@ -406,8 +406,7 @@ public class RoleController {
                     List<Role> roleEntityList = roleService.findListByEntity(query);
                     if (CollectionUtils.isEmpty(roleEntityList)) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setMsg("请求失败,角色不存在!");
+                        resultObjectVO.setMsg("请求失败,角色不存在!");
                         continue;
                     }
 
@@ -415,8 +414,7 @@ public class RoleController {
                     int row = roleService.deleteById(role.getId());
                     if (row < 1) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setCode(ResultVO.FAILD);
-                        appResultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请求失败,请重试!");
                         continue;
                     }
 

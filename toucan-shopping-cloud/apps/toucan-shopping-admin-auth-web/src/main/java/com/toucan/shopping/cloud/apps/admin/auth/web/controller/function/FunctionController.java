@@ -205,7 +205,7 @@ public class FunctionController {
 
 
     /**
-     * 删除应用
+     * 删除功能项
      * @param request
      * @return
      */
@@ -222,11 +222,11 @@ public class FunctionController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Function Function =new Function();
-            Function.setId(Long.parseLong(id));
-            Function.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            Function entity =new Function();
+            entity.setId(Long.parseLong(id));
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
-            String entityJson = JSONObject.toJSONString(Function);
+            String entityJson = JSONObject.toJSONString(entity);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
@@ -250,17 +250,17 @@ public class FunctionController {
     @AdminAuth
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<FunctionVO> FunctionVOS)
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<FunctionVO> functionVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(CollectionUtils.isEmpty(FunctionVOS))
+            if(CollectionUtils.isEmpty(functionVOS))
             {
                 resultObjectVO.setMsg("请求失败,请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            String entityJson = JSONObject.toJSONString(FunctionVOS);
+            String entityJson = JSONObject.toJSONString(functionVOS);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
