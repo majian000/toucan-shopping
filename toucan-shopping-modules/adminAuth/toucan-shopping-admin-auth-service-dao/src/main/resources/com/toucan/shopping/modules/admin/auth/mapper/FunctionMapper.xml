@@ -107,12 +107,13 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_function(pid,type,name,link,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
-        values(#{pid},#{type},#{name},#{link},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_sa_function(pid,type,name,icon,link,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
+        values(#{pid},#{type},#{name},#{icon},#{link},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
-        update t_sa_function set  name=#{name},code=#{code},update_date=#{updateDate},
+        update t_sa_function set  name=#{name},type=#{type},pid=#{pid},icon=#{icon},link=#{link},permission=#{permission},
+         function_sort=#{functionSort},app_code=#{appCode},update_date=#{updateDate},
          update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
          remark=#{remark}
           where id = #{id}

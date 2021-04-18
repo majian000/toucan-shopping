@@ -186,8 +186,8 @@ public class FunctionController {
             Function query=new Function();
             query.setId(entity.getId());
             query.setDeleteStatus((short)0);
-            List<Function> FunctionList = functionService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(FunctionList))
+            List<Function> functions = functionService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(functions))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("该功能项不存在!");
@@ -202,6 +202,11 @@ public class FunctionController {
                 return resultObjectVO;
             }
 
+            //如果修改了上级功能项,删除旧的角色功能关联
+            if(functions.get(0).getPid().longValue()!=entity.getPid().longValue())
+            {
+                roleFunctionService.deleteByFunctionId(functions.get(0).getPid());
+            }
 
             resultObjectVO.setData(entity);
 

@@ -11,5 +11,9 @@ import lombok.Data;
 public class FunctionVO extends Function {
 
 
+    /**
+     * 上级节点名称
+     */
+    private String parentName;
 
 }

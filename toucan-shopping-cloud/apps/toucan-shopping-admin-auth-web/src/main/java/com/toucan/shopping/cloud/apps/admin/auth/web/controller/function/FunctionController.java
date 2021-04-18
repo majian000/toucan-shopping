@@ -4,9 +4,11 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.function;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
@@ -19,6 +21,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +57,9 @@ public class FunctionController {
 
     @Autowired
     private FeignAdminAppService feignAdminAppService;
+
+    @Autowired
+    private FeignAppService feignAppService;
 
 
     public void initSelectApp(HttpServletRequest request)
@@ -108,10 +115,37 @@ public class FunctionController {
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
-                    List<Function> Functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
-                    if(!CollectionUtils.isEmpty(Functions))
+                    List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
+                    if(!CollectionUtils.isEmpty(functions))
                     {
-                        request.setAttribute("model",Functions.get(0));
+                        FunctionVO functionVO = new FunctionVO();
+                        BeanUtils.copyProperties(functionVO,functions.get(0));
+                        //如果是顶级节点,上级节点就是所属应用
+                        if(functionVO.getPid().longValue()==-1)
+                        {
+                            App queryApp = new App();
+                            queryApp.setCode(functionVO.getAppCode());
+                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryApp);
+                            resultObjectVO = feignAppService.findByCode(SignUtil.sign(requestJsonVO),requestJsonVO);
+                            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
+                                App app = JSONObject.parseObject(JSONObject.toJSONString(resultObjectVO.getData()),App.class);
+                                if(app!=null) {
+                                    functionVO.setParentName(app.getCode()+" "+ app.getName());
+                                }
+                            }
+                        }else{
+                            Function queryParentFunction = new Function();
+                            queryParentFunction.setId(functionVO.getPid());
+                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentFunction);
+                            resultObjectVO = feignFunctionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+                            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
+                                List<Function> parentFunctionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
+                                if(!CollectionUtils.isEmpty(parentFunctionList)) {
+                                    functionVO.setParentName(parentFunctionList.get(0).getName());
+                                }
+                            }
+                        }
+                        request.setAttribute("model",functionVO);
                     }
                 }
 
@@ -138,6 +172,7 @@ public class FunctionController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignFunctionService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)

@@ -24,7 +24,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
         return new FeignAppService(){
 
             @Override
-            public ResultObjectVO save(String toucanAdminAuth,RequestJsonVO requestVo) {
+            public ResultObjectVO save(String signHeader,RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -39,7 +39,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO update(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -54,7 +54,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO listPage(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO listPage(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -69,7 +69,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO deleteById(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -84,7 +84,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO findById(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -99,7 +99,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -123,6 +123,21 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     return resultObjectVO;
                 }
                 logger.warn("请求用户中心查询应用列表失败 params:"+ JSONObject.toJSON(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO findByCode(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAppService.findByCode faild sign {} params {}", signHeader,JSONObject.toJSON(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

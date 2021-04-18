@@ -209,9 +209,13 @@
         table.on('tool(functionTreeTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-
+                if(data.type==null)
+                {
+                    layer.msg("不能修改该节点");
+                    return false;
+                }
                 var index = layer.open({
-                    title: '编辑用户',
+                    title: '编辑功能',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,

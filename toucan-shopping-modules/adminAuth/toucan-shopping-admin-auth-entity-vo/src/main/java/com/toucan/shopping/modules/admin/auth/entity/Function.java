@@ -48,6 +48,10 @@ public class Function {
      */
     private Short enableStatus;
 
+    /**
+     * 图标
+     */
+    private String icon;
 
     /**
      * 创建时间
@@ -74,6 +78,7 @@ public class Function {
      * 排序
      */
     private Long functionSort;
+
 
 
     /**
