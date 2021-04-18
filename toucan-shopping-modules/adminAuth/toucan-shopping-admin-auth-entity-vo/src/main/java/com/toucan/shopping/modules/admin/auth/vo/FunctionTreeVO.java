@@ -34,4 +34,9 @@ public class FunctionTreeVO extends Function {
      */
     private String updateAdminUsername;
 
+    /**
+     * 是否支持checkbox
+     */
+    private boolean checked;
+
 }

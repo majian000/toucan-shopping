@@ -81,4 +81,13 @@ public interface FeignFunctionService {
     @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.POST)
     public ResultObjectVO queryAppFunctionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询指定用户和应用的权限树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/function/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryFunctionTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
 }

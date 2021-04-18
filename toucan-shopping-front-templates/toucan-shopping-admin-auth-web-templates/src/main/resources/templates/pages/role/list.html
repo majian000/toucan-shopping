@@ -62,16 +62,20 @@
         <script type="text/html" id="roleTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="permission">权限</a>
         </script>
 
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table','tree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -243,6 +247,54 @@
                         }
                     });
                 });
+            } else if (obj.event === 'permission') {
+
+                loadding = layer.load();
+                index = layer.open({
+                    title: '选择权限',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['20%', '60%'],
+                    btn: ['确定'],
+                    content: "<div id='functionTree'></div>",
+                    success:function(layero){
+                        $.ajax({
+                            url:"[[@{/}]]common/query/function/tree",
+                            type:'POST',
+                            data:{appCode:data.appCode},
+                            success:function(data){
+                                if(data.code==1)
+                                {
+                                    //渲染
+                                    var inst1 = tree.render({
+                                        elem: '#functionTree'
+                                        ,id:"functionTreeId"
+                                        ,showCheckbox: true
+                                        ,data: data.data
+                                    });
+                                }
+                            },
+                            complete:function()
+                            {
+                                layer.close(loadding);
+                            }
+                        });
+
+                    },
+                    yes: function(index, layero){
+                        var checkedData = tree.getChecked('functionTreeId'); //获取选中节点的数据
+                        layer.alert(JSON.stringify(checkedData), {shade:0});
+
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+
+
             }
         });
 

@@ -152,6 +152,43 @@ public class FunctionController {
 
 
     /**
+     * 查询指定用户和应用的权限树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/function/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryFunctionTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminApp.class);
+            if(StringUtils.isEmpty(query.getAdminId()))
+            {
+                throw new IllegalArgumentException("adminId为空");
+            }
+            if(StringUtils.isEmpty(query.getAppCode()))
+            {
+                throw new IllegalArgumentException("appCode为空");
+            }
+            //查询当前用户指定应用下的权限树
+            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(query);
+            if(!CollectionUtils.isEmpty(adminApps))
+            {
+                resultObjectVO.setData(functionService.queryTreeByAppCode(adminApps.get(0).getAppCode()));
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
      * 編輯功能项
      * @param requestVo
      * @return
