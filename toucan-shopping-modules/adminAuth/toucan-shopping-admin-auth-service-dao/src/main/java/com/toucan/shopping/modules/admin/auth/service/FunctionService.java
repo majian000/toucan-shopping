@@ -11,24 +11,76 @@ import java.util.List;
 
 public interface FunctionService {
 
+    /**
+     * 根据查询对象返回列表
+     * @param entity
+     * @return
+     */
     List<Function> findListByEntity(Function entity);
 
+    /**
+     * 根据应用编码查询树
+     * @param appCode
+     * @return
+     */
     List<FunctionTreeVO> queryTreeByAppCode(String appCode);
 
+    /**
+     * 保存
+     * @param entity
+     * @return
+     */
     int save(Function entity);
 
+    /**
+     * 更新
+     * @param entity
+     * @return
+     */
     int update(Function entity);
 
+    /**
+     * 判断是否存在
+     * @param name
+     * @return
+     */
     boolean exists(String name);
 
+    /**
+     * 查询列表页
+     * @param FunctionTreeInfo
+     * @return
+     */
     PageInfo<Function> queryListPage(FunctionTreeInfo FunctionTreeInfo);
 
+    /**
+     *  根据ID删除
+     * @param id
+     * @return
+     */
     int deleteById(Long id);
 
 
+    /**
+     * 根据应用编码查询列表
+     * @param appCode
+     * @return
+     */
     List<FunctionVO> queryListByAppCode(String appCode);
 
-
+    /**
+     * 查询所有子节点
+     * @param children
+     * @param query
+     */
     void queryChildren(List<Function> children,Function query);
+
+
+    /**
+     * 查询树表格
+     * @param functionTreeInfo
+     * @return
+     */
+    List<Function> findTreeTable(FunctionTreeInfo functionTreeInfo);
 
 }

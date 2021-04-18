@@ -25,6 +25,9 @@ public interface FunctionMapper {
 
     List<FunctionVO> queryListByAppCode(String appCode);
 
+    List<FunctionVO> findListByPid(Long pid);
 
-    List<Function> findListByPid(Long pid);
+    List<FunctionVO> findById(Long id);
+
+    List<Function> findTreeTableByPageInfo(FunctionTreeInfo functionTreeInfo);
 }

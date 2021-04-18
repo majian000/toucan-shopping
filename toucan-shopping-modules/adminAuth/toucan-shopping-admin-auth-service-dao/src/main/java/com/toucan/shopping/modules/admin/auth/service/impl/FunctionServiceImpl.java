@@ -123,12 +123,67 @@ public class FunctionServiceImpl implements FunctionService {
 
     @Override
     public void queryChildren(List<Function> children, Function query) {
-        List<Function> functions = functionMapper.findListByPid(query.getId());
+        List<FunctionVO> functions = functionMapper.findListByPid(query.getId());
         children.addAll(functions);
         for(Function function:functions)
         {
             queryChildren(children,function);
         }
+    }
+
+    /**
+     * 查询上级节点
+     * @param retNodes 返回的所有节点
+     * @param child
+     */
+    public void queryParentNode(List<Function> retNodes,Function child)
+    {
+        List<FunctionVO> parentNode = functionMapper.findById(child.getPid());
+        retNodes.addAll(parentNode);
+        if(!CollectionUtils.isEmpty(parentNode))
+        {
+            //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
+            if(parentNode.get(0).getPid().longValue()!=-1&&!existsParent(retNodes,parentNode.get(0)))
+            {
+                queryParentNode(retNodes,parentNode.get(0));
+            }
+        }
+    }
+
+    public boolean existsParent(List<Function> nodes,Function node)
+    {
+        if(!CollectionUtils.isEmpty(nodes))
+        {
+            for(Function n:nodes)
+            {
+                if(node.getPid().longValue()==n.getId().longValue())
+                {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    @Override
+    public List<Function> findTreeTable(FunctionTreeInfo functionTreeInfo){
+        List<Function> retNodes = new ArrayList<Function>();
+        List<Function> nodes = functionMapper.findTreeTableByPageInfo(functionTreeInfo);
+        if(!CollectionUtils.isEmpty(nodes))
+        {
+            retNodes.addAll(nodes);
+            for(Function node:nodes)
+            {
+                //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
+                if(node.getPid().longValue()!=-1&&!existsParent(retNodes,node))
+                {
+                    queryParentNode(retNodes,node);
+                }
+            }
+
+        }
+        return retNodes;
     }
 
 

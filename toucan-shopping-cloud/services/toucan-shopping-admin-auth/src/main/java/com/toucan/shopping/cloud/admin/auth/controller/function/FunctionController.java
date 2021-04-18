@@ -265,11 +265,9 @@ public class FunctionController {
                     appFunctionTreeVO.setEnableStatus((short)1);
                     appFunctionTreeVOS.add(appFunctionTreeVO);
 
-                    //设置应用编码和功能项名称
-                    Function queryFunction = new Function();
-                    queryFunction.setAppCode(adminAppVO.getAppCode());
-                    queryFunction.setName(queryPageInfo.getName());
-                    List<Function>  functions = functionService.findListByEntity(queryFunction);
+                    //查询查询这个APP下的功能项列表
+                    queryPageInfo.setAppCode(adminAppVO.getAppCode());
+                    List<Function>  functions = functionService.findTreeTable(queryPageInfo);
                     for(Function function:functions)
                     {
                         //将-1替换成adminApp的id

@@ -68,6 +68,23 @@
     </select>
 
 
+
+    <select id="findTreeTableByPageInfo" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo">
+        select * from t_sa_function t
+        <where>
+            1=1
+            <if test="name!=null and name!=''">
+                and t.name  like concat('%',#{name},'%')
+            </if>
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code = #{appCode}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
     <select id="queryListPage" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo">
         select t.* from t_sa_function t
         <where>
@@ -92,6 +109,12 @@
         </where>
     </select>
 
+
+
+
+    <select id="findById" resultMap="functionVOMap" parameterType="java.lang.Long">
+        select * from t_sa_function t where  1=1 and t.id = #{id} and t.delete_status = 0
+    </select>
 
 
 
