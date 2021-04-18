@@ -22,6 +22,8 @@
     <resultMap id="functionVOMap" type="com.toucan.shopping.modules.admin.auth.vo.FunctionVO" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="create_admin_username" jdbcType="VARCHAR" property="createAdminUsername" />
+        <result column="update_admin_username" jdbcType="VARCHAR" property="updateAdminUsername" />
         <result column="function_id" jdbcType="VARCHAR" property="functionId" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
@@ -69,8 +71,10 @@
 
 
 
-    <select id="findTreeTableByPageInfo" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo">
-        select * from t_sa_function t
+    <select id="findTreeTableByPageInfo" resultMap="functionVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo">
+        select *,tsa.username as create_admin_username,tsau.username as update_admin_username from t_sa_function t
+            left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id
+            left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id
         <where>
             1=1
             <if test="name!=null and name!=''">

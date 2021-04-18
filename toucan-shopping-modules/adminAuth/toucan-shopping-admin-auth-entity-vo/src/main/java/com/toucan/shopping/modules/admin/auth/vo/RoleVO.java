@@ -14,5 +14,20 @@ import java.util.Date;
 public class RoleVO extends Role {
 
 
+    /**
+     * 创建人
+     */
+    private String createAdminUsername;
+
+
+    /**
+     * 修改人
+     */
+    private String updateAdminUsername;
+
+    /**
+     * 应用名称
+     */
+    private String appName;
 
 }

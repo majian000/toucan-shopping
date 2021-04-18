@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,11 +52,7 @@ public class RoleController {
     @Autowired
     private FeignAdminAppService feignAdminAppService;
 
-
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
+    public void initSelectApp(HttpServletRequest request)
     {
         try {
             AdminApp query = new AdminApp();
@@ -72,6 +70,15 @@ public class RoleController {
 
             request.setAttribute("adminAppVOS",new ArrayList<AdminAppVO>());
         }
+    }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
+    public String page(HttpServletRequest request)
+    {
+        initSelectApp(request);
         return "pages/role/list.html";
     }
 
@@ -82,8 +89,9 @@ public class RoleController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage()
+    public String addPage(HttpServletRequest request)
     {
+        initSelectApp(request);
         return "pages/role/add.html";
     }
 
@@ -94,6 +102,9 @@ public class RoleController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
+
+            initSelectApp(request);
+
             Role entity = new Role();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -131,6 +142,7 @@ public class RoleController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             role.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            role.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
             resultObjectVO = feignRoleService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
@@ -157,6 +169,7 @@ public class RoleController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignRoleService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
@@ -175,10 +188,10 @@ public class RoleController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)
+    public TableVO listPage(RolePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -211,7 +224,7 @@ public class RoleController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
@@ -249,7 +262,7 @@ public class RoleController {
      * @param request
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<RoleVO> roleVOS)

@@ -115,11 +115,14 @@
                 cols: [
                     [
                         {type: "checkbox", width: 50},
-                        {field: 'name',  title: '功能名称'},
-                        {field: 'functionId',  title: '功能项ID'},
+                        {field: 'name', width: 150,  title: '功能名称'},
                         {field: 'link', title: '链接'},
                         {field: 'permission', title: '权限'},
                         {field: 'functionSort', title: '排序'},
+                        {field: 'createAdminUsername', title: '创建人'},
+                        {field: 'createDate',  title: '创建时间'},
+                        {field: 'updateAdminUsername',  title: '修改人'},
+                        {field: 'updateDate',  title: '修改时间'},
                         {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
                                 if (d.enableStatus == 1) {
                                     return '启用';

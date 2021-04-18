@@ -22,4 +22,16 @@ public class FunctionTreeVO extends Function {
      */
     private List<FunctionTreeVO> children;
 
+
+    /**
+     * 创建人
+     */
+    private String createAdminUsername;
+
+
+    /**
+     * 修改人
+     */
+    private String updateAdminUsername;
+
 }

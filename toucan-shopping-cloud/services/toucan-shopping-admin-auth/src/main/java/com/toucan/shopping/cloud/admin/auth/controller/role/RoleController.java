@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
+import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
@@ -45,6 +46,8 @@ public class RoleController {
     @Autowired
     private AdminRoleService adminRoleService;
 
+    @Autowired
+    private RoleFunctionService roleFunctionService;
 
 
 
@@ -75,8 +78,6 @@ public class RoleController {
 
 
             role.setRoleId(GlobalUUID.uuid());
-            role.setCreateDate(new Date());
-            role.setEnableStatus((short)1);
             role.setDeleteStatus((short)0);
             int row = roleService.save(role);
             if (row < 1) {
@@ -342,20 +343,13 @@ public class RoleController {
                 return resultObjectVO;
             }
 
-            //删除角色下所有关联
-            AdminRole queryAdminRole =new AdminRole();
-            queryAdminRole.setRoleId(roleList.get(0).getRoleId());
 
-            List<AdminRole> adminRoles = adminRoleService.findListByEntity(queryAdminRole);
-            if(!CollectionUtils.isEmpty(adminRoles)) {
-                row = adminRoleService.deleteByRoleId(roleList.get(0).getId());
+            //删除账号关联
+            adminRoleService.deleteByRoleId(roleList.get(0).getId());
 
-                if (row <= 0) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,删除角色下所有管理账户失败!");
-                    return resultObjectVO;
-                }
-            }
+            //删除功能关联
+            roleFunctionService.deleteByRoleId(roleList.get(0).getId());
+
 
             resultObjectVO.setData(entity);
 
@@ -418,20 +412,11 @@ public class RoleController {
                         continue;
                     }
 
-                    //删除角色下所有关联
-                    AdminRole queryAdminRole =new AdminRole();
-                    queryAdminRole.setRoleId(roleEntityList.get(0).getRoleId());
+                    //删除账号关联
+                    adminRoleService.deleteByRoleId(roleList.get(0).getId());
 
-                    List<AdminRole> adminApps = adminRoleService.findListByEntity(queryAdminRole);
-                    if(!CollectionUtils.isEmpty(adminApps)) {
-                        row = adminRoleService.deleteByRoleId(roleEntityList.get(0).getId());
-
-                        if (row <= 0) {
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("请求失败,删除角色下所有关联账户失败!");
-                            return resultObjectVO;
-                        }
-                    }
+                    //删除功能关联
+                    roleFunctionService.deleteByRoleId(roleList.get(0).getId());
 
                 }
             }

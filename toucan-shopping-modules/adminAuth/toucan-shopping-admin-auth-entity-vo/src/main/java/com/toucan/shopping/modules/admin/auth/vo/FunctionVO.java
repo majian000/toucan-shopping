@@ -16,4 +16,15 @@ public class FunctionVO extends Function {
      */
     private String parentName;
 
+    /**
+     * 创建人
+     */
+    private String createAdminUsername;
+
+
+    /**
+     * 修改人
+     */
+    private String updateAdminUsername;
+
 }

@@ -260,7 +260,7 @@ public class FunctionController {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                     appFunctionTreeVO.setId(adminAppVO.getId());
                     appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
-                    appFunctionTreeVO.setName(adminAppVO.getName());
+                    appFunctionTreeVO.setName(adminAppVO.getAppCode()+" "+adminAppVO.getName());
                     appFunctionTreeVO.setPid(-1L);
                     appFunctionTreeVO.setEnableStatus((short)1);
                     appFunctionTreeVOS.add(appFunctionTreeVO);

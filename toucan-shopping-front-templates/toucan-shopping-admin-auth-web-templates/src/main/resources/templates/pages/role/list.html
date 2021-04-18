@@ -22,6 +22,12 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">编码</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="code" autocomplete="off" class="layui-input">
@@ -30,7 +36,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">所属应用</label>
                             <div class="layui-input-inline">
-                                <select id="selectApp" name="appCode" lay-verify="required" lay-search="">
+                                <select id="selectApp" name="appCode" lay-search="">
                                     <option value="">请选择</option>
                                     <option th:each="aa : ${adminAppVOS}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}">
                                 </select>
@@ -110,10 +116,11 @@
                 {type: "checkbox", width: 50},
                 {field: 'name', width: 180, title: '角色名称'},
                 {field: 'appCode', width: 180, title: '应用编码'},
+                {field: 'appName', width: 180, title: '所属应用'},
+                {field: 'createAdminUsername', width: 180, title: '创建人'},
                 {field: 'createDate', width: 180, title: '创建时间'},
-                {field: '', width: 180, title: '创建人'},
+                {field: 'updateAdminUsername', width: 180, title: '修改人'},
                 {field: 'updateDate', width: 180, title: '修改时间'},
-                {field: '', width: 180, title: '修改人'},
                 {field: 'enableStatus', width: 80, title: '状态',
                     templet: function (row) {
                     if(row.enableStatus == "1"){
@@ -165,7 +172,7 @@
                     , data = checkStatus.data;
                 layer.confirm('确定删除角色?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/delete/ids",
+                        url:"[[@{/}]]role/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -200,13 +207,13 @@
             if (obj.event === 'edit') {
 
                 var index = layer.open({
-                    title: '编辑用户',
+                    title: '编辑角色',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]app/editPage/'+data.id,
+                    content: '[[@{/}]]role/editPage/'+data.id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -215,7 +222,7 @@
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除该角色?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/delete/"+data.id,
+                        url:"[[@{/}]]role/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

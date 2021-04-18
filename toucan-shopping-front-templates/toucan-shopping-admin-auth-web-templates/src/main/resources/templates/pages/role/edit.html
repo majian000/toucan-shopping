@@ -26,16 +26,28 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">应用编码</label>
+        <label class="layui-form-label required">所属应用</label>
         <div class="layui-input-block">
-            <input type="text" name="appCode" lay-verify="required" maxlength="8" lay-reqtext="应用编码不能为空" placeholder="请输入角色编码" value="" class="layui-input" th:value="${model.code}">
-            <tip>填写角色的编码。</tip>
+            <select id="selectApp" name="appCode" lay-verify="required" lay-search="">
+                <option th:each="aa : ${adminAppVOS}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}" th:selected="${aa.appCode  eq model.appCode}" >
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" checked>
+            <input type="radio" name="enableStatus" value="0" title="禁用">
+        </div>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 0}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" >
+            <input type="radio" name="enableStatus" value="0" title="禁用" checked>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息" th:value="${model.remark}"></textarea>
+            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息" th:text="${model.remark}"></textarea>
         </div>
     </div>
 
@@ -70,6 +82,7 @@
                         // 关闭弹出层
                         layer.close(index);
                         var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
                         parent.layer.close(iframeIndex);
 
                     });
