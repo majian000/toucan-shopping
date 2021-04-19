@@ -56,14 +56,14 @@ public abstract class UIController {
      * 初始化界面按钮
      * @param request
      * @param toucan
-     * @param functionId
+     * @param url
      * @param feignFunctionService
      */
-    public void initButtons(HttpServletRequest request, Toucan toucan,String functionId, FeignFunctionService feignFunctionService)
+    public void initButtons(HttpServletRequest request, Toucan toucan,String url, FeignFunctionService feignFunctionService)
     {
         try {
             Function function = new Function();
-            function.setPid(Long.parseLong(functionId));
+            function.setUrl(url);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
             ResultObjectVO resultObjectVO = feignFunctionService.queryChildren(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())

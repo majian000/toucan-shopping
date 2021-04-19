@@ -571,7 +571,13 @@ public class FunctionController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             Function query = JSONObject.parseObject(requestJsonVO.getEntityJson(), Function.class);
-            resultObjectVO.setData(functionService.findListByEntity(query));
+            //根据URL查询出功能项
+            List<Function> treeNode = functionService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(treeNode)) {
+                query = new Function();
+                query.setPid(treeNode.get(0).getId());
+                resultObjectVO.setData(functionService.findListByEntity(query));
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

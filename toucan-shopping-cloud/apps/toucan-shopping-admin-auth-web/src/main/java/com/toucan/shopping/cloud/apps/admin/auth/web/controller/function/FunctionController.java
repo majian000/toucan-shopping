@@ -73,13 +73,14 @@ public class FunctionController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request,String functionId)
+    public String page(HttpServletRequest request)
     {
         //初始化选择应用控件
         super.initSelectApp(request,toucan,feignAdminAppService);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,functionId,feignFunctionService);
+
+        super.initButtons(request,toucan,"function/listPage",feignFunctionService);
 
         return "pages/function/list.html";
     }

@@ -27,7 +27,7 @@ public class Function {
     /**
      * 连接
      */
-    private String link;
+    private String url;
 
     /**
      * 权限标识

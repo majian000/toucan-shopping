@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="function_id" jdbcType="VARCHAR" property="functionId" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="function_text" jdbcType="VARCHAR" property="functionText" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
@@ -44,6 +45,9 @@
             </if>
             <if test="pid!=null">
                 and t.pid = #{pid}
+            </if>
+            <if test="url!=null and url!='' ">
+                and t.url = #{url}
             </if>
             <if test="name!=null and name!=''">
                 and t.name = #{name}
@@ -124,12 +128,12 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_function(pid,function_text,type,name,icon,link,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
-        values(#{pid},#{functionText},#{type},#{name},#{icon},#{link},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_sa_function(pid,function_text,type,name,icon,url,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
+        values(#{pid},#{functionText},#{type},#{name},#{icon},#{url},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
-        update t_sa_function set  name=#{name},type=#{type},pid=#{pid},icon=#{icon},link=#{link},permission=#{permission},
+        update t_sa_function set  name=#{name},type=#{type},pid=#{pid},icon=#{icon},url=#{url},permission=#{permission},
          function_sort=#{functionSort},app_code=#{appCode},update_date=#{updateDate},function_text=#{functionText},
          update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
          remark=#{remark}

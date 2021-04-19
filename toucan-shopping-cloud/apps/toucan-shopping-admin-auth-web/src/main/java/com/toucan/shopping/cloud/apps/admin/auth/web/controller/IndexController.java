@@ -84,7 +84,7 @@ public class IndexController {
                 if(functionVO.getType().shortValue()==0||functionVO.getType().shortValue()==1) {
                     MenuInfo menuInfo=new MenuInfo();
                     menuInfo.setTitle(functionVO.getName());
-                    menuInfo.setHref(functionVO.getLink());
+                    menuInfo.setHref(functionVO.getUrl());
                     menuInfo.setTarget("_self");
                     currentNode.getChild().add(menuInfo);
 
@@ -133,7 +133,7 @@ public class IndexController {
                             MenuInfo menuInfo=new MenuInfo();
                             menuInfo.setId(functionVO.getId());
                             menuInfo.setTitle(functionVO.getName());
-                            menuInfo.setHref(functionVO.getLink());
+                            menuInfo.setHref(functionVO.getUrl());
                             menuInfo.setTarget("_self");
                             menuInfos.add(menuInfo);
 
