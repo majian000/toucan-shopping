@@ -1,7 +1,10 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.admin;
 
 
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
@@ -25,7 +28,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,12 +41,24 @@ public class AdminController {
     @Autowired
     private FeignAdminService feignAdminService;
 
+    @Autowired
+    private FeignAdminAppService feignAdminAppService;
+
+    @Autowired
+    private FeignFunctionService feignFunctionService;
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page()
+    public String page(HttpServletRequest request,String functionId)
     {
+
+        //初始化选择应用控件
+        super.initSelectApp(request,toucan,feignAdminAppService);
+
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,functionId,feignFunctionService);
         return "pages/admin/list.html";
     }
 
