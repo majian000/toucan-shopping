@@ -25,10 +25,10 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">应用编码</label>
+        <label class="layui-form-label">关联应用</label>
         <div class="layui-input-block">
-            <input type="text" name="code" lay-verify="required" maxlength="8" lay-reqtext="应用编码不能为空" placeholder="请输入应用编码" value="" class="layui-input">
-            <tip>填写应用的编码。</tip>
+            <input type="checkbox" name="appCodes" value="1" title="用户中心"  checked="">
+            <input type="checkbox" name="appCodes" value="1"  title="权限中心">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
