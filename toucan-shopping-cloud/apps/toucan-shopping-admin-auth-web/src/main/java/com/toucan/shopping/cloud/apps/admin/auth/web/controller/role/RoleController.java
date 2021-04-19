@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.role;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
@@ -11,6 +12,7 @@ import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -51,6 +53,9 @@ public class RoleController {
 
     @Autowired
     private FeignAdminAppService feignAdminAppService;
+
+    @Autowired
+    private FeignRoleFunctionService roleFunctionService;
 
     public void initSelectApp(HttpServletRequest request)
     {
@@ -172,6 +177,33 @@ public class RoleController {
             entity.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignRoleService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 关联功能项
+     * @param roleFunctionVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/connect/functions",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO connectFunctions(HttpServletRequest request, @RequestBody RoleFunctionVO roleFunctionVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            roleFunctionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            roleFunctionVO.setCreateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, roleFunctionVO);
+            resultObjectVO = roleFunctionService.saveFunctions(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

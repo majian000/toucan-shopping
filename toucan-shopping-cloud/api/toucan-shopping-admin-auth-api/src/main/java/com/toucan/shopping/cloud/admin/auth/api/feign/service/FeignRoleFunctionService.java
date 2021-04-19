@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignRoleFunctionService {
 
 
-
+    @RequestMapping(value = "/save/functions",method = RequestMethod.POST)
+    public ResultObjectVO saveFunctions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
     @RequestMapping(value = "/query/list",method = RequestMethod.POST)
     ResultObjectVO queryRoleFunctionList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);

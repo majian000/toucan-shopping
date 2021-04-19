@@ -263,7 +263,7 @@
                         $.ajax({
                             url:"[[@{/}]]function/query/role/function/tree",
                             type:'POST',
-                            data:{appCode:data.appCode},
+                            data:{appCode:data.appCode,roleId:data.roleId},
                             success:function(data){
                                 if(data.code==1)
                                 {
@@ -286,8 +286,19 @@
                     yes: function(index, layero){
                         var checkedData = tree.getChecked('functionTreeId'); //获取选中节点的数据
                         layer.alert(JSON.stringify(checkedData), {shade:0});
-
-                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                        // $.ajax({
+                        //     url:"[[@{/}]]role/save/functions",
+                        //     contentType: "application/json; charset=utf-8",
+                        //     type:'POST',
+                        //     data:JSON.stringify(data),
+                        //     success:function(data){
+                        //
+                        //     },
+                        //     complete:function(data)
+                        //     {
+                        //         layer.close(index);
+                        //     }
+                        // });
                     }
                 });
                 $(window).on("resize", function () {

@@ -25,6 +25,23 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
         return new FeignRoleFunctionService(){
 
             @Override
+            public ResultObjectVO saveFunctions(String signHeader, RequestJsonVO requestJsonVO) {
+
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+
+                logger.warn("FeignRoleFunctionService.saveFunctions faild sign {} params {}",signHeader,JSONObject.toJSON(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO queryRoleFunctionList(String signHeader, RequestJsonVO requestJsonVO) {
 
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
