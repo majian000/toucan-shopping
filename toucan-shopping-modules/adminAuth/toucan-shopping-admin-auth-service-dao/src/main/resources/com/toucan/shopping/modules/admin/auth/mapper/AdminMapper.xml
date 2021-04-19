@@ -16,7 +16,7 @@
 
 
     <resultMap id="adminVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AdminVO" extends="adminMap" >
-
+        <result column="app_enable_status" jdbcType="INTEGER" property="appLoginEnableStatus" />
     </resultMap>
 
     <sql id="queryListPageWhere">
@@ -52,7 +52,7 @@
 
 
     <select id="queryListPage" resultMap="adminVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
-        select tu.* from t_sa_admin tu
+        select tu.*,tsa.enable_status as app_enable_status from t_sa_admin tu left join t_sa_admin_app tsa on tu.admin_id = tsa.admin_id
         <where>
             1=1 and tu.delete_status = 0
             <include refid="queryListPageWhere" />
@@ -63,7 +63,7 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
-        select count(*) from t_sa_admin tu
+        select count(*) from t_sa_admin tu left join t_sa_admin_app tsa on tu.admin_id = tsa.admin_id
         <where>
             1=1 and tu.delete_status = 0
 
