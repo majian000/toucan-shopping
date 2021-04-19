@@ -11,13 +11,8 @@
         
     </resultMap>
 
-    <resultMap id="adminAppVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AdminAppVO" >
-        <id column="id" jdbcType="BIGINT"  property="id" />
+    <resultMap id="adminAppVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AdminAppVO" extends="adminAppMap" >
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="admin_id" jdbcType="VARCHAR" property="adminId" />
-        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
-        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
 
     </resultMap>
 

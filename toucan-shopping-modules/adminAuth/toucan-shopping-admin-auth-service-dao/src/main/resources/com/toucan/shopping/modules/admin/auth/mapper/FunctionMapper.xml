@@ -137,4 +137,15 @@
         update t_sa_function set delete_status=1 where id = #{id}
     </update>
 
+
+
+    <select id="queryListByAdminIdAndAppCode" resultMap="functionVOMap" >
+        select tsf.* from t_sa_role_function tsrf
+            left join t_sa_role tsr on tsrf.role_id = tsr.role_id and tsr.delete_status=0 and tsr.enable_status=1
+            left join t_sa_function tsf  on tsf.function_id = tsrf.function_id  and tsf.delete_status=0 and tsf.enable_status=1
+            left join t_sa_admin_role tsar on tsar.role_id = tsrf.function_id and tsar.delete_status=0
+            left join t_sa_admin_app tsap on tsap.admin_id = tsar.admin_id and tsrf.delete_status=0   and tsap.admin_id=#{adminId}  and tsap.app_code=#{appCode}
+            where 1=1
+    </select>
+
 </mapper>

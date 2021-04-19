@@ -90,4 +90,14 @@ public interface FeignFunctionService {
     @RequestMapping(value = "/query/function/tree",method = RequestMethod.POST)
     public ResultObjectVO queryFunctionTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询指定管理员应用所有角色的功能项
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/admin/app/functions",method = RequestMethod.POST)
+    public ResultObjectVO queryAdminAppFunctions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
 }

@@ -83,4 +83,12 @@ public interface FunctionService {
      */
     List<Function> findTreeTable(FunctionTreeInfo functionTreeInfo);
 
+
+    /**
+     * 查询指定应用下指定管理员的所有功能项
+     * @param appCode
+     * @return
+     */
+    List<FunctionVO> queryListByAdminIdAndAppCode(String adminId,String appCode);
+
 }

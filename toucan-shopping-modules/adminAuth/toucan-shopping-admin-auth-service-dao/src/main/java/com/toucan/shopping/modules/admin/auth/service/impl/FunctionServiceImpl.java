@@ -186,5 +186,10 @@ public class FunctionServiceImpl implements FunctionService {
         return retNodes;
     }
 
+    @Override
+    public List<FunctionVO> queryListByAdminIdAndAppCode(String adminId, String appCode) {
+        return functionMapper.queryListByAdminIdAndAppCode(adminId,appCode);
+    }
+
 
 }

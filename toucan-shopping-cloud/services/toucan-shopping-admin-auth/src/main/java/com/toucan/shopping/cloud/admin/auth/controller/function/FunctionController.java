@@ -516,4 +516,38 @@ public class FunctionController {
     }
 
 
+
+
+    /**
+     * 查询指定管理员应用所有角色的功能项
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/admin/app/functions",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAdminAppFunctions(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminApp.class);
+            if(StringUtils.isEmpty(query.getAdminId()))
+            {
+                throw new IllegalArgumentException("adminId为空");
+            }
+            if(StringUtils.isEmpty(query.getAppCode()))
+            {
+                throw new IllegalArgumentException("appCode为空");
+            }
+
+            resultObjectVO.setData(functionService.queryListByAdminIdAndAppCode(query.getAdminId(),query.getAppCode()));
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 }
