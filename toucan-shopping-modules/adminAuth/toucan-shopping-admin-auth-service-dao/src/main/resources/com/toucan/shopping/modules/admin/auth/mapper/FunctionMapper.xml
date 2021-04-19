@@ -7,6 +7,7 @@
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="function_id" jdbcType="VARCHAR" property="functionId" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="function_text" jdbcType="VARCHAR" property="functionText" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="pid" jdbcType="BIGINT" property="pid" />
@@ -19,23 +20,9 @@
         
     </resultMap>
 
-    <resultMap id="functionVOMap" type="com.toucan.shopping.modules.admin.auth.vo.FunctionVO" >
-        <id column="id" jdbcType="BIGINT"  property="id" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
+    <resultMap id="functionVOMap" type="com.toucan.shopping.modules.admin.auth.vo.FunctionVO" extends="functionMap">
         <result column="create_admin_username" jdbcType="VARCHAR" property="createAdminUsername" />
         <result column="update_admin_username" jdbcType="VARCHAR" property="updateAdminUsername" />
-        <result column="function_id" jdbcType="VARCHAR" property="functionId" />
-        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
-        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
-        <result column="type" jdbcType="INTEGER" property="type" />
-        <result column="pid" jdbcType="BIGINT" property="pid" />
-        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
-        <result column="remark" jdbcType="VARCHAR" property="remark" />
-        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
-        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
-
     </resultMap>
 
     <sql id="queryListPageWhere">
@@ -134,13 +121,13 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_function(pid,type,name,icon,link,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
-        values(#{pid},#{type},#{name},#{icon},#{link},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_sa_function(pid,function_text,type,name,icon,link,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
+        values(#{pid},#{functionText},#{type},#{name},#{icon},#{link},#{permission},#{functionId},#{functionSort},#{remark},#{appCode},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
         update t_sa_function set  name=#{name},type=#{type},pid=#{pid},icon=#{icon},link=#{link},permission=#{permission},
-         function_sort=#{functionSort},app_code=#{appCode},update_date=#{updateDate},
+         function_sort=#{functionSort},app_code=#{appCode},update_date=#{updateDate},function_text=#{functionText},
          update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
          remark=#{remark}
           where id = #{id}

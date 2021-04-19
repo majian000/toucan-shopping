@@ -6,13 +6,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
+import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -60,6 +63,9 @@ public class FunctionController {
 
     @Autowired
     private FeignAppService feignAppService;
+
+    @Autowired
+    private FeignRoleFunctionService feignRoleFunctionService;
 
 
     public void initSelectApp(HttpServletRequest request)
@@ -309,6 +315,63 @@ public class FunctionController {
         return resultObjectVO;
     }
 
+
+    public void setTreeNodeSelect(List<FunctionTreeVO> functionTreeVOList,List<RoleFunction> roleFunctions)
+    {
+        for(FunctionTreeVO functionTreeVO:functionTreeVOList)
+        {
+            for(RoleFunction roleFunction:roleFunctions) {
+                if(functionTreeVO.getId().longValue() == roleFunction.getFunctionId().length()) {
+                    functionTreeVO.setChecked(true);
+                }
+            }
+            if(!CollectionUtils.isEmpty(functionTreeVO.getChildren()))
+            {
+                setTreeNodeSelect(functionTreeVO.getChildren(),roleFunctions);
+            }
+        }
+    }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/role/function/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryFunctionTree(HttpServletRequest request,String roleId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            //查询当前用户的权限树
+            AdminApp query = new AdminApp();
+            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            query.setAppCode(appCode);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            resultObjectVO = feignFunctionService.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
+
+                RoleFunction queryRoleFunction = new RoleFunction();
+                queryRoleFunction.setRoleId(roleId);
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
+                resultObjectVO = feignRoleFunctionService.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
+                if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
+                {
+                    List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
+                    //设置节点选中状态
+                    setTreeNodeSelect(functionTreeVOList,roleFunctions);
+                }
+                resultObjectVO.setData(functionTreeVOList);
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

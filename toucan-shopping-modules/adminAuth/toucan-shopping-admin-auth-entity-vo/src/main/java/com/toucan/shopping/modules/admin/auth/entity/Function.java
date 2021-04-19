@@ -34,9 +34,14 @@ public class Function {
 
 
     /**
-     * 菜单类型 0目录 1菜单 2按钮
+     * 菜单类型 0目录 1菜单 2按钮 3工具条按钮
      */
     private Short type;
+
+    /**
+     * 功能内容
+     */
+    private String functionText;
 
     /**
      * 上级菜单 -1表示当前是顶级
