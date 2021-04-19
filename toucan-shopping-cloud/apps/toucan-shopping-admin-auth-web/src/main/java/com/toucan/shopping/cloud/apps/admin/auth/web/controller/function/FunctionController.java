@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppServi
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
+import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
@@ -45,7 +46,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/function")
-public class FunctionController {
+public class FunctionController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -68,32 +69,18 @@ public class FunctionController {
     private FeignRoleFunctionService feignRoleFunctionService;
 
 
-    public void initSelectApp(HttpServletRequest request)
-    {
-        try {
-            AdminApp query = new AdminApp();
-            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
-            ResultObjectVO resultObjectVO = feignAdminAppService.queryAppListByAdminId(SignUtil.sign(requestJsonVO), requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                List<AdminAppVO> adminAppVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminAppVO.class);
-                request.setAttribute("adminAppVOS",adminAppVOS);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-
-            request.setAttribute("adminAppVOS",new ArrayList<AdminAppVO>());
-        }
-    }
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
+    public String page(HttpServletRequest request,String functionId)
     {
-        initSelectApp(request);
+        //初始化选择应用控件
+        super.initSelectApp(request,toucan,feignAdminAppService);
+
+        //初始化工具条按钮、操作按钮
+
+
         return "pages/function/list.html";
     }
 
@@ -103,7 +90,9 @@ public class FunctionController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        initSelectApp(request);
+        super.initSelectApp(request,toucan,feignAdminAppService);
+
+
         return "pages/function/add.html";
     }
 
