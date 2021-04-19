@@ -44,7 +44,7 @@
     </insert>
 
 
-    <update id="deleteByRoleId" parameterType="java.lang.Long">
+    <update id="deleteByRoleId" parameterType="java.lang.String">
         update t_sa_admin_role set delete_status=1  where role_id = #{roleId}
     </update>
 

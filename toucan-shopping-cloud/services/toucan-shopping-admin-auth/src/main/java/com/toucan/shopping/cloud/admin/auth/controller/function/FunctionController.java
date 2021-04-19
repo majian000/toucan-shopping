@@ -143,6 +143,7 @@ public class FunctionController {
 
         }catch(Exception e)
         {
+            logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }
@@ -180,6 +181,7 @@ public class FunctionController {
 
         }catch(Exception e)
         {
+            logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }
@@ -239,10 +241,13 @@ public class FunctionController {
                 return resultObjectVO;
             }
 
+            //更新子节点的应用编码
+            functionService.updateChildAppCode(entity);
+
             //如果修改了上级功能项,删除旧的角色功能关联
             if(functions.get(0).getPid().longValue()!=entity.getPid().longValue())
             {
-                roleFunctionService.deleteByFunctionId(functions.get(0).getPid());
+                roleFunctionService.deleteByFunctionId(functions.get(0).getFunctionId());
             }
 
             resultObjectVO.setData(entity);
@@ -425,7 +430,7 @@ public class FunctionController {
 
                 List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
                 if (!CollectionUtils.isEmpty(roleFunction)) {
-                    row = roleFunctionService.deleteByFunctionId(f.getId());
+                    row = roleFunctionService.deleteByFunctionId(f.getFunctionId());
 
                 }
 
@@ -496,7 +501,7 @@ public class FunctionController {
 
                         List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
                         if (!CollectionUtils.isEmpty(roleFunction)) {
-                            roleFunctionService.deleteByFunctionId(f.getId());
+                            roleFunctionService.deleteByFunctionId(f.getFunctionId());
                         }
 
                     }
@@ -543,6 +548,7 @@ public class FunctionController {
 
         }catch(Exception e)
         {
+            logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }
@@ -568,6 +574,7 @@ public class FunctionController {
             resultObjectVO.setData(functionService.findListByEntity(query));
         }catch(Exception e)
         {
+            logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }

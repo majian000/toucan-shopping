@@ -345,10 +345,10 @@ public class RoleController {
 
 
             //删除账号关联
-            adminRoleService.deleteByRoleId(roleList.get(0).getId());
+            adminRoleService.deleteByRoleId(roleList.get(0).getRoleId());
 
             //删除功能关联
-            roleFunctionService.deleteByRoleId(roleList.get(0).getId());
+            roleFunctionService.deleteByRoleId(roleList.get(0).getRoleId());
 
 
             resultObjectVO.setData(entity);
@@ -413,10 +413,10 @@ public class RoleController {
                     }
 
                     //删除账号关联
-                    adminRoleService.deleteByRoleId(roleList.get(0).getId());
+                    adminRoleService.deleteByRoleId(roleList.get(0).getRoleId());
 
                     //删除功能关联
-                    roleFunctionService.deleteByRoleId(roleList.get(0).getId());
+                    roleFunctionService.deleteByRoleId(roleList.get(0).getRoleId());
 
                 }
             }

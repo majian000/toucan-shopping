@@ -89,6 +89,18 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
+    public void updateChildAppCode(Function parentEntity) {
+        List<FunctionVO> children = functionMapper.findListByPid(parentEntity.getId());
+        if(!CollectionUtils.isEmpty(children)) {
+            for (FunctionVO child : children) {
+                child.setAppCode(parentEntity.getAppCode());
+                this.update(child);
+                updateChildAppCode(child);
+            }
+        }
+    }
+
+    @Override
     public boolean exists(String name) {
         Function entity = new Function();
         entity.setName(name);

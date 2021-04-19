@@ -13,7 +13,7 @@ public interface AdminRoleMapper {
 
     List<AdminRole> findListByEntity(AdminRole adminRole);
 
-    int deleteByRoleId(Long roleId);
+    int deleteByRoleId(String roleId);
 
     List<AdminRole> findListByAdminId(String adminId);
 

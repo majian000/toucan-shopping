@@ -305,18 +305,20 @@ public class FunctionController extends UIController {
     }
 
 
-    public void setTreeNodeSelect(List<FunctionTreeVO> functionTreeVOList,List<RoleFunction> roleFunctions)
+    public void setTreeNodeSelect(List<FunctionTreeVO> functionTreeVOList,FunctionTreeVO parentNode,List<RoleFunction> roleFunctions)
     {
         for(FunctionTreeVO functionTreeVO:functionTreeVOList)
         {
             for(RoleFunction roleFunction:roleFunctions) {
-                if(functionTreeVO.getId().longValue() == roleFunction.getFunctionId().length()) {
+                if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
+                    //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
+                    parentNode.setChecked(false);
                     functionTreeVO.setChecked(true);
                 }
             }
             if(!CollectionUtils.isEmpty(functionTreeVO.getChildren()))
             {
-                setTreeNodeSelect(functionTreeVO.getChildren(),roleFunctions);
+                setTreeNodeSelect(functionTreeVO.getChildren(),functionTreeVO,roleFunctions);
             }
         }
     }
@@ -326,7 +328,7 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/role/function/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryFunctionTree(HttpServletRequest request,String roleId)
+    public ResultObjectVO queryFunctionTree(HttpServletRequest request,String appCode,String roleId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -334,7 +336,7 @@ public class FunctionController extends UIController {
             AdminApp query = new AdminApp();
             query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             query.setAppCode(appCode);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
             resultObjectVO = feignFunctionService.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
@@ -347,8 +349,12 @@ public class FunctionController extends UIController {
                 if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
                 {
                     List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
-                    //设置节点选中状态
-                    setTreeNodeSelect(functionTreeVOList,roleFunctions);
+                    if(!CollectionUtils.isEmpty(roleFunctions)) {
+                        for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
+                            //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
+                            setTreeNodeSelect(functionTreeVO.getChildren(),functionTreeVO, roleFunctions);
+                        }
+                    }
                 }
                 resultObjectVO.setData(functionTreeVOList);
             }

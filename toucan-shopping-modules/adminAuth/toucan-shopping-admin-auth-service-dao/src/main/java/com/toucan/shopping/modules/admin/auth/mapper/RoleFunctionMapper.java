@@ -13,8 +13,8 @@ public interface RoleFunctionMapper {
 
     List<RoleFunction> findListByEntity(RoleFunction entity);
 
-    int deleteByRoleId(Long roleId);
+    int deleteByRoleId(String roleId);
 
-    int deleteByFunctionId(Long functionId);
+    int deleteByFunctionId(String functionId);
 
 }

@@ -39,6 +39,14 @@ public interface FunctionService {
      */
     int update(Function entity);
 
+
+    /**
+     * 更新子节点得应用编码
+     * @param parentEntity
+     * @return
+     */
+    void updateChildAppCode(Function parentEntity);
+
     /**
      * 判断是否存在
      * @param name

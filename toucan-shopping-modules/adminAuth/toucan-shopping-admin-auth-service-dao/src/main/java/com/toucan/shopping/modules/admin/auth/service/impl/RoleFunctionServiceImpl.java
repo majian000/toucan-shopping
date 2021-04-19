@@ -28,12 +28,12 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     }
 
     @Override
-    public int deleteByRoleId(Long roleId) {
+    public int deleteByRoleId(String roleId) {
         return roleFunctionMapper.deleteByRoleId(roleId);
     }
 
     @Override
-    public int deleteByFunctionId(Long functionId) {
+    public int deleteByFunctionId(String functionId) {
         return roleFunctionMapper.deleteByFunctionId(functionId);
     }
 

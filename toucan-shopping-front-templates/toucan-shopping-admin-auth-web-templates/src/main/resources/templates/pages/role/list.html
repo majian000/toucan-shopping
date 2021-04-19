@@ -101,6 +101,22 @@
             return formParam;
         }
 
+
+
+
+        /**
+         * 拿到选中树的功能项ID
+         **/
+        function getFunctionId(functions,trees)
+        {
+            if(trees!=null) {
+                for (var i = 0; i < trees.length; i++) {
+                    functions.add(trees[i].functionId);
+                    getFunctionId(functions,trees[i].children);
+                }
+            }
+        }
+
         table.render({
             elem: '#roleTable',
             url: "[[@{/}]]role/list",
@@ -272,6 +288,7 @@
                                         elem: '#functionTree'
                                         ,id:"functionTreeId"
                                         ,showCheckbox: true
+                                        ,checkChild: false
                                         ,data: data.data
                                     });
                                 }
@@ -285,20 +302,32 @@
                     },
                     yes: function(index, layero){
                         var checkedData = tree.getChecked('functionTreeId'); //获取选中节点的数据
-                        layer.alert(JSON.stringify(checkedData), {shade:0});
-                        // $.ajax({
-                        //     url:"[[@{/}]]role/save/functions",
-                        //     contentType: "application/json; charset=utf-8",
-                        //     type:'POST',
-                        //     data:JSON.stringify(data),
-                        //     success:function(data){
-                        //
-                        //     },
-                        //     complete:function(data)
-                        //     {
-                        //         layer.close(index);
-                        //     }
-                        // });
+                        if(checkedData==null||checkedData.length<=0)
+                        {
+                            layer.msg("请选择权限");
+                            return false;
+                        }
+                        var functions = new Set();
+                        getFunctionId(functions,checkedData);
+                        var functionsArray =  Array.from(functions);
+                        for(var i=0;i<functionsArray.length;i++)
+                        {
+                            functionsArray[i] = {functionId:functionsArray[i]};
+                        }
+                        console.log(functionsArray);
+                        $.ajax({
+                            url: "[[@{/}]]role/connect/functions",
+                            contentType: "application/json; charset=utf-8",
+                            type: 'POST',
+                            data: JSON.stringify({functions:functionsArray,roleId: data.roleId, appCode: data.appCode}),
+                            success: function (data) {
+                                if (data.code == 0) {
+                                    layer.msg(data.msg);
+                                    return false;
+                                }
+                                layer.close(index);
+                            }
+                        });
                     }
                 });
                 $(window).on("resize", function () {

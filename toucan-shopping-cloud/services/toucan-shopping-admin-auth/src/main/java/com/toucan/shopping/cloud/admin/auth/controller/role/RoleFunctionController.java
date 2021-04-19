@@ -65,10 +65,7 @@ public class RoleFunctionController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RoleFunction query = JSONObject.parseObject(requestJsonVO.getEntityJson(), RoleFunction.class);
-            if(StringUtils.isEmpty(query.getFunctionId()))
-            {
-                throw new IllegalArgumentException("functionId为空");
-            }
+
             if(StringUtils.isEmpty(query.getRoleId()))
             {
                 throw new IllegalArgumentException("roleId为空");
@@ -82,6 +79,7 @@ public class RoleFunctionController {
 
         }catch(Exception e)
         {
+            logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }
@@ -112,20 +110,22 @@ public class RoleFunctionController {
             {
                 throw new IllegalArgumentException("functions为空");
             }
-
+            roleFunctionService.deleteByRoleId(entity.getRoleId());
             for(Function function:entity.getFunctions())
             {
                 RoleFunction roleFunction = new RoleFunction();
                 roleFunction.setRoleId(entity.getRoleId());
                 roleFunction.setFunctionId(function.getFunctionId());
                 roleFunction.setAppCode(entity.getAppCode());
-                roleFunction.setCreateAdminId(roleFunction.getCreateAdminId());
+                roleFunction.setCreateAdminId(entity.getCreateAdminId());
                 roleFunction.setCreateDate(new Date());
+                roleFunction.setDeleteStatus((short)0);
                 roleFunctionService.save(roleFunction);
             }
 
         }catch(Exception e)
         {
+            logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }

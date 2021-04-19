@@ -30,6 +30,9 @@
         <if test="name!=null and name!=''">
             and t.name like concat('%',#{name},'%')
         </if>
+        <if test="appCode!=null and appCode!=''">
+            and t.app_code = #{appCode}
+        </if>
         <if test="enableStatus!=null">
             and t.enable_status = #{enableStatus}
         </if>

@@ -30,7 +30,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     }
 
     @Override
-    public int deleteByRoleId(Long roleId) {
+    public int deleteByRoleId(String roleId) {
         return adminRoleMapper.deleteByRoleId(roleId);
     }
 
