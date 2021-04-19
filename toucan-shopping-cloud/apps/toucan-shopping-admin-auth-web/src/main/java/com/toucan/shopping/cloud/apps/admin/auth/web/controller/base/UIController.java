@@ -64,6 +64,7 @@ public abstract class UIController {
         try {
             Function function = new Function();
             function.setUrl(url);
+            function.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
             ResultObjectVO resultObjectVO = feignFunctionService.queryChildren(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())

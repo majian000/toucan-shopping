@@ -576,6 +576,7 @@ public class FunctionController {
             if(!CollectionUtils.isEmpty(treeNode)) {
                 query = new Function();
                 query.setPid(treeNode.get(0).getId());
+                query.setAppCode(treeNode.get(0).getAppCode());
                 resultObjectVO.setData(functionService.findListByEntity(query));
             }
         }catch(Exception e)
