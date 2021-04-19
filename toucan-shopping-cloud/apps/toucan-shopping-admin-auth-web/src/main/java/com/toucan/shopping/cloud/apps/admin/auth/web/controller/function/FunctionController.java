@@ -79,7 +79,7 @@ public class FunctionController extends UIController {
         super.initSelectApp(request,toucan,feignAdminAppService);
 
         //初始化工具条按钮、操作按钮
-
+        super.initButtons(request,toucan,functionId,feignFunctionService);
 
         return "pages/function/list.html";
     }
