@@ -550,4 +550,28 @@ public class FunctionController {
     }
 
 
+
+
+
+    /**
+     * 返回一级子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/one/children",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryChildren(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            Function query = JSONObject.parseObject(requestJsonVO.getEntityJson(), Function.class);
+            resultObjectVO.setData(functionService.findListByEntity(query));
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 }

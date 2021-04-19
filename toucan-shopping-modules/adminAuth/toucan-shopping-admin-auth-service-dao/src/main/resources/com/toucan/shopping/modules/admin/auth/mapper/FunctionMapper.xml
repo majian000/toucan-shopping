@@ -42,6 +42,9 @@
             <if test="id!=null">
                 and t.id = #{id}
             </if>
+            <if test="pid!=null">
+                and t.pid = #{pid}
+            </if>
             <if test="name!=null and name!=''">
                 and t.name = #{name}
             </if>
