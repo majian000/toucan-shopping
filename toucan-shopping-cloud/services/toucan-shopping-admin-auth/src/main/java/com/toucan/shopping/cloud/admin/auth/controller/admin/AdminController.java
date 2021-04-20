@@ -95,12 +95,7 @@ public class AdminController {
                 resultObjectVO.setMsg("添加失败,请输入6至15位的密码");
                 return resultObjectVO;
             }
-            if(CollectionUtils.isEmpty(admin.getAdminApps()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("添加失败,请选择要关联的应用");
-                return resultObjectVO;
-            }
+
 
             Admin query=new Admin();
             query.setUsername(admin.getUsername());
@@ -124,6 +119,15 @@ public class AdminController {
                 return resultObjectVO;
             }
 
+            for(AdminApp adminApp : admin.getAdminApps())
+            {
+                adminApp.setAdminId(admin.getAdminId());
+                adminApp.setEnableStatus((short)1);
+                adminApp.setDeleteStatus((short)0);
+                adminApp.setCreateDate(new Date());
+                adminApp.setCreateAdminId(admin.getCreateAdminId());
+                adminAppService.save(adminApp);
+            }
 
 
             resultObjectVO.setData(admin);

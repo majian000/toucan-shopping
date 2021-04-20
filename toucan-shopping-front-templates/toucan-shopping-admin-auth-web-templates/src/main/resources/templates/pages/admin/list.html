@@ -28,6 +28,13 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">账号状态</label>
+                            <div class="layui-input-inline">
+                                <input type="radio" name="enableStatus" value="1" title="启用" checked>
+                                <input type="radio" name="enableStatus" value="0" title="禁用">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
@@ -101,21 +108,15 @@
             cols: [
                 [
                 {type: "checkbox", width: 50},
-                {field: 'username', width: 180, title: '账号'},
-                {field: 'enableStatus', width: 80, title: '账号状态',
+                {field: 'username',  title: '账号'},
+                {field: 'appNames', title: '关联应用'},
+                {field: 'enableStatus', title: '账号状态',
                     templet: function (row) {
                     if(row.enableStatus == "1"){
                         return "启用"
                     }
                     return "禁用"
                 }},
-                {field: 'appLoginEnableStatus', width: 80, title: '登录状态',
-                    templet: function (row) {
-                        if(row.enableStatus == "1"){
-                            return "启用"
-                        }
-                        return "禁用"
-                    }},
                 {title: '操作', minWidth: 150, toolbar: '#adminTableBar', align: "center"}
             ]
             ],

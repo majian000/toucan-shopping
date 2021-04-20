@@ -13,15 +13,16 @@ import java.util.List;
 @Data
 public class AdminVO extends Admin {
 
-    /**
-     * 应用登录状态
-     */
-    private String appLoginEnableStatus;
 
 
     /**
      * 前台传入
      */
     private String vcode;
+
+    /**
+     * 关联所有应用
+     */
+    private String appNames;
 
 }
