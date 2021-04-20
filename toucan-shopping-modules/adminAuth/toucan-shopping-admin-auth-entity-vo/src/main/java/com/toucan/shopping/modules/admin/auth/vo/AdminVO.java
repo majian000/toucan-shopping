@@ -25,4 +25,9 @@ public class AdminVO extends Admin {
      */
     private String appNames;
 
+    /**
+     * 应用编码
+     */
+    private List<String> appCodes;
+
 }

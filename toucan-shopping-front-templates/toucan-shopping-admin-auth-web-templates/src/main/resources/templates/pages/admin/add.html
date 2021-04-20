@@ -20,7 +20,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">账号</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" maxlength="20" lay-reqtext="名称不能为空" placeholder="请输入账号" value="" class="layui-input">
+            <input type="text" name="username" lay-verify="required" maxlength="20" lay-reqtext="名称不能为空" placeholder="请输入账号" value="" class="layui-input">
             <tip>填写账号。</tip>
         </div>
     </div>
@@ -39,7 +39,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">关联应用</label>
         <div class="layui-input-block">
-            <input th:each="aa:${adminAppVOS}"  type="checkbox"  th:value="${aa.appCode}"  th:text="${aa.name}">
+            <input th:each="aa:${adminAppVOS}" name="appCodes" id="appCodes" type="checkbox"  th:value="${aa.appCode}"  th:title="${aa.name}">
+
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
@@ -69,10 +70,16 @@
             layer = layui.layer,
             $ = layui.$;
 
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            var appCodes = [];
+            $('input[name=appCodes]:checked').each(function() {
+                appCodes.push($(this).val());
+            });
+            data.field.appCodes=appCodes;
             $.ajax({
-                url:"[[@{/app/app/save}]]",
+                url:"[[@{/admin/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -87,6 +94,7 @@
                         // 关闭弹出层
                         layer.close(index);
                         var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
                         parent.layer.close(iframeIndex);
 
                     });

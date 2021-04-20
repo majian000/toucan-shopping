@@ -1,11 +1,16 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.admin;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.entity.Admin;
+import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
@@ -15,17 +20,18 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -65,15 +71,64 @@ public class AdminController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            super.initSelectApp(request,toucan,feignAdminAppService);
+
+            Admin admin = new Admin();
+            admin.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
+            ResultObjectVO resultObjectVO = feignAdminService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<Admin> admins = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Admin.class);
+                    if(!CollectionUtils.isEmpty(admins))
+                    {
+                        admin = admins.get(0);
+                        //设置复选框选中状态
+                        Object adminAppVoObject = request.getAttribute("adminAppVOS");
+                        if(adminAppVoObject!=null) {
+                            List<AdminAppVO> adminAppVOS = (List<AdminAppVO>) adminAppVoObject;
+                            if(!CollectionUtils.isEmpty(admin.getAdminApps()))
+                            {
+                                for(AdminApp adminAppVO:admin.getAdminApps())
+                                {
+                                    for(AdminAppVO aa:adminAppVOS)
+                                    {
+                                        if(adminAppVO.getAppCode().equals(aa.getAppCode()))
+                                        {
+                                            aa.setChecked(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        request.setAttribute("model",admin);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/admin/edit.html";
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request,String functionId)
+    public String page(HttpServletRequest request)
     {
 
         //初始化选择应用控件
         super.initSelectApp(request,toucan,feignAdminAppService);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,functionId,feignFunctionService);
+        super.initButtons(request,toucan,"/admin/listPage",feignFunctionService);
         return "pages/admin/list.html";
     }
 
@@ -92,6 +147,18 @@ public class AdminController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
+            {
+
+                entity.setAdminApps(new ArrayList<AdminApp>());
+                for(String appCode:entity.getAppCodes()){
+                    AdminApp adminApp = new AdminApp();
+                    adminApp.setAppCode(appCode);
+                    adminApp.setCreateAdminId(entity.getCreateAdminId());
+                    adminApp.setCreateDate(new Date());
+                    entity.getAdminApps().add(adminApp);
+                }
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignAdminService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)

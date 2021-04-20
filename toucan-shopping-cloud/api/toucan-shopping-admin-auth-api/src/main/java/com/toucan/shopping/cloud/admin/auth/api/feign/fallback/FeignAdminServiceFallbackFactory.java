@@ -88,7 +88,6 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
 
             @Override
             public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
-
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -97,6 +96,21 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminService.list faild params:"+ JSONObject.toJSON(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO findById(String signHeader,RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAdminService.findById faild sign {} params {} ",signHeader,JSONObject.toJSON(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

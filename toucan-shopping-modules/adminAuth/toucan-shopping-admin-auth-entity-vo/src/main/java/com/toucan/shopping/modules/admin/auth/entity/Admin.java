@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class Admin {
-    private Integer id;
+    private Long id;
 
 
     /**

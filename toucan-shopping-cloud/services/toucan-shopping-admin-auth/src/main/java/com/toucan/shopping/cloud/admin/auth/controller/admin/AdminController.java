@@ -23,10 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -245,6 +242,64 @@ public class AdminController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Admin admin = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
+            if(admin.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该应用
+            Admin query=new Admin();
+            query.setId(admin.getId());
+            List<Admin> adminList = adminService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(adminList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,账号不存在!");
+                return resultObjectVO;
+            }
+
+            for(Admin adminEntity:adminList)
+            {
+                AdminApp queryAdminApp = new AdminApp();
+                queryAdminApp.setAdminId(adminEntity.getAdminId());
+                queryAdminApp.setDeleteStatus((short)0);
+                queryAdminApp.setEnableStatus((short)1);
+                adminEntity.setAdminApps(adminAppService.findListByEntity(queryAdminApp));
+            }
+            resultObjectVO.setData(adminList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

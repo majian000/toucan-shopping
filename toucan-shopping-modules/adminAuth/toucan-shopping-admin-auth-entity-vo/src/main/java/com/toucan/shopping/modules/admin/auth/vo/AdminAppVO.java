@@ -11,4 +11,9 @@ public class AdminAppVO extends AdminApp {
      */
     private String name;
 
+    /**
+     * checkbox是否选中
+     */
+    private boolean checked;
+
 }
