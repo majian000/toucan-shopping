@@ -124,6 +124,8 @@ public class AdminController {
                 return resultObjectVO;
             }
 
+
+
             resultObjectVO.setData(admin);
 
         }catch(Exception e)

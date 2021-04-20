@@ -63,13 +63,13 @@ public class AdminAppController {
             AdminApp adminApp = JSONObject.parseObject(requestVo.getEntityJson(),AdminApp.class);
             if(StringUtils.isEmpty(adminApp.getAppCode()))
             {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_MOBILE);
+                resultObjectVO.setCode(AdminResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请传入应用编码");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(adminApp.getAdminId()))
             {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_MOBILE);
+                resultObjectVO.setCode(AdminResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请传入账号ID");
                 return resultObjectVO;
             }
