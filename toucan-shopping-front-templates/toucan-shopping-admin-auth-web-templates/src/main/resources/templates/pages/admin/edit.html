@@ -20,7 +20,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">账号</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" maxlength="20" lay-reqtext="名称不能为空" placeholder="请输入账号" value="" class="layui-input">
+            <input type="text" name="name" lay-verify="required" maxlength="20" lay-reqtext="名称不能为空" placeholder="请输入账号" value="" class="layui-input" >
             <tip>填写账号。</tip>
         </div>
     </div>
@@ -39,7 +39,10 @@
     <div class="layui-form-item">
         <label class="layui-form-label">关联应用</label>
         <div class="layui-input-block">
-            <input th:each="aa:${adminAppVOS}"  type="checkbox"  th:value="${aa.appCode}"  th:text="${aa.name}">
+
+
+            <input th:each="aa:${adminAppVOS}"  type="checkbox"   th:value="${aa.appCode}"  th:text="${aa.name}">
+
         </div>
     </div>
     <div class="layui-form-item layui-form-text">

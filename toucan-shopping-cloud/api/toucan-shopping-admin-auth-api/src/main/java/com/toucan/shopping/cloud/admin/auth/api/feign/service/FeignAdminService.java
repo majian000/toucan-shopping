@@ -20,6 +20,16 @@ public interface FeignAdminService {
 
 
     /**
+     * 保存
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/save",method = RequestMethod.POST)
+    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+
+
+    /**
      * 列表分页
      * @param signHeader
      * @param requestVo

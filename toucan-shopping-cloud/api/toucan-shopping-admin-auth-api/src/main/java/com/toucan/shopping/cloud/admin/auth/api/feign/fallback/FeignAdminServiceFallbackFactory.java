@@ -71,6 +71,22 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
             }
 
             @Override
+            public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAdminService.save faild sign {} params {}", signHeader,JSONObject.toJSON(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO list(String signHeader, RequestJsonVO requestVo) {
 
                 ResultObjectVO resultObjectVO = new ResultObjectVO();

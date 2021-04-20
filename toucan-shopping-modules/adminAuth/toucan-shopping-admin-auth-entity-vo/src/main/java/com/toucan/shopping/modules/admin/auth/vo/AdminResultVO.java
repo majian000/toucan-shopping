@@ -8,9 +8,9 @@ public class AdminResultVO extends ResultVO {
      */
     public static Integer NOT_FOUND_USER=-2;
     /**
-     * 请输入手机号
+     * 请输入账号
      */
-    public static Integer NOT_FOUND_MOBILE=-3;
+    public static Integer NOT_FOUND_USERNAME=-3;
     /**
      * 未找到所属应用
      */

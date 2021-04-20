@@ -71,7 +71,7 @@ public class AdminController {
             Admin admin = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
             if(StringUtils.isEmpty(admin.getUsername()))
             {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_MOBILE);
+                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
                 resultObjectVO.setMsg("添加失败,请输入账号");
                 return resultObjectVO;
             }
@@ -85,14 +85,20 @@ public class AdminController {
             if(StringUtils.isEmpty(admin.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("注册失败,请输入密码");
+                resultObjectVO.setMsg("添加失败,请输入密码");
                 return resultObjectVO;
             }
 
             if(!UserRegistUtil.checkPwd(admin.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+                resultObjectVO.setMsg("添加失败,请输入6至15位的密码");
+                return resultObjectVO;
+            }
+            if(CollectionUtils.isEmpty(admin.getAdminApps()))
+            {
+                resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
+                resultObjectVO.setMsg("添加失败,请选择要关联的应用");
                 return resultObjectVO;
             }
 
@@ -114,7 +120,7 @@ public class AdminController {
             if (row < 1) {
 
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("注册失败,请重试!");
+                resultObjectVO.setMsg("添加失败,请重试!");
                 return resultObjectVO;
             }
 
@@ -125,15 +131,10 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("添加失败,请稍后重试");
         }
         return resultObjectVO;
     }
-
-
-
-
-
 
 
 
@@ -160,7 +161,7 @@ public class AdminController {
             Admin admin =JSONObject.parseObject(entityJson,Admin.class);
             if(StringUtils.isEmpty(admin.getUsername()))
             {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_MOBILE);
+                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
                 resultObjectVO.setMsg("登录失败,请输入账号");
                 return resultObjectVO;
             }
@@ -180,7 +181,7 @@ public class AdminController {
 
             if(admin.getPassword().length()>15)
             {
-                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_MOBILE);
+                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
                 resultObjectVO.setMsg("登录失败,密码长度不能大与15位");
                 return resultObjectVO;
             }
