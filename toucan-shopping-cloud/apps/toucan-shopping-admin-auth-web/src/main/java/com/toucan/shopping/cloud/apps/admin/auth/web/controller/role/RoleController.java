@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -158,6 +159,59 @@ public class RoleController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    /**
+     * 查询当前账号下关联所有应用的所有的角色树
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryFunctionTree(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            //查询当前用户的权限树
+            AdminApp query = new AdminApp();
+            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            query.setAppCode(appCode);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+            resultObjectVO = feignRoleService.queryRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+//            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+//            {
+//                List<RoleTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
+//
+//                RoleFunction queryRoleFunction = new RoleFunction();
+//                queryRoleFunction.setRoleId(roleId);
+//                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
+//                resultObjectVO = feignRoleFunctionService.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
+//                if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
+//                {
+//                    List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
+//                    if(!CollectionUtils.isEmpty(roleFunctions)) {
+//                        for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
+//                            //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
+//                            setTreeNodeSelect(functionTreeVO.getChildren(),functionTreeVO, roleFunctions);
+//                        }
+//                    }
+//                }
+//                resultObjectVO.setData(functionTreeVOList);
+//            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 
 

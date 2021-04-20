@@ -325,7 +325,13 @@ public class FunctionController extends UIController {
     }
 
 
-
+    /**
+     * 返回指定角色下的功能树
+     * @param request
+     * @param appCode
+     * @param roleId
+     * @return
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/role/function/tree",method = RequestMethod.POST)
     @ResponseBody

@@ -42,6 +42,18 @@ public interface FeignRoleService {
     ResultObjectVO listPage(@RequestHeader("toucan-sign-header") String toucanAdminAuth, @RequestBody RequestJsonVO requestVo);
 
 
+
+    /**
+     * 查询指定用户的角色树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/role/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryRoleTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+
     /**
      * 根据ID删除指定角色
      * @param toucanAdminAuth

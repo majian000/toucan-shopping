@@ -56,17 +56,19 @@
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
             <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="role">角色</a>
-            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="app">应用</a>
         </script>
 
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['form', 'table','tree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -139,6 +141,23 @@
 
             return false;
         });
+
+
+
+
+
+        /**
+         * 拿到选中树的功能项ID
+         **/
+        function getRoleId(functions,trees)
+        {
+            if(trees!=null) {
+                for (var i = 0; i < trees.length; i++) {
+                    functions.add(trees[i].roleId);
+                    getRoleId(functions,trees[i].children);
+                }
+            }
+        }
 
         /**
          * toolbar监听事件
@@ -234,9 +253,76 @@
                     });
                 });
             }else if (obj.event === 'role') {
-                layer.msg("role");
-            }else if (obj.event === 'app') {
-                layer.msg("app");
+
+
+                loadding = layer.load();
+                index = layer.open({
+                    title: '选择角色',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['20%', '60%'],
+                    btn: ['确定'],
+                    content: "<div id='roleTree'></div>",
+                    success:function(layero){
+                        $.ajax({
+                            url:"[[@{/}]]function/query/role/function/tree",
+                            type:'POST',
+                            data:{appCode:data.appCode,roleId:data.roleId},
+                            success:function(data){
+                                if(data.code==1)
+                                {
+                                    //渲染
+                                    var inst1 = tree.render({
+                                        elem: '#roleTree'
+                                        ,id:"roleTreeId"
+                                        ,showCheckbox: true
+                                        ,checkChild: false
+                                        ,data: data.data
+                                    });
+                                }
+                            },
+                            complete:function()
+                            {
+                                layer.close(loadding);
+                            }
+                        });
+
+                    },
+                    yes: function(index, layero){
+                        var checkedData = tree.getChecked('roleTreeId'); //获取选中节点的数据
+                        if(checkedData==null||checkedData.length<=0)
+                        {
+                            layer.msg("请选择角色");
+                            return false;
+                        }
+                        var roles = new Set();
+                        getRoleId(roles,checkedData);
+                        var roleArray =  Array.from(roles);
+                        for(var i=0;i<roleArray.length;i++)
+                        {
+                            roleArray[i] = {roleId:roleArray[i]};
+                        }
+                        $.ajax({
+                            url: "[[@{/}]]role/connect/functions",
+                            contentType: "application/json; charset=utf-8",
+                            type: 'POST',
+                            data: JSON.stringify({roles:roleArray}),
+                            success: function (data) {
+                                if (data.code == 0) {
+                                    layer.msg(data.msg);
+                                    return false;
+                                }
+                                layer.close(index);
+                            }
+                        });
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+
             }
         });
 

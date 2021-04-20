@@ -8,11 +8,10 @@ import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
-import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
-import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
-import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
-import com.toucan.shopping.modules.admin.auth.service.RoleService;
+import com.toucan.shopping.modules.admin.auth.service.*;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleTreeVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -48,6 +47,15 @@ public class RoleController {
 
     @Autowired
     private RoleFunctionService roleFunctionService;
+
+    @Autowired
+    private AdminService adminService;
+
+    @Autowired
+    private AdminAppService adminAppService;
+
+    @Autowired
+    private AppService appService;
 
 
 
@@ -165,6 +173,78 @@ public class RoleController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 查询指定用户的角色树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/role/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryFunctionTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminApp query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminApp.class);
+            if(StringUtils.isEmpty(query.getAdminId()))
+            {
+                throw new IllegalArgumentException("adminId为空");
+            }
+            if(StringUtils.isEmpty(query.getAppCode()))
+            {
+                throw new IllegalArgumentException("appCode为空");
+            }
+            //查询当前用户指定应用下的权限树
+            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(query);
+            if(!CollectionUtils.isEmpty(adminApps))
+            {
+                List<RoleTreeVO> roleTreeVOS = new ArrayList<RoleTreeVO>();
+                for(AdminApp adminApp:adminApps)
+                {
+                    App queryApp = new App();
+                    queryApp.setAppCode(adminApp.getAppCode());
+                    queryApp.setDeleteStatus((short)0);
+                    List<App> apps = appService.findListByEntity(queryApp);
+                    //查询所有应用
+                    if(!CollectionUtils.isEmpty(apps))
+                    {
+                        RoleTreeVO roleTreeVO = new RoleTreeVO();
+                        roleTreeVO.setTitle(apps.get(0).getCode()+" "+apps.get(0).getName());
+                        roleTreeVO.setChildren(new ArrayList<RoleTreeVO>());
+
+                        Role queryRole = new Role();
+                        queryRole.setAppCode(apps.get(0).getCode());
+                        queryRole.setEnableStatus((short)1);
+                        queryRole.setDeleteStatus((short)0);
+                        //查询所有角色
+                        List<Role> roles = roleService.findListByEntity(queryRole);
+                        if(!CollectionUtils.isEmpty(roles))
+                        {
+                            for(Role role:roles) {
+                                RoleTreeVO roleTreeChild = new RoleTreeVO();
+                                roleTreeChild.setTitle(role.getName());
+                                roleTreeChild.setRoleId(role.getRoleId());
+
+                                roleTreeVO.getChildren().add(roleTreeChild);
+                            }
+
+                        }
+
+                        roleTreeVOS.add(roleTreeVO);
+                    }
+                }
+
+                resultObjectVO.setData(roleTreeVOS);
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**
