@@ -37,4 +37,9 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
         return roleFunctionMapper.deleteByFunctionId(functionId);
     }
 
+    @Override
+    public List<RoleFunction> findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url, String appCode, String[] roleIdArray) {
+        return roleFunctionMapper.findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(url,appCode,roleIdArray);
+    }
+
 }

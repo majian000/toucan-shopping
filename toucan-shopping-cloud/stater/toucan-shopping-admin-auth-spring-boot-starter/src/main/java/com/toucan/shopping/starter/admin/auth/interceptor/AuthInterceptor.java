@@ -3,7 +3,9 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAuthService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
+import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -18,14 +20,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 权限校验
@@ -46,6 +51,71 @@ public class AuthInterceptor implements HandlerInterceptor {
         response.getWriter().write(content);
     }
 
+
+    /**
+     * 校验权限
+     * @param adminId
+     * @param method
+     * @return
+     */
+    public boolean authVerify(String adminId,Method method) throws NoSuchAlgorithmException {
+        AuthVerifyVO authVerifyVO = new AuthVerifyVO();
+        authVerifyVO.setAdminId(adminId);
+        String url="";
+        //拿到控制器的路径
+        RequestMapping controllerRequestMapping = method.getClass().getAnnotation(RequestMapping.class);
+        if(controllerRequestMapping!=null)
+        {
+            url+=controllerRequestMapping.value();
+        }
+        //拿到方法的路径
+        RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
+        if(methodRequestMapping==null)
+        {
+            PostMapping methodPostMapping = method.getAnnotation(PostMapping.class);
+            if(methodPostMapping==null)
+            {
+                GetMapping methodGetMapping = method.getAnnotation(GetMapping.class);
+                if(methodGetMapping==null)
+                {
+                    DeleteMapping methodDeleteMapping = method.getAnnotation(DeleteMapping.class);
+                    if(methodDeleteMapping==null)
+                    {
+                        PutMapping methodPutMapping = method.getAnnotation(PutMapping.class);
+                        if(methodPutMapping!=null)
+                        {
+                            url+=methodPutMapping.value();
+                        }
+                    }else{
+                        url+=methodDeleteMapping.value();
+                    }
+                }else{
+                    url+=methodGetMapping.value();
+                }
+            }else{
+                url+=methodPostMapping.value();
+            }
+        }else{
+            url+=methodRequestMapping.value();
+        }
+        authVerifyVO.setUrl(url);
+        authVerifyVO.setAppCode(toucan.getAppCode());
+
+        FeignAuthService feignAuthService = springContextHolder.getBean(FeignAuthService.class);
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),authVerifyVO);
+        ResultObjectVO resultObjectVO = feignAuthService.verify(SignUtil.sign(requestJsonVO),requestJsonVO);
+        if(resultObjectVO.isSuccess())
+        {
+            boolean status = Boolean.parseBoolean(String.valueOf(resultObjectVO.getData()));
+            if(status)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         ResultObjectVO resultVO = new ResultObjectVO();
@@ -60,7 +130,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 if (authAnnotation != null) {
                     //由用户中心做权限判断
                     if (authAnnotation.verifyMethod() == AdminAuth.VERIFYMETHOD_ADMIN_AUTH) {
-                        //拿到权限中心服务
+                        //拿到权限中心账号服务
                         FeignAdminService feignAdminService = springContextHolder.getBean(FeignAdminService.class);
                         if (authAnnotation.login()) {
                             logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
@@ -129,6 +199,17 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
+
+
+                                //校验请求权限
+                                if(!authVerify(aid,method))
+                                {
+                                    logger.info("权限校验失败 " + authHeader);
+                                    resultVO.setCode(ResultVO.FAILD);
+                                    resultVO.setMsg("没有权限访问");
+                                    responseWrite(response, JSONObject.toJSONString(resultVO));
+                                    return false;
+                                }
                             }
 
                             //如果是直接请求
@@ -172,6 +253,15 @@ public class AuthInterceptor implements HandlerInterceptor {
                                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
                                     return false;
                                 }
+
+                                //校验请求权限
+                                if(!authVerify(aid,method))
+                                {
+                                    logger.info("权限校验失败 " + authHeader);
+                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                                            + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -180,7 +270,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 logger.warn(e.getMessage(), e);
                 if (authAnnotation.requestType() == AdminAuth.REQUEST_JSON) {
                     resultVO.setCode(ResultVO.FAILD);
-                    resultVO.setMsg("操作失败,请检查传入参数");
+                    resultVO.setMsg("请求失败");
                     response.setContentType("application/json");
                     response.getWriter().write(JSONObject.toJSONString(resultVO));
                 }

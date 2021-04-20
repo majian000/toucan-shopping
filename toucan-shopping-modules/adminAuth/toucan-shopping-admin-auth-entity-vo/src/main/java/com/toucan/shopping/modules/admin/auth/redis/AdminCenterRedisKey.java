@@ -3,7 +3,7 @@ package com.toucan.shopping.modules.admin.auth.redis;
 public class AdminCenterRedisKey {
 
 
-    public static Integer LOGIN_TIMEOUT_SECOND=60*60; //1小时超时
+    public static Integer LOGIN_TIMEOUT_SECOND=60*60*60; //1小时超时
 
 
 

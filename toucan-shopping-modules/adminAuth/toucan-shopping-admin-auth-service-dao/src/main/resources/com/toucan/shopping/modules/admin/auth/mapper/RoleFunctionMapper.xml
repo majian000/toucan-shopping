@@ -50,6 +50,23 @@
     </update>
 
 
+
+    <select id="findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds" resultMap="roleFunctionMap">
+            select * from (
+                select tsrf.*,tsf.name,tsf.url from t_sa_role_function tsrf
+                left join t_sa_function tsf on tsf.function_id =tsrf.function_id and tsf.delete_status = 0  and tsf.enable_status = 1
+            )ds
+            where 1=1 and ds.url=#{url} and ds.app_code=#{appCode}
+            and ds.delete_status=0
+            and ds.url is not null
+            and ds.role_id in  in
+            <foreach item="item" index="index" collection="roleIdArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+
+    </select>
+
+
     <update id="deleteByFunctionId" parameterType="java.lang.String">
         update t_sa_role_function set delete_status=1  where function_id = #{functionId}
     </update>

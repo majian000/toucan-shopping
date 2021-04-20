@@ -15,5 +15,10 @@ public class AuthVerifyVO {
      */
     private String url;
 
+    /**
+     * 应用编码
+     */
+    private String appCode;
+
 
 }

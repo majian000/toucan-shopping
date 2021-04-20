@@ -17,4 +17,5 @@ public interface RoleFunctionService {
 
     int deleteByFunctionId(String functionId);
 
+    List<RoleFunction> findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url,String appCode,String[] roleIdArray);
 }

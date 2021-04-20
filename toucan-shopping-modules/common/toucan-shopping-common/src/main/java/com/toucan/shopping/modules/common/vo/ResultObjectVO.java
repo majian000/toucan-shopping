@@ -17,4 +17,14 @@ public class ResultObjectVO<T> extends ResultVO {
         this.code = code;
         this.msg = msg;
     }
+
+
+    public boolean isSuccess()
+    {
+        if(this.code.intValue()== ResultVO.SUCCESS.intValue())
+        {
+            return true;
+        }
+        return false;
+    }
 }
