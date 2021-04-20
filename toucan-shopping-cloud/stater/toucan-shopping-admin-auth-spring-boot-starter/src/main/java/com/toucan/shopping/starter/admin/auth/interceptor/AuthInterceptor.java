@@ -98,6 +98,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         }else{
             url+=methodRequestMapping.value();
         }
+
+        //去掉地址传递的参数
+        if(url.indexOf("{")!=-1)
+        {
+            url = url.substring(0,url.indexOf("{"));
+        }
+
         authVerifyVO.setUrl(url);
         authVerifyVO.setAppCode(toucan.getAppCode());
 
@@ -201,15 +208,15 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
 
-                                //校验请求权限
-                                if(!authVerify(aid,method))
-                                {
-                                    logger.info("权限校验失败 " + authHeader);
-                                    resultVO.setCode(ResultVO.FAILD);
-                                    resultVO.setMsg("没有权限访问");
-                                    responseWrite(response, JSONObject.toJSONString(resultVO));
-                                    return false;
-                                }
+//                                //校验请求权限
+//                                if(!authVerify(aid,method))
+//                                {
+//                                    logger.info("权限校验失败 " + authHeader);
+//                                    resultVO.setCode(ResultVO.FAILD);
+//                                    resultVO.setMsg("没有权限访问");
+//                                    responseWrite(response, JSONObject.toJSONString(resultVO));
+//                                    return false;
+//                                }
                             }
 
                             //如果是直接请求
@@ -255,13 +262,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
                                 //校验请求权限
-                                if(!authVerify(aid,method))
-                                {
-                                    logger.info("权限校验失败 " + authHeader);
-                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
-                                    return false;
-                                }
+//                                if(!authVerify(aid,method))
+//                                {
+//                                    logger.info("权限校验失败 " + authHeader);
+//                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+//                                            + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
+//                                    return false;
+//                                }
                             }
                         }
                     }
