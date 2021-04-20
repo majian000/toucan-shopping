@@ -187,6 +187,7 @@ public class AdminController {
             Admin query=new Admin();
             query.setUsername(admin.getUsername());
             query.setDeleteStatus((short)0);
+            query.setEnableStatus((short)1);
             List<Admin> adminPersistence = adminService.findListByEntity(query);
             if(CollectionUtils.isEmpty(adminPersistence))
             {
@@ -208,6 +209,7 @@ public class AdminController {
             queryAdminApp.setDeleteStatus((short)0);
             queryAdminApp.setAdminId(adminPersistence.get(0).getAdminId());
             queryAdminApp.setAppCode(requestVo.getAppCode());
+            queryAdminApp.setEnableStatus((short)1);
             List<AdminApp> adminApps=adminAppService.findListByEntity(queryAdminApp);
             if(CollectionUtils.isEmpty(adminApps))
             {

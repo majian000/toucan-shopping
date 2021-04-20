@@ -39,6 +39,12 @@ public class AdminApp {
 
 
     /**
+     * 启用状态 0:禁用 1启用
+     */
+    private Short enableStatus;
+
+
+    /**
      * 保存状态,在批量保存的时候返回哪些保存失败了
      */
     public int success=0;

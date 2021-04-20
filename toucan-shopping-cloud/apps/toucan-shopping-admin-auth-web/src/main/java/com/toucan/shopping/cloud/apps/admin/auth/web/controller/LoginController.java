@@ -100,7 +100,6 @@ public class LoginController {
 
             //删除缓存中验证码
             stringRedisTemplate.delete(vcodeRedisKey);
-
             String entityJson = JSONObject.toJSONString(adminVo);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
