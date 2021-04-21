@@ -207,6 +207,7 @@ public class RoleController {
                         RoleTreeVO roleTreeVO = new RoleTreeVO();
                         roleTreeVO.setTitle(apps.get(0).getCode()+" "+apps.get(0).getName());
                         roleTreeVO.setChildren(new ArrayList<RoleTreeVO>());
+                        roleTreeVO.setRoleId("-1");
 
                         Role queryRole = new Role();
                         queryRole.setAppCode(apps.get(0).getCode());
@@ -220,6 +221,7 @@ public class RoleController {
                                 RoleTreeVO roleTreeChild = new RoleTreeVO();
                                 roleTreeChild.setTitle(role.getName());
                                 roleTreeChild.setRoleId(role.getRoleId());
+                                roleTreeChild.setAppCode(role.getAppCode());
 
                                 roleTreeVO.getChildren().add(roleTreeChild);
                             }

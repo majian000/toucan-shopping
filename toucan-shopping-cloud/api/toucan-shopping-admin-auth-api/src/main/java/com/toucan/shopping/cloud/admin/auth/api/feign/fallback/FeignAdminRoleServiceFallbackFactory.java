@@ -25,6 +25,21 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
         return new FeignAdminRoleService(){
 
             @Override
+            public ResultObjectVO saveRoles(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAdminRoleService.saveRoles faild sign {} params {}",signHeader,JSONObject.toJSON(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO queryListByEntity(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)

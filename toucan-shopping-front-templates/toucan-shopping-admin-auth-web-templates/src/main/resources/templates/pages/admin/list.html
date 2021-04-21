@@ -112,6 +112,7 @@
                 [
                 {type: "checkbox", width: 50},
                 {field: 'username',  title: '账号'},
+                {field: 'adminId',  title: '账号ID'},
                 {field: 'appNames', title: '关联应用'},
                 {field: 'enableStatus', title: '账号状态',
                     templet: function (row) {
@@ -147,14 +148,14 @@
 
 
         /**
-         * 拿到选中树的功能项ID
+         * 拿到选中树的角色ID
          **/
-        function getRoleId(functions,trees)
+        function getRoleObj(roles,trees)
         {
             if(trees!=null) {
                 for (var i = 0; i < trees.length; i++) {
-                    functions.add(trees[i].roleId);
-                    getRoleId(functions,trees[i].children);
+                    roles.add({roleId:trees[i].roleId,appCode:trees[i].appCode});
+                    getRoleObj(roles,trees[i].children);
                 }
             }
         }
@@ -253,8 +254,6 @@
                     });
                 });
             }else if (obj.event === 'role') {
-
-
                 loadding = layer.load();
                 index = layer.open({
                     title: '选择角色',
@@ -269,7 +268,7 @@
                         $.ajax({
                             url:"[[@{/}]]role/query/admin/role/tree",
                             type:'POST',
-                            data:{},
+                            data:{adminId:data.adminId},
                             success:function(data){
                                 if(data.code==1)
                                 {
@@ -298,17 +297,14 @@
                             return false;
                         }
                         var roles = new Set();
-                        getRoleId(roles,checkedData);
+                        getRoleObj(roles,checkedData);
                         var roleArray =  Array.from(roles);
-                        for(var i=0;i<roleArray.length;i++)
-                        {
-                            roleArray[i] = {roleId:roleArray[i]};
-                        }
+
                         $.ajax({
-                            url: "[[@{/}]]role/connect/functions",
+                            url: "[[@{/}]]admin/connect/roles",
                             contentType: "application/json; charset=utf-8",
                             type: 'POST',
-                            data: JSON.stringify({roles:roleArray}),
+                            data: JSON.stringify({roles:roleArray,adminId:data.adminId}),
                             success: function (data) {
                                 if (data.code == 0) {
                                     layer.msg(data.msg);

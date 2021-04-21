@@ -35,6 +35,16 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     }
 
     @Override
+    public int deleteByAdminId(String adminId) {
+        return adminRoleMapper.deleteByAdminId(adminId);
+    }
+
+    @Override
+    public int deleteByAdminIdAndAppCodes(String adminId, String[] appCodes) {
+        return adminRoleMapper.deleteByAdminIdAndAppCodes(adminId,appCodes);
+    }
+
+    @Override
     public List<AdminRole> findListByAdminId(String adminId) {
         return adminRoleMapper.findListByAdminId(adminId);
     }

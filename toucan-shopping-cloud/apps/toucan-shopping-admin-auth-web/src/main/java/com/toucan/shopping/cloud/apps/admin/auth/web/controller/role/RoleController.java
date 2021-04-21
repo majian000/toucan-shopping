@@ -191,18 +191,18 @@ public class RoleController {
 
 
     /**
-     * 查询当前账号下关联所有应用的所有的角色树
+     * 查询当前账号可管理的所有角色树
      * @param request
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryFunctionTree(HttpServletRequest request)
+    public ResultObjectVO queryFunctionTree(HttpServletRequest request,@RequestBody AdminAppVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //查询当前用户关联应用的角色树
+            //查询当前用户可看到的所有应用角色树
             AdminApp query = new AdminApp();
             query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             query.setAppCode(appCode);
@@ -213,12 +213,12 @@ public class RoleController {
                 //拿到角色树
                 List<RoleTreeVO> roleTreeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleTreeVO.class);
 
-                //查询用户角色关联
+                //查询要操作账户的所有角色关联
                 AdminRole queryAdminRole = new AdminRole();
-                queryAdminRole.setAdminId(query.getAdminId());
+                queryAdminRole.setAdminId(entity.getAdminId());
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminRole);
                 resultObjectVO = feignAdminRoleService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
-                if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
+                if(resultObjectVO.isSuccess())
                 {
                     List<AdminRole> adminRoles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminRole.class);
                     if(!CollectionUtils.isEmpty(adminRoles)) {

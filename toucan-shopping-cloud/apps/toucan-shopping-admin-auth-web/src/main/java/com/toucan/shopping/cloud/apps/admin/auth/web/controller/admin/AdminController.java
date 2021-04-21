@@ -4,13 +4,16 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.admin;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
@@ -53,7 +56,11 @@ public class AdminController extends UIController {
     @Autowired
     private FeignAdminAppService feignAdminAppService;
 
+    @Autowired
     private FeignFunctionService feignFunctionService;
+
+    @Autowired
+    private FeignAdminRoleService feignAdminRoleService;
 
 
 
@@ -161,6 +168,35 @@ public class AdminController extends UIController {
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignAdminService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 关联角色
+     * @param adminRoleVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/connect/roles",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO connectRoles(HttpServletRequest request, @RequestBody AdminRoleVO adminRoleVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            adminRoleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            adminRoleVO.setCreateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminRoleVO);
+            resultObjectVO = feignAdminRoleService.saveRoles(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
