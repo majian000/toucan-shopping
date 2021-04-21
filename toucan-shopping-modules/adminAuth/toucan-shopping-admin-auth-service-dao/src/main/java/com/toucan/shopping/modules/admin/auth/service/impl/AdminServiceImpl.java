@@ -32,6 +32,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public int update(Admin admin) {
+        return adminMapper.update(admin);
+    }
+
+    @Override
     public boolean exists(String username) {
         Admin admin = new Admin();
         admin.setUsername(username);

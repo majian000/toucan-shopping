@@ -24,7 +24,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
         return new FeignRoleService(){
 
             @Override
-            public ResultObjectVO save(String toucanAdminAuth,RequestJsonVO requestVo) {
+            public ResultObjectVO save(String signHeader,RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -39,7 +39,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO update(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO update(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -54,7 +54,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO listPage(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO listPage(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -84,7 +84,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO deleteById(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -99,7 +99,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO findById(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -114,7 +114,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO deleteByIds(String toucanAdminAuth, RequestJsonVO requestVo) {
+            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {

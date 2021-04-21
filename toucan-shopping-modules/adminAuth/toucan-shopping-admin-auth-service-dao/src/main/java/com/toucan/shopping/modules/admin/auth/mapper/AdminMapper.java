@@ -11,11 +11,38 @@ import java.util.List;
 @Mapper
 public interface AdminMapper {
 
-    public int insert(Admin admin);
+    /**
+     * 保存账号
+     * @param admin
+     * @return
+     */
+    int insert(Admin admin);
 
-    public List<Admin> findListByEntity(Admin admin);
+    /**
+     * 根据实体查询列表
+     * @param admin
+     * @return
+     */
+    List<Admin> findListByEntity(Admin admin);
 
+    /**
+     * 查询列表页
+     * @param adminPageInfo
+     * @return
+     */
     List<AdminVO> queryListPage(AdminPageInfo adminPageInfo);
 
+    /**
+     * 返回列表页数量
+     * @param adminPageInfo
+     * @return
+     */
     Long queryListPageCount(AdminPageInfo adminPageInfo);
+
+    /**
+     * 修改
+     * @param admin
+     * @return
+     */
+    int update(Admin admin);
 }

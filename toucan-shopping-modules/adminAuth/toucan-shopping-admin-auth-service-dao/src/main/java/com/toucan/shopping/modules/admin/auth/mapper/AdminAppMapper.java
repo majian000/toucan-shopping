@@ -10,15 +10,42 @@ import java.util.List;
 @Mapper
 public interface AdminAppMapper {
 
-    int insert(AdminApp AdminApp);
 
-    List<AdminApp> findListByEntity(AdminApp AdminApp);
+    /**
+     * 保存关联
+     * @param adminApp
+     * @return
+     */
+    int insert(AdminApp adminApp);
 
+    /**
+     * 根据实体查询列表
+     * @param adminApp
+     * @return
+     */
+    List<AdminApp> findListByEntity(AdminApp adminApp);
+
+    /**
+     * 删除指定应用编码下所有关联
+     * @param appCode
+     * @return
+     */
     int deleteByAppCode(String appCode);
 
 
+    /**
+     * 查询账号应用关联列表
+     * @param query
+     * @return
+     */
     List<AdminAppVO> findAppListByAdminAppEntity(AdminApp query);
 
 
+    /**
+     * 删除指定账号下所有关联
+     * @param adminId
+     * @return
+     */
+    int deleteByAdminId(String adminId);
 
 }

@@ -17,6 +17,8 @@
 </head>
 <body>
 <div class="layui-form layuimini-form">
+    <input type="hidden" name="id" th:value="${model.id}">
+    <input type="hidden" name="adminId" th:value="${model.adminId}">
     <div class="layui-form-item">
         <label class="layui-form-label required">账号</label>
         <div class="layui-input-block">

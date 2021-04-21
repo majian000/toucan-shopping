@@ -176,7 +176,7 @@ public class RoleController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //查询当前用户的权限树
+            //查询当前用户的角色树
             AdminApp query = new AdminApp();
             query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             query.setAppCode(appCode);

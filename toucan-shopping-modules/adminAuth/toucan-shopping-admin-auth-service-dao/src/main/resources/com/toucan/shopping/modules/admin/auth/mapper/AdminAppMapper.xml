@@ -59,7 +59,13 @@
 
 
     <update id="deleteByAppCode" parameterType="java.lang.String">
-        update t_sa_admin_app set delete_status=1 where app_code = #{appCode}
+        update t_sa_admin_app set delete_status=1 where app_code = #{appCode} and delete_status=0
     </update>
+
+
+    <update id="deleteByAdminId" parameterType="java.lang.String">
+        update t_sa_admin_app set delete_status=1 where admin_id = #{adminId} and delete_status=0
+    </update>
+
 
 </mapper>

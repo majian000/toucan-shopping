@@ -11,7 +11,19 @@ public interface AdminService {
 
     List<Admin> findListByEntity(Admin admin);
 
+    /**
+     * 保存账号
+     * @param admin
+     * @return
+     */
     int save(Admin admin);
+
+    /**
+     * 修改账号
+     * @param admin
+     * @return
+     */
+    int update(Admin admin);
 
     /**
      * 判断账号是否存在(无关应用)
@@ -19,6 +31,8 @@ public interface AdminService {
      * @return
      */
     boolean exists(String username);
+
+
 
 
 

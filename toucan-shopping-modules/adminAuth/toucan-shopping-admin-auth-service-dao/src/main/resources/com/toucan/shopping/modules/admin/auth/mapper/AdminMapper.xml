@@ -78,4 +78,14 @@
         values(#{username},#{password},#{adminId},#{enableStatus},#{createDate},#{deleteStatus},#{createAdminId},#{remark})
     </insert>
 
+
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Admin">
+        update t_sa_admin set  username=#{username},password=#{password},update_date=#{updateDate},
+         update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
+         remark=#{remark}
+          where id = #{id}
+    </update>
+
 </mapper>

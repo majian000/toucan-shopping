@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -33,8 +35,17 @@ public class Admin {
     /**
      * 创建时间
      */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate;
 
+
+    /**
+     * 修改时间
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate;
     /**
      * 备注
      */
@@ -50,6 +61,10 @@ public class Admin {
      * 创建人
      */
     private String createAdminId;
+    /**
+     * 修改人
+     */
+    private String updateAdminId;
 
     /**
      * 管理员ID

@@ -426,6 +426,100 @@ public class AdminController {
     }
 
 
+    /**
+     * 編輯角色
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Admin admin = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
+            if(StringUtils.isEmpty(admin.getUsername()))
+            {
+                resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
+                resultObjectVO.setMsg("添加失败,请输入账号");
+                return resultObjectVO;
+            }
+
+            if(admin.getUsername().length()>20)
+            {
+                resultObjectVO.setCode(AdminResultVO.FAILD);
+                resultObjectVO.setMsg("登录失败,账号长度不能大与20位");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(admin.getPassword()))
+            {
+                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
+                resultObjectVO.setMsg("添加失败,请输入密码");
+                return resultObjectVO;
+            }
+
+            if(!UserRegistUtil.checkPwd(admin.getPassword()))
+            {
+                resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
+                resultObjectVO.setMsg("添加失败,请输入6至15位的密码");
+                return resultObjectVO;
+            }
+
+            Admin query=new Admin();
+            query.setUsername(admin.getUsername());
+            query.setDeleteStatus((short)0);
+            List<Admin> queryAdmins = adminService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(queryAdmins))
+            {
+                if(!queryAdmins.get(0).getAdminId().equals(admin.getAdminId()))
+                {
+                    resultObjectVO.setCode(AdminResultVO.FAILD);
+                    resultObjectVO.setMsg("账号已存在!");
+                    return resultObjectVO;
+                }
+            }
+            int row = adminService.update(admin);
+            if (row < 1) {
+
+                resultObjectVO.setCode(AdminResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请重试!");
+                return resultObjectVO;
+            }
+
+            //删除用户应用关联
+            adminAppService.deleteByAdminId(admin.getAdminId());
+
+            //重新保存关联
+            for(AdminApp adminApp : admin.getAdminApps())
+            {
+                adminApp.setAdminId(admin.getAdminId());
+                adminApp.setEnableStatus((short)1);
+                adminApp.setDeleteStatus((short)0);
+                adminApp.setCreateDate(new Date());
+                adminApp.setCreateAdminId(admin.getCreateAdminId());
+                adminAppService.save(adminApp);
+            }
+
+
+            resultObjectVO.setData(admin);
+
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
 
