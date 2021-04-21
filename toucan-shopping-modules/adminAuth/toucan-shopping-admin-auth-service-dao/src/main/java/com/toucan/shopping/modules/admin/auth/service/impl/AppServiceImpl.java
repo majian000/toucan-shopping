@@ -23,13 +23,11 @@ public class AppServiceImpl implements AppService {
         return appMapper.findListByEntity(user);
     }
 
-    @Transactional
     @Override
     public int save(App user) {
         return appMapper.insert(user);
     }
 
-    @Transactional
     @Override
     public int update(App app) {
         return appMapper.update(app);
@@ -57,7 +55,6 @@ public class AppServiceImpl implements AppService {
         return pageInfo;
     }
 
-    @Transactional
     @Override
     public int deleteById(Long id) {
         return appMapper.deleteById(id);

@@ -25,7 +25,6 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.findListByEntity(admin);
     }
 
-    @Transactional
     @Override
     public int save(Admin admin) {
         return adminMapper.insert(admin);

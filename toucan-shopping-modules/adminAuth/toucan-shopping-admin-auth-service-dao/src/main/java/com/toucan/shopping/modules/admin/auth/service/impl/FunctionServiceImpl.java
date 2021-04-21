@@ -76,7 +76,6 @@ public class FunctionServiceImpl implements FunctionService {
         return functionTreeVOS;
     }
 
-    @Transactional
     @Override
     public int save(Function entity) {
         return functionMapper.insert(entity);
@@ -122,7 +121,6 @@ public class FunctionServiceImpl implements FunctionService {
         return pageInfo;
     }
 
-    @Transactional
     @Override
     public int deleteById(Long id) {
         return functionMapper.deleteById(id);

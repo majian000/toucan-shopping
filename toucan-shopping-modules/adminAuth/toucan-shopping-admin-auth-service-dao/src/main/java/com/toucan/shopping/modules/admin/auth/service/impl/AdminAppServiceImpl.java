@@ -22,13 +22,11 @@ public class AdminAppServiceImpl implements AdminAppService {
         return adminAppMapper.findListByEntity(adminApp);
     }
 
-    @Transactional
     @Override
     public int save(AdminApp adminApp) {
         return adminAppMapper.insert(adminApp);
     }
 
-    @Transactional
     @Override
     public int deleteByAppCode(String appCode) {
         return adminAppMapper.deleteByAppCode(appCode);

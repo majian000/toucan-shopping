@@ -25,13 +25,11 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.findListByEntity(entity);
     }
 
-    @Transactional
     @Override
     public int save(Role entity) {
         return roleMapper.insert(entity);
     }
 
-    @Transactional
     @Override
     public int update(Role entity) {
         return roleMapper.update(entity);
@@ -59,7 +57,6 @@ public class RoleServiceImpl implements RoleService {
         return pageInfo;
     }
 
-    @Transactional
     @Override
     public int deleteById(Long id) {
         return roleMapper.deleteById(id);
