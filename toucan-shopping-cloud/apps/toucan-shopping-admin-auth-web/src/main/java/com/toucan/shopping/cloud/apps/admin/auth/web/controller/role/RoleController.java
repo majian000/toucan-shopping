@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping("/role")
@@ -169,20 +171,23 @@ public class RoleController {
 
 
 
-    public void setTreeNodeSelect(List<RoleTreeVO> roleTreeVOS,RoleTreeVO parentNode,List<AdminRole> adminRoles)
+    public void setTreeNodeSelect(AtomicLong id,List<RoleTreeVO> roleTreeVOS,RoleTreeVO parentNode,List<AdminRole> adminRoles)
     {
         for(RoleTreeVO roleTreeVO:roleTreeVOS)
         {
+            roleTreeVO.setId(id.incrementAndGet());
             for(AdminRole adminRole:adminRoles) {
                 if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
                     //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
                     parentNode.setChecked(false);
-                    roleTreeVO.setChecked(true);
+                    if(CollectionUtils.isEmpty(roleTreeVO.getChildren())) {
+                        roleTreeVO.setChecked(true);
+                    }
                 }
             }
             if(!CollectionUtils.isEmpty(roleTreeVO.getChildren()))
             {
-                setTreeNodeSelect(roleTreeVO.getChildren(),roleTreeVO,adminRoles);
+                setTreeNodeSelect(id,roleTreeVO.getChildren(),roleTreeVO,adminRoles);
             }
         }
     }
@@ -205,7 +210,6 @@ public class RoleController {
             //查询当前用户可看到的所有应用角色树
             AdminApp query = new AdminApp();
             query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            query.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
             resultObjectVO = feignRoleService.queryRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -213,6 +217,8 @@ public class RoleController {
                 //拿到角色树
                 List<RoleTreeVO> roleTreeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleTreeVO.class);
 
+                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复,layui不支持id重复
+                AtomicLong id = new AtomicLong();
                 //查询要操作账户的所有角色关联
                 AdminRole queryAdminRole = new AdminRole();
                 queryAdminRole.setAdminId(entity.getAdminId());
@@ -223,8 +229,16 @@ public class RoleController {
                     List<AdminRole> adminRoles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminRole.class);
                     if(!CollectionUtils.isEmpty(adminRoles)) {
                         for(RoleTreeVO roleTreeVO:roleTreeVOS) {
+                            roleTreeVO.setId(id.incrementAndGet());
+                            for(AdminRole adminRole:adminRoles) {
+                                if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
+                                    if(CollectionUtils.isEmpty(roleTreeVO.getChildren())) {
+                                        roleTreeVO.setChecked(true);
+                                    }
+                                }
+                            }
                             //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
-                            setTreeNodeSelect(roleTreeVO.getChildren(),roleTreeVO, adminRoles);
+                            setTreeNodeSelect(id,roleTreeVO.getChildren(),roleTreeVO, adminRoles);
                         }
                     }
                 }

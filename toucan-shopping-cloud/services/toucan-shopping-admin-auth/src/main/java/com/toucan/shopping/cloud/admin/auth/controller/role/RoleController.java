@@ -198,13 +198,14 @@ public class RoleController {
                 for(AdminApp adminApp:adminApps)
                 {
                     App queryApp = new App();
-                    queryApp.setAppCode(adminApp.getAppCode());
+                    queryApp.setCode(adminApp.getAppCode());
                     queryApp.setDeleteStatus((short)0);
                     List<App> apps = appService.findListByEntity(queryApp);
                     //查询所有应用
                     if(!CollectionUtils.isEmpty(apps))
                     {
                         RoleTreeVO roleTreeVO = new RoleTreeVO();
+                        roleTreeVO.setId(apps.get(0).getId());
                         roleTreeVO.setTitle(apps.get(0).getCode()+" "+apps.get(0).getName());
                         roleTreeVO.setChildren(new ArrayList<RoleTreeVO>());
                         roleTreeVO.setRoleId("-1");
@@ -219,6 +220,7 @@ public class RoleController {
                         {
                             for(Role role:roles) {
                                 RoleTreeVO roleTreeChild = new RoleTreeVO();
+                                roleTreeChild.setId(role.getId());
                                 roleTreeChild.setTitle(role.getName());
                                 roleTreeChild.setRoleId(role.getRoleId());
                                 roleTreeChild.setAppCode(role.getAppCode());

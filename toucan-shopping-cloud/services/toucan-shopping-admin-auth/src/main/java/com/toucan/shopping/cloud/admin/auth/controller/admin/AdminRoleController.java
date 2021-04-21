@@ -87,7 +87,7 @@ public class AdminRoleController {
             {
                 //-1为应用节点
                 if(!"-1".equals(adminRole.getRoleId())) {
-                    adminRole.setAdminId(entity.getRoleId());
+                    adminRole.setAdminId(entity.getAdminId());
                     adminRole.setCreateAdminId(entity.getCreateAdminId());
                     adminRole.setCreateDate(new Date());
                     adminRole.setDeleteStatus((short) 0);

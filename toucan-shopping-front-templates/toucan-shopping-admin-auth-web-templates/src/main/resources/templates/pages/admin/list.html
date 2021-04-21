@@ -267,8 +267,9 @@
                     success:function(layero){
                         $.ajax({
                             url:"[[@{/}]]role/query/admin/role/tree",
+                            contentType: "application/json; charset=utf-8",
                             type:'POST',
-                            data:{adminId:data.adminId},
+                            data:JSON.stringify({adminId:data.adminId}),
                             success:function(data){
                                 if(data.code==1)
                                 {

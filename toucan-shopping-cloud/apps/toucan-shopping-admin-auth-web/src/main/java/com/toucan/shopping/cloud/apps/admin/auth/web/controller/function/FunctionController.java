@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 功能项控制器
@@ -306,20 +307,23 @@ public class FunctionController extends UIController {
     }
 
 
-    public void setTreeNodeSelect(List<FunctionTreeVO> functionTreeVOList,FunctionTreeVO parentNode,List<RoleFunction> roleFunctions)
+    public void setTreeNodeSelect(AtomicLong id,List<FunctionTreeVO> functionTreeVOList,FunctionTreeVO parentNode,List<RoleFunction> roleFunctions)
     {
         for(FunctionTreeVO functionTreeVO:functionTreeVOList)
         {
+            functionTreeVO.setId(id.incrementAndGet());
             for(RoleFunction roleFunction:roleFunctions) {
                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
                     //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
                     parentNode.setChecked(false);
-                    functionTreeVO.setChecked(true);
+                    if(CollectionUtils.isEmpty(functionTreeVO.getChildren())) {
+                        functionTreeVO.setChecked(true);
+                    }
                 }
             }
             if(!CollectionUtils.isEmpty(functionTreeVO.getChildren()))
             {
-                setTreeNodeSelect(functionTreeVO.getChildren(),functionTreeVO,roleFunctions);
+                setTreeNodeSelect(id,functionTreeVO.getChildren(),functionTreeVO,roleFunctions);
             }
         }
     }
@@ -349,6 +353,8 @@ public class FunctionController extends UIController {
             {
                 List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
 
+                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复,layui不支持id重复
+                AtomicLong id = new AtomicLong();
                 RoleFunction queryRoleFunction = new RoleFunction();
                 queryRoleFunction.setRoleId(roleId);
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
@@ -358,8 +364,16 @@ public class FunctionController extends UIController {
                     List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
                     if(!CollectionUtils.isEmpty(roleFunctions)) {
                         for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
+                            functionTreeVO.setId(id.incrementAndGet());
+                            for(RoleFunction roleFunction:roleFunctions) {
+                                if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
+                                    if(CollectionUtils.isEmpty(functionTreeVO.getChildren())) {
+                                        functionTreeVO.setChecked(true);
+                                    }
+                                }
+                            }
                             //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
-                            setTreeNodeSelect(functionTreeVO.getChildren(),functionTreeVO, roleFunctions);
+                            setTreeNodeSelect(id,functionTreeVO.getChildren(),functionTreeVO, roleFunctions);
                         }
                     }
                 }

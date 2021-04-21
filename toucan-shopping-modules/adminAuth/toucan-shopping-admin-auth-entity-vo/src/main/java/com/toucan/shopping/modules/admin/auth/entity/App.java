@@ -50,11 +50,6 @@ public class App {
      */
     private String remark;
 
-    /**
-     * 应用编码
-     */
-    private String appCode;
-
 
 
     /**
