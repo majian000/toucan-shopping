@@ -306,7 +306,7 @@ public class RoleController {
 
 
     /**
-     * 删除应用
+     * 删除
      * @param request
      * @return
      */
@@ -344,7 +344,7 @@ public class RoleController {
 
 
     /**
-     * 删除应用
+     * 删除
      * @param request
      * @return
      */
