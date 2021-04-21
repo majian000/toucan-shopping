@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * 管理员服务
+ * 管理员应用服务
  */
 @Component
 public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<FeignAdminAppService> {

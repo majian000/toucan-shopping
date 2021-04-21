@@ -175,13 +175,13 @@ public class RoleController {
 
 
     /**
-     * 查询指定用户的角色树
+     * 查询指定用户关联所有应用的角色树
      * @param requestJsonVO
      * @return
      */
     @RequestMapping(value = "/query/role/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryFunctionTree(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryRoleTree(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -189,10 +189,6 @@ public class RoleController {
             if(StringUtils.isEmpty(query.getAdminId()))
             {
                 throw new IllegalArgumentException("adminId为空");
-            }
-            if(StringUtils.isEmpty(query.getAppCode()))
-            {
-                throw new IllegalArgumentException("appCode为空");
             }
             //查询当前用户指定应用下的权限树
             List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(query);

@@ -4,10 +4,12 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.role;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
@@ -57,6 +59,9 @@ public class RoleController {
 
     @Autowired
     private FeignRoleFunctionService roleFunctionService;
+
+    @Autowired
+    private FeignAdminRoleService feignAdminRoleService;
 
     public void initSelectApp(HttpServletRequest request)
     {
@@ -164,6 +169,27 @@ public class RoleController {
 
 
 
+    public void setTreeNodeSelect(List<RoleTreeVO> roleTreeVOS,RoleTreeVO parentNode,List<AdminRole> adminRoles)
+    {
+        for(RoleTreeVO roleTreeVO:roleTreeVOS)
+        {
+            for(AdminRole adminRole:adminRoles) {
+                if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
+                    //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
+                    parentNode.setChecked(false);
+                    roleTreeVO.setChecked(true);
+                }
+            }
+            if(!CollectionUtils.isEmpty(roleTreeVO.getChildren()))
+            {
+                setTreeNodeSelect(roleTreeVO.getChildren(),roleTreeVO,adminRoles);
+            }
+        }
+    }
+
+
+
+
     /**
      * 查询当前账号下关联所有应用的所有的角色树
      * @param request
@@ -176,32 +202,34 @@ public class RoleController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //查询当前用户的角色树
+            //查询当前用户关联应用的角色树
             AdminApp query = new AdminApp();
             query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             query.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
             resultObjectVO = feignRoleService.queryRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
-//            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-//            {
-//                List<RoleTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
-//
-//                RoleFunction queryRoleFunction = new RoleFunction();
-//                queryRoleFunction.setRoleId(roleId);
-//                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
-//                resultObjectVO = feignRoleFunctionService.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
-//                if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
-//                {
-//                    List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
-//                    if(!CollectionUtils.isEmpty(roleFunctions)) {
-//                        for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
-//                            //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
-//                            setTreeNodeSelect(functionTreeVO.getChildren(),functionTreeVO, roleFunctions);
-//                        }
-//                    }
-//                }
-//                resultObjectVO.setData(functionTreeVOList);
-//            }
+            if(resultObjectVO.isSuccess())
+            {
+                //拿到角色树
+                List<RoleTreeVO> roleTreeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleTreeVO.class);
+
+                //查询用户角色关联
+                AdminRole queryAdminRole = new AdminRole();
+                queryAdminRole.setAdminId(query.getAdminId());
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminRole);
+                resultObjectVO = feignAdminRoleService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+                if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
+                {
+                    List<AdminRole> adminRoles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminRole.class);
+                    if(!CollectionUtils.isEmpty(adminRoles)) {
+                        for(RoleTreeVO roleTreeVO:roleTreeVOS) {
+                            //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
+                            setTreeNodeSelect(roleTreeVO.getChildren(),roleTreeVO, adminRoles);
+                        }
+                    }
+                }
+                resultObjectVO.setData(roleTreeVOS);
+            }
             return resultObjectVO;
         }catch(Exception e)
         {

@@ -267,9 +267,9 @@
                     content: "<div id='roleTree'></div>",
                     success:function(layero){
                         $.ajax({
-                            url:"[[@{/}]]function/query/role/function/tree",
+                            url:"[[@{/}]]role/query/admin/role/tree",
                             type:'POST',
-                            data:{appCode:data.appCode,roleId:data.roleId},
+                            data:{},
                             success:function(data){
                                 if(data.code==1)
                                 {
