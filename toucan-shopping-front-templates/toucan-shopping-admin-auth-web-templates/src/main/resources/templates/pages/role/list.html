@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.css}" >
 </head>
 <body>
 
@@ -17,7 +18,6 @@
     <div class="layuimini-main">
 
         <fieldset class="table-search-fieldset">
-            <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
@@ -68,6 +68,9 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:src="@{/lib/bootstrap/js/bootstrap.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-treeview/js/bootstrap-treeview.js}" charset="utf-8"></script>
 <script>
     layui.use(['form', 'table','tree'], function () {
         var $ = layui.jquery,
@@ -265,7 +268,7 @@
                 });
             } else if (obj.event === 'permission') {
 
-                loadding = layer.load();
+                // loadding = layer.load();
                 index = layer.open({
                     title: '选择权限',
                     type: 1,
@@ -274,59 +277,125 @@
                     shadeClose: true,
                     area: ['20%', '60%'],
                     btn: ['确定'],
-                    content: "<div id='functionTree'></div>",
+                    content: "<div id='treeview-checkable' ></div>",
                     success:function(layero){
-                        $.ajax({
-                            url:"[[@{/}]]function/query/role/function/tree",
-                            type:'POST',
-                            data:{appCode:data.appCode,roleId:data.roleId},
-                            success:function(data){
-                                if(data.code==1)
-                                {
-                                    //渲染
-                                    var inst1 = tree.render({
-                                        elem: '#functionTree'
-                                        ,id:"functionTreeId"
-                                        ,showCheckbox: true
-                                        ,checkChild: false
-                                        ,data: data.data
-                                    });
-                                }
-                            },
-                            complete:function()
+
+
+                        var defaultData = [
                             {
-                                layer.close(loadding);
+                                text: 'Parent 1',
+                                href: '#parent1',
+                                tags: ['4'],
+                                nodes: [
+                                    {
+                                        text: 'Child 1',
+                                        href: '#child1',
+                                        tags: ['2'],
+                                        nodes: [
+                                            {
+                                                text: 'Grandchild 1',
+                                                href: '#grandchild1',
+                                                tags: ['0']
+                                            },
+                                            {
+                                                text: 'Grandchild 2',
+                                                href: '#grandchild2',
+                                                tags: ['0']
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        text: 'Child 2',
+                                        href: '#child2',
+                                        tags: ['0']
+                                    }
+                                ]
+                            },
+                            {
+                                text: 'Parent 2',
+                                href: '#parent2',
+                                tags: ['0']
+                            },
+                            {
+                                text: 'Parent 3',
+                                href: '#parent3',
+                                tags: ['0']
+                            },
+                            {
+                                text: 'Parent 4',
+                                href: '#parent4',
+                                tags: ['0']
+                            },
+                            {
+                                text: 'Parent 5',
+                                href: '#parent5'  ,
+                                tags: ['0']
+                            }
+                        ];
+
+                        var $checkableTree = $('#treeview-checkable').treeview({
+                            data: defaultData,
+                            showIcon: false,
+                            showCheckbox: true,
+                            onNodeChecked: function(event, node) {
+
+                            },
+                            onNodeUnchecked: function (event, node) {
+
                             }
                         });
 
+                        // $.ajax({
+                        //     url:"[[@{/}]]function/query/role/function/tree",
+                        //     type:'POST',
+                        //     data:{appCode:data.appCode,roleId:data.roleId},
+                        //     success:function(data){
+                        //         if(data.code==1)
+                        //         {
+                        //             //渲染
+                        //             var inst1 = tree.render({
+                        //                 elem: '#functionTree'
+                        //                 ,id:"functionTreeId"
+                        //                 ,showCheckbox: true
+                        //                 ,checkChild: false
+                        //                 ,data: data.data
+                        //             });
+                        //         }
+                        //     },
+                        //     complete:function()
+                        //     {
+                        //         layer.close(loadding);
+                        //     }
+                        // });
+
                     },
                     yes: function(index, layero){
-                        var checkedData = tree.getChecked('functionTreeId'); //获取选中节点的数据
-                        if(checkedData==null||checkedData.length<=0)
-                        {
-                            layer.msg("请选择权限");
-                            return false;
-                        }
-                        var functions = new Set();
-                        getFunctionId(functions,checkedData);
-                        var functionsArray =  Array.from(functions);
-                        for(var i=0;i<functionsArray.length;i++)
-                        {
-                            functionsArray[i] = {functionId:functionsArray[i]};
-                        }
-                        $.ajax({
-                            url: "[[@{/}]]role/connect/functions",
-                            contentType: "application/json; charset=utf-8",
-                            type: 'POST',
-                            data: JSON.stringify({functions:functionsArray,roleId: data.roleId, appCode: data.appCode}),
-                            success: function (data) {
-                                if (data.code == 0) {
-                                    layer.msg(data.msg);
-                                    return false;
-                                }
-                                layer.close(index);
-                            }
-                        });
+                        // var checkedData = tree.getChecked('functionTreeId'); //获取选中节点的数据
+                        // if(checkedData==null||checkedData.length<=0)
+                        // {
+                        //     layer.msg("请选择权限");
+                        //     return false;
+                        // }
+                        // var functions = new Set();
+                        // getFunctionId(functions,checkedData);
+                        // var functionsArray =  Array.from(functions);
+                        // for(var i=0;i<functionsArray.length;i++)
+                        // {
+                        //     functionsArray[i] = {functionId:functionsArray[i]};
+                        // }
+                        // $.ajax({
+                        //     url: "[[@{/}]]role/connect/functions",
+                        //     contentType: "application/json; charset=utf-8",
+                        //     type: 'POST',
+                        //     data: JSON.stringify({functions:functionsArray,roleId: data.roleId, appCode: data.appCode}),
+                        //     success: function (data) {
+                        //         if (data.code == 0) {
+                        //             layer.msg(data.msg);
+                        //             return false;
+                        //         }
+                        //         layer.close(index);
+                        //     }
+                        // });
                     }
                 });
                 $(window).on("resize", function () {
