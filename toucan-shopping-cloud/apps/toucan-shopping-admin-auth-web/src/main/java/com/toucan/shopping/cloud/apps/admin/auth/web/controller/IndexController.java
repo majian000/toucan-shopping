@@ -81,6 +81,7 @@ public class IndexController {
                 {
                     currentNode.setChild(new ArrayList<MenuInfo>());
                 }
+                //只查询目录和菜单
                 if(functionVO.getType().shortValue()==0||functionVO.getType().shortValue()==1) {
                     MenuInfo menuInfo=new MenuInfo();
                     menuInfo.setTitle(functionVO.getName());
@@ -129,6 +130,7 @@ public class IndexController {
                 {
                     if(functionVO.getPid().longValue()==-1)
                     {
+                        //只查询目录和菜单
                         if(functionVO.getType().shortValue()==0||functionVO.getType().shortValue()==1) {
                             MenuInfo menuInfo=new MenuInfo();
                             menuInfo.setId(functionVO.getId());
