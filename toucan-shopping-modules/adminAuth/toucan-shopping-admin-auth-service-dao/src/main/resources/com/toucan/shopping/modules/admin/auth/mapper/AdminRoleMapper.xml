@@ -53,6 +53,15 @@
         update t_sa_admin_role set delete_status=1  where admin_id = #{adminId} and delete_status=0
     </update>
 
+    <select id="listByAdminIdAndAppCode" resultMap="adminRoleMap" >
+        select * from (
+            select distinct tsar.* from t_sa_admin_role tsar
+                left join t_sa_role tsr on tsar.role_id = tsr.role_id and tsr.delete_status=0 and tsr.enable_status=1
+        )ds
+        where admin_id=#{adminId}  and app_code=#{appCode} and delete_status=0
+
+    </select>
+
 
 
     <update id="deleteByAdminIdAndAppCodes" >

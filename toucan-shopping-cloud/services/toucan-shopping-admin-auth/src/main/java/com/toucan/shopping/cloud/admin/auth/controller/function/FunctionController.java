@@ -543,8 +543,19 @@ public class FunctionController {
             {
                 throw new IllegalArgumentException("appCode为空");
             }
+            List<AdminRole> adminRoles = adminRoleService.listByAdminIdAndAppCode(query.getAdminId(),query.getAppCode());
+            if(!CollectionUtils.isEmpty(adminRoles))
+            {
+                String[] roleIdArray = new String[adminRoles.size()];
+                int pos =0 ;
+                for(AdminRole adminRole:adminRoles)
+                {
+                    roleIdArray[pos]=adminRole.getRoleId();
+                    pos++;
+                }
+                resultObjectVO.setData(functionService.queryListByRoleIdArray(roleIdArray));
+            }
 
-            resultObjectVO.setData(functionService.queryListByAdminIdAndAppCode(query.getAdminId(),query.getAppCode()));
 
         }catch(Exception e)
         {

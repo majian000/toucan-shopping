@@ -48,4 +48,9 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     public List<AdminRole> findListByAdminId(String adminId) {
         return adminRoleMapper.findListByAdminId(adminId);
     }
+
+    @Override
+    public List<AdminRole> listByAdminIdAndAppCode(String adminId, String appCode) {
+        return adminRoleMapper.listByAdminIdAndAppCode(adminId,appCode);
+    }
 }

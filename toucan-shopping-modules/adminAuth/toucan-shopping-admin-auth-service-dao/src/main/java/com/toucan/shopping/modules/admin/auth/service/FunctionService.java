@@ -93,10 +93,10 @@ public interface FunctionService {
 
 
     /**
-     * 查询指定应用下指定管理员的所有功能项
-     * @param appCode
+     * 查询指定角色下所有功能
+     * @param roleId
      * @return
      */
-    List<FunctionVO> queryListByAdminIdAndAppCode(String adminId,String appCode);
+    List<FunctionVO> queryListByRoleIdArray(String[] roleIds);
 
 }

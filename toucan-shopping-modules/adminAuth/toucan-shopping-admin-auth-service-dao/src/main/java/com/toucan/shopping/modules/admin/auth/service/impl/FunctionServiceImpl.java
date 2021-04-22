@@ -199,8 +199,8 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
-    public List<FunctionVO> queryListByAdminIdAndAppCode(String adminId, String appCode) {
-        return functionMapper.queryListByAdminIdAndAppCode(adminId,appCode);
+    public List<FunctionVO> queryListByRoleIdArray(String[] roleIds) {
+        return functionMapper.queryListByRoleIdArray(roleIds);
     }
 
 

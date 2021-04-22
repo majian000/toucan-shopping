@@ -27,4 +27,6 @@ public interface AdminRoleService {
 
     List<AdminRole> findListByAdminId(String adminId);
 
+    List<AdminRole> listByAdminIdAndAppCode(String adminId,String appCode);
+
 }

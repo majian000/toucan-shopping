@@ -84,6 +84,7 @@ public class IndexController {
                 //只查询目录和菜单
                 if(functionVO.getType().shortValue()==0||functionVO.getType().shortValue()==1) {
                     MenuInfo menuInfo=new MenuInfo();
+                    menuInfo.setId(functionVO.getId());
                     menuInfo.setTitle(functionVO.getName());
                     menuInfo.setHref(functionVO.getUrl());
                     menuInfo.setTarget("_self");
@@ -110,7 +111,7 @@ public class IndexController {
         indexInfo.setHomeInfo(homeInfo);
 
         LogoInfo logoInfo = new LogoInfo();
-        logoInfo.setTitle("权限中心");
+        logoInfo.setTitle("权限管理");
         logoInfo.setImage("../images/logo.png");
         logoInfo.setHref("");
         indexInfo.setLogoInfo(logoInfo);
