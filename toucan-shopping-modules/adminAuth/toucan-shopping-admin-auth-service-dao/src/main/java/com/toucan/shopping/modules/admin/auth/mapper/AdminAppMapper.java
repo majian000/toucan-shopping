@@ -48,4 +48,12 @@ public interface AdminAppMapper {
      */
     int deleteByAdminId(String adminId);
 
+
+    /**
+     * 删除指定账号下指定应用的关联
+     * @param adminId
+     * @return
+     */
+    int deleteByAdminIdAndAppCode(String adminId, String appCode);
+
 }

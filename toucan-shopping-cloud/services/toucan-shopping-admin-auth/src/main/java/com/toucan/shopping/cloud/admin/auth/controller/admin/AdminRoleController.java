@@ -65,7 +65,6 @@ public class AdminRoleController {
             }
 
             AdminApp queryAdminApp = new AdminApp();
-            queryAdminApp.setEnableStatus((short)1);
             queryAdminApp.setAdminId(entity.getCreateAdminId());
 
             List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);

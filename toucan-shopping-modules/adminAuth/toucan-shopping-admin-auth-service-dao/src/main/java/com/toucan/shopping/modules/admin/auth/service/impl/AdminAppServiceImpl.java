@@ -42,5 +42,10 @@ public class AdminAppServiceImpl implements AdminAppService {
         return adminAppMapper.findAppListByAdminAppEntity(query);
     }
 
+    @Override
+    public int deleteByAdminIdAndAppCode(String adminId, String appCode) {
+        return adminAppMapper.deleteByAdminIdAndAppCode(adminId,appCode);
+    }
+
 
 }

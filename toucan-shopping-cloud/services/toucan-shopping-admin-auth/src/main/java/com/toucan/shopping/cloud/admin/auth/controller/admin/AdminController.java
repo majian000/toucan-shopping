@@ -115,17 +115,15 @@ public class AdminController {
                 resultObjectVO.setMsg("添加失败,请重试!");
                 return resultObjectVO;
             }
-
-            for(AdminApp adminApp : admin.getAdminApps())
-            {
-                adminApp.setAdminId(admin.getAdminId());
-                adminApp.setEnableStatus((short)1);
-                adminApp.setDeleteStatus((short)0);
-                adminApp.setCreateDate(new Date());
-                adminApp.setCreateAdminId(admin.getCreateAdminId());
-                adminAppService.save(adminApp);
+            if(!CollectionUtils.isEmpty(admin.getAdminApps())) {
+                for (AdminApp adminApp : admin.getAdminApps()) {
+                    adminApp.setAdminId(admin.getAdminId());
+                    adminApp.setDeleteStatus((short) 0);
+                    adminApp.setCreateDate(new Date());
+                    adminApp.setCreateAdminId(admin.getCreateAdminId());
+                    adminAppService.save(adminApp);
+                }
             }
-
 
             resultObjectVO.setData(admin);
 
@@ -213,7 +211,6 @@ public class AdminController {
             queryAdminApp.setDeleteStatus((short)0);
             queryAdminApp.setAdminId(adminPersistence.get(0).getAdminId());
             queryAdminApp.setAppCode(requestVo.getAppCode());
-            queryAdminApp.setEnableStatus((short)1);
             List<AdminApp> adminApps=adminAppService.findListByEntity(queryAdminApp);
             if(CollectionUtils.isEmpty(adminApps))
             {
@@ -286,7 +283,6 @@ public class AdminController {
                 AdminApp queryAdminApp = new AdminApp();
                 queryAdminApp.setAdminId(adminEntity.getAdminId());
                 queryAdminApp.setDeleteStatus((short)0);
-                queryAdminApp.setEnableStatus((short)1);
                 adminEntity.setAdminApps(adminAppService.findListByEntity(queryAdminApp));
             }
             resultObjectVO.setData(adminList);
@@ -427,7 +423,7 @@ public class AdminController {
 
 
     /**
-     * 編輯角色
+     * 編輯账号
      * @param requestVo
      * @return
      */
@@ -444,30 +440,36 @@ public class AdminController {
 
         try {
             Admin admin = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
+            if(StringUtils.isEmpty(admin.getAdminId()))
+            {
+                resultObjectVO.setCode(AdminResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,adminId为空");
+                return resultObjectVO;
+            }
             if(StringUtils.isEmpty(admin.getUsername()))
             {
                 resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
-                resultObjectVO.setMsg("添加失败,请输入账号");
+                resultObjectVO.setMsg("修改失败,请输入账号");
                 return resultObjectVO;
             }
 
             if(admin.getUsername().length()>20)
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("登录失败,账号长度不能大与20位");
+                resultObjectVO.setMsg("修改失败,账号长度不能大与20位");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(admin.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("添加失败,请输入密码");
+                resultObjectVO.setMsg("修改失败,请输入密码");
                 return resultObjectVO;
             }
 
             if(!UserRegistUtil.checkPwd(admin.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("添加失败,请输入6至15位的密码");
+                resultObjectVO.setMsg("修改失败,请输入6至15位的密码");
                 return resultObjectVO;
             }
 
@@ -492,18 +494,52 @@ public class AdminController {
                 return resultObjectVO;
             }
 
-            //删除用户应用关联
-            adminAppService.deleteByAdminId(admin.getAdminId());
-
-            //重新保存关联
-            for(AdminApp adminApp : admin.getAdminApps())
+            //查询出当前账号数据库中保存的应用关联
+            AdminApp queryAdminApp = new AdminApp();
+            queryAdminApp.setAdminId(admin.getAdminId());
+            List<AdminApp> adminAppPersistentList = adminAppService.findListByEntity(queryAdminApp);
+            if(!CollectionUtils.isEmpty(adminAppPersistentList))
             {
-                adminApp.setAdminId(admin.getAdminId());
-                adminApp.setEnableStatus((short)1);
-                adminApp.setDeleteStatus((short)0);
-                adminApp.setCreateDate(new Date());
-                adminApp.setCreateAdminId(admin.getCreateAdminId());
-                adminAppService.save(adminApp);
+                //这次修改将所有应用都取消关联了
+                if(CollectionUtils.isEmpty(admin.getAdminApps()))
+                {
+
+                    //将数据库中保存的关联全部删除
+                    for(AdminApp adminAppPersistent:adminAppPersistentList)
+                    {
+                        adminAppService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                    }
+
+                }else{
+                    //找到这次取消掉的关联,把那个关联删除掉
+                    for(AdminApp adminAppPersistent:adminAppPersistentList)
+                    {
+                        boolean find=false;
+                        for(AdminApp adminApp : admin.getAdminApps())
+                        {
+                            //如果这次修改数据库中保存的关联没有任何操作,那么就什么都不做
+                            if(adminAppPersistent.getAppCode().equals(adminApp.getAppCode()))
+                            {
+                                find=true;
+                            }
+                        }
+                        if(!find)
+                        {
+                            adminAppService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                        }
+                    }
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(admin.getAdminApps())) {
+                //重新保存关联
+                for (AdminApp adminApp : admin.getAdminApps()) {
+                    adminApp.setAdminId(admin.getAdminId());
+                    adminApp.setDeleteStatus((short) 0);
+                    adminApp.setCreateDate(new Date());
+                    adminApp.setCreateAdminId(admin.getCreateAdminId());
+                    adminAppService.save(adminApp);
+                }
             }
 
 

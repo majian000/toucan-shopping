@@ -38,10 +38,6 @@ public class AdminApp {
     private String createAdminId;
 
 
-    /**
-     * 启用状态 0:禁用 1启用
-     */
-    private Short enableStatus;
 
 
     /**
