@@ -179,6 +179,7 @@ public class RoleController {
             for(AdminRole adminRole:adminRoles) {
                 if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
                     roleTreeVO.getState().setChecked(true);
+                    roleTreeVO.getState().setSelected(true);
                 }
             }
             if(!CollectionUtils.isEmpty(roleTreeVO.getNodes()))
@@ -229,6 +230,7 @@ public class RoleController {
                             for(AdminRole adminRole:adminRoles) {
                                 if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
                                     roleTreeVO.getState().setChecked(true);
+                                    roleTreeVO.getState().setSelected(true);
                                 }
                             }
                             setTreeNodeSelect(id,roleTreeVO.getNodes(), adminRoles);

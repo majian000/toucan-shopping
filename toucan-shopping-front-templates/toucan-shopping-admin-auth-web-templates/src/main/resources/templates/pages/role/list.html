@@ -107,18 +107,6 @@
 
 
 
-        /**
-         * 拿到选中树的功能项ID
-         **/
-        function getFunctionId(functions,trees)
-        {
-            if(trees!=null) {
-                for (var i = 0; i < trees.length; i++) {
-                    functions.add(trees[i].functionId);
-                    getFunctionId(functions,trees[i].children);
-                }
-            }
-        }
 
         table.render({
             elem: '#roleTable',
@@ -314,131 +302,66 @@
                     btn: ['确定'],
                     content: "<div id='treeview-checkable' ></div>",
                     success:function(layero){
-
-
-                        var defaultData = [
-                            {
-                                text: 'Parent 1',
-                                href: '#parent1',
-                                tags: ['4'],
-                                nodes: [
-                                    {
-                                        text: 'Child 1',
-                                        href: '#child1',
-                                        tags: ['2'],
-                                        nodes: [
-                                            {
-                                                text: 'Grandchild 1',
-                                                href: '#grandchild1',
-                                                tags: ['0']
-                                            },
-                                            {
-                                                text: 'Grandchild 2',
-                                                href: '#grandchild2',
-                                                tags: ['0']
+                        $.ajax({
+                            url:"[[@{/}]]function/query/role/function/tree",
+                            type:'POST',
+                            data:{appCode:data.appCode,roleId:data.roleId},
+                            success:function(data){
+                                if(data.code==1)
+                                {
+                                    //渲染
+                                    var $checkableTree = $('#treeview-checkable').treeview({
+                                        data: data.data,
+                                        showIcon: false,
+                                        showCheckbox: true,
+                                        onNodeChecked: function(event, node) {
+                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                                            if (selectNodes) { //子节点不为空，则选中所有子节点
+                                                $('#treeview-checkable').treeview('checkNode', [selectNodes, { silent: true }]);
                                             }
-                                        ]
-                                    },
-                                    {
-                                        text: 'Child 2',
-                                        href: '#child2',
-                                        tags: ['0']
-                                    }
-                                ]
-                            },
-                            {
-                                text: 'Parent 2',
-                                href: '#parent2',
-                                tags: ['0']
-                            },
-                            {
-                                text: 'Parent 3',
-                                href: '#parent3',
-                                tags: ['0']
-                            },
-                            {
-                                text: 'Parent 4',
-                                href: '#parent4',
-                                tags: ['0']
-                            },
-                            {
-                                text: 'Parent 5',
-                                href: '#parent5'  ,
-                                tags: ['0']
-                            }
-                        ];
-
-                        var $checkableTree = $('#treeview-checkable').treeview({
-                            data: defaultData,
-                            showIcon: false,
-                            showCheckbox: true,
-                            onNodeChecked: function(event, node) {
-                                var selectNodes = getChildNodeIdArr(node); //获取所有子节点
-                                if (selectNodes) { //子节点不为空，则选中所有子节点
-                                    $('#treeview-checkable').treeview('checkNode', [selectNodes, { silent: true }]);
+                                            var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
+                                            setParentNodeCheck(node);
+                                        },
+                                        onNodeUnchecked: function (event, node) {
+                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                                            if (selectNodes) { //子节点不为空，则取消选中所有子节点
+                                                $('#treeview-checkable').treeview('uncheckNode', [selectNodes, { silent: true }]);
+                                            }
+                                        }
+                                    });
                                 }
-                                var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
-                                setParentNodeCheck(node);
                             },
-                            onNodeUnchecked: function (event, node) {
-                                var selectNodes = getChildNodeIdArr(node); //获取所有子节点
-                                if (selectNodes) { //子节点不为空，则取消选中所有子节点
-                                    $('#treeview-checkable').treeview('uncheckNode', [selectNodes, { silent: true }]);
-                                }
+                            complete:function()
+                            {
+                                layer.close(loadding);
                             }
                         });
 
-                        // $.ajax({
-                        //     url:"[[@{/}]]function/query/role/function/tree",
-                        //     type:'POST',
-                        //     data:{appCode:data.appCode,roleId:data.roleId},
-                        //     success:function(data){
-                        //         if(data.code==1)
-                        //         {
-                        //             //渲染
-                        //             var inst1 = tree.render({
-                        //                 elem: '#functionTree'
-                        //                 ,id:"functionTreeId"
-                        //                 ,showCheckbox: true
-                        //                 ,checkChild: false
-                        //                 ,data: data.data
-                        //             });
-                        //         }
-                        //     },
-                        //     complete:function()
-                        //     {
-                        //         layer.close(loadding);
-                        //     }
-                        // });
-
                     },
                     yes: function(index, layero){
-                        // var checkedData = tree.getChecked('functionTreeId'); //获取选中节点的数据
-                        // if(checkedData==null||checkedData.length<=0)
-                        // {
-                        //     layer.msg("请选择权限");
-                        //     return false;
-                        // }
-                        // var functions = new Set();
-                        // getFunctionId(functions,checkedData);
-                        // var functionsArray =  Array.from(functions);
-                        // for(var i=0;i<functionsArray.length;i++)
-                        // {
-                        //     functionsArray[i] = {functionId:functionsArray[i]};
-                        // }
-                        // $.ajax({
-                        //     url: "[[@{/}]]role/connect/functions",
-                        //     contentType: "application/json; charset=utf-8",
-                        //     type: 'POST',
-                        //     data: JSON.stringify({functions:functionsArray,roleId: data.roleId, appCode: data.appCode}),
-                        //     success: function (data) {
-                        //         if (data.code == 0) {
-                        //             layer.msg(data.msg);
-                        //             return false;
-                        //         }
-                        //         layer.close(index);
-                        //     }
-                        // });
+                        var selectNodes = $('#treeview-checkable').treeview('getSelected');
+                        if(selectNodes==null||selectNodes.length<=0)
+                        {
+                            layer.msg("请选择权限");
+                            return false;
+                        }
+                        var functionsArray =  new Array(selectNodes.length);
+                        for (var i = 0; i < selectNodes.length; i++) {
+                            functionsArray[i]={functionId:selectNodes[i].functionId};
+                        }
+                        $.ajax({
+                            url: "[[@{/}]]role/connect/functions",
+                            contentType: "application/json; charset=utf-8",
+                            type: 'POST',
+                            data: JSON.stringify({functions:functionsArray,roleId: data.roleId, appCode: data.appCode}),
+                            success: function (data) {
+                                if (data.code == 0) {
+                                    layer.msg(data.msg);
+                                    return false;
+                                }
+                                layer.close(index);
+                            }
+                        });
                     }
                 });
                 $(window).on("resize", function () {

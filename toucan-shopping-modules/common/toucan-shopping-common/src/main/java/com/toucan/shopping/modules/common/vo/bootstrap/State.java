@@ -10,7 +10,7 @@ import lombok.Data;
 public class State {
 
     /**
-     * 是否选中
+     * 是否选中,前面的chebox是否打对号
      */
     private boolean checked;
 
@@ -25,8 +25,8 @@ public class State {
     private boolean expanded = true;
 
     /**
-     * 是否可被选中
+     * 是否选中
      */
-    private boolean selected = true;
+    private boolean selected;
 
 }

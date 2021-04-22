@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
 </head>
 <body>
 
@@ -17,7 +18,6 @@
     <div class="layuimini-main">
 
         <fieldset class="table-search-fieldset">
-            <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
@@ -61,6 +61,9 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:src="@{/lib/bootstrap/js/bootstrap.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-treeview/js/bootstrap-treeview.js}" charset="utf-8"></script>
 <script>
     layui.use(['form', 'table','tree'], function () {
         var $ = layui.jquery,
@@ -145,20 +148,6 @@
 
 
 
-
-
-        /**
-         * 拿到选中树的角色ID
-         **/
-        function getRoleObj(roles,trees)
-        {
-            if(trees!=null) {
-                for (var i = 0; i < trees.length; i++) {
-                    roles.add({roleId:trees[i].roleId,appCode:trees[i].appCode});
-                    getRoleObj(roles,trees[i].children);
-                }
-            }
-        }
 
         /**
          * toolbar监听事件
@@ -263,7 +252,7 @@
                     shadeClose: true,
                     area: ['20%', '60%'],
                     btn: ['确定'],
-                    content: "<div id='roleTree'></div>",
+                    content: "<div id='treeview-checkable' ></div>",
                     success:function(layero){
                         $.ajax({
                             url:"[[@{/}]]role/query/admin/role/tree",
@@ -274,12 +263,24 @@
                                 if(data.code==1)
                                 {
                                     //渲染
-                                    var inst1 = tree.render({
-                                        elem: '#roleTree'
-                                        ,id:"roleTreeId"
-                                        ,showCheckbox: true
-                                        ,checkChild: false
-                                        ,data: data.data
+                                    var $checkableTree = $('#treeview-checkable').treeview({
+                                        data: data.data,
+                                        showIcon: false,
+                                        showCheckbox: true,
+                                        onNodeChecked: function(event, node) {
+                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                                            if (selectNodes) { //子节点不为空，则选中所有子节点
+                                                $('#treeview-checkable').treeview('checkNode', [selectNodes, { silent: true }]);
+                                            }
+                                            var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
+                                            setParentNodeCheck(node);
+                                        },
+                                        onNodeUnchecked: function (event, node) {
+                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                                            if (selectNodes) { //子节点不为空，则取消选中所有子节点
+                                                $('#treeview-checkable').treeview('uncheckNode', [selectNodes, { silent: true }]);
+                                            }
+                                        }
                                     });
                                 }
                             },
@@ -291,15 +292,16 @@
 
                     },
                     yes: function(index, layero){
-                        var checkedData = tree.getChecked('roleTreeId'); //获取选中节点的数据
-                        if(checkedData==null||checkedData.length<=0)
+                        var selectNodes = $('#treeview-checkable').treeview('getSelected');
+                        if(selectNodes==null||selectNodes.length<=0)
                         {
                             layer.msg("请选择角色");
                             return false;
                         }
-                        var roles = new Set();
-                        getRoleObj(roles,checkedData);
-                        var roleArray =  Array.from(roles);
+                        var roleArray = new Array(selectNodes.length);
+                        for (var i = 0; i < selectNodes.length; i++) {
+                            roleArray[i]={roleId:selectNodes[i].roleId,appCode:selectNodes[i].appCode};
+                        }
 
                         $.ajax({
                             url: "[[@{/}]]admin/connect/roles",
