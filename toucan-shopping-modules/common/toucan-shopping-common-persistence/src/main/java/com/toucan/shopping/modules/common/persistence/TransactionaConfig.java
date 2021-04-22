@@ -2,6 +2,8 @@ package com.toucan.shopping.modules.common.persistence;
 
 
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
@@ -21,6 +23,7 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 @Configuration
 public class TransactionaConfig {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private TransactionManager transactionManager;
@@ -28,19 +31,20 @@ public class TransactionaConfig {
     @Bean
     public TransactionInterceptor txAdvice() {
 
-        //写,开启事务
+        logger.info("配置AOP全局事务处理.........");
+
+        //开启事务
         DefaultTransactionAttribute writeTransaction = new DefaultTransactionAttribute();
         //如果当前没有事务就创建,如果已经存在就加入
         writeTransaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 
-        //读,不开启事务
+        //只读事务
         DefaultTransactionAttribute readOnlyTransaction = new DefaultTransactionAttribute();
         readOnlyTransaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         readOnlyTransaction.setReadOnly(true);
 
         NameMatchTransactionAttributeSource source = new NameMatchTransactionAttributeSource();
 
-        //写
         source.addTransactionalMethod("save*", writeTransaction);
         source.addTransactionalMethod("update*", writeTransaction);
         source.addTransactionalMethod("edit*", writeTransaction);
@@ -49,7 +53,6 @@ public class TransactionaConfig {
         source.addTransactionalMethod("remove*", writeTransaction);
         source.addTransactionalMethod("update*", writeTransaction);
 
-        //读
         source.addTransactionalMethod("find*", readOnlyTransaction);
         source.addTransactionalMethod("query*", readOnlyTransaction);
 
