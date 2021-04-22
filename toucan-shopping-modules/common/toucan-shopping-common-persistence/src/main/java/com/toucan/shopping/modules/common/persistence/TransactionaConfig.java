@@ -1,6 +1,9 @@
 package com.toucan.shopping.modules.common.persistence;
 
 
+import org.aopalliance.aop.Advice;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +54,6 @@ public class TransactionaConfig {
         source.addTransactionalMethod("insert*", writeTransaction);
         source.addTransactionalMethod("delete*", writeTransaction);
         source.addTransactionalMethod("remove*", writeTransaction);
-        source.addTransactionalMethod("update*", writeTransaction);
 
         source.addTransactionalMethod("find*", readOnlyTransaction);
         source.addTransactionalMethod("query*", readOnlyTransaction);
@@ -62,7 +64,7 @@ public class TransactionaConfig {
     @Bean
     public Advisor txAdviceAdvisor() {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
-        pointcut.setExpression("execution(* com.toucan.shopping.*.service.*.*(..))");
+        pointcut.setExpression("execution(* com.toucan.shopping..*ServiceImpl.*(*) )");
         return new DefaultPointcutAdvisor(pointcut, txAdvice());
     }
 }

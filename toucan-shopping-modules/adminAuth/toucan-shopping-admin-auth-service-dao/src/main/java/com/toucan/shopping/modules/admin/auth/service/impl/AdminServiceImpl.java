@@ -27,7 +27,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public int save(Admin admin) {
-        return adminMapper.insert(admin);
+        int row = adminMapper.insert(admin);
+//        throw new IllegalArgumentException("手动测试异常,测试事务回滚");
+        return row;
     }
 
     @Override
