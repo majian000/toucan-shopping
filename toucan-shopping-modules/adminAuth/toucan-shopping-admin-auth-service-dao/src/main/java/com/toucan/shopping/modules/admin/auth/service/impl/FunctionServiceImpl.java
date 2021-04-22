@@ -41,9 +41,10 @@ public class FunctionServiceImpl implements FunctionService {
             {
                 FunctionTreeVO functionTreeVO = new FunctionTreeVO();
                 functionTreeVO.setTitle(functionVO.getName());
+                functionTreeVO.setText(functionVO.getName());
                 BeanUtils.copyProperties(functionTreeVO, functionVO);
-                functionTreeVO.setChildren(new ArrayList<FunctionTreeVO>());
-                currentNode.getChildren().add(functionTreeVO);
+                functionTreeVO.setNodes(new ArrayList<FunctionTreeVO>());
+                currentNode.getNodes().add(functionTreeVO);
 
                 //查找当前节点的子节点
                 setChildren(functionVOS,functionTreeVO);
@@ -61,8 +62,9 @@ public class FunctionServiceImpl implements FunctionService {
                 if (functionVO.getPid().longValue() == -1L) {
                     FunctionTreeVO functionTreeVO = new FunctionTreeVO();
                     functionTreeVO.setTitle(functionVO.getName());
+                    functionTreeVO.setText(functionVO.getName());
                     BeanUtils.copyProperties(functionTreeVO, functionVO);
-                    functionTreeVO.setChildren(new ArrayList<FunctionTreeVO>());
+                    functionTreeVO.setNodes(new ArrayList<FunctionTreeVO>());
                     functionTreeVOS.add(functionTreeVO);
 
                     //递归查找子节点

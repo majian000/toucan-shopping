@@ -171,23 +171,19 @@ public class RoleController {
 
 
 
-    public void setTreeNodeSelect(AtomicLong id,List<RoleTreeVO> roleTreeVOS,RoleTreeVO parentNode,List<AdminRole> adminRoles)
+    public void setTreeNodeSelect(AtomicLong id,List<RoleTreeVO> roleTreeVOS,List<AdminRole> adminRoles)
     {
         for(RoleTreeVO roleTreeVO:roleTreeVOS)
         {
             roleTreeVO.setId(id.incrementAndGet());
             for(AdminRole adminRole:adminRoles) {
                 if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
-                    //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
-                    parentNode.setChecked(false);
-                    if(CollectionUtils.isEmpty(roleTreeVO.getChildren())) {
-                        roleTreeVO.setChecked(true);
-                    }
+                    roleTreeVO.getState().setChecked(true);
                 }
             }
-            if(!CollectionUtils.isEmpty(roleTreeVO.getChildren()))
+            if(!CollectionUtils.isEmpty(roleTreeVO.getNodes()))
             {
-                setTreeNodeSelect(id,roleTreeVO.getChildren(),roleTreeVO,adminRoles);
+                setTreeNodeSelect(id,roleTreeVO.getNodes(),adminRoles);
             }
         }
     }
@@ -232,13 +228,10 @@ public class RoleController {
                             roleTreeVO.setId(id.incrementAndGet());
                             for(AdminRole adminRole:adminRoles) {
                                 if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
-                                    if(CollectionUtils.isEmpty(roleTreeVO.getChildren())) {
-                                        roleTreeVO.setChecked(true);
-                                    }
+                                    roleTreeVO.getState().setChecked(true);
                                 }
                             }
-                            //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
-                            setTreeNodeSelect(id,roleTreeVO.getChildren(),roleTreeVO, adminRoles);
+                            setTreeNodeSelect(id,roleTreeVO.getNodes(), adminRoles);
                         }
                     }
                 }

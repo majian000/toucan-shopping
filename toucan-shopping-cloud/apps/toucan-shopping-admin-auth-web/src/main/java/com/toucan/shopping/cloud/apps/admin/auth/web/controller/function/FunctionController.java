@@ -307,23 +307,20 @@ public class FunctionController extends UIController {
     }
 
 
-    public void setTreeNodeSelect(AtomicLong id,List<FunctionTreeVO> functionTreeVOList,FunctionTreeVO parentNode,List<RoleFunction> roleFunctions)
+    public void setTreeNodeSelect(AtomicLong id,List<FunctionTreeVO> functionTreeVOList,List<RoleFunction> roleFunctions)
     {
         for(FunctionTreeVO functionTreeVO:functionTreeVOList)
         {
             functionTreeVO.setId(id.incrementAndGet());
             for(RoleFunction roleFunction:roleFunctions) {
                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
-                    //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
-                    parentNode.setChecked(false);
-                    if(CollectionUtils.isEmpty(functionTreeVO.getChildren())) {
-                        functionTreeVO.setChecked(true);
-                    }
+                    //设置节点被选中
+                    functionTreeVO.getState().setChecked(true);
                 }
             }
-            if(!CollectionUtils.isEmpty(functionTreeVO.getChildren()))
+            if(!CollectionUtils.isEmpty(functionTreeVO.getNodes()))
             {
-                setTreeNodeSelect(id,functionTreeVO.getChildren(),functionTreeVO,roleFunctions);
+                setTreeNodeSelect(id,functionTreeVO.getNodes(),roleFunctions);
             }
         }
     }
@@ -353,7 +350,7 @@ public class FunctionController extends UIController {
             {
                 List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
 
-                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复,layui不支持id重复
+                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
                 AtomicLong id = new AtomicLong();
                 RoleFunction queryRoleFunction = new RoleFunction();
                 queryRoleFunction.setRoleId(roleId);
@@ -365,15 +362,14 @@ public class FunctionController extends UIController {
                     if(!CollectionUtils.isEmpty(roleFunctions)) {
                         for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
                             functionTreeVO.setId(id.incrementAndGet());
+                            functionTreeVO.setText(functionTreeVO.getTitle());
                             for(RoleFunction roleFunction:roleFunctions) {
                                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
-                                    if(CollectionUtils.isEmpty(functionTreeVO.getChildren())) {
-                                        functionTreeVO.setChecked(true);
-                                    }
+                                    //设置节点被选中
+                                    functionTreeVO.getState().setChecked(true);
                                 }
                             }
-                            //设置节点选中状态,如果子节点被选择了,需要把父节点取消勾选,这是layui框架的问题
-                            setTreeNodeSelect(id,functionTreeVO.getChildren(),functionTreeVO, roleFunctions);
+                            setTreeNodeSelect(id,functionTreeVO.getNodes(), roleFunctions);
                         }
                     }
                 }
