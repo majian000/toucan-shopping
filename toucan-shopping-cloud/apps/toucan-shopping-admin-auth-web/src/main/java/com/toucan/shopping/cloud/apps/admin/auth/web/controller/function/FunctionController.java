@@ -316,7 +316,6 @@ public class FunctionController extends UIController {
                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
                     //设置节点被选中
                     functionTreeVO.getState().setChecked(true);
-                    functionTreeVO.getState().setSelected(true);
                 }
             }
             if(!CollectionUtils.isEmpty(functionTreeVO.getNodes()))
@@ -368,7 +367,6 @@ public class FunctionController extends UIController {
                                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
                                     //设置节点被选中
                                     functionTreeVO.getState().setChecked(true);
-                                    functionTreeVO.getState().setSelected(true);
                                 }
                             }
                             setTreeNodeSelect(id,functionTreeVO.getNodes(), roleFunctions);

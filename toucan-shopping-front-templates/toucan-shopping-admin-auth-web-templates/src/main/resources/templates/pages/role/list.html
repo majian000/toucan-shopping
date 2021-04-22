@@ -339,7 +339,7 @@
 
                     },
                     yes: function(index, layero){
-                        var selectNodes = $('#treeview-checkable').treeview('getSelected');
+                        var selectNodes = $('#treeview-checkable').treeview('getChecked');
                         if(selectNodes==null||selectNodes.length<=0)
                         {
                             layer.msg("请选择权限");
