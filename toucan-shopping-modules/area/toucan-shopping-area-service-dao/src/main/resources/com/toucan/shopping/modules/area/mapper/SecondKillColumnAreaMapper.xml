@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.area.mapper.SecondKillColumnAreaMapper">
+
+    <resultMap id="secondKillColumnAreaMap" type="com.toucan.shopping.modules.area.entity.SecondKillColumnArea" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="second_kill_column_id" jdbcType="BIGINT" property="secondKillColumnId" />
+        <result column="areaCode" jdbcType="VARCHAR" property="areaCode" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+    <select id="queryList" resultMap="secondKillColumnAreaMap" parameterType="com.toucan.shopping.modules.area.vo.SecondKillColumnAreaVO">
+        select t.* from t_second_kill_column_banner t
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+
+
+            <if test="areaCode!=null and areaCode!='' ">
+                and t.area_code = #{areaCode}
+            </if>
+
+            <if test="idArray!=null ">
+                and t.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="appCode!=null and appCode!='' ">
+                and t.app_code = #{appCode}
+            </if>
+
+              and t.delete_status = 0
+
+        </where>
+    </select>
+
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.SecondKillColumnArea"  keyProperty="id" >
+         insert into t_banner_area(id,second_kill_column_id,area_code,create_date,update_date,app_code,create_admin_id,update_admin_id)
+        values(#{id},#{secondKillColumnId},#{areaCode},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+     </insert>
+
+
+
+    <update id="deleteById">
+        update t_second_kill_column_banner  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+</mapper>
