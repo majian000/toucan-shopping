@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.mapper;
 
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface AppMapper {
 
     List<App> findListByEntity(App app);
 
-    List<App> queryListPage(AppPageInfo appPageInfo);
+    List<AppVO> queryListPage(AppPageInfo appPageInfo);
 
     Long queryListPageCount(AppPageInfo appPageInfo);
 

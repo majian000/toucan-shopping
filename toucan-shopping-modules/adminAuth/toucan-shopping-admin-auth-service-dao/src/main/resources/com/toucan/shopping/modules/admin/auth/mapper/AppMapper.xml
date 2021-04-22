@@ -16,6 +16,12 @@
         
     </resultMap>
 
+    <resultMap id="appVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AppVO" extends="appMap">
+        <result column="create_admin_username" jdbcType="VARCHAR" property="createAdminUsername" />
+        <result column="update_admin_username" jdbcType="VARCHAR" property="updateAdminUsername" />
+    </resultMap>
+
+
     <sql id="queryListPageWhere">
         <if test="name!=null and name!=''">
             and t.name like concat('%',#{name},'%')
@@ -54,8 +60,10 @@
     </select>
 
 
-    <select id="queryListPage" resultMap="appMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AppPageInfo">
-        select t.* from t_app t
+    <select id="queryListPage" resultMap="appVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AppPageInfo">
+        select t.*,tsa.username as create_admin_username,tsau.username as update_admin_username from t_app t
+          left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id
+          left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id
         <where>
             1=1
 

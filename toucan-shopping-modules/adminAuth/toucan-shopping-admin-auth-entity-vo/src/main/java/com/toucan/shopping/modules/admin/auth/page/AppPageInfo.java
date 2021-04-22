@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.page;
 
 import com.toucan.shopping.modules.admin.auth.entity.App;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class AppPageInfo extends PageInfo<App> {
+public class AppPageInfo extends PageInfo<AppVO> {
 
 
     // ===============查询条件===================

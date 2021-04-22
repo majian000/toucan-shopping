@@ -32,6 +32,17 @@
             <tip>填写应用的编码。</tip>
         </div>
     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号状态</label>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" checked>
+            <input type="radio" name="enableStatus" value="0" title="禁用">
+        </div>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 0}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" >
+            <input type="radio" name="enableStatus" value="0" title="禁用" checked>
+        </div>
+    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
@@ -70,6 +81,7 @@
                         // 关闭弹出层
                         layer.close(index);
                         var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
                         parent.layer.close(iframeIndex);
 
                     });

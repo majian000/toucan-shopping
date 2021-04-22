@@ -33,18 +33,22 @@
 
         </div>
     </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">账号状态</label>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" checked>
+            <input type="radio" name="enableStatus" value="0" title="禁用">
+        </div>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 0}" >
+            <input type="radio" name="enableStatus" value="1" title="启用" >
+            <input type="radio" name="enableStatus" value="0" title="禁用" checked>
+        </div>
+    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
             <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">账号状态</label>
-        <div class="layui-input-block">
-            <input type="radio" name="enableStatus" value="1" title="启用" checked="">
-            <input type="radio" name="enableStatus" value="0" title="禁用">
         </div>
     </div>
     <div class="layui-form-item">

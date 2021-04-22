@@ -167,7 +167,6 @@ public class AppController {
             }
 
             app.setUpdateDate(new Date());
-            app.setUpdateAdminId(app.getUpdateAdminId());
             int row = appService.update(app);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);

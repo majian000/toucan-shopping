@@ -171,19 +171,16 @@ public class RoleController {
 
 
 
-    public void setTreeNodeSelect(AtomicLong id,List<RoleTreeVO> roleTreeVOS,List<AdminRole> adminRoles)
+    public void setTreeNodeSelect(AtomicLong id,List<RoleTreeVO> roleTreeVOS,RoleTreeVO parentNode,List<AdminRole> adminRoles)
     {
         for(RoleTreeVO roleTreeVO:roleTreeVOS)
         {
             roleTreeVO.setId(id.incrementAndGet());
             for(AdminRole adminRole:adminRoles) {
                 if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
+                    parentNode.getState().setChecked(true);
                     roleTreeVO.getState().setChecked(true);
                 }
-            }
-            if(!CollectionUtils.isEmpty(roleTreeVO.getNodes()))
-            {
-                setTreeNodeSelect(id,roleTreeVO.getNodes(),adminRoles);
             }
         }
     }
@@ -226,12 +223,7 @@ public class RoleController {
                     if(!CollectionUtils.isEmpty(adminRoles)) {
                         for(RoleTreeVO roleTreeVO:roleTreeVOS) {
                             roleTreeVO.setId(id.incrementAndGet());
-                            for(AdminRole adminRole:adminRoles) {
-                                if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
-                                    roleTreeVO.getState().setChecked(true);
-                                }
-                            }
-                            setTreeNodeSelect(id,roleTreeVO.getNodes(), adminRoles);
+                            setTreeNodeSelect(id,roleTreeVO.getNodes(),roleTreeVO, adminRoles);
                         }
                     }
                 }

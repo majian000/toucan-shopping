@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface AppService {
 
     boolean exists(String name);
 
-    PageInfo<App> queryListPage(AppPageInfo appPageInfo);
+    PageInfo<AppVO> queryListPage(AppPageInfo appPageInfo);
 
     int deleteById(Long id);
 }
