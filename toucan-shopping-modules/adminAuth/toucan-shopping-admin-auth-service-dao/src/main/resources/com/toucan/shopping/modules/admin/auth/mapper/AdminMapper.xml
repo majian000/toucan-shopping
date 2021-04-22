@@ -17,6 +17,7 @@
 
 
     <resultMap id="adminVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AdminVO" extends="adminMap" >
+        <result column="appNames" jdbcType="VARCHAR" property="appNames" />
     </resultMap>
 
     <sql id="queryListPageWhere">
@@ -52,7 +53,17 @@
 
 
     <select id="queryListPage" resultMap="adminVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
-        select tu.* from t_sa_admin tu
+        select tu.* from (
+            select tsa.*,ds2.appNames from t_sa_admin tsa left join (
+                select ds.admin_id,group_concat(ds.appName) as appNames from (
+                    select tu.*,ta.name as appName from t_sa_admin tu
+                    left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
+                    left join t_app ta on tsaa.app_code = ta.code and ta.delete_status = 0
+                    where tu.delete_status = 0
+                )ds
+                group by ds.admin_id
+            )ds2 on tsa.admin_id = ds2.admin_id
+        )tu
         <where>
             1=1 and tu.delete_status = 0
             <include refid="queryListPageWhere" />
@@ -63,7 +74,17 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
-        select count(*) from t_sa_admin tu
+        select count(*) from (
+            select tsa.*,ds2.appNames from t_sa_admin tsa left join (
+                    select ds.admin_id,group_concat(ds.appName) as appNames from (
+                        select tu.*,ta.name as appName from t_sa_admin tu
+                        left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
+                        left join t_app ta on tsaa.app_code = ta.code and ta.delete_status = 0
+                        where tu.delete_status = 0
+                   )ds
+                group by ds.admin_id
+            )ds2 on tsa.admin_id = ds2.admin_id
+        )tu
         <where>
             1=1 and tu.delete_status = 0
 
@@ -82,10 +103,10 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Admin">
-        update t_sa_admin set  username=#{username},password=#{password},update_date=#{updateDate},
+        update t_sa_admin set  username=#{username},update_date=#{updateDate},
          update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
          remark=#{remark}
-          where id = #{id}
+          where admin_id = #{adminId}
     </update>
 
 </mapper>

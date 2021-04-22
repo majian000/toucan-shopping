@@ -459,19 +459,6 @@ public class AdminController {
                 resultObjectVO.setMsg("修改失败,账号长度不能大与20位");
                 return resultObjectVO;
             }
-            if(StringUtils.isEmpty(admin.getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("修改失败,请输入密码");
-                return resultObjectVO;
-            }
-
-            if(!UserRegistUtil.checkPwd(admin.getPassword()))
-            {
-                resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("修改失败,请输入6至15位的密码");
-                return resultObjectVO;
-            }
 
             Admin query=new Admin();
             query.setUsername(admin.getUsername());
@@ -534,11 +521,21 @@ public class AdminController {
             if(!CollectionUtils.isEmpty(admin.getAdminApps())) {
                 //重新保存关联
                 for (AdminApp adminApp : admin.getAdminApps()) {
-                    adminApp.setAdminId(admin.getAdminId());
-                    adminApp.setDeleteStatus((short) 0);
-                    adminApp.setCreateDate(new Date());
-                    adminApp.setCreateAdminId(admin.getCreateAdminId());
-                    adminAppService.save(adminApp);
+                    boolean find=false;
+                    for(AdminApp adminAppPersistent:adminAppPersistentList) {
+                        if(adminAppPersistent.getAppCode().equals(adminApp.getAppCode()))
+                        {
+                            find=true;
+                        }
+                    }
+                    //如果这次保存传过来的应用已经存在关联 就什么都不做
+                    if(!find) {
+                        adminApp.setAdminId(admin.getAdminId());
+                        adminApp.setDeleteStatus((short) 0);
+                        adminApp.setCreateDate(new Date());
+                        adminApp.setCreateAdminId(admin.getUpdateAdminId());
+                        adminAppService.save(adminApp);
+                    }
                 }
             }
 

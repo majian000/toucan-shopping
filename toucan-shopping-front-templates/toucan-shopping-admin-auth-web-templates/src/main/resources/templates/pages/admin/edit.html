@@ -73,7 +73,7 @@
             });
             data.field.appCodes=appCodes;
             $.ajax({
-                url:"[[@{/admin/save}]]",
+                url:"[[@{/admin/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
