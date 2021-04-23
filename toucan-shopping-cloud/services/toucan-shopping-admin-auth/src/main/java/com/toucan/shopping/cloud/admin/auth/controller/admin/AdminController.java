@@ -279,7 +279,9 @@ public class AdminController {
                 if(redisLoginToken.equals(admin.getLoginToken()))
                 {
                     //删除对应的登录会话
-                    redisTemplate.opsForHash().delete(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+                    redisTemplate.opsForHash().delete(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId())
+                            ,AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                 }
