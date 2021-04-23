@@ -48,8 +48,8 @@ public interface FeignRoleService {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value = "/query/role/tree",method = RequestMethod.POST)
-    public ResultObjectVO queryRoleTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryAdminRoleTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
 

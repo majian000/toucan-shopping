@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
+import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -46,6 +47,9 @@ public class AdminController {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private AdminRoleService adminRoleService;
 
 
     /**
@@ -551,6 +555,7 @@ public class AdminController {
                     for(AdminApp adminAppPersistent:adminAppPersistentList)
                     {
                         adminAppService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                        adminRoleService.deleteByAdminIdAndAppCodes(admin.getAdminId(),new String[]{adminAppPersistent.getAppCode()});
                     }
 
                 }else{
@@ -569,6 +574,7 @@ public class AdminController {
                         if(!find)
                         {
                             adminAppService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                            adminRoleService.deleteByAdminIdAndAppCodes(admin.getAdminId(),new String[]{adminAppPersistent.getAppCode()});
                         }
                     }
                 }

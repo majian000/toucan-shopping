@@ -69,7 +69,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
             }
 
             @Override
-            public ResultObjectVO queryRoleTree(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryAdminRoleTree(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {

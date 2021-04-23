@@ -127,6 +127,35 @@ public class AdminController extends UIController {
     }
 
 
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/passwordPage/{id}",method = RequestMethod.GET)
+    public String passwordPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            Admin admin = new Admin();
+            admin.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
+            ResultObjectVO resultObjectVO = feignAdminService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<Admin> admins = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Admin.class);
+                    if(!CollectionUtils.isEmpty(admins))
+                    {
+                        admin = admins.get(0);
+                        request.setAttribute("model",admin);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/admin/password.html";
+    }
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page(HttpServletRequest request)

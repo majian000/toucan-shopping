@@ -73,6 +73,11 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            if(data.field.password!=data.field.password2)
+            {
+                layer.msg("密码与确认密码不一致");
+                return false;
+            }
             var appCodes = [];
             $('input[name=appCodes]:checked').each(function() {
                 appCodes.push($(this).val());
@@ -84,7 +89,7 @@
                 type:'POST',
                 data:JSON.stringify(data.field),
                 success:function(data){
-                    if(data.code==0) {
+                    if(data.code<=0) {
                         layer.msg(data.msg);
                         return false;
                     }

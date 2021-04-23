@@ -186,10 +186,9 @@ public class RoleController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //查询所有应用角色树
-            App query = new App();
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = feignRoleService.queryRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            //查询对应账户的应用
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),entity);
+            resultObjectVO = feignRoleService.queryAdminRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //拿到角色树

@@ -56,6 +56,7 @@
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
             <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="role">角色</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs " lay-event="password">密码</a>
         </script>
 
     </div>
@@ -240,7 +241,7 @@
 
         table.on('tool(adminTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'edit') {
+            if (obj.event == 'edit') {
 
                 var index = layer.open({
                     title: '编辑用户',
@@ -255,7 +256,7 @@
                     layer.full(index);
                 });
                 return false;
-            } else if (obj.event === 'delete') {
+            } else if (obj.event == 'delete') {
                 layer.confirm('确定删除该账号?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]admin/delete/"+data.id,
@@ -279,7 +280,7 @@
                         }
                     });
                 });
-            }else if (obj.event === 'role') {
+            }else if (obj.event == 'role') {
                 loadding = layer.load();
                 index = layer.open({
                     title: '选择角色',
@@ -359,6 +360,21 @@
                     layer.full(index);
                 });
 
+            }else if (obj.event == 'password') {
+
+                var index = layer.open({
+                    title: '修改密码',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]admin/passwordPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
             }
         });
 

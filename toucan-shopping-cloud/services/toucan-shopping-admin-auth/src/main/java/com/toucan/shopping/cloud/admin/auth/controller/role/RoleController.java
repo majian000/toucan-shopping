@@ -179,17 +179,24 @@ public class RoleController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value = "/query/role/tree",method = RequestMethod.POST)
+    @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryRoleTree(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryAdminRoleTree(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            App query = JSONObject.parseObject(requestJsonVO.getEntityJson(), App.class);
-            //查询当前用户指定应用下的权限树
-            List<App> apps = appService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(apps))
+            AdminAppVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminAppVO.class);
+            //查询查询指定用户下的应用角色树
+            List<AdminApp> adminApps = adminAppService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(adminApps))
             {
+                List<App> apps=new ArrayList<App>();
+                for(AdminApp adminApp:adminApps)
+                {
+                    App queryApp =new App();
+                    queryApp.setCode(adminApp.getAppCode());
+                    apps.addAll(appService.findListByEntity(queryApp));
+                }
                 List<RoleTreeVO> roleTreeVOS = new ArrayList<RoleTreeVO>();
                 for(App app:apps)
                 {
