@@ -4,6 +4,8 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.app;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
@@ -34,7 +36,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/app")
-public class AppController {
+public class AppController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -47,12 +49,17 @@ public class AppController {
     @Autowired
     private FeignAppService feignAppService;
 
+    @Autowired
+    private FeignFunctionService feignFunctionService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page()
+    public String page(HttpServletRequest request)
     {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/app/listPage",feignFunctionService);
+
         return "pages/app/list.html";
     }
 

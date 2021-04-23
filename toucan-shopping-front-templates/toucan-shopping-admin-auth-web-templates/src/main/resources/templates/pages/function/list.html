@@ -49,8 +49,7 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">删除</button>
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
             </div>
         </script>
 
@@ -58,8 +57,7 @@
 
         <!-- 操作列 -->
         <script type="text/html" id="functionTreeTableToolbar">
-            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
     </div>

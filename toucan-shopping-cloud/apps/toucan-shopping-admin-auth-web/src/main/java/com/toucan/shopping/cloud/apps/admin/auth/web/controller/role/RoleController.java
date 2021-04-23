@@ -64,6 +64,9 @@ public class RoleController extends UIController {
     @Autowired
     private FeignAdminRoleService feignAdminRoleService;
 
+    @Autowired
+    private FeignFunctionService feignFunctionService;
+
 
     @Autowired
     private FeignAppService feignAppService;
@@ -75,6 +78,9 @@ public class RoleController extends UIController {
     {
         //初始化选择应用控件
         super.initSelectApp(request,toucan,feignAppService);
+
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/role/listPage",feignFunctionService);
 
         return "pages/role/list.html";
     }

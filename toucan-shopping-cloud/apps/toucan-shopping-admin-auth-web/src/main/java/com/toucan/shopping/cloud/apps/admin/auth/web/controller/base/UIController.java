@@ -69,22 +69,22 @@ public abstract class UIController {
             function.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
             ResultObjectVO resultObjectVO = feignFunctionService.queryChildren(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
+            if(resultObjectVO.isSuccess())
             {
                 List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
                 if(!CollectionUtils.isEmpty(functions))
                 {
-                    List<Function> toolbarButtons = new ArrayList<Function>();
-                    List<Function> rowButtons = new ArrayList<Function>();
+                    List<String> toolbarButtons = new ArrayList<String>();
+                    List<String> rowButtons = new ArrayList<String>();
 
                     for(Function buttonFunction:functions)
                     {
                         if(buttonFunction.getType().shortValue()==2)
                         {
-                            rowButtons.add(buttonFunction);
+                            rowButtons.add(buttonFunction.getFunctionText());
                         }else if(buttonFunction.getType().shortValue()==3)
                         {
-                            toolbarButtons.add(buttonFunction);
+                            toolbarButtons.add(buttonFunction.getFunctionText());
                         }
                     }
 
@@ -96,8 +96,8 @@ public abstract class UIController {
         {
             logger.warn(e.getMessage(),e);
 
-            request.setAttribute("toolbarButtons",new ArrayList<Function>());
-            request.setAttribute("rowButtons",new ArrayList<Function>());
+            request.setAttribute("toolbarButtons",new ArrayList<String>());
+            request.setAttribute("rowButtons",new ArrayList<String>());
         }
     }
 

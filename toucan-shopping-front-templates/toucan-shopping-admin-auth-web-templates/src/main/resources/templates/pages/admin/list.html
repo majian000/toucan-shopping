@@ -44,8 +44,7 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">删除</button>
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
 
             </div>
         </script>
@@ -53,10 +52,7 @@
         <table class="layui-hide" id="adminTable" lay-filter="adminTableFilter"></table>
 
         <script type="text/html" id="adminTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="role">角色</a>
-            <a class="layui-btn layui-btn-normal layui-btn-xs " lay-event="password">密码</a>
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
     </div>

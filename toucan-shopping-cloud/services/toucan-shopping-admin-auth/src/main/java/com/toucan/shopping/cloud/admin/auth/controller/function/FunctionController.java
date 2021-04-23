@@ -567,11 +567,11 @@ public class FunctionController {
         try {
             Function query = JSONObject.parseObject(requestJsonVO.getEntityJson(), Function.class);
             //根据URL查询出功能项
-            List<Function> treeNode = functionService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(treeNode)) {
+            List<Function> childs = functionService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(childs)) {
                 query = new Function();
-                query.setPid(treeNode.get(0).getId());
-                query.setAppCode(treeNode.get(0).getAppCode());
+                query.setPid(childs.get(0).getId());
+                query.setAppCode(childs.get(0).getAppCode());
                 resultObjectVO.setData(functionService.findListByEntity(query));
             }
         }catch(Exception e)
