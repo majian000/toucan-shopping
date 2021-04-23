@@ -67,12 +67,16 @@ public class IndexController {
             ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 List<Admin> admins = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Admin.class);
-                if (CollectionUtils.isEmpty(admins)) {
-                    request.setAttribute("username",admins.get(0).getUsername());
+                if (!CollectionUtils.isEmpty(admins)) {
+                    request.setAttribute("model",admins.get(0));
                 }
             }
         }catch(Exception e)
         {
+            Admin admin = new Admin();
+            admin.setUsername("");
+            admin.setId(-1L);
+            request.setAttribute("model",admin);
             logger.warn(e.getMessage(),e);
         }
         return "index.html";
