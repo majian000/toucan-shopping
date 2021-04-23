@@ -7,6 +7,8 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.cloud.apps.admin.auth.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
+import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.util.VerifyCodeUtil;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,6 +39,9 @@ public class LoginController {
 
     @Value("${toucan.app-code}")
     private String appCode;
+
+    @Autowired
+    private Toucan toucan;
 
     @Autowired
     private FeignAdminService feignAdminService;
@@ -106,7 +112,7 @@ public class LoginController {
             requestVo.setSign(SignUtil.sign(appCode, entityJson));
             requestVo.setEntityJson(entityJson);
             resultObjectVO = feignAdminService.login(requestVo.getSign(),requestVo);
-            if(resultObjectVO.getCode()== ResultVO.SUCCESS)
+            if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
                 {
@@ -133,6 +139,9 @@ public class LoginController {
         }
         return resultObjectVO;
     }
+
+
+
 
 
 

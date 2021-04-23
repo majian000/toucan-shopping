@@ -83,6 +83,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
             }
+
         };
     }
 }

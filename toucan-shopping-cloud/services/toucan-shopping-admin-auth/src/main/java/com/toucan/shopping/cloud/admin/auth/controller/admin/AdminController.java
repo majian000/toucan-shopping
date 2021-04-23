@@ -240,7 +240,62 @@ public class AdminController {
     }
 
 
+    /**
+     * 管理员账户注销
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO logout(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要注销的用户");
+            return resultObjectVO;
+        }
 
+        try {
+            String entityJson = requestVo.getEntityJson();
+            Admin admin =JSONObject.parseObject(entityJson,Admin.class);
+            if(StringUtils.isEmpty(admin.getAdminId()))
+            {
+                resultObjectVO.setCode(AdminResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入adminId");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(admin.getLoginToken()))
+            {
+                resultObjectVO.setCode(AdminResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入登录token");
+                return resultObjectVO;
+            }
+
+            Object loginTokenObject = redisTemplate.opsForHash().get(AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()),AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()));
+            if(loginTokenObject!=null)
+            {
+                String redisLoginToken = String.valueOf(loginTokenObject);
+                if(redisLoginToken.equals(admin.getLoginToken()))
+                {
+                    //删除对应的登录会话
+                    redisTemplate.opsForHash().delete(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+                }
+            }
+            //设置登录token1个小时超时
+            redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
+                    AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+            resultObjectVO.setData(admin);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("登录失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 根据ID查询

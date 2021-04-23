@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/admin",fallbackFactory = FeignAdminServiceFallbackFactory.class)
 public interface FeignAdminService {
 
+    /**
+     * 登录账号
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
     @PostMapping("/login")
     ResultObjectVO login(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
@@ -57,6 +63,11 @@ public interface FeignAdminService {
      * @return
      */
     @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO logout(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 
 }

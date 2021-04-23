@@ -28,4 +28,5 @@ public interface FeignAdminAppService {
     ResultObjectVO queryAppListByAdminId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+
 }

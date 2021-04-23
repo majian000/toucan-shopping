@@ -21,4 +21,21 @@ public class AuthHeaderUtil {
         return adminId;
     }
 
+
+
+    public static String getToken(String authHeader) throws Exception {
+        if(StringUtils.isEmpty(authHeader))
+        {
+            throw new IllegalArgumentException("请求头参数无效");
+
+        }
+
+        String token = StringUtils.substringAfter(authHeader,"lt=");
+        if(token.indexOf(";")!=-1)
+        {
+            token=token.substring(0,token.indexOf(";"));
+        }
+        return token;
+    }
+
 }
