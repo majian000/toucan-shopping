@@ -45,4 +45,11 @@ public interface AdminMapper {
      * @return
      */
     int update(Admin admin);
+
+    /**
+     * 修改密码
+     * @param adminVO
+     * @return
+     */
+    int updatePassword(AdminVO adminVO);
 }

@@ -25,6 +25,10 @@ public interface FeignAdminService {
     ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+
+    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByEntity(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
     /**
      * 保存
      * @param signHeader
@@ -66,8 +70,23 @@ public interface FeignAdminService {
     ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 退出登录
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
     @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO logout(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO logout(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
+
+    /**
+     * 修改密码
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update/password",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updatePassword(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 }

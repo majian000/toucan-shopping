@@ -51,6 +51,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public int updatePassword(AdminVO adminVO) {
+        return adminMapper.updatePassword(adminVO);
+    }
+
+    @Override
     public PageInfo<AdminVO> queryListPage(AdminPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<AdminVO> pageInfo = new PageInfo();

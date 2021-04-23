@@ -144,6 +144,95 @@ public class AdminController {
 
 
 
+    /**
+     * 根据实体查询对象
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到参数");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminVO adminQuery = JSONObject.parseObject(requestVo.getEntityJson(),AdminVO.class);
+            List<Admin> adminApps = adminService.findListByEntity(adminQuery);
+            resultObjectVO.setData(adminApps);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 修改密码
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update/password",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updatePassword(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
+            resultObjectVO.setMsg("修改失败,没有找到账号");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminVO adminVO = JSONObject.parseObject(requestVo.getEntityJson(),AdminVO.class);
+
+            if(StringUtils.isEmpty(adminVO.getPassword()))
+            {
+                resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
+                resultObjectVO.setMsg("请求失败,请输入密码");
+                return resultObjectVO;
+            }
+
+            if(!UserRegistUtil.checkPwd(adminVO.getPassword()))
+            {
+                resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
+                resultObjectVO.setMsg("请求失败,请输入6至15位的密码");
+                return resultObjectVO;
+            }
+            adminVO.setPassword(MD5Util.md5(adminVO.getPassword()));
+            int row = adminService.updatePassword(adminVO);
+            if (row < 1) {
+
+                resultObjectVO.setCode(AdminResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(adminVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("添加失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
     /**
      * 管理员账户登录

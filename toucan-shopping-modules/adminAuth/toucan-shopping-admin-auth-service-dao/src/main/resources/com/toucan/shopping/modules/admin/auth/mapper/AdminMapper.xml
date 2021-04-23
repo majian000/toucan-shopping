@@ -45,6 +45,9 @@
             <if test="username!=null">
                 and saa.username = #{username}
             </if>
+            <if test="adminId!=null and adminId!=''">
+                and saa.admin_id = #{adminId}
+            </if>
                 and saa.delete_status = 0
         </where>
 
@@ -107,6 +110,11 @@
          update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
          remark=#{remark}
           where admin_id = #{adminId}
+    </update>
+
+    <update id="updatePassword" parameterType="com.toucan.shopping.modules.admin.auth.vo.AdminVO">
+        update t_sa_admin set  password=#{password},update_date=#{updateDate},update_admin_id=#{updateAdminId}
+          where admin_id = #{adminId} and delete_status=0
     </update>
 
 </mapper>

@@ -33,6 +33,12 @@ public interface AdminService {
     boolean exists(String username);
 
 
+    /**
+     * 修改密码
+     * @param adminVO
+     * @return
+     */
+    int updatePassword(AdminVO adminVO);
 
 
 
