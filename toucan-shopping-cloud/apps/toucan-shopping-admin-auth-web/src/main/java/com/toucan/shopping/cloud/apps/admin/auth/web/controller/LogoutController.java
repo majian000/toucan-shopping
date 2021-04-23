@@ -65,7 +65,7 @@ public class LogoutController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/",method = RequestMethod.POST)
+    @RequestMapping(value = "/out",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO out(HttpServletRequest request)
     {

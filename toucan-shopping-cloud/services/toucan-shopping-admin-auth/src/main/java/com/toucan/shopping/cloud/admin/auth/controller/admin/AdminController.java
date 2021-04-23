@@ -280,13 +280,12 @@ public class AdminController {
                 {
                     //删除对应的登录会话
                     redisTemplate.opsForHash().delete(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+                }else{
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
                 }
+            }else{
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
             }
-            //设置登录token1个小时超时
-            redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
-            resultObjectVO.setData(admin);
-
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
