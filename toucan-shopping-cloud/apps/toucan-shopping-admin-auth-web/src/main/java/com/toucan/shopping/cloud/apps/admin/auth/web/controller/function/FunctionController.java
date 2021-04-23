@@ -365,7 +365,7 @@ public class FunctionController extends UIController {
             query.setCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
             resultObjectVO = feignFunctionService.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            if(resultObjectVO.isSuccess())
             {
                 List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
 
@@ -375,7 +375,7 @@ public class FunctionController extends UIController {
                 queryRoleFunction.setRoleId(roleId);
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
                 resultObjectVO = feignRoleFunctionService.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
-                if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
+                if(resultObjectVO.isSuccess())
                 {
                     List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
                     if(!CollectionUtils.isEmpty(roleFunctions)) {
