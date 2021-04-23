@@ -130,10 +130,6 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 
-<script th:inline="javascript">
-    var current_admin_id = [[${model.id}]];
-</script>
-
 <script th:src="@{/js/lay-config.js?v=2.0.0}" charset="utf-8"></script>
 <script>
     layui.use(['jquery', 'layer', 'miniAdmin'], function () {
@@ -156,7 +152,7 @@
         };
         miniAdmin.render(options);
 
-        $("#updatePassword").attr("layuimini-content-href",'[[@{/}]]admin/passwordPage/'+current_admin_id);
+        $("#updatePassword").attr("layuimini-content-href",'[[@{/}]]admin/myPasswordPage');
 
         $('.login-out').on("click", function () {
             $.ajax({

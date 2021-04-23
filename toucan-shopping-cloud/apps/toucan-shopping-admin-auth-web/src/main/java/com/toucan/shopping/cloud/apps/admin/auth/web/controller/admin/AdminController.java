@@ -156,6 +156,37 @@ public class AdminController extends UIController {
     }
 
 
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/myPasswordPage",method = RequestMethod.GET)
+    public String myPasswordPage(HttpServletRequest request)
+    {
+        try {
+            Admin admin = new Admin();
+            admin.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
+            ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<Admin> admins = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Admin.class);
+                    if(!CollectionUtils.isEmpty(admins))
+                    {
+                        admin = admins.get(0);
+                        request.setAttribute("model",admin);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/admin/mypassword.html";
+    }
+
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
@@ -238,7 +269,7 @@ public class AdminController extends UIController {
 
 
     /**
-     * 修改
+     * 修改密码
      * @param entity
      * @return
      */
@@ -246,6 +277,32 @@ public class AdminController extends UIController {
     @RequestMapping(value = "/update/password",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO updatePassword(HttpServletRequest request,@RequestBody AdminVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignAdminService.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 修改我的密码
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update/mypassword",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO updateMyPassword(HttpServletRequest request,@RequestBody AdminVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
