@@ -32,6 +32,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="enableStatus!=null">
+            and tu.enable_status = #{enableStatus}
+        </if>
     </sql>
 
 
@@ -47,6 +50,9 @@
             </if>
             <if test="adminId!=null and adminId!=''">
                 and saa.admin_id = #{adminId}
+            </if>
+            <if test="enableStatus!=null">
+                and saa.enable_status = #{enableStatus}
             </if>
                 and saa.delete_status = 0
         </where>
