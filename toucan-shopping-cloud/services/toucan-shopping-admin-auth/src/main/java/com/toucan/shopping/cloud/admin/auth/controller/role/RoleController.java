@@ -175,7 +175,7 @@ public class RoleController {
 
 
     /**
-     * 查询指定用户关联所有应用的角色树
+     * 查询所有应用的角色树
      * @param requestJsonVO
      * @return
      */
@@ -185,34 +185,26 @@ public class RoleController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            AdminApp query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminApp.class);
-            if(StringUtils.isEmpty(query.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
+            App query = JSONObject.parseObject(requestJsonVO.getEntityJson(), App.class);
             //查询当前用户指定应用下的权限树
-            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(query);
-            if(!CollectionUtils.isEmpty(adminApps))
+            List<App> apps = appService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(apps))
             {
                 List<RoleTreeVO> roleTreeVOS = new ArrayList<RoleTreeVO>();
-                for(AdminApp adminApp:adminApps)
+                for(App app:apps)
                 {
-                    App queryApp = new App();
-                    queryApp.setCode(adminApp.getAppCode());
-                    queryApp.setDeleteStatus((short)0);
-                    List<App> apps = appService.findListByEntity(queryApp);
                     //查询所有应用
                     if(!CollectionUtils.isEmpty(apps))
                     {
                         RoleTreeVO roleTreeVO = new RoleTreeVO();
-                        roleTreeVO.setId(apps.get(0).getId());
-                        roleTreeVO.setTitle(apps.get(0).getCode()+" "+apps.get(0).getName());
-                        roleTreeVO.setText(apps.get(0).getCode()+" "+apps.get(0).getName());
+                        roleTreeVO.setId(app.getId());
+                        roleTreeVO.setTitle(app.getCode()+" "+app.getName());
+                        roleTreeVO.setText(app.getCode()+" "+app.getName());
                         roleTreeVO.setNodes(new ArrayList<RoleTreeVO>());
                         roleTreeVO.setRoleId("-1");
 
                         Role queryRole = new Role();
-                        queryRole.setAppCode(apps.get(0).getCode());
+                        queryRole.setAppCode(app.getCode());
                         queryRole.setEnableStatus((short)1);
                         queryRole.setDeleteStatus((short)0);
                         //查询所有角色

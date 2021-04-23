@@ -3,13 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.role;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
+import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
+import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
@@ -43,7 +42,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping("/role")
-public class RoleController {
+public class RoleController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -65,33 +64,18 @@ public class RoleController {
     @Autowired
     private FeignAdminRoleService feignAdminRoleService;
 
-    public void initSelectApp(HttpServletRequest request)
-    {
-        try {
-            AdminApp query = new AdminApp();
-            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, query);
-            ResultObjectVO resultObjectVO = feignAdminAppService.queryAppListByAdminId(SignUtil.sign(requestJsonVO), requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                List<AdminAppVO> adminAppVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminAppVO.class);
-                request.setAttribute("adminAppVOS",adminAppVOS);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
 
-            request.setAttribute("adminAppVOS",new ArrayList<AdminAppVO>());
-        }
-    }
-
+    @Autowired
+    private FeignAppService feignAppService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
     {
-        initSelectApp(request);
+        //初始化选择应用控件
+        super.initSelectApp(request,toucan,feignAppService);
+
         return "pages/role/list.html";
     }
 
@@ -104,7 +88,8 @@ public class RoleController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        initSelectApp(request);
+        //初始化选择应用控件
+        super.initSelectApp(request,toucan,feignAppService);
         return "pages/role/add.html";
     }
 
@@ -116,7 +101,8 @@ public class RoleController {
     {
         try {
 
-            initSelectApp(request);
+            //初始化选择应用控件
+            super.initSelectApp(request,toucan,feignAppService);
 
             Role entity = new Role();
             entity.setId(id);
@@ -200,9 +186,8 @@ public class RoleController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //查询当前用户可看到的所有应用角色树
-            AdminApp query = new AdminApp();
-            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            //查询所有应用角色树
+            App query = new App();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
             resultObjectVO = feignRoleService.queryRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())

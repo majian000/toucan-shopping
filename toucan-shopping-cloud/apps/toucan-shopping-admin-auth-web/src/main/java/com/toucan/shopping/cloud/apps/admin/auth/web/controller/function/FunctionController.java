@@ -77,7 +77,7 @@ public class FunctionController extends UIController {
     public String page(HttpServletRequest request)
     {
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAdminAppService);
+        super.initSelectApp(request,toucan,feignAppService);
 
         //初始化工具条按钮、操作按钮
 
@@ -92,7 +92,7 @@ public class FunctionController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAdminAppService);
+        super.initSelectApp(request,toucan,feignAppService);
 
 
         return "pages/function/add.html";
@@ -301,6 +301,27 @@ public class FunctionController extends UIController {
         {
             resultObjectVO.setMsg("请求失败,请重试");
             resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            App query = new App();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            return feignFunctionService.queryAppFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

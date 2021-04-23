@@ -115,27 +115,23 @@ public class FunctionController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            AdminApp query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminApp.class);
-            if(StringUtils.isEmpty(query.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
+            App query = JSONObject.parseObject(requestJsonVO.getEntityJson(), App.class);
 
-            //当前用户下关联所有应用
-            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(query);
-            if(!CollectionUtils.isEmpty(adminApps))
+            //查询所有应用
+            List<App> apps = appService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(apps))
             {
                 List<AppFunctionTreeVO> appFunctionTreeVOS = new ArrayList<AppFunctionTreeVO>();
-                for(AdminAppVO adminAppVO : adminApps)
+                for(App app : apps)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                     appFunctionTreeVO.setId(-1L);
-                    appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
-                    appFunctionTreeVO.setTitle(adminAppVO.getName());
+                    appFunctionTreeVO.setAppCode(app.getCode());
+                    appFunctionTreeVO.setTitle(app.getName());
                     appFunctionTreeVO.setEnableStatus((short)1);
                     appFunctionTreeVOS.add(appFunctionTreeVO);
 
-                    appFunctionTreeVO.setChildren(functionService.queryTreeByAppCode(adminAppVO.getAppCode()));
+                    appFunctionTreeVO.setChildren(functionService.queryTreeByAppCode(app.getCode()));
 
                 }
                 resultObjectVO.setData(appFunctionTreeVOS);

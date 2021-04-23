@@ -3,10 +3,13 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.base;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -30,25 +33,24 @@ public abstract class UIController {
      * 初始化选择应用控件
      * @param request
      * @param toucan
-     * @param feignAdminAppService
+     * @param feignAppService
      */
-    public void initSelectApp(HttpServletRequest request, Toucan toucan, FeignAdminAppService feignAdminAppService)
+    public void initSelectApp(HttpServletRequest request, Toucan toucan, FeignAppService feignAppService)
     {
         try {
-            AdminApp query = new AdminApp();
-            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            App query = new App();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-            ResultObjectVO resultObjectVO = feignAdminAppService.queryAppListByAdminId(SignUtil.sign(requestJsonVO), requestJsonVO);
+            ResultObjectVO resultObjectVO = feignAppService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
-                List<AdminAppVO> adminAppVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminAppVO.class);
-                request.setAttribute("adminAppVOS",adminAppVOS);
+                List<AppVO> apps = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AppVO.class);
+                request.setAttribute("apps",apps);
             }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            request.setAttribute("adminAppVOS",new ArrayList<AdminAppVO>());
+            request.setAttribute("apps",new ArrayList<AdminAppVO>());
         }
     }
 

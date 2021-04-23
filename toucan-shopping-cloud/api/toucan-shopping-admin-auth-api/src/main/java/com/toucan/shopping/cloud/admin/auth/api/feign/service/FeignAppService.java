@@ -77,7 +77,7 @@ public interface FeignAppService {
      * @return
      */
     @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
-    ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
     /**

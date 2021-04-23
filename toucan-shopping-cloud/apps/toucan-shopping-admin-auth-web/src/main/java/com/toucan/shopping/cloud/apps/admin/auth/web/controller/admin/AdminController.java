@@ -3,10 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.admin;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
@@ -15,6 +12,7 @@ import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -62,13 +60,16 @@ public class AdminController extends UIController {
     @Autowired
     private FeignAdminRoleService feignAdminRoleService;
 
+    @Autowired
+    private FeignAppService feignAppService;
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAdminAppService);
+        super.initSelectApp(request,toucan,feignAppService);
 
 
         return "pages/admin/add.html";
@@ -82,7 +83,7 @@ public class AdminController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
-            super.initSelectApp(request,toucan,feignAdminAppService);
+            super.initSelectApp(request,toucan,feignAppService);
 
             Admin admin = new Admin();
             admin.setId(id);
@@ -96,16 +97,16 @@ public class AdminController extends UIController {
                     {
                         admin = admins.get(0);
                         //设置复选框选中状态
-                        Object adminAppVoObject = request.getAttribute("adminAppVOS");
-                        if(adminAppVoObject!=null) {
-                            List<AdminAppVO> adminAppVOS = (List<AdminAppVO>) adminAppVoObject;
+                        Object appsObject = request.getAttribute("apps");
+                        if(appsObject!=null) {
+                            List<AppVO> appVos = (List<AppVO>) appsObject;
                             if(!CollectionUtils.isEmpty(admin.getAdminApps()))
                             {
                                 for(AdminApp adminAppVO:admin.getAdminApps())
                                 {
-                                    for(AdminAppVO aa:adminAppVOS)
+                                    for(AppVO aa:appVos)
                                     {
-                                        if(adminAppVO.getAppCode().equals(aa.getAppCode()))
+                                        if(adminAppVO.getAppCode().equals(aa.getCode()))
                                         {
                                             aa.setChecked(true);
                                         }
@@ -132,7 +133,7 @@ public class AdminController extends UIController {
     {
 
         //初始化选择应用控件
-        super.initSelectApp(request,toucan,feignAdminAppService);
+        super.initSelectApp(request,toucan,feignAppService);
 
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/admin/listPage",feignFunctionService);

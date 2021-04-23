@@ -28,7 +28,7 @@
         <label class="layui-form-label required">所属应用</label>
         <div class="layui-input-block">
             <select id="selectApp" name="appCode" lay-verify="required" lay-search="">
-                <option th:each="aa : ${adminAppVOS}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}">
+                <option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}">
             </select>
         </div>
     </div>

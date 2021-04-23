@@ -28,4 +28,10 @@ public class AppVO extends App {
      */
     private String ids;
 
+
+    /**
+     * checkbox是否选中
+     */
+    private boolean checked;
+
 }
