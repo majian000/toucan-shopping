@@ -162,8 +162,19 @@
         });
 
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', function () {
-                window.location = 'page/login-3.html';
+            $.ajax({
+                url:"[[@{/}]]logout/out",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                success:function(data){
+                    layer.msg('退出登录成功', function () {
+                        window.location = "[[@{/}]]login/page";
+                    });
+                },
+                complete:function(data)
+                {
+                    layer.close(index);
+                }
             });
         });
     });
