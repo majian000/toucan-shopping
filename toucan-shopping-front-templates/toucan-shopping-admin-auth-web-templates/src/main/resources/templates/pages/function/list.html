@@ -35,7 +35,7 @@
                             <div class="layui-input-inline">
                                 <select id="selectApp" name="appCode"  lay-search="">
                                     <option value="">请选择</option>
-                                    <option th:each="aa : ${adminAppVOS}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}">
+                                    <option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}">
                                 </select>
                             </div>
                         </div>
