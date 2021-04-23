@@ -3,10 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.function;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.auth.web.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
@@ -69,6 +66,8 @@ public class FunctionController extends UIController {
     @Autowired
     private FeignRoleFunctionService feignRoleFunctionService;
 
+    @Autowired
+    private FeignRoleService feignRoleService;
 
 
 
@@ -361,10 +360,9 @@ public class FunctionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //查询当前用户的权限树
-            AdminApp query = new AdminApp();
-            query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            query.setAppCode(appCode);
+            //查询权限树
+            App query = new App();
+            query.setCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
             resultObjectVO = feignFunctionService.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())

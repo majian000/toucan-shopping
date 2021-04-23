@@ -159,21 +159,9 @@ public class FunctionController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            AdminApp query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminApp.class);
-            if(StringUtils.isEmpty(query.getAdminId()))
-            {
-                throw new IllegalArgumentException("adminId为空");
-            }
-            if(StringUtils.isEmpty(query.getAppCode()))
-            {
-                throw new IllegalArgumentException("appCode为空");
-            }
-            //查询当前用户指定应用下的权限树
-            List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(query);
-            if(!CollectionUtils.isEmpty(adminApps))
-            {
-                resultObjectVO.setData(functionService.queryTreeByAppCode(adminApps.get(0).getAppCode()));
-            }
+            App query = JSONObject.parseObject(requestJsonVO.getEntityJson(), App.class);
+            //查询指定应用下的权限树
+            resultObjectVO.setData(functionService.queryTreeByAppCode(query.getCode()));
 
         }catch(Exception e)
         {

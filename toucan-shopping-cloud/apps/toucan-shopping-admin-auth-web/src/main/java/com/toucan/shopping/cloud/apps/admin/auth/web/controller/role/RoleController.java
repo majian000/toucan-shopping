@@ -182,7 +182,7 @@ public class RoleController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryFunctionTree(HttpServletRequest request,@RequestBody AdminAppVO entity)
+    public ResultObjectVO queryRoleTree(HttpServletRequest request,@RequestBody AdminAppVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
