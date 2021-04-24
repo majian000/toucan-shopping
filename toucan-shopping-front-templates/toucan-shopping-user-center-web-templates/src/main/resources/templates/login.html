@@ -101,6 +101,7 @@
             form = layui.form,
             layer = layui.layer;
 
+        var loadding;
         // 登录过期的时候，跳出ifram框架
         if (top.location != self.location) top.location = self.location;
 
@@ -137,6 +138,7 @@
                 layer.msg('验证码不能为空');
                 return false;
             }
+            loadding = layer.load();
             $.ajax({
                 url:"[[@{/}]]login/submit",
                 contentType: "application/json; charset=utf-8",
@@ -151,6 +153,10 @@
                     layer.msg('登录成功', function () {
                         window.location = '[[@{/}]]index/page';
                     });
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
                 }
             });
             return false;
