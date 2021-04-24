@@ -27,4 +27,10 @@ public class FunctionVO extends Function {
      */
     private String updateAdminUsername;
 
+    /**
+     * 功能所属人
+     */
+    private String adminId;
+
+
 }

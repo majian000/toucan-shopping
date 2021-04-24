@@ -207,5 +207,10 @@ public class FunctionServiceImpl implements FunctionService {
         return functionMapper.queryListByRoleIdArray(roleIds);
     }
 
+    @Override
+    public List<FunctionVO> queryListByRoleIdArrayAndParentId(String[] roleIds,String parentId) {
+        return functionMapper.queryListByRoleIdArrayAndParentId(roleIds,parentId);
+    }
+
 
 }

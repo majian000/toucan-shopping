@@ -79,7 +79,7 @@ public interface FeignFunctionService {
      * @return
      */
     @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.POST)
-    public ResultObjectVO queryAppFunctionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppFunctionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -88,7 +88,7 @@ public interface FeignFunctionService {
      * @return
      */
     @RequestMapping(value = "/query/function/tree",method = RequestMethod.POST)
-    public ResultObjectVO queryFunctionTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryFunctionTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
 
@@ -98,7 +98,7 @@ public interface FeignFunctionService {
      * @return
      */
     @RequestMapping(value = "/query/admin/app/functions",method = RequestMethod.POST)
-    public ResultObjectVO queryAdminAppFunctions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAdminAppFunctions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -108,6 +108,16 @@ public interface FeignFunctionService {
      * @return
      */
     @RequestMapping(value = "/query/one/children",method = RequestMethod.POST)
-    public ResultObjectVO queryChildren(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryChildren(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 返回指定人的指定应用的某个上级功能项下的按钮列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/admin/app/parent/url/one/child",method = RequestMethod.POST)
+    ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

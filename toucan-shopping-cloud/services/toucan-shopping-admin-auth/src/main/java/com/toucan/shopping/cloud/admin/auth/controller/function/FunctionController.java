@@ -583,4 +583,44 @@ public class FunctionController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 返回指定人的指定应用的某个上级功能项下的按钮列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/admin/app/parent/url/one/child",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            FunctionVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionVO.class);
+            List<AdminRole> adminRoles = adminRoleService.listByAdminIdAndAppCode(query.getAdminId(),query.getAppCode());
+            if(!CollectionUtils.isEmpty(adminRoles))
+            {
+                String[] roleIdArray = new String[adminRoles.size()];
+                int pos =0 ;
+                for(AdminRole adminRole:adminRoles)
+                {
+                    roleIdArray[pos]=adminRole.getRoleId();
+                    pos++;
+                }
+                List<Function> functions = functionService.findListByEntity(query);
+                if(!CollectionUtils.isEmpty(functions)) {
+                    resultObjectVO.setData(functionService.queryListByRoleIdArrayAndParentId(roleIdArray,String.valueOf(functions.get(0).getId())));
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
 }

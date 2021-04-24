@@ -67,4 +67,8 @@ public interface FunctionMapper {
     List<Function> findTreeTableByPageInfo(FunctionTreeInfo functionTreeInfo);
 
     List<FunctionVO> queryListByRoleIdArray(String[] roleIds);
+
+    List<FunctionVO> queryListByRoleIdArrayAndParentId(String[] roleIds,String parentId);
+
+
 }

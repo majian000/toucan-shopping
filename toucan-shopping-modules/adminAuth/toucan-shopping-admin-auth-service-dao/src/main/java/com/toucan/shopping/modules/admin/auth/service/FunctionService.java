@@ -94,9 +94,18 @@ public interface FunctionService {
 
     /**
      * 查询指定角色下所有功能
-     * @param roleId
+     * @param roleIds
      * @return
      */
     List<FunctionVO> queryListByRoleIdArray(String[] roleIds);
 
+
+
+
+    /**
+     * 查询指定角色下所有功能
+     * @param roleIds
+     * @return
+     */
+    List<FunctionVO> queryListByRoleIdArrayAndParentId(String[] roleIds,String url);
 }

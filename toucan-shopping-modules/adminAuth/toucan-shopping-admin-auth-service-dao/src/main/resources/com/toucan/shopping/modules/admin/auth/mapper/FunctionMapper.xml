@@ -159,4 +159,24 @@
 
     </select>
 
+
+
+
+
+
+    <select id="queryListByRoleIdArrayAndParentId" resultMap="functionVOMap" >
+        select distinct * from (
+        select tsf.* from t_sa_function tsf
+        right join t_sa_role_function tsrf on tsf.function_id = tsrf.function_id and tsrf.delete_status = 0
+        and tsrf.role_id in
+        <foreach item="item" index="index" collection="roleIds" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        )ds
+        where ds.delete_status=0 and ds.pid = #{parentId}
+
+    </select>
+
+
+
 </mapper>
