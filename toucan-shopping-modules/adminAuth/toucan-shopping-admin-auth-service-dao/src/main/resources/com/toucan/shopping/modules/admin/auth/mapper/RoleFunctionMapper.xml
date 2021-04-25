@@ -59,7 +59,7 @@
             where 1=1 and ds.url=#{url} and ds.app_code=#{appCode}
             and ds.delete_status=0
             and ds.url is not null
-            and ds.role_id in  in
+            and ds.role_id in
             <foreach item="item" index="index" collection="roleIdArray" open="("  close=")" separator=",">
                 #{item}
             </foreach>

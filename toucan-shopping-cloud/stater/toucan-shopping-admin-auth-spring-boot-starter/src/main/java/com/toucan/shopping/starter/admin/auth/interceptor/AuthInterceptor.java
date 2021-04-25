@@ -58,15 +58,17 @@ public class AuthInterceptor implements HandlerInterceptor {
      * @param method
      * @return
      */
-    public boolean authVerify(String adminId,Method method) throws NoSuchAlgorithmException {
+    public boolean authVerify(String adminId,Class clazz,Method method) throws NoSuchAlgorithmException {
         AuthVerifyVO authVerifyVO = new AuthVerifyVO();
         authVerifyVO.setAdminId(adminId);
         String url="";
         //拿到控制器的路径
-        RequestMapping controllerRequestMapping = method.getClass().getAnnotation(RequestMapping.class);
+        RequestMapping controllerRequestMapping =((RequestMapping)clazz.getAnnotation(RequestMapping.class));
         if(controllerRequestMapping!=null)
         {
-            url+=controllerRequestMapping.value();
+            if(controllerRequestMapping.value()!=null&&controllerRequestMapping.value().length>0) {
+                url += controllerRequestMapping.value()[0];
+            }
         }
         //拿到方法的路径
         RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
@@ -84,25 +86,35 @@ public class AuthInterceptor implements HandlerInterceptor {
                         PutMapping methodPutMapping = method.getAnnotation(PutMapping.class);
                         if(methodPutMapping!=null)
                         {
-                            url+=methodPutMapping.value();
+                            if(methodPutMapping.value()!=null&&methodPutMapping.value().length>0) {
+                                url += methodPutMapping.value()[0];
+                            }
                         }
                     }else{
-                        url+=methodDeleteMapping.value();
+                        if(methodDeleteMapping.value()!=null&&methodDeleteMapping.value().length>0) {
+                            url += methodDeleteMapping.value()[0];
+                        }
                     }
                 }else{
-                    url+=methodGetMapping.value();
+                    if(methodGetMapping.value()!=null&&methodGetMapping.value().length>0) {
+                        url += methodGetMapping.value()[0];
+                    }
                 }
             }else{
-                url+=methodPostMapping.value();
+                if(methodPostMapping.value()!=null&&methodPostMapping.value().length>0) {
+                    url += methodPostMapping.value()[0];
+                }
             }
         }else{
-            url+=methodRequestMapping.value();
+            if(methodRequestMapping.value()!=null&&methodRequestMapping.value().length>0) {
+                url += methodRequestMapping.value()[0];
+            }
         }
 
         //去掉地址传递的参数
         if(url.indexOf("{")!=-1)
         {
-            url = url.substring(0,url.indexOf("{"));
+            url = url.substring(0,url.indexOf("{")-1);
         }
 
         authVerifyVO.setUrl(url);
@@ -208,15 +220,15 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
 
-//                                //校验请求权限
-//                                if(!authVerify(aid,method))
-//                                {
-//                                    logger.info("权限校验失败 " + authHeader);
-//                                    resultVO.setCode(ResultVO.FAILD);
-//                                    resultVO.setMsg("没有权限访问");
-//                                    responseWrite(response, JSONObject.toJSONString(resultVO));
-//                                    return false;
-//                                }
+                                //校验请求权限
+                                if(!authVerify(aid,handlerMethod.getBeanType(),method))
+                                {
+                                    logger.info("权限校验失败 " + authHeader);
+                                    resultVO.setCode(ResultVO.FAILD);
+                                    resultVO.setMsg("没有权限访问");
+                                    responseWrite(response, JSONObject.toJSONString(resultVO));
+                                    return false;
+                                }
                             }
 
                             //如果是直接请求
@@ -262,7 +274,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
                                 //校验请求权限
-                                if(!authVerify(aid,method))
+                                if(!authVerify(aid,handlerMethod.getBeanType(),method))
                                 {
                                     logger.info("权限校验失败 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
