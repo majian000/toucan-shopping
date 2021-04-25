@@ -118,6 +118,11 @@
             <artifactId>toucan-shopping-layui</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.modules.apps</groupId>
+            <artifactId>toucan-shopping-admin-auth-controller</artifactId>
+        </dependency>
+
     </dependencies>
 
 

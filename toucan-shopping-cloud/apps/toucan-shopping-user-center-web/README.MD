@@ -8,14 +8,14 @@
     
     用户服务
     1.toucan-shopping-cloud/services/toucan-shopping-user
-    2.modules/user/toucan-shopping-user-entity-vo
-    3.modules/user/toucan-shopping-user-es
-    4.modules/user/toucan-shopping-user-service-dao
+    2.toucan-shopping-modules/user/toucan-shopping-user-entity-vo
+    3.toucan-shopping-modules/user/toucan-shopping-user-es
+    4.toucan-shopping-modules/user/toucan-shopping-user-service-dao
     
     权限服务
     1.toucan-shopping-cloud/services/toucan-shopping-admin-auth
-    2.modules/adminAuth/toucan-shopping-admin-auth-entity-vo
-    3.modules/adminAuth/toucan-shopping-admin-auth-service-dao
+    2.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-entity-vo
+    3.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-service-dao
         
 ### 用户中心界面
     
