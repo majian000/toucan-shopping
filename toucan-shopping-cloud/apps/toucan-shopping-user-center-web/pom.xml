@@ -113,6 +113,11 @@
             <artifactId>toucan-shopping-user-center-web-templates</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-layui</artifactId>
+        </dependency>
+
     </dependencies>
 
 
