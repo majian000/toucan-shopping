@@ -3,6 +3,13 @@
 ## 权限中心
     管理所有后台账号权限
     端口号:8098
+       
+
+#### 依赖模块及服务
+    权限服务
+    1.toucan-shopping-cloud/services/toucan-shopping-admin-auth
+    2.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-entity-vo
+    3.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-service-dao
         
 ### 权限中心界面
     
