@@ -64,13 +64,10 @@
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
                 <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;">admin</a>
+                    <a href="javascript:;" th:text="${model.username}"></a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
-                        </dd>
-                        <dd>
-                            <a href="javascript:;" layuimini-content-href="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+                            <a href="javascript:;" id="updatePassword" layuimini-content-href="page/user-setting.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
                         </dd>
                         <dd>
                             <hr>
@@ -132,16 +129,18 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+
 <script th:src="@{/js/lay-config.js?v=2.0.0}" charset="utf-8"></script>
 <script>
-    layui.use(['jquery', 'layer', 'miniAdmin','miniTongji'], function () {
+    layui.use(['jquery', 'layer', 'miniAdmin'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
             miniAdmin = layui.miniAdmin,
             miniTongji = layui.miniTongji;
 
         var options = {
-            iniUrl: "../api/init.json",    // 初始化接口
+            //iniUrl: "../api/init.json",    // 初始化接口
+            iniUrl: "[[@{/}]]index/menus",    // 初始化接口
             clearUrl: "../api/clear.json", // 缓存清理接口
             urlHashLocation: true,      // 是否打开hash定位
             bgColorDefault: false,      // 主题默认配置
@@ -153,16 +152,22 @@
         };
         miniAdmin.render(options);
 
-        // 百度统计代码，只统计指定域名
-        miniTongji.render({
-            specific: true,
-            domains: [
-            ],
-        });
+        $("#updatePassword").attr("layuimini-content-href",'[[@{/}]]admin/myPasswordPage');
 
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', function () {
-                window.location = 'page/login-3.html';
+            $.ajax({
+                url:"[[@{/}]]logout/out",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                success:function(data){
+                    layer.msg('退出登录成功', function () {
+                        window.location = "[[@{/}]]login/page";
+                    });
+                },
+                complete:function(data)
+                {
+                    layer.close(index);
+                }
             });
         });
     });

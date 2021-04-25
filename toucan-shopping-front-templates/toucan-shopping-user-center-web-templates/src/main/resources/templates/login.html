@@ -62,7 +62,7 @@
 <div class="main-body">
     <div class="login-main">
         <div class="login-top">
-            <span>用户中心</span>
+            <span>权限管理</span>
             <span class="bg1"></span>
             <span class="bg2"></span>
         </div>
@@ -81,7 +81,7 @@
 
                 <div id="validatePanel" class="item" style="width: 137px;">
                     <input type="text" name="vcode" placeholder="请输入验证码" maxlength="4">
-                    <img id="refreshCaptcha" class="validateImg"  th:src="@{/login/vcode}"  >
+                    <img id="refreshCaptcha" class="validateImg"  th:src="@{/login/vcode}" >
                 </div>
 
             </div>
@@ -147,6 +147,7 @@
                 success:function(data){
                     if(data.code==0) {
                         layer.msg(data.msg);
+
                         $("#refreshCaptcha").attr("src",basePath+"/login/vcode?"+new Date().getTime());
                         return false;
                     }
@@ -167,10 +168,7 @@
             $("#refreshCaptcha").attr("src",basePath+"/login/vcode?"+new Date().getTime());
         });
 
-
-
     });
-
 </script>
 </body>
 </html>

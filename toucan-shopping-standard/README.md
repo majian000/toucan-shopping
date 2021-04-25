@@ -8,7 +8,7 @@
 #### 软件架构
 
 ##### 公共基础模块
-    modules目录下包含订单编号生成、redis分布式锁、各种工具类等
+    toucan-shopping-modules 目录下包含订单编号生成、redis分布式锁、各种工具类等
 
     
 
@@ -48,4 +48,5 @@
     
 
 #### 参与贡献
-1.majian
+    
+    1.majian

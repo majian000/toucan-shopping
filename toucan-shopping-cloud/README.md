@@ -8,14 +8,13 @@
 #### 软件架构
 
 ##### 公共基础模块
-    modules目录下包含订单编号生成、redis分布式锁、各种工具类等
+    toucan-shopping-modules 目录下包含订单编号生成、redis分布式锁、各种工具类等
 
 ##### 基础服务层
     base目录下包含配置中心、服务注册中心、网关等
     
 ##### 业务服务层
     services目录下包含商品服务、订单服务、秒杀服务、类别服务等
-    export目录下包含商品服务导出类、订单服务导出类等实体以及VO相关
     api目录下包含商品服务、订单服务等feign接口
     starter目录下包含权限中心的插件
     
@@ -29,23 +28,23 @@
     按顺序依次启动下面项目
 
     xshell linux
-    1.1.配置中心
+##### 配置中心
     源码:base/toucan-shopping-config-server
     启动:nohup java -jar toucan-shopping-config-server-1.0-SNAPSHOT.jar &
     查看:ps aux|grep toucan-shopping-config-server
 
-    2.服务中心
+##### 服务中心
     源码:base/toucan-shopping-eureka
     启动:nohup java -jar toucan-shopping-eureka-1.0-SNAPSHOT.jar  &
     查看:ps aux|grep toucan-shopping-eureka
     
-    3.网关服务
+##### 网关服务
     源码:base/toucan-shopping-gateway
     启动:nohup java -jar toucan-shopping-gateway-1.0-SNAPSHOT.jar &
     查看:ps aux|grep toucan-shopping-gateway
     
     
-    4.用户服务
+##### 用户服务
     源码:services/toucan-shopping-user
     启动:nohup java -jar toucan-shopping-user-1.0-SNAPSHOT.jar  &
     查看:ps aux|grep toucan-shopping-user
@@ -160,12 +159,9 @@
     端口号:8083
     前端界面服务
 
-
-
     2.apps/toucan-shopping-admin
     端口号:8086
     后台管理端
-
 
     3.apps/toucan-shopping-user-center-web
     端口号:8088
@@ -195,4 +191,5 @@
     
 
 #### 参与贡献
-1.majian
+    
+    1.majian

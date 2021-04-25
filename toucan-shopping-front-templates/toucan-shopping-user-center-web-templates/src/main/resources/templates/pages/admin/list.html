@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>权限中心</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.css}" >
+</head>
+<body>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">账号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">账号状态</label>
+                            <div class="layui-input-inline">
+                                <input type="radio" name="enableStatus" value="1" title="启用" checked>
+                                <input type="radio" name="enableStatus" value="0" title="禁用">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+            </div>
+        </script>
+
+        <table class="layui-hide" id="adminTable" lay-filter="adminTableFilter"></table>
+
+        <script type="text/html" id="adminTableBar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:src="@{/lib/bootstrap/js/bootstrap.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-treeview/js/bootstrap-treeview.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table','tree'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#userSearchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#adminTable',
+            url: "[[@{/}]]admin/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                {type: "checkbox", width: 50},
+                {field: 'username',  title: '账号'},
+                {field: 'adminId',  title: '账号ID'},
+                {field: 'appNames', title: '关联应用'},
+                {field: 'enableStatus', title: '账号状态',
+                    templet: function (row) {
+                    if(row.enableStatus == "1"){
+                        return "启用"
+                    }
+                    return "禁用"
+                }},
+                {title: '操作', minWidth: 150, toolbar: '#adminTableBar', align: "center"}
+            ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('adminTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(adminTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加账号',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/admin/addPage}]]",
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('adminTable')
+                    , data = checkStatus.data;
+                layer.confirm('确定删除账号?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]admin/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('adminTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+
+        function getChildNodeIdArr(node) {
+            var ts = [];
+            if (node.nodes) {
+                for (x in node.nodes) {
+                    ts.push(node.nodes[x].nodeId);
+                    if (node.nodes[x].nodes) {
+                        var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);
+                        for (j in getNodeDieDai) {
+                            ts.push(getNodeDieDai[j]);
+                        }
+                    }
+                }
+            } else {
+                ts.push(node.nodeId);
+            }
+            return ts;
+        }
+
+        function setParentNodeCheck(node) {
+            var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
+            if (parentNode.nodes) {
+                var checkedCount = 0;
+                for (x in parentNode.nodes) {
+                    if (parentNode.nodes[x].state.checked) {
+                        checkedCount ++;
+                    } else {
+                        break;
+                    }
+                }
+                if (checkedCount === parentNode.nodes.length) {
+                    $("#treeview-checkable").treeview("checkNode", parentNode.nodeId);
+                    setParentNodeCheck(parentNode);
+                }
+            }
+        }
+
+        //监听表格复选框选择
+        table.on('checkbox(adminTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(adminTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'edit') {
+
+                var index = layer.open({
+                    title: '编辑用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]admin/editPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event == 'delete') {
+                layer.confirm('确定删除该账号?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]admin/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('adminTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event == 'role') {
+                loadding = layer.load();
+                index = layer.open({
+                    title: '选择角色',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['20%', '60%'],
+                    btn: ['确定'],
+                    content: "<div id='treeview-checkable' ></div>",
+                    success:function(layero){
+                        $.ajax({
+                            url:"[[@{/}]]role/query/admin/role/tree",
+                            contentType: "application/json; charset=utf-8",
+                            type:'POST',
+                            data:JSON.stringify({adminId:data.adminId}),
+                            success:function(data){
+                                if(data.code==1)
+                                {
+                                    //渲染
+                                    var $checkableTree = $('#treeview-checkable').treeview({
+                                        data: data.data,
+                                        showIcon: false,
+                                        showCheckbox: true,
+                                        onNodeChecked: function(event, node) {
+                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                                            if (selectNodes) { //子节点不为空，则选中所有子节点
+                                                $('#treeview-checkable').treeview('checkNode', [selectNodes, { silent: true }]);
+                                            }
+                                            var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
+                                            setParentNodeCheck(node);
+                                        },
+                                        onNodeUnchecked: function (event, node) {
+                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+                                            if (selectNodes) { //子节点不为空，则取消选中所有子节点
+                                                $('#treeview-checkable').treeview('uncheckNode', [selectNodes, { silent: true }]);
+                                            }
+                                        }
+                                    });
+                                }
+                            },
+                            complete:function()
+                            {
+                                layer.close(loadding);
+                            }
+                        });
+
+                    },
+                    yes: function(index, layero){
+                        var selectNodes = $('#treeview-checkable').treeview('getChecked');
+                        if(selectNodes==null||selectNodes.length<=0)
+                        {
+                            layer.msg("请选择角色");
+                            return false;
+                        }
+                        var roleArray = new Array(selectNodes.length);
+                        for (var i = 0; i < selectNodes.length; i++) {
+                            roleArray[i]={roleId:selectNodes[i].roleId,appCode:selectNodes[i].appCode};
+                        }
+
+                        $.ajax({
+                            url: "[[@{/}]]admin/connect/roles",
+                            contentType: "application/json; charset=utf-8",
+                            type: 'POST',
+                            data: JSON.stringify({roles:roleArray,adminId:data.adminId}),
+                            success: function (data) {
+                                if (data.code == 0) {
+                                    layer.msg(data.msg);
+                                    return false;
+                                }
+                                layer.close(index);
+                            }
+                        });
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+
+            }else if (obj.event == 'password') {
+
+                var index = layer.open({
+                    title: '修改密码',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]admin/passwordPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
