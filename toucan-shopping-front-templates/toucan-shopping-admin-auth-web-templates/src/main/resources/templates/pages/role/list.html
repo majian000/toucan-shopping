@@ -287,8 +287,6 @@
                     });
                 });
             } else if (obj.event === 'permission') {
-
-                loadding = layer.load();
                 index = layer.open({
                     title: '选择权限',
                     type: 1,
@@ -299,6 +297,7 @@
                     btn: ['确定'],
                     content: "<div id='treeview-checkable' ></div>",
                     success:function(layero){
+                        loadding = layer.load();
                         $.ajax({
                             url:"[[@{/}]]function/query/role/function/tree",
                             type:'POST',

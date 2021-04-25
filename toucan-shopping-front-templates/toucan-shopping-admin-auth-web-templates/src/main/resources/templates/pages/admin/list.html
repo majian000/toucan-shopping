@@ -277,7 +277,6 @@
                     });
                 });
             }else if (obj.event == 'role') {
-                loadding = layer.load();
                 index = layer.open({
                     title: '选择角色',
                     type: 1,
@@ -288,6 +287,7 @@
                     btn: ['确定'],
                     content: "<div id='treeview-checkable' ></div>",
                     success:function(layero){
+                        loadding = layer.load();
                         $.ajax({
                             url:"[[@{/}]]role/query/admin/role/tree",
                             contentType: "application/json; charset=utf-8",
