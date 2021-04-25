@@ -22,7 +22,7 @@ public class State {
     /**
      * 是否展开
      */
-    private boolean expanded = true;
+    private boolean expanded = false;
 
     /**
      * 是否选中
