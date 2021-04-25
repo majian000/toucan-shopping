@@ -262,13 +262,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
                                 //校验请求权限
-//                                if(!authVerify(aid,method))
-//                                {
-//                                    logger.info("权限校验失败 " + authHeader);
-//                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-//                                            + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
-//                                    return false;
-//                                }
+                                if(!authVerify(aid,method))
+                                {
+                                    logger.info("权限校验失败 " + authHeader);
+                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                                            + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
+                                    return false;
+                                }
                             }
                         }
                     }
