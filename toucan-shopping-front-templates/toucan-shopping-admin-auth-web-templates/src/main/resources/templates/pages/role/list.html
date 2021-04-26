@@ -329,6 +329,7 @@
                             success:function(data){
                                 if(data.code==1)
                                 {
+                                    //已选择节点
                                     var idArray = new Array();
                                     getCheckdNodeId(data.data,idArray);
                                     permissionTree = dtree.render({
