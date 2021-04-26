@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.vo;
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.common.vo.bootstrap.State;
+import com.toucan.shopping.modules.common.vo.layui.dtree.CheckArr;
 import lombok.Data;
 
 import java.util.List;
@@ -27,6 +28,11 @@ public class FunctionTreeVO extends Function {
      * 节点属性
      */
     private State state = new State();
+
+    /**
+     * 节点属性
+     */
+    private CheckArr checkArr = new CheckArr();
 
     /**
      * 标签

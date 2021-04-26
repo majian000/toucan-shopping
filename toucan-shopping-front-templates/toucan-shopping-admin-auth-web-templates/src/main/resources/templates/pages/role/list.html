@@ -11,6 +11,9 @@
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
     <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+
 </head>
 <body>
 
@@ -66,16 +69,21 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
-<script th:src="@{/lib/bootstrap/js/bootstrap.js}" charset="utf-8"></script>
-<script th:src="@{/lib/jquery-treeview/js/bootstrap-treeview.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table','tree'], function () {
+    layui.config({
+        base: '[[@{/}]]/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form', 'table','tree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
         var index;
         var tree = layui.tree;
         var loadding;
+        var dtree = layui.dtree;
+        var permissionTree;
+        var permissionTreeDataArray;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -170,7 +178,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/role/addPage}]]",
+                    content: "[[@{/role/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -205,41 +213,57 @@
             }
         });
 
-        function getChildNodeIdArr(node) {
-            var ts = [];
-            if (node.nodes) {
-                for (x in node.nodes) {
-                    ts.push(node.nodes[x].nodeId);
-                    if (node.nodes[x].nodes) {
-                        var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);
-                        for (j in getNodeDieDai) {
-                            ts.push(getNodeDieDai[j]);
-                        }
-                    }
+        /**
+         * 拿到所有选中节点的ID
+         * @param data
+         * @param idArray
+         */
+        function getCheckdNodeId(data,idArray)
+        {
+            for(var i=0;i<data.length;i++)
+            {
+                permissionTreeDataArray.push(data[i]);
+                if(data[i].state.checked==true)
+                {
+                    idArray.push(data[i].id);
                 }
-            } else {
-                ts.push(node.nodeId);
+                if(data[i].nodes!=null&&data[i].nodes.length>0)
+                {
+                    getCheckdNodeId(data[i].nodes,idArray);
+                }
             }
-            return ts;
+
         }
 
-        function setParentNodeCheck(node) {
-            var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
-            if (parentNode.nodes) {
-                var checkedCount = 0;
-                for (x in parentNode.nodes) {
-                    if (parentNode.nodes[x].state.checked) {
-                        checkedCount ++;
-                    } else {
-                        break;
+        /**
+         * 拿到上级节点信息
+         */
+        function getParentNode(functionsArray,pid)
+        {
+            for(var i=0;i<permissionTreeDataArray.length;i++)
+            {
+
+                if(pid!=-1&&permissionTreeDataArray[i].id==pid)
+                {
+                    var exists=false;
+                    //判断上级节点ID是否已经保存了
+                    for(var j=0;j<functionsArray.length;j++)
+                    {
+                        if(functionsArray[j].id==pid) {
+                            exists = true;
+                        }
                     }
-                }
-                if (checkedCount === parentNode.nodes.length) {
-                    $("#treeview-checkable").treeview("checkNode", parentNode.nodeId);
-                    setParentNodeCheck(parentNode);
+                    //避免上级节点ID重复保存两份
+                    if(!exists)
+                    {
+                        functionsArray.push({functionId:permissionTreeDataArray[i].functionId})
+                    }
+                    //找到这个节点的上级节点
+                    getParentNode(functionsArray,permissionTreeDataArray[i].pid);
                 }
             }
         }
+
         //监听表格复选框选择
         table.on('checkbox(roleTableFilter)', function (obj) {
             console.log(obj)
@@ -256,7 +280,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]role/editPage/'+data.id,
+                    content: '[[@{/}]]role/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -295,7 +319,7 @@
                     shadeClose: true,
                     area: ['20%', '60%'],
                     btn: ['确定'],
-                    content: "<div id='treeview-checkable' ></div>",
+                    content: "<ul id='permissionTree' class='dtree' data-id='0'></ul>",
                     success:function(layero){
                         loadding = layer.load();
                         $.ajax({
@@ -305,24 +329,20 @@
                             success:function(data){
                                 if(data.code==1)
                                 {
-                                    //渲染
-                                    var $checkableTree = $('#treeview-checkable').treeview({
-                                        data: data.data,
-                                        showIcon: false,
-                                        showCheckbox: true,
-                                        onNodeChecked: function(event, node) {
-                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
-                                            if (selectNodes) { //子节点不为空，则选中所有子节点
-                                                $('#treeview-checkable').treeview('checkNode', [selectNodes, { silent: true }]);
+                                    var idArray = new Array();
+                                    getCheckdNodeId(data.data,idArray);
+                                    permissionTree = dtree.render({
+                                        elem: "#permissionTree",//html中的id值
+                                        data:data.data,
+                                        checkbarType: "no-all",
+                                        checkbar: true,  //开启复选框
+                                        checkbarData: "choose",// 记录选中（默认）， "change"：记录变更， "all"：记录全部， "halfChoose"："记录选中和半选（V2.5.0新增）"
+                                        done: function (res, $ul, first) {
+                                            if (first) {
+                                                dtree.chooseDataInit("permissionTree", idArray); //"001001,001002"被选中的子节点id
+                                                dtree.initNoAllCheck("permissionTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
                                             }
-                                            var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
-                                            setParentNodeCheck(node);
-                                        },
-                                        onNodeUnchecked: function (event, node) {
-                                            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
-                                            if (selectNodes) { //子节点不为空，则取消选中所有子节点
-                                                $('#treeview-checkable').treeview('uncheckNode', [selectNodes, { silent: true }]);
-                                            }
+
                                         }
                                     });
                                 }
@@ -335,15 +355,16 @@
 
                     },
                     yes: function(index, layero){
-                        var selectNodes = $('#treeview-checkable').treeview('getChecked');
+                        var selectNodes = permissionTree.getCheckbarNodesParam("permissionTree");
                         if(selectNodes==null||selectNodes.length<=0)
                         {
                             layer.msg("请选择权限");
                             return false;
                         }
-                        var functionsArray =  new Array(selectNodes.length);
+                        var functionsArray =  new Array();
                         for (var i = 0; i < selectNodes.length; i++) {
-                            functionsArray[i]={functionId:selectNodes[i].functionId};
+                            functionsArray.push({functionId:selectNodes[i].functionId});
+                            getParentNode(functionsArray,selectNodes[i]);
                         }
                         $.ajax({
                             url: "[[@{/}]]role/connect/functions",

@@ -321,11 +321,12 @@ public class FunctionController extends UIController {
     }
 
 
-    public void setTreeNodeSelect(AtomicLong id,List<FunctionTreeVO> functionTreeVOList,List<RoleFunction> roleFunctions)
+    public void setTreeNodeSelect(AtomicLong id,FunctionTreeVO parentTreeVO,List<FunctionTreeVO> functionTreeVOList,List<RoleFunction> roleFunctions)
     {
         for(FunctionTreeVO functionTreeVO:functionTreeVOList)
         {
             functionTreeVO.setId(id.incrementAndGet());
+            functionTreeVO.setPid(parentTreeVO.getId());
             for(RoleFunction roleFunction:roleFunctions) {
                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
                     //设置节点被选中
@@ -334,7 +335,7 @@ public class FunctionController extends UIController {
             }
             if(!CollectionUtils.isEmpty(functionTreeVO.getNodes()))
             {
-                setTreeNodeSelect(id,functionTreeVO.getNodes(),roleFunctions);
+                setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getNodes(),roleFunctions);
             }
         }
     }
@@ -382,7 +383,7 @@ public class FunctionController extends UIController {
                                     functionTreeVO.getState().setChecked(true);
                                 }
                             }
-                            setTreeNodeSelect(id,functionTreeVO.getNodes(), roleFunctions);
+                            setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getNodes(), roleFunctions);
                         }
                     }
                 }
