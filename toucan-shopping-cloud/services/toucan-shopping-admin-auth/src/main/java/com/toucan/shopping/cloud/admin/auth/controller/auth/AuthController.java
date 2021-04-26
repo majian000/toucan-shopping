@@ -54,7 +54,7 @@ public class AuthController {
 
 
     /**
-     * 根据实体查询对象
+     * 校验权限
      * @param requestVo
      * @return
      */
