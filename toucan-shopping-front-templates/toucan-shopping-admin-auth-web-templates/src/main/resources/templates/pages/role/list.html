@@ -232,8 +232,24 @@
                     getCheckdNodeId(data[i].children,idArray);
                 }
             }
-
         }
+
+
+        /**
+         * 拿到指定节点对象
+         */
+        function getNodeObject(nodeId)
+        {
+            for(var i=0;i<permissionTreeDataArray.length;i++)
+            {
+                if(permissionTreeDataArray[i].id==nodeId)
+                {
+                    return permissionTreeDataArray[i];
+                }
+            }
+            return null;
+        }
+
 
         /**
          * 拿到上级节点信息
@@ -256,7 +272,7 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        functionsArray.push({functionId:permissionTreeDataArray[i].functionId})
+                        functionsArray.push({id:permissionTreeDataArray[i].id,functionId:permissionTreeDataArray[i].functionId})
                     }
                     //找到这个节点的上级节点
                     getParentNode(functionsArray,permissionTreeDataArray[i].pid);
@@ -364,8 +380,12 @@
                         }
                         var functionsArray =  new Array();
                         for (var i = 0; i < selectNodes.length; i++) {
-                            functionsArray.push({functionId:selectNodes[i].functionId});
-                            getParentNode(functionsArray,selectNodes[i]);
+                            var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
+                            functionsArray.push({id:selectNodeObject.id,functionId:selectNodeObject.functionId});
+                            getParentNode(functionsArray,selectNodeObject.pid);
+                        }
+                        for (var j = 0; j < functionsArray.length; j++) {
+                            functionsArray[j]={functionId:functionsArray[j].functionId};
                         }
                         $.ajax({
                             url: "[[@{/}]]role/connect/functions",

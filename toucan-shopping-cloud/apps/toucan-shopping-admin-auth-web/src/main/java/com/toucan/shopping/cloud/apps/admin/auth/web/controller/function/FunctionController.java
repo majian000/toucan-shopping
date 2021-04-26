@@ -326,7 +326,9 @@ public class FunctionController extends UIController {
         for(FunctionTreeVO functionTreeVO:functionTreeVOList)
         {
             functionTreeVO.setId(id.incrementAndGet());
+            functionTreeVO.setNodeId(functionTreeVO.getId());
             functionTreeVO.setPid(parentTreeVO.getId());
+            functionTreeVO.setParentId(functionTreeVO.getPid());
             for(RoleFunction roleFunction:roleFunctions) {
                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
                     //设置节点被选中
@@ -376,6 +378,7 @@ public class FunctionController extends UIController {
                     if(!CollectionUtils.isEmpty(roleFunctions)) {
                         for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
                             functionTreeVO.setId(id.incrementAndGet());
+                            functionTreeVO.setNodeId(functionTreeVO.getId());
                             functionTreeVO.setText(functionTreeVO.getTitle());
                             for(RoleFunction roleFunction:roleFunctions) {
                                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {

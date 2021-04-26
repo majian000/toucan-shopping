@@ -13,6 +13,15 @@ import java.util.List;
 @Data
 public class FunctionTreeVO extends Function {
 
+    /**
+     * 节点ID
+     */
+    private Long nodeId;
+
+    /**
+     * 上级节点ID
+     */
+    private Long parentId;
 
     /**
      * 节点名
