@@ -83,7 +83,7 @@
         var loadding;
         var dtree = layui.dtree;
         var permissionTree;
-        var permissionTreeDataArray;
+        var permissionTreeDataArray = new Array();
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -227,9 +227,9 @@
                 {
                     idArray.push(data[i].id);
                 }
-                if(data[i].nodes!=null&&data[i].nodes.length>0)
+                if(data[i].children!=null&&data[i].children.length>0)
                 {
-                    getCheckdNodeId(data[i].nodes,idArray);
+                    getCheckdNodeId(data[i].children,idArray);
                 }
             }
 
