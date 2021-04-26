@@ -250,7 +250,7 @@
             for(var i=0;i<roleTreeDataArray.length;i++)
             {
 
-                if(pid!=-1&&roleTreeDataArray[i].id==pid)
+                if(roleTreeDataArray[i].id==pid)
                 {
                     var exists=false;
                     //判断上级节点ID是否已经保存了
@@ -265,8 +265,10 @@
                     {
                         rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
                     }
-                    //找到这个节点的上级节点
-                    getParentNode(rolesArray,roleTreeDataArray[i].pid);
+                    if(permissionTreeDataArray[i].pid!=-1) {
+                        //找到这个节点的上级节点
+                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
+                    }
                 }
             }
         }
@@ -339,6 +341,7 @@
                                 if(data.code==1)
                                 {
                                     //已选择节点
+                                    roleTreeDataArray = new Array();
                                     var idArray = new Array();
                                     getCheckdNodeId(data.data,idArray);
                                     roleTree = dtree.render({

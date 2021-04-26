@@ -53,6 +53,10 @@ public class FunctionTreeVO extends Function {
      */
     private List<FunctionTreeVO> children;
 
+    /**
+     * 子节点
+     */
+    private List<FunctionTreeVO> nodes;
 
     /**
      * 创建人

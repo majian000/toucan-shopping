@@ -261,7 +261,7 @@
             for(var i=0;i<permissionTreeDataArray.length;i++)
             {
 
-                if(pid!=-1&&permissionTreeDataArray[i].id==pid)
+                if(permissionTreeDataArray[i].id==pid)
                 {
                     var exists=false;
                     //判断上级节点ID是否已经保存了
@@ -276,8 +276,10 @@
                     {
                         functionsArray.push({id:permissionTreeDataArray[i].id,functionId:permissionTreeDataArray[i].functionId})
                     }
-                    //找到这个节点的上级节点
-                    getParentNode(functionsArray,permissionTreeDataArray[i].pid);
+                    if(permissionTreeDataArray[i].pid!=-1) {
+                        //找到这个节点的上级节点
+                        getParentNode(functionsArray, permissionTreeDataArray[i].pid);
+                    }
                 }
             }
         }
@@ -349,6 +351,7 @@
                                 {
                                     //已选择节点
                                     var idArray = new Array();
+                                    permissionTreeDataArray = new Array();
                                     getCheckdNodeId(data.data,idArray);
                                     permissionTree = dtree.render({
                                         elem: "#permissionTree",//html中的id值

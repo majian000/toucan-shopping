@@ -56,7 +56,7 @@
     </insert>
 
     <update id="deleteByRoleId" parameterType="java.lang.String">
-        update t_sa_role_function set delete_status=1  where role_id = #{roleId}
+        update t_sa_role_function set delete_status=1  where role_id = #{roleId} and delete_status=0
     </update>
 
 
