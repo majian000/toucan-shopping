@@ -11,6 +11,8 @@ public interface AdminRoleMapper {
 
     int insert(AdminRole AdminRole);
 
+    int inserts(AdminRole[] entitys);
+
     List<AdminRole> findListByEntity(AdminRole adminRole);
 
     int deleteByRoleId(String roleId);

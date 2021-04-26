@@ -13,6 +13,8 @@ public interface AdminRoleService {
 
     int save(AdminRole adminRole);
 
+    int saves(AdminRole[] adminRole);
+
     int deleteByRoleId(String roleId);
 
     int deleteByAdminId(String adminId);

@@ -111,6 +111,8 @@ public class RoleFunctionController {
                 throw new IllegalArgumentException("functions为空");
             }
             roleFunctionService.deleteByRoleId(entity.getRoleId());
+            RoleFunction[] roleFunctions= new RoleFunction[entity.getFunctions().size()];
+            int pos = 0;
             for(Function function:entity.getFunctions())
             {
                 RoleFunction roleFunction = new RoleFunction();
@@ -120,8 +122,11 @@ public class RoleFunctionController {
                 roleFunction.setCreateAdminId(entity.getCreateAdminId());
                 roleFunction.setCreateDate(new Date());
                 roleFunction.setDeleteStatus((short)0);
-                roleFunctionService.save(roleFunction);
+
+                roleFunctions[pos] = roleFunction;
+                pos ++;
             }
+            roleFunctionService.saves(roleFunctions);
 
         }catch(Exception e)
         {

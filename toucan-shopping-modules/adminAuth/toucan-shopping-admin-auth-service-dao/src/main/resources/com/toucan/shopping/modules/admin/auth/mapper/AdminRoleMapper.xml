@@ -44,6 +44,15 @@
     </insert>
 
 
+    <insert id="inserts"  useGeneratedKeys="true" keyProperty="id" >
+        insert into t_sa_admin_role(admin_id,role_id,app_code,create_date,delete_status,create_admin_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.adminId},#{entity.roleId},#{entity.appCode},#{entity.createDate},#{entity.deleteStatus},#{entity.createAdminId})
+        </foreach>
+
+    </insert>
+
     <update id="deleteByRoleId" parameterType="java.lang.String">
         update t_sa_admin_role set delete_status=1  where role_id = #{roleId} and delete_status=0
     </update>

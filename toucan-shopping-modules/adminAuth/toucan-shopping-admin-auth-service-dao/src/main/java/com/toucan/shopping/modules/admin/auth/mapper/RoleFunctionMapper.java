@@ -11,6 +11,8 @@ public interface RoleFunctionMapper {
 
     int insert(RoleFunction entity);
 
+    int inserts(RoleFunction[] entitys);
+
     List<RoleFunction> findListByEntity(RoleFunction entity);
 
     int deleteByRoleId(String roleId);

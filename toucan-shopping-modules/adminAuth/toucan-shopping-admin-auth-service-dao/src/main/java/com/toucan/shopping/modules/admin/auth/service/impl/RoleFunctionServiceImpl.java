@@ -27,6 +27,12 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
         return roleFunctionMapper.insert(entity);
     }
 
+
+    @Override
+    public int saves(RoleFunction[] entitys) {
+        return roleFunctionMapper.inserts(entitys);
+    }
+
     @Override
     public int deleteByRoleId(String roleId) {
         return roleFunctionMapper.deleteByRoleId(roleId);

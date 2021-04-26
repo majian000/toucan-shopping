@@ -13,6 +13,8 @@ public interface RoleFunctionService {
 
     int save(RoleFunction roleFunction);
 
+    int saves(RoleFunction[] roleFunctions);
+
     int deleteByRoleId(String roleId);
 
     int deleteByFunctionId(String functionId);

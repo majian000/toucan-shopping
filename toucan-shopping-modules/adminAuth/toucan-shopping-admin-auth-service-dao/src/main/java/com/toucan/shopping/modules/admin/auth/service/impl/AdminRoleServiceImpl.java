@@ -30,6 +30,10 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     }
 
     @Override
+    public int saves(AdminRole[] adminRole) {
+        return adminRoleMapper.inserts(adminRole);
+    }
+    @Override
     public int deleteByRoleId(String roleId) {
         return adminRoleMapper.deleteByRoleId(roleId);
     }

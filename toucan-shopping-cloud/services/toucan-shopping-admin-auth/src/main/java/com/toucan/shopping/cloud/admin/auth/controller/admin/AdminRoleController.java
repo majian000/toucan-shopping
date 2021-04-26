@@ -82,6 +82,8 @@ public class AdminRoleController {
             }
             //创建账户角色的前提是这个账户和操作这个账户的操作人属于同一个应用,这个操作人也只能操作他俩所属同一应用下面的所有角色
             adminRoleService.deleteByAdminIdAndAppCodes(entity.getAdminId(),appCodes);
+
+            int length=0;
             for(AdminRole adminRole:entity.getRoles())
             {
                 //-1为应用节点
@@ -90,10 +92,19 @@ public class AdminRoleController {
                     adminRole.setCreateAdminId(entity.getCreateAdminId());
                     adminRole.setCreateDate(new Date());
                     adminRole.setDeleteStatus((short) 0);
-                    adminRoleService.save(adminRole);
+                    length++;
                 }
             }
-
+            AdminRole[] adminRoles = new AdminRole[length];
+            int pos = 0;
+            for(AdminRole adminRole:entity.getRoles()) {
+                //-1为应用节点
+                if (!"-1".equals(adminRole.getRoleId())) {
+                    adminRoles[pos] = adminRole;
+                    pos++;
+                }
+            }
+            adminRoleService.saves(adminRoles);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
