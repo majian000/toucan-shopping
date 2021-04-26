@@ -40,10 +40,6 @@ public class RoleTreeVO extends Role {
      */
     private List<RoleTreeVO> children;
 
-    /**
-     * 子节点
-     */
-    private List<RoleTreeVO> nodes;
 
 
 

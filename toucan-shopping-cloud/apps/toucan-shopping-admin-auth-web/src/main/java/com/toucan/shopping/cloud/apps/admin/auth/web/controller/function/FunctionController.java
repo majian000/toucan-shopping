@@ -335,9 +335,9 @@ public class FunctionController extends UIController {
                     functionTreeVO.getState().setChecked(true);
                 }
             }
-            if(!CollectionUtils.isEmpty(functionTreeVO.getNodes()))
+            if(!CollectionUtils.isEmpty(functionTreeVO.getChildren()))
             {
-                setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getNodes(),roleFunctions);
+                setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getChildren(),roleFunctions);
             }
         }
     }
@@ -386,7 +386,7 @@ public class FunctionController extends UIController {
                                     functionTreeVO.getState().setChecked(true);
                                 }
                             }
-                            setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getNodes(), roleFunctions);
+                            setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getChildren(), roleFunctions);
                         }
                     }
                 }

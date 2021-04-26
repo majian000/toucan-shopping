@@ -211,7 +211,7 @@ public class RoleController extends UIController {
                         for(RoleTreeVO roleTreeVO:roleTreeVOS) {
                             roleTreeVO.setId(id.incrementAndGet());
                             roleTreeVO.setNodeId(roleTreeVO.getId());
-                            setTreeNodeSelect(id,roleTreeVO,roleTreeVO.getNodes(),roleTreeVO, adminRoles);
+                            setTreeNodeSelect(id,roleTreeVO,roleTreeVO.getChildren(),roleTreeVO, adminRoles);
                         }
                     }
                 }

@@ -17,6 +17,8 @@
 </head>
 <body>
 
+<span th:replace="common_page::common"></span>
+
 <div class="layuimini-container">
     <div class="layuimini-main">
 
@@ -71,10 +73,10 @@
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
     layui.config({
-        base: '[[@{/}]]/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree'], function () {
+    }).use(['form', 'table','tree','dtree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
@@ -356,8 +358,10 @@
                                         checkbarData: "choose",// 记录选中（默认）， "change"：记录变更， "all"：记录全部， "halfChoose"："记录选中和半选（V2.5.0新增）"
                                         done: function (res, $ul, first) {
                                             if (first) {
-                                                dtree.chooseDataInit("permissionTree", idArray); //"001001,001002"被选中的子节点id
-                                                dtree.initNoAllCheck("permissionTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
+                                                if(idArray!=null&&idArray.length>0) {
+                                                    dtree.chooseDataInit("permissionTree", idArray); //"001001,001002"被选中的子节点id
+                                                    dtree.initNoAllCheck("permissionTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
+                                                }
                                             }
 
                                         }
