@@ -88,7 +88,7 @@
         <div class="layui-input-block">
             <input type="hidden" name="pid" id="pid" th:value="${model.pid}" >
             <input type="hidden" name="appCode" id="appCode" th:value="${model.appCode}">
-            <input type="text"  id="selectPid" lay-verify="required"  placeholder="请选择上级功能" value="" class="layui-input" th:value="${model.parentName}" >
+            <input type="text"  readonly id="selectPid" lay-verify="required"  placeholder="请选择上级功能" value="" class="layui-input" th:value="${model.parentName}" >
         </div>
     </div>
     <div class="layui-form-item">

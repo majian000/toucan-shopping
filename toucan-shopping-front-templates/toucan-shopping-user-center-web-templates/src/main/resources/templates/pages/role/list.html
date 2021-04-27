@@ -339,7 +339,7 @@
                     shadeClose: true,
                     area: ['20%', '60%'],
                     btn: ['确定'],
-                    content: "<ul id='permissionTree' class='dtree' data-id='0'></ul>",
+                    content: "<ul id='permissionTree' class='dtree' data-id='0' ></ul>",
                     success:function(layero){
                         loadding = layer.load();
                         $.ajax({
@@ -356,6 +356,7 @@
                                     permissionTree = dtree.render({
                                         elem: "#permissionTree",//html中的id值
                                         data:data.data,
+                                        width:'100%',
                                         checkbarType: "no-all",
                                         checkbar: true,  //开启复选框
                                         checkbarData: "choose",// 记录选中（默认）， "change"：记录变更， "all"：记录全部， "halfChoose"："记录选中和半选（V2.5.0新增）"
