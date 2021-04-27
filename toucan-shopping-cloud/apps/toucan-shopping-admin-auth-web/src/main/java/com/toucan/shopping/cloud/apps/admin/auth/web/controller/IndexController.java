@@ -114,6 +114,7 @@ public class IndexController {
                     menuInfo.setTitle(functionVO.getName());
                     menuInfo.setHref(functionVO.getUrl());
                     menuInfo.setTarget("_self");
+                    menuInfo.setIcon(functionVO.getIcon());
                     currentNode.getChild().add(menuInfo);
 
                     //查询子节点
@@ -164,6 +165,7 @@ public class IndexController {
                             menuInfo.setTitle(functionVO.getName());
                             menuInfo.setHref(functionVO.getUrl());
                             menuInfo.setTarget("_self");
+                            menuInfo.setIcon(functionVO.getIcon());
                             menuInfos.add(menuInfo);
 
                             //查询子节点

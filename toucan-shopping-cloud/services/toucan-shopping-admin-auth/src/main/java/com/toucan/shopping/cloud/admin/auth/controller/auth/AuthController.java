@@ -95,7 +95,7 @@ public class AuthController {
                     }
                 }
                 Long count = roleFunctionService.findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(query.getUrl(),query.getAppCode(),roleIdArray);
-                if(count.longValue()>0)
+                if(count!=null&&count.longValue()>0)
                 {
                     resultObjectVO.setData(true);
                 }

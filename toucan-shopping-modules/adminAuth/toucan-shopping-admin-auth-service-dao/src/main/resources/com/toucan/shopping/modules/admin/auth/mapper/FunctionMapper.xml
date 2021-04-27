@@ -7,6 +7,7 @@
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="function_id" jdbcType="VARCHAR" property="functionId" />
         <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="function_text" jdbcType="VARCHAR" property="functionText" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />

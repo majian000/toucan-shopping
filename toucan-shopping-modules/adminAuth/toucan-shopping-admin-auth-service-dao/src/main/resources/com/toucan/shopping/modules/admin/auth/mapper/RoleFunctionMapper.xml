@@ -78,7 +78,7 @@
 
 
 
-    <select id="findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds" resultMap="roleFunctionMap">
+    <select id="findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds" resultType="java.lang.Long">
         select count(*) from (
         select tsrf.*,tsf.name,tsf.url from t_sa_role_function tsrf
         left join t_sa_function tsf on tsf.function_id =tsrf.function_id and tsf.delete_status = 0  and tsf.enable_status = 1
