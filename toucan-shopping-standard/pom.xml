@@ -31,7 +31,7 @@
         <!--商城客户端公共类 -->
         <module>modules/apps/toucan-shopping-web-common</module>
         <!--权限管理公共类 -->
-        <module>modules/apps/toucan-shopping-admin-auth-web-common</module>
+        <!--<module>modules/apps/toucan-shopping-admin-auth-web-common</module>-->
 
 
         <!--  =================================应用层 =================================-->
@@ -42,7 +42,7 @@
         <module>apps/toucan-shopping-web-war</module>
 
         <!--权限管理 jar包版 -->
-        <module>apps/toucan-shopping-admin-auth-web-jar</module>
+        <!--<module>apps/toucan-shopping-admin-auth-web-jar</module>-->
 
 
 

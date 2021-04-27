@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 应用列表查询页
+ * 账号列表查询页
  */
 @Data
 @NoArgsConstructor
