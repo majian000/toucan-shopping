@@ -4,16 +4,16 @@
     <contextName>logback</contextName>
 
     <springProfile name="dev">
-        <property name="log.path" value="D:/log/dev/toucan_shopping/toucan_shopping_user_center" />
+        <property name="log.path" value="D:/log/dev/toucan_shopping/toucan_shopping_admin_auth" />
     </springProfile>
 
     <springProfile name="test">
-        <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_user_center" />
+        <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_admin_auth" />
     </springProfile>
 
 
     <springProfile name="prod">
-        <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_user_center" />
+        <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_admin_auth" />
     </springProfile>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
