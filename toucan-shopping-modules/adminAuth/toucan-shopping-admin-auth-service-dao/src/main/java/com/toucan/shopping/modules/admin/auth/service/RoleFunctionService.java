@@ -9,17 +9,56 @@ import java.util.List;
 
 public interface RoleFunctionService {
 
+    /**
+     * 根据查询对象查询列表
+     * @param roleFunction
+     * @return
+     */
     List<RoleFunction> findListByEntity(RoleFunction roleFunction);
 
+    /**
+     * 保存角色功能项关联
+     * @param roleFunction
+     * @return
+     */
     int save(RoleFunction roleFunction);
 
+    /**
+     * 批量保存角色功能项关联
+     * @param roleFunctions
+     * @return
+     */
     int saves(RoleFunction[] roleFunctions);
 
+    /**
+     * 删除指定角色下的关联
+     * @param roleId
+     * @return
+     */
     int deleteByRoleId(String roleId);
 
+    /**
+     * 删除指定功能项下的关联
+     * @param functionId
+     * @return
+     */
     int deleteByFunctionId(String functionId);
 
+    /**
+     * 根据用户ID 权限URL 和应用编码查询所有角关联
+     * @param url
+     * @param appCode
+     * @param roleIdArray
+     * @return
+     */
     List<RoleFunction> findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url,String appCode,String[] roleIdArray);
 
+    /**
+     * 根据用户ID 权限URL 和应用编码查询所有角关联总数
+     * @param url
+     * @param appCode
+     * @param roleIdArray
+     * @return
+     */
     Long findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url,String appCode,String[] roleIdArray);
 }
