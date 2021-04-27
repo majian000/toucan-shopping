@@ -32,10 +32,6 @@ public class FunctionVO extends Function {
      */
     private String adminId;
 
-    /**
-     * 跳转目标
-     */
-    private String target="_self";
 
 
 }
