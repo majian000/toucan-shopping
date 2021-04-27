@@ -94,8 +94,8 @@ public class AuthController {
                         roleIdArray[i] = adminRoles.get(i).getRoleId();
                     }
                 }
-                List<RoleFunction> roleFunctions = roleFunctionService.findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(query.getUrl(),query.getAppCode(),roleIdArray);
-                if(CollectionUtils.isNotEmpty(roleFunctions))
+                Long count = roleFunctionService.findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(query.getUrl(),query.getAppCode(),roleIdArray);
+                if(count.longValue()>0)
                 {
                     resultObjectVO.setData(true);
                 }
