@@ -97,7 +97,7 @@ public class LoginController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            if(!StringUtils.equals(adminVo.getVcode(),String.valueOf(vCodeObject)))
+            if(!StringUtils.equals(adminVo.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
             {
                 resultObjectVO.setMsg("登录失败,验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
