@@ -105,7 +105,7 @@ public class IndexController {
 
                     for(Function buttonFunction:functions)
                     {
-                        if(buttonFunction.getType().shortValue()==2)
+                        if(buttonFunction.getType().shortValue()==5)
                         {
                             quickButtons.add(buttonFunction.getFunctionText());
                         }
