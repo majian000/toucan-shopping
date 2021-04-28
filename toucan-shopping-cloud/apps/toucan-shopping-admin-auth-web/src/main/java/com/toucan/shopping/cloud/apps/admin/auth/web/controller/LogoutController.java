@@ -67,7 +67,7 @@ public class LogoutController {
      */
     @RequestMapping(value = "/out",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO out(HttpServletRequest request)
+    public ResultObjectVO out(HttpServletRequest request,HttpServletResponse response)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{

@@ -34,11 +34,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/index")
 public class IndexController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -56,9 +57,19 @@ public class IndexController {
     private FeignAdminService feignAdminService;
 
 
+    @RequestMapping(value = "/",method = RequestMethod.GET)
+    public void index(HttpServletRequest request, HttpServletResponse response)
+    {
+        try {
+            response.sendRedirect("/index/page");
+        } catch (IOException e) {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/page",method = RequestMethod.GET)
+    @RequestMapping(value = "/index/page",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
     {
         try {
@@ -86,7 +97,7 @@ public class IndexController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/welcome",method = RequestMethod.GET)
+    @RequestMapping(value = "/index/welcome",method = RequestMethod.GET)
     public String welcome(HttpServletRequest request)
     {
         try {
@@ -159,9 +170,9 @@ public class IndexController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/menus",method = RequestMethod.GET)
+    @RequestMapping(value = "/index/menus",method = RequestMethod.GET)
     @ResponseBody
-    public IndexInfo index(HttpServletRequest request)
+    public IndexInfo menus(HttpServletRequest request)
     {
         IndexInfo indexInfo = new IndexInfo();
 

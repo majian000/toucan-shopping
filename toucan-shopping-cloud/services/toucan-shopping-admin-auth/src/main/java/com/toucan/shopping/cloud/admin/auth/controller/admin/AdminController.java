@@ -365,7 +365,7 @@ public class AdminController {
                 return resultObjectVO;
             }
 
-            Object loginTokenObject = redisTemplate.opsForHash().get(AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()),AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()));
+            Object loginTokenObject = redisTemplate.opsForHash().get(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
             if(loginTokenObject!=null)
             {
                 String redisLoginToken = String.valueOf(loginTokenObject);
