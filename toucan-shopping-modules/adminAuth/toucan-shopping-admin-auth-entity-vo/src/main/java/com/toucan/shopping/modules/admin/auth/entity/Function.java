@@ -36,7 +36,7 @@ public class Function {
 
 
     /**
-     * 功能项类型 0目录 1菜单 2按钮 3工具条按钮 4:API
+     * 功能项类型 0目录 1菜单 2按钮 3工具条按钮 4:API 5页面控件
      */
     private Short type;
 

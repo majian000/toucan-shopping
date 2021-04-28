@@ -81,14 +81,44 @@ public class IndexController {
     }
 
 
-
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/welcome",method = RequestMethod.GET)
-    public String welcome()
+    public String welcome(HttpServletRequest request)
     {
+        try {
+            FunctionVO function = new FunctionVO();
+            function.setUrl("/index/welcome");
+            function.setAppCode(toucan.getAppCode());
+            function.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
+            ResultObjectVO resultObjectVO = feignFunctionService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
+                if(!CollectionUtils.isEmpty(functions))
+                {
+                    List<String> quickButtons = new ArrayList<String>();
+
+                    for(Function buttonFunction:functions)
+                    {
+                        if(buttonFunction.getType().shortValue()==2)
+                        {
+                            quickButtons.add(buttonFunction.getFunctionText());
+                        }
+                    }
+
+                    request.setAttribute("quickButtons",quickButtons);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("quickButtons",new ArrayList<String>());
+        }
+
         return "welcome.html";
     }
-
 
     /**
      * 查询出每个节点的子节点
