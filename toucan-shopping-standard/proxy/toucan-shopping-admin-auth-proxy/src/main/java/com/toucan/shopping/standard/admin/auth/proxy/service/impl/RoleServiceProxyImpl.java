@@ -1,12 +1,10 @@
-package com.toucan.shopping.cloud.admin.auth.controller.role;
-
+package com.toucan.shopping.standard.admin.auth.proxy.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
-import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
@@ -16,23 +14,21 @@ import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import org.apache.commons.lang.StringUtils;
+import com.toucan.shopping.standard.admin.auth.proxy.service.RoleServiceProxy;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * 角色管理
- */
-@RestController
-@RequestMapping("/role")
-public class RoleController {
+@Service
+public class RoleServiceProxyImpl implements RoleServiceProxy {
+
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -64,9 +60,7 @@ public class RoleController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO save(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO save( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -114,9 +108,7 @@ public class RoleController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO update( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -179,9 +171,7 @@ public class RoleController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value = "/query/admin/role/tree",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryAdminRoleTree(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryAdminRoleTree( RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -253,9 +243,7 @@ public class RoleController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO listPage( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -283,9 +271,7 @@ public class RoleController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO findById( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -331,9 +317,7 @@ public class RoleController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/list/admin/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO findListByAdminId(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO findListByAdminId( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -385,9 +369,7 @@ public class RoleController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteById( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -450,9 +432,7 @@ public class RoleController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIds( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {

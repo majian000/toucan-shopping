@@ -13,7 +13,7 @@
         
 ### 权限中心界面
     
-    需要启动center/services/toucan-shopping-admin-auth
+    需要启动services/services/toucan-shopping-admin-auth
     访问地址 localhost:8098/login
     
     

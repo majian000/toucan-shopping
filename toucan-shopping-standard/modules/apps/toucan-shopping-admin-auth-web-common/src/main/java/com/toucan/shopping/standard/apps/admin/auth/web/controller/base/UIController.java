@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
-import com.toucan.shopping.modules.admin.auth.service.AppService;
-import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
@@ -16,6 +14,8 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.standard.admin.auth.proxy.service.AppServiceProxy;
+import com.toucan.shopping.standard.admin.auth.proxy.service.FunctionServiceProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -33,14 +33,14 @@ public abstract class UIController {
      * 初始化选择应用控件
      * @param request
      * @param toucan
-     * @param appService
+     * @param appServiceProxy
      */
-    public void initSelectApp(HttpServletRequest request, Toucan toucan, AppService appService)
+    public void initSelectApp(HttpServletRequest request, Toucan toucan, AppServiceProxy appServiceProxy)
     {
         try {
             App query = new App();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-            ResultObjectVO resultObjectVO = appService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
+            ResultObjectVO resultObjectVO = appServiceProxy.list(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 List<AppVO> apps = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AppVO.class);
@@ -59,9 +59,9 @@ public abstract class UIController {
      * @param request
      * @param toucan
      * @param url
-     * @param functionService
+     * @param functionServiceProxy
      */
-    public void initButtons(HttpServletRequest request, Toucan toucan,String url, FunctionService functionService)
+    public void initButtons(HttpServletRequest request, Toucan toucan,String url, FunctionServiceProxy functionServiceProxy)
     {
         try {
             FunctionVO function = new FunctionVO();
@@ -69,7 +69,7 @@ public abstract class UIController {
             function.setAppCode(toucan.getAppCode());
             function.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
-            ResultObjectVO resultObjectVO = functionService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceProxy.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);

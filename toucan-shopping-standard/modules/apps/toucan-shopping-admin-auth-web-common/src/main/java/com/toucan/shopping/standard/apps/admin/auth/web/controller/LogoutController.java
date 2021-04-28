@@ -1,7 +1,6 @@
 package com.toucan.shopping.standard.apps.admin.auth.web.controller;
 
 
-import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -9,6 +8,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.standard.admin.auth.proxy.service.AdminServiceProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class LogoutController {
     private Toucan toucan;
 
     @Autowired
-    private AdminService adminService;
+    private AdminServiceProxy adminServiceProxy;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -78,7 +78,7 @@ public class LogoutController {
             adminVO.setAdminId(adminId);
             adminVO.setLoginToken(loginToken);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
-            return adminService.logout(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return adminServiceProxy.logout(requestJsonVO);
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

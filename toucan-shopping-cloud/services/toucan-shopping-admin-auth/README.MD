@@ -34,7 +34,7 @@
     
     POST http://localhost:8099/app/save
     HEADER
-        bbs-user-center-atuh:adminId=bb155acbf5ef43dcac9aa892274fadd5;loginToken=8b84093057c14d569fa94eb0bbdb19ac
+        toucan-shopping-admin-auth:adminId=bb155acbf5ef43dcac9aa892274fadd5;loginToken=8b84093057c14d569fa94eb0bbdb19ac
         content-type:application/json;charset=UTF-8
     REQUEST BODY
     {"sign":"9bd190fac50df8d7212ee12df82cbd67","appCode":"10000001", "entityJson":"{ \"name":"商品中心02\","code\":\"10001003\",\"updateAdminId\":\"123456\",\"remark\": \"商品中心\" }"}
@@ -43,7 +43,7 @@
     
     POST http://localhost:8099/app/update
     HEADER
-    bbs-user-center-atuh:adminId=bb155acbf5ef43dcac9aa892274fadd5;loginToken=8b84093057c14d569fa94eb0bbdb19ac
+    toucan-shopping-admin-auth:adminId=bb155acbf5ef43dcac9aa892274fadd5;loginToken=8b84093057c14d569fa94eb0bbdb19ac
         
     REQUEST BODY
     {

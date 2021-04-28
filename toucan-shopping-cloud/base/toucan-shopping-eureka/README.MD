@@ -2,7 +2,7 @@
        
 
 #### 依赖服务
-1.toucan-shopping-config-server
+    1.toucan-shopping-config-server
 
     配置中心
     

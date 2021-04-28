@@ -3,7 +3,6 @@ package com.toucan.shopping.standard.apps.admin.auth.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -12,6 +11,7 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.util.VerifyCodeUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.standard.admin.auth.proxy.service.AdminServiceProxy;
 import com.toucan.shopping.standard.apps.admin.auth.web.util.VCodeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class LoginController {
     private Toucan toucan;
 
     @Autowired
-    private AdminService adminService;
+    private AdminServiceProxy adminServiceProxy;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -94,7 +94,7 @@ public class LoginController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            if(!StringUtils.equals(adminVo.getVcode(),String.valueOf(vCodeObject)))
+            if(!StringUtils.equals(adminVo.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
             {
                 resultObjectVO.setMsg("登录失败,验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -108,7 +108,7 @@ public class LoginController {
             requestVo.setAppCode(appCode);
             requestVo.setSign(SignUtil.sign(appCode, entityJson));
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = adminService.login(requestVo.getSign(),requestVo);
+            resultObjectVO = adminServiceProxy.login(requestVo);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)

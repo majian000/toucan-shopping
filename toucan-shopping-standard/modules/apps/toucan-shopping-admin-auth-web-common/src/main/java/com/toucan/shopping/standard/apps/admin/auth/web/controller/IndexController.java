@@ -5,8 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
-import com.toucan.shopping.modules.admin.auth.service.AdminService;
-import com.toucan.shopping.modules.admin.auth.service.FunctionService;
+import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -20,6 +19,8 @@ import com.toucan.shopping.modules.layui.vo.HomeInfo;
 import com.toucan.shopping.modules.layui.vo.IndexInfo;
 import com.toucan.shopping.modules.layui.vo.LogoInfo;
 import com.toucan.shopping.modules.layui.vo.MenuInfo;
+import com.toucan.shopping.standard.admin.auth.proxy.service.AdminServiceProxy;
+import com.toucan.shopping.standard.admin.auth.proxy.service.FunctionServiceProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +48,10 @@ public class IndexController {
     private Toucan toucan;
 
     @Autowired
-    private FunctionService functionService;
+    private FunctionServiceProxy functionServiceProxy;
 
     @Autowired
-    private AdminService adminService;
+    private AdminServiceProxy adminServiceProxy;
 
 
 
@@ -62,7 +63,7 @@ public class IndexController {
             AdminVO adminVO = new AdminVO();
             adminVO.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),adminVO);
-            ResultObjectVO resultObjectVO = adminService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = adminServiceProxy.queryListByEntity(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 List<Admin> admins = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Admin.class);
                 if (!CollectionUtils.isEmpty(admins)) {
@@ -81,6 +82,7 @@ public class IndexController {
     }
 
 
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/welcome",method = RequestMethod.GET)
     public String welcome(HttpServletRequest request)
@@ -91,7 +93,7 @@ public class IndexController {
             function.setAppCode(toucan.getAppCode());
             function.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
-            ResultObjectVO resultObjectVO = feignFunctionService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceProxy.queryOneChildsByAdminIdAndAppCodeAndParentUrl(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
@@ -120,6 +122,7 @@ public class IndexController {
         return "welcome.html";
     }
 
+
     /**
      * 查询出每个节点的子节点
      * @param all
@@ -142,6 +145,7 @@ public class IndexController {
                     menuInfo.setTitle(functionVO.getName());
                     menuInfo.setHref(functionVO.getUrl());
                     menuInfo.setTarget("_self");
+                    menuInfo.setIcon(functionVO.getIcon());
                     currentNode.getChild().add(menuInfo);
 
                     //查询子节点
@@ -177,7 +181,7 @@ public class IndexController {
             query.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             query.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            ResultObjectVO resultObjectVO = functionService.queryAdminAppFunctions(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = functionServiceProxy.queryAdminAppFunctions(requestJsonVO);
             if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
             {
                 List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),FunctionVO.class);
@@ -192,6 +196,7 @@ public class IndexController {
                             menuInfo.setTitle(functionVO.getName());
                             menuInfo.setHref(functionVO.getUrl());
                             menuInfo.setTarget("_self");
+                            menuInfo.setIcon(functionVO.getIcon());
                             menuInfos.add(menuInfo);
 
                             //查询子节点

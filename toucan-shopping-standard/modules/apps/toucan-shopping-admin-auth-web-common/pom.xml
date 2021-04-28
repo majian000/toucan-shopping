@@ -78,6 +78,11 @@
             <artifactId>toucan-shopping-layui</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.toucan.shopping.standard.proxy</groupId>
+            <artifactId>toucan-shopping-admin-auth-proxy</artifactId>
+        </dependency>
     </dependencies>
 
 

@@ -4,7 +4,6 @@ package com.toucan.shopping.standard.apps.admin.auth.web.controller.role;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
-import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
@@ -20,7 +19,9 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.standard.admin.auth.proxy.service.*;
 import com.toucan.shopping.standard.apps.admin.auth.web.controller.base.UIController;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,23 +49,23 @@ public class RoleController extends UIController {
     private Toucan toucan;
 
     @Autowired
-    private RoleService roleService;
+    private RoleServiceProxy roleServiceProxy;
 
     @Autowired
-    private AdminAppService adminAppService;
+    private AdminAppServiceProxy adminAppServiceProxy;
 
     @Autowired
-    private RoleFunctionService roleFunctionService;
+    private RoleFunctionServiceProxy roleFunctionServiceProxy;
 
     @Autowired
-    private AdminRoleService adminRoleService;
+    private AdminRoleServiceProxy adminRoleServiceProxy;
 
     @Autowired
-    private FunctionService functionService;
+    private FunctionServiceProxy functionServiceProxy;
 
 
     @Autowired
-    private AppService appService;
+    private AppServiceProxy appServiceProxy;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -72,10 +73,10 @@ public class RoleController extends UIController {
     public String page(HttpServletRequest request)
     {
         //初始化选择应用控件
-        super.initSelectApp(request,toucan, appService);
+        super.initSelectApp(request,toucan, appServiceProxy);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/role/listPage", functionService);
+        super.initButtons(request,toucan,"/role/listPage", functionServiceProxy);
 
         return "pages/role/list.html";
     }
@@ -90,7 +91,7 @@ public class RoleController extends UIController {
     public String addPage(HttpServletRequest request)
     {
         //初始化选择应用控件
-        super.initSelectApp(request,toucan, appService);
+        super.initSelectApp(request,toucan, appServiceProxy);
         return "pages/role/add.html";
     }
 
@@ -103,12 +104,12 @@ public class RoleController extends UIController {
         try {
 
             //初始化选择应用控件
-            super.initSelectApp(request,toucan, appService);
+            super.initSelectApp(request,toucan, appServiceProxy);
 
             Role entity = new Role();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            ResultObjectVO resultObjectVO = roleService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = roleServiceProxy.findById(requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -144,7 +145,7 @@ public class RoleController extends UIController {
             role.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             role.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
-            resultObjectVO = roleService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceProxy.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
@@ -191,7 +192,7 @@ public class RoleController extends UIController {
         try {
             //查询对应账户的应用
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),entity);
-            resultObjectVO = roleService.queryAdminRoleTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceProxy.queryAdminRoleTree(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //拿到角色树
@@ -203,7 +204,7 @@ public class RoleController extends UIController {
                 AdminRole queryAdminRole = new AdminRole();
                 queryAdminRole.setAdminId(entity.getAdminId());
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminRole);
-                resultObjectVO = adminRoleService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+                resultObjectVO = adminRoleServiceProxy.queryListByEntity(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     List<AdminRole> adminRoles = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminRole.class);
@@ -245,7 +246,7 @@ public class RoleController extends UIController {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = roleService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleServiceProxy.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
@@ -272,7 +273,7 @@ public class RoleController extends UIController {
             roleFunctionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             roleFunctionVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, roleFunctionVO);
-            resultObjectVO = roleFunctionService.saveFunctions(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = roleFunctionServiceProxy.saveFunctions(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
@@ -297,7 +298,7 @@ public class RoleController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = roleService.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = roleServiceProxy.listPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -346,7 +347,7 @@ public class RoleController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = roleService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = roleServiceProxy.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
@@ -380,7 +381,7 @@ public class RoleController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = roleService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = roleServiceProxy.deleteByIds(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
