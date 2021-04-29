@@ -75,52 +75,11 @@ public interface FeignOrgnazitionService {
     ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
-    /**
-     * 查询应用以及下面所有功能树
-     * @param signHeader
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value = "/query/app/orgnazition/tree",method = RequestMethod.POST)
-    ResultObjectVO queryAppOrgnazitionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
-
-
-    /**
-     * 查询指定用户和应用的权限树
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value = "/query/orgnazition/tree",method = RequestMethod.POST)
-    ResultObjectVO queryOrgnazitionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
 
-    /**
-     * 查询指定管理员应用所有角色的功能项
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value = "/query/admin/app/orgnazitions",method = RequestMethod.POST)
-    ResultObjectVO queryAdminAppOrgnazitions(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
-
-
-    /**
-     * 查询下一级子节点
-     * @param signHeader
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value = "/query/one/children",method = RequestMethod.POST)
-    ResultObjectVO queryChildren(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
 
-    /**
-     * 返回指定人的指定应用的某个上级功能项下的按钮列表
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value = "/query/admin/app/parent/url/one/child",method = RequestMethod.POST)
-    ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 }

@@ -110,29 +110,14 @@ public class OrgnazitionController extends UIController {
                     {
                         OrgnazitionVO OrgnazitionVO = new OrgnazitionVO();
                         BeanUtils.copyProperties(OrgnazitionVO,Orgnazitions.get(0));
-                        //如果是顶级节点,上级节点就是所属应用
-                        if(OrgnazitionVO.getPid().longValue()==-1)
-                        {
-                            App queryApp = new App();
-                            queryApp.setCode(OrgnazitionVO.getAppCode());
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryApp);
-                            resultObjectVO = feignAppService.findByCode(SignUtil.sign(requestJsonVO),requestJsonVO);
-                            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
-                                App app = JSONObject.parseObject(JSONObject.toJSONString(resultObjectVO.getData()),App.class);
-                                if(app!=null) {
-                                    OrgnazitionVO.setParentName(app.getCode()+" "+ app.getName());
-                                }
-                            }
-                        }else{
-                            Orgnazition queryParentOrgnazition = new Orgnazition();
-                            queryParentOrgnazition.setId(OrgnazitionVO.getPid());
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentOrgnazition);
-                            resultObjectVO = feignOrgnazitionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
-                            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
-                                List<Orgnazition> parentOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
-                                if(!CollectionUtils.isEmpty(parentOrgnazitionList)) {
-                                    OrgnazitionVO.setParentName(parentOrgnazitionList.get(0).getName());
-                                }
+                        Orgnazition queryParentOrgnazition = new Orgnazition();
+                        queryParentOrgnazition.setId(OrgnazitionVO.getPid());
+                        requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentOrgnazition);
+                        resultObjectVO = feignOrgnazitionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+                        if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
+                            List<Orgnazition> parentOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
+                            if(!CollectionUtils.isEmpty(parentOrgnazitionList)) {
+                                OrgnazitionVO.setParentName(parentOrgnazitionList.get(0).getName());
                             }
                         }
                         request.setAttribute("model",OrgnazitionVO);
@@ -301,106 +286,6 @@ public class OrgnazitionController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/app/Orgnazition/tree",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultObjectVO queryAppOrgnazitionTree(HttpServletRequest request)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            App query = new App();
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignOrgnazitionService.queryAppOrgnazitionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请求失败");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
-    public void setTreeNodeSelect(AtomicLong id,OrgnazitionTreeVO parentTreeVO,List<OrgnazitionTreeVO> OrgnazitionTreeVOList,List<RoleOrgnazition> roleOrgnazitions)
-    {
-        for(OrgnazitionTreeVO OrgnazitionTreeVO:OrgnazitionTreeVOList)
-        {
-            OrgnazitionTreeVO.setId(id.incrementAndGet());
-            OrgnazitionTreeVO.setNodeId(OrgnazitionTreeVO.getId());
-            OrgnazitionTreeVO.setPid(parentTreeVO.getId());
-            OrgnazitionTreeVO.setParentId(OrgnazitionTreeVO.getPid());
-            for(RoleOrgnazition roleOrgnazition:roleOrgnazitions) {
-                if(OrgnazitionTreeVO.getOrgnazitionId().equals(roleOrgnazition.getOrgnazitionId())) {
-                    //设置节点被选中
-                    OrgnazitionTreeVO.getState().setChecked(true);
-                }
-            }
-            if(!CollectionUtils.isEmpty(OrgnazitionTreeVO.getChildren()))
-            {
-                setTreeNodeSelect(id,OrgnazitionTreeVO,OrgnazitionTreeVO.getChildren(),roleOrgnazitions);
-            }
-        }
-    }
-
-
-    /**
-     * 返回指定角色下的功能树
-     * @param request
-     * @param appCode
-     * @param roleId
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/role/Orgnazition/tree",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request,String appCode,String roleId)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            //查询权限树
-            App query = new App();
-            query.setCode(appCode);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = feignOrgnazitionService.queryOrgnazitionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<OrgnazitionTreeVO> OrgnazitionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), OrgnazitionTreeVO.class);
-
-                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
-                AtomicLong id = new AtomicLong();
-                RoleOrgnazition queryRoleOrgnazition = new RoleOrgnazition();
-                queryRoleOrgnazition.setRoleId(roleId);
-                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleOrgnazition);
-                resultObjectVO = feignRoleOrgnazitionService.queryRoleOrgnazitionList(SignUtil.sign(requestJsonVO),requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<RoleOrgnazition> roleOrgnazitions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleOrgnazition.class);
-                    if(!CollectionUtils.isEmpty(roleOrgnazitions)) {
-                        for(OrgnazitionTreeVO OrgnazitionTreeVO:OrgnazitionTreeVOList) {
-                            OrgnazitionTreeVO.setId(id.incrementAndGet());
-                            OrgnazitionTreeVO.setNodeId(OrgnazitionTreeVO.getId());
-                            OrgnazitionTreeVO.setText(OrgnazitionTreeVO.getTitle());
-                            for(RoleOrgnazition roleOrgnazition:roleOrgnazitions) {
-                                if(OrgnazitionTreeVO.getOrgnazitionId().equals(roleOrgnazition.getOrgnazitionId())) {
-                                    //设置节点被选中
-                                    OrgnazitionTreeVO.getState().setChecked(true);
-                                }
-                            }
-                            setTreeNodeSelect(id,OrgnazitionTreeVO,OrgnazitionTreeVO.getChildren(), roleOrgnazitions);
-                        }
-                    }
-                }
-                resultObjectVO.setData(OrgnazitionTreeVOList);
-            }
-            return resultObjectVO;
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请求失败");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
 
 
 }

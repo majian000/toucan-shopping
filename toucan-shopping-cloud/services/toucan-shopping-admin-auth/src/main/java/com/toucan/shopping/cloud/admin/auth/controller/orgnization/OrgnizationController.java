@@ -377,12 +377,12 @@ public class OrgnizationController {
                         }
 
                         //删除组织机构下所有关联
-                        RoleOrgnazition queryRoleOrgnazition = new RoleOrgnazition();
-                        queryRoleOrgnazition.setOrgnazitionId(f.getOrgnazitionId());
+                        AdminOrgnazition queryAdminOrgnazition = new AdminOrgnazition();
+                        queryAdminOrgnazition.setOrgnazitionId(f.getOrgnazitionId());
 
-                        List<RoleOrgnazition> roleOrgnazition = roleOrgnazitionService.findListByEntity(queryRoleOrgnazition);
-                        if (!CollectionUtils.isEmpty(roleOrgnazition)) {
-                            roleOrgnazitionService.deleteByOrgnazitionId(f.getOrgnazitionId());
+                        List<AdminOrgnazition> adminOrgnazitions = adminOrgnazitionService.findListByEntity(queryAdminOrgnazition);
+                        if (!CollectionUtils.isEmpty(adminOrgnazitions)) {
+                            adminOrgnazitionService.deleteByOrgnazitionId(f.getOrgnazitionId());
                         }
 
                     }
