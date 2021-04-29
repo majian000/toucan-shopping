@@ -5,39 +5,29 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 部门
+ * 组织机构应用表
  */
 @Data
-public class Department {
+public class OrgnazitionApp {
     private Integer id;
 
 
     /**
-     * 名称
+     * 组织机构ID
      */
-    private String name;
+    private String orgnazitionId;
 
 
     /**
-     * 上级菜单 -1表示当前是顶级
+     * 所属应用
      */
-    private Integer pid;
-
-    /**
-     * 启用状态 0:禁用 1启用
-     */
-    private Short enableStatus;
-
+    private String appCode;
 
     /**
      * 创建时间
      */
     private Date createDate;
 
-    /**
-     * 备注
-     */
-    private String remark;
 
 
     /**

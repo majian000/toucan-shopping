@@ -5,20 +5,23 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 部门应用表
+ * 用户组织机构表
  */
 @Data
-public class DepartmentApp {
+public class AdminOrgnazition {
     private Integer id;
 
 
     /**
+     * 所属账号
+     */
+    private String adminId;
 
 
     /**
-     * 所属角色
+     * 所属组织机构
      */
-    private Integer deptId;
+    private String orgnazitionId;
 
 
     /**

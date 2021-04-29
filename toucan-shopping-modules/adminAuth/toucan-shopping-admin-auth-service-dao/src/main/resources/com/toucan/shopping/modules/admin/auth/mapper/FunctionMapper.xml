@@ -13,6 +13,7 @@
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="pid" jdbcType="BIGINT" property="pid" />
+        <result column="function_sort" jdbcType="BIGINT" property="functionSort" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
