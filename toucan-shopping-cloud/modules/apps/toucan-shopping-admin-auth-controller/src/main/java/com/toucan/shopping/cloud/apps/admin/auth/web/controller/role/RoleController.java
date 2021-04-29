@@ -6,11 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
-import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
-import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
@@ -23,7 +20,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +30,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -163,11 +158,13 @@ public class RoleController extends UIController {
 
 
 
-    public void setTreeNodeSelect(AtomicLong id,List<RoleTreeVO> roleTreeVOS,RoleTreeVO parentNode,List<AdminRole> adminRoles)
+    public void setTreeNodeSelect(AtomicLong id,RoleTreeVO parentTree,List<RoleTreeVO> roleTreeVOS,RoleTreeVO parentNode,List<AdminRole> adminRoles)
     {
         for(RoleTreeVO roleTreeVO:roleTreeVOS)
         {
             roleTreeVO.setId(id.incrementAndGet());
+            roleTreeVO.setNodeId(roleTreeVO.getId());
+            roleTreeVO.setParentId(parentTree.getId());
             for(AdminRole adminRole:adminRoles) {
                 if(adminRole.getRoleId().equals(roleTreeVO.getRoleId())) {
                     parentNode.getState().setChecked(true);
@@ -213,7 +210,8 @@ public class RoleController extends UIController {
                     if(!CollectionUtils.isEmpty(adminRoles)) {
                         for(RoleTreeVO roleTreeVO:roleTreeVOS) {
                             roleTreeVO.setId(id.incrementAndGet());
-                            setTreeNodeSelect(id,roleTreeVO.getChildren(),roleTreeVO, adminRoles);
+                            roleTreeVO.setNodeId(roleTreeVO.getId());
+                            setTreeNodeSelect(id,roleTreeVO,roleTreeVO.getChildren(),roleTreeVO, adminRoles);
                         }
                     }
                 }

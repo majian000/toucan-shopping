@@ -5,13 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
-import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
-import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -21,9 +19,8 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +30,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -220,7 +215,6 @@ public class FunctionController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            queryPageInfo.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignFunctionService.queryAppFunctionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;
@@ -327,20 +321,23 @@ public class FunctionController extends UIController {
     }
 
 
-    public void setTreeNodeSelect(AtomicLong id,List<FunctionTreeVO> functionTreeVOList,List<RoleFunction> roleFunctions)
+    public void setTreeNodeSelect(AtomicLong id,FunctionTreeVO parentTreeVO,List<FunctionTreeVO> functionTreeVOList,List<RoleFunction> roleFunctions)
     {
         for(FunctionTreeVO functionTreeVO:functionTreeVOList)
         {
             functionTreeVO.setId(id.incrementAndGet());
+            functionTreeVO.setNodeId(functionTreeVO.getId());
+            functionTreeVO.setPid(parentTreeVO.getId());
+            functionTreeVO.setParentId(functionTreeVO.getPid());
             for(RoleFunction roleFunction:roleFunctions) {
                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
                     //设置节点被选中
                     functionTreeVO.getState().setChecked(true);
                 }
             }
-            if(!CollectionUtils.isEmpty(functionTreeVO.getNodes()))
+            if(!CollectionUtils.isEmpty(functionTreeVO.getChildren()))
             {
-                setTreeNodeSelect(id,functionTreeVO.getNodes(),roleFunctions);
+                setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getChildren(),roleFunctions);
             }
         }
     }
@@ -381,6 +378,7 @@ public class FunctionController extends UIController {
                     if(!CollectionUtils.isEmpty(roleFunctions)) {
                         for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
                             functionTreeVO.setId(id.incrementAndGet());
+                            functionTreeVO.setNodeId(functionTreeVO.getId());
                             functionTreeVO.setText(functionTreeVO.getTitle());
                             for(RoleFunction roleFunction:roleFunctions) {
                                 if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
@@ -388,7 +386,7 @@ public class FunctionController extends UIController {
                                     functionTreeVO.getState().setChecked(true);
                                 }
                             }
-                            setTreeNodeSelect(id,functionTreeVO.getNodes(), roleFunctions);
+                            setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getChildren(), roleFunctions);
                         }
                     }
                 }
