@@ -5,9 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages ="com.toucan.shopping.cloud.base.gateway.filter" )
 @EnableDiscoveryClient
-@ComponentScan("com.toucan.shopping.gateway.filter")
 public class CloudGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(CloudGatewayApplication.class, args);

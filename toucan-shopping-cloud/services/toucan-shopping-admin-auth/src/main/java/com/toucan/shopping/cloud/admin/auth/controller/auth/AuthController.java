@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
+import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 校验权限
@@ -40,17 +42,13 @@ public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private AdminService adminService;
-
-    @Autowired
-    private AdminAppService adminAppService;
-
-    @Autowired
     private RoleFunctionService roleFunctionService;
 
     @Autowired
     private AdminRoleService adminRoleService;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
 
     /**
@@ -97,6 +95,9 @@ public class AuthController {
                 Long count = roleFunctionService.findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(query.getUrl(),query.getAppCode(),roleIdArray);
                 if(count!=null&&count.longValue()>0)
                 {
+                    //每次操作都延长登录会话1小时
+                    redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
+                            AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
                     resultObjectVO.setData(true);
                 }
             }

@@ -554,8 +554,6 @@ public class AdminController {
             if (loginTokenObject != null) {
                 if(StringUtils.equals(admin.getLoginToken(),String.valueOf(loginTokenObject)))
                 {
-                    //每次操作都延长登录会话10秒钟
-                    redisTemplate.opsForHash().getOperations().expire(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),10*1000,TimeUnit.SECONDS);
                     resultObjectVO.setData(true);
                 }
             }
