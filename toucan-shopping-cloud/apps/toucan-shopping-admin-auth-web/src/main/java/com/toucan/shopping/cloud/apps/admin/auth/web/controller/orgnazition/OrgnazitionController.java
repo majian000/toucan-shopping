@@ -61,8 +61,6 @@ public class OrgnazitionController extends UIController {
     private FeignAppService feignAppService;
 
 
-    @Autowired
-    private FeignRoleService feignRoleService;
 
 
 
@@ -105,22 +103,22 @@ public class OrgnazitionController extends UIController {
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
-                    List<Orgnazition> Orgnazitions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
-                    if(!CollectionUtils.isEmpty(Orgnazitions))
+                    List<Orgnazition> orgnazitions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
+                    if(!CollectionUtils.isEmpty(orgnazitions))
                     {
-                        OrgnazitionVO OrgnazitionVO = new OrgnazitionVO();
-                        BeanUtils.copyProperties(OrgnazitionVO,Orgnazitions.get(0));
+                        OrgnazitionVO orgnazitionVO = new OrgnazitionVO();
+                        BeanUtils.copyProperties(orgnazitionVO,orgnazitions.get(0));
                         Orgnazition queryParentOrgnazition = new Orgnazition();
-                        queryParentOrgnazition.setId(OrgnazitionVO.getPid());
+                        queryParentOrgnazition.setId(orgnazitionVO.getPid());
                         requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentOrgnazition);
                         resultObjectVO = feignOrgnazitionService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
                         if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
                             List<Orgnazition> parentOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
                             if(!CollectionUtils.isEmpty(parentOrgnazitionList)) {
-                                OrgnazitionVO.setParentName(parentOrgnazitionList.get(0).getName());
+                                orgnazitionVO.setParentName(parentOrgnazitionList.get(0).getName());
                             }
                         }
-                        request.setAttribute("model",OrgnazitionVO);
+                        request.setAttribute("model",orgnazitionVO);
                     }
                 }
 

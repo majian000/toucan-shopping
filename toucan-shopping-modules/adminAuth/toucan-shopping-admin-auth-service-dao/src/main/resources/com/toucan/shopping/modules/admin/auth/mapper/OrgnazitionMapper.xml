@@ -109,7 +109,7 @@
 
     <select id="queryListByAppCode" resultMap="orgnazitionVOMap" parameterType="java.lang.String">
         select * from t_sa_orgnazition t
-          left join t_sa_orgnazition_app to on t.orgnazation_id = tso.orgnazition_id and tso.app_code = #{appCode} and tso.delete_status = 0
+          left join t_sa_orgnazition_app tso on t.orgnazition_id = tso.orgnazition_id and tso.app_code = #{appCode} and tso.delete_status = 0
          where  1=1  and t.delete_status = 0
     </select>
 

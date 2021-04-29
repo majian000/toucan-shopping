@@ -24,7 +24,14 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">上级组织机构</label>
+        <label class="layui-form-label">关联应用</label>
+        <div class="layui-input-block">
+            <input th:each="aa:${apps}" name="appCodes" id="appCodes" type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上级组织机构</label>
         <div class="layui-input-block">
             <input type="hidden" name="pid" id="pid">
             <input type="hidden" name="appCode" id="appCode">
@@ -34,7 +41,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="functionSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="number" name="orgnazitionSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
         </div>
     </div>
     <div class="layui-form-item">
@@ -113,11 +120,6 @@
                         success:function(data){
                             if(data.code==1)
                             {
-                                for(var i=0;i<data.data.length;i++)
-                                {
-                                    var node = data.data[i];
-                                    node.title=node.appCode+" "+node.title;
-                                }
                                 //渲染
                                 var inst1 = tree.render({
                                     elem: '#apporgnazitionTree'  //绑定元素

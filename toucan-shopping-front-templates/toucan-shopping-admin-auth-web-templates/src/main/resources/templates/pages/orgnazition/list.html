@@ -56,7 +56,7 @@
         <table class="layui-hide" id="orgnazitionTreeTable" lay-filter="orgnazitionTreeTableFilter"></table>
 
         <!-- 操作列 -->
-        <script type="text/html" id="functionTreeTableToolbar">
+        <script type="text/html" id="orgnazitionTreeTableToolbar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -119,13 +119,6 @@
                         {field: 'createDate',  title: '创建时间'},
                         {field: 'updateAdminUsername',  title: '修改人'},
                         {field: 'updateDate',  title: '修改时间'},
-                        {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
-                                if (d.enableStatus == 1) {
-                                    return '启用';
-                                } else {
-                                    return '禁用';
-                                }
-                            }},
                         {templet: '#orgnazitionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
                     ]
                 ],
@@ -197,11 +190,6 @@
         table.on('tool(orgnazitionTreeTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                if(data.type==null)
-                {
-                    layer.msg("不能修改该节点");
-                    return false;
-                }
                 var index = layer.open({
                     title: '编辑组织机构',
                     type: 2,

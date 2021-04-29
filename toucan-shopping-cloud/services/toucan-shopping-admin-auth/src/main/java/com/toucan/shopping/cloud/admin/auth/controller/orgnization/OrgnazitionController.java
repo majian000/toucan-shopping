@@ -26,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/orgnazition")
-public class OrgnizationController {
+public class OrgnazitionController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -77,7 +77,10 @@ public class OrgnizationController {
                 return resultObjectVO;
             }
 
-
+            if(entity.getPid()==null)
+            {
+                entity.setPid(-1L);
+            }
             entity.setOrgnazitionId(GlobalUUID.uuid());
             entity.setCreateDate(new Date());
             entity.setDeleteStatus((short)0);
