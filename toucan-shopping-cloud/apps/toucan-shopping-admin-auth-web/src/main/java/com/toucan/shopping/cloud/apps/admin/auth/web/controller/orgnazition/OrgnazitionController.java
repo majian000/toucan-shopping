@@ -253,7 +253,7 @@ public class OrgnazitionController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/orgnazition/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/tree",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request)
     {
@@ -261,7 +261,7 @@ public class OrgnazitionController extends UIController {
         try {
             App query = new App();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignOrgnazitionService.queryAppOrgnazitionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return feignOrgnazitionService.queryOrgnazationTree(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");

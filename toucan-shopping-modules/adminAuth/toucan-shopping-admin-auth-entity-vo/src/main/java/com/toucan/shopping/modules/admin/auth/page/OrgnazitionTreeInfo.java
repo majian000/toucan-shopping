@@ -22,7 +22,10 @@ public class OrgnazitionTreeInfo extends PageInfo<Orgnazition> {
 
     // ===============查询条件===================
 
-
+    /**
+     * 机构名称
+     */
+    private String name;
 
     /**
      * 启用状态 0:禁用 1启用

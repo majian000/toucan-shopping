@@ -28,7 +28,7 @@
         <div class="layui-input-block">
             <input type="hidden" name="pid" id="pid">
             <input type="hidden" name="appCode" id="appCode">
-            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级组织机构" value="" class="layui-input" >
+            <input type="text" readonly  id="selectPid"   placeholder="请选择上级组织机构" value="" class="layui-input" >
         </div>
     </div>
     <div class="layui-form-item">
@@ -106,7 +106,7 @@
                 content: "<div id='apporgnazitionTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]orgnazition/query/app/orgnazition/tree",
+                        url:"[[@{/}]]orgnazition/query/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
