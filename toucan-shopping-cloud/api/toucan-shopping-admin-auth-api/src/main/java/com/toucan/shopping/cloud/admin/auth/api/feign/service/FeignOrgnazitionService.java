@@ -75,9 +75,14 @@ public interface FeignOrgnazitionService {
     ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
-
-
-
+    /**
+     * 查询组织机构树
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/orgnazation/tree",method = RequestMethod.POST)
+    public ResultObjectVO queryOrgnazationTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
 

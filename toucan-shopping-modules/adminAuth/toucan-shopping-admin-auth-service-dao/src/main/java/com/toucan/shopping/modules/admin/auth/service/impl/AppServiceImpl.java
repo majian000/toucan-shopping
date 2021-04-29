@@ -20,8 +20,8 @@ public class AppServiceImpl implements AppService {
     private AppMapper appMapper;
 
     @Override
-    public List<App> findListByEntity(App user) {
-        return appMapper.findListByEntity(user);
+    public List<App> findListByEntity(App app) {
+        return appMapper.findListByEntity(app);
     }
 
     @Override

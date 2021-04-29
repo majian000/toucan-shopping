@@ -5,8 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.*;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
-import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
-import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
+import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -33,7 +32,7 @@ public class OrgnizationController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrgnazitionService OrgnazitionService;
+    private OrgnazitionService orgnazitionService;
 
     @Autowired
     private AppService appService;
@@ -82,7 +81,7 @@ public class OrgnizationController {
             entity.setOrgnazitionId(GlobalUUID.uuid());
             entity.setCreateDate(new Date());
             entity.setDeleteStatus((short)0);
-            int row = OrgnazitionService.save(entity);
+            int row = orgnazitionService.save(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("添加失败,请重试!");
@@ -139,7 +138,7 @@ public class OrgnizationController {
             Orgnazition query=new Orgnazition();
             query.setId(entity.getId());
             query.setDeleteStatus((short)0);
-            List<Orgnazition> Orgnazitions = OrgnazitionService.findListByEntity(query);
+            List<Orgnazition> Orgnazitions = orgnazitionService.findListByEntity(query);
             if(CollectionUtils.isEmpty(Orgnazitions))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -148,7 +147,7 @@ public class OrgnizationController {
             }
 
             entity.setUpdateDate(new Date());
-            int row = OrgnazitionService.update(entity);
+            int row = orgnazitionService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
@@ -156,7 +155,7 @@ public class OrgnizationController {
             }
 
             //更新子节点的应用编码
-            OrgnazitionService.updateChildAppCode(entity);
+            orgnazitionService.updateChildAppCode(entity);
 
             resultObjectVO.setData(entity);
 
@@ -202,7 +201,7 @@ public class OrgnizationController {
 
 
             //查询查询这个APP下的组织机构列表
-            List<Orgnazition>  orgnazitions = OrgnazitionService.findTreeTable(queryPageInfo);
+            List<Orgnazition>  orgnazitions = orgnazitionService.findTreeTable(queryPageInfo);
             resultObjectVO.setData(orgnazitions);
 
         }catch(Exception e)
@@ -243,7 +242,7 @@ public class OrgnizationController {
             //查询是否存在该组织机构
             Orgnazition query=new Orgnazition();
             query.setId(entity.getId());
-            List<Orgnazition> appList = OrgnazitionService.findListByEntity(query);
+            List<Orgnazition> appList = orgnazitionService.findListByEntity(query);
             if(CollectionUtils.isEmpty(appList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -291,14 +290,14 @@ public class OrgnizationController {
             }
 
             List<Orgnazition> chidlren = new ArrayList<Orgnazition>();
-            OrgnazitionService.queryChildren(chidlren,entity);
+            orgnazitionService.queryChildren(chidlren,entity);
 
             //把当前组织机构添加进去,循环这个集合
             chidlren.add(entity);
 
             for(Orgnazition f:chidlren) {
                 //删除当前组织机构
-                int row = OrgnazitionService.deleteById(f.getId());
+                int row = orgnazitionService.deleteById(f.getId());
                 if (row < 1) {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("请求失败,请重试!");
@@ -362,14 +361,14 @@ public class OrgnizationController {
 
 
                     List<Orgnazition> chidlren = new ArrayList<Orgnazition>();
-                    OrgnazitionService.queryChildren(chidlren,Orgnazition);
+                    orgnazitionService.queryChildren(chidlren,Orgnazition);
 
                     //把当前组织机构添加进去,循环这个集合
                     chidlren.add(Orgnazition);
 
                     for(Orgnazition f:chidlren) {
                         //删除当前组织机构
-                        int row = OrgnazitionService.deleteById(f.getId());
+                        int row = orgnazitionService.deleteById(f.getId());
                         if (row < 1) {
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
@@ -402,6 +401,34 @@ public class OrgnizationController {
     }
 
 
+    /**
+     * 查询组织机构树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/orgnazation/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryOrgnazationTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            App query = JSONObject.parseObject(requestJsonVO.getEntityJson(), App.class);
+
+            //查询所有应用
+            List<App> apps = appService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(apps))
+            {
+                resultObjectVO.setData(orgnazitionService.queryTreeByAppCode(query.getCode()));
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

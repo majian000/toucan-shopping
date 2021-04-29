@@ -74,9 +74,9 @@ public class OrgnazitionController extends UIController {
         super.initSelectApp(request,toucan,feignAppService);
 
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/Orgnazition/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/orgnazition/listPage",feignFunctionService);
 
-        return "pages/Orgnazition/list.html";
+        return "pages/orgnazition/list.html";
     }
 
 
@@ -88,7 +88,7 @@ public class OrgnazitionController extends UIController {
         super.initSelectApp(request,toucan,feignAppService);
 
 
-        return "pages/Orgnazition/add.html";
+        return "pages/orgnazition/add.html";
     }
 
 
@@ -129,7 +129,7 @@ public class OrgnazitionController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/Orgnazition/edit.html";
+        return "pages/orgnazition/edit.html";
     }
 
 
@@ -245,6 +245,27 @@ public class OrgnazitionController extends UIController {
         {
             resultObjectVO.setMsg("请求失败,请重试");
             resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/orgnazition/tree",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryOrgnazitionTree(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            App query = new App();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            return feignOrgnazitionService.queryAppOrgnazitionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
