@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
+import com.toucan.shopping.modules.admin.auth.service.AdminOrgnazitionService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
@@ -51,6 +52,8 @@ public class AdminController {
     @Autowired
     private AdminRoleService adminRoleService;
 
+    @Autowired
+    private AdminOrgnazitionService adminOrgnazitionService;
 
     /**
      * 保存管理员账户
@@ -641,8 +644,12 @@ public class AdminController {
                     //将数据库中保存的关联全部删除
                     for(AdminApp adminAppPersistent:adminAppPersistentList)
                     {
+                        //账号应用关联
                         adminAppService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                        //账号角色关联
                         adminRoleService.deleteByAdminIdAndAppCodes(admin.getAdminId(),new String[]{adminAppPersistent.getAppCode()});
+                        //账号机构关联
+                        adminOrgnazitionService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
                     }
 
                 }else{
@@ -660,8 +667,12 @@ public class AdminController {
                         }
                         if(!find)
                         {
+                            //账号应用关联
                             adminAppService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                            //账号角色关联
                             adminRoleService.deleteByAdminIdAndAppCodes(admin.getAdminId(),new String[]{adminAppPersistent.getAppCode()});
+                            //账号机构关联
+                            adminOrgnazitionService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
                         }
                     }
                 }
