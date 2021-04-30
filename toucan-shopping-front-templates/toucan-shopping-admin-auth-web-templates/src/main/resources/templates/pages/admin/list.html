@@ -335,7 +335,7 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        orgsArray.push({roleId:orgTreeDataArray[i].roleId,appCode:orgTreeDataArray[i].appCode})
+                        orgsArray.push({orgnazitionId:orgTreeDataArray[i].orgnazitionId,appCode:orgTreeDataArray[i].appCode})
                     }
                     if(orgTreeDataArray[i].pid!=-1) {
                         //找到这个节点的上级节点
@@ -487,7 +487,7 @@
                     success:function(layero){
                         loadding = layer.load();
                         $.ajax({
-                            url:"[[@{/}]]role/query/admin/role/tree",
+                            url:"[[@{/}]]orgnazition/query/admin/orgnazition/tree",
                             contentType: "application/json; charset=utf-8",
                             type:'POST',
                             data:JSON.stringify({adminId:data.adminId}),
@@ -534,7 +534,7 @@
                         var orgsArray =  new Array();
                         for (var i = 0; i < selectNodes.length; i++) {
                             var selectNodeObject = getOrgNodeObject(selectNodes[i].nodeId);
-                            orgsArray.push({roleId:selectNodeObject.roleId,appCode:selectNodeObject.appCode});
+                            orgsArray.push({orgnazitionId:selectNodeObject.orgnazitionId,appCode:selectNodeObject.appCode});
                             getOrgParentNode(orgsArray,selectNodeObject.pid);
                         }
 
