@@ -138,16 +138,16 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
      * @param retNodes 返回的所有节点
      * @param child
      */
-    public void queryParentNode(List<Orgnazition> retNodes,Orgnazition child)
+    public void queryParentNode(List<Orgnazition> retNodes,Orgnazition child,String appCode)
     {
-        List<OrgnazitionVO> parentNode = orgnazitionMapper.findById(child.getPid());
+        List<OrgnazitionVO> parentNode = orgnazitionMapper.findByIdAndAppCode(child.getPid(),appCode);
         retNodes.addAll(parentNode);
         if(!CollectionUtils.isEmpty(parentNode))
         {
             //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
             if(parentNode.get(0).getPid().longValue()!=-1&&!existsParent(retNodes,parentNode.get(0)))
             {
-                queryParentNode(retNodes,parentNode.get(0));
+                queryParentNode(retNodes,parentNode.get(0),appCode);
             }
         }
     }
@@ -180,10 +180,9 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
                 //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
                 if(node.getPid().longValue()!=-1&&!existsParent(retNodes,node))
                 {
-                    queryParentNode(retNodes,node);
+                    queryParentNode(retNodes,node,orgnazitionTreeInfo.getAppCode());
                 }
             }
-
         }
         return retNodes;
     }
