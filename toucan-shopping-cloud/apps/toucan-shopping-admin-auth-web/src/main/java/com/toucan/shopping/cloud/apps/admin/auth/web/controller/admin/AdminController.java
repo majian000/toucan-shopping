@@ -95,9 +95,9 @@ public class AdminController extends UIController {
             }
         }catch (Exception e){
             logger.warn(e.getMessage(),e);
-
             request.setAttribute("apps",new ArrayList<AdminAppVO>());
         }
+        request.setAttribute("adminId",adminId);
         return "pages/admin/selectorgnazition.html";
     }
 

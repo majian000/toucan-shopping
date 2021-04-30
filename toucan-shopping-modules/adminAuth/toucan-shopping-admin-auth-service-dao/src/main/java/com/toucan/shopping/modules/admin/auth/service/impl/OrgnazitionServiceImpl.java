@@ -39,16 +39,16 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
             //为当前参数的子节点
             if(OrgnazitionVO.getPid().longValue()==currentNode.getId().longValue())
             {
-                OrgnazitionTreeVO OrgnazitionTreeVO = new OrgnazitionTreeVO();
-                OrgnazitionTreeVO.setTitle(OrgnazitionVO.getName());
-                OrgnazitionTreeVO.setText(OrgnazitionVO.getName());
-                BeanUtils.copyProperties(OrgnazitionTreeVO, OrgnazitionVO);
-                OrgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
+                OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
+                orgnazitionTreeVO.setTitle(OrgnazitionVO.getName());
+                orgnazitionTreeVO.setText(OrgnazitionVO.getName());
+                BeanUtils.copyProperties(orgnazitionTreeVO, OrgnazitionVO);
+                orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
 
-                currentNode.getChildren().add(OrgnazitionTreeVO);
+                currentNode.getChildren().add(orgnazitionTreeVO);
 
                 //查找当前节点的子节点
-                setChildren(orgnazitionVOS,OrgnazitionTreeVO);
+                setChildren(orgnazitionVOS,orgnazitionTreeVO);
             }
         }
     }
@@ -56,55 +56,106 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
 
     @Override
     public List<OrgnazitionTreeVO> queryTreeByAppCode(String appCode) {
-        List<OrgnazitionTreeVO> OrgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
+        List<OrgnazitionTreeVO> orgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
         try {
-            List<OrgnazitionVO> OrgnazitionVOS = orgnazitionMapper.queryListByAppCode(appCode);
-            for (OrgnazitionVO OrgnazitionVO : OrgnazitionVOS) {
-                if (OrgnazitionVO.getPid().longValue() == -1L) {
-                    OrgnazitionTreeVO OrgnazitionTreeVO = new OrgnazitionTreeVO();
-                    OrgnazitionTreeVO.setTitle(OrgnazitionVO.getName());
-                    OrgnazitionTreeVO.setText(OrgnazitionVO.getName());
-                    BeanUtils.copyProperties(OrgnazitionTreeVO, OrgnazitionVO);
-                    OrgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
-                    OrgnazitionTreeVOS.add(OrgnazitionTreeVO);
+            List<OrgnazitionVO> orgnazitionVOS = orgnazitionMapper.queryListByAppCode(appCode);
+            for (OrgnazitionVO orgnazitionVO : orgnazitionVOS) {
+                if (orgnazitionVO.getPid().longValue() == -1L) {
+                    OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
+                    orgnazitionTreeVO.setTitle(orgnazitionVO.getName());
+                    orgnazitionTreeVO.setText(orgnazitionVO.getName());
+                    BeanUtils.copyProperties(orgnazitionTreeVO, orgnazitionVO);
+                    orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
+                    orgnazitionTreeVOS.add(orgnazitionTreeVO);
 
                     //递归查找子节点
-                    setChildren(OrgnazitionVOS,OrgnazitionTreeVO);
+                    setChildren(orgnazitionVOS,orgnazitionTreeVO);
                 }
             }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
         }
-        return OrgnazitionTreeVOS;
+        return orgnazitionTreeVOS;
+    }
+
+    @Override
+    public List<OrgnazitionTreeVO> queryTree() {
+        List<OrgnazitionTreeVO> orgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
+        try {
+            List<OrgnazitionVO> orgnazitionVOS = orgnazitionMapper.queryAll();
+            for (OrgnazitionVO orgnazitionVO : orgnazitionVOS) {
+                if (orgnazitionVO.getPid().longValue() == -1L) {
+                    OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
+                    orgnazitionTreeVO.setTitle(orgnazitionVO.getName());
+                    orgnazitionTreeVO.setText(orgnazitionVO.getName());
+                    BeanUtils.copyProperties(orgnazitionTreeVO, orgnazitionVO);
+                    orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
+                    orgnazitionTreeVOS.add(orgnazitionTreeVO);
+
+                    //递归查找子节点
+                    setChildren(orgnazitionVOS,orgnazitionTreeVO);
+                }
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return orgnazitionTreeVOS;
     }
 
 
+    /**
+     * 设置顶级节点ID
+     * @param orgnazitionVOS
+     */
+    public void setTopParentId(List<OrgnazitionVO> orgnazitionVOS)
+    {
+        for(OrgnazitionVO orgnazitionVO:orgnazitionVOS)
+        {
+            boolean find=false;
+            for(OrgnazitionVO parentOrgnazitionVO:orgnazitionVOS)
+            {
+                if(orgnazitionVO.getPid().longValue()==parentOrgnazitionVO.getId())
+                {
+                    find=true;
+                }
+            }
+            if(!find)
+            {
+                orgnazitionVO.setPid(-1L);
+            }
+        }
+    }
 
 
     @Override
     public List<OrgnazitionTreeVO> queryTreeByAppCodeArray(String[] appCodeArray) {
-        List<OrgnazitionTreeVO> OrgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
+        List<OrgnazitionTreeVO> orgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
         try {
-            List<OrgnazitionVO> OrgnazitionVOS = orgnazitionMapper.queryListByAppCodeArray(appCodeArray);
-            for (OrgnazitionVO OrgnazitionVO : OrgnazitionVOS) {
-                if (OrgnazitionVO.getPid().longValue() == -1L) {
-                    OrgnazitionTreeVO OrgnazitionTreeVO = new OrgnazitionTreeVO();
-                    OrgnazitionTreeVO.setTitle(OrgnazitionVO.getName());
-                    OrgnazitionTreeVO.setText(OrgnazitionVO.getName());
-                    BeanUtils.copyProperties(OrgnazitionTreeVO, OrgnazitionVO);
-                    OrgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
-                    OrgnazitionTreeVOS.add(OrgnazitionTreeVO);
+            List<OrgnazitionVO> orgnazitionVOS = orgnazitionMapper.queryListByAppCodeArray(appCodeArray);
+            if(!CollectionUtils.isEmpty(orgnazitionVOS)) {
+                //如果当前集合里没有它的父节点,那么它设置为顶级节点,因为传入应用编码,可能会出现父节点与子节点应用编码不一致情况
+                setTopParentId(orgnazitionVOS);
+                for (OrgnazitionVO orgnazitionVO : orgnazitionVOS) {
+                    if (orgnazitionVO.getPid().longValue() == -1L) {
+                        OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
+                        orgnazitionTreeVO.setTitle(orgnazitionVO.getName());
+                        orgnazitionTreeVO.setText(orgnazitionVO.getName());
+                        BeanUtils.copyProperties(orgnazitionTreeVO, orgnazitionVO);
+                        orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
+                        orgnazitionTreeVOS.add(orgnazitionTreeVO);
 
-                    //递归查找子节点
-                    setChildren(OrgnazitionVOS,OrgnazitionTreeVO);
+                        //递归查找子节点
+                        setChildren(orgnazitionVOS, orgnazitionTreeVO);
+                    }
                 }
             }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
         }
-        return OrgnazitionTreeVOS;
+        return orgnazitionTreeVOS;
     }
 
     @Override

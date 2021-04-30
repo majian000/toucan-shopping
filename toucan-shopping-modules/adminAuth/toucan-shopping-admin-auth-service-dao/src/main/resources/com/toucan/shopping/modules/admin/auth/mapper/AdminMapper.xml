@@ -104,8 +104,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Admin" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_admin(username,password,admin_id,enable_status,create_date,delete_status,create_admin_id,remark)
-        values(#{username},#{password},#{adminId},#{enableStatus},#{createDate},#{deleteStatus},#{createAdminId},#{remark})
+        insert into t_sa_admin(id,username,password,admin_id,enable_status,create_date,delete_status,create_admin_id,remark)
+        values(#{id},#{username},#{password},#{adminId},#{enableStatus},#{createDate},#{deleteStatus},#{createAdminId},#{remark})
     </insert>
 
 

@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.mapper;
 
 import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
+import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -99,5 +100,10 @@ public interface OrgnazitionMapper {
     List<Orgnazition> findTreeTableByPageInfo(OrgnazitionTreeInfo OrgnazitionTreeInfo);
 
 
+    /**
+     * 查询全部
+     * @return
+     */
+    List<OrgnazitionVO> queryAll();
 
 }

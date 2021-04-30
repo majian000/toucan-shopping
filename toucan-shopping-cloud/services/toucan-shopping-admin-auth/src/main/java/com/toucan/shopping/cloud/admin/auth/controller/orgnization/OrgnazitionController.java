@@ -314,31 +314,9 @@ public class OrgnazitionController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AdminAppVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminAppVO.class);
-            //查询查询指定用户下的应用角色树
-            List<AdminApp> adminApps = adminAppService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(adminApps))
-            {
-                List<App> apps=new ArrayList<App>();
-                for(AdminApp adminApp:adminApps)
-                {
-                    App queryApp =new App();
-                    queryApp.setCode(adminApp.getAppCode());
-                    apps.addAll(appService.findListByEntity(queryApp));
-                }
-                String[] appCodes = null;
-                if(!CollectionUtils.isEmpty(apps)) {
-                    appCodes = new String[apps.size()];
-                    int pos = 0;
-                    for (App app : apps) {
-                        appCodes[pos] = app.getCode();
-                        pos++;
-                    }
-                }else{ //如果没有查询到应用,则组织机构树不显示任何东西
-                    appCodes=new String[1];
-                    appCodes[0] = "-1";
-                }
-                resultObjectVO.setData(orgnazitionService.queryTreeByAppCodeArray(appCodes));
-            }
+            String[] appCodes=new String[1];
+            appCodes[0] = query.getAppCode();
+            resultObjectVO.setData(orgnazitionService.queryTreeByAppCodeArray(appCodes));
 
         }catch(Exception e)
         {
@@ -501,14 +479,7 @@ public class OrgnazitionController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            App query = JSONObject.parseObject(requestJsonVO.getEntityJson(), App.class);
-
-            //查询所有应用
-            List<App> apps = appService.findListByEntity(query);
-            if(!CollectionUtils.isEmpty(apps))
-            {
-                resultObjectVO.setData(orgnazitionService.queryTreeByAppCode(query.getCode()));
-            }
+            resultObjectVO.setData(orgnazitionService.queryTree());
 
         }catch(Exception e)
         {

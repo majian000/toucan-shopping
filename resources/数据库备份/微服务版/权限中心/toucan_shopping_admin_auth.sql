@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80018
 File Encoding         : 65001
 
-Date: 2021-04-28 21:16:55
+Date: 2021-04-30 22:32:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -44,7 +44,7 @@ INSERT INTO `t_app` VALUES ('11', '权限管理', '10001003', '1', '0', '', '202
 -- ----------------------------
 DROP TABLE IF EXISTS `t_sa_admin`;
 CREATE TABLE `t_sa_admin` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `id` bigint(20) NOT NULL COMMENT '主键',
   `admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户ID',
   `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
   `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
@@ -56,7 +56,7 @@ CREATE TABLE `t_sa_admin` (
   `update_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `update_date` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='系统用户主表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='系统用户主表';
 
 -- ----------------------------
 -- Records of t_sa_admin
@@ -72,6 +72,8 @@ INSERT INTO `t_sa_admin` VALUES ('79', '6a94e16ceeab4a99b5d74fc34a00ae03', 'sa00
 INSERT INTO `t_sa_admin` VALUES ('80', '6eeaa44c7ba6402cb62348b496b15dcd', 'zhanghao001', 'e10adc3949ba59abbe56e057f20f883e', '1', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-23 23:09:49.684000', null, null);
 INSERT INTO `t_sa_admin` VALUES ('81', 'f70a3f2d8ccc46cf8636259383b4849b', 'app_manager_01', 'e10adc3949ba59abbe56e057f20f883e', '1', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-24 01:25:51.700000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-25 21:46:16.532000');
 INSERT INTO `t_sa_admin` VALUES ('82', '08d044fa382d4011b43026bd85696618', 'm_sa', 'e10adc3949ba59abbe56e057f20f883e', '1', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-27 23:17:56.061000', null, null);
+INSERT INTO `t_sa_admin` VALUES ('83', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'm_sa02', 'e10adc3949ba59abbe56e057f20f883e', '1', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-30 20:45:21.385000', null, null);
+INSERT INTO `t_sa_admin` VALUES ('837805783709122635', 'd62732b6a00643ecab2295a27be92b14', 'm_sa03', 'e10adc3949ba59abbe56e057f20f883e', '1', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-30 21:41:08.830000', null, null);
 
 -- ----------------------------
 -- Table structure for t_sa_admin_app
@@ -85,7 +87,7 @@ CREATE TABLE `t_sa_admin_app` (
   `create_date` datetime(6) DEFAULT NULL COMMENT '创建时间',
   `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1067 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='用户应用关联';
+) ENGINE=InnoDB AUTO_INCREMENT=1071 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='用户应用关联';
 
 -- ----------------------------
 -- Records of t_sa_admin_app
@@ -151,15 +153,19 @@ INSERT INTO `t_sa_admin_app` VALUES ('1063', 'f70a3f2d8ccc46cf8636259383b4849b',
 INSERT INTO `t_sa_admin_app` VALUES ('1064', 'f70a3f2d8ccc46cf8636259383b4849b', '10001002', '1', '2021-04-25 21:46:11.994000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_admin_app` VALUES ('1065', '08d044fa382d4011b43026bd85696618', '10001002', '0', '2021-04-27 23:17:56.094000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_admin_app` VALUES ('1066', '08d044fa382d4011b43026bd85696618', '10001003', '0', '2021-04-27 23:17:56.100000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_app` VALUES ('1067', '7bbdca6e27e642478b6fb5b1e1c8eab8', '10001002', '0', '2021-04-30 20:45:21.842000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_app` VALUES ('1068', '7bbdca6e27e642478b6fb5b1e1c8eab8', '10001003', '0', '2021-04-30 20:45:22.268000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_app` VALUES ('1069', 'd62732b6a00643ecab2295a27be92b14', '10001002', '0', '2021-04-30 21:41:08.889000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_app` VALUES ('1070', 'd62732b6a00643ecab2295a27be92b14', '10001003', '0', '2021-04-30 21:41:08.935000', 'bb155acbf5ef43dcac9aa892274fadd5');
 
 -- ----------------------------
--- Table structure for t_sa_admin_dept
+-- Table structure for t_sa_admin_orgnazition
 -- ----------------------------
-DROP TABLE IF EXISTS `t_sa_admin_dept`;
-CREATE TABLE `t_sa_admin_dept` (
+DROP TABLE IF EXISTS `t_sa_admin_orgnazition`;
+CREATE TABLE `t_sa_admin_orgnazition` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '所属用户',
-  `dept_id` bigint(20) NOT NULL COMMENT '所属部门',
+  `orgnazition_id` varchar(32) NOT NULL COMMENT '所属部门',
   `delete_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除状态 0未删除 1已删除',
   `app_code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '所属应用 (软关联,直接存储应用名字符串)',
   `create_date` datetime(6) NOT NULL COMMENT '创建时间',
@@ -170,7 +176,7 @@ CREATE TABLE `t_sa_admin_dept` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='管理员部门关联表';
 
 -- ----------------------------
--- Records of t_sa_admin_dept
+-- Records of t_sa_admin_orgnazition
 -- ----------------------------
 
 -- ----------------------------
@@ -186,7 +192,7 @@ CREATE TABLE `t_sa_admin_role` (
   `create_date` datetime(6) NOT NULL COMMENT '创建时间',
   `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='管理员角色关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='管理员角色关联表';
 
 -- ----------------------------
 -- Records of t_sa_admin_role
@@ -203,45 +209,109 @@ INSERT INTO `t_sa_admin_role` VALUES ('31', '6eeaa44c7ba6402cb62348b496b15dcd', 
 INSERT INTO `t_sa_admin_role` VALUES ('108', 'f70a3f2d8ccc46cf8636259383b4849b', 'f033f6356c2449bdb34d657fa4720ffa', '0', '10001003', '2021-04-26 21:58:52.962000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_admin_role` VALUES ('109', '263681613aff46619ed1b4a175b0fc33', '142a30e4210c48a0966e84bf1e22e815', '0', '10001003', '2021-04-26 22:33:27.996000', 'f70a3f2d8ccc46cf8636259383b4849b');
 INSERT INTO `t_sa_admin_role` VALUES ('110', '08d044fa382d4011b43026bd85696618', '89d3bf8fbf4543188a64fb7738a6bc62', '0', '10001003', '2021-04-27 23:18:21.403000', 'bb155acbf5ef43dcac9aa892274fadd5');
-
--- ----------------------------
--- Table structure for t_sa_department
--- ----------------------------
-DROP TABLE IF EXISTS `t_sa_department`;
-CREATE TABLE `t_sa_department` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '部门名称',
-  `pid` bigint(20) NOT NULL COMMENT '上级部门 -1表示当前是顶级',
-  `delete_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除状态 0未删除 1已删除',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
-  `create_date` datetime(6) NOT NULL COMMENT '创建时间',
-  `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
-  `update_date` datetime(6) DEFAULT NULL,
-  `update_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='部门表';
-
--- ----------------------------
--- Records of t_sa_department
--- ----------------------------
-
--- ----------------------------
--- Table structure for t_sa_department_app
--- ----------------------------
-DROP TABLE IF EXISTS `t_sa_department_app`;
-CREATE TABLE `t_sa_department_app` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `dept_id` bigint(20) NOT NULL COMMENT '所属角色',
-  `app_code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '所属应用 (软关联,直接存储应用名字符串)',
-  `delete_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除状态 0未删除 1已删除',
-  `create_date` datetime(6) NOT NULL COMMENT '创建时间',
-  `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='部门应用关联表';
-
--- ----------------------------
--- Records of t_sa_department_app
--- ----------------------------
+INSERT INTO `t_sa_admin_role` VALUES ('111', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('112', '7bbdca6e27e642478b6fb5b1e1c8eab8', '922739c7dc844aeb90d0e79118ffa642', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('113', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'c0c19231b9c44aeba849545297986744', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('114', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('115', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'd50a8420dcba444a818b2804416aeca9', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('116', '7bbdca6e27e642478b6fb5b1e1c8eab8', '0d726135121f4fe49569b533f2dae1f3', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('117', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('118', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('119', '7bbdca6e27e642478b6fb5b1e1c8eab8', '572bc044d1e24be19faa6a2235043720', '1', '10001003', '2021-04-30 20:59:06.371000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('120', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('121', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f0349fe34ce34a9780033354cc27d335', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('122', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('123', '7bbdca6e27e642478b6fb5b1e1c8eab8', '922739c7dc844aeb90d0e79118ffa642', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('124', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'c0c19231b9c44aeba849545297986744', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('125', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('126', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'd50a8420dcba444a818b2804416aeca9', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('127', '7bbdca6e27e642478b6fb5b1e1c8eab8', '0d726135121f4fe49569b533f2dae1f3', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('128', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('129', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('130', '7bbdca6e27e642478b6fb5b1e1c8eab8', '572bc044d1e24be19faa6a2235043720', '1', '10001003', '2021-04-30 20:59:11.601000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('131', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 20:59:23.248000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('132', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f0349fe34ce34a9780033354cc27d335', '1', '10001003', '2021-04-30 20:59:23.248000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('133', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('134', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f0349fe34ce34a9780033354cc27d335', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('135', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('136', '7bbdca6e27e642478b6fb5b1e1c8eab8', '922739c7dc844aeb90d0e79118ffa642', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('137', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'c0c19231b9c44aeba849545297986744', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('138', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('139', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'd50a8420dcba444a818b2804416aeca9', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('140', '7bbdca6e27e642478b6fb5b1e1c8eab8', '0d726135121f4fe49569b533f2dae1f3', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('141', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('142', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('143', '7bbdca6e27e642478b6fb5b1e1c8eab8', '572bc044d1e24be19faa6a2235043720', '1', '10001003', '2021-04-30 20:59:26.772000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('144', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 20:59:31.441000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('145', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 20:59:31.441000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('146', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('147', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f0349fe34ce34a9780033354cc27d335', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('148', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('149', '7bbdca6e27e642478b6fb5b1e1c8eab8', '922739c7dc844aeb90d0e79118ffa642', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('150', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'c0c19231b9c44aeba849545297986744', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('151', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('152', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'd50a8420dcba444a818b2804416aeca9', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('153', '7bbdca6e27e642478b6fb5b1e1c8eab8', '0d726135121f4fe49569b533f2dae1f3', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('154', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('155', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('156', '7bbdca6e27e642478b6fb5b1e1c8eab8', '572bc044d1e24be19faa6a2235043720', '1', '10001003', '2021-04-30 20:59:35.829000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('157', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 20:59:46.086000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('158', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 20:59:46.086000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('159', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:00:11.200000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('160', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:00:11.200000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('161', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 21:00:11.200000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('162', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 21:00:11.200000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('163', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:00:15.561000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('164', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:00:15.561000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('165', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'c0c19231b9c44aeba849545297986744', '1', '10001003', '2021-04-30 21:00:15.561000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('166', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 21:00:15.561000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('167', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 21:00:15.561000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('168', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 21:00:15.561000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('169', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'e7dd9c824ff94d4c8b93cc1996b4ff0c', '1', '10001002', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('170', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('171', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('172', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f0349fe34ce34a9780033354cc27d335', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('173', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('174', '7bbdca6e27e642478b6fb5b1e1c8eab8', '922739c7dc844aeb90d0e79118ffa642', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('175', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'c0c19231b9c44aeba849545297986744', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('176', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('177', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'd50a8420dcba444a818b2804416aeca9', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('178', '7bbdca6e27e642478b6fb5b1e1c8eab8', '0d726135121f4fe49569b533f2dae1f3', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('179', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('180', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('181', '7bbdca6e27e642478b6fb5b1e1c8eab8', '572bc044d1e24be19faa6a2235043720', '1', '10001003', '2021-04-30 21:00:20.709000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('182', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:00:26.212000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('183', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:00:26.212000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('184', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'e7dd9c824ff94d4c8b93cc1996b4ff0c', '1', '10001002', '2021-04-30 21:01:26.303000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('185', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:01:26.303000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('186', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:01:26.303000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('187', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'e7dd9c824ff94d4c8b93cc1996b4ff0c', '1', '10001002', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('188', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('189', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('190', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f0349fe34ce34a9780033354cc27d335', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('191', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('192', '7bbdca6e27e642478b6fb5b1e1c8eab8', '922739c7dc844aeb90d0e79118ffa642', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('193', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'c0c19231b9c44aeba849545297986744', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('194', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('195', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'd50a8420dcba444a818b2804416aeca9', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('196', '7bbdca6e27e642478b6fb5b1e1c8eab8', '0d726135121f4fe49569b533f2dae1f3', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('197', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('198', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('199', '7bbdca6e27e642478b6fb5b1e1c8eab8', '572bc044d1e24be19faa6a2235043720', '1', '10001003', '2021-04-30 21:01:30.874000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('200', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:01:36.750000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('201', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:01:36.750000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('202', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 21:01:36.750000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('203', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '1', '10001002', '2021-04-30 21:01:41.031000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('204', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '2021-04-30 21:01:41.031000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('205', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '1', '10001003', '2021-04-30 21:01:41.031000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('206', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '1', '10001003', '2021-04-30 21:01:41.031000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('207', '7bbdca6e27e642478b6fb5b1e1c8eab8', '520fccd50efa484e9ab2f87cddd22283', '0', '10001002', '2021-04-30 21:02:00.589000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('208', '7bbdca6e27e642478b6fb5b1e1c8eab8', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0', '10001003', '2021-04-30 21:02:00.589000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('209', '7bbdca6e27e642478b6fb5b1e1c8eab8', '7943ff9283ba4572bdad44838cc29052', '0', '10001003', '2021-04-30 21:02:00.589000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('210', '7bbdca6e27e642478b6fb5b1e1c8eab8', 'f033f6356c2449bdb34d657fa4720ffa', '0', '10001003', '2021-04-30 21:02:00.589000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('211', '7bbdca6e27e642478b6fb5b1e1c8eab8', '142a30e4210c48a0966e84bf1e22e815', '0', '10001003', '2021-04-30 21:02:00.589000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('212', '7bbdca6e27e642478b6fb5b1e1c8eab8', '89d3bf8fbf4543188a64fb7738a6bc62', '0', '10001003', '2021-04-30 21:02:00.589000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_admin_role` VALUES ('213', '7bbdca6e27e642478b6fb5b1e1c8eab8', '572bc044d1e24be19faa6a2235043720', '0', '10001003', '2021-04-30 21:02:00.589000', 'bb155acbf5ef43dcac9aa892274fadd5');
 
 -- ----------------------------
 -- Table structure for t_sa_function
@@ -267,7 +337,7 @@ CREATE TABLE `t_sa_function` (
   `update_date` datetime(6) DEFAULT NULL COMMENT '修改时间',
   `update_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=170 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='功能项';
+) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='功能项';
 
 -- ----------------------------
 -- Records of t_sa_function
@@ -335,7 +405,7 @@ INSERT INTO `t_sa_function` VALUES ('78', 0x323831613031663464396630343938326136
 INSERT INTO `t_sa_function` VALUES ('79', 0x3936653963663530383633633436396139356530663530303834613130383362, '查看列表API', '/admin/list', '', 'permissioncenter:system:admin:list', '4', '10', '', '11', '1', '0', '', '10001003', '2021-04-20 14:44:07.000000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-21 21:30:04.871000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_function` VALUES ('80', 0x6337386134353335623764313439376338656264393462363365393039393136, '查看角色树', '/role/query/admin/role/tree', '', 'permissioncenter:system:admin:tree:list', '4', '72', '', '11', '1', '0', '', '10001003', '2021-04-20 14:44:07.000000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-25 21:37:13.947000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_function` VALUES ('81', 0x6565656161333731383435633431326161306462616661356234386237396461, '保存角色关联', '/admin/connect/roles', '', 'permissioncenter:system:admin:connect:roles', '4', '72', '', '11', '1', '0', '', '10001003', '2021-04-20 14:44:07.000000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-23 21:30:19.426000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_function` VALUES ('82', 0x6437316630616232326462623439633039613938373232326138643533653031, '修改密码', '/', '<a class=\"layui-btn layui-btn-normal layui-btn-xs \" lay-event=\"password\">修改密码</a>', 'permissioncenter:system:admin:passwordRowBtn', '2', '10', '', '11', '1', '0', '', '10001003', '2021-04-24 01:16:01.659000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_function` VALUES ('82', 0x6437316630616232326462623439633039613938373232326138643533653031, '修改密码', '/', '<a class=\"layui-btn layui-btn-normal layui-btn-xs \" lay-event=\"password\">修改密码</a>&nbsp;&nbsp;', 'permissioncenter:system:admin:passwordRowBtn', '2', '10', '', '11', '1', '0', '', '10001003', '2021-04-24 01:16:01.659000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-30 20:58:07.820000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_function` VALUES ('83', 0x3639656165313962353937373436386239353239353237373330373861643737, '跳转修改密码界面API', '/admin/passwordPage', '', 'permissioncenter:system:admin:passwordPage', '4', '82', '', '11', '1', '0', '', '10001003', '2021-04-24 01:17:08.437000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
 INSERT INTO `t_sa_function` VALUES ('84', 0x3731656330646331663831613464343839333832343135316238326137376261, '修改密码API', '/admin/update/password', '', 'permissioncenter:system:admin:update:password', '4', '82', '', '11', '1', '0', '', '10001003', '2021-04-24 01:17:49.774000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
 INSERT INTO `t_sa_function` VALUES ('85', 0x3934393064343038313062663437616461313265393733343735366439623638, '跳转我的密码界面API', '/admin/myPasswordPage', '', 'permissioncenter:system:mypassword', '4', '86', '', '11', '1', '0', '', '10001003', '2021-04-24 01:19:59.204000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-24 01:21:00.636000', 'bb155acbf5ef43dcac9aa892274fadd5');
@@ -423,6 +493,98 @@ INSERT INTO `t_sa_function` VALUES ('166', 0x61633637306434323732646634393866623
 INSERT INTO `t_sa_function` VALUES ('167', 0x3033363936653161646535393464653839373363336231306238636433343638, '账号列表', '', '\n                                            <a href=\"javascript:;\" layuimini-content-href=\"/admin/listPage\" data-title=\"账号列表\" data-icon=\"fa fa-gears\">\n                                                <i class=\"fa fa-gears\"></i>\n                                                <cite>账号列表</cite>\n                                            </a>\n', 'permissioncenter:welcome:adminlist', '5', '93', '', '2', '1', '0', '', '10001003', '2021-04-28 21:03:47.196000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-28 21:14:34.347000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_function` VALUES ('168', 0x3131373039393433363536353462633861333833303461633634656333336132, '角色列表', '', '  <a href=\"javascript:;\" layuimini-content-href=\"/role/listPage\" data-title=\"角色列表\" data-icon=\"fa fa-file-text\">\n                                                <i class=\"fa fa-file-text\"></i>\n                                                <cite>角色列表</cite>\n                                            </a>\n                         ', 'permissioncenter:welcome:rolelist', '5', '93', '', '3', '1', '0', '', '10001003', '2021-04-28 21:04:20.173000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-28 21:13:55.236000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_function` VALUES ('169', 0x3533383235353436363030323430303239303131303930343866616663316533, '功能项列表', '', '                                            <a href=\"javascript:;\" layuimini-content-href=\"/function/listPage\" data-title=\"功能项列表\" data-icon=\"fa fa-dot-circle-o\">\n                                                <i class=\"fa fa-dot-circle-o\"></i>\n                                                <cite>功能项列表</cite>\n                                            </a>', 'permissioncenter:welcome:functionlist', '5', '93', '', '4', '1', '0', '', '10001003', '2021-04-28 21:04:55.172000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-28 21:14:09.394000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('170', 0x3736613238626636663136373436303738663533353662646533626637383461, '组织机构列表', '/orgnazition/listPage', '', 'permissioncenter:system:orgnazition:listPage', '1', '5', '', '6', '1', '0', '', '10001003', '2021-04-29 20:33:22.761000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:31:33.276000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('171', 0x6635323462306630323932313438303661393665363331643034383136323635, '查看列表API', '/orgnazition/tree/table', '', 'permissioncenter:system:orgnazition:list', '4', '170', '', '7', '1', '0', '', '10001003', '2021-04-29 20:34:31.058000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:35:02.194000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('172', 0x6565353062396134656430633437613139623730333935333962386632363737, '添加', '', '<button class=\"layui-btn layui-btn-normal layui-btn-sm data-add-btn\" lay-event=\"add\"> 添加 </button>', 'permissioncenter:system:orgnazition:addbtn', '3', '170', '', '1', '1', '0', '', '10001003', '2021-04-29 20:35:21.659000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:33:43.290000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('173', 0x3830393431636361653732623463323238373264336439396532363135366532, '跳转添加界面API', '/orgnazition/addPage', '', 'permissioncenter:system:orgnazition:addpage', '4', '172', '', '1', '1', '0', '', '10001003', '2021-04-29 20:36:06.659000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:34:04.775000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('174', 0x3834313232353364323736633462306261303736613766343332383934646238, '保存API', '/orgnazition/save', '', 'permissioncenter:system:orgnazition:save', '4', '172', '', '1', '1', '0', '', '10001003', '2021-04-29 20:36:53.065000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:34:32.686000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('175', 0x3339386536313930613361653465383661633037386139366239376430363465, '查看组织机构树', '/orgnazition/query/tree', '', 'permissioncenter:system:orgnazition:tree', '4', '170', '', '1', '1', '0', '', '10001003', '2021-04-29 20:50:23.594000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:35:23.090000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('176', 0x6663343834363031346465393432333362373864333065306162366330343965, '删除', '', '<button class=\"layui-btn layui-btn-sm layui-btn-danger data-delete-btn\" lay-event=\"delete\">删除</button>', 'permissioncenter:system:orgnazition:delbtn', '3', '170', '', '3', '1', '0', '', '10001003', '2021-04-29 21:20:57.360000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:35:44.938000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('177', 0x6339623131333230656333383437343662313262313938303339636233656130, '删除API', '/orgnazition/delete', '', 'permissioncenter:system:orgnazition:delete', '4', '176', '', '1', '1', '0', '', '10001003', '2021-04-29 21:22:47.157000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_function` VALUES ('178', 0x6530626366343239376261313436376362346234343666653461393934633166, '编辑', '', '<a class=\"layui-btn layui-btn-primary layui-btn-xs\" lay-event=\"edit\">修改</a> &nbsp;&nbsp;', 'permissioncenter:system:orgnazition:updateRowBtn', '2', '170', '', '6', '1', '0', '', '10001003', '2021-04-29 21:23:39.816000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:24:04.449000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('179', 0x3335386437336531366665613433636162333034326366366636383864353033, '修改API', '/orgnazition/update', '', 'permissioncenter:system:orgnazition:update', '4', '178', '', '7', '1', '0', '', '10001003', '2021-04-29 21:26:48.717000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_function` VALUES ('180', 0x3331363066396264326538343430353538613862306239613366623665313431, '跳转编辑界面API', '/orgnazition/editPage', '', 'permissioncenter:system:orgnazition:editPage', '4', '178', '', '8', '1', '0', '', '10001003', '2021-04-29 21:27:24.609000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_function` VALUES ('181', 0x3332386536333639356337343465623262383231336335643030303466656631, '删除', '', '<a class=\"layui-btn layui-btn-danger layui-btn-xs\" lay-event=\"delete\">删除</a>', 'permissioncenter:system:orgnazition:deleteRowBtn', '2', '170', '', '2', '1', '0', '', '10001003', '2021-04-29 21:28:45.539000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:29:50.254000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_function` VALUES ('182', 0x3731343831663239343863313433656438396231643661356161653239633137, '删除API', '/orgnazition/delete', '', 'permissioncenter:system:orgnazition:delete', '4', '181', '', '8', '1', '0', '', '10001003', '2021-04-29 21:29:23.147000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_function` VALUES ('183', 0x6133363666373663313133343439656661303030336236303966313061343535, '组织机构', '', '<a class=\"layui-btn layui-btn-primary layui-btn-xs\" lay-event=\"orgnazition\">组织机构</a> &nbsp;&nbsp;', 'permissioncenter:system:admin:orgRowBtn', '2', '10', '', '8', '1', '0', '', '10001003', '2021-04-30 20:57:26.450000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_function` VALUES ('184', 0x3831313538666566643237353431623339303737333639653031313835366662, '跳转选择组织机构界面API', '/admin/selectOrgnazitionPage', '', 'permissioncenter:system:admin:selectOrgnazitionPage', '4', '183', '', '10', '1', '0', '', '10001003', '2021-04-30 21:06:46.529000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_function` VALUES ('185', 0x6666626338353865613763623464396538633937383864363765323666353162, '查询组织机构树API', '/orgnazition/query/admin/orgnazition/tree', '', 'permissioncenter:system:admin:orgnazition:tree', '4', '183', '', '10', '1', '0', '', '10001003', '2021-04-30 22:04:02.952000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+
+-- ----------------------------
+-- Table structure for t_sa_orgnazition
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sa_orgnazition`;
+CREATE TABLE `t_sa_orgnazition` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `orgnazition_id` varchar(32) DEFAULT NULL COMMENT '组织机构ID',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称',
+  `pid` bigint(20) NOT NULL COMMENT '上级菜单 -1表示当前是顶级',
+  `orgnazition_sort` bigint(20) DEFAULT NULL COMMENT '排序',
+  `delete_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除状态 0未删除 1已删除',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '备注',
+  `create_date` datetime(6) NOT NULL COMMENT '创建时间',
+  `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
+  `update_date` datetime(6) DEFAULT NULL COMMENT '修改时间',
+  `update_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '修改人',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='组织机构';
+
+-- ----------------------------
+-- Records of t_sa_orgnazition
+-- ----------------------------
+INSERT INTO `t_sa_orgnazition` VALUES ('170', '1323755008df4b4f88c62827d3eaddf2', '犀鸟数科', '-1', '1', '0', '', '2021-04-29 21:13:38.557000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-30 22:31:15.740000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition` VALUES ('171', '79be0fc5c2604e21bd007b1a98422d97', '研发中心1', '170', '1', '0', '', '2021-04-29 21:19:44.415000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_orgnazition` VALUES ('172', 'a96b0a1deafa4df4b6838d985a54ad95', '研发中心2', '170', '1', '0', '', '2021-04-29 21:19:58.747000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:42:52.950000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition` VALUES ('173', '7608f0a6a31042e4a4db47c760feecc0', '研发中心1——研发1部', '171', '1', '0', '', '2021-04-29 21:43:07.962000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:44:01.195000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition` VALUES ('174', 'c004b32491374f5da881f575a5188cff', '研发中心1——研发2部', '171', '3', '1', '', '2021-04-29 21:43:26.822000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-29 21:44:08.660000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition` VALUES ('175', 'b09bffcf41f4496c8a94d58acc8edc98', '研发中心2——研发1部', '172', '5', '0', '', '2021-04-29 21:44:27.077000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_orgnazition` VALUES ('176', '1a9d472b6df94f0e8d37caa64ea8842e', '研发中心1——测试1部', '171', '1', '0', '1', '2021-04-30 20:46:53.581000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-30 20:53:51.432000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition` VALUES ('177', 'f8866e3be0354c77b965bde9315fa061', '研发中心1——测试1部——测试1组', '173', '9', '0', '', '2021-04-30 20:54:50.040000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_orgnazition` VALUES ('178', '5be3798ed19e4b19b1419d03490d4326', '研发中心1——研发3部', '171', '3', '0', '', '2021-04-30 22:28:36.957000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_orgnazition` VALUES ('179', 'e6118636d973448ca7eee4e73a2abad3', '研发中心1——研发3部', '171', '3', '0', '', '2021-04-30 22:28:54.158000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_orgnazition` VALUES ('180', '2bf5a4ca77ea429b8265ce61929d66ee', '研发中心1——研发5部', '171', '33', '0', '', '2021-04-30 22:29:04.377000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_orgnazition` VALUES ('181', '9a17e1a7164f44bbbae112c288c0962a', '研发中心1——研发6部', '171', '3', '0', '1', '2021-04-30 22:29:19.104000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+INSERT INTO `t_sa_orgnazition` VALUES ('182', '19b10098c4e7422da00dd19e10678d17', '研发中心1——研发8部', '171', '3', '0', '', '2021-04-30 22:29:28.017000', 'bb155acbf5ef43dcac9aa892274fadd5', null, null);
+
+-- ----------------------------
+-- Table structure for t_sa_orgnazition_app
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sa_orgnazition_app`;
+CREATE TABLE `t_sa_orgnazition_app` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `orgnazition_id` varchar(32) NOT NULL COMMENT '所属组织机构',
+  `app_code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '所属应用 (软关联,直接存储应用名字符串)',
+  `delete_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除状态 0未删除 1已删除',
+  `create_date` datetime(6) NOT NULL COMMENT '创建时间',
+  `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='部门应用关联表';
+
+-- ----------------------------
+-- Records of t_sa_orgnazition_app
+-- ----------------------------
+INSERT INTO `t_sa_orgnazition_app` VALUES ('1', 'a96b0a1deafa4df4b6838d985a54ad95', '10001003', '0', '2021-04-30 13:19:31.000000', '-1');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('2', 'a96b0a1deafa4df4b6838d985a54ad95', '10001002', '0', '2021-04-30 13:20:20.000000', '-1');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('3', '7608f0a6a31042e4a4db47c760feecc0', '10001003', '0', '2021-04-30 13:20:36.000000', '-1');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('4', '1a9d472b6df94f0e8d37caa64ea8842e', '10001002', '1', '2021-04-30 20:46:53.652000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('5', '1a9d472b6df94f0e8d37caa64ea8842e', '10001003', '1', '2021-04-30 20:46:53.695000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('6', '1a9d472b6df94f0e8d37caa64ea8842e', '10001002', '1', '2021-04-30 20:53:43.983000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('7', '1a9d472b6df94f0e8d37caa64ea8842e', '10001002', '0', '2021-04-30 20:53:51.524000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('8', '1a9d472b6df94f0e8d37caa64ea8842e', '10001003', '0', '2021-04-30 20:53:51.572000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('9', 'f8866e3be0354c77b965bde9315fa061', '10001002', '0', '2021-04-30 20:54:50.090000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('10', 'f8866e3be0354c77b965bde9315fa061', '10001003', '0', '2021-04-30 20:54:50.140000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('11', '5be3798ed19e4b19b1419d03490d4326', '10001002', '0', '2021-04-30 22:28:37.025000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('12', '5be3798ed19e4b19b1419d03490d4326', '10001003', '0', '2021-04-30 22:28:37.079000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('13', 'e6118636d973448ca7eee4e73a2abad3', '10001002', '0', '2021-04-30 22:28:54.197000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('14', 'e6118636d973448ca7eee4e73a2abad3', '10001003', '0', '2021-04-30 22:28:54.238000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('15', '2bf5a4ca77ea429b8265ce61929d66ee', '10001002', '0', '2021-04-30 22:29:04.420000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('16', '2bf5a4ca77ea429b8265ce61929d66ee', '10001003', '0', '2021-04-30 22:29:04.475000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('17', '9a17e1a7164f44bbbae112c288c0962a', '10001002', '0', '2021-04-30 22:29:19.150000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('18', '9a17e1a7164f44bbbae112c288c0962a', '10001003', '0', '2021-04-30 22:29:19.216000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('19', '19b10098c4e7422da00dd19e10678d17', '10001002', '0', '2021-04-30 22:29:28.057000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('20', '19b10098c4e7422da00dd19e10678d17', '10001003', '0', '2021-04-30 22:29:28.099000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('21', '1323755008df4b4f88c62827d3eaddf2', '10001002', '0', '2021-04-30 22:31:15.835000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_orgnazition_app` VALUES ('22', '1323755008df4b4f88c62827d3eaddf2', '10001003', '0', '2021-04-30 22:31:15.869000', 'bb155acbf5ef43dcac9aa892274fadd5');
 
 -- ----------------------------
 -- Table structure for t_sa_role
@@ -482,7 +644,7 @@ CREATE TABLE `t_sa_role_function` (
   `create_date` datetime(6) NOT NULL COMMENT '创建时间',
   `create_admin_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户ID -1初始化',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4929 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='角色菜单关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=5430 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='角色菜单关联表';
 
 -- ----------------------------
 -- Records of t_sa_role_function
@@ -1299,75 +1461,576 @@ INSERT INTO `t_sa_role_function` VALUES ('4853', '6ba7eb5c30ea49a5b20a4f9de5636b
 INSERT INTO `t_sa_role_function` VALUES ('4854', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '1', '10001003', '2021-04-28 21:15:15.610000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_role_function` VALUES ('4855', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '1', '10001003', '2021-04-28 21:15:15.610000', 'bb155acbf5ef43dcac9aa892274fadd5');
 INSERT INTO `t_sa_role_function` VALUES ('4856', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '1', '10001003', '2021-04-28 21:15:15.610000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4857', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4858', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4859', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4860', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4861', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4862', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4863', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4864', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4865', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4866', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4867', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4868', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4869', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4870', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4871', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4872', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4873', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4874', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4875', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4876', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4877', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4878', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4879', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4880', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4881', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4882', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4883', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4884', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4885', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4886', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4887', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4888', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4889', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4890', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4891', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4892', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4893', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4894', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4895', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4896', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4897', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4898', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4899', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4900', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4901', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4902', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4903', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4904', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4905', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4906', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4907', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4908', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4909', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4910', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4911', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4912', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4913', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4914', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4915', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4916', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4917', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4918', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4919', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4920', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4921', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4922', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4923', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4924', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4925', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4926', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4927', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
-INSERT INTO `t_sa_role_function` VALUES ('4928', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '0', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4857', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4858', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4859', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4860', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4861', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4862', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4863', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4864', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4865', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4866', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4867', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4868', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4869', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4870', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4871', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4872', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4873', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4874', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4875', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4876', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4877', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4878', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4879', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4880', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4881', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4882', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4883', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4884', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4885', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4886', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4887', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4888', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4889', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4890', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4891', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4892', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4893', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4894', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4895', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4896', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4897', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4898', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4899', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4900', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4901', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4902', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4903', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4904', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4905', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4906', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4907', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4908', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4909', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4910', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4911', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4912', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4913', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4914', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4915', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4916', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4917', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4918', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4919', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4920', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4921', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4922', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4923', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4924', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4925', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4926', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4927', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4928', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '1', '10001003', '2021-04-28 21:15:33.253000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4929', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4930', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4931', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4932', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4933', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4934', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4935', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4936', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4937', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4938', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4939', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4940', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4941', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4942', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4943', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4944', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4945', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4946', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4947', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4948', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4949', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4950', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4951', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4952', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4953', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4954', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4955', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4956', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4957', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4958', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4959', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4960', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4961', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4962', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4963', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4964', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4965', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4966', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4967', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4968', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4969', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4970', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4971', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4972', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4973', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4974', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4975', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4976', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4977', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4978', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4979', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4980', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4981', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4982', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4983', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4984', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4985', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4986', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4987', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4988', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4989', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4990', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '76a28bf6f16746078f5356bde3bf784a', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4991', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f524b0f029214806a96e631d04816265', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4992', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ee50b9a4ed0c47a19b7039539b8f2677', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4993', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '80941ccae72b4c22872d3d99e26156e2', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4994', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8412253d276c4b0ba076a7f432894db8', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4995', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4996', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4997', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4998', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('4999', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5000', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5001', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5002', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5003', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5004', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5005', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '1', '10001003', '2021-04-29 20:37:03.205000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5006', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5007', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5008', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5009', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5010', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5011', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5012', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5013', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5014', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5015', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5016', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5017', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5018', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5019', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5020', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5021', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5022', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5023', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5024', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5025', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5026', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5027', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5028', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5029', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5030', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5031', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5032', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5033', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5034', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5035', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5036', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5037', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5038', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5039', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5040', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5041', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5042', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5043', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5044', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5045', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5046', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5047', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5048', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5049', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5050', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5051', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5052', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5053', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5054', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5055', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5056', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5057', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5058', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5059', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5060', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5061', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5062', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5063', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5064', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5065', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5066', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5067', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '76a28bf6f16746078f5356bde3bf784a', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5068', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f524b0f029214806a96e631d04816265', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5069', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ee50b9a4ed0c47a19b7039539b8f2677', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5070', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '80941ccae72b4c22872d3d99e26156e2', '1', '10001003', '2021-04-29 20:50:33.202000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5071', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8412253d276c4b0ba076a7f432894db8', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5072', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '398e6190a3ae4e86ac078a96b97d064e', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5073', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5074', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5075', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5076', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5077', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5078', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5079', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5080', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5081', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5082', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5083', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '1', '10001003', '2021-04-29 20:50:33.203000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5084', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5085', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5086', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5087', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5088', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5089', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5090', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5091', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5092', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5093', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5094', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5095', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5096', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5097', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5098', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5099', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5100', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5101', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5102', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5103', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5104', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5105', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5106', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5107', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5108', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5109', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5110', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5111', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5112', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5113', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5114', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5115', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5116', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5117', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5118', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5119', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5120', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5121', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5122', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5123', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5124', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5125', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5126', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5127', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5128', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5129', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5130', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5131', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5132', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5133', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5134', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5135', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5136', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5137', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5138', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5139', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5140', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5141', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5142', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5143', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5144', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5145', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '76a28bf6f16746078f5356bde3bf784a', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5146', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f524b0f029214806a96e631d04816265', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5147', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ee50b9a4ed0c47a19b7039539b8f2677', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5148', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '80941ccae72b4c22872d3d99e26156e2', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5149', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8412253d276c4b0ba076a7f432894db8', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5150', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '398e6190a3ae4e86ac078a96b97d064e', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5151', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fc4846014de94233b78d30e0ab6c049e', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5152', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c9b11320ec384746b12b198039cb3ea0', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5153', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e0bcf4297ba1467cb4b446fe4a994c1f', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5154', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '358d73e16fea43cab3042cf6f688d503', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5155', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '3160f9bd2e8440558a8b0b9a3fb6e141', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5156', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '328e63695c744eb2b8213c5d0004fef1', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5157', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71481f2948c143ed89b1d6a5aae29c17', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5158', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5159', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5160', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5161', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5162', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5163', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5164', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5165', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5166', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5167', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5168', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '1', '10001003', '2021-04-29 21:30:01.230000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5169', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5170', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5171', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5172', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5173', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5174', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5175', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5176', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5177', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5178', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5179', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5180', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5181', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5182', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5183', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5184', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5185', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5186', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5187', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5188', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5189', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5190', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5191', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5192', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5193', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5194', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5195', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5196', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5197', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5198', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5199', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5200', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5201', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a366f76c113449efa0003b609f10a455', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5202', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5203', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5204', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5205', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5206', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5207', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5208', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5209', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5210', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5211', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5212', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5213', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5214', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5215', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5216', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5217', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5218', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5219', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5220', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5221', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5222', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5223', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5224', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5225', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5226', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5227', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5228', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5229', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5230', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5231', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '76a28bf6f16746078f5356bde3bf784a', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5232', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f524b0f029214806a96e631d04816265', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5233', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ee50b9a4ed0c47a19b7039539b8f2677', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5234', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '80941ccae72b4c22872d3d99e26156e2', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5235', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8412253d276c4b0ba076a7f432894db8', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5236', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '398e6190a3ae4e86ac078a96b97d064e', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5237', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fc4846014de94233b78d30e0ab6c049e', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5238', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c9b11320ec384746b12b198039cb3ea0', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5239', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e0bcf4297ba1467cb4b446fe4a994c1f', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5240', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '358d73e16fea43cab3042cf6f688d503', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5241', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '3160f9bd2e8440558a8b0b9a3fb6e141', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5242', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '328e63695c744eb2b8213c5d0004fef1', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5243', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71481f2948c143ed89b1d6a5aae29c17', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5244', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5245', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5246', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5247', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5248', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5249', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5250', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5251', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5252', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5253', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5254', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '1', '10001003', '2021-04-30 20:57:35.952000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5255', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5256', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5257', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5258', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5259', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5260', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5261', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5262', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5263', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5264', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5265', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5266', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5267', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5268', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5269', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5270', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5271', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5272', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5273', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5274', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5275', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5276', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5277', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5278', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5279', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5280', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5281', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5282', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5283', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5284', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5285', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5286', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5287', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a366f76c113449efa0003b609f10a455', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5288', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81158fefd27541b39077369e011856fb', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5289', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5290', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5291', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5292', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5293', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5294', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5295', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5296', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5297', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5298', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5299', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5300', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5301', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5302', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5303', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5304', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5305', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5306', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5307', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5308', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5309', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5310', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5311', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5312', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5313', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5314', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5315', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5316', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5317', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5318', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '76a28bf6f16746078f5356bde3bf784a', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5319', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f524b0f029214806a96e631d04816265', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5320', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ee50b9a4ed0c47a19b7039539b8f2677', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5321', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '80941ccae72b4c22872d3d99e26156e2', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5322', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8412253d276c4b0ba076a7f432894db8', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5323', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '398e6190a3ae4e86ac078a96b97d064e', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5324', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fc4846014de94233b78d30e0ab6c049e', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5325', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c9b11320ec384746b12b198039cb3ea0', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5326', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e0bcf4297ba1467cb4b446fe4a994c1f', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5327', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '358d73e16fea43cab3042cf6f688d503', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5328', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '3160f9bd2e8440558a8b0b9a3fb6e141', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5329', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '328e63695c744eb2b8213c5d0004fef1', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5330', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71481f2948c143ed89b1d6a5aae29c17', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5331', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5332', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5333', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5334', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5335', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5336', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5337', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5338', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5339', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5340', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5341', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '1', '10001003', '2021-04-30 21:08:39.553000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5342', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5c64c60e08134442821abc9ad7e3b4c8', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5343', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '39c83f899de34bf59b21c6886582632a', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5344', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f6ad367db5e44191ad24a960803cea67', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5345', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ea0902431e344171b868835db84083e6', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5346', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '63170363336b414faca2c340adbcabc4', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5347', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71967473598845d6a0804a3fbbdba133', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5348', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd156bdfa0d0c4b4ba5f460a9d055079b', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5349', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a9d6ae5c80e342acaf4eea99355f91bb', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5350', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '55921edd97684d6b863b45d6a2f0bc3e', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5351', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8ef8f4fdbdc04681a6c71bd1818aa593', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5352', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '464ef2d2d2a04fde9a033c6663bfa66b', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5353', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '83e92b838c07405dbcd7ff4c04627855', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5354', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81bba07a4ed14ad8abe46226bd914015', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5355', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b123af0d51ff401db2a742702c011e0b', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5356', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd0343e35b29d407787e84a0a28f0f11e', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5357', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd574b4a76c194d499d1d5454aaf0a809', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5358', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e6bac32f950a46d6a060c14f0ebf64b7', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5359', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '826bf5cd67fd41679bbb46a13fb17a34', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5360', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6fbdeca5f0354766a6edc1852eeba1ff', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5361', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '606c586db19641029e076eff37143ba3', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5362', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd2b024f36714282ab7788879edcf7b1', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5363', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '0b347bbdb6f44e9290dd0676a63b54d9', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5364', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '281a01f4d9f04982a6940803908f3a3b', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5365', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1a51535097dd462a898e4233890e1303', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5366', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bb12900ea3f2486c99931f54ed2a68df', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5367', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f67eaf649e9f42dcb60c7190838b11e0', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5368', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c78a4535b7d1497c8ebd94b63e909916', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5369', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eeeaa371845c412aa0dbafa5b48b79da', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5370', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '96e9cf50863c469a95e0f50084a1083b', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5371', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd71f0ab22dbb49c09a987222a8d53e01', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5372', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '69eae19b5977468b952952773078ad77', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5373', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71ec0dc1f81a4d4893824151b82a77ba', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5374', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a366f76c113449efa0003b609f10a455', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5375', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '81158fefd27541b39077369e011856fb', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5376', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ffbc858ea7cb4d9e8c9788d67e26f51b', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5377', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '84c94b59a1e54d53821f8d1f27d63c56', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5378', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f057542ebdfd426cbbab84acf419637a', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5379', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'bc68fa67e27b44a38ef746d5263832e5', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5380', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ddf50bb0daa047a183a645a6032b0616', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5381', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '40bd4766e1c34a0fbf5e4e92ba67900a', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5382', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '240a37be562840cb98e38d95bec1331f', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5383', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ba0700d73b38455888028be8e3e376f0', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5384', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '67acf29c21484b97b3b6e282edda76ca', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5385', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a077e729ce8942e38d6f2c606aba48eb', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5386', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f911a3a3ed4540dab81cfa6bae6c4d54', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5387', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fd5c6c4a98814e648b64d82fb7a05ba6', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5388', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c491a1cc1cbe4c268ca0327151c1567c', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5389', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c45bbc294bac4a60ba84d76c46771cf4', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5390', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f2c1644cc32e48fda25a8a1c5784d299', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5391', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'abf4c5e1f2a24b2a874af3fe54a2400e', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5392', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ed16b75127e74de1be176251175b2a6e', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5393', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '6a37026a28c645628c1cc2b6d44ac61a', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5394', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '363a0d886fa54e82821c08e0b0463de5', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5395', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b82237719cbf4409be88610c737448d2', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5396', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a392188d7fac472bbf1bd63eec86d488', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5397', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'b73d7f12439947aa8049bed8c3700315', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5398', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'aa2f5af303e34273980ec1c3c897157f', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5399', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f84d864fee8746698af4787e7542290d', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5400', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '710d97bce5684d7a95bd927150a323a5', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5401', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'dfa23a417aa9492e96b5a4e5d72ae61b', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5402', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '34a56f8868a84010a98d1a1ee51f36b9', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5403', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '31f368be0fb043e7b88850ddff6b27e3', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5404', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'eb6f4cbd34004ac4853c0fb8a3435652', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5405', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '7666992387c14de09cc2199d9cb1fc1e', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5406', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '76a28bf6f16746078f5356bde3bf784a', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5407', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'f524b0f029214806a96e631d04816265', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5408', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ee50b9a4ed0c47a19b7039539b8f2677', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5409', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '80941ccae72b4c22872d3d99e26156e2', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5410', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '8412253d276c4b0ba076a7f432894db8', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5411', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '398e6190a3ae4e86ac078a96b97d064e', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5412', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'fc4846014de94233b78d30e0ab6c049e', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5413', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'c9b11320ec384746b12b198039cb3ea0', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5414', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e0bcf4297ba1467cb4b446fe4a994c1f', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5415', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '358d73e16fea43cab3042cf6f688d503', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5416', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '3160f9bd2e8440558a8b0b9a3fb6e141', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5417', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '328e63695c744eb2b8213c5d0004fef1', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5418', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '71481f2948c143ed89b1d6a5aae29c17', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5419', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'd48a5a7d612c4099a6bf9f4b9a469c18', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5420', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '9490d40810bf47ada12e9734756d9b68', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5421', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'e88d4d1406dc4d0b8823d0250349ddac', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5422', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'cf3e9c21b80b4181b7a5c53993be4e1f', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5423', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '817243e48f3a4e37a48736b9e3b1ea24', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5424', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'a3e6b2f72e464e3abafe7d949f4a5ccc', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5425', '6ba7eb5c30ea49a5b20a4f9de5636bb0', 'ac670d4272df498fb472ede13e7e3d02', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5426', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '03696e1ade594de8973c3b10b8cd3468', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5427', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1170994365654bc8a38304ac64ec33a2', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5428', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '5382554660024002901109048fafc1e3', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');
+INSERT INTO `t_sa_role_function` VALUES ('5429', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '18faaf650a6241a895423333610d1711', '0', '10001003', '2021-04-30 22:04:11.644000', 'bb155acbf5ef43dcac9aa892274fadd5');

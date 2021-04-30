@@ -25,6 +25,15 @@ public interface OrgnazitionService {
      */
     List<OrgnazitionTreeVO> queryTreeByAppCode(String appCode);
 
+
+
+    /**
+     * 查询全部树结构
+     * @return
+     */
+    List<OrgnazitionTreeVO> queryTree();
+
+
     /**
      * 根据应用编码查询树
      * @param appCodeArray

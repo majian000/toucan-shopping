@@ -124,10 +124,15 @@
 
     <select id="queryListByAppCode" resultMap="orgnazitionVOMap" parameterType="java.lang.String">
         select * from t_sa_orgnazition t
-          left join t_sa_orgnazition_app tso on t.orgnazition_id = tso.orgnazition_id and tso.app_code = #{appCode} and tso.delete_status = 0
-         where  1=1  and t.delete_status = 0
+          left join t_sa_orgnazition_app tso on t.orgnazition_id = tso.orgnazition_id
+          and tso.app_code = #{appCode}
+          and tso.delete_status = 0
+         where  1=1  and t.delete_status = 0 and tso.app_code is not null
     </select>
 
+    <select id="queryAll" resultMap="orgnazitionVOMap" parameterType="java.lang.String">
+        select * from t_sa_orgnazition t where  1=1  and t.delete_status = 0
+    </select>
 
     <select id="queryListByAppCodeArray" resultMap="orgnazitionVOMap" >
         select * from t_sa_orgnazition t
@@ -137,7 +142,7 @@
                 #{item}
             </foreach>
            and tso.delete_status = 0
-         where  1=1  and t.delete_status = 0
+         where  1=1  and t.delete_status = 0 and tso.app_code is not null
     </select>
 
 
