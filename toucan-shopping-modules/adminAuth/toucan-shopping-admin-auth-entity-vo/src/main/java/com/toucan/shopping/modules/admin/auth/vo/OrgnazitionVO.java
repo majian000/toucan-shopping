@@ -46,5 +46,9 @@ public class OrgnazitionVO extends Orgnazition {
      */
     private List<OrgnazitionApp> orgnazitionApps;
 
+    /**
+     * 关联应用名称
+     */
+    private String appNames;
 
 }

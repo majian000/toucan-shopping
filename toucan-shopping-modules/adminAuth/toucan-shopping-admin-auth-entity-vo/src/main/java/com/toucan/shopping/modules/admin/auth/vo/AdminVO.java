@@ -21,7 +21,7 @@ public class AdminVO extends Admin {
     private String vcode;
 
     /**
-     * 关联所有应用
+     * 关联应用名称
      */
     private String appNames;
 
