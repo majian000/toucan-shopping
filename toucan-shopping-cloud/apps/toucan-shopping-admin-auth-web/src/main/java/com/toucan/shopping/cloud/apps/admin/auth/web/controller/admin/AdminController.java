@@ -75,6 +75,13 @@ public class AdminController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/selectOrgnazitionPage",method = RequestMethod.GET)
+    public String orgnazitionPage(HttpServletRequest request)
+    {
+        return "pages/admin/selectorgnazition.html";
+    }
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
