@@ -46,6 +46,16 @@
     </insert>
 
 
+    <insert id="inserts"  useGeneratedKeys="true" keyProperty="id" >
+        insert into t_sa_admin_orgnazition(admin_id,orgnazition_id,app_code,create_date,delete_status,create_admin_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{adminId},#{orgnazitionId},#{appCode},#{createDate},#{deleteStatus},#{createAdminId}})
+        </foreach>
+
+    </insert>
+
+
     <update id="deleteByAppCode" parameterType="java.lang.String">
         update t_sa_admin_orgnazition set delete_status=1 where app_code = #{appCode} and delete_status=0
     </update>
@@ -63,6 +73,16 @@
 
     <update id="deleteByAdminIdAndAppCode" >
         update t_sa_admin_orgnazition set delete_status=1 where admin_id = #{adminId} and app_code = #{appCode} and delete_status=0
+    </update>
+
+
+    <update id="deleteByAdminIdAndAppCodes" >
+        update t_sa_admin_orgnazition set delete_status=1  where 1=1
+        and admin_id = #{adminId} and delete_status=0
+        and app_code in
+        <foreach item="item" index="index" collection="appCodes" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
     </update>
 
 </mapper>

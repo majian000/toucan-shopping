@@ -82,9 +82,14 @@ public interface FeignOrgnazitionService {
      * @return
      */
     @RequestMapping(value = "/query/orgnazation/tree",method = RequestMethod.POST)
-    public ResultObjectVO queryOrgnazationTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryOrgnazationTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+
+
+
+    @RequestMapping(value = "/query/admin/orgnazition/tree",method = RequestMethod.POST)
+    ResultObjectVO queryAdminOrgnazitionTree(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
 }

@@ -77,6 +77,8 @@
         var dtree = layui.dtree;
         var roleTree;
         var roleTreeDataArray = new Array();
+        var orgTree;
+        var orgTreeDataArray = new Array();
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -226,6 +228,28 @@
         }
 
 
+
+        /**
+         * 拿到所有选中节点的ID
+         * @param data
+         * @param idArray
+         */
+        function getOrgCheckdNodeId(data,idArray)
+        {
+            for(var i=0;i<data.length;i++)
+            {
+                orgTreeDataArray.push(data[i]);
+                if(data[i].state.checked==true)
+                {
+                    idArray.push(data[i].id);
+                }
+                if(data[i].children!=null&&data[i].children.length>0)
+                {
+                    getOrgCheckdNodeId(data[i].children,idArray);
+                }
+            }
+        }
+
         /**
          * 拿到指定节点对象
          */
@@ -241,6 +265,20 @@
             return null;
         }
 
+        /**
+         * 拿到指定节点对象
+         */
+        function getOrgNodeObject(nodeId)
+        {
+            for(var i=0;i<orgTreeDataArray.length;i++)
+            {
+                if(orgTreeDataArray[i].id==nodeId)
+                {
+                    return orgTreeDataArray[i];
+                }
+            }
+            return null;
+        }
 
         /**
          * 拿到上级节点信息
@@ -265,7 +303,7 @@
                     {
                         rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
                     }
-                    if(permissionTreeDataArray[i].pid!=-1) {
+                    if(roleTreeDataArray[i].pid!=-1) {
                         //找到这个节点的上级节点
                         getParentNode(rolesArray, roleTreeDataArray[i].pid);
                     }
@@ -273,6 +311,39 @@
             }
         }
 
+
+
+
+        /**
+         * 拿到上级节点信息
+         */
+        function getOrgParentNode(orgsArray,pid)
+        {
+            for(var i=0;i<orgTreeDataArray.length;i++)
+            {
+
+                if(orgTreeDataArray[i].id==pid)
+                {
+                    var exists=false;
+                    //判断上级节点ID是否已经保存了
+                    for(var j=0;j<orgsArray.length;j++)
+                    {
+                        if(orgsArray[j].id==pid) {
+                            exists = true;
+                        }
+                    }
+                    //避免上级节点ID重复保存两份
+                    if(!exists)
+                    {
+                        orgsArray.push({roleId:orgTreeDataArray[i].roleId,appCode:orgTreeDataArray[i].appCode})
+                    }
+                    if(orgTreeDataArray[i].pid!=-1) {
+                        //找到这个节点的上级节点
+                        getOrgParentNode(orgsArray,orgTreeDataArray[i].pid);
+                    }
+                }
+            }
+        }
 
         //监听表格复选框选择
         table.on('checkbox(adminTableFilter)', function (obj) {
@@ -382,6 +453,89 @@
                             var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
                             rolesArray.push({roleId:selectNodeObject.roleId,appCode:selectNodeObject.appCode});
                             getParentNode(rolesArray,selectNodeObject.pid);
+                        }
+
+                        $.ajax({
+                            url: "[[@{/}]]admin/connect/roles",
+                            contentType: "application/json; charset=utf-8",
+                            type: 'POST',
+                            data: JSON.stringify({roles:rolesArray,adminId:data.adminId}),
+                            success: function (data) {
+                                if (data.code == 0) {
+                                    layer.msg(data.msg);
+                                    return false;
+                                }
+                                layer.close(index);
+                            }
+                        });
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+
+            }else if (obj.event == 'orgnazition') {
+                index = layer.open({
+                    title: '选择组织机构',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['20%', '60%'],
+                    btn: ['确定'],
+                    content: "<ul id='orgTree' class='dtree' data-id='0'></ul>",
+                    success:function(layero){
+                        loadding = layer.load();
+                        $.ajax({
+                            url:"[[@{/}]]role/query/admin/role/tree",
+                            contentType: "application/json; charset=utf-8",
+                            type:'POST',
+                            data:JSON.stringify({adminId:data.adminId}),
+                            success:function(data){
+                                if(data.code==1)
+                                {
+                                    //已选择节点
+                                    orgTreeDataArray = new Array();
+                                    var idArray = new Array();
+                                    getOrgCheckdNodeId(data.data,idArray);
+                                    orgTree = dtree.render({
+                                        elem: "#orgTree",//html中的id值
+                                        data:data.data,
+                                        checkbarType: "no-all",
+                                        width:'100%',
+                                        checkbar: true,  //开启复选框
+                                        checkbarData: "choose",// 记录选中（默认）， "change"：记录变更， "all"：记录全部， "halfChoose"："记录选中和半选（V2.5.0新增）"
+                                        done: function (res, $ul, first) {
+                                            if (first) {
+                                                if(idArray!=null&&idArray.length>0) {
+                                                    dtree.chooseDataInit("orgTree", idArray); //"001001,001002"被选中的子节点id
+                                                    dtree.initNoAllCheck("orgTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
+                                                }
+                                            }
+
+                                        }
+                                    });
+                                }
+                            },
+                            complete:function()
+                            {
+                                layer.close(loadding);
+                            }
+                        });
+
+                    },
+                    yes: function(index, layero){
+                        var selectNodes = roleTree.getCheckbarNodesParam("orgTree");
+                        if(selectNodes==null||selectNodes.length<=0)
+                        {
+                            layer.msg("请选择组织机构");
+                            return false;
+                        }
+                        var orgsArray =  new Array();
+                        for (var i = 0; i < selectNodes.length; i++) {
+                            var selectNodeObject = getOrgNodeObject(selectNodes[i].nodeId);
+                            orgsArray.push({roleId:selectNodeObject.roleId,appCode:selectNodeObject.appCode});
+                            getOrgParentNode(orgsArray,selectNodeObject.pid);
                         }
 
                         $.ajax({

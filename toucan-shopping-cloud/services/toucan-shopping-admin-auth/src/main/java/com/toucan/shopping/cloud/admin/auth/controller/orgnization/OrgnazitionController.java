@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.*;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -46,6 +47,8 @@ public class OrgnazitionController {
     @Autowired
     private OrgnazitionAppService orgnazitionAppService;
 
+    @Autowired
+    private AdminAppService adminAppService;
 
 
     /**
@@ -292,6 +295,60 @@ public class OrgnazitionController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+
+
+    /**
+     * 查询当前账号下组织机构树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/admin/orgnazition/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAdminOrgnazitionTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AdminAppVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AdminAppVO.class);
+            //查询查询指定用户下的应用角色树
+            List<AdminApp> adminApps = adminAppService.findListByEntity(query);
+            if(!CollectionUtils.isEmpty(adminApps))
+            {
+                List<App> apps=new ArrayList<App>();
+                for(AdminApp adminApp:adminApps)
+                {
+                    App queryApp =new App();
+                    queryApp.setCode(adminApp.getAppCode());
+                    apps.addAll(appService.findListByEntity(queryApp));
+                }
+                String[] appCodes = null;
+                if(!CollectionUtils.isEmpty(apps)) {
+                    appCodes = new String[apps.size()];
+                    int pos = 0;
+                    for (App app : apps) {
+                        appCodes[pos] = app.getCode();
+                        pos++;
+                    }
+                }else{ //如果没有查询到应用,则组织机构树不显示任何东西
+                    appCodes=new String[1];
+                    appCodes[0] = "-1";
+                }
+                resultObjectVO.setData(orgnazitionService.queryTreeByAppCodeArray(appCodes));
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
 

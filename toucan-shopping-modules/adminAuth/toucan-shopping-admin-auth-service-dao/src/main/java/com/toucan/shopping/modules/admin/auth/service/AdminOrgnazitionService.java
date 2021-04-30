@@ -53,4 +53,18 @@ public interface AdminOrgnazitionService {
      * @return
      */
     int deleteByAdminIdAndAppCode(String adminId, String appCode);
+
+
+
+    /**
+     * 删除指定账号下的指定所有应用下的所有账号角色关联
+     * @param adminId
+     * @param appCodes
+     * @return
+     */
+    int deleteByAdminIdAndAppCodes(String adminId,String[] appCodes);
+
+
+
+    int saves(AdminOrgnazition[] adminOrgnazitionMapper);
 }

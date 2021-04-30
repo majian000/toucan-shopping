@@ -60,6 +60,15 @@ public interface OrgnazitionMapper {
      */
     List<OrgnazitionVO> queryListByAppCode(String appCode);
 
+
+    /**
+     * 根据应用编码数组查询列表
+     * @param appCodes
+     * @return
+     */
+    List<OrgnazitionVO> queryListByAppCodeArray(String[] appCodes);
+
+
     /**
      * 根据上级节点ID查询
      * @param pid

@@ -5,13 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.entity.AdminOrgnazition;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;
 import com.toucan.shopping.modules.admin.auth.entity.OrgnazitionApp;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
-import com.toucan.shopping.modules.admin.auth.vo.AppVO;
-import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
-import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
+import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -62,6 +61,8 @@ public class OrgnazitionController extends UIController {
     @Autowired
     private FeignAppService feignAppService;
 
+    @Autowired
+    private FeignAdminOrgnazitionService feignAdminOrgnazitionService;
 
 
 
@@ -291,6 +292,79 @@ public class OrgnazitionController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+    public void setTreeNodeSelect(AtomicLong id,OrgnazitionTreeVO parentTree,List<OrgnazitionTreeVO> orgnazitionTreeVOS,OrgnazitionTreeVO parentNode,List<AdminOrgnazition> adminOrgnazitions)
+    {
+        for(OrgnazitionTreeVO orgnazitionTreeVO:orgnazitionTreeVOS)
+        {
+            orgnazitionTreeVO.setId(id.incrementAndGet());
+            orgnazitionTreeVO.setNodeId(orgnazitionTreeVO.getId());
+            orgnazitionTreeVO.setParentId(parentTree.getId());
+            for(AdminOrgnazition adminOrgnazition:adminOrgnazitions) {
+                if(adminOrgnazition.getOrgnazitionId().equals(orgnazitionTreeVO.getOrgnazitionId())) {
+                    parentNode.getState().setChecked(true);
+                    orgnazitionTreeVO.getState().setChecked(true);
+                }
+            }
+        }
+    }
+
+
+
+
+    /**
+     * 查看账号所关联应用的所有组织机构树
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/admin/orgnazition/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAdminOrgnazitionTree(HttpServletRequest request,@RequestBody AdminAppVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            //查询对应账户的应用
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),entity);
+            resultObjectVO = feignOrgnazitionService.queryAdminOrgnazitionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                //拿到组织机构树
+                List<OrgnazitionTreeVO> orgnazitionTreeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), OrgnazitionTreeVO.class);
+
+                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复,layui不支持id重复
+                AtomicLong id = new AtomicLong();
+                //查询要操作账户的所有组织机构关联
+                AdminOrgnazition queryAdminOrgnazition = new AdminOrgnazition();
+                queryAdminOrgnazition.setAdminId(entity.getAdminId());
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryAdminOrgnazition);
+                resultObjectVO = feignAdminOrgnazitionService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<AdminOrgnazition> adminOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminOrgnazition.class);
+                    if(!CollectionUtils.isEmpty(adminOrgnazitionList)) {
+                        for(OrgnazitionTreeVO roleTreeVO:orgnazitionTreeVOS) {
+                            roleTreeVO.setId(id.incrementAndGet());
+                            roleTreeVO.setNodeId(roleTreeVO.getId());
+                            setTreeNodeSelect(id,roleTreeVO,roleTreeVO.getChildren(),roleTreeVO, adminOrgnazitionList);
+                        }
+                    }
+                }
+                resultObjectVO.setData(orgnazitionTreeVOS);
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 

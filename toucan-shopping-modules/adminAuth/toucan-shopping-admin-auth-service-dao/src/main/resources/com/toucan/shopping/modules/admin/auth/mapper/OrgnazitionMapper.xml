@@ -129,6 +129,18 @@
     </select>
 
 
+    <select id="queryListByAppCodeArray" resultMap="orgnazitionVOMap" >
+        select * from t_sa_orgnazition t
+          left join t_sa_orgnazition_app tso on t.orgnazition_id = tso.orgnazition_id
+            and tso.app_code in
+            <foreach item="item" index="index" collection="appCodes" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+           and tso.delete_status = 0
+         where  1=1  and t.delete_status = 0
+    </select>
+
+
 
     <select id="findListByPid" resultMap="orgnazitionVOMap" parameterType="java.lang.Long">
         select * from t_sa_orgnazition t where  1=1 and t.pid = #{pid} and t.delete_status = 0

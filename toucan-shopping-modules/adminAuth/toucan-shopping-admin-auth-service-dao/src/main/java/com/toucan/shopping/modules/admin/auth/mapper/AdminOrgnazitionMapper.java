@@ -35,7 +35,7 @@ public interface AdminOrgnazitionMapper {
 
     /**
      * 根据组织机构ID删除所有关联
-     * @param roleId
+     * @param orgnazitionId
      * @return
      */
     int deleteByOrgnazitionId(String orgnazitionId);
@@ -55,5 +55,22 @@ public interface AdminOrgnazitionMapper {
      * @return
      */
     int deleteByAdminIdAndAppCode(String adminId, String appCode);
+
+
+    /**
+     * 删除指定账号应用下所有关联
+     * @param adminId
+     * @param appCodes
+     * @return
+     */
+    int deleteByAdminIdAndAppCodes(String adminId,String[] appCodes);
+
+
+    /**
+     * 批量创建关联
+     * @param entitys
+     * @return
+     */
+    int inserts(AdminOrgnazition[] entitys);
 
 }

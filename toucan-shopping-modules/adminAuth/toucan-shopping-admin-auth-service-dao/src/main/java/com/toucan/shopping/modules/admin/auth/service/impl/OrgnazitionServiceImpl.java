@@ -34,8 +34,8 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
     }
 
 
-    public void setChildren(List<OrgnazitionVO> OrgnazitionVOS,OrgnazitionTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
-        for (OrgnazitionVO OrgnazitionVO : OrgnazitionVOS) {
+    public void setChildren(List<OrgnazitionVO> orgnazitionVOS,OrgnazitionTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
+        for (OrgnazitionVO OrgnazitionVO : orgnazitionVOS) {
             //为当前参数的子节点
             if(OrgnazitionVO.getPid().longValue()==currentNode.getId().longValue())
             {
@@ -48,7 +48,7 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
                 currentNode.getChildren().add(OrgnazitionTreeVO);
 
                 //查找当前节点的子节点
-                setChildren(OrgnazitionVOS,OrgnazitionTreeVO);
+                setChildren(orgnazitionVOS,OrgnazitionTreeVO);
             }
         }
     }
@@ -59,6 +59,34 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
         List<OrgnazitionTreeVO> OrgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
         try {
             List<OrgnazitionVO> OrgnazitionVOS = orgnazitionMapper.queryListByAppCode(appCode);
+            for (OrgnazitionVO OrgnazitionVO : OrgnazitionVOS) {
+                if (OrgnazitionVO.getPid().longValue() == -1L) {
+                    OrgnazitionTreeVO OrgnazitionTreeVO = new OrgnazitionTreeVO();
+                    OrgnazitionTreeVO.setTitle(OrgnazitionVO.getName());
+                    OrgnazitionTreeVO.setText(OrgnazitionVO.getName());
+                    BeanUtils.copyProperties(OrgnazitionTreeVO, OrgnazitionVO);
+                    OrgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
+                    OrgnazitionTreeVOS.add(OrgnazitionTreeVO);
+
+                    //递归查找子节点
+                    setChildren(OrgnazitionVOS,OrgnazitionTreeVO);
+                }
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return OrgnazitionTreeVOS;
+    }
+
+
+
+
+    @Override
+    public List<OrgnazitionTreeVO> queryTreeByAppCodeArray(String[] appCodeArray) {
+        List<OrgnazitionTreeVO> OrgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
+        try {
+            List<OrgnazitionVO> OrgnazitionVOS = orgnazitionMapper.queryListByAppCodeArray(appCodeArray);
             for (OrgnazitionVO OrgnazitionVO : OrgnazitionVOS) {
                 if (OrgnazitionVO.getPid().longValue() == -1L) {
                     OrgnazitionTreeVO OrgnazitionTreeVO = new OrgnazitionTreeVO();

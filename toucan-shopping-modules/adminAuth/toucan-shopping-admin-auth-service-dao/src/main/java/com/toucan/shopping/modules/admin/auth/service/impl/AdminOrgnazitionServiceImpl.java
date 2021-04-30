@@ -47,4 +47,14 @@ public class AdminOrgnazitionServiceImpl implements AdminOrgnazitionService {
     }
 
 
+
+    @Override
+    public int deleteByAdminIdAndAppCodes(String adminId,String[] appCodes) {
+        return adminOrgnazitionMapper.deleteByAdminIdAndAppCodes(adminId,appCodes);
+    }
+
+    @Override
+    public int saves(AdminOrgnazition[] adminOrgnazitions) {
+        return adminOrgnazitionMapper.inserts(adminOrgnazitions);
+    }
 }
