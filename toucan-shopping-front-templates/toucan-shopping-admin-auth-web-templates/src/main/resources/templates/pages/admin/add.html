@@ -40,7 +40,6 @@
         <label class="layui-form-label">关联应用</label>
         <div class="layui-input-block">
             <input th:each="aa:${apps}" name="appCodes" id="appCodes" type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
-
         </div>
     </div>
     <div class="layui-form-item layui-form-text">

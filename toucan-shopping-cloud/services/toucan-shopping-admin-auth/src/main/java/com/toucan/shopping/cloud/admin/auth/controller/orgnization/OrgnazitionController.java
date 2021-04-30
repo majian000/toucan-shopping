@@ -181,11 +181,11 @@ public class OrgnazitionController {
                 for(String appCode:entity.getAppCodes())
                 {
                     OrgnazitionApp orgnazitionApp = new OrgnazitionApp();
-                    orgnazitionApp.setOrgnazitionId(entity.getOrgnazitionId());
+                    orgnazitionApp.setOrgnazitionId(orgnazitions.get(0).getOrgnazitionId());
                     orgnazitionApp.setAppCode(appCode);
                     orgnazitionApp.setCreateDate(new Date());
                     orgnazitionApp.setDeleteStatus((short)0);
-                    orgnazitionApp.setCreateAdminId(entity.getCreateAdminId());
+                    orgnazitionApp.setCreateAdminId(entity.getUpdateAdminId());
 
                     orgnazitionAppService.save(orgnazitionApp);
                 }

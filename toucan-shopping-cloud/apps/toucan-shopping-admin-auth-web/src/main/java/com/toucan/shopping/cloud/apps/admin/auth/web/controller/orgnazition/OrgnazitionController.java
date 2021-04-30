@@ -99,6 +99,9 @@ public class OrgnazitionController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
+
+            super.initSelectApp(request,toucan,feignAppService);
+
             Orgnazition entity = new Orgnazition();
             entity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -106,7 +109,7 @@ public class OrgnazitionController extends UIController {
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
-                    List<Orgnazition> orgnazitions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
+                    List<OrgnazitionVO> orgnazitions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),OrgnazitionVO.class);
                     if(!CollectionUtils.isEmpty(orgnazitions))
                     {
                         //查询上级机构名称
@@ -164,7 +167,7 @@ public class OrgnazitionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody Orgnazition entity)
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody OrgnazitionVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

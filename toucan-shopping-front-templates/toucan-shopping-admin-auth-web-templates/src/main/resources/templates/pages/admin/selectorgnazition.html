@@ -28,42 +28,12 @@
                             <div>
                                 <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label">游戏ID:</label>
+                                        <label class="layui-form-label">关联应用</label>
                                         <div class="layui-input-block">
-                                            <input type="text" placeholder="请填写入款人游戏ID" class="layui-input" lay-verify="number" required />
-
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">入款金额:</label>
-                                        <div class="layui-input-block">
-                                            <input type="number" placeholder="请填写入款金额" value="" class="layui-input" lay-verify="number" required>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">入款类型:</label>
-                                        <div class="layui-input-block">
-                                            <select lay-verify="required">
-                                                <option value="1" selected>保险箱</option>
-                                                <option value="2">现金</option>
+                                            <select id="selectApp" name="appCode" lay-verify="required"  lay-search="">
+                                                <option value="">请选择</option>
+                                                <option th:each="aa : ${apps}" th:value="${aa.appCode}" th:text="${aa.appCode}+' '+${aa.name}">
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">入款方式:</label>
-                                        <div class="layui-input-block">
-                                            <select lay-verify="required">
-                                                <option value="1" selected>人工入款</option>
-                                                <option value="2">修正</option>
-                                                <option value="3">活动</option>
-                                                <option value="4">佣金</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">备注说明:</label>
-                                        <div class="layui-input-block">
-                                            <textarea placeholder="入款备注" value="" class="layui-textarea"></textarea>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -144,10 +114,8 @@
                     <hr>
                     <div style="color: #666;margin-top: 30px;margin-bottom: 40px;padding-left: 30px;">
                         <h3>说明</h3><br>
-                        <h4>入款到保险箱</h4>
-                        <p>如果需要，这里可以放一些关于产品的常见问题说明。</p>
-                        <br><h4>入款到现金</h4>
-                        <p>如果需要，这里可以放一些关于产品的常见问题说明。</p>
+                        <h4>选择账号所属的应用</h4>
+                        <p>选择应用关联的组织机构</p>
                     </div>
                 </div>
             </div>
@@ -156,6 +124,7 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/lay-module/step-lay/step.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
     layui.use([ 'form', 'step'], function () {
@@ -170,9 +139,9 @@
             stepWidth: '750px',
             height: '500px',
             stepItems: [{
-                title: '填写入款信息'
+                title: '选择关联应用'
             }, {
-                title: '确认入款信息'
+                title: '选择组织机构'
             }, {
                 title: '完成'
             }]

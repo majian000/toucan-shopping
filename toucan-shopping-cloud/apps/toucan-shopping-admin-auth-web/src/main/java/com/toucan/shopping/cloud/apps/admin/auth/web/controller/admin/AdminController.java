@@ -8,10 +8,12 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -60,6 +62,8 @@ public class AdminController extends UIController {
     @Autowired
     private FeignAppService feignAppService;
 
+    @Autowired
+    private IdGenerator idGenerator;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -76,9 +80,24 @@ public class AdminController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/selectOrgnazitionPage",method = RequestMethod.GET)
-    public String orgnazitionPage(HttpServletRequest request)
+    @RequestMapping(value = "/selectOrgnazitionPage/{adminId}",method = RequestMethod.GET)
+    public String orgnazitionPage(HttpServletRequest request,@PathVariable String adminId)
     {
+        try {
+            AdminApp adminApp = new AdminApp();
+            adminApp.setAdminId(adminId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), adminApp);
+            ResultObjectVO resultObjectVO = feignAdminAppService.queryAppListByAdminId(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<AdminAppVO> adminAppVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminAppVO.class);
+                request.setAttribute("apps",adminAppVOS);
+            }
+        }catch (Exception e){
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("apps",new ArrayList<AdminAppVO>());
+        }
         return "pages/admin/selectorgnazition.html";
     }
 
@@ -220,6 +239,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setId(idGenerator.id());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
             {

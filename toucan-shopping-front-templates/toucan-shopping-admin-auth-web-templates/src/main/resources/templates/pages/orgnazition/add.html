@@ -44,13 +44,6 @@
             <input type="number" name="orgnazitionSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
-        <div class="layui-input-block">
-            <input type="radio" name="enableStatus" value="1" title="启用" checked="">
-            <input type="radio" name="enableStatus" value="0" title="禁用">
-        </div>
-    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
@@ -75,6 +68,12 @@
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+
+            var appCodes = [];
+            $('input[name=appCodes]:checked').each(function() {
+                appCodes.push($(this).val());
+            });
+            data.field.appCodes=appCodes;
             $.ajax({
                 url:"[[@{/orgnazition/save}]]",
                 contentType: "application/json; charset=utf-8",

@@ -68,6 +68,12 @@
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+
+            var appCodes = [];
+            $('input[name=appCodes]:checked').each(function() {
+                appCodes.push($(this).val());
+            });
+            data.field.appCodes=appCodes;
             $.ajax({
                 url:"[[@{/orgnazition/update}]]",
                 contentType: "application/json; charset=utf-8",
