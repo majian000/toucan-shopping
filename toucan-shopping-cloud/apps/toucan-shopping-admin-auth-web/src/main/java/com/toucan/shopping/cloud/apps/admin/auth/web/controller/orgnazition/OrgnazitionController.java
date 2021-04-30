@@ -216,7 +216,7 @@ public class OrgnazitionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO listPage(HttpServletRequest request, OrgnazitionTreeInfo queryPageInfo)
+    public ResultObjectVO treeTable(HttpServletRequest request, OrgnazitionTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

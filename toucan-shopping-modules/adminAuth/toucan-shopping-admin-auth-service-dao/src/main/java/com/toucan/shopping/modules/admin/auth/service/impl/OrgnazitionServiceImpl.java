@@ -169,9 +169,9 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
     }
 
     @Override
-    public List<Orgnazition> findTreeTable(OrgnazitionTreeInfo OrgnazitionTreeInfo){
+    public List<Orgnazition> findTreeTable(OrgnazitionTreeInfo orgnazitionTreeInfo){
         List<Orgnazition> retNodes = new ArrayList<Orgnazition>();
-        List<Orgnazition> nodes = orgnazitionMapper.findTreeTableByPageInfo(OrgnazitionTreeInfo);
+        List<Orgnazition> nodes = orgnazitionMapper.findTreeTableByPageInfo(orgnazitionTreeInfo);
         if(!CollectionUtils.isEmpty(nodes))
         {
             retNodes.addAll(nodes);

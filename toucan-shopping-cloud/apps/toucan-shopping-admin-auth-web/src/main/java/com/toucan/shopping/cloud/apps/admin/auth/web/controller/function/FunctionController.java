@@ -210,7 +210,7 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO listPage(HttpServletRequest request, FunctionTreeInfo queryPageInfo)
+    public ResultObjectVO treeTable(HttpServletRequest request, FunctionTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

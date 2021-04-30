@@ -226,13 +226,7 @@ public class OrgnazitionController {
                 throw new IllegalArgumentException("adminId为空");
             }
 
-            //查询账号下关联应用
-            AdminApp queryAdminApp = new AdminApp();
-            queryAdminApp.setAdminId(queryPageInfo.getAdminId());
-            queryAdminApp.setAppCode(queryPageInfo.getAppCode());
-
-
-            //查询查询这个APP下的组织机构列表
+            //查询所有结构树
             List<Orgnazition>  orgnazitions = orgnazitionService.findTreeTable(queryPageInfo);
             resultObjectVO.setData(orgnazitions);
 
