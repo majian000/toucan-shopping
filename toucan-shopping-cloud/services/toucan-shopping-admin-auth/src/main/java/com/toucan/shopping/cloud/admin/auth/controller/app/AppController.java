@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AppService;
+import com.toucan.shopping.modules.admin.auth.service.OrgnazitionAppService;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -42,6 +43,8 @@ public class AppController {
     @Autowired
     private AdminAppService adminAppService;
 
+    @Autowired
+    private OrgnazitionAppService orgnazitionAppService;
 
 
     /**
@@ -407,6 +410,10 @@ public class AppController {
                 }
             }
 
+            //删除应用机构关联
+            orgnazitionAppService.deleteByAppCode(appList.get(0).getCode());
+
+
             resultObjectVO.setData(app);
 
         }catch(Exception e)
@@ -479,9 +486,12 @@ public class AppController {
                         if (row <= 0) {
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,删除应用下所有管理账户失败!");
-                            return resultObjectVO;
+                            continue;
                         }
                     }
+
+                    //删除应用机构关联
+                    orgnazitionAppService.deleteByAppCode(appList.get(0).getCode());
 
                 }
             }

@@ -60,10 +60,33 @@ public interface OrgnazitionMapper {
      */
     List<OrgnazitionVO> queryListByAppCode(String appCode);
 
+    /**
+     * 根据上级节点ID查询
+     * @param pid
+     * @return
+     */
     List<OrgnazitionVO> findListByPid(Long pid);
 
+    /**
+     * 根据指定ID查询
+     * @param id
+     * @return
+     */
     List<OrgnazitionVO> findById(Long id);
 
+
+    /**
+     * 根据指定ID查询
+     * @param id
+     * @return
+     */
+    List<OrgnazitionVO> findByIdAndAppCode(Long id,String appCode);
+
+    /**
+     * 查询表格树
+     * @param OrgnazitionTreeInfo
+     * @return
+     */
     List<Orgnazition> findTreeTableByPageInfo(OrgnazitionTreeInfo OrgnazitionTreeInfo);
 
 
