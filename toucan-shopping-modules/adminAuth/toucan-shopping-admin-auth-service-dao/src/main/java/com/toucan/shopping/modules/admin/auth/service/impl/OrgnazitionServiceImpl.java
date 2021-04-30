@@ -149,6 +149,8 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
             {
                 queryParentNode(retNodes,parentNode.get(0),appCode);
             }
+        }else{ //如果父节点和当前节点不属于同一个应用,当前节点设置为顶级节点
+            child.setPid(-1L);
         }
     }
 
