@@ -32,5 +32,13 @@ public interface OrgnazitionAppMapper {
     int deleteByAppCode(String appCode);
 
 
+    /**
+     * 根据机构ID删除所有关联
+     * @param orgnazitionId
+     * @return
+     */
+    int deleteByOrgnazitionId(String orgnazitionId);
+
+
 
 }

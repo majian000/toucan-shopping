@@ -6,6 +6,8 @@ import com.toucan.shopping.modules.admin.auth.entity.*;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -37,18 +39,12 @@ public class OrgnazitionController {
     @Autowired
     private AppService appService;
 
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private AdminRoleService adminRoleService;
-
-    @Autowired
-    private AdminAppService adminAppService;
 
     @Autowired
     private AdminOrgnazitionService adminOrgnazitionService;
 
+    @Autowired
+    private OrgnazitionAppService orgnazitionAppService;
 
 
 
@@ -69,7 +65,7 @@ public class OrgnazitionController {
         }
 
         try {
-            Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(),Orgnazition.class);
+            OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(),OrgnazitionVO.class);
             if(StringUtils.isEmpty(entity.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -89,6 +85,21 @@ public class OrgnazitionController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("添加失败,请重试!");
                 return resultObjectVO;
+            }
+
+            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
+            {
+                for(String appCode:entity.getAppCodes())
+                {
+                    OrgnazitionApp orgnazitionApp = new OrgnazitionApp();
+                    orgnazitionApp.setOrgnazitionId(entity.getOrgnazitionId());
+                    orgnazitionApp.setAppCode(appCode);
+                    orgnazitionApp.setCreateDate(new Date());
+                    orgnazitionApp.setDeleteStatus((short)0);
+                    orgnazitionApp.setCreateAdminId(entity.getCreateAdminId());
+
+                    orgnazitionAppService.save(orgnazitionApp);
+                }
             }
 
             resultObjectVO.setData(entity);
@@ -123,7 +134,7 @@ public class OrgnazitionController {
         }
 
         try {
-            Orgnazition entity = JSONObject.parseObject(requestVo.getEntityJson(),Orgnazition.class);
+            OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(),OrgnazitionVO.class);
             if(StringUtils.isEmpty(entity.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -141,8 +152,8 @@ public class OrgnazitionController {
             Orgnazition query=new Orgnazition();
             query.setId(entity.getId());
             query.setDeleteStatus((short)0);
-            List<Orgnazition> Orgnazitions = orgnazitionService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(Orgnazitions))
+            List<OrgnazitionVO> orgnazitions = orgnazitionService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(orgnazitions))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("该组织机构不存在!");
@@ -157,8 +168,26 @@ public class OrgnazitionController {
                 return resultObjectVO;
             }
 
-            //更新子节点的应用编码
-            orgnazitionService.updateChildAppCode(entity);
+            //删除机构应用关联
+            orgnazitionAppService.deleteByOrgnazitionId(orgnazitions.get(0).getOrgnazitionId());
+
+
+            //重新生成关联
+            if(!CollectionUtils.isEmpty(entity.getAppCodes()))
+            {
+                for(String appCode:entity.getAppCodes())
+                {
+                    OrgnazitionApp orgnazitionApp = new OrgnazitionApp();
+                    orgnazitionApp.setOrgnazitionId(entity.getOrgnazitionId());
+                    orgnazitionApp.setAppCode(appCode);
+                    orgnazitionApp.setCreateDate(new Date());
+                    orgnazitionApp.setDeleteStatus((short)0);
+                    orgnazitionApp.setCreateAdminId(entity.getCreateAdminId());
+
+                    orgnazitionAppService.save(orgnazitionApp);
+                }
+            }
+
 
             resultObjectVO.setData(entity);
 
@@ -245,14 +274,20 @@ public class OrgnazitionController {
             //查询是否存在该组织机构
             Orgnazition query=new Orgnazition();
             query.setId(entity.getId());
-            List<Orgnazition> appList = orgnazitionService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(appList))
+            List<OrgnazitionVO> orgnazitionVOS = orgnazitionService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(orgnazitionVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,组织机构不存在!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(appList);
+            for(OrgnazitionVO orgnazitionVO:orgnazitionVOS) {
+                OrgnazitionApp queryOrgnazitionApp = new OrgnazitionApp();
+                queryOrgnazitionApp.setOrgnazitionId(orgnazitionVO.getOrgnazitionId());
+                List<OrgnazitionApp> orgnazitionApps = orgnazitionAppService.findListByEntity(queryOrgnazitionApp);
+                orgnazitionVO.setOrgnazitionApps(orgnazitionApps);
+            }
+            resultObjectVO.setData(orgnazitionVOS);
 
         }catch(Exception e)
         {

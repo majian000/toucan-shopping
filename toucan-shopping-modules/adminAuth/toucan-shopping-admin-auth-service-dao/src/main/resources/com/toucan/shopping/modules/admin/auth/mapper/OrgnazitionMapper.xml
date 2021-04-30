@@ -28,12 +28,9 @@
         <if test="name!=null and name!=''">
             and t.name like concat('%',#{name},'%')
         </if>
-        <if test="enableStatus!=null">
-            and t.enable_status = #{enableStatus}
-        </if>
     </sql>
 
-    <select id="findListByEntity" resultMap="orgnazitionMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Orgnazition">
+    <select id="findListByEntity" resultMap="orgnazitionVOMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Orgnazition">
         select * from t_sa_orgnazition t
         <where>
             1=1
@@ -45,9 +42,6 @@
             </if>
             <if test="name!=null and name!=''">
                 and t.name = #{name}
-            </if>
-            <if test="enableStatus!=null">
-                and t.enable_status = #{enableStatus}
             </if>
             and t.delete_status = 0
         </where>
@@ -121,14 +115,13 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Orgnazition" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_sa_orgnazition(pid,name,orgnazition_id,orgnazition_sort,remark,create_admin_id,enable_status,create_date,delete_status)
-        values(#{pid},#{name},#{orgnazitionId},#{orgnazitionSort},#{remark},#{createAdminId},#{enableStatus},#{createDate},#{deleteStatus})
+        insert into t_sa_orgnazition(id,pid,name,orgnazition_id,orgnazition_sort,remark,create_admin_id,create_date,delete_status)
+        values(#{id},#{pid},#{name},#{orgnazitionId},#{orgnazitionSort},#{remark},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.admin.auth.entity.Orgnazition">
         update t_sa_orgnazition set  name=#{name},pid=#{pid},orgnazition_sort=#{orgnazitionSort},
-        update_date=#{updateDate},update_admin_id=#{updateAdminId},enable_status=#{enableStatus},
-         remark=#{remark}
+        update_date=#{updateDate},update_admin_id=#{updateAdminId},remark=#{remark}
           where id = #{id}
     </update>
 

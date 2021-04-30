@@ -30,7 +30,7 @@ public interface OrgnazitionMapper {
      * @param entity
      * @return
      */
-    List<Orgnazition> findListByEntity(Orgnazition entity);
+    List<OrgnazitionVO> findListByEntity(Orgnazition entity);
 
     /**
      * 查询列表页

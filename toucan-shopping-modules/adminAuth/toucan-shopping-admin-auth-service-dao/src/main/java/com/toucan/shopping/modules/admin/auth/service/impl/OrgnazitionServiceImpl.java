@@ -29,7 +29,7 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
     private OrgnazitionMapper orgnazitionMapper;
 
     @Override
-    public List<Orgnazition> findListByEntity(Orgnazition entity) {
+    public List<OrgnazitionVO> findListByEntity(Orgnazition entity) {
         return orgnazitionMapper.findListByEntity(entity);
     }
 
@@ -90,25 +90,14 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
         return orgnazitionMapper.update(entity);
     }
 
-    @Override
-    public void updateChildAppCode(Orgnazition parentEntity) {
-        List<OrgnazitionVO> children = orgnazitionMapper.findListByPid(parentEntity.getId());
-        if(!CollectionUtils.isEmpty(children)) {
-            for (OrgnazitionVO child : children) {
-                //child.setAppCode(parentEntity.getAppCode());
-                this.update(child);
-                updateChildAppCode(child);
-            }
-        }
-    }
 
     @Override
     public boolean exists(String name) {
         Orgnazition entity = new Orgnazition();
         entity.setName(name);
         entity.setDeleteStatus((short)0);
-        List<Orgnazition> users = orgnazitionMapper.findListByEntity(entity);
-        if(!CollectionUtils.isEmpty(users))
+        List<OrgnazitionVO> list = orgnazitionMapper.findListByEntity(entity);
+        if(!CollectionUtils.isEmpty(list))
         {
             return true;
         }

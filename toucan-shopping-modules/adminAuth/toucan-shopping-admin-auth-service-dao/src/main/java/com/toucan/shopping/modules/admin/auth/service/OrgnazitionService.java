@@ -16,7 +16,7 @@ public interface OrgnazitionService {
      * @param entity
      * @return
      */
-    List<Orgnazition> findListByEntity(Orgnazition entity);
+    List<OrgnazitionVO> findListByEntity(Orgnazition entity);
 
     /**
      * 根据应用编码查询树
@@ -40,12 +40,6 @@ public interface OrgnazitionService {
     int update(Orgnazition entity);
 
 
-    /**
-     * 更新子节点得应用编码
-     * @param parentEntity
-     * @return
-     */
-    void updateChildAppCode(Orgnazition parentEntity);
 
     /**
      * 判断是否存在

@@ -33,11 +33,6 @@ public class Orgnazition {
     private String orgnazitionId;
 
 
-    /**
-     * 启用状态 0:禁用 1启用
-     */
-    private Short enableStatus;
-
 
     /**
      * 创建时间

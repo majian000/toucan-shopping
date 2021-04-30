@@ -2,7 +2,10 @@ package com.toucan.shopping.modules.admin.auth.vo;
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;
+import com.toucan.shopping.modules.admin.auth.entity.OrgnazitionApp;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 组织机构
@@ -32,6 +35,16 @@ public class OrgnazitionVO extends Orgnazition {
      */
     private String adminId;
 
+
+    /**
+     * 应用编码
+     */
+    private List<String> appCodes;
+
+    /**
+     * 机构应用关联
+     */
+    private List<OrgnazitionApp> orgnazitionApps;
 
 
 }

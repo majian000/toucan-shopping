@@ -7,7 +7,9 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Orgnazition;
+import com.toucan.shopping.modules.admin.auth.entity.OrgnazitionApp;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -106,6 +108,7 @@ public class OrgnazitionController extends UIController {
                     List<Orgnazition> orgnazitions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Orgnazition.class);
                     if(!CollectionUtils.isEmpty(orgnazitions))
                     {
+                        //查询上级机构名称
                         OrgnazitionVO orgnazitionVO = new OrgnazitionVO();
                         BeanUtils.copyProperties(orgnazitionVO,orgnazitions.get(0));
                         Orgnazition queryParentOrgnazition = new Orgnazition();
@@ -118,6 +121,26 @@ public class OrgnazitionController extends UIController {
                                 orgnazitionVO.setParentName(parentOrgnazitionList.get(0).getName());
                             }
                         }
+
+                        //设置关联应用选中
+                        Object appsObject = request.getAttribute("apps");
+                        if(appsObject!=null) {
+                            List<AppVO> appVos = (List<AppVO>) appsObject;
+                            if(!CollectionUtils.isEmpty(orgnazitionVO.getOrgnazitionApps()))
+                            {
+                                for(OrgnazitionApp orgnazitionApp:orgnazitionVO.getOrgnazitionApps())
+                                {
+                                    for(AppVO aa:appVos)
+                                    {
+                                        if(orgnazitionApp.getAppCode().equals(aa.getCode()))
+                                        {
+                                            aa.setChecked(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         request.setAttribute("model",orgnazitionVO);
                     }
                 }
@@ -167,7 +190,7 @@ public class OrgnazitionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody Orgnazition entity)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody OrgnazitionVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
