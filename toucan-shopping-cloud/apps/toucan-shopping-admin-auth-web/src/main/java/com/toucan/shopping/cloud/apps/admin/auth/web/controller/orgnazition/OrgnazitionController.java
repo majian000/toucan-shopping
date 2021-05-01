@@ -298,7 +298,7 @@ public class OrgnazitionController extends UIController {
 
 
 
-    public void setTreeNodeSelect(AtomicLong id,OrgnazitionTreeVO parentTree,List<OrgnazitionTreeVO> orgnazitionTreeVOS,OrgnazitionTreeVO parentNode,List<AdminOrgnazition> adminOrgnazitions)
+    public void setTreeNodeSelect(AtomicLong id,OrgnazitionTreeVO parentTree,List<OrgnazitionTreeVO> orgnazitionTreeVOS,List<AdminOrgnazition> adminOrgnazitions)
     {
         for(OrgnazitionTreeVO orgnazitionTreeVO:orgnazitionTreeVOS)
         {
@@ -307,9 +307,12 @@ public class OrgnazitionController extends UIController {
             orgnazitionTreeVO.setParentId(parentTree.getId());
             for(AdminOrgnazition adminOrgnazition:adminOrgnazitions) {
                 if(adminOrgnazition.getOrgnazitionId().equals(orgnazitionTreeVO.getOrgnazitionId())) {
-                    parentNode.getState().setChecked(true);
                     orgnazitionTreeVO.getState().setChecked(true);
                 }
+            }
+            if(!CollectionUtils.isEmpty(orgnazitionTreeVO.getChildren()))
+            {
+                setTreeNodeSelect(id,orgnazitionTreeVO,orgnazitionTreeVO.getChildren(),adminOrgnazitions);
             }
         }
     }
@@ -348,10 +351,16 @@ public class OrgnazitionController extends UIController {
                 {
                     List<AdminOrgnazition> adminOrgnazitionList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AdminOrgnazition.class);
                     if(!CollectionUtils.isEmpty(adminOrgnazitionList)) {
-                        for(OrgnazitionTreeVO roleTreeVO:orgnazitionTreeVOS) {
-                            roleTreeVO.setId(id.incrementAndGet());
-                            roleTreeVO.setNodeId(roleTreeVO.getId());
-                            setTreeNodeSelect(id,roleTreeVO,roleTreeVO.getChildren(),roleTreeVO, adminOrgnazitionList);
+                        for(OrgnazitionTreeVO orgnazitionTreeVO:orgnazitionTreeVOS) {
+                            orgnazitionTreeVO.setId(id.incrementAndGet());
+                            orgnazitionTreeVO.setNodeId(orgnazitionTreeVO.getId());
+                            for(AdminOrgnazition adminOrgnazition:adminOrgnazitionList) {
+                                if(orgnazitionTreeVO.getOrgnazitionId().equals(adminOrgnazition.getOrgnazitionId())) {
+                                    //设置节点被选中
+                                    orgnazitionTreeVO.getState().setChecked(true);
+                                }
+                            }
+                            setTreeNodeSelect(id,orgnazitionTreeVO,orgnazitionTreeVO.getChildren(), adminOrgnazitionList);
                         }
                     }
                 }
