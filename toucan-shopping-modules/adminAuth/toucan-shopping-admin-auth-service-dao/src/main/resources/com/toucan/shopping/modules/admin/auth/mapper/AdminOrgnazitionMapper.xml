@@ -50,7 +50,7 @@
         insert into t_sa_admin_orgnazition(admin_id,orgnazition_id,app_code,create_date,delete_status,create_admin_id)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{adminId},#{orgnazitionId},#{appCode},#{createDate},#{deleteStatus},#{createAdminId})
+            (#{entity.adminId},#{entity.orgnazitionId},#{entity.appCode},#{entity.createDate},#{entity.deleteStatus},#{entity.createAdminId})
         </foreach>
 
     </insert>
