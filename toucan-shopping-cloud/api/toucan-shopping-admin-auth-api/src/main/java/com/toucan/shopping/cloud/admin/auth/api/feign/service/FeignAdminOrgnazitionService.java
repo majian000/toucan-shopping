@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminOrgnazition",fallbackFactory = FeignAdminOrgnazitionServiceFallbackFactory.class)
 public interface FeignAdminOrgnazitionService {
@@ -28,5 +29,12 @@ public interface FeignAdminOrgnazitionService {
     ResultObjectVO queryAppListByAdminId(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 保存组织机构关联
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/save/orgnazition",method = RequestMethod.POST)
+    ResultObjectVO saveOrgnazitions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

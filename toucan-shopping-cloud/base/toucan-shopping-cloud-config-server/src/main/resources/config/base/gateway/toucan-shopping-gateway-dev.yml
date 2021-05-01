@@ -29,7 +29,7 @@ spring:
   application:
     name: toucan-shopping-gateway
   zipkin: #链路追踪
-    enabled: true
+    enabled: false
     base-url: http://localhost:9411
     sleuth:
       sampler:

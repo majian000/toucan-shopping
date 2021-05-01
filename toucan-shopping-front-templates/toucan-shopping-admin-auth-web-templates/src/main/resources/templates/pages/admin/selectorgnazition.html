@@ -25,9 +25,9 @@
                 <div class="layui-card-body" style="padding-top: 40px;">
                     <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
                         <div carousel-item>
-                            <!--<input type="hidden" name="adminId" th:value="${adminId}">-->
                             <div>
                                 <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
+                                    <input type="hidden" id="adminId" th:value="${adminId}">
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">关联应用</label>
                                         <div class="layui-input-block">
@@ -66,13 +66,8 @@
                                     <i class="layui-icon layui-circle"
                                        style="color: white;font-size:30px;font-weight:bold;background: #52C41A;padding: 20px;line-height: 80px;">&#xe605;</i>
                                     <div style="font-size: 24px;color: #333;font-weight: 500;margin-top: 30px;">
-                                        入款成功
+                                        操作完成
                                     </div>
-                                    <div style="font-size: 14px;color: #666;margin-top: 20px;">预计两小时到账</div>
-                                </div>
-                                <div style="text-align: center;margin-top: 50px;">
-                                    <button class="layui-btn next">再入一笔</button>
-                                    <button class="layui-btn layui-btn-primary">查看账单</button>
                                 </div>
                             </div>
                         </div>
@@ -104,6 +99,7 @@
         var dtree = layui.dtree;
         var orgnazitionTree;
         var orgnazitionTreeDataArray = new Array();
+        var g_appCode;
 
         step.render({
             elem: '#stepForm',
@@ -194,7 +190,7 @@
 
         form.on('submit(formStep)', function (data) {
             step.next('#stepForm');
-
+            g_appCode=data.field.appCode;
             loadding = layer.load();
             $.ajax({
                 url:"[[@{/}]]orgnazition/query/admin/orgnazition/tree",
@@ -236,7 +232,33 @@
         });
 
         form.on('submit(formStep2)', function (data) {
-            step.next('#stepForm');
+
+            var selectNodes = orgnazitionTree.getCheckbarNodesParam("orgTree");
+            if(selectNodes==null||selectNodes.length<=0)
+            {
+                layer.msg("请选择组织机构");
+                return false;
+            }
+            var orgArray =  new Array();
+            for (var i = 0; i < selectNodes.length; i++) {
+                var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
+                orgArray.push({orgnazitionId:selectNodeObject.orgnazitionId,appCode:g_appCode});
+                getParentNode(orgArray,selectNodeObject.pid);
+            }
+            $.ajax({
+                url: "[[@{/}]]admin/connect/orgnazitions",
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify({adminOrgnazitions:orgArray,adminId:$("#adminId").val()}),
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    step.next('#stepForm');
+                    layer.close(index);
+                }
+            });
             return false;
         });
 

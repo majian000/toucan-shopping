@@ -49,7 +49,7 @@ public class AdminOrgnazitionController {
      */
     @RequestMapping(value = "/save/orgnazition",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO saveRoles(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO saveOrgnazitions(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
