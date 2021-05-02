@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class VCodeUtil {
 

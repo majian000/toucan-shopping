@@ -25,7 +25,7 @@ import com.toucan.shopping.modules.stock.vo.InventoryReductionVo;
 import com.toucan.shopping.modules.stock.vo.RestoreStockVo;
 import com.toucan.shopping.cloud.apps.web.vo.BuyResultVo;
 import com.toucan.shopping.cloud.apps.web.vo.BuyVo;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

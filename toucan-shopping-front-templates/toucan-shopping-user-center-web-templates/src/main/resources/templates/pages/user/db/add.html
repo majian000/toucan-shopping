@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>用户中心</title>
+    <title>layui</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -17,37 +17,24 @@
 </head>
 <body>
 <div class="layui-form layuimini-form">
-    <input type="hidden" name="id" th:value="${model.id}">
     <div class="layui-form-item">
-        <label class="layui-form-label required">角色名称</label>
+        <label class="layui-form-label required">应用名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" maxlength="60" lay-reqtext="名称不能为空" placeholder="请输入角色名称" value="" class="layui-input" th:value="${model.name}">
-            <tip>填写角色的名称。</tip>
+            <input type="text" name="name" lay-verify="required" maxlength="60" lay-reqtext="名称不能为空" placeholder="请输入应用名称" value="" class="layui-input">
+            <tip>填写应用的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">所属应用</label>
+        <label class="layui-form-label required">应用编码</label>
         <div class="layui-input-block">
-            <select id="selectApp" name="appCode" lay-verify="required" lay-search="">
-                <option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}" th:selected="${aa.code  eq model.appCode}" >
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
-        <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
-            <input type="radio" name="enableStatus" value="1" title="启用" checked>
-            <input type="radio" name="enableStatus" value="0" title="禁用">
-        </div>
-        <div class="layui-input-block" th:if="${model.enableStatus eq 0}" >
-            <input type="radio" name="enableStatus" value="1" title="启用" >
-            <input type="radio" name="enableStatus" value="0" title="禁用" checked>
+            <input type="text" name="code" lay-verify="required" maxlength="8" lay-reqtext="应用编码不能为空" placeholder="请输入应用编码" value="" class="layui-input">
+            <tip>填写应用的编码。</tip>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息" th:text="${model.remark}"></textarea>
+            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
         </div>
     </div>
 
@@ -67,7 +54,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/role/update}]]",
+                url:"[[@{/app/app/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -82,7 +69,6 @@
                         // 关闭弹出层
                         layer.close(index);
                         var iframeIndex = parent.layer.getFrameIndex(window.name);
-                        parent.location.reload();
                         parent.layer.close(iframeIndex);
 
                     });

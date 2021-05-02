@@ -20,7 +20,7 @@ import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.modules.stock.util.StockRedisKeyUtil;
 import com.toucan.shopping.second.kill.service.SecondKillService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

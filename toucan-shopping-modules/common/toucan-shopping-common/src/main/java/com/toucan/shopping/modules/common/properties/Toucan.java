@@ -18,6 +18,11 @@ public class Toucan {
     private String appCode;
 
     /**
+     * 应用名称
+     */
+    private String appName;
+
+    /**
      * 机器编码 用于生成订单号,可以通过订单号定位某个机器的某个时间阶段下的订单
      */
     private String machineId;

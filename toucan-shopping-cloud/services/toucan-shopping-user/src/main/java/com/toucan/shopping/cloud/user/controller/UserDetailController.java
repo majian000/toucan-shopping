@@ -13,7 +13,7 @@ import com.toucan.shopping.modules.user.service.UserDetailService;
 import com.toucan.shopping.modules.user.vo.UserDetailVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

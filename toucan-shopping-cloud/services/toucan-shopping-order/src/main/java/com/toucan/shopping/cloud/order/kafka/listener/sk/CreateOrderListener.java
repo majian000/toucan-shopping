@@ -12,7 +12,7 @@ import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

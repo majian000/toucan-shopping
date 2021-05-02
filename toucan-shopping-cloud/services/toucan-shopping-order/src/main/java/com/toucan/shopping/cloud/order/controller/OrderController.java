@@ -14,7 +14,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.vo.CreateOrderVo;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
