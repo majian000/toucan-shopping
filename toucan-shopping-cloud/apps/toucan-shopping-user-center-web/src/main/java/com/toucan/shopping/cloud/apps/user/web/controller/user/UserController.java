@@ -3,14 +3,21 @@ package com.toucan.shopping.cloud.apps.user.web.controller.user;
 
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.PhoneUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
+import com.toucan.shopping.modules.common.util.UserRegistUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
+import com.toucan.shopping.modules.user.vo.UserRegistVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +45,9 @@ public class UserController {
 
     @Autowired
     private FeignUserService feignUserService;
+
+    @Autowired
+    private RedisLock redisLock;
 
     @Autowired
     private UserElasticSearchService userElasticSearchService;
@@ -86,6 +96,87 @@ public class UserController {
         }
         return tableVO;
     }
+
+
+
+
+
+    @RequestMapping(value="/regist/phone")
+    @ResponseBody
+    public ResultObjectVO regist(UserRegistVO user){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(user==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(user.getMobilePhone()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("注册失败,请输入注册手机号");
+            return resultObjectVO;
+        }
+
+        if(!PhoneUtils.isChinaPhoneLegal(user.getMobilePhone()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("注册失败,手机号错误");
+            return resultObjectVO;
+        }
+
+        if(StringUtils.isEmpty(user.getPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg("注册失败,请输入密码");
+            return resultObjectVO;
+        }
+        if(!StringUtils.equals(user.getPassword(),user.getConfirmPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg("注册失败,密码与确认密码不一致");
+            return resultObjectVO;
+        }
+
+        if(!UserRegistUtil.checkPwd(user.getPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
+            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+            return resultObjectVO;
+        }
+
+
+        //商城应用编码
+        String shoppingAppCode = "10001001";
+        String lockKey = toucan.getAppCode()+"_user_regist_mobile_"+user.getMobilePhone();
+        try {
+
+            boolean lockStatus = redisLock.lock(lockKey, user.getMobilePhone());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
+
+            logger.info(" 用户注册 {} ", user.getMobilePhone());
+
+            resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+
+            resultObjectVO.setData(null);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("注册失败,请稍后重试");
+        }finally{
+            redisLock.unLock(lockKey, user.getMobilePhone());
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 

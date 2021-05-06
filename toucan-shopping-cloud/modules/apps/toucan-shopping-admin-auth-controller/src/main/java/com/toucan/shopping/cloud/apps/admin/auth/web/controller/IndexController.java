@@ -181,7 +181,7 @@ public class IndexController {
         indexInfo.setHomeInfo(homeInfo);
 
         LogoInfo logoInfo = new LogoInfo();
-        logoInfo.setTitle(toucan.getAppName());
+        logoInfo.setTitle("权限管理");
         logoInfo.setImage("../images/logo.png");
         logoInfo.setHref("");
         indexInfo.setLogoInfo(logoInfo);

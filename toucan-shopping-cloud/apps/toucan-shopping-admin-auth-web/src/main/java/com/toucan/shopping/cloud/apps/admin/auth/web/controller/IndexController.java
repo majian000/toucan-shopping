@@ -3,7 +3,6 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.netflix.discovery.converters.Auto;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
