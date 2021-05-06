@@ -18,10 +18,10 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">手机号</label>
+        <label class="layui-form-label required">用户名</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" maxlength="11" lay-reqtext="不能为空" placeholder="请输入手机号" value="" class="layui-input">
-            <tip>填写手机号。</tip>
+            <input type="text" name="username" lay-verify="required" maxlength="12" minlength="5" lay-reqtext="不能为空" placeholder="请输入用户名" value="" class="layui-input">
+            <tip>填写用户名。</tip>
         </div>
     </div>
     <div class="layui-form-item">
@@ -52,7 +52,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/user/regist/phone}]]",
+                url:"[[@{/user/regist/username}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -67,6 +67,7 @@
                         // 关闭弹出层
                         layer.close(index);
                         var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
                         parent.layer.close(iframeIndex);
 
                     });

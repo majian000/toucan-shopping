@@ -43,8 +43,9 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 手机号注册 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 停用 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="registByMobile">手机号注册</button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="registByUserName">用户名注册</button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">停用</button>
             </div>
         </script>
 
@@ -150,7 +151,7 @@
          * toolbar监听事件
          */
         table.on('toolbar(userTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
+            if (obj.event === 'registByMobile') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加用户',
                     type: 2,
@@ -158,7 +159,20 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/app/app/page/add}]]",
+                    content: "[[@{/user/registByMobilePage}]]",
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'registByUserName') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/user/registByUserNamePage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

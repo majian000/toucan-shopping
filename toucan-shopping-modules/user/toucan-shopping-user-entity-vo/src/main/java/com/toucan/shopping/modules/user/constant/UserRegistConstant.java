@@ -43,4 +43,16 @@ public final class UserRegistConstant {
     public static Integer PASSWORD_CNFIRMPASSWORD_FAILD=-8;
 
 
+    /**
+     * 请输入用户名
+     */
+    public static Integer NOT_FOUND_USERNAME=-9;
+
+
+    /**
+     * 用户名错误
+     */
+    public static Integer USERNAME_ERROR=-10;
+
+
 }

@@ -19,6 +19,11 @@ public class UserRegistVO {
     private String mobilePhone;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * 密码
      */
     private String password;
