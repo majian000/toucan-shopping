@@ -743,7 +743,7 @@ public class AdminController {
             }
 
 
-            //查询用户主表
+            //查询账号主表
             PageInfo<AdminVO> pageInfo =  adminService.queryListPage(adminPageInfo);
             resultObjectVO.setData(pageInfo);
 

@@ -26,13 +26,6 @@
             <tip>填写账号。</tip>
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">关联应用</label>
-        <div class="layui-input-block">
-            <input th:each="aa:${apps}" name="appCodes" id="appCodes" th:attr="checked=${aa.checked?true:false}"  type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
-
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">账号状态</label>

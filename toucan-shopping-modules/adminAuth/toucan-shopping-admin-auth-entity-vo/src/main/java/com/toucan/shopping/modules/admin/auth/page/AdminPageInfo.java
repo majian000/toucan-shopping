@@ -79,6 +79,11 @@ public class AdminPageInfo extends PageInfo<Admin> {
      */
     private String loginToken;
 
+    /**
+     * 所属应用
+     */
+    private String appCode;
+
 
     private Long[] idArray; //ID数组
 

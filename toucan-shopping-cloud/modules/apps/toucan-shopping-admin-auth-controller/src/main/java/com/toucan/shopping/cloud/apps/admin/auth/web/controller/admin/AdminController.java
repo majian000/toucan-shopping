@@ -239,6 +239,9 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            List<String> appCodes= new ArrayList<String>();
+            appCodes.add(toucan.getAppCode());
+            entity.setAppCodes(appCodes);
             entity.setId(idGenerator.id());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
@@ -384,6 +387,9 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            List<String> appCodes= new ArrayList<String>();
+            appCodes.add(toucan.getAppCode());
+            entity.setAppCodes(appCodes);
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
@@ -420,6 +426,7 @@ public class AdminController extends UIController {
     {
         TableVO tableVO = new TableVO();
         try {
+            pageInfo.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignAdminService.list(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)

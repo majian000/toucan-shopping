@@ -36,12 +36,6 @@
             <input type="password" name="password2" lay-verify="required" maxlength="10" placeholder="请输入密码" autocomplete="off" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">关联应用</label>
-        <div class="layui-input-block">
-            <input th:each="aa:${apps}" name="appCodes" id="appCodes" type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
-        </div>
-    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">

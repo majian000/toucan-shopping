@@ -69,12 +69,17 @@
                     left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
                     left join t_app ta on tsaa.app_code = ta.code and ta.delete_status = 0
                     where tu.delete_status = 0
+
+                    <if test="appCode!=null and appCode!='' ">
+                        and ta.code = #{appCode}
+                    </if>
+
                 )ds
                 group by ds.admin_id
             )ds2 on tsa.admin_id = ds2.admin_id
         )tu
         <where>
-            1=1 and tu.delete_status = 0
+            1=1 and tu.delete_status = 0 and tu.appNames is not null
             <include refid="queryListPageWhere" />
         </where>
         order by tu.id desc
@@ -90,12 +95,17 @@
                         left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
                         left join t_app ta on tsaa.app_code = ta.code and ta.delete_status = 0
                         where tu.delete_status = 0
-                   )ds
+
+                        <if test="appCode!=null and appCode!='' ">
+                            and ta.code = #{appCode}
+                        </if>
+
+                  )ds
                 group by ds.admin_id
             )ds2 on tsa.admin_id = ds2.admin_id
         )tu
         <where>
-            1=1 and tu.delete_status = 0
+            1=1 and tu.delete_status = 0  and tu.appNames is not null
 
             <include refid="queryListPageWhere" />
         </where>
