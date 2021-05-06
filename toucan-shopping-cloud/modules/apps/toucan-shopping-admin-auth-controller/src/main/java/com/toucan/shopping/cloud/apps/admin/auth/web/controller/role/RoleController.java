@@ -141,6 +141,7 @@ public class RoleController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            role.setAppCode(toucan.getAppCode());
             role.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             role.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, role);
@@ -242,6 +243,7 @@ public class RoleController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setAppCode(toucan.getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -296,6 +298,7 @@ public class RoleController extends UIController {
     {
         TableVO tableVO = new TableVO();
         try {
+            pageInfo.setAppCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignRoleService.listPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)

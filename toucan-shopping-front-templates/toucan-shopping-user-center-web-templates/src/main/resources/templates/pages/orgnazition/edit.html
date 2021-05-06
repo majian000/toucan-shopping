@@ -25,13 +25,6 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">关联应用</label>
-        <div class="layui-input-block">
-            <input th:each="aa:${apps}" name="appCodes" id="appCodes" th:attr="checked=${aa.checked?true:false}"  type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
-
-        </div>
-    </div>
-    <div class="layui-form-item">
         <label class="layui-form-label">上级组织机构</label>
         <div class="layui-input-block">
             <input type="hidden" name="pid" id="pid" th:value="${model.pid}" >

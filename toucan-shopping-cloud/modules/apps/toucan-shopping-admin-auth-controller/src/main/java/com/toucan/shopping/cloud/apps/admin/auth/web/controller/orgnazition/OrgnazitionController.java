@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -171,6 +172,9 @@ public class OrgnazitionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            List<String> appCodes = new ArrayList();
+            appCodes.add(toucan.getAppCode());
+            entity.setAppCodes(appCodes);
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -198,6 +202,9 @@ public class OrgnazitionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            List<String> appCodes = new ArrayList();
+            appCodes.add(toucan.getAppCode());
+            entity.setAppCodes(appCodes);
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignOrgnazitionService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -224,6 +231,7 @@ public class OrgnazitionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            queryPageInfo.setAppCode(toucan.getAppCode());
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignOrgnazitionService.queryAppOrgnazitionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -285,6 +293,7 @@ public class OrgnazitionController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             App query = new App();
+            query.setCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             return feignOrgnazitionService.queryOrgnazationTree(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)

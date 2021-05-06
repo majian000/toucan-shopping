@@ -214,6 +214,7 @@ public class FunctionController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            queryPageInfo.setAppCode(toucan.getAppCode());
             queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignFunctionService.queryAppFunctionTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -309,6 +310,7 @@ public class FunctionController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             App query = new App();
+            query.setCode(toucan.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             return feignFunctionService.queryAppFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)

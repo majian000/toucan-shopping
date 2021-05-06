@@ -479,7 +479,13 @@ public class OrgnazitionController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            resultObjectVO.setData(orgnazitionService.queryTree());
+            App queryApp = JSONObject.parseObject(requestJsonVO.getEntityJson(),App.class);
+            if(queryApp==null||StringUtils.isEmpty(queryApp.getCode()))
+            {
+                resultObjectVO.setData(orgnazitionService.queryTree());
+            }else {
+                resultObjectVO.setData(orgnazitionService.queryTree(queryApp.getCode()));
+            }
 
         }catch(Exception e)
         {

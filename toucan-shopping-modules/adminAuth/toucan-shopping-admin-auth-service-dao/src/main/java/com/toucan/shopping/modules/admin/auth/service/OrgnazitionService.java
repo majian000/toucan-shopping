@@ -33,6 +33,11 @@ public interface OrgnazitionService {
      */
     List<OrgnazitionTreeVO> queryTree();
 
+    /**
+     * 查询指定应用树结构
+     * @return
+     */
+    List<OrgnazitionTreeVO> queryTree(String appCode);
 
     /**
      * 根据应用编码查询树

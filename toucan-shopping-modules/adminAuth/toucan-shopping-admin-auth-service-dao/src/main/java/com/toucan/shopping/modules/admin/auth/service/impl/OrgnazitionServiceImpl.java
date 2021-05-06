@@ -104,6 +104,38 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
         return orgnazitionTreeVOS;
     }
 
+    @Override
+    public List<OrgnazitionTreeVO> queryTree(String appCode) {
+        List<OrgnazitionTreeVO> orgnazitionTreeVOS = new ArrayList<OrgnazitionTreeVO>();
+        try {
+            List<OrgnazitionVO> orgnazitionVOS = orgnazitionMapper.queryListByAppCode(appCode);
+            for (OrgnazitionVO orgnazitionVO : orgnazitionVOS) {
+                if (orgnazitionVO.getPid().longValue() == -1L) {
+                    OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
+                    orgnazitionTreeVO.setTitle(orgnazitionVO.getName());
+                    orgnazitionTreeVO.setText(orgnazitionVO.getName());
+                    BeanUtils.copyProperties(orgnazitionTreeVO, orgnazitionVO);
+                    orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
+                    orgnazitionTreeVOS.add(orgnazitionTreeVO);
+
+                    //递归查找子节点
+                    setChildren(orgnazitionVOS,orgnazitionTreeVO);
+                }else if(!existsParentForOrgnazitionVOList(orgnazitionVOS,orgnazitionVO)) //如果没有上级节点,那么该节点默认为根级节点
+                {
+                    OrgnazitionTreeVO orgnazitionTreeVO = new OrgnazitionTreeVO();
+                    orgnazitionTreeVO.setTitle(orgnazitionVO.getName());
+                    orgnazitionTreeVO.setText(orgnazitionVO.getName());
+                    BeanUtils.copyProperties(orgnazitionTreeVO, orgnazitionVO);
+                    orgnazitionTreeVO.setChildren(new ArrayList<OrgnazitionTreeVO>());
+                    orgnazitionTreeVOS.add(orgnazitionTreeVO);
+                }
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return orgnazitionTreeVOS;
+    }
 
     /**
      * 设置顶级节点ID
@@ -234,6 +266,23 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
     }
 
     public boolean existsParent(List<Orgnazition> nodes,Orgnazition node)
+    {
+        if(!CollectionUtils.isEmpty(nodes))
+        {
+            for(Orgnazition n:nodes)
+            {
+                if(node.getPid().longValue()==n.getId().longValue())
+                {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+
+    public boolean existsParentForOrgnazitionVOList(List<OrgnazitionVO> nodes,Orgnazition node)
     {
         if(!CollectionUtils.isEmpty(nodes))
         {

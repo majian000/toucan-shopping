@@ -31,15 +31,6 @@
                         </div>
 
                         <div class="layui-inline">
-                            <label class="layui-form-label">所属应用</label>
-                            <div class="layui-input-inline">
-                                <select id="selectApp" name="appCode"  lay-search="">
-                                    <option value="">请选择</option>
-                                    <option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
