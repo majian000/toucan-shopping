@@ -107,24 +107,7 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'userId', width: 180, title: 'ID'},
-                    {field: 'userMainIdString', width: 180, title: '用户ID'},
                     {field: 'mobilePhone', width: 200, title: '手机号'},
-                    {field: 'nickName', width: 240, title: '昵称'},
-                    {field: 'email', width: 240, title: '邮箱'},
-                    {field: 'enableStatus', width: 80, title: '状态',
-                        templet: function (row) {
-                            if(row.enableStatus == "1"){
-                                return "启用"
-                            }
-                            return "禁用"
-                        }},
-                    {field: 'sex', width: 80, title: '性别',
-                        templet: function (row) {
-                            if(row.sex == "1"){
-                                return "男"
-                            }
-                            return "女"
-                        }},
                     {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
                 ]
             ],
@@ -153,31 +136,18 @@
         table.on('toolbar(userTableFilter)', function (obj) {
             if (obj.event === 'registByMobile') {  // 监听添加操作
                 var index = layer.open({
-                    title: '手机号注册',
+                    title: '添加用户',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/user/registByMobilePage}]]",
+                    content: "[[@{/user/registByMobilePage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'registByUserName') {  // 监听添加操作
-                var index = layer.open({
-                    title: '用户名注册',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: "[[@{/user/registByUserNamePage}]]",
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            }  else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('userTable')
                     , data = checkStatus.data;
                 layer.confirm('确定删除用户?', function (index) {
