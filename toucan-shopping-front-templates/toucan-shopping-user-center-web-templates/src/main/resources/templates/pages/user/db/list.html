@@ -43,16 +43,13 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="registByMobile">手机号注册</button>
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="registByUserName">用户名注册</button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">停用</button>
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
             </div>
         </script>
 
         <table class="layui-hide" id="userTable" lay-filter="userTableFilter"></table>
 
         <script type="text/html" id="userTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">停用</a>
         </script>
 
@@ -177,10 +174,10 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'disabled') {  // 监听删除操作
                 var checkStatus = table.checkStatus('userTable')
                     , data = checkStatus.data;
-                layer.confirm('确定删除用户?', function (index) {
+                layer.confirm('确定停用?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]app/app/delete/ids",
                         contentType: "application/json; charset=utf-8",

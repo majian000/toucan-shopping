@@ -43,9 +43,7 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="registByMobile">手机号注册</button>
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="registByUserName">用户名注册</button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete">停用</button>
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
             </div>
         </script>
 
@@ -91,7 +89,7 @@
 
         table.render({
             elem: '#userTable',
-            url: "[[@{/}]]user/list",
+            url: "[[@{/}]]user/mobile/phone/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',

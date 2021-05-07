@@ -1,6 +1,8 @@
 package com.toucan.shopping.cloud.apps.user.web.controller.user;
 
 
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
@@ -24,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,7 +37,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -53,11 +56,17 @@ public class UserController {
     @Autowired
     private UserElasticSearchService userElasticSearchService;
 
+    @Autowired
+    private FeignFunctionService feignFunctionService;
+
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page()
+    public String listPage(HttpServletRequest request)
     {
+
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/user/listPage",feignFunctionService);
         return "pages/user/db/list.html";
     }
 
@@ -88,7 +97,7 @@ public class UserController {
     @AdminAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, UserPageInfo userPageInfo)
+    public TableVO list(HttpServletRequest request, UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -120,7 +129,7 @@ public class UserController {
 
     @RequestMapping(value="/regist/mobile/phone")
     @ResponseBody
-    public ResultObjectVO registMyMobilePhone(UserRegistVO user){
+    public ResultObjectVO registMyMobilePhone(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
         {
@@ -198,7 +207,7 @@ public class UserController {
 
     @RequestMapping(value="/regist/username")
     @ResponseBody
-    public ResultObjectVO registByUserName(UserRegistVO user){
+    public ResultObjectVO registByUserName(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
         {

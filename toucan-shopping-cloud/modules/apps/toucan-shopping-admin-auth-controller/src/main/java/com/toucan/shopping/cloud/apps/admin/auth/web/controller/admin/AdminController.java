@@ -214,7 +214,7 @@ public class AdminController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page(HttpServletRequest request)
+    public String listPage(HttpServletRequest request)
     {
 
         //初始化选择应用控件
