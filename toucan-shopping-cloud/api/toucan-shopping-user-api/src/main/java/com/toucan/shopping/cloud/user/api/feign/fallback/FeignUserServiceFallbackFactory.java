@@ -23,7 +23,6 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
         logger.warn(throwable.getMessage(),throwable);
         return new FeignUserService(){
 
-
             @Override
             public ResultObjectVO registByMobilePhone(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -186,6 +185,36 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.mobilePhoneList失败 header{} params {}",signHeader,requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO findUsernameListByUsername(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.findUsernameListByUsername失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO findEmailListByEmail(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.findEmailListByEmail失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时请重试");
                 return resultObjectVO;

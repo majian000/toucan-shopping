@@ -121,4 +121,24 @@ public interface FeignUserService {
     @RequestMapping(value="/mobile/phone/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO mobilePhoneList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 根据用户名查询用户名列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/username/list/by/username",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findUsernameListByUsername(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+
+    /**
+     * 根据邮箱查询邮箱列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/email/list/by/email",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findEmailListByEmail(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 }

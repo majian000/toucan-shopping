@@ -355,6 +355,64 @@ public class UserController {
 
 
 
+    /**
+     * 查询用户名列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/username/list/by/username",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findUsernameListByUsername(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要关联的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userRegistVO.getUsername()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("请求失败,请输入用户名");
+            return resultObjectVO;
+        }
+
+        if(!UsernameUtils.isUsername(userRegistVO.getUsername()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("请求失败,用户名格式错误");
+            return resultObjectVO;
+        }
+
+
+        try {
+            UserUserName query = new UserUserName();
+            query.setUsername(userRegistVO.getUsername());
+            List<UserUserName> userUserNameList = userUserNameService.findListByEntity(query);
+            resultObjectVO.setData(userUserNameList);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+        }
+        return resultObjectVO;
+    }
+
 
     /**
      * 关联邮箱
@@ -449,6 +507,64 @@ public class UserController {
     }
 
 
+
+    /**
+     * 查询邮箱列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/email/list/by/email",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findEmailListByEmail(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要关联的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userRegistVO.getEmail()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("请求失败,请输入邮箱");
+            return resultObjectVO;
+        }
+
+        if(!EmailUtils.isEmail(userRegistVO.getEmail()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("请求失败,邮箱格式错误");
+            return resultObjectVO;
+        }
+
+        try {
+            UserEmail query = new UserEmail();
+            query.setEmail(userRegistVO.getEmail());
+            List<UserEmail> userEmails = userEmailService.findListByEntity(query);
+            resultObjectVO.setData(userEmails);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+        }
+        return resultObjectVO;
+    }
 
 
 

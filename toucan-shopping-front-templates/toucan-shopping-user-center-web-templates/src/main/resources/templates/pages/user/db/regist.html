@@ -115,6 +115,25 @@
                 layer.msg("密码与确认密码不一致");
                 return false;
             }
+            if(data.field.email!=null)
+            {
+                var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+                if(!reg.test(data.field.email))
+                {
+                    layer.msg("邮箱格式错误");
+                    return false;
+                }
+            }
+
+            if(data.field.username!=null)
+            {
+                var reg = /^[a-zA-Z][a-zA-Z0-9]{4,16}$/;
+                if(!reg.test(data.field.username))
+                {
+                    layer.msg("用户名格式错误");
+                    return false;
+                }
+            }
             $.ajax({
                 url:"[[@{/user/regist}]]",
                 contentType: "application/json; charset=utf-8",

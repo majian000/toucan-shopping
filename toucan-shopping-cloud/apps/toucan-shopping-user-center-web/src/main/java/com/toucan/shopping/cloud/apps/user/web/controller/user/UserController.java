@@ -27,12 +27,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -171,7 +173,7 @@ public class UserController extends UIController {
     @AdminAuth
     @RequestMapping(value="/regist")
     @ResponseBody
-    public ResultObjectVO registMyMobilePhone(@RequestBody UserRegistVO user){
+    public ResultObjectVO regist(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
         {
@@ -227,7 +229,42 @@ public class UserController extends UIController {
                 return resultObjectVO;
             }
 
+
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
+            //查询是否已注册用户名
+            if(StringUtils.isNotEmpty(user.getUsername()))
+            {
+                resultObjectVO = feignUserService.findUsernameListByUsername(requestJsonVO.sign(),requestJsonVO);
+                if(!resultObjectVO.isSuccess())
+                {
+                    return resultObjectVO;
+                }
+                List userNames = (List)resultObjectVO.formatData(ArrayList.class);
+                if(!CollectionUtils.isEmpty(userNames))
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("用户名已注册");
+                    return resultObjectVO;
+                }
+            }
+
+            //查询是否已注册邮箱
+            if(StringUtils.isNotEmpty(user.getEmail()))
+            {
+                resultObjectVO = feignUserService.findEmailListByEmail(requestJsonVO.sign(),requestJsonVO);
+                if(!resultObjectVO.isSuccess())
+                {
+                    return resultObjectVO;
+                }
+                List emails = (List)resultObjectVO.formatData(ArrayList.class);
+                if(!CollectionUtils.isEmpty(emails))
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("邮箱已注册");
+                    return resultObjectVO;
+                }
+            }
+
 
             logger.info(" 用户注册 {} ", user.getMobilePhone());
 
