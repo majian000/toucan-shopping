@@ -13,5 +13,5 @@ public interface UserEmailMapper {
 
     List<UserEmail> findListByEntity(UserEmail userEmail);
 
-
+    List<UserEmail> queryListByUserId(Long[] userIdArray);
 }

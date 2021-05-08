@@ -31,9 +31,28 @@
     </select>
 
 
+
+    <select id="queryListByUserId" resultMap="userEmailMap" >
+        select tuu.* from t_user_email tuu
+        <where>
+            1=1 and tuu.delete_status = 0
+
+            <if test="array!=null  ">
+                and tuu.user_main_id in
+                <foreach item="item" index="index" collection="array" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+
+        order by tuu.id desc
+    </select>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserEmail" keyProperty="id" >
-        insert into t_user_email(id,email,userMainId,create_date,delete_status)
-        values(#{id},#{email},#{user_main_id},#{createDate},#{deleteStatus})
+        insert into t_user_email(id,email,user_main_id,create_date,delete_status)
+        values(#{id},#{email},#{userMainId},#{createDate},#{deleteStatus})
     </insert>
 
 </mapper>

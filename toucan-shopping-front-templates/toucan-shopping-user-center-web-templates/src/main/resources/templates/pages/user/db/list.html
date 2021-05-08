@@ -152,7 +152,7 @@
          * toolbar监听事件
          */
         table.on('toolbar(userTableFilter)', function (obj) {
-            if (obj.event === 'registByMobile') {  // 监听添加操作
+            if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '手机号注册',
                     type: 2,
@@ -160,7 +160,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/user/registByMobilePage}]]",
+                    content: "[[@{/user/registPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

@@ -216,7 +216,8 @@ public class UserController extends UIController {
 
         //商城应用编码
         String shoppingAppCode = "10001001";
-        String lockKey = toucan.getAppCode()+"_user_regist_mobile_"+user.getMobilePhone();
+        String mobilePhone = user.getMobilePhone();
+        String lockKey = toucan.getAppCode()+"_user_regist_mobile_"+mobilePhone;
         try {
 
             boolean lockStatus = redisLock.lock(lockKey, user.getMobilePhone());
@@ -232,18 +233,18 @@ public class UserController extends UIController {
 
             resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess()) {
+                //拿到用户主ID
+                UserRegistVO userRegistResult = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
+                user.setUserMainId(userRegistResult.getUserMainId());
+
                 //如果输入了用户名,进行用户名的关联
                 if(StringUtils.isNotEmpty(user.getUsername())) {
-                    //拿到用户主ID
-                    user = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
                     requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
                     resultObjectVO = feignUserService.connectUsername(requestJsonVO.sign(), requestJsonVO);
                 }
 
                 //如果输入了邮箱,进行邮箱关联
                 if (StringUtils.isNotEmpty(user.getEmail())) {
-                    //拿到用户主ID
-                    user = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
                     requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
                     resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(), requestJsonVO);
                 }
@@ -260,7 +261,7 @@ public class UserController extends UIController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
-            redisLock.unLock(lockKey, user.getMobilePhone());
+            redisLock.unLock(lockKey, mobilePhone);
         }
         return resultObjectVO;
     }

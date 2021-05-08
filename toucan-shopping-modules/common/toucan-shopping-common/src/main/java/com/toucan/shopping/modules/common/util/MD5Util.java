@@ -9,6 +9,17 @@ import java.security.NoSuchAlgorithmException;
 public class MD5Util {
 
 
+    private static final Logger logger = LoggerFactory.getLogger(MD5Util.class);
+
+    private static MessageDigest md5;
+    static{
+        try {
+            md5 =  MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
     /**
      * MD5 32位加密
      * @param text
@@ -16,7 +27,7 @@ public class MD5Util {
      * @throws NoSuchAlgorithmException
      */
     public static String md5(String text) throws NoSuchAlgorithmException {
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
+
         md5.update(text.getBytes());
         byte bytes[] = md5.digest();
 

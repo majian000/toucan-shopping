@@ -21,6 +21,11 @@ public class UserEmailServiceImpl implements UserEmailService {
         return userEmailMapper.findListByEntity(entity);
     }
 
+    @Override
+    public List<UserEmail> queryListByUserId(Long[] userIdArray) {
+        return userEmailMapper.queryListByUserId(userIdArray);
+    }
+
 
     @Override
     @Transactional

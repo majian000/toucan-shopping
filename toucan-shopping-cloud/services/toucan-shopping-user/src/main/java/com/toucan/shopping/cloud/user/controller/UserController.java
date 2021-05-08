@@ -391,7 +391,7 @@ public class UserController {
             return resultObjectVO;
         }
 
-        if(!EmailUtils.isEmail(userRegistVO.getUsername()))
+        if(!EmailUtils.isEmail(userRegistVO.getEmail()))
         {
             resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
             resultObjectVO.setMsg("请求失败,邮箱格式错误");
@@ -848,6 +848,25 @@ public class UserController {
                             if(userUserName.getUserMainId().longValue()==userVO.getUserMainId().longValue())
                             {
                                 userVO.setUsername(userUserName.getUsername());
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+
+                //查询用户邮箱关联表
+                List<UserEmail> userEmails = userEmailService.queryListByUserId(userIdArray);
+                if(CollectionUtils.isNotEmpty(userEmails))
+                {
+                    //设置邮箱
+                    for(UserEmail userEmail:userEmails)
+                    {
+                        for(UserVO userVO:pageInfo.getList())
+                        {
+                            if(userEmail.getUserMainId().longValue()==userVO.getUserMainId().longValue())
+                            {
+                                userVO.setEmail(userEmail.getEmail());
                                 continue;
                             }
                         }

@@ -53,8 +53,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserUserName" keyProperty="id" >
-        insert into t_user_username(id,username,userMainId,create_date,delete_status)
-        values(#{id},#{username},#{user_main_id},#{createDate},#{deleteStatus})
+        insert into t_user_username(id,username,user_main_id,create_date,delete_status)
+        values(#{id},#{username},#{userMainId},#{createDate},#{deleteStatus})
     </insert>
 
 </mapper>
