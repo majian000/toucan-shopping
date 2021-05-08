@@ -18,22 +18,36 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">用户名</label>
+        <label class="layui-form-label required">手机号</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" maxlength="12" minlength="5" lay-reqtext="不能为空" placeholder="请输入用户名" value="" class="layui-input">
+            <input type="text" name="mobilePhone" lay-verify="required" maxlength="11" lay-reqtext="不能为空" placeholder="请输入手机号" value="" class="layui-input">
+            <tip>填写手机号。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" name="username"  maxlength="15"  placeholder="请输入用户名" value="" class="layui-input">
             <tip>填写用户名。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">密码</label>
+        <label class="layui-form-label">邮箱</label>
         <div class="layui-input-block">
-            <input type="password" name="password" lay-verify="required" maxlength="10" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            <input type="text" name="email"  maxlength="40" placeholder="请输入邮箱" value="" class="layui-input">
+            <tip>填写邮箱。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">确认密码</label>
+        <label class="layui-form-label required">密码</label>
         <div class="layui-input-block">
-            <input type="password" name="password2" lay-verify="required" maxlength="10" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            <input type="password" name="password" lay-verify="required" maxlength="15" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">确认密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="confirmPassword" lay-verify="required" maxlength="15" placeholder="请输入密码" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -51,13 +65,18 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            if(data.field.password!=data.field.confirmPassword)
+            {
+                layer.msg("密码与确认密码不一致");
+                return false;
+            }
             $.ajax({
-                url:"[[@{/user/regist/username}]]",
+                url:"[[@{/user/regist/mobile/phone}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
                 success:function(data){
-                    if(data.code==0) {
+                    if(data.code<=0) {
                         layer.msg(data.msg);
                         return false;
                     }

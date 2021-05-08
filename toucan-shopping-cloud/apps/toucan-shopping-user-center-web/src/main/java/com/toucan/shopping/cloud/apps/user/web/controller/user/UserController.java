@@ -72,19 +72,11 @@ public class UserController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/registByMobilePage",method = RequestMethod.GET)
-    public String addByMobilePage()
+    @RequestMapping(value = "/registPage",method = RequestMethod.GET)
+    public String registPage()
     {
-        return "pages/user/db/registbymobile.html";
+        return "pages/user/db/regist.html";
     }
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/registByUserNamePage",method = RequestMethod.GET)
-    public String registByUserNamePage()
-    {
-        return "pages/user/db/registbyusername.html";
-    }
-
 
 
 
