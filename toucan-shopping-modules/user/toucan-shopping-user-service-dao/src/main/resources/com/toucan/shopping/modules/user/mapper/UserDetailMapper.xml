@@ -24,6 +24,9 @@
             <if test="id!=null">
                 and bu.id = #{id}
             </if>
+            <if test="userMainId!=null">
+                and bu.user_main_id = #{userMainId}
+            </if>
             and bu.delete_status = 0
         </where>
 
@@ -61,9 +64,11 @@
 
 
 
-    <insert id="update" parameterType="com.toucan.shopping.modules.user.entity.UserDetail" keyProperty="id" >
-        update t_user_detail set nick_name=#{nickName} , head_sculpture=#{headSculpture} , sex=#{sex} where user_main_id=#{userMainId} and delete_status = 0
-    </insert>
+    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserDetail"  >
+        update t_user_detail set nick_name=#{nickName} , true_name=#{trueName},
+        head_sculpture=#{headSculpture} ,id_card=#{idCard},type=#{type},
+         sex=#{sex} where user_main_id=#{userMainId} and delete_status = 0
+    </update>
 
     <update id="deleteById" parameterType="java.lang.Long">
         update t_user_detail set delete_status=1 where id =#{id}

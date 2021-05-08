@@ -44,6 +44,17 @@ public interface FeignUserService {
     ResultObjectVO connectEmail(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
+
+
+    /**
+     * 修改用户详情
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/detail",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateDetail(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
     /**
      * 根据用户名注册
      * @param requestJsonVO

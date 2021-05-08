@@ -65,6 +65,36 @@ public class UserRegistVO {
      */
     private Short deleteStatus;
 
+    /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
+     * 真实姓名
+     */
+    private String trueName;
+
+    /**
+     * 头像
+     */
+    private String headSculpture;
+
+    /**
+     * 身份证号
+     */
+    private String idCard;
+
+    /**
+     * 性别 0:女 1:男
+     */
+    private Short sex;
+
+    /**
+     * 用户类型 0:买家 1:卖家 2:既是买家又是卖家
+     */
+    private Short type;
+
 
     //前台传入
 

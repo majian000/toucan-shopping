@@ -47,7 +47,7 @@ public class UserDetail {
     private Short sex;
 
     /**
-     * 用户类型 0:买家 1:卖家 2:既是买家又是卖家
+     * 用户类型 0:用户(买家) 1:商户(卖家) 2:既是买家又是卖家
      */
     private Short type;
 

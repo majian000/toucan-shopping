@@ -306,6 +306,12 @@ public class UserController {
             return resultObjectVO;
         }
 
+        if(userRegistVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户主ID");
+            return resultObjectVO;
+        }
 
         try {
             boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
@@ -395,6 +401,12 @@ public class UserController {
             return resultObjectVO;
         }
 
+        if(userRegistVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户主ID");
+            return resultObjectVO;
+        }
 
         try {
             boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
@@ -438,6 +450,110 @@ public class UserController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+
+    /**
+     * 修改用户详情
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/detail",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateDetail(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要操作的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要修改的用户");
+            return resultObjectVO;
+        }
+        if(userRegistVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户主ID");
+            return resultObjectVO;
+        }
+        try {
+            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+            UserDetail query = new UserDetail();
+            query.setUserMainId(userRegistVO.getUserMainId());
+            List<UserDetail> userDetails = userDetailService.findListByEntity(query);
+            if(CollectionUtils.isNotEmpty(userDetails))
+            {
+                UserDetail userDetail = userDetails.get(0);
+                //昵称
+                if(StringUtils.isNotEmpty(userRegistVO.getNickName()))
+                {
+                    userDetail.setNickName(userRegistVO.getNickName());
+                }
+                //姓名
+                if(StringUtils.isNotEmpty(userRegistVO.getTrueName()))
+                {
+                    userDetail.setTrueName(userRegistVO.getTrueName());
+                }
+                //身份证
+                if(StringUtils.isNotEmpty(userRegistVO.getIdCard()))
+                {
+                    userDetail.setIdCard(userRegistVO.getIdCard());
+                }
+                //头像
+                if(StringUtils.isNotEmpty(userRegistVO.getHeadSculpture()))
+                {
+                    userDetail.setHeadSculpture(userRegistVO.getHeadSculpture());
+                }
+                //性别
+                if(userRegistVO.getSex()!=null)
+                {
+                    userDetail.setSex(userRegistVO.getSex());
+                }
+                //用户类型
+                if(userRegistVO.getType()!=null)
+                {
+                    userDetail.setType(userRegistVO.getType());
+                }
+                int row = userDetailService.update(userDetail);
+                if(row<=0)
+                {
+                    logger.warn("修改用户详情失败 {}", requestJsonVO.getEntityJson());
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                }
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 
