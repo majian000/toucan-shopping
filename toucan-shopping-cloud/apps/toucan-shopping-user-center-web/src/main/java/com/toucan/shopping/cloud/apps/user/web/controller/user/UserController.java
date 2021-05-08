@@ -192,12 +192,14 @@ public class UserController extends UIController {
                     resultObjectVO = feignUserService.connectUsername(requestJsonVO.sign(), requestJsonVO);
                 }
 
-                //如果输入了邮箱,进行邮箱关联
-                if(StringUtils.isNotEmpty(user.getEmail())) {
-                    //拿到用户主ID
-                    user = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
-                    requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(), requestJsonVO);
+                if(resultObjectVO.isSuccess()) {
+                    //如果输入了邮箱,进行邮箱关联
+                    if (StringUtils.isNotEmpty(user.getEmail())) {
+                        //拿到用户主ID
+                        user = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
+                        requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
+                        resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(), requestJsonVO);
+                    }
                 }
             }
 
