@@ -176,6 +176,21 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO mobilePhoneList(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.mobilePhoneList失败 header{} params {}",signHeader,requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
         };
     }
 }

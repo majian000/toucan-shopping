@@ -34,10 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -896,6 +893,69 @@ public class UserController {
 
 
 
+    /**
+     * 用户绑定手机号列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/mobile/phone/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO mobilePhoneList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserPageInfo userPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserPageInfo.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            if(userPageInfo.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户主ID");
+                return resultObjectVO;
+            }
+
+            Long[] userMainIdArray = new Long[1];
+            userMainIdArray[0]=userPageInfo.getUserMainId();
+
+            PageInfo<UserVO> pageInfo= new PageInfo<>();
+            //查询用户手机号关联表
+            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserId(userMainIdArray);
+            if(CollectionUtils.isNotEmpty(userMobilePhones))
+            {
+                pageInfo.setTotal((long)userMobilePhones.size());
+                pageInfo.setList(new ArrayList<>());
+                //设置用户对象中的手机号
+                for(UserMobilePhone userMobilePhone:userMobilePhones)
+                {
+                    UserVO userVO = new UserVO();
+                    userVO.setUserMainId(userMobilePhone.getUserMainId());
+                    userVO.setMobilePhone(userMobilePhone.getMobilePhone());
+                    pageInfo.getList().add(userVO);
+                }
+            }
+
+            resultObjectVO.setData(pageInfo);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

@@ -112,4 +112,13 @@ public interface FeignUserService {
 
 
 
+    /**
+     * 列表分页
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/mobile/phone/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO mobilePhoneList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 }

@@ -80,6 +80,20 @@ public class UserController extends UIController {
     }
 
 
+    /**
+     * 手机号列表页
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/mobilePhoneListPage",method = RequestMethod.GET)
+    public String mobilePhoneListPage()
+    {
+        return "pages/user/db/mobile_phone_list.html";
+    }
+
+
+
+
 
 
     /**
@@ -118,6 +132,40 @@ public class UserController extends UIController {
 
 
 
+
+    /**
+     * 手机号列表
+     * @param userPageInfo
+     * @return
+     */
+    @AdminAuth
+    @RequestMapping(value = "/mobile/phone/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO mobilePhoneList(HttpServletRequest request, UserPageInfo userPageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
+            ResultObjectVO resultObjectVO = feignUserService.mobilePhoneList(SignUtil.sign(requestVo),requestVo);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请求失败,请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
 
 
     @AdminAuth
