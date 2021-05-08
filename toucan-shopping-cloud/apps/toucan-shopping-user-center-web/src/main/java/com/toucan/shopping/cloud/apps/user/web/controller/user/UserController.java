@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.user.web.controller.user;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -119,7 +120,8 @@ public class UserController extends UIController {
 
 
 
-    @RequestMapping(value="/regist/mobile/phone")
+    @AdminAuth
+    @RequestMapping(value="/regist")
     @ResponseBody
     public ResultObjectVO registMyMobilePhone(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -181,85 +183,24 @@ public class UserController extends UIController {
             logger.info(" 用户注册 {} ", user.getMobilePhone());
 
             resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                //如果输入了用户名,进行用户名的关联
+                if(StringUtils.isNotEmpty(user.getUsername())) {
+                    //拿到用户主ID
+                    user = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
+                    requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
+                    resultObjectVO = feignUserService.connectUsername(requestJsonVO.sign(), requestJsonVO);
+                }
 
-            resultObjectVO.setData(null);
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
-        }finally{
-            redisLock.unLock(lockKey, user.getMobilePhone());
-        }
-        return resultObjectVO;
-    }
-
-
-
-
-    @RequestMapping(value="/regist/username")
-    @ResponseBody
-    public ResultObjectVO registByUserName(@RequestBody UserRegistVO user){
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(user==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(user.getUsername()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USERNAME);
-            resultObjectVO.setMsg("注册失败,请输入用户名");
-            return resultObjectVO;
-        }
-
-        if(!UsernameUtils.isUsername(user.getUsername()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.USERNAME_ERROR);
-            resultObjectVO.setMsg("注册失败,用户名格式错误");
-            return resultObjectVO;
-        }
-
-        if(StringUtils.isEmpty(user.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,请输入密码");
-            return resultObjectVO;
-        }
-        if(!StringUtils.equals(user.getPassword(),user.getConfirmPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,密码与确认密码不一致");
-            return resultObjectVO;
-        }
-
-        if(!UserRegistUtil.checkPwd(user.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
-            return resultObjectVO;
-        }
-
-
-        //商城应用编码
-        String shoppingAppCode = "10001001";
-        String lockKey = toucan.getAppCode()+"_user_regist_username_"+user.getMobilePhone();
-        try {
-
-            boolean lockStatus = redisLock.lock(lockKey, user.getMobilePhone());
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
-                return resultObjectVO;
+                //如果输入了邮箱,进行邮箱关联
+                if(StringUtils.isNotEmpty(user.getEmail())) {
+                    //拿到用户主ID
+                    user = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
+                    requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
+                    resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(), requestJsonVO);
+                }
             }
 
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
-
-            logger.info(" 用户注册 {} ", user.getMobilePhone());
-
-            resultObjectVO = feignUserService.registByUsername(SignUtil.sign(requestJsonVO),requestJsonVO);
-
             resultObjectVO.setData(null);
         }catch(Exception e)
         {
@@ -271,6 +212,9 @@ public class UserController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
 
 
 }

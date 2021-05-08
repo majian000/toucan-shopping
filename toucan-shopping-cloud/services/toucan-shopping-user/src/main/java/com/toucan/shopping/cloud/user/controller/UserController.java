@@ -4,16 +4,10 @@ package com.toucan.shopping.cloud.user.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.page.PageInfo;
-import com.toucan.shopping.modules.common.util.EmailUtils;
-import com.toucan.shopping.modules.common.util.MD5Util;
-import com.toucan.shopping.modules.common.util.PhoneUtils;
-import com.toucan.shopping.modules.common.util.UserRegistUtil;
+import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
-import com.toucan.shopping.modules.user.entity.User;
-import com.toucan.shopping.modules.user.entity.UserDetail;
-import com.toucan.shopping.modules.user.entity.UserMobilePhone;
-import com.toucan.shopping.modules.user.entity.UserUserName;
+import com.toucan.shopping.modules.user.entity.*;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
@@ -84,6 +78,9 @@ public class UserController {
     @Autowired
     private UserDetailService userDetailService;
 
+    @Autowired
+    private UserEmailService userEmailService;
+
 
     @Autowired
     private NewUserMessageQueue newUserMessageQueue;
@@ -95,12 +92,12 @@ public class UserController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到请求对象");
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("查询失败,没有找到应用编码");
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
             return resultObjectVO;
         }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
@@ -109,7 +106,7 @@ public class UserController {
             if(StringUtils.isEmpty(userRegistVO.getMobilePhone())||!PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()))
             {
                 resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-                resultObjectVO.setMsg("查询失败,手机号错误");
+                resultObjectVO.setMsg("请求失败,手机号错误");
                 return resultObjectVO;
             }
             List<UserMobilePhone> userEntityList = userMobilePhoneService.findListByMobilePhone(userRegistVO.getMobilePhone());
@@ -118,7 +115,7 @@ public class UserController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }
         return resultObjectVO;
     }
@@ -131,47 +128,47 @@ public class UserController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("请求失败,没有找到要注册的用户");
             return resultObjectVO;
         }
 
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到应用编码");
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
             return resultObjectVO;
         }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
         if(userRegistVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("请求失败,没有找到要注册的用户");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userRegistVO.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("注册失败,请输入注册手机号");
+            resultObjectVO.setMsg("请求失败,请输入注册手机号");
             return resultObjectVO;
         }
 
         if(!PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("注册失败,手机号错误");
+            resultObjectVO.setMsg("请求失败,手机号错误");
             return resultObjectVO;
         }
 
         if(StringUtils.isEmpty(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,请输入密码");
+            resultObjectVO.setMsg("请求失败,请输入密码");
             return resultObjectVO;
         }
 
         if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("请求失败,请输入6至15位的密码");
             return resultObjectVO;
         }
 
@@ -236,6 +233,7 @@ public class UserController {
                         if (row < 1) {
                             logger.warn("保存默认用户昵称失败 {}",requestJsonVO.getEntityJson());
                         }else {
+                            userRegistVO.setUserMainId(user.getUserMainId());
                             resultObjectVO.setData(userRegistVO);
 
                             //发送创建用户到缓存
@@ -258,9 +256,185 @@ public class UserController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
             redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 关联用户名
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/connect/username",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO connectUsername(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要关联的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userRegistVO.getUsername()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("请求失败,请输入用户名");
+            return resultObjectVO;
+        }
+
+        if(!UsernameUtils.isUsername(userRegistVO.getUsername()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("请求失败,用户名格式错误");
+            return resultObjectVO;
+        }
+
+
+        try {
+            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+            //查询用户名是否已经关联
+            UserUserName query = new UserUserName();
+            query.setUsername(userRegistVO.getUsername());
+            List<UserUserName> userUserNameList = userUserNameService.findListByEntity(query);
+            if (!CollectionUtils.isEmpty(userUserNameList)) {
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("用户名已关联!");
+            } else {
+                //保存用户用户名子表
+                UserUserName userUserName = new UserUserName();
+                userUserName.setId(idGenerator.id());
+                //设置用户名
+                userUserName.setUsername(userRegistVO.getUsername());
+                //设置用户主表ID
+                userUserName.setUserMainId(userRegistVO.getUserMainId());
+                userUserName.setCreateDate(new Date());
+                userUserName.setDeleteStatus((short) 0);
+
+                int row = userUserNameService.save(userUserName);
+                if (row < 1) {
+                    logger.warn("关联用户名失败 {}", requestJsonVO.getEntityJson());
+                    resultObjectVO.setCode(UserResultVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请重试!");
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 关联邮箱
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/connect/email",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO connectEmail(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要关联的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userRegistVO.getEmail()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("请求失败,请输入邮箱");
+            return resultObjectVO;
+        }
+
+        if(!EmailUtils.isEmail(userRegistVO.getUsername()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("请求失败,邮箱格式错误");
+            return resultObjectVO;
+        }
+
+
+        try {
+            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+            //查询邮箱是否已经关联
+            UserEmail query = new UserEmail();
+            query.setEmail(userRegistVO.getEmail());
+            List<UserEmail> userEmails = userEmailService.findListByEntity(query);
+            if (!CollectionUtils.isEmpty(userEmails)) {
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("邮箱已关联!");
+            } else {
+                //保存用户邮箱子表
+                UserEmail userEmail = new UserEmail();
+                userEmail.setId(idGenerator.id());
+                //设置用户名
+                userEmail.setEmail(userRegistVO.getEmail());
+                //设置用户主表ID
+                userEmail.setUserMainId(userRegistVO.getUserMainId());
+                userEmail.setCreateDate(new Date());
+                userEmail.setDeleteStatus((short) 0);
+
+                int row = userEmailService.save(userEmail);
+                if (row < 1) {
+                    logger.warn("关联邮箱失败 {}", requestJsonVO.getEntityJson());
+                    resultObjectVO.setCode(UserResultVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请重试!");
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
         }
         return resultObjectVO;
     }
@@ -279,12 +453,12 @@ public class UserController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null) {
             resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到要登录的用户");
+            resultObjectVO.setMsg("请求失败,没有找到要登录的用户");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到应用编码");
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
             return resultObjectVO;
         }
 
@@ -292,20 +466,20 @@ public class UserController {
         if(userLogin==null)
         {
             resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("登录失败,没有找到账号");
+            resultObjectVO.setMsg("请求失败,没有找到账号");
             return resultObjectVO;
         }
         logger.info(" 用户登录 {} ",requestJsonVO.getEntityJson());
 
         if (StringUtils.isEmpty(userLogin.getPassword())) {
             resultObjectVO.setCode(UserLoginConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("登录失败,请输入密码");
+            resultObjectVO.setMsg("请求失败,请输入密码");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userLogin.getLoginUserName()))
         {
             resultObjectVO.setCode(UserLoginConstant.USERNAME_NOT_FOUND);
-            resultObjectVO.setMsg("登录失败,请输入账号");
+            resultObjectVO.setMsg("请求失败,请输入账号");
             return resultObjectVO;
         }
 
@@ -338,7 +512,7 @@ public class UserController {
             if(CollectionUtils.isEmpty(users))
             {
                 resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
-                resultObjectVO.setMsg("登录失败,请先注册");
+                resultObjectVO.setMsg("请求失败,请先注册");
             }else {
                 User userEntity = users.get(0);
                 //判断用户启用状态
@@ -375,7 +549,7 @@ public class UserController {
                     }
                 }else{
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("登录失败,用户已被禁用");
+                    resultObjectVO.setMsg("请求失败,用户已被禁用");
                 }
             }
 
@@ -383,7 +557,7 @@ public class UserController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("登录失败,请稍后重试");
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
             redisLock.unLock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
         }

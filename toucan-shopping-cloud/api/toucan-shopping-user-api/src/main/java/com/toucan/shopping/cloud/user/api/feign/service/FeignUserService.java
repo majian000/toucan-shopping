@@ -23,7 +23,25 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/regist/mobile/phone",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO registByMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO registByMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 关联到用户名
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/connect/username",produces = "application/json;charset=UTF-8")
+    ResultObjectVO connectUsername(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 关联到邮箱
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/connect/email",produces = "application/json;charset=UTF-8")
+    ResultObjectVO connectEmail(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
     /**

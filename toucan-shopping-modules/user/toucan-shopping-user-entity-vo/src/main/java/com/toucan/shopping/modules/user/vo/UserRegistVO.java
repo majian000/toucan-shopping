@@ -11,7 +11,10 @@ public class UserRegistVO {
 
     private Long id;
 
-
+    /**
+     * 用户主ID
+     */
+    private Long userMainId;
 
     /**
      * 手机号
@@ -22,6 +25,11 @@ public class UserRegistVO {
      * 用户名
      */
     private String username;
+
+    /**
+     * 邮箱
+     */
+    private String email;
 
     /**
      * 密码
