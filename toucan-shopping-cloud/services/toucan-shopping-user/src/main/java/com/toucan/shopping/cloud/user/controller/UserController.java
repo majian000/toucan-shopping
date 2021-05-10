@@ -561,6 +561,92 @@ public class UserController {
     }
 
 
+    /**
+     * 将用户详情更新到es
+     * @param userRegistVO
+     * @throws Exception
+     */
+    public void updateDetailToElasticsearch(UserRegistVO userRegistVO) throws Exception {
+        //从缓存中查询用户对象
+        List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+        UserElasticSearchVO userElasticSearchVO = null;
+        if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+        {
+            userElasticSearchVO = userElasticSearchVOS.get(0);
+        }else{ //如果缓存不存在将重新推到缓存中
+            userElasticSearchVO = new UserElasticSearchVO();
+
+            User queryUser = new User();
+            queryUser.setUserMainId(userRegistVO.getUserMainId());
+            List<User> users = userService.findListByEntity(queryUser);
+            if(CollectionUtils.isNotEmpty(users)) {
+                User user = users.get(0);
+                userElasticSearchVO.setId(user.getId());
+                userElasticSearchVO.setUserMainId(user.getUserMainId());
+                userElasticSearchVO.setEnableStatus(user.getEnableStatus());
+                userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
+            }
+
+            //设置手机号
+            UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
+            queryUserMobilePhone.setUserMainId(userRegistVO.getUserMainId());
+            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobilePhone);
+            if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+                userElasticSearchVO.setMobilePhone(userMobilePhones.get(0).getMobilePhone());
+            }
+
+            //设置邮箱
+            UserEmail queryUserEmail = new UserEmail();
+            queryUserEmail.setUserMainId(userRegistVO.getUserMainId());
+            List<UserEmail> userEmails = userEmailService.findListByEntity(queryUserEmail);
+            if(CollectionUtils.isNotEmpty(userEmails)) {
+                userElasticSearchVO.setEmail(userEmails.get(0).getEmail());
+            }
+
+            //设置用户名
+            UserUserName userUserName = new UserUserName();
+            userUserName.setUserMainId(userRegistVO.getUserMainId());
+            List<UserUserName> userUserNames = userUserNameService.findListByEntity(userUserName);
+            if(CollectionUtils.isNotEmpty(userUserNames)) {
+                userElasticSearchVO.setUsername(userUserNames.get(0).getUsername());
+            }
+
+            userElasticSearchService.save(userElasticSearchVO);
+        }
+
+        //昵称
+        if(StringUtils.isNotEmpty(userRegistVO.getNickName()))
+        {
+            userElasticSearchVO.setNickName(userRegistVO.getNickName());
+        }
+        //姓名
+        if(StringUtils.isNotEmpty(userRegistVO.getTrueName()))
+        {
+            userElasticSearchVO.setTrueName(userRegistVO.getTrueName());
+        }
+        //身份证
+        if(StringUtils.isNotEmpty(userRegistVO.getIdCard()))
+        {
+            userElasticSearchVO.setIdCard(userRegistVO.getIdCard());
+        }
+        //头像
+        if(StringUtils.isNotEmpty(userRegistVO.getHeadSculpture()))
+        {
+            userElasticSearchVO.setHeadSculpture(userRegistVO.getHeadSculpture());
+        }
+        //性别
+        if(userRegistVO.getSex()!=null)
+        {
+            userElasticSearchVO.setSex(userRegistVO.getSex());
+        }
+        //用户类型
+        if(userRegistVO.getType()!=null)
+        {
+            userElasticSearchVO.setType(userRegistVO.getType());
+        }
+
+        userElasticSearchService.update(userElasticSearchVO);
+    }
 
 
     /**
@@ -609,89 +695,38 @@ public class UserController {
             List<UserDetail> userDetails = userDetailService.findListByEntity(query);
             if(CollectionUtils.isNotEmpty(userDetails))
             {
-                //从缓存中查询用户对象
-                List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
-                UserElasticSearchVO userElasticSearchVO = null;
-                if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
-                {
-                    userElasticSearchVO = userElasticSearchVOS.get(0);
-                }else{ //如果缓存不存在将重新推到缓存中
-                    userElasticSearchVO = new UserElasticSearchVO();
 
-                    User queryUser = new User();
-                    queryUser.setUserMainId(userRegistVO.getUserMainId());
-                    List<User> users = userService.findListByEntity(queryUser);
-                    if(CollectionUtils.isNotEmpty(users)) {
-                        User user = users.get(0);
-                        userElasticSearchVO.setId(user.getId());
-                        userElasticSearchVO.setUserMainId(user.getUserMainId());
-                        userElasticSearchVO.setEnableStatus(user.getEnableStatus());
-                        userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
-                    }
-
-                    //设置手机号
-                    UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
-                    queryUserMobilePhone.setUserMainId(userRegistVO.getUserMainId());
-                    List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobilePhone);
-                    if(CollectionUtils.isNotEmpty(userMobilePhones)) {
-                        userElasticSearchVO.setMobilePhone(userMobilePhones.get(0).getMobilePhone());
-                    }
-
-                    //设置邮箱
-                    UserEmail queryUserEmail = new UserEmail();
-                    queryUserEmail.setUserMainId(userRegistVO.getUserMainId());
-                    List<UserEmail> userEmails = userEmailService.findListByEntity(queryUserEmail);
-                    if(CollectionUtils.isNotEmpty(userEmails)) {
-                        userElasticSearchVO.setEmail(userEmails.get(0).getEmail());
-                    }
-
-                    //设置用户名
-                    UserUserName userUserName = new UserUserName();
-                    userUserName.setUserMainId(userRegistVO.getUserMainId());
-                    List<UserUserName> userUserNames = userUserNameService.findListByEntity(userUserName);
-                    if(CollectionUtils.isNotEmpty(userUserNames)) {
-                        userElasticSearchVO.setUsername(userUserNames.get(0).getUsername());
-                    }
-
-                    userElasticSearchService.save(userElasticSearchVO);
-                }
 
                 UserDetail userDetail = userDetails.get(0);
                 //昵称
                 if(StringUtils.isNotEmpty(userRegistVO.getNickName()))
                 {
                     userDetail.setNickName(userRegistVO.getNickName());
-                    userElasticSearchVO.setNickName(userRegistVO.getNickName());
                 }
                 //姓名
                 if(StringUtils.isNotEmpty(userRegistVO.getTrueName()))
                 {
                     userDetail.setTrueName(userRegistVO.getTrueName());
-                    userElasticSearchVO.setTrueName(userRegistVO.getTrueName());
                 }
                 //身份证
                 if(StringUtils.isNotEmpty(userRegistVO.getIdCard()))
                 {
                     userDetail.setIdCard(userRegistVO.getIdCard());
-                    userElasticSearchVO.setIdCard(userRegistVO.getIdCard());
                 }
                 //头像
                 if(StringUtils.isNotEmpty(userRegistVO.getHeadSculpture()))
                 {
                     userDetail.setHeadSculpture(userRegistVO.getHeadSculpture());
-                    userElasticSearchVO.setHeadSculpture(userRegistVO.getHeadSculpture());
                 }
                 //性别
                 if(userRegistVO.getSex()!=null)
                 {
                     userDetail.setSex(userRegistVO.getSex());
-                    userElasticSearchVO.setSex(userRegistVO.getSex());
                 }
                 //用户类型
                 if(userRegistVO.getType()!=null)
                 {
                     userDetail.setType(userRegistVO.getType());
-                    userElasticSearchVO.setType(userRegistVO.getType());
                 }
                 int row = userDetailService.update(userDetail);
                 if(row<=0)
@@ -702,8 +737,13 @@ public class UserController {
                 }
 
                 //更新缓存
-                userElasticSearchService.update(userElasticSearchVO);
-
+                try{
+                    updateDetailToElasticsearch(userRegistVO);
+                }catch(Exception e){
+                    logger.warn(e.getMessage(),e);
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                }
             }
 
         }catch(Exception e)
@@ -1180,7 +1220,7 @@ public class UserController {
 
         try {
             User entity = JSONObject.parseObject(requestVo.getEntityJson(),User.class);
-            if(entity.getId()==null)
+            if(entity.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,没有找到ID");
@@ -1202,6 +1242,52 @@ public class UserController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 批量删除
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/disabled/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledByIds(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<User> users = JSONObject.parseArray(requestVo.getEntityJson(),User.class);
+            if(CollectionUtils.isEmpty(users))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(User user:users) {
+                if(user.getUserMainId()!=null) {
+
+                    //用户主表禁用
+                    userService.updateEnableStatus((short)0,user.getUserMainId());
+
+                }
+            }
+            resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

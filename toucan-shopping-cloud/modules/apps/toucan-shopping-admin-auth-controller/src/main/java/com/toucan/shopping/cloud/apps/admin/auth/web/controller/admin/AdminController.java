@@ -423,7 +423,7 @@ public class AdminController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, AdminPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, AdminPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

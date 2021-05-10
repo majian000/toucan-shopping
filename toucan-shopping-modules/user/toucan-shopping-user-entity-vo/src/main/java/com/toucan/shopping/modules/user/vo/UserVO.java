@@ -26,6 +26,7 @@ public class UserVO {
     /**
      * 用户ID
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 

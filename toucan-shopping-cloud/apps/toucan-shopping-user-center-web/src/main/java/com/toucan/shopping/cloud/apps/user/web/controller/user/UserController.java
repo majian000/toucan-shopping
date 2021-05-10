@@ -22,6 +22,7 @@ import com.toucan.shopping.modules.user.entity.User;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.vo.UserRegistVO;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,10 +102,10 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, UserPageInfo userPageInfo)
+    public TableVO list( UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -138,10 +139,10 @@ public class UserController extends UIController {
      * @param userPageInfo
      * @return
      */
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/mobile/phone/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO mobilePhoneList(HttpServletRequest request, UserPageInfo userPageInfo)
+    public TableVO mobilePhoneList(UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -168,7 +169,7 @@ public class UserController extends UIController {
     }
 
 
-    @AdminAuth
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value="/regist")
     @ResponseBody
     public ResultObjectVO regist(@RequestBody UserRegistVO user){
@@ -339,6 +340,39 @@ public class UserController extends UIController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 批量禁用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/disabled/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledByIds(HttpServletRequest request, @RequestBody List<UserVO> userVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(userVOS))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String entityJson = JSONObject.toJSONString(userVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignUserService.disabledByIds(SignUtil.sign(requestVo), requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

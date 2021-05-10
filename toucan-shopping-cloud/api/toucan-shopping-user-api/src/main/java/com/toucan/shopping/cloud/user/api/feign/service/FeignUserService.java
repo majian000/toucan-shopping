@@ -150,4 +150,21 @@ public interface FeignUserService {
      */
     @RequestMapping(value="/disabled/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO disabledById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+
+
+
+    /**
+     * 批量禁用
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/disabled/ids",method = RequestMethod.DELETE)
+    ResultObjectVO disabledByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+
+
+
+
 }
