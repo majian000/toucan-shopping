@@ -312,7 +312,7 @@ public class UserController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/disabled/{id}",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO disabledById(HttpServletRequest request,  @PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
