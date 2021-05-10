@@ -753,7 +753,7 @@ public class UserController {
             if(CollectionUtils.isEmpty(users))
             {
                 resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
-                resultObjectVO.setMsg("请求失败,请先注册");
+                resultObjectVO.setMsg("登录失败,请检查用户名和密码");
             }else {
                 User userEntity = users.get(0);
                 //判断用户启用状态
