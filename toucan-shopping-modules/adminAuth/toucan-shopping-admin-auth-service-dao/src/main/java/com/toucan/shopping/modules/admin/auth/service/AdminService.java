@@ -50,4 +50,11 @@ public interface AdminService {
     PageInfo<AdminVO> queryListPage(AdminPageInfo appPageInfo);
 
 
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 }

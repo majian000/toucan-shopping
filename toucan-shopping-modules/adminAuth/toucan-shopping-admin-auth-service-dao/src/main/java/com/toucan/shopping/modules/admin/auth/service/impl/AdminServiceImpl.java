@@ -64,4 +64,9 @@ public class AdminServiceImpl implements AdminService {
         return pageInfo;
     }
 
+    @Override
+    public int deleteById(Long id) {
+        return adminMapper.deleteById(id);
+    }
+
 }

@@ -52,4 +52,12 @@ public interface AdminMapper {
      * @return
      */
     int updatePassword(AdminVO adminVO);
+
+
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
 }

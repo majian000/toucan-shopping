@@ -89,4 +89,30 @@ public interface FeignAdminService {
     @RequestMapping(value="/update/password",produces = "application/json;charset=UTF-8")
     ResultObjectVO updatePassword(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
+
+
+
+
+    /**
+     * 根据ID删除指定角色
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 批量删除
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+
+
+
+
 }

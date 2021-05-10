@@ -55,6 +55,7 @@ public class AdminController {
     @Autowired
     private AdminOrgnazitionService adminOrgnazitionService;
 
+
     /**
      * 保存管理员账户
      * @param requestVo
@@ -746,6 +747,142 @@ public class AdminController {
             //查询账号主表
             PageInfo<AdminVO> pageInfo =  adminService.queryListPage(adminPageInfo);
             resultObjectVO.setData(pageInfo);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 删除指定
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Admin entity = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到账号ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该角色
+            Admin query=new Admin();
+            query.setId(entity.getId());
+            List<Admin> adminList = adminService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(adminList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,账号不存在!");
+                return resultObjectVO;
+            }
+
+
+            int row = adminService.deleteById(entity.getId());
+            if (row < 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+
+            //删除账号角色关联
+            adminRoleService.deleteByAdminId(adminList.get(0).getAdminId());
+
+            //删除账号部门关联
+            adminOrgnazitionService.deleteByAdminId(adminList.get(0).getAdminId());
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 批量删除
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<Admin> admins = JSONObject.parseArray(requestVo.getEntityJson(),Admin.class);
+            if(CollectionUtils.isEmpty(admins))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到账号ID");
+                return resultObjectVO;
+            }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(Admin admin:admins) {
+                if(admin.getId()!=null) {
+                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
+                    appResultObjectVO.setData(admin);
+
+                    //查询是否存在该角色
+                    Admin query = new Admin();
+                    query.setId(admin.getId());
+                    List<Admin> adminList = adminService.findListByEntity(query);
+                    if (CollectionUtils.isEmpty(adminList)) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,账号不存在!");
+                        continue;
+                    }
+
+
+                    int row = adminService.deleteById(admin.getId());
+                    if (row < 1) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,请重试!");
+                        continue;
+                    }
+
+                    //删除账号角色关联
+                    adminRoleService.deleteByAdminId(adminList.get(0).getAdminId());
+
+                    //删除账号部门关联
+                    adminOrgnazitionService.deleteByAdminId(adminList.get(0).getAdminId());
+
+                }
+            }
+            resultObjectVO.setData(resultObjectVOList);
 
         }catch(Exception e)
         {

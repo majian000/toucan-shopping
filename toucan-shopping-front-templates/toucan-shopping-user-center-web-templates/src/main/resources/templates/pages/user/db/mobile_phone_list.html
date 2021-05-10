@@ -47,9 +47,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="userTable" lay-filter="userTableFilter"></table>
+        <table class="layui-hide" id="userMobilePhoneTable" lay-filter="userMobilePhoneTableFilter"></table>
 
-        <script type="text/html" id="userTableBar">
+        <script type="text/html" id="userMobilePhoneTableBar">
 
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
             <!--删除 停用 -->
@@ -89,7 +89,7 @@
         }
 
         table.render({
-            elem: '#userTable',
+            elem: '#userMobilePhoneTable',
             url: "[[@{/}]]user/mobile/phone/list",
             method:'POST',
             where:getFormParam(),
@@ -108,26 +108,8 @@
                     {field: 'userId', width: 180, title: 'ID'},
                     {field: 'userMainIdString', width: 180, title: '用户ID'},
                     {field: 'mobilePhone', width: 200, title: '手机号'},
-                    {field: 'nickName', width: 240, title: '昵称'},
-                    {field: 'email', width: 240, title: '邮箱'},
-                    {field: 'username', width: 240, title: '用户名'},
-                    {field: 'trueName', width: 240, title: '真实姓名'},
-                    {field: 'idCard', width: 240, title: '身份证'},
-                    {field: 'enableStatus', width: 80, title: '状态',
-                        templet: function (row) {
-                            if(row.enableStatus == "1"){
-                                return "启用"
-                            }
-                            return "禁用"
-                        }},
-                    {field: 'sex', width: 80, title: '性别',
-                        templet: function (row) {
-                            if(row.sex == "1"){
-                                return "男"
-                            }
-                            return "女"
-                        }},
-                    {title: '操作', minWidth: 240, toolbar: '#userTableBar', align: "center"}
+                    {field: 'createDate', width: 240, title: '创建时间'},
+                    {title: '操作', minWidth: 240, toolbar: '#userMobilePhoneTableBar', align: "center"}
                 ]
             ],
             limits: [15,50,100,300],
@@ -139,7 +121,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('userTable', {
+            table.reload('userMobilePhoneTable', {
                 page: {
                     curr: 1
                 }
@@ -152,7 +134,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(userTableFilter)', function (obj) {
+        table.on('toolbar(userMobilePhoneTableFilter)', function (obj) {
             if (obj.event === 'registByMobile') {  // 监听添加操作
                 var index = layer.open({
                     title: '手机号注册',
@@ -166,21 +148,8 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'registByUserName') {  // 监听添加操作
-                var index = layer.open({
-                    title: '用户名注册',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: "[[@{/user/registByUserNamePage}]]",
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'disabled') {  // 监听删除操作
-                var checkStatus = table.checkStatus('userTable')
+            }  else if (obj.event === 'disabled') {  // 监听删除操作
+                var checkStatus = table.checkStatus('userMobilePhoneTable')
                     , data = checkStatus.data;
                 layer.confirm('确定停用?', function (index) {
                     $.ajax({
@@ -192,7 +161,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('userTable', {
+                            table.reload('userMobilePhoneTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -210,11 +179,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(userTableFilter)', function (obj) {
+        table.on('checkbox(userMobilePhoneTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(userTableFilter)', function (obj) {
+        table.on('tool(userMobilePhoneTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
 
@@ -241,7 +210,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('userTable', {
+                            table.reload('userMobilePhoneTable', {
                                 page: {
                                     curr: 1
                                 }

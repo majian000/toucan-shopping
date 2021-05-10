@@ -133,4 +133,10 @@
           where admin_id = #{adminId} and delete_status=0
     </update>
 
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_sa_admin set delete_status=1 where id = #{id}
+    </update>
+
+
 </mapper>
