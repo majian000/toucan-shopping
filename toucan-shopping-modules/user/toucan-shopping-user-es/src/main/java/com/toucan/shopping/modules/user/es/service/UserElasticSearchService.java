@@ -46,6 +46,14 @@ public interface UserElasticSearchService {
      */
     List<UserElasticSearchVO> queryById(Long id) throws Exception;
 
+
+    /**
+     * 根据ID查询
+     * @param userMainId
+     * @return
+     */
+    List<UserElasticSearchVO> queryByUserMainId(Long userMainId) throws Exception;
+
     /**
      * 查询列表 search after方式
      * @param esUserVo

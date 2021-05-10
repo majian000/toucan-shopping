@@ -14,10 +14,7 @@ import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.service.*;
-import com.toucan.shopping.modules.user.vo.UserLoginVO;
-import com.toucan.shopping.modules.user.vo.UserRegistVO;
-import com.toucan.shopping.modules.user.vo.UserResultVO;
-import com.toucan.shopping.modules.user.vo.UserVO;
+import com.toucan.shopping.modules.user.vo.*;
 import com.toucan.shopping.cloud.user.queue.NewUserMessageQueue;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -612,36 +609,89 @@ public class UserController {
             List<UserDetail> userDetails = userDetailService.findListByEntity(query);
             if(CollectionUtils.isNotEmpty(userDetails))
             {
+                //从缓存中查询用户对象
+                List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                UserElasticSearchVO userElasticSearchVO = null;
+                if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+                {
+                    userElasticSearchVO = userElasticSearchVOS.get(0);
+                }else{ //如果缓存不存在将重新推到缓存中
+                    userElasticSearchVO = new UserElasticSearchVO();
+
+                    User queryUser = new User();
+                    queryUser.setUserMainId(userRegistVO.getUserMainId());
+                    List<User> users = userService.findListByEntity(queryUser);
+                    if(CollectionUtils.isNotEmpty(users)) {
+                        User user = users.get(0);
+                        userElasticSearchVO.setId(user.getId());
+                        userElasticSearchVO.setUserMainId(user.getUserMainId());
+                        userElasticSearchVO.setEnableStatus(user.getEnableStatus());
+                        userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
+                    }
+
+                    //设置手机号
+                    UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
+                    queryUserMobilePhone.setUserMainId(userRegistVO.getUserMainId());
+                    List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobilePhone);
+                    if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+                        userElasticSearchVO.setMobilePhone(userMobilePhones.get(0).getMobilePhone());
+                    }
+
+                    //设置邮箱
+                    UserEmail queryUserEmail = new UserEmail();
+                    queryUserEmail.setUserMainId(userRegistVO.getUserMainId());
+                    List<UserEmail> userEmails = userEmailService.findListByEntity(queryUserEmail);
+                    if(CollectionUtils.isNotEmpty(userEmails)) {
+                        userElasticSearchVO.setEmail(userEmails.get(0).getEmail());
+                    }
+
+                    //设置用户名
+                    UserUserName userUserName = new UserUserName();
+                    userUserName.setUserMainId(userRegistVO.getUserMainId());
+                    List<UserUserName> userUserNames = userUserNameService.findListByEntity(userUserName);
+                    if(CollectionUtils.isNotEmpty(userUserNames)) {
+                        userElasticSearchVO.setUsername(userUserNames.get(0).getUsername());
+                    }
+
+                    userElasticSearchService.save(userElasticSearchVO);
+                }
+
                 UserDetail userDetail = userDetails.get(0);
                 //昵称
                 if(StringUtils.isNotEmpty(userRegistVO.getNickName()))
                 {
                     userDetail.setNickName(userRegistVO.getNickName());
+                    userElasticSearchVO.setNickName(userRegistVO.getNickName());
                 }
                 //姓名
                 if(StringUtils.isNotEmpty(userRegistVO.getTrueName()))
                 {
                     userDetail.setTrueName(userRegistVO.getTrueName());
+                    userElasticSearchVO.setTrueName(userRegistVO.getTrueName());
                 }
                 //身份证
                 if(StringUtils.isNotEmpty(userRegistVO.getIdCard()))
                 {
                     userDetail.setIdCard(userRegistVO.getIdCard());
+                    userElasticSearchVO.setIdCard(userRegistVO.getIdCard());
                 }
                 //头像
                 if(StringUtils.isNotEmpty(userRegistVO.getHeadSculpture()))
                 {
                     userDetail.setHeadSculpture(userRegistVO.getHeadSculpture());
+                    userElasticSearchVO.setHeadSculpture(userRegistVO.getHeadSculpture());
                 }
                 //性别
                 if(userRegistVO.getSex()!=null)
                 {
                     userDetail.setSex(userRegistVO.getSex());
+                    userElasticSearchVO.setSex(userRegistVO.getSex());
                 }
                 //用户类型
                 if(userRegistVO.getType()!=null)
                 {
                     userDetail.setType(userRegistVO.getType());
+                    userElasticSearchVO.setType(userRegistVO.getType());
                 }
                 int row = userDetailService.update(userDetail);
                 if(row<=0)
@@ -650,6 +700,10 @@ public class UserController {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                 }
+
+                //更新缓存
+                userElasticSearchService.update(userElasticSearchVO);
+
             }
 
         }catch(Exception e)
