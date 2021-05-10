@@ -19,4 +19,5 @@ public interface UserMobilePhoneMapper {
 
     List<UserMobilePhone> queryListByUserId(Long[] userIdArray);
 
+
 }

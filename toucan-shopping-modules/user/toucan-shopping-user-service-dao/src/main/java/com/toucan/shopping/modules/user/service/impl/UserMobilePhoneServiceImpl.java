@@ -42,4 +42,5 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
     public List<UserMobilePhone> queryListByUserId(Long[] userIdArray) {
         return userMobilePhoneMapper.queryListByUserId(userIdArray);
     }
+
 }

@@ -166,25 +166,12 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'registByUserName') {  // 监听添加操作
-                var index = layer.open({
-                    title: '用户名注册',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: "[[@{/user/registByUserNamePage}]]",
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'disabled') {  // 监听删除操作
+            }  else if (obj.event === 'disabled') {  // 监听删除操作
                 var checkStatus = table.checkStatus('userTable')
                     , data = checkStatus.data;
                 layer.confirm('确定停用?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/app/delete/ids",
+                        url:"[[@{/}]]user/disabled/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -234,7 +221,7 @@
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除该用户?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/app/delete/"+data.id,
+                        url:"[[@{/}]]user/delete/"+data.userMainIdString,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

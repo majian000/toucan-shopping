@@ -65,4 +65,7 @@
         values(#{id},#{mobilePhone},#{userMainId},#{createDate},#{deleteStatus})
     </insert>
 
+
+
+
 </mapper>
