@@ -32,4 +32,9 @@ public class UserUserNameServiceImpl implements UserUserNameService {
     public List<UserUserName> queryListByUserId(Long[] userIdArray) {
         return userUserNameMapper.queryListByUserId(userIdArray);
     }
+
+    @Override
+    public List<UserUserName> findListByUserName(String username) {
+        return userUserNameMapper.findListByUserName(username);
+    }
 }

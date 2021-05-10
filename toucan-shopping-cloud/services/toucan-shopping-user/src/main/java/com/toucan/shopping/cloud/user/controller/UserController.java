@@ -669,7 +669,7 @@ public class UserController {
 
 
     /**
-     * 用户密码登录
+     * 密码登录
      * @param requestJsonVO
      * @return
      */
@@ -729,9 +729,24 @@ public class UserController {
                     }
                 }
 
-            }else if(EmailUtils.isEmail(userLogin.getLoginUserName()))
+            }else if(EmailUtils.isEmail(userLogin.getLoginUserName())) //如果输入邮箱,拿到邮箱对应的用户主ID
             {
-
+                List<UserEmail> userEmails = userEmailService.findListByEmail(userLogin.getLoginUserName());
+                if(!CollectionUtils.isEmpty(userEmails))
+                {
+                    if(userEmails.get(0)!=null&&userEmails.get(0).getUserMainId()!=null) {
+                        userId = userEmails.get(0).getUserMainId();
+                    }
+                }
+            }else if(UsernameUtils.isUsername(userLogin.getLoginUserName())) //如果输入用户名,拿到用户名对应的用户主ID
+            {
+                List<UserUserName> userUserNames = userUserNameService.findListByUserName(userLogin.getLoginUserName());
+                if(!CollectionUtils.isEmpty(userUserNames))
+                {
+                    if(userUserNames.get(0)!=null&&userUserNames.get(0).getUserMainId()!=null) {
+                        userId = userUserNames.get(0).getUserMainId();
+                    }
+                }
             }
 
             List<User> users = userService.findById(userId);

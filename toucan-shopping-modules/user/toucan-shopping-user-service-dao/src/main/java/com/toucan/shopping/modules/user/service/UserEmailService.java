@@ -11,9 +11,16 @@ public interface UserEmailService {
 
     List<UserEmail> findListByEntity(UserEmail entity);
 
-
     List<UserEmail> queryListByUserId(Long[] userIdArray);
 
     int save(UserEmail entity);
+
+
+    /**
+     * 根据邮箱查询关联
+     * @param email
+     * @return
+     */
+    List<UserEmail> findListByEmail(String email);
 
 }

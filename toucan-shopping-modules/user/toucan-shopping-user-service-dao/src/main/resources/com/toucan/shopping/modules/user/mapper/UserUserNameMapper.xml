@@ -57,4 +57,9 @@
         values(#{id},#{username},#{userMainId},#{createDate},#{deleteStatus})
     </insert>
 
+
+    <select id="findListByUserName" resultMap="userUserNameMap" parameterType="java.lang.String">
+        select * from t_user_username bu where  1=1  and bu.username = #{username}  and bu.delete_status = 0
+    </select>
+
 </mapper>

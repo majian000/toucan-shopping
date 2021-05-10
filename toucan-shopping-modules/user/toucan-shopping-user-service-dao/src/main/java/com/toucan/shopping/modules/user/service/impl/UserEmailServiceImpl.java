@@ -34,4 +34,9 @@ public class UserEmailServiceImpl implements UserEmailService {
         return userEmailMapper.insert(entity);
     }
 
+    @Override
+    public List<UserEmail> findListByEmail(String email) {
+        return userEmailMapper.findListByEmail(email);
+    }
+
 }

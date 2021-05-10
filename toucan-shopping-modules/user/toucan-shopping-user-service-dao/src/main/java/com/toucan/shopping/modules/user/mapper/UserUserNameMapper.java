@@ -15,4 +15,6 @@ public interface UserUserNameMapper {
 
     List<UserUserName> queryListByUserId(Long[] userIdArray);
 
+    List<UserUserName> findListByUserName(String username);
+
 }
