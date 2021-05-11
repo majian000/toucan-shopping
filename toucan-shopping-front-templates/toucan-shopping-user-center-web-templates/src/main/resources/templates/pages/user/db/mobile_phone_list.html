@@ -110,15 +110,15 @@
          * toolbar监听事件
          */
         table.on('toolbar(userMobilePhoneTableFilter)', function (obj) {
-            if (obj.event === 'registByMobile') {  // 监听添加操作
+            if (obj.event === 'addMobilePhone') {  // 监听添加操作
                 var index = layer.open({
-                    title: '手机号注册',
+                    title: '添加手机号',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/user/registByMobilePage}]]",
+                    content: "[[@{/}]]user/addMobilePhonePage/"+data.userMainIdString,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
