@@ -39,8 +39,8 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
     }
 
     @Override
-    public List<UserMobilePhone> queryListByUserId(Long[] userIdArray) {
-        return userMobilePhoneMapper.queryListByUserId(userIdArray);
+    public List<UserMobilePhone> queryListByUserMainId(Long[] userMainIdArray) {
+        return userMobilePhoneMapper.queryListByUserMainId(userMainIdArray);
     }
 
 }

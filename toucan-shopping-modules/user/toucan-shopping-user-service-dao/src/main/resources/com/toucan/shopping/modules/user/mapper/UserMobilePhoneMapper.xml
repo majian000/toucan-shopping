@@ -32,7 +32,7 @@
 
 
 
-    <select id="queryListByUserId" resultMap="userMobilePhoneMap" >
+    <select id="queryListByUserMainId" resultMap="userMobilePhoneMap" >
         select tump.* from t_user_mobile_phone tump
         <where>
             1=1 and tump.delete_status = 0

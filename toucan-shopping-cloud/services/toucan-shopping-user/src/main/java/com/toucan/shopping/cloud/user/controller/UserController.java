@@ -458,7 +458,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -495,7 +495,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
         }
         return resultObjectVO;
     }
@@ -1042,7 +1042,7 @@ public class UserController {
                 }
 
                 //查询用户手机号关联表
-                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserId(userIdArray);
+                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserMainId(userIdArray);
                 if(CollectionUtils.isNotEmpty(userMobilePhones))
                 {
                     //设置用户对象中的手机号
@@ -1171,7 +1171,7 @@ public class UserController {
 
             PageInfo<UserVO> pageInfo= new PageInfo<>();
             //查询用户手机号关联表
-            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserId(userMainIdArray);
+            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserMainId(userMainIdArray);
             if(CollectionUtils.isNotEmpty(userMobilePhones))
             {
                 pageInfo.setTotal((long)userMobilePhones.size());
@@ -1394,6 +1394,106 @@ public class UserController {
     }
 
 
+    /**
+     * 关联手机号
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/connect/mobile/phone",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO connectMobilePhone(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要关联的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userRegistVO.getMobilePhone()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("请求失败,请输入手机号");
+            return resultObjectVO;
+        }
+
+        if(!PhoneUtils.isPhoneLegal(userRegistVO.getMobilePhone()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("请求失败,手机号格式错误");
+            return resultObjectVO;
+        }
+
+        if(userRegistVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户主ID");
+            return resultObjectVO;
+        }
+
+        try {
+            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+            //查询手机号是否已经关联
+            UserMobilePhone query = new UserMobilePhone();
+            query.setMobilePhone(userRegistVO.getMobilePhone());
+            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(query);
+            if (!CollectionUtils.isEmpty(userMobilePhones)) {
+                resultObjectVO.setCode(UserResultVO.FAILD);
+                resultObjectVO.setMsg("关联失败，手机号已注册!");
+            } else {
+                query = new UserMobilePhone();
+                query.setUserMainId(userRegistVO.getUserMainId());
+                userMobilePhones = userMobilePhoneService.findListByEntity(query);
+                if(CollectionUtils.isNotEmpty(userMobilePhones))
+                {
+                    resultObjectVO.setCode(UserResultVO.FAILD);
+                    resultObjectVO.setMsg("关联失败，该用户已存在的关联手机号!");
+                }else {
+                    //保存用户手机号关联
+                    UserMobilePhone userMobilePhone = new UserMobilePhone();
+                    userMobilePhone.setId(idGenerator.id());
+                    //设置手机号
+                    userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
+                    //设置用户主表ID
+                    userMobilePhone.setUserMainId(userRegistVO.getUserMainId());
+                    userMobilePhone.setCreateDate(new Date());
+                    userMobilePhone.setDeleteStatus((short) 0);
+
+                    int row = userMobilePhoneService.save(userMobilePhone);
+                    if (row < 1) {
+                        logger.warn("关联手机号失败 {}", requestJsonVO.getEntityJson());
+                        resultObjectVO.setCode(UserResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,请重试!");
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+        }
+        return resultObjectVO;
+    }
 
 
 }
