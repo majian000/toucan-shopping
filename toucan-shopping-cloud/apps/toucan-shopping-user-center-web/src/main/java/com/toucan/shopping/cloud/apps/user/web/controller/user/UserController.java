@@ -86,9 +86,10 @@ public class UserController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/mobilePhoneListPage",method = RequestMethod.GET)
-    public String mobilePhoneListPage()
+    @RequestMapping(value = "/mobilePhoneListPage/{userMainId}",method = RequestMethod.GET)
+    public String mobilePhoneListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
+        request.setAttribute("userMainId",userMainId);
         return "pages/user/db/mobile_phone_list.html";
     }
 
@@ -119,7 +120,7 @@ public class UserController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list( UserPageInfo userPageInfo)
+    public TableVO list(UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

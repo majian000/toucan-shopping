@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
 import com.toucan.shopping.modules.user.mapper.UserMobilePhoneMapper;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.service.UserMobilePhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,4 +45,17 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
         return userMobilePhoneMapper.queryListByUserMainId(userMainIdArray);
     }
 
+    @Override
+    public List<UserMobilePhone> queryListByUserMainIdNothingDeleteStatus(Long[] userMainIdArray) {
+        return userMobilePhoneMapper.queryListByUserMainIdNothingDeleteStatus(userMainIdArray);
+    }
+
+    @Override
+    public PageInfo<UserMobilePhone> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo) {
+        PageInfo<UserMobilePhone> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(userMobilePhoneMapper.queryListPageNothingDeleteStatus(queryPageInfo));
+        pageInfo.setTotal(userMobilePhoneMapper.queryListPageNothingDeleteStatusCount(queryPageInfo));
+        return pageInfo;
+    }
 }

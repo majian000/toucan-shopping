@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.user.mapper;
 
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,5 +21,11 @@ public interface UserMobilePhoneMapper {
 
     List<UserMobilePhone> queryListByUserMainId(Long[] userMainIdArray);
 
+    List<UserMobilePhone> queryListByUserMainIdNothingDeleteStatus(Long[] userMainIdArray);
+
+
+    List<UserMobilePhone> queryListPageNothingDeleteStatus(UserPageInfo appPageInfo);
+
+    Long queryListPageNothingDeleteStatusCount(UserPageInfo appPageInfo);
 
 }

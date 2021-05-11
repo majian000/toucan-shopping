@@ -1166,27 +1166,9 @@ public class UserController {
                 return resultObjectVO;
             }
 
-            Long[] userMainIdArray = new Long[1];
-            userMainIdArray[0]=userPageInfo.getUserMainId();
 
-            PageInfo<UserVO> pageInfo= new PageInfo<>();
             //查询用户手机号关联表
-            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserMainId(userMainIdArray);
-            if(CollectionUtils.isNotEmpty(userMobilePhones))
-            {
-                pageInfo.setTotal((long)userMobilePhones.size());
-                pageInfo.setList(new ArrayList<>());
-                //设置用户对象中的手机号
-                for(UserMobilePhone userMobilePhone:userMobilePhones)
-                {
-                    UserVO userVO = new UserVO();
-                    userVO.setUserMainId(userMobilePhone.getUserMainId());
-                    userVO.setMobilePhone(userMobilePhone.getMobilePhone());
-                    pageInfo.getList().add(userVO);
-                }
-            }
-
-            resultObjectVO.setData(pageInfo);
+            resultObjectVO.setData(userMobilePhoneService.queryListPageNothingDeleteStatus(userPageInfo));
 
         }catch(Exception e)
         {

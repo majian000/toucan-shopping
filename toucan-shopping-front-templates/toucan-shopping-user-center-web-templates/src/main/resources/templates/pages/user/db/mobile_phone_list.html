@@ -16,6 +16,12 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
 
+        <form class="layui-form layui-form-pane" id="userMobilePhoneSearchForm" action="">
+            <div class="layui-form-item">
+                <input type="hidden" name="userMainId" th:value="${userMainId}">
+            </div>
+        </form>
+        
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
@@ -59,7 +65,7 @@
 
         function getFormParam()
         {
-            var formParam = $("#userSearchForm").serializeJson();
+            var formParam = $("#userMobilePhoneSearchForm").serializeJson();
             return formParam;
         }
 
@@ -80,10 +86,17 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'userId', width: 180, title: 'ID'},
-                    {field: 'userMainIdString', width: 180, title: '用户ID'},
+                    {field: 'id', width: 180, title: 'ID'},
+                    {field: 'userMainId', width: 180, title: '用户ID'},
                     {field: 'mobilePhone', width: 200, title: '手机号'},
                     {field: 'createDate', width: 240, title: '创建时间'},
+                    {field: 'deleteStatus', width: 80, title: '状态',
+                        templet: function (row) {
+                            if(row.deleteStatus == "1"){
+                                return "已删除"
+                            }
+                            return "使用中"
+                        }},
                     {title: '操作', minWidth: 240, toolbar: '#userMobilePhoneTableBar', align: "center"}
                 ]
             ],
