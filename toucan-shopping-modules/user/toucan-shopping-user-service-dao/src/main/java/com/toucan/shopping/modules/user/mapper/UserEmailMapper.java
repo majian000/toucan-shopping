@@ -16,4 +16,6 @@ public interface UserEmailMapper {
     List<UserEmail> queryListByUserId(Long[] userIdArray);
 
     List<UserEmail> findListByEmail(String email);
+
+    List<UserEmail> findListByUserMainId(Long userMainId);
 }

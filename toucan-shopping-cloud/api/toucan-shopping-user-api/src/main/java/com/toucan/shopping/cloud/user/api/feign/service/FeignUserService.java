@@ -165,6 +165,14 @@ public interface FeignUserService {
     ResultObjectVO disabledByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 根据用户ID查询
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/by/user/main/id",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findByUserMainId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
 }

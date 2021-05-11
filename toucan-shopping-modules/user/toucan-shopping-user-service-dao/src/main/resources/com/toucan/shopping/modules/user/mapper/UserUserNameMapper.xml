@@ -62,4 +62,9 @@
         select * from t_user_username bu where  1=1  and bu.username = #{username}  and bu.delete_status = 0
     </select>
 
+
+    <select id="findListByUserMainId" resultMap="userUserNameMap" parameterType="java.lang.Long">
+        select * from t_user_username bu where 1=1 and bu.user_main_id = #{userMainId} and bu.delete_status = 0
+    </select>
+
 </mapper>

@@ -23,4 +23,7 @@ public interface UserEmailService {
      */
     List<UserEmail> findListByEmail(String email);
 
+
+    List<UserEmail> findListByUserMainId(Long userMainId);
+
 }

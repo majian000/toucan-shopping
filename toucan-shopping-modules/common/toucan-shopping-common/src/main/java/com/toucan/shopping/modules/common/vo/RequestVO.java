@@ -11,7 +11,7 @@ public class RequestVO {
     private String sign;
 
     /**
-     * 应用编码
+     * 发起请求的应用编码(谁发的请求)
      */
     private String appCode;
 

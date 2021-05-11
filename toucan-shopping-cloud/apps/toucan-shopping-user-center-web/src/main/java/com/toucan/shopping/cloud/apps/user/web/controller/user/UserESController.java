@@ -1,20 +1,30 @@
 package com.toucan.shopping.cloud.apps.user.web.controller.user;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.SignUtil;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.user.entity.User;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.es.vo.SearchAfterPage;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.vo.UserElasticSearchVO;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -105,6 +115,64 @@ public class UserESController {
         return tableVO;
     }
 
+
+
+
+
+
+
+
+
+    /**
+     * 刷新最新数据到缓存
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/flush/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO flushById(HttpServletRequest request, @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            Long userMainId = Long.parseLong(id);
+            //从缓存中查询用户对象
+            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userMainId);
+            UserElasticSearchVO userElasticSearchVO = null;
+            if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+            {
+                userElasticSearchVO = userElasticSearchVOS.get(0);
+            }else{ //如果缓存不存在将重新推到缓存中
+                userElasticSearchVO = new UserElasticSearchVO();
+
+            }
+
+            UserVO queryUser = new UserVO();
+            queryUser.setUserMainId(userMainId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUser);
+            resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                UserVO userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
+                BeanUtils.copyProperties(userVO,userElasticSearchVO);
+                userElasticSearchService.update(userElasticSearchVO);
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

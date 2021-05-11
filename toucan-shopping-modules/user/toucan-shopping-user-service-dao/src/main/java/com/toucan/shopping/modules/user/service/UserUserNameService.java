@@ -17,6 +17,8 @@ public interface UserUserNameService {
     List<UserUserName> queryListByUserId(Long[] userIdArray);
 
 
+    List<UserUserName> findListByUserMainId(Long userMainId);
+
     /**
      * 根据用户名查询关联
      * @param username
