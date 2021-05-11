@@ -13,6 +13,9 @@ import java.util.Date;
 @Data
 public class UserVO {
 
+    /**
+     * ===================用户主表========================
+     */
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
@@ -37,9 +40,35 @@ public class UserVO {
 
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
+     * 所属应用
+     */
+    private String appCode ="10001001";
+
+    /**
+     * 删除状态 0未删除 1已删除
+     */
+    private Short deleteStatus;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+
+    //=====================用户手机号关联表====================
+
+    /**
      * 手机号
      */
     private String mobilePhone;
+
+
+    //===============用户邮箱关联=========================
 
     /**
      * 邮箱
@@ -47,20 +76,20 @@ public class UserVO {
     private String email;
 
 
+    //===============用户和用户名关联======================
+
     /**
      * 用户名
      */
     private String username;
 
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 确认密码
      */
     private String confirmPassword;
+
+    //==============用户和用户详情关联======================
 
     /**
      * 昵称
@@ -100,23 +129,10 @@ public class UserVO {
     private Short enableStatus;
 
 
-    /**
-     * 创建时间
-     */
-    private Date createDate;
 
 
-    /**
-     * 所属应用
-     */
-    private String appCode ="10001001";
 
-    /**
-     * 删除状态 0未删除 1已删除
-     */
-    private Short deleteStatus;
-
-    //前台传入
+    //=================前台传入====================
 
     /**
      * 验证码
