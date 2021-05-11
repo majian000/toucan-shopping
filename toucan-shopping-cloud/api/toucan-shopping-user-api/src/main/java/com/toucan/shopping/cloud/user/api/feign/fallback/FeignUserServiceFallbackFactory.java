@@ -221,7 +221,7 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
             }
 
             @Override
-            public ResultObjectVO disabledById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO disabledEnabledById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -229,7 +229,7 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                     resultObjectVO.setMsg("超时请重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserService.disabledById header{} params {}",signHeader,requestVo.getEntityJson());
+                logger.warn("调用FeignUserService.disabledEnabledById header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时请重试");
                 return resultObjectVO;

@@ -23,6 +23,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.findListByEntity(user);
     }
 
+    @Override
+    public List<User> findListByUserMainId(Long userMainId) {
+        return userMapper.findListByUserMainId(userMainId);
+    }
+
 
     @Override
     @Transactional

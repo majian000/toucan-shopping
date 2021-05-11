@@ -306,12 +306,12 @@ public class UserController extends UIController {
 
 
     /**
-     * 禁用
+     * 禁用/启用
      * @param request
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/disabled/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/disabled/enabled/{id}",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO disabledById(HttpServletRequest request,  @PathVariable String id)
     {
@@ -330,7 +330,7 @@ public class UserController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignUserService.disabledById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = feignUserService.disabledEnabledById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

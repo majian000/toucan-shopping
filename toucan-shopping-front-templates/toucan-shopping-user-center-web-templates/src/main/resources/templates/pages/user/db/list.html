@@ -219,9 +219,14 @@
                 });
                 return false;
             } else if (obj.event === 'disabledBtn') {
-                layer.confirm('确定删除该用户?', function (index) {
+                var optText = "启用";
+                if(data.enableStatus==1)
+                {
+                    optText="禁用";
+                }
+                layer.confirm("确定"+optText+"该用户?", function (index) {
                     $.ajax({
-                        url:"[[@{/}]]user/disabled/"+data.userMainIdString,
+                        url:"[[@{/}]]user/disabled/enabled/"+data.userMainIdString,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

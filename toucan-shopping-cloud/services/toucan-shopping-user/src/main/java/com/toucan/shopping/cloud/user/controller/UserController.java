@@ -1203,13 +1203,13 @@ public class UserController {
 
 
     /**
-     * 禁用指定用户
+     * 禁用启用指定用户
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/disabled/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/disabled/enabled/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO disabledById(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO disabledEnabledById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -1227,8 +1227,17 @@ public class UserController {
                 return resultObjectVO;
             }
 
-            //用户主表禁用
-            userService.updateEnableStatus((short)0,entity.getUserMainId());
+            List<User> users = userService.findListByUserMainId(entity.getUserMainId());
+            if(CollectionUtils.isNotEmpty(users)) {
+                if(users.get(0).getEnableStatus().shortValue()==0)
+                {
+                    //用户主表启用
+                    userService.updateEnableStatus((short) 1, entity.getUserMainId());
+                }else{
+                    //用户主表禁用
+                    userService.updateEnableStatus((short) 0, entity.getUserMainId());
+                }
+            }
 
             resultObjectVO.setData(entity);
 

@@ -12,6 +12,8 @@ public interface UserService {
 
     List<User> findListByEntity(User user);
 
+    List<User> findListByUserMainId(Long userMainId);
+
     int save(User user);
 
     int deleteById(Long id);
