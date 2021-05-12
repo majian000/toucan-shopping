@@ -1211,13 +1211,30 @@ public class UserController {
 
             List<User> users = userService.findListByUserMainId(entity.getUserMainId());
             if(CollectionUtils.isNotEmpty(users)) {
+                short enableStatus=0;
                 if(users.get(0).getEnableStatus().shortValue()==0)
                 {
                     //用户主表启用
-                    userService.updateEnableStatus((short) 1, entity.getUserMainId());
+                    enableStatus=1;
                 }else{
                     //用户主表禁用
-                    userService.updateEnableStatus((short) 0, entity.getUserMainId());
+                    enableStatus=0;
+                }
+                userService.updateEnableStatus(enableStatus, entity.getUserMainId());
+
+                try {
+                    List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(entity.getUserMainId());
+                    if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+                    {
+                        UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                        userElasticSearchVO.setEnableStatus(enableStatus);
+                        userElasticSearchService.update(userElasticSearchVO);
+                    }
+                }catch(Exception e)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                    logger.warn(e.getMessage(),e);
                 }
             }
 
@@ -1275,8 +1292,11 @@ public class UserController {
 
             List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntityNothingDeleteStatus(queryUserMobile);
             if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+                short deleteStatus = 0;
+                int row = 0;
                 if(userMobilePhones.get(0).getDeleteStatus().shortValue()==0)
                 {
+                    deleteStatus=1;
                     //禁用
                     userMobilePhoneService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getMobilePhone());
                 }else{
@@ -1299,7 +1319,31 @@ public class UserController {
                     //禁用用户ID下所有关联手机号
                     userMobilePhoneService.deleteByUserMainId(entity.getUserMainId());
                     //启用
-                    userMobilePhoneService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getMobilePhone());
+                    row = userMobilePhoneService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getMobilePhone());
+                    deleteStatus=0;
+                }
+
+                try {
+                    List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(entity.getUserMainId());
+                    if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+                    {
+                        UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                        //删除用户手机号关联
+                        if(deleteStatus==1)
+                        {
+                            userElasticSearchVO.setMobilePhone(null);
+                        }else{
+                            if(row>0) { //数据库操作成功后 设置手机号到缓存
+                                userElasticSearchVO.setMobilePhone(entity.getMobilePhone());
+                            }
+                        }
+                        userElasticSearchService.update(userElasticSearchVO);
+                    }
+                }catch(Exception e)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                    logger.warn(e.getMessage(),e);
                 }
             }
 
