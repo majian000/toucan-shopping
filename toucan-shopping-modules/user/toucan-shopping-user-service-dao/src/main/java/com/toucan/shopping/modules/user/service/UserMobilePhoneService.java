@@ -11,10 +11,32 @@ import java.util.List;
 
 public interface UserMobilePhoneService {
 
+    /**
+     * 根据实体查询列表
+     * @param entity
+     * @return
+     */
     List<UserMobilePhone> findListByEntity(UserMobilePhone entity);
 
+    /**
+     * 根据实体查询列表
+     * @param entity
+     * @return
+     */
+    List<UserMobilePhone> findListByEntityNothingDeleteStatus(UserMobilePhone entity);
+
+    /**
+     * 根据手机号查询列表
+     * @param mobilePhone
+     * @return
+     */
     List<UserMobilePhone> findListByMobilePhone(String mobilePhone);
 
+    /**
+     * 根据手机号查询列表
+     * @param mobilePhone
+     * @return
+     */
     List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone);
 
     int save(UserMobilePhone entity);
@@ -24,5 +46,15 @@ public interface UserMobilePhoneService {
     List<UserMobilePhone> queryListByUserMainIdNothingDeleteStatus(Long[] userIdArray);
 
     PageInfo<UserMobilePhone> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo);
+
+
+    int updateDeleteStatus(Short deleteStatus,Long userMainId,String mobilePhone);
+
+    /**
+     * 删除指定用户ID下所有关联手机号
+     * @param userMainId
+     * @return
+     */
+    int deleteByUserMainId(Long userMainId);
 
 }

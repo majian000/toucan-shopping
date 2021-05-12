@@ -89,6 +89,8 @@ public class UserController extends UIController {
     @RequestMapping(value = "/mobilePhoneListPage/{userMainId}",method = RequestMethod.GET)
     public String mobilePhoneListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/user/mobilePhoneListPage",feignFunctionService);
         request.setAttribute("userMainId",userMainId);
         return "pages/user/db/mobile_phone_list.html";
     }
@@ -494,6 +496,38 @@ public class UserController extends UIController {
         return resultObjectVO;
     }
 
+    /**
+     * 手机号 禁用/启用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/mobile/phone/disabled/enabled/{id}/{mobilePhone}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(HttpServletRequest request,  @PathVariable String id,  @PathVariable String mobilePhone)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            UserVO userVO =new UserVO();
+            userVO.setUserMainId(Long.parseLong(id));
+            userVO.setMobilePhone(mobilePhone);
+
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,userVO);
+            resultObjectVO = feignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(SignUtil.sign(requestVo),requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
     /**

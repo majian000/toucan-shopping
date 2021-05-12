@@ -1,5 +1,7 @@
 package com.toucan.shopping.modules.user.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,6 +29,8 @@ public class UserMobilePhone {
     /**
      * 用户主表ID,分库分表
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
 

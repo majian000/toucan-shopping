@@ -25,6 +25,11 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
     }
 
     @Override
+    public List<UserMobilePhone> findListByEntityNothingDeleteStatus(UserMobilePhone entity) {
+        return userMobilePhoneMapper.findListByEntityNothingDeleteStatus(entity);
+    }
+
+    @Override
     public List<UserMobilePhone> findListByMobilePhone(String mobilePhone) {
         return userMobilePhoneMapper.findListByMobilePhone(mobilePhone);
     }
@@ -57,5 +62,16 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
         pageInfo.setList(userMobilePhoneMapper.queryListPageNothingDeleteStatus(queryPageInfo));
         pageInfo.setTotal(userMobilePhoneMapper.queryListPageNothingDeleteStatusCount(queryPageInfo));
         return pageInfo;
+    }
+
+    @Override
+    public int updateDeleteStatus(Short deleteStatus, Long userMainId, String mobilePhone) {
+        return userMobilePhoneMapper.updateDeleteStatus(deleteStatus,userMainId,mobilePhone);
+    }
+
+
+    @Override
+    public int deleteByUserMainId(Long userMainId) {
+        return userMobilePhoneMapper.deleteByUserMainId(userMainId);
     }
 }

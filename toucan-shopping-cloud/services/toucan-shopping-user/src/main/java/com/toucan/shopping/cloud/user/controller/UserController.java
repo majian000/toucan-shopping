@@ -1235,6 +1235,89 @@ public class UserController {
 
 
 
+
+
+
+    /**
+     * 禁用启用指定用户手机号
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
+            if(entity.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(entity.getMobilePhone()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到手机号");
+                return resultObjectVO;
+            }
+
+            UserMobilePhone queryUserMobile = new UserMobilePhone();
+            queryUserMobile.setUserMainId(entity.getUserMainId());
+            queryUserMobile.setMobilePhone(entity.getMobilePhone());
+
+            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntityNothingDeleteStatus(queryUserMobile);
+            if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+                if(userMobilePhones.get(0).getDeleteStatus().shortValue()==0)
+                {
+                    //禁用
+                    userMobilePhoneService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getMobilePhone());
+                }else{
+
+                    //查询当前手机号关联用户列表,判断手机号是否已经有其他人使用了
+                    queryUserMobile.setUserMainId(null);
+                    userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobile);
+                    if(CollectionUtils.isNotEmpty(userMobilePhones))
+                    {
+                        for(UserMobilePhone userMobilePhone:userMobilePhones)
+                        {
+                            if(userMobilePhone.getUserMainId()!=entity.getUserMainId())
+                            {
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("请求失败,手机号无法启用,已经有人在使用中了");
+                                return resultObjectVO;
+                            }
+                        }
+                    }
+                    //禁用用户ID下所有关联手机号
+                    userMobilePhoneService.deleteByUserMainId(entity.getUserMainId());
+                    //启用
+                    userMobilePhoneService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getMobilePhone());
+                }
+            }
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
     /**
      * 批量删除
      * @param requestVo

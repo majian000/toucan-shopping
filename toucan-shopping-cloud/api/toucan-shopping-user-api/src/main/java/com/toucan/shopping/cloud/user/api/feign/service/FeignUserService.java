@@ -152,6 +152,8 @@ public interface FeignUserService {
     ResultObjectVO disabledEnabledById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
 

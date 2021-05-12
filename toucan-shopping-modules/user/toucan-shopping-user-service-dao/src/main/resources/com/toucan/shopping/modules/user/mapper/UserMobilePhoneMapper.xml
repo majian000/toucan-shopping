@@ -31,6 +31,23 @@
     </select>
 
 
+    <select id="findListByEntityNothingDeleteStatus" resultMap="userMobilePhoneMap" parameterType="com.toucan.shopping.modules.user.entity.UserMobilePhone">
+        select * from t_user_mobile_phone bu
+        <where>
+            1=1
+            <if test="id!=null">
+                and bu.id = #{id}
+            </if>
+            <if test="mobilePhone!=null and mobilePhone!='' ">
+                and bu.mobile_phone = #{mobilePhone}
+            </if>
+            <if test="userMainId!=null  ">
+                and bu.user_main_id = #{userMainId}
+            </if>
+        </where>
+
+    </select>
+
 
     <select id="queryListByUserMainId" resultMap="userMobilePhoneMap" >
         select tump.* from t_user_mobile_phone tump
@@ -114,6 +131,18 @@
         values(#{id},#{mobilePhone},#{userMainId},#{createDate},#{deleteStatus})
     </insert>
 
+
+
+    <update id="updateDeleteStatus" >
+        update t_user_mobile_phone set delete_status=#{deleteStatus}
+           where user_main_id =#{userMainId} and mobile_phone=#{mobilePhone}
+    </update>
+
+
+
+    <update id="deleteByUserMainId" >
+        update t_user_mobile_phone set delete_status=1  where user_main_id =#{userMainId}
+    </update>
 
 
 

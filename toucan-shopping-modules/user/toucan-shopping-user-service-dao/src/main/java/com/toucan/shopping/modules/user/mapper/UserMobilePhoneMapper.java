@@ -15,6 +15,8 @@ public interface UserMobilePhoneMapper {
 
     List<UserMobilePhone> findListByEntity(UserMobilePhone userMobilePhone);
 
+    List<UserMobilePhone> findListByEntityNothingDeleteStatus(UserMobilePhone userMobilePhone);
+
     List<UserMobilePhone> findListByMobilePhone(String mobilePhone);
 
     List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone);
@@ -27,5 +29,9 @@ public interface UserMobilePhoneMapper {
     List<UserMobilePhone> queryListPageNothingDeleteStatus(UserPageInfo appPageInfo);
 
     Long queryListPageNothingDeleteStatusCount(UserPageInfo appPageInfo);
+
+    int updateDeleteStatus(Short deleteStatus, Long userMainId, String mobilePhone);
+
+    int deleteByUserMainId(Long userMainId);
 
 }

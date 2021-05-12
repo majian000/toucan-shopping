@@ -92,8 +92,8 @@
                     {field: 'createDate', width: 240, title: '创建时间'},
                     {field: 'deleteStatus', width: 80, title: '状态',
                         templet: function (row) {
-                            if(row.deleteStatus == "1"){
-                                return "已删除"
+                            if(row.deleteStatus == 1){
+                                return "已禁用"
                             }
                             return "使用中"
                         }},
@@ -173,25 +173,15 @@
 
         table.on('tool(userMobilePhoneTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'edit') {
-
-                var index = layer.open({
-                    title: '编辑用户',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '../page/table/edit.html',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('确定删除该用户?', function (index) {
+            if (obj.event === 'disabledEnabledBtn') {
+                var optText = "禁用";
+                if(data.deleteStatus==1)
+                {
+                    optText="启用";
+                }
+                layer.confirm("确定"+optText+"该手机号?", function (index) {
                     $.ajax({
-                        url:"[[@{/}]]app/app/delete/"+data.id,
+                        url:"[[@{/}]]user/mobile/phone/disabled/enabled/"+data.userMainId+"/"+data.mobilePhone,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
