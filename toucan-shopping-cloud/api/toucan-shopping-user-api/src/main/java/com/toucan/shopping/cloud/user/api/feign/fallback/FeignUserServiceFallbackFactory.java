@@ -69,6 +69,21 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
             }
 
             @Override
+            public ResultObjectVO connectMobilePhone(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.connectMobilePhone faild header {} params {} ",signHeader,requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO updateDetail(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)

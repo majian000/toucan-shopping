@@ -18,7 +18,7 @@
 <body>
 <div class="layui-form layuimini-form">
 
-    <input type="hidden" name="userMainId" th:value="${userMainId}">
+    <input type="hidden" id="userMainId" th:value="${userMainId}">
     <div class="layui-form-item">
         <label class="layui-form-label required">手机号</label>
         <div class="layui-input-block">
@@ -41,8 +41,9 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            data.field.userMainId=$("#userMainId").val();
             $.ajax({
-                url:"[[@{/user/add/mobile/phone}]]",
+                url:"[[@{/user/connect/mobile/phone}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

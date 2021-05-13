@@ -1573,23 +1573,45 @@ public class UserController {
                 if(CollectionUtils.isNotEmpty(userMobilePhones))
                 {
                     resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("关联失败，该用户已存在的关联手机号!");
+                    resultObjectVO.setMsg("关联失败，该用户已存在使用中手机号!");
                 }else {
-                    //保存用户手机号关联
-                    UserMobilePhone userMobilePhone = new UserMobilePhone();
-                    userMobilePhone.setId(idGenerator.id());
-                    //设置手机号
-                    userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
-                    //设置用户主表ID
-                    userMobilePhone.setUserMainId(userRegistVO.getUserMainId());
-                    userMobilePhone.setCreateDate(new Date());
-                    userMobilePhone.setDeleteStatus((short) 0);
-
-                    int row = userMobilePhoneService.save(userMobilePhone);
-                    if (row < 1) {
-                        logger.warn("关联手机号失败 {}", requestJsonVO.getEntityJson());
+                    query.setMobilePhone(userRegistVO.getMobilePhone());
+                    userMobilePhones = userMobilePhoneService.findListByEntityNothingDeleteStatus(query);
+                    if(CollectionUtils.isNotEmpty(userMobilePhones))
+                    {
                         resultObjectVO.setCode(UserResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("关联失败，手机号已经关联到该用户了!");
+                    }else {
+
+                        //保存用户手机号关联
+                        UserMobilePhone userMobilePhone = new UserMobilePhone();
+                        userMobilePhone.setId(idGenerator.id());
+                        //设置手机号
+                        userMobilePhone.setMobilePhone(userRegistVO.getMobilePhone());
+                        //设置用户主表ID
+                        userMobilePhone.setUserMainId(userRegistVO.getUserMainId());
+                        userMobilePhone.setCreateDate(new Date());
+                        userMobilePhone.setDeleteStatus((short) 0);
+
+                        int row = userMobilePhoneService.save(userMobilePhone);
+                        if (row < 1) {
+                            logger.warn("关联手机号失败 {}", requestJsonVO.getEntityJson());
+                            resultObjectVO.setCode(UserResultVO.FAILD);
+                            resultObjectVO.setMsg("请求失败,请重试!");
+                        }
+
+                        try {
+                            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                            if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                userElasticSearchVO.setMobilePhone(userRegistVO.getMobilePhone());
+                                userElasticSearchService.update(userElasticSearchVO);
+                            }
+                        } catch (Exception e) {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("更新用户缓存出现异常");
+                            logger.warn(e.getMessage(), e);
+                        }
                     }
                 }
             }

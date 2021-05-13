@@ -45,6 +45,14 @@ public interface FeignUserService {
 
 
 
+    /**
+     * 关联到手机号
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/connect/mobile/phone",produces = "application/json;charset=UTF-8")
+    ResultObjectVO connectMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
 
     /**
      * 修改用户详情

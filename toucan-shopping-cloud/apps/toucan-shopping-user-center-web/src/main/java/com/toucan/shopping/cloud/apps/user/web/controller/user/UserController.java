@@ -102,11 +102,11 @@ public class UserController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/addMobilePhonePage/{userMainId}",method = RequestMethod.GET)
-    public String addMobilePhonePage(HttpServletRequest request,@PathVariable String userMainId)
+    @RequestMapping(value = "/connectMobilePhonePage/{userMainId}",method = RequestMethod.GET)
+    public String connectMobilePhonePage(HttpServletRequest request,@PathVariable String userMainId)
     {
         request.setAttribute("userMainId",userMainId);
-        return "pages/user/db/add_mobile_phone.html";
+        return "pages/user/db/connect_mobile_phone.html";
     }
 
 
@@ -326,9 +326,9 @@ public class UserController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value="/add/mobile/phone")
+    @RequestMapping(value="/connect/mobile/phone")
     @ResponseBody
-    public ResultObjectVO addMobilePhone(@RequestBody UserRegistVO user){
+    public ResultObjectVO connectMobilePhone(@RequestBody UserRegistVO user){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(user==null)
         {
@@ -339,7 +339,7 @@ public class UserController extends UIController {
         if(StringUtils.isEmpty(user.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("注册失败,请输入注册手机号");
+            resultObjectVO.setMsg("注册失败,请输入关联手机号");
             return resultObjectVO;
         }
 
@@ -347,26 +347,6 @@ public class UserController extends UIController {
         {
             resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
             resultObjectVO.setMsg("注册失败,手机号错误");
-            return resultObjectVO;
-        }
-
-        if(StringUtils.isEmpty(user.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,请输入密码");
-            return resultObjectVO;
-        }
-        if(!StringUtils.equals(user.getPassword(),user.getConfirmPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,密码与确认密码不一致");
-            return resultObjectVO;
-        }
-
-        if(!UserRegistUtil.checkPwd(user.getPassword()))
-        {
-            resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
             return resultObjectVO;
         }
 
@@ -384,67 +364,10 @@ public class UserController extends UIController {
                 return resultObjectVO;
             }
 
-
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
-            //查询是否已注册用户名
-            if(StringUtils.isNotEmpty(user.getUsername()))
-            {
-                resultObjectVO = feignUserService.findUsernameListByUsername(requestJsonVO.sign(),requestJsonVO);
-                if(!resultObjectVO.isSuccess())
-                {
-                    return resultObjectVO;
-                }
-                List userNames = (List)resultObjectVO.formatData(ArrayList.class);
-                if(!CollectionUtils.isEmpty(userNames))
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("用户名已注册");
-                    return resultObjectVO;
-                }
-            }
+            logger.info(" 关联手机号 {} ", user.getMobilePhone());
 
-            //查询是否已注册邮箱
-            if(StringUtils.isNotEmpty(user.getEmail()))
-            {
-                resultObjectVO = feignUserService.findEmailListByEmail(requestJsonVO.sign(),requestJsonVO);
-                if(!resultObjectVO.isSuccess())
-                {
-                    return resultObjectVO;
-                }
-                List emails = (List)resultObjectVO.formatData(ArrayList.class);
-                if(!CollectionUtils.isEmpty(emails))
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("邮箱已注册");
-                    return resultObjectVO;
-                }
-            }
-
-
-            logger.info(" 用户注册 {} ", user.getMobilePhone());
-
-            resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
-                //拿到用户主ID
-                UserRegistVO userRegistResult = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
-                user.setUserMainId(userRegistResult.getUserMainId());
-
-                //如果输入了用户名,进行用户名的关联
-                if(StringUtils.isNotEmpty(user.getUsername())) {
-                    requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = feignUserService.connectUsername(requestJsonVO.sign(), requestJsonVO);
-                }
-
-                //如果输入了邮箱,进行邮箱关联
-                if (StringUtils.isNotEmpty(user.getEmail())) {
-                    requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(), requestJsonVO);
-                }
-
-                //修改用户详情
-                requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                resultObjectVO = feignUserService.updateDetail(requestJsonVO.sign(), requestJsonVO);
-            }
+            resultObjectVO = feignUserService.connectMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
 
             resultObjectVO.setData(null);
         }catch(Exception e)

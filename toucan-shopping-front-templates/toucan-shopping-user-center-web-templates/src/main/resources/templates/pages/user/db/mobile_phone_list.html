@@ -18,7 +18,7 @@
 
         <form class="layui-form layui-form-pane" id="userMobilePhoneSearchForm" action="">
             <div class="layui-form-item">
-                <input type="hidden" name="userMainId" th:value="${userMainId}">
+                <input type="hidden" name="userMainId" id="userMainId" th:value="${userMainId}">
             </div>
         </form>
         
@@ -123,6 +123,7 @@
          * toolbar监听事件
          */
         table.on('toolbar(userMobilePhoneTableFilter)', function (obj) {
+            var userMainId = $("#userMainId").val();
             if (obj.event === 'addMobilePhone') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加手机号',
@@ -131,37 +132,21 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/}]]user/addMobilePhonePage/"+data.userMainIdString,
+                    content: "[[@{/}]]user/connectMobilePhonePage/"+userMainId,
+                    cancel: function(index, layero){
+                        //执行搜索重载
+                        table.reload('userMobilePhoneTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: getFormParam()
+                        }, 'data');
+                        layer.close(index);
+                        return false;
+                    }
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
-                });
-            }  else if (obj.event === 'disabled') {  // 监听删除操作
-                var checkStatus = table.checkStatus('userMobilePhoneTable')
-                    , data = checkStatus.data;
-                layer.confirm('确定停用?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]app/app/delete/ids",
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('userMobilePhoneTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
                 });
             }
         });
