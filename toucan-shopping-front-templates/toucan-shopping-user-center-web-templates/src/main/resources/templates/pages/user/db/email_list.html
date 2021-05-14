@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>用户中心</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+</head>
+<body>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <form class="layui-form layui-form-pane" id="userEmailSearchForm" action="">
+            <div class="layui-form-item">
+                <input type="hidden" name="userMainId" id="userMainId" th:value="${userMainId}">
+            </div>
+        </form>
+        
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="userEmailTable" lay-filter="userEmailTableFilter"></table>
+
+        <script type="text/html" id="userEmailTableBar">
+
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+            <!--删除 停用 -->
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#userEmailSearchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#userEmailTable',
+            url: "[[@{/}]]user/email/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'id', width: 180, title: 'ID'},
+                    {field: 'userMainId', width: 180, title: '用户ID'},
+                    {field: 'mobilePhone', width: 200, title: '手机号'},
+                    {field: 'createDate', width: 240, title: '创建时间'},
+                    {field: 'deleteStatus', width: 80, title: '状态',
+                        templet: function (row) {
+                            if(row.deleteStatus == 1){
+                                return "已禁用"
+                            }
+                            return "使用中"
+                        }},
+                    {title: '操作', minWidth: 240, toolbar: '#userEmailTableBar', align: "center"}
+                ]
+            ],
+            limits: [15,50,100,300],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('userEmailTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(userEmailTableFilter)', function (obj) {
+            var userMainId = $("#userMainId").val();
+            if (obj.event === 'addMobilePhone') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加手机号',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]user/connectMobilePhonePage/"+userMainId,
+                    cancel: function(index, layero){
+                        //执行搜索重载
+                        table.reload('userEmailTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: getFormParam()
+                        }, 'data');
+                        layer.close(index);
+                        return false;
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(userEmailTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(userEmailTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'disabledEnabledBtn') {
+                var optText = "禁用";
+                if(data.deleteStatus==1)
+                {
+                    optText="启用";
+                }
+                layer.confirm("确定"+optText+"该手机号?", function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]user/mobile/phone/disabled/enabled/"+data.userMainId+"/"+data.mobilePhone,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('userEmailTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.mapper.UserEmailMapper;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.service.UserEmailService;
 import com.toucan.shopping.modules.user.entity.UserEmail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,15 @@ public class UserEmailServiceImpl implements UserEmailService {
     @Override
     public List<UserEmail> findListByUserMainId(Long userMainId) {
         return userEmailMapper.findListByUserMainId(userMainId);
+    }
+
+    @Override
+    public PageInfo<UserEmail> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo) {
+        PageInfo<UserEmail> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(userEmailMapper.queryListPageNothingDeleteStatus(queryPageInfo));
+        pageInfo.setTotal(userEmailMapper.queryListPageNothingDeleteStatusCount(queryPageInfo));
+        return pageInfo;
     }
 
 }

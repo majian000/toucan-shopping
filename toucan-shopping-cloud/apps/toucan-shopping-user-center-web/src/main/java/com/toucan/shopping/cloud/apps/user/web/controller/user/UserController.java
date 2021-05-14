@@ -95,6 +95,19 @@ public class UserController extends UIController {
         return "pages/user/db/mobile_phone_list.html";
     }
 
+    /**
+     * 邮箱列表
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "emailListPage/{userMainId}",method = RequestMethod.GET)
+    public String emailListPage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/user/emailListPage",feignFunctionService);
+        request.setAttribute("userMainId",userMainId);
+        return "pages/user/db/email_list.html";
+    }
 
 
     /**
@@ -184,6 +197,46 @@ public class UserController extends UIController {
         }
         return tableVO;
     }
+
+
+
+
+
+    /**
+     * 手机号列表
+     * @param userPageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/email/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO emailList(UserPageInfo userPageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
+            ResultObjectVO resultObjectVO = feignUserService.mobilePhoneList(SignUtil.sign(requestVo),requestVo);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请求失败,请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
+
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
