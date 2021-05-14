@@ -218,7 +218,37 @@
                     layer.full(index);
                 });
                 return false;
-            } else if (obj.event === 'disabledEnabledBtn') {
+            }else if (obj.event === 'emailBtn') {
+
+                var index = layer.open({
+                    title: '邮箱列表',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]user/emailListPage/"+data.userMainIdString,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }else if (obj.event === 'usernameBtn') {
+
+                var index = layer.open({
+                    title: '用户名列表',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]user/usernameListPage/"+data.userMainIdString,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }  else if (obj.event === 'disabledEnabledBtn') {
                 var optText = "启用";
                 if(data.enableStatus==1)
                 {
