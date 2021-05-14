@@ -19,11 +19,12 @@
 <div class="layui-form layuimini-form">
 
     <input type="hidden" id="userMainId" th:value="${userMainId}">
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">手机号</label>
+        <label class="layui-form-label">邮箱</label>
         <div class="layui-input-block">
-            <input type="text" name="mobilePhone" lay-verify="required" maxlength="11" lay-reqtext="不能为空" placeholder="请输入手机号" value="" class="layui-input">
-            <tip>填写手机号。</tip>
+            <input type="text" name="email"  maxlength="40" placeholder="请输入邮箱" value="" class="layui-input">
+            <tip>填写邮箱。</tip>
         </div>
     </div>
     <div class="layui-form-item">
@@ -42,18 +43,19 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
-            if(data.field.mobilePhone!=null)
+            if(data.field.email!=null)
             {
-                var reg = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-                if(!reg.test(data.field.mobilePhone))
+                var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+                if(!reg.test(data.field.email))
                 {
-                    layer.msg("手机号格式错误");
+                    layer.msg("邮箱格式错误");
                     return false;
                 }
             }
+
             data.field.userMainId=$("#userMainId").val();
             $.ajax({
-                url:"[[@{/user/connect/mobile/phone}]]",
+                url:"[[@{/user/connect/email}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

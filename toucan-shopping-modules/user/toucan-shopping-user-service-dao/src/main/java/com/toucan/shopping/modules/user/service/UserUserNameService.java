@@ -14,6 +14,13 @@ public interface UserUserNameService {
     int save(UserUserName entity);
 
 
+    /**
+     * 根据实体查询列表
+     * @param entity
+     * @return
+     */
+    List<UserUserName> findListByEntityNothingDeleteStatus(UserUserName entity);
+
     List<UserUserName> queryListByUserId(Long[] userIdArray);
 
 

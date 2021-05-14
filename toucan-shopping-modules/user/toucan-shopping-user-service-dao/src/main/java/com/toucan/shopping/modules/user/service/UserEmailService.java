@@ -17,6 +17,12 @@ public interface UserEmailService {
 
     int save(UserEmail entity);
 
+    /**
+     * 根据实体查询列表
+     * @param entity
+     * @return
+     */
+    List<UserEmail> findListByEntityNothingDeleteStatus(UserEmail entity);
 
     /**
      * 根据邮箱查询关联

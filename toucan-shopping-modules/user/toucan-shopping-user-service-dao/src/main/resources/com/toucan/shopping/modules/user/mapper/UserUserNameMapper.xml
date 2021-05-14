@@ -52,6 +52,25 @@
 
 
 
+
+    <select id="findListByEntityNothingDeleteStatus" resultMap="userUserNameMap" parameterType="com.toucan.shopping.modules.user.entity.UserUserName">
+        select * from t_user_username bu
+        <where>
+            1=1
+            <if test="id!=null">
+                and bu.id = #{id}
+            </if>
+            <if test="username!=null and username!='' ">
+                and bu.username = #{username}
+            </if>
+            <if test="userMainId!=null  ">
+                and bu.user_main_id = #{userMainId}
+            </if>
+        </where>
+
+    </select>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserUserName" keyProperty="id" >
         insert into t_user_username(id,username,user_main_id,create_date,delete_status)
         values(#{id},#{username},#{userMainId},#{createDate},#{deleteStatus})

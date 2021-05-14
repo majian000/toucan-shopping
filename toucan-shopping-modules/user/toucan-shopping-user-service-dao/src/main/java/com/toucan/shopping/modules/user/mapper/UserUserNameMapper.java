@@ -19,4 +19,7 @@ public interface UserUserNameMapper {
 
     List<UserUserName> findListByUserMainId(Long userMainId);
 
+
+    List<UserUserName> findListByEntityNothingDeleteStatus(UserUserName entity);
+
 }

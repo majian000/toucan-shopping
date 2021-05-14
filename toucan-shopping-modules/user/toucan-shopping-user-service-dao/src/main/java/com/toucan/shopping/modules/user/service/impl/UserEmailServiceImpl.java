@@ -37,6 +37,11 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
+    public List<UserEmail> findListByEntityNothingDeleteStatus(UserEmail entity) {
+        return userEmailMapper.findListByEntityNothingDeleteStatus(entity);
+    }
+
+    @Override
     public List<UserEmail> findListByEmail(String email) {
         return userEmailMapper.findListByEmail(email);
     }

@@ -124,9 +124,9 @@
          */
         table.on('toolbar(userEmailTableFilter)', function (obj) {
             var userMainId = $("#userMainId").val();
-            if (obj.event === 'addMobilePhone') {  // 监听添加操作
+            if (obj.event === 'connectEmail') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加手机号',
+                    title: '关联邮箱',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,

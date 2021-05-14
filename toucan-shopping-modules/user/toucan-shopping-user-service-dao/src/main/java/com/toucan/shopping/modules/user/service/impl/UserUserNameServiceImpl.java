@@ -29,6 +29,11 @@ public class UserUserNameServiceImpl implements UserUserNameService {
     }
 
     @Override
+    public List<UserUserName> findListByEntityNothingDeleteStatus(UserUserName entity) {
+        return userUserNameMapper.findListByEntityNothingDeleteStatus(entity);
+    }
+
+    @Override
     public List<UserUserName> queryListByUserId(Long[] userIdArray) {
         return userUserNameMapper.queryListByUserId(userIdArray);
     }

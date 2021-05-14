@@ -24,4 +24,7 @@ public interface UserEmailMapper {
     List<UserEmail> queryListPageNothingDeleteStatus(UserPageInfo appPageInfo);
 
     Long queryListPageNothingDeleteStatusCount(UserPageInfo appPageInfo);
+
+
+    List<UserEmail> findListByEntityNothingDeleteStatus(UserEmail entity);
 }

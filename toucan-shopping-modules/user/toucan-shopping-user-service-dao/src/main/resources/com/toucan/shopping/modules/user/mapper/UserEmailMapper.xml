@@ -78,6 +78,25 @@
 
 
 
+
+    <select id="findListByEntityNothingDeleteStatus" resultMap="userEmailMap" parameterType="com.toucan.shopping.modules.user.entity.UserEmail">
+        select * from t_user_email bu
+        <where>
+            1=1
+            <if test="id!=null">
+                and bu.id = #{id}
+            </if>
+            <if test="email!=null and email!='' ">
+                and bu.email = #{email}
+            </if>
+            <if test="userMainId!=null  ">
+                and bu.user_main_id = #{userMainId}
+            </if>
+        </where>
+
+    </select>
+
+
     <select id="queryListPageNothingDeleteStatusCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.UserPageInfo">
         select count(*) from t_user_email tu
         <where>

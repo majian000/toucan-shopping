@@ -311,29 +311,60 @@ public class UserController {
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;
             }
-            //查询用户名是否已经关联
+            //查询用户名是否已关联
             UserUserName query = new UserUserName();
             query.setUsername(userRegistVO.getUsername());
-            List<UserUserName> userUserNameList = userUserNameService.findListByEntity(query);
-            if (!CollectionUtils.isEmpty(userUserNameList)) {
+            List<UserUserName> userUserNames = userUserNameService.findListByEntity(query);
+            if (!CollectionUtils.isEmpty(userUserNames)) {
                 resultObjectVO.setCode(UserResultVO.FAILD);
-                resultObjectVO.setMsg("用户名已关联!");
+                resultObjectVO.setMsg("关联失败，用户名已注册!");
             } else {
-                //保存用户用户名子表
-                UserUserName userUserName = new UserUserName();
-                userUserName.setId(idGenerator.id());
-                //设置用户名
-                userUserName.setUsername(userRegistVO.getUsername());
-                //设置用户主表ID
-                userUserName.setUserMainId(userRegistVO.getUserMainId());
-                userUserName.setCreateDate(new Date());
-                userUserName.setDeleteStatus((short) 0);
-
-                int row = userUserNameService.save(userUserName);
-                if (row < 1) {
-                    logger.warn("关联用户名失败 {}", requestJsonVO.getEntityJson());
+                query = new UserUserName();
+                query.setUserMainId(userRegistVO.getUserMainId());
+                userUserNames = userUserNameService.findListByEntity(query);
+                if(CollectionUtils.isNotEmpty(userUserNames))
+                {
                     resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请重试!");
+                    resultObjectVO.setMsg("关联失败，该用户已存在使用中用户名!");
+                }else {
+                    query.setUsername(userRegistVO.getUsername());
+                    userUserNames = userUserNameService.findListByEntityNothingDeleteStatus(query);
+                    if(CollectionUtils.isNotEmpty(userUserNames))
+                    {
+                        resultObjectVO.setCode(UserResultVO.FAILD);
+                        resultObjectVO.setMsg("关联失败，邮箱已经关联到该用户了!");
+                    }else {
+
+                        //保存用户和用户名关联
+                        UserUserName userUserName = new UserUserName();
+                        userUserName.setId(idGenerator.id());
+                        //设置邮箱
+                        userUserName.setUsername(userRegistVO.getUsername());
+                        //设置用户主表ID
+                        userUserName.setUserMainId(userRegistVO.getUserMainId());
+                        userUserName.setCreateDate(new Date());
+                        userUserName.setDeleteStatus((short) 0);
+
+                        int row = userUserNameService.save(userUserName);
+                        if (row < 1) {
+                            logger.warn("关联用户名失败 {}", requestJsonVO.getEntityJson());
+                            resultObjectVO.setCode(UserResultVO.FAILD);
+                            resultObjectVO.setMsg("请求失败,请重试!");
+                        }
+
+                        try {
+                            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                            if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                userElasticSearchVO.setUsername(userRegistVO.getUsername());
+                                userElasticSearchService.update(userElasticSearchVO);
+                            }
+                        } catch (Exception e) {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("更新用户缓存出现异常");
+                            logger.warn(e.getMessage(), e);
+                        }
+                    }
                 }
             }
         }catch(Exception e)
@@ -464,29 +495,60 @@ public class UserController {
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;
             }
-            //查询邮箱是否已经关联
+            //查询邮箱是否已关联
             UserEmail query = new UserEmail();
             query.setEmail(userRegistVO.getEmail());
             List<UserEmail> userEmails = userEmailService.findListByEntity(query);
             if (!CollectionUtils.isEmpty(userEmails)) {
                 resultObjectVO.setCode(UserResultVO.FAILD);
-                resultObjectVO.setMsg("邮箱已关联!");
+                resultObjectVO.setMsg("关联失败，邮箱已注册!");
             } else {
-                //保存用户邮箱子表
-                UserEmail userEmail = new UserEmail();
-                userEmail.setId(idGenerator.id());
-                //设置用户名
-                userEmail.setEmail(userRegistVO.getEmail());
-                //设置用户主表ID
-                userEmail.setUserMainId(userRegistVO.getUserMainId());
-                userEmail.setCreateDate(new Date());
-                userEmail.setDeleteStatus((short) 0);
-
-                int row = userEmailService.save(userEmail);
-                if (row < 1) {
-                    logger.warn("关联邮箱失败 {}", requestJsonVO.getEntityJson());
+                query = new UserEmail();
+                query.setUserMainId(userRegistVO.getUserMainId());
+                userEmails = userEmailService.findListByEntity(query);
+                if(CollectionUtils.isNotEmpty(userEmails))
+                {
                     resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请重试!");
+                    resultObjectVO.setMsg("关联失败，该用户已存在使用中手机号!");
+                }else {
+                    query.setEmail(userRegistVO.getEmail());
+                    userEmails = userEmailService.findListByEntityNothingDeleteStatus(query);
+                    if(CollectionUtils.isNotEmpty(userEmails))
+                    {
+                        resultObjectVO.setCode(UserResultVO.FAILD);
+                        resultObjectVO.setMsg("关联失败，邮箱已经关联到该用户了!");
+                    }else {
+
+                        //保存用户邮箱关联
+                        UserEmail userEmail = new UserEmail();
+                        userEmail.setId(idGenerator.id());
+                        //设置邮箱
+                        userEmail.setEmail(userRegistVO.getEmail());
+                        //设置用户主表ID
+                        userEmail.setUserMainId(userRegistVO.getUserMainId());
+                        userEmail.setCreateDate(new Date());
+                        userEmail.setDeleteStatus((short) 0);
+
+                        int row = userEmailService.save(userEmail);
+                        if (row < 1) {
+                            logger.warn("关联邮箱失败 {}", requestJsonVO.getEntityJson());
+                            resultObjectVO.setCode(UserResultVO.FAILD);
+                            resultObjectVO.setMsg("请求失败,请重试!");
+                        }
+
+                        try {
+                            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                            if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                userElasticSearchVO.setEmail(userRegistVO.getEmail());
+                                userElasticSearchService.update(userElasticSearchVO);
+                            }
+                        } catch (Exception e) {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("更新用户缓存出现异常");
+                            logger.warn(e.getMessage(), e);
+                        }
+                    }
                 }
             }
         }catch(Exception e)
