@@ -8,10 +8,7 @@ import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.PhoneUtils;
-import com.toucan.shopping.modules.common.util.SignUtil;
-import com.toucan.shopping.modules.common.util.UserRegistUtil;
-import com.toucan.shopping.modules.common.util.UsernameUtils;
+import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
@@ -109,9 +106,22 @@ public class UserController extends UIController {
         return "pages/user/db/email_list.html";
     }
 
+    /**
+     * 用户名列表
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "userNameListPage/{userMainId}",method = RequestMethod.GET)
+    public String userNameListPage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/user/userNameListPage",feignFunctionService);
+        request.setAttribute("userMainId",userMainId);
+        return "pages/user/db/username_list.html";
+    }
 
     /**
-     * 添加手机号页
+     * 关联手机号页
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -123,6 +133,29 @@ public class UserController extends UIController {
     }
 
 
+    /**
+     * 关联邮箱页
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/connectEmailPage/{userMainId}",method = RequestMethod.GET)
+    public String connectEmailPage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        request.setAttribute("userMainId",userMainId);
+        return "pages/user/db/connect_email.html";
+    }
+
+    /**
+     * 关联用户名页
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/connectUsernamePage/{userMainId}",method = RequestMethod.GET)
+    public String connectUsernamePage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        request.setAttribute("userMainId",userMainId);
+        return "pages/user/db/connect_username.html";
+    }
 
 
 
@@ -374,7 +407,7 @@ public class UserController extends UIController {
 
 
     /**
-     * 添加手机号
+     * 关联手机号
      * @param user
      * @return
      */
@@ -430,6 +463,130 @@ public class UserController extends UIController {
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
             redisLock.unLock(lockKey, mobilePhone);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 关联邮箱
+     * @param user
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value="/connect/email")
+    @ResponseBody
+    public ResultObjectVO connectEmail(@RequestBody UserRegistVO user){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(user==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(user.getEmail()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("关联失败,请输入关联邮箱");
+            return resultObjectVO;
+        }
+
+        if(!EmailUtils.isEmail(user.getEmail()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("关联失败,邮箱错误");
+            return resultObjectVO;
+        }
+
+
+        //商城应用编码
+        String shoppingAppCode = "10001001";
+        String email = user.getEmail();
+        String lockKey = toucan.getAppCode()+"_user_regist_email_"+email;
+        try {
+
+            boolean lockStatus = redisLock.lock(lockKey, user.getEmail());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
+            logger.info(" 关联邮箱 {} ", user.getEmail());
+
+            resultObjectVO = feignUserService.connectEmail(SignUtil.sign(requestJsonVO),requestJsonVO);
+
+            resultObjectVO.setData(null);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("注册失败,请稍后重试");
+        }finally{
+            redisLock.unLock(lockKey, email);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 关联用户名
+     * @param user
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value="/connect/username")
+    @ResponseBody
+    public ResultObjectVO connectUsername(@RequestBody UserRegistVO user){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(user==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("关联失败,没有找到要注册的用户");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(user.getUsername()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("关联失败,请输入关联用户名");
+            return resultObjectVO;
+        }
+
+        if(!UsernameUtils.isUsername(user.getUsername()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("关联失败,用户名错误");
+            return resultObjectVO;
+        }
+
+
+        //商城应用编码
+        String shoppingAppCode = "10001001";
+        String username = user.getUsername();
+        String lockKey = toucan.getAppCode()+"_user_regist_username_"+username;
+        try {
+
+            boolean lockStatus = redisLock.lock(lockKey, user.getUsername());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
+            logger.info(" 关联用户名 {} ", user.getUsername());
+
+            resultObjectVO = feignUserService.connectUsername(SignUtil.sign(requestJsonVO),requestJsonVO);
+
+            resultObjectVO.setData(null);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("注册失败,请稍后重试");
+        }finally{
+            redisLock.unLock(lockKey, username);
         }
         return resultObjectVO;
     }

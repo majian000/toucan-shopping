@@ -16,7 +16,7 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
 
-        <form class="layui-form layui-form-pane" id="userEmailSearchForm" action="">
+        <form class="layui-form layui-form-pane" id="userUserNameSearchForm" action="">
             <div class="layui-form-item">
                 <input type="hidden" name="userMainId" id="userMainId" th:value="${userMainId}">
             </div>
@@ -28,9 +28,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="userEmailTable" lay-filter="userEmailTableFilter"></table>
+        <table class="layui-hide" id="userUserNameTable" lay-filter="userUserNameTableFilter"></table>
 
-        <script type="text/html" id="userEmailTableBar">
+        <script type="text/html" id="userUserNameTableBar">
 
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
             <!--删除 停用 -->
@@ -65,13 +65,13 @@
 
         function getFormParam()
         {
-            var formParam = $("#userEmailSearchForm").serializeJson();
+            var formParam = $("#userUserNameSearchForm").serializeJson();
             return formParam;
         }
 
         table.render({
-            elem: '#userEmailTable',
-            url: "[[@{/}]]user/email/list",
+            elem: '#userUserNameTable',
+            url: "[[@{/}]]user/username/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -88,7 +88,7 @@
                     {type: "checkbox", width: 50},
                     {field: 'id', width: 180, title: 'ID'},
                     {field: 'userMainId', width: 180, title: '用户ID'},
-                    {field: 'email', width: 200, title: '邮箱'},
+                    {field: 'userName', width: 200, title: '用户名'},
                     {field: 'createDate', width: 240, title: '创建时间'},
                     {field: 'deleteStatus', width: 80, title: '状态',
                         templet: function (row) {
@@ -97,7 +97,7 @@
                             }
                             return "使用中"
                         }},
-                    {title: '操作', minWidth: 240, toolbar: '#userEmailTableBar', align: "center"}
+                    {title: '操作', minWidth: 240, toolbar: '#userUserNameTableBar', align: "center"}
                 ]
             ],
             limits: [15,50,100,300],
@@ -109,7 +109,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('userEmailTable', {
+            table.reload('userUserNameTable', {
                 page: {
                     curr: 1
                 }
@@ -122,20 +122,20 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(userEmailTableFilter)', function (obj) {
+        table.on('toolbar(userUserNameTableFilter)', function (obj) {
             var userMainId = $("#userMainId").val();
-            if (obj.event === 'connectEmail') {  // 监听添加操作
+            if (obj.event === 'connectUserName') {  // 监听添加操作
                 var index = layer.open({
-                    title: '关联邮箱',
+                    title: '关联用户名',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/}]]user/connectMobilePhonePage/"+userMainId,
+                    content: "[[@{/}]]user/connectUserNamePage/"+userMainId,
                     cancel: function(index, layero){
                         //执行搜索重载
-                        table.reload('userEmailTable', {
+                        table.reload('userUserNameTable', {
                             page: {
                                 curr: 1
                             }
@@ -152,11 +152,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(userEmailTableFilter)', function (obj) {
+        table.on('checkbox(userUserNameTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(userEmailTableFilter)', function (obj) {
+        table.on('tool(userUserNameTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'disabledEnabledBtn') {
                 var optText = "禁用";
@@ -173,7 +173,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('userEmailTable', {
+                            table.reload('userUserNameTable', {
                                 page: {
                                     curr: 1
                                 }
