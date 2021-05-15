@@ -24,6 +24,8 @@ public interface UserEmailService {
      */
     List<UserEmail> findListByEntityNothingDeleteStatus(UserEmail entity);
 
+    int updateDeleteStatus(Short deleteStatus,Long userMainId,String email);
+
     /**
      * 根据邮箱查询关联
      * @param email
@@ -36,4 +38,12 @@ public interface UserEmailService {
 
 
     PageInfo<UserEmail> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo);
+
+
+    /**
+     * 删除指定用户ID下所有关联邮箱
+     * @param userMainId
+     * @return
+     */
+    int deleteByUserMainId(Long userMainId);
 }

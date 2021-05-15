@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.mapper.UserUserNameMapper;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.service.UserUserNameService;
 import com.toucan.shopping.modules.user.entity.UserUserName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,25 @@ public class UserUserNameServiceImpl implements UserUserNameService {
     @Override
     public List<UserUserName> findListByUserName(String username) {
         return userUserNameMapper.findListByUserName(username);
+    }
+
+    @Override
+    public PageInfo<UserUserName> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo) {
+        PageInfo<UserUserName> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(userUserNameMapper.queryListPageNothingDeleteStatus(queryPageInfo));
+        pageInfo.setTotal(userUserNameMapper.queryListPageNothingDeleteStatusCount(queryPageInfo));
+        return pageInfo;
+    }
+
+    @Override
+    public int updateDeleteStatus(Short deleteStatus, Long userMainId, String username) {
+        return userUserNameMapper.updateDeleteStatus(deleteStatus,userMainId,username);
+    }
+
+    @Override
+    public int deleteByUserMainId(Long userMainId) {
+        return userUserNameMapper.deleteByUserMainId(userMainId);
     }
 
 

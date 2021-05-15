@@ -127,7 +127,7 @@
                             return "女"
                         }},
                     {field: 'createDate', width: 240, title: '注册时间'},
-                    {title: '操作', minWidth: 350, toolbar: '#userTableBar', align: "center"}
+                    {title: '操作', minWidth: 420, toolbar: '#userTableBar', align: "center"}
                 ]
             ],
             limits: [15,50,100,300],
@@ -242,7 +242,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/}]]user/usernameListPage/"+data.userMainIdString,
+                    content: "[[@{/}]]user/userNameListPage/"+data.userMainIdString,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

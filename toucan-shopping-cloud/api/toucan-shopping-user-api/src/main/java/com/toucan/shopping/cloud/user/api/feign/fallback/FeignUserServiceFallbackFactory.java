@@ -221,6 +221,21 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
             }
 
             @Override
+            public ResultObjectVO usernameList(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.usernameList header{} params {}",signHeader,requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO findUsernameListByUsername(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
@@ -275,6 +290,36 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone失败 header{} params {}",signHeader,requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.disabledEnabledEmailByUserMainIdAndEmail失败 header{} params {}",signHeader,requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.disabledEnabledUsernameByUserMainIdAndUsername失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时请重试");
                 return resultObjectVO;

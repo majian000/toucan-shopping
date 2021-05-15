@@ -17,6 +17,8 @@ public class UserMobilePhone {
     /**
      * 主键
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
 

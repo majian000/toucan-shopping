@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.user.mapper;
 
 import com.toucan.shopping.modules.user.entity.UserUserName;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -21,5 +22,13 @@ public interface UserUserNameMapper {
 
 
     List<UserUserName> findListByEntityNothingDeleteStatus(UserUserName entity);
+
+    List<UserUserName> queryListPageNothingDeleteStatus(UserPageInfo appPageInfo);
+
+    Long queryListPageNothingDeleteStatusCount(UserPageInfo appPageInfo);
+
+    int updateDeleteStatus(Short deleteStatus, Long userMainId, String username);
+
+    int deleteByUserMainId(Long userMainId);
 
 }

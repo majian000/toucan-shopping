@@ -75,6 +75,11 @@
         limit #{start},#{limit}
     </select>
 
+    <update id="updateDeleteStatus" >
+        update t_user_email set delete_status=#{deleteStatus}
+           where user_main_id =#{userMainId} and email=#{email}
+    </update>
+
 
 
 
@@ -115,5 +120,13 @@
     <select id="findListByMobilePhone" resultMap="userEmailMap" parameterType="java.lang.String">
         select * from t_user_email bu where  1=1  and bu.email = #{email}  and bu.delete_status = 0
     </select>
+
+
+
+    <update id="deleteByUserMainId" >
+        update t_user_email set delete_status=1  where user_main_id =#{userMainId}
+    </update>
+
+
 
 </mapper>

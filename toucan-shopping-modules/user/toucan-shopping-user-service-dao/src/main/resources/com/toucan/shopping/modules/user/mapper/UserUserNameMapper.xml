@@ -71,6 +71,41 @@
     </select>
 
 
+
+
+    <select id="queryListPageNothingDeleteStatus" resultMap="userUserNameMap" parameterType="com.toucan.shopping.modules.user.page.UserPageInfo">
+        select tu.* from t_user_username tu
+        <where>
+            1=1
+
+            <if test="userMainId!=null  ">
+                and tu.user_main_id = #{userMainId}
+            </if>
+
+        </where>
+        order by tu.user_main_id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+
+    <select id="queryListPageNothingDeleteStatusCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.UserPageInfo">
+        select count(*) from t_user_username tu
+        <where>
+            1=1
+
+            <if test="userMainId!=null  ">
+                and tu.user_main_id = #{userMainId}
+            </if>
+
+        </where>
+
+    </select>
+
+
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserUserName" keyProperty="id" >
         insert into t_user_username(id,username,user_main_id,create_date,delete_status)
         values(#{id},#{username},#{userMainId},#{createDate},#{deleteStatus})
@@ -85,5 +120,14 @@
     <select id="findListByUserMainId" resultMap="userUserNameMap" parameterType="java.lang.Long">
         select * from t_user_username bu where 1=1 and bu.user_main_id = #{userMainId} and bu.delete_status = 0
     </select>
+
+    <update id="updateDeleteStatus" >
+        update t_user_username set delete_status=#{deleteStatus}
+           where user_main_id =#{userMainId} and username=#{username}
+    </update>
+
+    <update id="deleteByUserMainId" >
+        update t_user_username set delete_status=1  where user_main_id =#{userMainId}
+    </update>
 
 </mapper>

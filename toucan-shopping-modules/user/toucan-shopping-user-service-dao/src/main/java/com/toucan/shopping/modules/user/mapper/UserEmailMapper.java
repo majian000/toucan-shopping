@@ -27,4 +27,10 @@ public interface UserEmailMapper {
 
 
     List<UserEmail> findListByEntityNothingDeleteStatus(UserEmail entity);
+
+    int updateDeleteStatus(Short deleteStatus, Long userMainId, String email);
+
+    int deleteByUserMainId(Long userMainId);
+
+
 }

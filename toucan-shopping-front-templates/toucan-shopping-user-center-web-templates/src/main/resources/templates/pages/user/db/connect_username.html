@@ -21,9 +21,9 @@
     <input type="hidden" id="userMainId" th:value="${userMainId}">
 
     <div class="layui-form-item">
-        <label class="layui-form-label">用户名</label>
+        <label class="layui-form-label required ">用户名</label>
         <div class="layui-input-block">
-            <input type="text" name="username"  maxlength="15"  placeholder="请输入用户名" value="" class="layui-input">
+            <input type="text" name="username"  maxlength="15" lay-verify="required"  placeholder="请输入用户名" value="" class="layui-input">
             <tip>填写用户名。</tip>
         </div>
     </div>

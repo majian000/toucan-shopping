@@ -97,7 +97,7 @@ public class UserController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "emailListPage/{userMainId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/emailListPage/{userMainId}",method = RequestMethod.GET)
     public String emailListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
         //初始化工具条按钮、操作按钮
@@ -111,7 +111,7 @@ public class UserController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "userNameListPage/{userMainId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/userNameListPage/{userMainId}",method = RequestMethod.GET)
     public String userNameListPage(HttpServletRequest request,@PathVariable String userMainId)
     {
         //初始化工具条按钮、操作按钮
@@ -150,8 +150,8 @@ public class UserController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/connectUsernamePage/{userMainId}",method = RequestMethod.GET)
-    public String connectUsernamePage(HttpServletRequest request,@PathVariable String userMainId)
+    @RequestMapping(value = "/connectUserNamePage/{userMainId}",method = RequestMethod.GET)
+    public String connectUserNamePage(HttpServletRequest request,@PathVariable String userMainId)
     {
         request.setAttribute("userMainId",userMainId);
         return "pages/user/db/connect_username.html";
@@ -236,7 +236,7 @@ public class UserController extends UIController {
 
 
     /**
-     * 手机号列表
+     * 邮箱列表
      * @param userPageInfo
      * @return
      */
@@ -248,7 +248,7 @@ public class UserController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
-            ResultObjectVO resultObjectVO = feignUserService.mobilePhoneList(SignUtil.sign(requestVo),requestVo);
+            ResultObjectVO resultObjectVO = feignUserService.emailList(SignUtil.sign(requestVo),requestVo);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -271,6 +271,40 @@ public class UserController extends UIController {
 
 
 
+
+    /**
+     * 用户名列表
+     * @param userPageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/username/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO usernameList(UserPageInfo userPageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userPageInfo);
+            ResultObjectVO resultObjectVO = feignUserService.usernameList(SignUtil.sign(requestVo),requestVo);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请求失败,请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value="/regist")
@@ -662,6 +696,76 @@ public class UserController extends UIController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 邮箱 禁用/启用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/email/disabled/enabled/{id}/{email}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(HttpServletRequest request,  @PathVariable String id,  @PathVariable String email)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            UserVO userVO =new UserVO();
+            userVO.setUserMainId(Long.parseLong(id));
+            userVO.setEmail(email);
+
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,userVO);
+            resultObjectVO = feignUserService.disabledEnabledEmailByUserMainIdAndEmail(SignUtil.sign(requestVo),requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 用户名 禁用/启用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/username/disabled/enabled/{id}/{username}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(HttpServletRequest request,  @PathVariable String id,  @PathVariable String username)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            UserVO userVO =new UserVO();
+            userVO.setUserMainId(Long.parseLong(id));
+            userVO.setUsername(username);
+
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,userVO);
+            resultObjectVO = feignUserService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 批量禁用

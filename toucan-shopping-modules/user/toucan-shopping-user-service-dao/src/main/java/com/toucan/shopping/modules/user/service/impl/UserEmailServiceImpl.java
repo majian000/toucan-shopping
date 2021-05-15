@@ -42,6 +42,11 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
+    public int updateDeleteStatus(Short deleteStatus, Long userMainId, String email) {
+        return userEmailMapper.updateDeleteStatus(deleteStatus,userMainId,email);
+    }
+
+    @Override
     public List<UserEmail> findListByEmail(String email) {
         return userEmailMapper.findListByEmail(email);
     }
@@ -58,6 +63,11 @@ public class UserEmailServiceImpl implements UserEmailService {
         pageInfo.setList(userEmailMapper.queryListPageNothingDeleteStatus(queryPageInfo));
         pageInfo.setTotal(userEmailMapper.queryListPageNothingDeleteStatusCount(queryPageInfo));
         return pageInfo;
+    }
+
+    @Override
+    public int deleteByUserMainId(Long userMainId) {
+        return userEmailMapper.deleteByUserMainId(userMainId);
     }
 
 }

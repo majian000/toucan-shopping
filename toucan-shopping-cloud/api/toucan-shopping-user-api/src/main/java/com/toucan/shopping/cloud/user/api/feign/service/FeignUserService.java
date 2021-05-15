@@ -140,6 +140,15 @@ public interface FeignUserService {
     ResultObjectVO emailList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 用户名列表分页
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/username/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO usernameList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 
     /**
      * 根据用户名查询用户名列表
@@ -170,9 +179,33 @@ public interface FeignUserService {
     ResultObjectVO disabledEnabledById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 根据用户ID和手机号 禁用手机号关联
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
     @RequestMapping(value="/mobile/phone/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
+
+    /**
+     * 根据用户ID和邮箱 禁用邮箱关联
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/email/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+    /**
+     * 根据用户ID和用户名 禁用用户名关联
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/username/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
     /**

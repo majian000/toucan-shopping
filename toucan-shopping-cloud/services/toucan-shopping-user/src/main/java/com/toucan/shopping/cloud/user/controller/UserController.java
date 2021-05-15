@@ -1290,6 +1290,51 @@ public class UserController {
     }
 
 
+    /**
+     * 用户名列表
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/username/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO usernameList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserPageInfo userPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserPageInfo.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            if(userPageInfo.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户主ID");
+                return resultObjectVO;
+            }
+
+
+            //查询用户名关联表
+            resultObjectVO.setData(userUserNameService.queryListPageNothingDeleteStatus(userPageInfo));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 禁用启用指定用户
@@ -1468,6 +1513,219 @@ public class UserController {
 
 
 
+
+
+    /**
+     * 禁用启用指定用户邮箱
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/email/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledEnabledEmailByUserMainIdAndEmail(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
+            if(entity.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(entity.getEmail()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到邮箱");
+                return resultObjectVO;
+            }
+
+            UserEmail queryUserEmail = new UserEmail();
+            queryUserEmail.setUserMainId(entity.getUserMainId());
+            queryUserEmail.setEmail(entity.getEmail());
+
+            List<UserEmail> userEmails = userEmailService.findListByEntityNothingDeleteStatus(queryUserEmail);
+            if(CollectionUtils.isNotEmpty(userEmails)) {
+                short deleteStatus = 0;
+                int row = 0;
+                if(userEmails.get(0).getDeleteStatus().shortValue()==0)
+                {
+                    deleteStatus=1;
+                    //禁用
+                    userEmailService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getEmail());
+                }else{
+
+                    //查询当前邮箱关联用户列表,判断邮箱是否已经有其他人使用了
+                    queryUserEmail.setUserMainId(null);
+                    userEmails = userEmailService.findListByEntity(queryUserEmail);
+                    if(CollectionUtils.isNotEmpty(userEmails))
+                    {
+                        for(UserEmail userEmail:userEmails)
+                        {
+                            if(userEmail.getUserMainId()!=entity.getUserMainId())
+                            {
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("请求失败,邮箱无法启用,已经有人在使用中了");
+                                return resultObjectVO;
+                            }
+                        }
+                    }
+                    //禁用用户ID下所有关联邮箱
+                    userEmailService.deleteByUserMainId(entity.getUserMainId());
+                    //启用
+                    row = userEmailService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getEmail());
+                    deleteStatus=0;
+                }
+
+                try {
+                    List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(entity.getUserMainId());
+                    if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+                    {
+                        UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                        //删除用户邮箱关联
+                        if(deleteStatus==1)
+                        {
+                            userElasticSearchVO.setEmail(null);
+                        }else{
+                            if(row>0) { //数据库操作成功后 设置邮箱到缓存
+                                userElasticSearchVO.setEmail(entity.getEmail());
+                            }
+                        }
+                        userElasticSearchService.update(userElasticSearchVO);
+                    }
+                }catch(Exception e)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 禁用启用指定用户名
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/username/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledEnabledUsernameByUserMainIdAndUsername(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
+            if(entity.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(entity.getUsername()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到用户名");
+                return resultObjectVO;
+            }
+
+            UserUserName queryUsername = new UserUserName();
+            queryUsername.setUserMainId(entity.getUserMainId());
+            queryUsername.setUsername(entity.getUsername());
+
+            List<UserUserName> userUserNames = userUserNameService.findListByEntityNothingDeleteStatus(queryUsername);
+            if(CollectionUtils.isNotEmpty(userUserNames)) {
+                short deleteStatus = 0;
+                int row = 0;
+                if(userUserNames.get(0).getDeleteStatus().shortValue()==0)
+                {
+                    deleteStatus=1;
+                    //禁用
+                    userUserNameService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getUsername());
+                }else{
+
+                    //查询当前邮箱关联用户列表,判断邮箱是否已经有其他人使用了
+                    queryUsername.setUserMainId(null);
+                    userUserNames = userUserNameService.findListByEntity(queryUsername);
+                    if(CollectionUtils.isNotEmpty(userUserNames))
+                    {
+                        for(UserUserName userUserName:userUserNames)
+                        {
+                            if(userUserName.getUserMainId()!=entity.getUserMainId())
+                            {
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("请求失败,用户名无法启用,已经有人在使用中了");
+                                return resultObjectVO;
+                            }
+                        }
+                    }
+                    //禁用用户ID下所有关联用户名
+                    userUserNameService.deleteByUserMainId(entity.getUserMainId());
+                    //启用
+                    row = userUserNameService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getUsername());
+                    deleteStatus=0;
+                }
+
+                try {
+                    List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(entity.getUserMainId());
+                    if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+                    {
+                        UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                        //删除用户和用户名关联
+                        if(deleteStatus==1)
+                        {
+                            userElasticSearchVO.setUsername(null);
+                        }else{
+                            if(row>0) { //数据库操作成功后 设置用户名到缓存
+                                userElasticSearchVO.setUsername(entity.getUsername());
+                            }
+                        }
+                        userElasticSearchService.update(userElasticSearchVO);
+                    }
+                }catch(Exception e)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 批量删除

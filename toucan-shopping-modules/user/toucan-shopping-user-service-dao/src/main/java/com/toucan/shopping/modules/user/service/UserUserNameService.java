@@ -3,7 +3,9 @@ package com.toucan.shopping.modules.user.service;
 
 
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.UserUserName;
+import com.toucan.shopping.modules.user.page.UserPageInfo;
 
 import java.util.List;
 
@@ -32,4 +34,18 @@ public interface UserUserNameService {
      * @return
      */
     List<UserUserName> findListByUserName(String username);
+
+
+    PageInfo<UserUserName> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo);
+
+
+    int updateDeleteStatus(Short deleteStatus,Long userMainId,String username);
+
+
+    /**
+     * 删除指定用户ID下所有关联用户名
+     * @param userMainId
+     * @return
+     */
+    int deleteByUserMainId(Long userMainId);
 }

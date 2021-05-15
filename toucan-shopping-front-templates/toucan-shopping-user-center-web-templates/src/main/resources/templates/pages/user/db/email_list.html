@@ -132,7 +132,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/}]]user/connectMobilePhonePage/"+userMainId,
+                    content: "[[@{/}]]user/connectEmailPage/"+userMainId,
                     cancel: function(index, layero){
                         //执行搜索重载
                         table.reload('userEmailTable', {
@@ -164,9 +164,9 @@
                 {
                     optText="启用";
                 }
-                layer.confirm("确定"+optText+"该手机号?", function (index) {
+                layer.confirm("确定"+optText+"该邮箱?", function (index) {
                     $.ajax({
-                        url:"[[@{/}]]user/mobile/phone/disabled/enabled/"+data.userMainId+"/"+data.mobilePhone,
+                        url:"[[@{/}]]user/email/disabled/enabled/"+data.userMainId+"/"+data.email,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
