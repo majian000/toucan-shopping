@@ -31,6 +31,11 @@ public class AdminAuth {
     private String loginPage;
 
     /**
+     * 没有权限跳转页面
+     */
+    private String page403;
+
+    /**
      * 拦截指定路径
      */
     private String pathPatterns;

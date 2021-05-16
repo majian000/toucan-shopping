@@ -278,7 +278,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 {
                                     logger.info("权限校验失败 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
+                                            + request.getContextPath() + "/" + toucan.getAdminAuth().getPage403());
                                     return false;
                                 }
                             }

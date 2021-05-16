@@ -72,6 +72,8 @@ toucan:
     http-toucan-auth-header: Cookie
     #当前项目登录页
     login-page: /login/page
+    #没有权限时跳转页面
+    page-403: /403
     #拦截指定路径
     path-patterns: /**
     #忽略拦截
