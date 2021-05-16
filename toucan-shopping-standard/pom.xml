@@ -57,7 +57,7 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.standard.proxy</groupId>
-                <artifactId>toucan-shopping-admin-auth-proxy</artifactId>
+                <artifactId>toucan-shopping-standard-admin-auth-proxy</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

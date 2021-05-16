@@ -129,6 +129,22 @@
             <artifactId>toucan-shopping-category-service-dao</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-layui</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.standard.proxy</groupId>
+            <artifactId>toucan-shopping-standard-admin-auth-proxy</artifactId>
+        </dependency>
+
     </dependencies>
 
 
