@@ -28,23 +28,19 @@
 
 
         <!--  =================================公共模块层 =================================-->
-        <!--商城客户端公共类 -->
-        <module>modules/apps/toucan-shopping-web-common</module>
-        <!--权限管理公共类 -->
-        <module>modules/apps/toucan-shopping-admin-auth-web-common</module>
 
 
         <!--  =================================应用层 =================================-->
 
         <!--商城WEB端-->
-        <module>apps/toucan-shopping-web</module>
+        <module>apps/toucan-shopping-standard-shopping-web</module>
 
-        <!--权限管理 jar包版 -->
-        <module>apps/toucan-shopping-admin-auth-web</module>
+        <!--权限管理WEB端 -->
+        <module>apps/toucan-shopping-standard-admin-auth-web</module>
 
         <!-- ====================================代理层=================================== -->
         <!--权限管理服务代理 -->
-        <module>proxy/toucan-shopping-admin-auth-proxy</module>
+        <module>proxy/toucan-shopping-standard-admin-auth-proxy</module>
 
     </modules>
 
@@ -57,20 +53,6 @@
 
     <dependencyManagement>
         <dependencies>
-
-            <dependency>
-                <groupId>com.toucan.shopping.standard.modules.apps</groupId>
-                <artifactId>toucan-shopping-web-common</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.toucan.shopping.standard.modules.apps</groupId>
-                <artifactId>toucan-shopping-admin-auth-web-common</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
 
 
             <dependency>
