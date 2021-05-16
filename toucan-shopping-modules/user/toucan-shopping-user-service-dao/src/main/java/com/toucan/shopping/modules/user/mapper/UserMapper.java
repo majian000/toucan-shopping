@@ -27,4 +27,6 @@ public interface UserMapper {
     int updateEnableStatus(Short enableStatus,Long userMainId);
 
     List<User> findListByUserMainId(Long userMainId);
+
+    int updatePasswordByUserMainId(Long userMainId, String password);
 }

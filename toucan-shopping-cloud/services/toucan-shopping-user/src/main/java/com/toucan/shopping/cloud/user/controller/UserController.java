@@ -255,6 +255,97 @@ public class UserController {
     }
 
 
+
+
+
+    @RequestMapping(value="/reset/password",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO resetPassword(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要重置的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要重置的用户");
+            return resultObjectVO;
+        }
+
+        if(userRegistVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg("重置失败,用户ID为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userRegistVO.getPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
+            resultObjectVO.setMsg("请求失败,请输入密码");
+            return resultObjectVO;
+        }
+
+        if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
+            resultObjectVO.setMsg("请求失败,请输入6至15位的密码");
+            return resultObjectVO;
+        }
+
+
+
+        String userMainId = String.valueOf(userRegistVO.getUserMainId());
+        try {
+            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+            String password = MD5Util.md5(userRegistVO.getPassword());
+
+            int row = userService.updatePasswordByUserMainId(userRegistVO.getUserMainId(),password);
+            if(row<1)
+            {
+                logger.warn("修改密码失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试");
+            }else{
+                try {
+                    List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                    if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                        UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                        userElasticSearchVO.setPassword(password);
+                        userElasticSearchService.update(userElasticSearchVO);
+                    }
+                } catch (Exception e) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                    logger.warn(e.getMessage(), e);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
+
     /**
      * 关联用户名
      * @param requestJsonVO
@@ -350,19 +441,20 @@ public class UserController {
                             logger.warn("关联用户名失败 {}", requestJsonVO.getEntityJson());
                             resultObjectVO.setCode(UserResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
-                        }
+                        }else {
 
-                        try {
-                            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
-                            if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
-                                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
-                                userElasticSearchVO.setUsername(userRegistVO.getUsername());
-                                userElasticSearchService.update(userElasticSearchVO);
+                            try {
+                                List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                                if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                                    UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                    userElasticSearchVO.setUsername(userRegistVO.getUsername());
+                                    userElasticSearchService.update(userElasticSearchVO);
+                                }
+                            } catch (Exception e) {
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("更新用户缓存出现异常");
+                                logger.warn(e.getMessage(), e);
                             }
-                        } catch (Exception e) {
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("更新用户缓存出现异常");
-                            logger.warn(e.getMessage(), e);
                         }
                     }
                 }
@@ -534,19 +626,20 @@ public class UserController {
                             logger.warn("关联邮箱失败 {}", requestJsonVO.getEntityJson());
                             resultObjectVO.setCode(UserResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
-                        }
+                        }else {
 
-                        try {
-                            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
-                            if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
-                                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
-                                userElasticSearchVO.setEmail(userRegistVO.getEmail());
-                                userElasticSearchService.update(userElasticSearchVO);
+                            try {
+                                List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                                if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                                    UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                    userElasticSearchVO.setEmail(userRegistVO.getEmail());
+                                    userElasticSearchService.update(userElasticSearchVO);
+                                }
+                            } catch (Exception e) {
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("更新用户缓存出现异常");
+                                logger.warn(e.getMessage(), e);
                             }
-                        } catch (Exception e) {
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("更新用户缓存出现异常");
-                            logger.warn(e.getMessage(), e);
                         }
                     }
                 }
@@ -796,15 +889,16 @@ public class UserController {
                     logger.warn("修改用户详情失败 {}", requestJsonVO.getEntityJson());
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("请求失败,请稍后重试");
-                }
+                }else {
 
-                //更新缓存
-                try{
-                    updateDetailToElasticsearch(userRegistVO);
-                }catch(Exception e){
-                    logger.warn(e.getMessage(),e);
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                    //更新缓存
+                    try {
+                        updateDetailToElasticsearch(userRegistVO);
+                    } catch (Exception e) {
+                        logger.warn(e.getMessage(), e);
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("更新用户缓存出现异常");
+                    }
                 }
             }
 
@@ -1963,19 +2057,20 @@ public class UserController {
                             logger.warn("关联手机号失败 {}", requestJsonVO.getEntityJson());
                             resultObjectVO.setCode(UserResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
-                        }
+                        }else {
 
-                        try {
-                            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
-                            if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
-                                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
-                                userElasticSearchVO.setMobilePhone(userRegistVO.getMobilePhone());
-                                userElasticSearchService.update(userElasticSearchVO);
+                            try {
+                                List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+                                if (CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                                    UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                    userElasticSearchVO.setMobilePhone(userRegistVO.getMobilePhone());
+                                    userElasticSearchService.update(userElasticSearchVO);
+                                }
+                            } catch (Exception e) {
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("更新用户缓存出现异常");
+                                logger.warn(e.getMessage(), e);
                             }
-                        } catch (Exception e) {
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("更新用户缓存出现异常");
-                            logger.warn(e.getMessage(), e);
                         }
                     }
                 }

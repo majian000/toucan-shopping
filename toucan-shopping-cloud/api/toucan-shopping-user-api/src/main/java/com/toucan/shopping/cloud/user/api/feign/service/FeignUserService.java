@@ -25,6 +25,15 @@ public interface FeignUserService {
     @RequestMapping(value="/regist/mobile/phone",produces = "application/json;charset=UTF-8")
     ResultObjectVO registByMobilePhone(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 重置密码
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/reset/password",produces = "application/json;charset=UTF-8")
+    ResultObjectVO resetPassword(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
 
     /**
      * 关联到用户名

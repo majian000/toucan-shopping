@@ -37,4 +37,12 @@ public interface UserService {
      * @return
      */
     PageInfo<UserVO> queryListPage(UserPageInfo appPageInfo);
+
+    /**
+     * 根据用户ID修改密码
+     * @param userMainId
+     * @param password
+     * @return
+     */
+    int updatePasswordByUserMainId(Long userMainId,String password);
 }

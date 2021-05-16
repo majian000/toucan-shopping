@@ -20,5 +20,15 @@ public class UserCenterRegistRedisKey {
     }
 
 
+    /**
+     * 重置密码锁
+     * @param userMainId
+     * @return
+     */
+    public static String getResetPasswordLockKey(String userMainId)
+    {
+        return appCode +"_user_reset_password_"+userMainId+"_lock";
+    }
+
 
 }

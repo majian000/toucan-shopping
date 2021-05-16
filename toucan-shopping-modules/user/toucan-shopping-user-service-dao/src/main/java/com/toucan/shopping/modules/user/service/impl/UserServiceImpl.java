@@ -67,4 +67,9 @@ public class UserServiceImpl implements UserService {
         pageInfo.setTotal(userMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public int updatePasswordByUserMainId(Long userMainId, String password) {
+        return userMapper.updatePasswordByUserMainId(userMainId,password);
+    }
 }

@@ -36,13 +36,11 @@
 
         <!--  =================================应用层 =================================-->
 
-        <!--商城客户端 jar包版-->
-        <module>apps/toucan-shopping-web-jar</module>
-        <!--商城客户端 war包版-->
-        <module>apps/toucan-shopping-web-war</module>
+        <!--商城WEB端-->
+        <module>apps/toucan-shopping-web</module>
 
         <!--权限管理 jar包版 -->
-        <module>apps/toucan-shopping-admin-auth-web-jar</module>
+        <module>apps/toucan-shopping-admin-auth-web</module>
 
         <!-- ====================================代理层=================================== -->
         <!--权限管理服务代理 -->
