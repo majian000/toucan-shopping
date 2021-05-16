@@ -158,6 +158,17 @@ public class UserController extends UIController {
     }
 
 
+    /**
+     * 重置密码页
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/resetPasswordPage/{userMainId}",method = RequestMethod.GET)
+    public String resetPasswordPage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        request.setAttribute("userMainId",userMainId);
+        return "pages/user/db/reset_password.html";
+    }
 
 
     /**
@@ -503,29 +514,7 @@ public class UserController extends UIController {
 
             logger.info(" 重置密码 {} ", user.getUserMainId());
 
-            resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
-                //拿到用户主ID
-                UserRegistVO userRegistResult = (UserRegistVO) resultObjectVO.formatData(UserRegistVO.class);
-                user.setUserMainId(userRegistResult.getUserMainId());
-
-                //如果输入了用户名,进行用户名的关联
-                if(StringUtils.isNotEmpty(user.getUsername())) {
-                    requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = feignUserService.connectUsername(requestJsonVO.sign(), requestJsonVO);
-                }
-
-                //如果输入了邮箱,进行邮箱关联
-                if (StringUtils.isNotEmpty(user.getEmail())) {
-                    requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                    resultObjectVO = feignUserService.connectEmail(requestJsonVO.sign(), requestJsonVO);
-                }
-
-                //修改用户详情
-                requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode, user);
-                resultObjectVO = feignUserService.updateDetail(requestJsonVO.sign(), requestJsonVO);
-            }
-
+            resultObjectVO = feignUserService.resetPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
             resultObjectVO.setData(null);
         }catch(Exception e)
         {

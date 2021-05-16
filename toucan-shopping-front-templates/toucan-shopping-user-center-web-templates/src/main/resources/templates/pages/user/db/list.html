@@ -248,7 +248,22 @@
                     layer.full(index);
                 });
                 return false;
-            }  else if (obj.event === 'disabledEnabledBtn') {
+            } else if (obj.event === 'resetPwd') {
+
+                var index = layer.open({
+                    title: '重置密码',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]user/resetPasswordPage/"+data.userMainIdString,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'disabledEnabledBtn') {
                 var optText = "启用";
                 if(data.enableStatus==1)
                 {
