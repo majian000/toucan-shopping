@@ -850,39 +850,13 @@ public class UserController {
             List<UserDetail> userDetails = userDetailService.findListByEntity(query);
             if(CollectionUtils.isNotEmpty(userDetails))
             {
-
-
                 UserDetail userDetail = userDetails.get(0);
-                //昵称
-                if(StringUtils.isNotEmpty(userRegistVO.getNickName()))
-                {
-                    userDetail.setNickName(userRegistVO.getNickName());
-                }
-                //姓名
-                if(StringUtils.isNotEmpty(userRegistVO.getTrueName()))
-                {
-                    userDetail.setTrueName(userRegistVO.getTrueName());
-                }
-                //身份证
-                if(StringUtils.isNotEmpty(userRegistVO.getIdCard()))
-                {
-                    userDetail.setIdCard(userRegistVO.getIdCard());
-                }
-                //头像
-                if(StringUtils.isNotEmpty(userRegistVO.getHeadSculpture()))
-                {
-                    userDetail.setHeadSculpture(userRegistVO.getHeadSculpture());
-                }
-                //性别
-                if(userRegistVO.getSex()!=null)
-                {
-                    userDetail.setSex(userRegistVO.getSex());
-                }
-                //用户类型
-                if(userRegistVO.getType()!=null)
-                {
-                    userDetail.setType(userRegistVO.getType());
-                }
+                userDetail.setNickName(userRegistVO.getNickName()); //昵称
+                userDetail.setTrueName(userRegistVO.getTrueName()); //姓名
+                userDetail.setIdCard(userRegistVO.getIdCard()); //身份证
+                userDetail.setHeadSculpture(userRegistVO.getHeadSculpture()); //头像
+                userDetail.setSex(userRegistVO.getSex()); //性别
+                userDetail.setType(userRegistVO.getType()); //用户类型
                 int row = userDetailService.update(userDetail);
                 if(row<=0)
                 {

@@ -146,6 +146,33 @@ public class UserController extends UIController {
     }
 
 
+    /**
+     * 跳转到编辑详情页
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/update/detail/page/{userMainId}",method = RequestMethod.GET)
+    public String updateDetailPage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        UserVO userVO = new UserVO();
+        try {
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+            ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
+                request.setAttribute("model", userVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("model", userVO);
+        }
+        return "pages/user/db/update_detail.html";
+    }
+
 
     /**
      * 查看详情页
@@ -347,6 +374,12 @@ public class UserController extends UIController {
         return tableVO;
     }
 
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value="/regist")
     @ResponseBody
@@ -479,6 +512,65 @@ public class UserController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    /**
+     * 修改详情
+     * @param user
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value="/update/detail")
+    @ResponseBody
+    public ResultObjectVO updateDetail(@RequestBody UserRegistVO user){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(user==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要修改的用户");
+            return resultObjectVO;
+        }
+
+        if(!PhoneUtils.isChinaPhoneLegal(user.getMobilePhone()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
+            resultObjectVO.setMsg("注册失败,手机号错误");
+            return resultObjectVO;
+        }
+
+
+        //商城应用编码
+        String shoppingAppCode = "10001001";
+        String userMainId = String.valueOf(user.getUserMainId());
+        String lockKey = toucan.getAppCode()+"_user_update_detail_"+userMainId;
+        try {
+
+            boolean lockStatus = redisLock.lock(lockKey, userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
+            logger.info(" 修改详情 {} ", user.getUserMainId());
+            resultObjectVO = feignUserService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("注册失败,请稍后重试");
+        }finally{
+            redisLock.unLock(lockKey, userMainId);
+        }
+        return resultObjectVO;
+    }
+
+
 
 
     /**
