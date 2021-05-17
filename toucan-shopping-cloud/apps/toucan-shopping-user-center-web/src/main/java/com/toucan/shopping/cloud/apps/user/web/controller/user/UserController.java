@@ -158,10 +158,10 @@ public class UserController extends UIController {
         try {
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO<UserVO> resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
+                userVO = resultObjectVO.getData();
                 request.setAttribute("model", userVO);
             }
         }catch(Exception e)
