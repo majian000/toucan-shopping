@@ -839,7 +839,7 @@ public class UserController {
             return resultObjectVO;
         }
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -908,12 +908,125 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+            redisLock.unLock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
         }
         return resultObjectVO;
     }
 
 
+    /**
+     * 刷新缓存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要操作的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
+        if(userRegistVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要操作的用户");
+            return resultObjectVO;
+        }
+        if(userRegistVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户主ID");
+            return resultObjectVO;
+        }
+        try {
+
+            //从缓存中查询用户对象
+            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
+            UserElasticSearchVO userElasticSearchVO = null;
+            if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+            {
+                userElasticSearchVO = userElasticSearchVOS.get(0);
+            }else{ //如果缓存不存在将重新推到缓存中
+                userElasticSearchVO = new UserElasticSearchVO();
+
+                User queryUser = new User();
+                queryUser.setUserMainId(userRegistVO.getUserMainId());
+                List<User> users = userService.findListByEntity(queryUser);
+                if(CollectionUtils.isNotEmpty(users)) {
+                    User user = users.get(0);
+                    userElasticSearchVO.setId(user.getId());
+                    userElasticSearchVO.setUserMainId(user.getUserMainId());
+                    userElasticSearchVO.setEnableStatus(user.getEnableStatus());
+                    userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
+                }
+
+                userElasticSearchService.save(userElasticSearchVO);
+            }
+
+            if(userElasticSearchVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+                resultObjectVO.setMsg("刷新失败,没有找到缓存中该用户的用户ID");
+                return resultObjectVO;
+            }
+
+            //设置手机号
+            UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
+            queryUserMobilePhone.setUserMainId(userRegistVO.getUserMainId());
+            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobilePhone);
+            if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+                userElasticSearchVO.setMobilePhone(userMobilePhones.get(0).getMobilePhone());
+            }
+
+            //设置邮箱
+            UserEmail queryUserEmail = new UserEmail();
+            queryUserEmail.setUserMainId(userRegistVO.getUserMainId());
+            List<UserEmail> userEmails = userEmailService.findListByEntity(queryUserEmail);
+            if(CollectionUtils.isNotEmpty(userEmails)) {
+                userElasticSearchVO.setEmail(userEmails.get(0).getEmail());
+            }
+
+            //设置用户名
+            UserUserName userUserName = new UserUserName();
+            userUserName.setUserMainId(userRegistVO.getUserMainId());
+            List<UserUserName> userUserNames = userUserNameService.findListByEntity(userUserName);
+            if(CollectionUtils.isNotEmpty(userUserNames)) {
+                userElasticSearchVO.setUsername(userUserNames.get(0).getUsername());
+            }
+
+            UserDetail queryUserDetail = new UserDetail();
+            queryUserDetail.setUserMainId(userRegistVO.getUserMainId());
+            List<UserDetail> userDetails = userDetailService.findListByEntity(queryUserDetail);
+            if(CollectionUtils.isNotEmpty(userDetails)) {
+                UserDetail userDetail = userDetails.get(0);
+                userElasticSearchVO.setNickName(userDetail.getNickName()); //昵称
+                userElasticSearchVO.setTrueName(userDetail.getTrueName()); //姓名
+                userElasticSearchVO.setIdCard(userDetail.getIdCard()); //身份证
+                userElasticSearchVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
+                userElasticSearchVO.setSex(userDetail.getSex()); //性别
+                userElasticSearchVO.setType(userDetail.getType()); //用户类型
+            }
+
+            userElasticSearchService.update(userElasticSearchVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

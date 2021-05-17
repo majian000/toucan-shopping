@@ -20,6 +20,16 @@ public class UserCenterRegistRedisKey {
     }
 
 
+
+    /**
+     * 修改详情锁
+     * @param mobile
+     * @return
+     */
+    public static String getUpdateDetailLockKey(String mobile)
+    {
+        return appCode +"_user_update_detail_"+mobile+"_lock";
+    }
     /**
      * 重置密码锁
      * @param userMainId

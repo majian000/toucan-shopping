@@ -452,6 +452,43 @@ public class UserController extends UIController {
 
 
     /**
+     * 刷新缓存
+     * @param userMainId
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value="/flush/cache/{userMainId}",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO flushCache(@PathVariable String userMainId){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(StringUtils.isEmpty(userMainId))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("刷新失败,没有找到用户ID");
+            return resultObjectVO;
+        }
+
+
+        //商城应用编码
+        String shoppingAppCode = "10001001";
+        try {
+            UserRegistVO user = new UserRegistVO();
+            user.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
+            resultObjectVO = feignUserService.flushCache(requestJsonVO.sign(),requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("刷新失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
      * 修改密码
      * @param user
      * @return

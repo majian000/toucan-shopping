@@ -237,4 +237,14 @@ public interface FeignUserService {
     ResultObjectVO findByUserMainId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 刷新用户缓存
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO flushCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
 }
