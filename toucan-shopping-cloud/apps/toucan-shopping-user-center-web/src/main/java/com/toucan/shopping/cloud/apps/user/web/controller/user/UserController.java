@@ -145,6 +145,36 @@ public class UserController extends UIController {
         return "pages/user/db/connect_email.html";
     }
 
+
+
+    /**
+     * 查看详情页
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detail/page/{userMainId}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        UserVO userVO = new UserVO();
+        try {
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+            ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
+                request.setAttribute("model", userVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("model", userVO);
+        }
+        return "pages/user/db/detail.html";
+    }
+
+
     /**
      * 关联用户名页
      * @return
