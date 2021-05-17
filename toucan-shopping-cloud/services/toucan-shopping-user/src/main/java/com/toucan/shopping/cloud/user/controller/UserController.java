@@ -236,6 +236,7 @@ public class UserController {
                             userCreateMessage.setNickName(userDetail.getNickName());
                             userCreateMessage.setSex(userDetail.getSex());
                             userCreateMessage.setDeleteStatus(user.getDeleteStatus());
+                            userCreateMessage.setType((short)1);
 
                             //放入队列
                             newUserMessageQueue.push(userCreateMessage);
@@ -835,7 +836,7 @@ public class UserController {
         if(userRegistVO.getUserMainId()==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要用户主ID");
+            resultObjectVO.setMsg("请求失败,没有找到要用户ID");
             return resultObjectVO;
         }
         try {
