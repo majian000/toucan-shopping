@@ -147,7 +147,7 @@ public class UserController extends UIController {
 
 
     /**
-     * 跳转到编辑详情页
+     * 跳转到修改用户资料页
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
