@@ -2,12 +2,6 @@
 tar -zxvf jdk-8u281-linux-x64.tar.gz
 
 
-启动redis
-nohup ./redis-server redis.conf &
-
-查看redis启动状态：
-ps aux|grep redis
-
 
 查看进程列表
 ps aux
