@@ -7,3 +7,11 @@
 
 #### 微服务版
     采用技术spring cloud、spring config、lombok、mybatis、eureka、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
+
+
+
+
+#### 参与贡献
+    
+    1.majian
+    2.niuyuxiao

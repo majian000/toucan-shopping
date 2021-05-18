@@ -76,24 +76,7 @@
 
 ##### 数据库
 
-    
-    商城库 resources/ddl/toucan_shopping.sql
-    商城首页、轮播图相关等
-    
-    订单库 resources/ddl/toucan_shopping_order.sql
-    主订单、子订单等
-    
-    商品库 resources/ddl/toucan_shopping_product.sql
-    商品SPU、商品SKU等
-    
-    库存   resources/ddl/toucan_shopping_stock.sql
-    商品库存等
-    
-    用户中心库 resources/用户中心
-    记录用户信息、用户密码等
-    
-    地区服务库 resources/地区服务
-    地区编码、轮播图等
+    备份路径 resources/数据库备份/微服务版
     
 
 ##### 基础服务层
