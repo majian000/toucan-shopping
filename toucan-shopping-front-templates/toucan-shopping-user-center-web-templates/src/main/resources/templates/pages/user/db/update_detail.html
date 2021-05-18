@@ -21,7 +21,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">昵称</label>
         <div class="layui-input-block">
-            <input type="text" name="nickName"  maxlength="8"  placeholder="请输入昵称" value="" class="layui-input" th:value="${model.nickName}" >
+            <input type="text" name="nickName"  maxlength="15"  placeholder="请输入昵称" value="" class="layui-input" th:value="${model.nickName}" >
         </div>
     </div>
 
@@ -60,17 +60,17 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">用户类型</label>
-        <div class="layui-input-block" th:if="${model.type eq 1}" >
+        <div class="layui-input-block" th:if="${model.type eq 0}" >
             <input type="radio" name="type" value="0" title="用户" checked="">
             <input type="radio" name="type" value="1" title="商户">
             <input type="radio" name="type" value="2" title="商户和用户">
         </div>
-        <div class="layui-input-block" th:if="${model.type eq 2}" >
+        <div class="layui-input-block" th:if="${model.type eq 1}" >
             <input type="radio" name="type" value="0" title="用户" >
             <input type="radio" name="type" value="1" title="商户" checked="" >
             <input type="radio" name="type" value="2" title="商户和用户">
         </div>
-        <div class="layui-input-block" th:if="${model.type eq 3}" >
+        <div class="layui-input-block" th:if="${model.type eq 2}" >
             <input type="radio" name="type" value="0" title="用户" >
             <input type="radio" name="type" value="1" title="商户">
             <input type="radio" name="type" value="2" title="商户和用户" checked="">

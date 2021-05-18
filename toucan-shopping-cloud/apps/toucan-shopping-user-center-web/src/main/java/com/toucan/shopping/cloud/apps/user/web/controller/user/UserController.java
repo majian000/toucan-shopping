@@ -158,10 +158,10 @@ public class UserController extends UIController {
         try {
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO<UserVO> resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                userVO = resultObjectVO.getData();
+                userVO =  (UserVO) resultObjectVO.formatData(UserVO.class);
                 request.setAttribute("model", userVO);
             }
         }catch(Exception e)
@@ -534,13 +534,12 @@ public class UserController extends UIController {
             return resultObjectVO;
         }
 
-        if(!PhoneUtils.isChinaPhoneLegal(user.getMobilePhone()))
+        if(user.getUserMainId()==null)
         {
-            resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("注册失败,手机号错误");
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户ID");
             return resultObjectVO;
         }
-
 
         //商城应用编码
         String shoppingAppCode = "10001001";
