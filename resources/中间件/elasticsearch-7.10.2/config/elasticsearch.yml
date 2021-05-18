@@ -1,0 +1,7 @@
+cluster.name: elasticsearch
+node.name: node-1
+node.attr.rack: r1
+path.data: d:/path/to/data
+path.logs: d:/path/to/logs
+http.port: 9200
+xpack.security.enabled: true
