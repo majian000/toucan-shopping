@@ -24,10 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -117,6 +114,84 @@ public class UserESController {
 
 
 
+
+    /**
+     * 禁用/启用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/disabled/enabled/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            Long userMainId = Long.parseLong(id);
+            //从缓存中查询用户对象
+            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userMainId);
+            UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+
+            if(userElasticSearchVO.getEnableStatus().shortValue()==0)
+            {
+                userElasticSearchVO.setEnableStatus((short)1);
+            }else{
+                userElasticSearchVO.setEnableStatus((short)0);
+            }
+            userElasticSearchService.update(userElasticSearchVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 批量禁用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/disabled/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO disabledByIds(HttpServletRequest request, @RequestBody List<UserVO> userVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(userVOS))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            for(UserVO userVO:userVOS)
+            {
+                //从缓存中查询用户对象
+                List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userVO.getUserMainId());
+                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                userElasticSearchVO.setEnableStatus((short)0);
+                userElasticSearchService.update(userElasticSearchVO);
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 
