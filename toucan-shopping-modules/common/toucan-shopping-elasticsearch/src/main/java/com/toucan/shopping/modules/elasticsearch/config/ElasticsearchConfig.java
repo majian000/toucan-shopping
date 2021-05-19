@@ -11,6 +11,8 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,8 @@ import java.net.UnknownHostException;
 
 @Configuration
 public class ElasticsearchConfig {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${spring.data.elasticsearch.username}")
     private String username;
@@ -32,6 +36,7 @@ public class ElasticsearchConfig {
 
     @Bean
     public RestHighLevelClient client(){
+        logger.info("初始化elasticsearch restHighLevelClient..............");
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,new UsernamePasswordCredentials(username, password));
         HttpHost[] httpHosts = new HttpHost[clusterNodes.length];

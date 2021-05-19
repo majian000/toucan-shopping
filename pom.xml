@@ -22,6 +22,10 @@
     <packaging>pom</packaging>
 
 
+    <properties>
+        <elasticsearch-version>7.8.0</elasticsearch-version>
+    </properties>
+
 
     <modules>
 
