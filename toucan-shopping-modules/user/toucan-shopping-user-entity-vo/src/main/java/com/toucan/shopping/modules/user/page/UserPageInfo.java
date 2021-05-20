@@ -111,6 +111,8 @@ public class UserPageInfo extends PageInfo<User> {
      */
     private String[] sortValues;
 
+    private String sortValuesString;
+
 
     //==============================================
 

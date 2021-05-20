@@ -84,12 +84,9 @@ public class UserESController  extends UIController {
             query.setEmail(userPageInfo.getEmail());
             query.setId(userPageInfo.getId());
 
-            if(userPageInfo.getPage()<=1)
+            if(StringUtils.isNotEmpty(userPageInfo.getSortValuesString()))
             {
-                request.getSession().removeAttribute("sortValue");
-            }
-            if(request.getSession().getAttribute("sortValue")!=null) {
-                userPageInfo.setSortValues(new String[]{String.valueOf(request.getSession().getAttribute("sortValue"))});
+                userPageInfo.setSortValues(userPageInfo.getSortValuesString().split(","));
             }
 
             SearchAfterPage searchAfterPage = userElasticSearchService.queryListForSearchAfter(query,userPageInfo.getLimit(),userPageInfo.getSortValues());
@@ -104,9 +101,6 @@ public class UserESController  extends UIController {
                     }
                     tableVO.setData((List) searchAfterPage.getUserElasticSearchVOS());
                     tableVO.setSortValues(searchAfterPage.getSortValues());
-                    if(searchAfterPage.getSortValues()!=null&&searchAfterPage.getSortValues().length>0) {
-                        request.getSession().setAttribute("sortValue", searchAfterPage.getSortValues()[0]);
-                    }
                 }
             }
         }catch(Exception e)
