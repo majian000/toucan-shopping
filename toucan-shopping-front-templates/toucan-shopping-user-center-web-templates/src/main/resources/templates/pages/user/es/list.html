@@ -55,17 +55,14 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <!--<button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>-->
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 停用 </button>
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
             </div>
         </script>
 
         <table class="layui-hide" id="userTable" lay-filter="userTableFilter"></table>
 
         <script type="text/html" id="userTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">停用</a>
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="flush">刷新</a>
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
     </div>
