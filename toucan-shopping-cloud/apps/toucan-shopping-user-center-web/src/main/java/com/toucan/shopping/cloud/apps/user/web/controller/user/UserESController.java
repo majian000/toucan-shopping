@@ -2,6 +2,8 @@ package com.toucan.shopping.cloud.apps.user.web.controller.user;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -31,7 +33,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/user/es")
-public class UserESController {
+public class UserESController  extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -47,11 +49,15 @@ public class UserESController {
     @Autowired
     private UserElasticSearchService userElasticSearchService;
 
+    @Autowired
+    private FeignFunctionService feignFunctionService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String page()
+    public String page(HttpServletRequest request)
     {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/user/es/listPage",feignFunctionService);
         return "pages/user/es/list.html";
     }
 
