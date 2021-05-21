@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>用户中心</title>
+    <title>商城后台</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -293,7 +293,22 @@
                     layer.full(index);
                 });
                 return false;
-            } else if (obj.event === 'disabledEnabledBtn') {
+            } else if (obj.event === 'flushCache') {
+                layer.confirm("确定刷新该用户?", function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]user/flush/cache/"+data.userMainIdString,
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        success:function(data){
+                            layer.msg(data.msg);
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'disabledEnabledBtn') {
                 var optText = "启用";
                 if(data.enableStatus==1)
                 {

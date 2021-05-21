@@ -32,15 +32,15 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 60000
-        readTimeout: 60000
+        connectTimeout: 120000
+        readTimeout: 120000
 hystrix:
   command:
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 60000 #请求时间超过60秒生熔断
+            timeoutInMilliseconds: 120000 #请求时间超过2分钟生熔断
       circuitBreaker:
         requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
 
@@ -63,7 +63,7 @@ ribbon:
 
 
 toucan:
-  app-name: 用户中心
+  app-name: 商城后台
   app-code: 10001002 #自定义应用编码
   #雪花算法ID相关
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID

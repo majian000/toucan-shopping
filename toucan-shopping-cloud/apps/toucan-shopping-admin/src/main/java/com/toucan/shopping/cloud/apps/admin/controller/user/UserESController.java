@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.user.web.controller.user;
+package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -72,7 +72,7 @@ public class UserESController  extends UIController {
     @AdminAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO listPage(HttpServletRequest request, UserPageInfo userPageInfo)
+    public TableVO list(HttpServletRequest request, UserPageInfo userPageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

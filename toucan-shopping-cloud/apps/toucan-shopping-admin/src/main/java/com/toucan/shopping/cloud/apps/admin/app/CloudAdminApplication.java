@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.user.web.app;
+package com.toucan.shopping.cloud.apps.admin.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

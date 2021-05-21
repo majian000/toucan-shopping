@@ -63,7 +63,20 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         try {
             UpdateRequest request = new UpdateRequest(UserCacheElasticSearchConstant.USER_INDEX,String.valueOf(esUserVO.getId()));
             XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
+            updateBody.field("userMainId",esUserVO.getUserMainId());
+            updateBody.field("password",esUserVO.getPassword());
+            updateBody.field("mobilePhone",esUserVO.getMobilePhone());
+            updateBody.field("email",esUserVO.getEmail());
+            updateBody.field("username",esUserVO.getUsername());
             updateBody.field("nickName",esUserVO.getNickName());
+            updateBody.field("trueName",esUserVO.getTrueName());
+            updateBody.field("headSculpture",esUserVO.getHeadSculpture());
+            updateBody.field("idCard",esUserVO.getIdCard());
+            updateBody.field("sex",esUserVO.getSex());
+            updateBody.field("type",esUserVO.getType());
+            updateBody.field("enableStatus",esUserVO.getEnableStatus());
+            updateBody.field("deleteStatus",esUserVO.getDeleteStatus());
+            updateBody.field("createDate",esUserVO.getCreateDate());
             updateBody.endObject();
             request.doc(updateBody);
             restHighLevelClient.update(request, RequestOptions.DEFAULT);

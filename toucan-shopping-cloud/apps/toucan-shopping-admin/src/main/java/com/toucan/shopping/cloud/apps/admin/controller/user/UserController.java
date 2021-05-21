@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.user.web.controller.user;
+package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -576,8 +576,8 @@ public class UserController extends UIController {
      * @param userMainId
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value="/flush/cache/{userMainId}",method = RequestMethod.GET)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value="/flush/cache/{userMainId}",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushCache(@PathVariable String userMainId){
         ResultObjectVO resultObjectVO = new ResultObjectVO();

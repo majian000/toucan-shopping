@@ -47,6 +47,9 @@
             <if test="id!=null">
                 and bu.id = #{id}
             </if>
+            <if test="userMainId!=null">
+                and bu.user_main_id = #{userMainId}
+            </if>
                 and bu.delete_status = 0
         </where>
 

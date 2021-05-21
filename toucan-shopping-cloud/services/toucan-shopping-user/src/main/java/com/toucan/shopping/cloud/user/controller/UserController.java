@@ -933,6 +933,8 @@ public class UserController {
                 userElasticSearchVO = userElasticSearchVOS.get(0);
             }else{ //如果缓存不存在将重新推到缓存中
                 userElasticSearchVO = new UserElasticSearchVO();
+                //设置默认用户ID
+                userElasticSearchVO.setUserMainId(-1L);
 
                 User queryUser = new User();
                 queryUser.setUserMainId(userRegistVO.getUserMainId());
@@ -941,6 +943,7 @@ public class UserController {
                     User user = users.get(0);
                     userElasticSearchVO.setId(user.getId());
                     userElasticSearchVO.setUserMainId(user.getUserMainId());
+                    userElasticSearchVO.setPassword(user.getPassword());
                     userElasticSearchVO.setEnableStatus(user.getEnableStatus());
                     userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
                 }

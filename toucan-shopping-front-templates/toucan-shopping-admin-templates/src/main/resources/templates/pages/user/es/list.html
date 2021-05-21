@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>用户中心</title>
+    <title>商城后台</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -117,11 +117,14 @@
             },
             cols: [
                 [
-                    {type: "checkbox", width: 50},
-                    {field: 'userId', width: 180, title: '用户ID'},
+                    {field: 'userId', width: 180, title: 'ID'},
+                    {field: 'userMainId', width: 180, title: '用户ID'},
                     {field: 'mobilePhone', width: 200, title: '手机号'},
                     {field: 'nickName', width: 240, title: '昵称'},
                     {field: 'email', width: 240, title: '邮箱'},
+                    {field: 'username', width: 240, title: '用户名'},
+                    {field: 'trueName', width: 240, title: '真实姓名'},
+                    {field: 'idCard', width: 240, title: '身份证'},
                     {field: 'enableStatus', width: 80, title: '状态',
                         templet: function (row) {
                             if(row.enableStatus == "1"){
@@ -136,6 +139,7 @@
                             }
                             return "女"
                         }},
+                    {field: 'createDate', width: 240, title: '注册时间'},
                     {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
                 ]
             ],
