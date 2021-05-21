@@ -12,9 +12,9 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan("com.toucan.shopping")
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @EnableHystrix
-public class CloudUserCenterWebApplication {
+public class CloudAdminApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CloudUserCenterWebApplication.class, args);
+        SpringApplication.run(CloudAdminApplication.class, args);
     }
 }
