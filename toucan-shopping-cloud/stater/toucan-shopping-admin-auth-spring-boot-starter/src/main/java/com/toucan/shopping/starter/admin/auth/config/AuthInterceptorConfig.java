@@ -33,7 +33,7 @@ public class AuthInterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        logger.info("初始化权限中心拦截器 拦截路径"+pathPatterns+
+        logger.info("初始化权限中台拦截器 拦截路径"+pathPatterns+
                 " 忽略拦截路径"+excludePathPatterns);
 
         InterceptorRegistration interceptorRegistration = registry.addInterceptor(authInterceptor);

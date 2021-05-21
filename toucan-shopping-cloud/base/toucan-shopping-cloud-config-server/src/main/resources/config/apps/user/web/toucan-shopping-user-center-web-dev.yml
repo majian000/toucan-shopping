@@ -32,15 +32,15 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 1200000
-        readTimeout: 1200000
+        connectTimeout: 60000
+        readTimeout: 60000
 hystrix:
   command:
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 1200000 #请求时间超过2分钟产生熔断
+            timeoutInMilliseconds: 60000 #请求时间超过60秒生熔断
       circuitBreaker:
         requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
 

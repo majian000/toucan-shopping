@@ -1,4 +1,4 @@
-#========================权限中心界面 生成环境====================================
+#========================权限中台界面 生成环境====================================
 
 server:
   port: 8098
@@ -31,16 +31,15 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 600000
-
-        readTimeout: 600000
+        connectTimeout: 60000
+        readTimeout: 60000
 hystrix:
   command:
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 600000 #请求时间超过1分钟超时
+            timeoutInMilliseconds: 60000 #请求时间超过1分钟超时
       circuitBreaker:
         requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
 

@@ -1,6 +1,5 @@
 package com.toucan.shopping.cloud.apps.admin.app;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -13,9 +12,8 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableEurekaClient
-@MapperScan({"com.toucan.shopping.modules.common.persistence.mapper"})
-@EnableFeignClients(basePackages = "com.toucan.shopping")
 @ComponentScan("com.toucan.shopping")
+@EnableFeignClients(basePackages = "com.toucan.shopping")
 @EnableHystrix
 public class CloudAdminApplication {
 

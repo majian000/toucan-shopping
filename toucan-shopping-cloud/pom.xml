@@ -61,7 +61,7 @@
         <module>api/toucan-shopping-category-api</module>
         <!--用户中心API -->
         <module>api/toucan-shopping-user-api</module>
-        <!--管理权限中心API -->
+        <!--管理权限中台API -->
         <module>api/toucan-shopping-admin-auth-api</module>
         <!--库存API -->
         <module>api/toucan-shopping-stock-api</module>
@@ -72,7 +72,7 @@
 
         <!--用户中心服务 -->
         <module>services/toucan-shopping-user</module>
-        <!--管理员权限中心 -->
+        <!--管理员权限中台 -->
         <module>services/toucan-shopping-admin-auth</module>
 
 
@@ -89,7 +89,7 @@
         <!--用户中心界面 -->
         <module>apps/toucan-shopping-user-center-web</module>
 
-        <!--权限中心界面 -->
+        <!--权限中台界面 -->
         <module>apps/toucan-shopping-admin-auth-web</module>
 
         <!--定时任务调度-->

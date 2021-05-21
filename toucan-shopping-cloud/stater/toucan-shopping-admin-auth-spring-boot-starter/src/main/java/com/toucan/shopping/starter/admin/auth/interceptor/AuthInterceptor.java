@@ -149,7 +149,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 if (authAnnotation != null) {
                     //由用户中心做权限判断
                     if (authAnnotation.verifyMethod() == AdminAuth.VERIFYMETHOD_ADMIN_AUTH) {
-                        //拿到权限中心账号服务
+                        //拿到权限中台账号服务
                         FeignAdminService feignAdminService = springContextHolder.getBean(FeignAdminService.class);
                         if (authAnnotation.login()) {
                             logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
@@ -202,7 +202,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                //在这里调用权限中心 判断登录
+                                //在这里调用权限中台 判断登录
                                 Admin queryAdminLogin = new Admin();
                                 queryAdminLogin.setAdminId(aid);
                                 queryAdminLogin.setLoginToken(lt);
@@ -258,7 +258,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
 
-                                //在这里调用权限中心 判断登录
+                                //在这里调用权限中台 判断登录
                                 Admin queryAdminLogin = new Admin();
                                 queryAdminLogin.setAdminId(aid);
                                 queryAdminLogin.setLoginToken(lt);

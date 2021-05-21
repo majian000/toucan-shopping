@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <description>权限中心管理界面</description>
+    <description>权限中台管理界面</description>
     <groupId>com.toucan.shopping.cloud.apps</groupId>
     <artifactId>toucan-shopping-admin-auth-web</artifactId>
     <version>1.0-SNAPSHOT</version>

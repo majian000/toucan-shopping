@@ -11,7 +11,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <description>权限中心API</description>
+    <description>权限中台API</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.cloud.api</groupId>

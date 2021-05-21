@@ -696,7 +696,7 @@ INSERT INTO `t_sa_role` VALUES ('4', '系统管理', 'e293c5082a354f79a5a8dac31e
 INSERT INTO `t_sa_role` VALUES ('5', '管理员', 'c81e574bb9d245719244228a0e65d1db', '1', '', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-18 18:47:04.474000', null, null);
 INSERT INTO `t_sa_role` VALUES ('6', '用户中心2', 'ca8f909fe744488da42efd328384db0b', '1', '10001002', '1', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-18 18:47:43.788000', null, null);
 INSERT INTO `t_sa_role` VALUES ('7', '管理员22', '96484aee63504ab4a175ce685610adf8', '1', '10001002', '1', '222', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-18 18:57:03.852000', null, null);
-INSERT INTO `t_sa_role` VALUES ('8', '权限中心管理员', 'f98da8a4f7ef412fa345225da51d14fb', '1', '10001003', '1', '1231231', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-18 19:00:10.473000', null, null);
+INSERT INTO `t_sa_role` VALUES ('8', '权限中台管理员', 'f98da8a4f7ef412fa345225da51d14fb', '1', '10001003', '1', '1231231', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-18 19:00:10.473000', null, null);
 INSERT INTO `t_sa_role` VALUES ('9', '测试禁用角色', 'a97fb5bceb744dfc94956fccb1f79717', '1', '10001002', '1', '44444111111222', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-18 19:09:32.328000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-18 19:10:05.588000');
 INSERT INTO `t_sa_role` VALUES ('10', '系统管理员', '6ba7eb5c30ea49a5b20a4f9de5636bb0', '1', '10001003', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-19 21:05:40.028000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-19 21:06:02.953000');
 INSERT INTO `t_sa_role` VALUES ('11', '部门负责人', 'f0349fe34ce34a9780033354cc27d335', '1', '10001003', '0', '', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-21 23:37:54.419000', 'bb155acbf5ef43dcac9aa892274fadd5', '2021-04-21 23:40:23.350000');

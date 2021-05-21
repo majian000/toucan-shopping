@@ -13,7 +13,7 @@ public @interface UserAuth {
 
 
 	/**
-	 * 校验方式 0本地验证 1权限中心验证
+	 * 校验方式 0本地验证 1权限中台验证
 	 */
 	public static int VERIFYMETHOD_LOCAL =0;
 	public static int VERIFYMETHOD_USER_CENTER =1;

@@ -11,7 +11,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <description>权限中心界面模板</description>
+    <description>权限中台界面模板</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.front.templates</groupId>

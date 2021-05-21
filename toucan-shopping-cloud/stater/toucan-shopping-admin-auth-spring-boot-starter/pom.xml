@@ -9,7 +9,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <description>权限中心starter</description>
+    <description>权限中台starter</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.cloud.starter</groupId>

@@ -1,7 +1,7 @@
 # 介绍
-    权限中心插件
+    权限中台插件
     
 ### 目录介绍
     
     1.toucan-shopping-admin-auth-spring-boot-starter
-    权限中心插件,用于验证管理员登录等
+    权限中台插件,用于验证管理员登录等

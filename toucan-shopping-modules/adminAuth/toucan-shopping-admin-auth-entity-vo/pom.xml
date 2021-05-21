@@ -11,7 +11,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <description>管理员权限中心实体VO</description>
+    <description>管理员权限中台实体VO</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.modules.adminAuth</groupId>
