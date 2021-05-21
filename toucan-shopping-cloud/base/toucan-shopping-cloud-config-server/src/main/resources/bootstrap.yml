@@ -34,9 +34,9 @@ spring:
                             classpath:/config/services/stock,\
                             classpath:/config/services/user,\
                             classpath:/config/services/app,\
-                            classpath:/config/services/admin/auth,\
+                            classpath:/config/services/adminAuth,\
                             classpath:/config/apps/shopping/web,\
-                            classpath:/config/apps/admin/auth/web,\
+                            classpath:/config/apps/shopping/adminAuth,\
                             classpath:/config/apps/scheduler/shopping,\
                             classpath:/config/apps/scheduler/user,\
                             classpath:/config/apps/shopping/admin,"
