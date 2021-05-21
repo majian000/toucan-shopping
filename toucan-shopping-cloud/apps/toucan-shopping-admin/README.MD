@@ -1,33 +1,35 @@
-###商城后台管理端
+# 介绍
     
-    管理商城商品SPU、商品SKU、商品类别、商品属性等
+## 用户中心
+    管理所有商城注册用户
+    端口号:8088
+
+#### 依赖模块及服务
     
-
-#### 依赖服务
-1.toucan-shopping-config-server
-
-    配置中心
+    用户服务
+    1.toucan-shopping-cloud/services/toucan-shopping-user
+    2.toucan-shopping-modules/user/toucan-shopping-user-entity-vo
+    3.toucan-shopping-modules/user/toucan-shopping-user-es
+    4.toucan-shopping-modules/user/toucan-shopping-user-service-dao
     
-2.toucan-shopping-eureka
+    权限服务
+    1.toucan-shopping-cloud/services/toucan-shopping-admin-auth
+    2.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-entity-vo
+    3.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-service-dao
+        
+### 用户中心界面
     
-    服务注册中心
-
-3.toucan-shopping-product
-
-    商品服务
-    
-4.toucan-shopping-order
-
-    订单服务
-
-
-#### 使用说明
-
-1.保存商品SKU接口
-    
-    POST http://localhost:8086/toucan-shopping-admin/productSku/save
-    { "productId":1, "price":999.99,"appCode": "10001001", "attributes": "{\"内存\": [\"8G\"],\"颜色\":[\"蓝色\"]}",    "stockNum": 10,    "remark": "小米手机备注",    "status": 0      }
-
+    访问地址 localhost:8088/login
     
     
+    
+### API
 
+#### 用户服务
+    
+    1.查询用户列表
+    POST http://localhost:8088/user/list
+    第一个请求参数
+    limit=500
+    第二页请求参数,sortValues[0]值为上一页返回的值,设置进去即可
+    limit=500&sortValues[0]=827214101934505996

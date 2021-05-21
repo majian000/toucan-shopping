@@ -101,7 +101,7 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.front.templates</groupId>
-                <artifactId>toucan-shopping-user-center-web-templates</artifactId>
+                <artifactId>toucan-shopping-admin-templates</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

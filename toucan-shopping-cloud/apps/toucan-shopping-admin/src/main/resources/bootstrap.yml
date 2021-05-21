@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  main:
+    allow-bean-definition-overriding: true #名称重复直接覆盖
 
 
 logging:
@@ -34,3 +36,4 @@ spring:
       uri: http://localhost:9090
       label: master
       profile: dev
+

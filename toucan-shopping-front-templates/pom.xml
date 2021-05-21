@@ -28,12 +28,10 @@
         <!--  =================================前端模板 =================================-->
         <!--商城客户端界面模板 -->
         <module>toucan-shopping-web-templates</module>
-        <!--用户中心界面模板 -->
-        <module>toucan-shopping-user-center-web-templates</module>
+        <!--后台管理界面 -->
+        <module>toucan-shopping-admin-templates</module>
         <!--权限中台界面模板 -->
         <module>toucan-shopping-admin-auth-web-templates</module>
-        <!--商城后台界面模板 -->
-        <module>toucan-shopping-admin-templates</module>
 
         <!-- ===============================================-->
 
@@ -58,7 +56,7 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.front.templates</groupId>
-                <artifactId>toucan-shopping-user-center-web-templates</artifactId>
+                <artifactId>toucan-shopping-admin-templates</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -66,13 +64,6 @@
             <dependency>
                 <groupId>com.toucan.shopping.front.templates</groupId>
                 <artifactId>toucan-shopping-admin-auth-web-templates</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.toucan.shopping.front.templates</groupId>
-                <artifactId>toucan-shopping-admin-templates</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

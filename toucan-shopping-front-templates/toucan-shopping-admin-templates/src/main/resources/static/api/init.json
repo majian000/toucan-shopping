@@ -4,45 +4,32 @@
     "href": "welcome"
   },
   "logoInfo": {
-    "title": "权限中台",
+    "title": "用户中心",
     "image": "../images/logo.png",
     "href": ""
   },
   "menuInfo": [
     {
-      "title": "权限中台",
+      "title": "用户中心",
       "icon": "fa fa-address-book",
       "href": "",
       "target": "_self",
       "child": [
         {
-          "title": "系统管理",
+          "title": "用户管理",
           "href": "",
           "icon": "fa fa-window-maximize",
           "target": "_self",
           "child": [
             {
-              "title": "应用列表",
-              "href": "../app/listPage",
+              "title": "用户缓存",
+              "href": "../user/es/listPage",
               "icon": "fa fa-list-alt",
               "target": "_self"
             },
             {
-              "title": "账号列表",
-              "href": "../admin/listPage",
-              "icon": "fa fa-list-alt",
-              "target": "_self"
-            },
-
-            {
-              "title": "角色列表",
-              "href": "../role/listPage",
-              "icon": "fa fa-list-alt",
-              "target": "_self"
-            },
-            {
-              "title": "功能项列表",
-              "href": "../function/listPage",
+              "title": "用户列表",
+              "href": "../user/listPage",
               "icon": "fa fa-list-alt",
               "target": "_self"
             }

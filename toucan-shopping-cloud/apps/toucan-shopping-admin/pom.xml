@@ -8,10 +8,9 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
-    <description>商城管理端</description>
-
     <modelVersion>4.0.0</modelVersion>
+
+    <description>用户中心管理界面</description>
     <groupId>com.toucan.shopping.cloud.apps</groupId>
     <artifactId>toucan-shopping-admin</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -132,13 +131,15 @@
     </dependencies>
 
 
+
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.apps.admin.app.CloudAdminApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.apps.user.web.app.CloudUserCenterWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -160,6 +161,4 @@
         </resources>
 
     </build>
-
-
 </project>

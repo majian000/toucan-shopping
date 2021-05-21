@@ -146,7 +146,7 @@
     端口号:8086
     后台管理端
 
-    3.apps/toucan-shopping-user-center-web
+    3.apps/toucan-shopping-admin
     端口号:8088
     用户中心界面
     

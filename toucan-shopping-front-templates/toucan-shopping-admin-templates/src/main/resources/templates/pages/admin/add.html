@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>权限管理</title>
+    <title>用户中心</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -34,12 +34,6 @@
         <label class="layui-form-label required">确认密码</label>
         <div class="layui-input-block">
             <input type="password" name="password2" lay-verify="required" maxlength="10" placeholder="请输入密码" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">关联应用</label>
-        <div class="layui-input-block">
-            <input th:each="aa:${apps}" name="appCodes" id="appCodes" type="checkbox"  th:value="${aa.code}"  th:title="${aa.name}">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">

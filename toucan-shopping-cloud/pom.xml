@@ -87,7 +87,7 @@
         <module>apps/toucan-shopping-admin</module>
         
         <!--用户中心界面 -->
-        <module>apps/toucan-shopping-user-center-web</module>
+        <module>apps/toucan-shopping-admin</module>
 
         <!--权限中台界面 -->
         <module>apps/toucan-shopping-admin-auth-web</module>

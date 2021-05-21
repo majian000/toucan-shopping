@@ -10,7 +10,7 @@
 ## 后台管理端
 
 ### 用户中心管理端界面
-    toucan-shopping-user-center-web-templates
+    toucan-shopping-admin-templates
     对用户操作等
 
 ### 权限中台管理端界面
