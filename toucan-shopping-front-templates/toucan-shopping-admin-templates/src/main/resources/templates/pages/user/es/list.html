@@ -20,11 +20,12 @@
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                    <input type="hidden" name="sortValuesString" value="" />
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">用户ID</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="id" autocomplete="off" class="layui-input">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -139,8 +140,7 @@
                             }
                             return "女"
                         }},
-                    {field: 'createDate', width: 240, title: '注册时间'},
-                    {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
+                    {field: 'createDate', width: 240, title: '注册时间'}
                 ]
             ],
             limits: [15,50,100,300],

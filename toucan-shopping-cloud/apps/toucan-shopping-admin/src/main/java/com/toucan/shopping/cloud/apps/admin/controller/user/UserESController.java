@@ -82,7 +82,7 @@ public class UserESController  extends UIController {
             query.setMobilePhone(userPageInfo.getMobilePhone());
             query.setNickName(userPageInfo.getNickName());
             query.setEmail(userPageInfo.getEmail());
-            query.setId(userPageInfo.getId());
+            query.setUserMainId(userPageInfo.getUserMainId());
 
             if(StringUtils.isNotEmpty(userPageInfo.getSortValuesString()))
             {

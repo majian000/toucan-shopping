@@ -234,9 +234,9 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         }
 
         //设置用户ID查询条件
-        if(esUserVo.getId()!=null)
+        if(esUserVo.getUserMainId()!=null)
         {
-            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("id", esUserVo.getId()));
+            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("userMainId", esUserVo.getUserMainId()));
         }
 
         //设置查询条件组
