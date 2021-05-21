@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <description>用户中心管理界面</description>
+    <description>商城后台管理界面</description>
     <groupId>com.toucan.shopping.cloud.apps</groupId>
     <artifactId>toucan-shopping-admin</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -69,7 +69,7 @@
         </dependency>
 
 
-        <!--用户中心权限处理 -->
+        <!--权限处理 -->
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
             <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
