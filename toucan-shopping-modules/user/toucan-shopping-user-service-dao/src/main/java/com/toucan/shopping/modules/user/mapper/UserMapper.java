@@ -15,6 +15,8 @@ public interface UserMapper {
 
     List<User> findListByEntity(User user);
 
+    List<User> findListByEntityNothingDeleteStatus(User user);
+
     int deleteById(Long id);
 
     List<User> findById(Long id);

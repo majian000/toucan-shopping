@@ -938,17 +938,25 @@ public class UserController {
 
                 User queryUser = new User();
                 queryUser.setUserMainId(userRegistVO.getUserMainId());
-                List<User> users = userService.findListByEntity(queryUser);
+                List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
                 if(CollectionUtils.isNotEmpty(users)) {
                     User user = users.get(0);
                     userElasticSearchVO.setId(user.getId());
                     userElasticSearchVO.setUserMainId(user.getUserMainId());
-                    userElasticSearchVO.setPassword(user.getPassword());
-                    userElasticSearchVO.setEnableStatus(user.getEnableStatus());
-                    userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
                 }
 
                 userElasticSearchService.save(userElasticSearchVO);
+            }
+
+            User queryUser = new User();
+            queryUser.setUserMainId(userRegistVO.getUserMainId());
+            List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
+            if(CollectionUtils.isNotEmpty(users)) {
+                User user = users.get(0);
+                userElasticSearchVO.setPassword(user.getPassword());
+                userElasticSearchVO.setEnableStatus(user.getEnableStatus());
+                userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
+                userElasticSearchVO.setCreateDate(user.getCreateDate());
             }
 
             if(userElasticSearchVO.getUserMainId()==null)

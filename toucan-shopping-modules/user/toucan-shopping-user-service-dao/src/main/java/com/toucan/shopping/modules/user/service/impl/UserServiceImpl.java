@@ -24,6 +24,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findListByEntityNothingDeleteStatus(User user) {
+        return userMapper.findListByEntityNothingDeleteStatus(user);
+    }
+    @Override
     public List<User> findListByUserMainId(Long userMainId) {
         return userMapper.findListByUserMainId(userMainId);
     }

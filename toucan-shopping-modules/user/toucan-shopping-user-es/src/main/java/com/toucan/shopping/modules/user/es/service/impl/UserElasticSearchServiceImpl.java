@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.user.es.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.user.constant.UserCacheElasticSearchConstant;
 import com.toucan.shopping.modules.user.vo.UserElasticSearchVO;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +78,7 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
             updateBody.field("type",esUserVO.getType());
             updateBody.field("enableStatus",esUserVO.getEnableStatus());
             updateBody.field("deleteStatus",esUserVO.getDeleteStatus());
-            updateBody.field("createDate",esUserVO.getCreateDate());
+            updateBody.field("createDate", esUserVO.getCreateDate().getTime());
             updateBody.endObject();
             request.doc(updateBody);
             restHighLevelClient.update(request, RequestOptions.DEFAULT);

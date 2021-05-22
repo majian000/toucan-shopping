@@ -56,6 +56,19 @@
     </select>
 
 
+    <select id="findListByEntityNothingDeleteStatus" resultMap="userMap" parameterType="com.toucan.shopping.modules.user.entity.User">
+        select * from t_user bu
+        <where>
+            1=1
+            <if test="id!=null">
+                and bu.id = #{id}
+            </if>
+            <if test="userMainId!=null">
+                and bu.user_main_id = #{userMainId}
+            </if>
+        </where>
+
+    </select>
 
     <select id="queryListPage" resultMap="userVOMap" parameterType="com.toucan.shopping.modules.user.page.UserPageInfo">
         select tu.* from t_user tu

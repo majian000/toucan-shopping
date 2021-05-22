@@ -115,6 +115,29 @@ public class UserESController  extends UIController {
 
 
 
+    /**
+     * 查看详情页
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detail/page/{userMainId}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable String userMainId)
+    {
+        try {
+            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(Long.parseLong(userMainId));
+            if(CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                request.setAttribute("model", userElasticSearchVOS.get(0));
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("model",  new UserElasticSearchVO());
+        }
+        return "pages/user/es/detail.html";
+    }
+
+
 
     /**
      * 刷新最新数据到缓存
