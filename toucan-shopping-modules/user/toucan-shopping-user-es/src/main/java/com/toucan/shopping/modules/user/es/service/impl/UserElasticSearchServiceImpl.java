@@ -78,7 +78,9 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
             updateBody.field("type",esUserVO.getType());
             updateBody.field("enableStatus",esUserVO.getEnableStatus());
             updateBody.field("deleteStatus",esUserVO.getDeleteStatus());
-            updateBody.field("createDate", esUserVO.getCreateDate().getTime());
+            if(esUserVO.getCreateDate()!=null) {
+                updateBody.field("createDate", esUserVO.getCreateDate().getTime());
+            }
             updateBody.endObject();
             request.doc(updateBody);
             restHighLevelClient.update(request, RequestOptions.DEFAULT);

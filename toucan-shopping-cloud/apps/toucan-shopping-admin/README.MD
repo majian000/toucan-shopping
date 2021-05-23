@@ -1,7 +1,7 @@
 # 介绍
     
-## 用户中心
-    管理所有商城注册用户
+## 商城后台管理
+    管理所有商城注册用户、轮播图、商品、订单等
     端口号:8088
 
 #### 依赖模块及服务
@@ -17,7 +17,7 @@
     2.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-entity-vo
     3.toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-service-dao
         
-### 用户中心界面
+### 管理界面
     
     访问地址 localhost:8088/login
     

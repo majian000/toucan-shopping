@@ -141,6 +141,19 @@
                             }
                             return "女"
                         }},
+                    {field: 'type', width: 80, title: '用户类型',
+                        templet: function (row) {
+                            if(row.type == "0"){
+                                return "用户"
+                            }
+                            if(row.type == "1"){
+                                return "商户"
+                            }
+                            if(row.type == "2"){
+                                return "商户和用户"
+                            }
+                            return row.type;
+                        }},
                     {field: 'createDate', width: 240, title: '注册时间'},
                     {title: '操作', minWidth: 200, toolbar: '#userTableBar', align: "center"}
                 ]
@@ -193,7 +206,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/}]]user/es/detail/page/"+data.userMainIdString,
+                    content: "[[@{/}]]user/es/detail/page/"+data.userMainId,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
