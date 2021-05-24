@@ -132,13 +132,6 @@
                         {field: 'createDate',  title: '创建时间'},
                         {field: 'updateAdminUsername',  title: '修改人'},
                         {field: 'updateDate',  title: '修改时间'},
-                        {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
-                                if (d.enableStatus == 1) {
-                                    return '启用';
-                                } else {
-                                    return '禁用';
-                                }
-                            }},
                         {templet: '#areaTreeTableToolbar', width: 120, align: 'center', title: '操作'}
                     ]
                 ],
