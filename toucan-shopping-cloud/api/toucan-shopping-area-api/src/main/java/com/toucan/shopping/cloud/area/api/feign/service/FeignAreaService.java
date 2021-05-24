@@ -31,4 +31,17 @@ public interface FeignAreaService {
 
 
 
+
+    /**
+     * 查询地区树
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
+    ResultObjectVO queryTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
+
+
 }

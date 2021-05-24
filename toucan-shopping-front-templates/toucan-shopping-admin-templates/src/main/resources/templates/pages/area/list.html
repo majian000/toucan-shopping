@@ -110,7 +110,7 @@
                 treePidName: 'pid',
                 elem: '#areaTreeTable',
                 where:getFormParam(),
-                url: '[[@{/}]]function/tree/table',
+                url: '[[@{/}]]area/tree/table',
                 toolbar: '#toolbarDemo',
                 page: false,
                 cols: [
@@ -173,7 +173,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/function/addPage}]]",
+                    content: "[[@{/area/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -183,7 +183,7 @@
                     , data = checkStatus.data;
                 layer.confirm('确定删除地区?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]function/delete/ids",
+                        url:"[[@{/}]]area/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -223,7 +223,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]function/editPage/'+data.id,
+                    content: '[[@{/}]]area/editPage/'+data.id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -232,7 +232,7 @@
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除该地区?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]function/delete/"+data.id,
+                        url:"[[@{/}]]area/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

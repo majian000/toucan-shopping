@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
+import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -442,6 +444,66 @@ public class AreaController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    /**
+     * 查询地区树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AreaVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaVO.class);
+
+            List<Area> areas = areaService.queryList(query);
+            if(!CollectionUtils.isEmpty(areas))
+            {
+                List<AreaTreeVO> areaTreeVOS = new ArrayList<AreaTreeVO>();
+                for(Area area : areas)
+                {
+                    if("-1".equals(area.getParentCode())) {
+                        AreaTreeVO areaTreeVO = new AreaTreeVO();
+                        BeanUtils.copyProperties(areaTreeVO, area);
+                        if(1==area.getType().shortValue())
+                        {
+                            areaTreeVO.setTitle(area.getProvince());
+                            areaTreeVO.setText(area.getProvince());
+                        }else if(2==area.getType().shortValue())
+                        {
+                            areaTreeVO.setTitle(area.getCity());
+                            areaTreeVO.setText(area.getCity());
+                        }else if(3==area.getType().shortValue())
+                        {
+                            areaTreeVO.setTitle(area.getArea());
+                            areaTreeVO.setText(area.getArea());
+                        }
+                        areaTreeVOS.add(areaTreeVO);
+
+                        areaTreeVO.setChildren(new ArrayList<AreaVO>());
+                        areaService.setChildren(areas,areaTreeVO);
+                    }
+                }
+                resultObjectVO.setData(areaTreeVOS);
+
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 }

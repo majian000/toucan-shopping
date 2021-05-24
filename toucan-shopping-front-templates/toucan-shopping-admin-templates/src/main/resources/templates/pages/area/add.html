@@ -123,10 +123,10 @@
                 maxmin:true,
                 shadeClose: true,
                 area: ['20%', '60%'],
-                content: "<div id='appFunctionTree'></div>",
+                content: "<div id='areaTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]function/query/app/function/tree",
+                        url:"[[@{/}]]area/query/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
@@ -140,11 +140,11 @@
                                 }
                                 //渲染
                                 var inst1 = tree.render({
-                                    elem: '#appFunctionTree'  //绑定元素
+                                    elem: '#areaTree'  //绑定元素
                                     ,data: data.data,
                                     click: function(obj){
                                         $("#selectPid").val(obj.data.title);
-                                        $("#pid").val(obj.data.id);
+                                        $("#parentCode").val(obj.data.code);
                                         $("#appCode").val(obj.data.appCode);
                                         layer.close(index);
                                     }

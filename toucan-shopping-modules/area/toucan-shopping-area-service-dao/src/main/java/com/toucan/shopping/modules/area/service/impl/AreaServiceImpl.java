@@ -4,18 +4,17 @@ import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.mapper.AreaMapper;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
+import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AreaServiceImpl implements AreaService {
@@ -72,7 +71,7 @@ public class AreaServiceImpl implements AreaService {
                 AreaVO areaVo = new AreaVO();
                 BeanUtils.copyProperties(areaVo,area);
                 areaVoList.add(areaVo);
-                setChildrenByParentId(areaVo);
+                setChildrenByParentCode(areaVo);
             }
         }
         return areaVoList;
@@ -80,21 +79,54 @@ public class AreaServiceImpl implements AreaService {
 
 
     @Override
-    public void setChildrenByParentId(AreaVO areaVO) throws InvocationTargetException, IllegalAccessException {
+    public void setChildrenByParentCode(AreaVO areaVO) throws InvocationTargetException, IllegalAccessException {
         List<Area> childrenList = this.findByParentCode(areaVO.getAppCode(),areaVO.getCode());
         if(CollectionUtils.isNotEmpty(childrenList))
         {
-            List<AreaVO> childrenCategoryVoList = new ArrayList<AreaVO>();
+            List<AreaVO> childrenAreaList = new ArrayList<AreaVO>();
             for(Area category:childrenList)
             {
                 AreaVO childAreaVo = new AreaVO();
                 BeanUtils.copyProperties(childAreaVo,category);
                 if(category!=null&&category.getId()!=null) {
-                    setChildrenByParentId(childAreaVo);
+                    setChildrenByParentCode(childAreaVo);
                 }
-                childrenCategoryVoList.add(childAreaVo);
+                childrenAreaList.add(childAreaVo);
             }
-            areaVO.setChildren(childrenCategoryVoList);
+            areaVO.setChildren((List<AreaVO>)childrenAreaList);
+        }
+    }
+
+
+
+
+    public void setChildren(List<Area> areas, AreaTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
+        for (Area area : areas) {
+            //为当前参数的子节点
+            if(area.getParentCode().equals(currentNode.getCode()))
+            {
+                AreaTreeVO areaTreeVO = new AreaTreeVO();
+                BeanUtils.copyProperties(areaTreeVO, area);
+
+                if(1==area.getType().shortValue())
+                {
+                    areaTreeVO.setTitle(area.getProvince());
+                    areaTreeVO.setText(area.getProvince());
+                }else if(2==area.getType().shortValue())
+                {
+                    areaTreeVO.setTitle(area.getCity());
+                    areaTreeVO.setText(area.getCity());
+                }else if(3==area.getType().shortValue())
+                {
+                    areaTreeVO.setTitle(area.getArea());
+                    areaTreeVO.setText(area.getArea());
+                }
+                areaTreeVO.setChildren(new ArrayList<AreaVO>());
+                currentNode.getChildren().add(areaTreeVO);
+
+                //查找当前节点的子节点
+                setChildren(areas,areaTreeVO);
+            }
         }
     }
 

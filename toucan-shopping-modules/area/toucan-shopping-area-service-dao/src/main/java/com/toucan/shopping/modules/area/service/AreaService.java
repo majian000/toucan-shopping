@@ -4,6 +4,7 @@ package com.toucan.shopping.modules.area.service;
 
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
+import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +29,7 @@ public interface AreaService {
 
     int deleteById(String appCode,Long id);
 
-    public List<Area> findByParentCode(String appCode,String parentCode);
+    List<Area> findByParentCode(String appCode,String parentCode);
 
     void deleteChildrenByParentCode(String appCode,String parentCode);
 
@@ -43,7 +44,7 @@ public interface AreaService {
      * 填充类别子节点
      * @param areaVO
      */
-    void setChildrenByParentId(AreaVO areaVO) throws InvocationTargetException, IllegalAccessException;
+    void setChildrenByParentCode(AreaVO areaVO) throws InvocationTargetException, IllegalAccessException;
 
 
 
@@ -56,7 +57,12 @@ public interface AreaService {
     List<AreaVO> findTreeTable(AreaTreeInfo areaTreeInfo);
 
 
-
+    /**
+     * 从一个集合中找到所有子节点并设置上
+     * @param areaVOS
+     * @param currentNode
+     */
+    void setChildren(List<Area> areaVOS, AreaTreeVO currentNode) throws InvocationTargetException, IllegalAccessException ;
 
 
 
