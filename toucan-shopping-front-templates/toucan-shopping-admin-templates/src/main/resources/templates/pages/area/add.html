@@ -113,6 +113,9 @@
             return false;
         });
 
+        $("input[name='type']").click(function(){
+            alert($(this).val());
+        });
 
         $("#selectPid").click(function(){
             loadding = layer.load();
