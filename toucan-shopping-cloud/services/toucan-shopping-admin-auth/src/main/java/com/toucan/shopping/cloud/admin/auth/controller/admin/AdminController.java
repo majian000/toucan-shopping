@@ -166,8 +166,8 @@ public class AdminController {
 
         try {
             AdminVO adminQuery = JSONObject.parseObject(requestVo.getEntityJson(),AdminVO.class);
-            List<Admin> adminApps = adminService.findListByEntity(adminQuery);
-            resultObjectVO.setData(adminApps);
+            List<Admin> admins = adminService.findListByEntity(adminQuery);
+            resultObjectVO.setData(admins);
 
         }catch(Exception e)
         {

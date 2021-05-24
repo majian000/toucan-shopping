@@ -17,5 +17,15 @@ public class AreaVO extends Area {
     private List<AreaVO> children;
 
 
+    /**
+     * 创建人
+     */
+    private String createAdminUsername;
+
+
+    /**
+     * 修改人
+     */
+    private String updateAdminUsername;
 
 }

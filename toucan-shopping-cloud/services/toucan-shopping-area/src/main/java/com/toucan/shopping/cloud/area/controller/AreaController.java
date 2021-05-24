@@ -2,11 +2,15 @@ package com.toucan.shopping.cloud.area.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
+import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -35,7 +39,11 @@ public class AreaController {
     @Autowired
     private AreaService areaService;
 
+    @Autowired
+    private FeignAdminService feignAdminService;
 
+    @Autowired
+    private Toucan toucan;
 
 
 
@@ -410,6 +418,50 @@ public class AreaController {
     }
 
 
+    /**
+     * 拿到创建人和修改人
+     * @param ids
+     * @param areas
+     */
+    private void getCreateAdminIdAndUpdateAdminId(List<Long> ids,List<AreaVO>  areas)
+    {
+        if(CollectionUtils.isEmpty(areas)) {
+            for (AreaVO areaVO : areas) {
+                if (areaVO.getCreateAdminId() != null) {
+                    ids.add(areaVO.getCreateAdminId());
+                }
+                if (areaVO.getUpdateAdminId() != null) {
+                    ids.add(areaVO.getUpdateAdminId());
+                }
+                getCreateAdminIdAndUpdateAdminId(ids, areaVO.getChildren());
+            }
+        }
+    }
+
+
+
+    /**
+     * 设置创建人和修改人
+     * @param adminVos
+     * @param areas
+     */
+    private void setCreateAdminNameAndUpdateAdminName(List<AdminVO> adminVos,List<AreaVO>  areas)
+    {
+        if(CollectionUtils.isEmpty(areas)) {
+            for (AreaVO areaVO : areas) {
+                for(AdminVO adminVO:adminVos)
+                {
+                    if (areaVO.getCreateAdminId() != null&&areaVO.getCreateAdminId().longValue()==adminVO.getId().longValue()) {
+                        areaVO.setCreateAdminUsername(adminVO.getUsername());
+                    }
+                    if (areaVO.getUpdateAdminId() != null&&areaVO.getUpdateAdminId().longValue()==adminVO.getId().longValue()) {
+                        areaVO.setUpdateAdminUsername(adminVO.getUsername());
+                    }
+                }
+                setCreateAdminNameAndUpdateAdminName(adminVos, areaVO.getChildren());
+            }
+        }
+    }
 
 
     /**
@@ -433,6 +485,28 @@ public class AreaController {
 
             //查询所有结构树
             List<AreaVO>  areas = areaService.findTreeTable(queryPageInfo);
+            List<Long> ids = new ArrayList<Long>();
+            //拿到树节点中所有创建人和修改人
+            getCreateAdminIdAndUpdateAdminId(ids,areas);
+
+            if(!CollectionUtils.isEmpty(areas))
+            {
+                AdminVO query = new AdminVO();
+                Long[] idArray = new Long[areas.size()];
+                query.setIds(idArray);
+                RequestJsonVO adminRequestJsonVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+                resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<AdminVO> admins = (List)resultObjectVO.formatData(ArrayList.class);
+                    if(!CollectionUtils.isEmpty(admins))
+                    {
+                        setCreateAdminNameAndUpdateAdminName(admins,areas);
+                    }
+                }
+            }
+
+
             resultObjectVO.setData(areas);
 
         }catch(Exception e)
