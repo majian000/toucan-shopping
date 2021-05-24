@@ -15,6 +15,7 @@ public class Area {
     private String code; //编码
     private String parentCode; //上级编码
     private String province; //省
+    private Long pid; //上级ID
     private String city; //市
     private String area; //区县
     private Short isMunicipality=0; //是否直辖市 0:否 1:是

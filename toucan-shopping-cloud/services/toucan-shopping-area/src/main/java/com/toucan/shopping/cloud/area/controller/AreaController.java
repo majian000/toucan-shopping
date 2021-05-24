@@ -510,28 +510,6 @@ public class AreaController {
                 }
             }
 
-            if(!CollectionUtils.isEmpty(areas))
-            {
-                for(AreaVO avo:areas)
-                {
-                    if("-1".equals(avo.getParentCode()))
-                    {
-                        avo.setPid(-1L);
-                        continue;
-                    }
-                    for(AreaVO vo:areas)
-                    {
-                        if(avo.getParentCode()!=null&&vo.getCode()!=null&&
-                                avo.getParentCode().equals(vo.getCode()))
-                        {
-                            avo.setPid(vo.getId());
-                            break;
-                        }
-                    }
-
-                }
-            }
-
             resultObjectVO.setData(areas);
 
         }catch(Exception e)

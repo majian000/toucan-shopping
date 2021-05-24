@@ -19,10 +19,6 @@ public class AreaVO extends Area {
      */
     private String name;
 
-    /**
-     * 上级ID
-     */
-    private Long pid;
 
     private List<AreaVO> children;
 

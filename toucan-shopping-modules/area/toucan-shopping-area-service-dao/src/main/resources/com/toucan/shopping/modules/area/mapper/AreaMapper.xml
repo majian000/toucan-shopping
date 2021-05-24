@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="code" jdbcType="VARCHAR" property="code" />
         <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+        <result column="pid" jdbcType="BIGINT" property="pid" />
         <result column="province" jdbcType="VARCHAR" property="province" />
         <result column="city" jdbcType="VARCHAR" property="city" />
         <result column="area" jdbcType="VARCHAR" property="area" />
@@ -22,6 +23,7 @@
     </resultMap>
 
     <resultMap id="areaVOMap" type="com.toucan.shopping.modules.area.vo.AreaVO" extends="areaMap">
+
     </resultMap>
 
 
@@ -81,7 +83,7 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.area.entity.Area">
         update t_area set code=#{code},parent_code=#{parentCode},province=#{province},city=#{city},area=#{area},area_sort=#{areaSort}
-        ,type=#{type},remark=#{remark},
+        ,type=#{type},remark=#{remark},pid=#{pid},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>

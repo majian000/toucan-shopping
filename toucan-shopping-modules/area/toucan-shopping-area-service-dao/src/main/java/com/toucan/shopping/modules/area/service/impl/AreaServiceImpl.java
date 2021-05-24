@@ -131,23 +131,6 @@ public class AreaServiceImpl implements AreaService {
     }
 
 
-    /**
-     * 查询上级节点
-     * @param retNodes 返回的所有节点
-     * @param child
-     */
-    public void queryParentNode(List<AreaVO> retNodes,AreaVO child)
-    {
-        List<AreaVO> parentNodes = areaMapper.queryByCode(child.getParentCode());
-        retNodes.addAll(parentNodes);
-        //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
-        if(CollectionUtils.isNotEmpty(parentNodes)) {
-            if (!"-1".equals(parentNodes.get(0).getParentCode()) && !existsParent(retNodes, parentNodes.get(0))) {
-                queryParentNode(retNodes, parentNodes.get(0));
-            }
-        }
-    }
-
 
     public boolean existsParent(List<AreaVO> nodes,AreaVO node)
     {
@@ -184,11 +167,6 @@ public class AreaServiceImpl implements AreaService {
                 }else if(node.getType()==3)
                 {
                     node.setName(node.getArea());
-                }
-                //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
-                if(!node.getParentCode().equals("-1")&&!existsParent(retNodes,node))
-                {
-                    queryParentNode(retNodes,node);
                 }
             }
         }
