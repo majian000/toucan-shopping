@@ -27,19 +27,19 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">省</label>
+        <label class="layui-form-label required" id="provinceDiv">省</label>
         <div class="layui-input-block">
             <input type="text" name="province" lay-verify="required" maxlength="20" lay-reqtext="省" placeholder="请输入省名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">市</label>
+        <label class="layui-form-label required" id="cityDiv">市</label>
         <div class="layui-input-block">
             <input type="text" name="city" lay-verify="required" maxlength="20" lay-reqtext="市" placeholder="请输入市名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">区县</label>
+        <label class="layui-form-label required" id="areaDiv">区县</label>
         <div class="layui-input-block">
             <input type="text" name="area" lay-verify="required" maxlength="20" lay-reqtext="区县" placeholder="请输入区县名称" value="" class="layui-input">
         </div>
@@ -56,6 +56,13 @@
             <input type="hidden" name="parentCode" id="parentCode">
             <input type="hidden" name="appCode" id="appCode">
             <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级节点" value="" class="layui-input" >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">直辖市</label>
+        <div class="layui-input-block">
+            <input type="radio" name="isMunicipality" value="0" title="否" checked="">
+            <input type="radio" name="isMunicipality" value="1" title="是">
         </div>
     </div>
     <div class="layui-form-item">
@@ -113,8 +120,27 @@
             return false;
         });
 
+
+        //默认显示省
+        $("#provinceDiv").show();
+        $("#cityDiv").hide();
+        $("#areaDiv").hide();
+
         $("input[name='type']").click(function(){
-            alert($(this).val());
+            var typeValue = $(this).val();
+            if(typeValue=="1") {
+                $("#provinceDiv").show();
+                $("#cityDiv").hide();
+                $("#areaDiv").hide();
+            }else if(typeValue=="2") {
+                $("#provinceDiv").hide();
+                $("#cityDiv").show();
+                $("#areaDiv").hide();
+            }else if(typeValue=="3") {
+                $("#provinceDiv").hide();
+                $("#cityDiv").hide();
+                $("#areaDiv").show();
+            }
         });
 
         $("#selectPid").click(function(){
