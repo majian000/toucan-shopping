@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.area.mapper;
 
 import com.toucan.shopping.modules.area.entity.Area;
+import com.toucan.shopping.modules.area.page.AreaTreeInfo;
+import com.toucan.shopping.modules.area.vo.AreaVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -22,4 +24,13 @@ public interface AreaMapper {
     int deleteById(String appCode,Long id);
 
     int update(Area area);
+
+    List<AreaVO> queryByCode(String code);
+
+    /**
+     * 查询表格树
+     * @param areaTreeInfo
+     * @return
+     */
+    List<AreaVO> findTreeTableByPageInfo(AreaTreeInfo areaTreeInfo);
 }

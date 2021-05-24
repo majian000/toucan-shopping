@@ -3,9 +3,8 @@ package com.toucan.shopping.cloud.apps.web.controller.page.index;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.redis.BannerRedisKey;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignAdminAreaService;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignUserAreaService;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignUserBannerService;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryUserService;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.vo.BannerVO;
@@ -37,11 +36,9 @@ public class IndexPageController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private FeignUserAreaService feignUserAreaService;
 
     @Autowired
-    private FeignAdminAreaService feignAdminAreaService;
+    private FeignAreaService feignAreaService;
 
     @Autowired
     private Toucan toucan;
@@ -50,7 +47,7 @@ public class IndexPageController {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private FeignUserBannerService feignUserBannerService;
+    private FeignBannerService feignBannerService;
 
     @Autowired
     private FeignCategoryUserService feignCategoryUserService;
@@ -107,7 +104,7 @@ public class IndexPageController {
                 BannerVO bannerVO = new BannerVO();
                 bannerVO.setAreaCodeArray(new String[]{"110000"});
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), bannerVO);
-                ResultObjectVO resultObjectVO = feignUserBannerService.queryList(SignUtil.sign(requestJsonVO), requestJsonVO);
+                ResultObjectVO resultObjectVO = feignBannerService.queryList(SignUtil.sign(requestJsonVO), requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Banner.class);
                     //保存轮播图到redis

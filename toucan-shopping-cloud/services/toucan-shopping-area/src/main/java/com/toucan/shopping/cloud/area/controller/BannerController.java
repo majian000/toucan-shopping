@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/banner/admin")
-public class AdminBannerController {
+public class BannerController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -134,6 +134,72 @@ public class AdminBannerController {
     }
 
 
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
+            if(bannerVO.getAreaCodeArray()!=null&&bannerVO.getAreaCodeArray().length>0)
+            {
+                List<Long> bannerIdList = new ArrayList<Long>();
+                for(int i=0;i<bannerVO.getAreaCodeArray().length;i++)
+                {
+                    BannerArea bannerArea = new BannerArea();
+                    bannerArea.setAppCode(requestJsonVO.getAppCode());
+                    bannerArea.setAreaCode(bannerVO.getAreaCodeArray()[i]);
+                    List<BannerArea> bannerAreaList = bannerAreaService.queryList(bannerArea);
+                    if(CollectionUtils.isNotEmpty(bannerAreaList))
+                    {
+                        for(BannerArea ba:bannerAreaList) {
+                            if(ba!=null) {
+                                bannerIdList.add(ba.getBannerId());
+                            }
+                        }
+                    }
+                }
+                if(CollectionUtils.isNotEmpty(bannerIdList))
+                {
+                    Long[] bannerIdArray = new Long[bannerIdList.size()];
+                    for(int i=0;i<bannerIdList.size();i++)
+                    {
+                        bannerIdArray[i]=bannerIdList.get(i);
+                    }
+                    bannerVO.setIdArray(bannerIdArray);
+                }
+
+            }
+            resultObjectVO.setData(bannerService.queryList(bannerVO));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
 
 

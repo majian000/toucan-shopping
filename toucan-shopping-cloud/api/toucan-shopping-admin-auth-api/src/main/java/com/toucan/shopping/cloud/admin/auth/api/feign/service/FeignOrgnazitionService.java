@@ -40,7 +40,7 @@ public interface FeignOrgnazitionService {
      * @return
      */
     @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO queryAppOrgnazitionTreeTable(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryAppOrgnazitionTreeTable(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
     /**

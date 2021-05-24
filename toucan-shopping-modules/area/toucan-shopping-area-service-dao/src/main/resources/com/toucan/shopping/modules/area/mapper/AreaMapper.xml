@@ -21,6 +21,10 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
     </resultMap>
 
+    <resultMap id="areaVOMap" type="com.toucan.shopping.modules.area.vo.AreaVO" extends="areaMap">
+    </resultMap>
+
+
     <select id="queryList" resultMap="areaMap" parameterType="com.toucan.shopping.modules.area.entity.Area">
         select ba.* from t_area ba
         <where>
@@ -65,6 +69,10 @@
         select * from t_area where id=#{id} and delete_status=0
     </select>
 
+    <select id="queryByCode" resultMap="areaVOMap" parameterType="java.lang.String">
+        select * from t_area where code=#{code} and delete_status=0
+    </select>
+
 
     <update id="deleteById">
         update t_area  set delete_status=1 where id=#{id} and app_code=#{appCode}  and delete_status=0
@@ -83,5 +91,23 @@
          where 1=1 and ba.parent_code=#{parentCode}  and ba.app_code=#{appCode} and ba.delete_status=0 order by ba.category_sort desc
 
     </select>
+
+
+
+
+    <select id="findTreeTableByPageInfo" resultMap="areaVOMap" parameterType="com.toucan.shopping.modules.area.page.AreaTreeInfo">
+
+        select * from t_area t
+        <where>
+            1=1
+            <if test="name!=null and name!=''">
+                and t.name  like concat('%',#{name},'%')
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
 
 </mapper>

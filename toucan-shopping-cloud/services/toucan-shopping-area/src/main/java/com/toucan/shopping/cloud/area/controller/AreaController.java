@@ -3,7 +3,9 @@ package com.toucan.shopping.cloud.area.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.area.entity.Area;
+import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
+import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -23,8 +25,8 @@ import java.util.List;
  * 管理端地区操作
  */
 @RestController
-@RequestMapping("/area/admin")
-public class AdminAreaController {
+@RequestMapping("/area")
+public class AreaController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -368,6 +370,78 @@ public class AdminAreaController {
     }
 
 
+    /**
+     * 查询指定应用下地区树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/all",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryAll(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            List<AreaVO> areaVOS = areaService.queryTree(requestJsonVO.getAppCode());
+            resultObjectVO.setData(areaVOS);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAppOrgnazitionTreeTable(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AreaTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaTreeInfo.class);
+
+            //查询所有结构树
+            List<AreaVO>  areas = areaService.findTreeTable(queryPageInfo);
+            resultObjectVO.setData(areas);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

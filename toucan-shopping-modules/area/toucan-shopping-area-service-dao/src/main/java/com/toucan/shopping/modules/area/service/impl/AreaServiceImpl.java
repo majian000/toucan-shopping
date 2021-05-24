@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.area.service.impl;
 
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.mapper.AreaMapper;
+import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import org.apache.commons.beanutils.BeanUtils;
@@ -22,8 +23,6 @@ public class AreaServiceImpl implements AreaService {
     @Autowired
     private AreaMapper areaMapper;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     @Override
     public List<Area> queryList(Area area) {
@@ -97,6 +96,60 @@ public class AreaServiceImpl implements AreaService {
             }
             areaVO.setChildren(childrenCategoryVoList);
         }
+    }
+
+
+    /**
+     * 查询上级节点
+     * @param retNodes 返回的所有节点
+     * @param child
+     */
+    public void queryParentNode(List<AreaVO> retNodes,AreaVO child)
+    {
+        List<AreaVO> parentNode = areaMapper.queryByCode(child.getCode());
+        retNodes.addAll(parentNode);
+        //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
+        if(!"-1".equals(parentNode.get(0).getParentCode())&&!existsParent(retNodes,parentNode.get(0)))
+        {
+            queryParentNode(retNodes,parentNode.get(0));
+        }
+    }
+
+
+    public boolean existsParent(List<AreaVO> nodes,AreaVO node)
+    {
+        if(!CollectionUtils.isEmpty(nodes))
+        {
+            for(AreaVO n:nodes)
+            {
+                if(node.getParentCode().equals(n.getCode()))
+                {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+
+    @Override
+    public List<AreaVO> findTreeTable(AreaTreeInfo areaTreeInfo) {
+        List<AreaVO> retNodes = new ArrayList<AreaVO>();
+        List<AreaVO> nodes = areaMapper.findTreeTableByPageInfo(areaTreeInfo);
+        if(!CollectionUtils.isEmpty(nodes))
+        {
+            retNodes.addAll(nodes);
+            for(AreaVO node:nodes)
+            {
+                //当前节点不是顶级节点并且这个集合里没有它的父节点,那么就去数据库查询出它的父节点
+                if(!node.getParentCode().equals("1")&&!existsParent(retNodes,node))
+                {
+                    queryParentNode(retNodes,node);
+                }
+            }
+        }
+        return retNodes;
     }
 
     @Override

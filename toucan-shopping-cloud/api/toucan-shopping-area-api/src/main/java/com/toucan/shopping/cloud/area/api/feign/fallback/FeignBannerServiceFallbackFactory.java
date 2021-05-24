@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.area.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignAdminAreaService;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;
@@ -10,22 +10,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 管理员地区服务
+ * 用户地区服务
  */
 @Component
-public class FeignAdminAreaServiceFallbackFactory implements FallbackFactory<FeignAdminAreaService> {
+public class FeignBannerServiceFallbackFactory implements FallbackFactory<FeignBannerService> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FeignAdminAreaService create(Throwable throwable) {
+    public FeignBannerService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
-        return new FeignAdminAreaService(){
-
-
+        return new FeignBannerService(){
             @Override
-            public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
-
+            public ResultObjectVO queryList(String signHeader,RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -33,7 +30,7 @@ public class FeignAdminAreaServiceFallbackFactory implements FallbackFactory<Fei
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAreaService save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignBannerService.queryList失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

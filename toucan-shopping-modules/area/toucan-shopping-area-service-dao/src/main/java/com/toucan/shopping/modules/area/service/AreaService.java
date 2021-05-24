@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.area.service;
 
 
 import com.toucan.shopping.modules.area.entity.Area;
+import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 
 import java.lang.reflect.InvocationTargetException;
@@ -43,4 +44,20 @@ public interface AreaService {
      * @param areaVO
      */
     void setChildrenByParentId(AreaVO areaVO) throws InvocationTargetException, IllegalAccessException;
+
+
+
+
+    /**
+     * 查询树表格
+     * @param areaTreeInfo
+     * @return
+     */
+    List<AreaVO> findTreeTable(AreaTreeInfo areaTreeInfo);
+
+
+
+
+
+
 }
