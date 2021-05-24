@@ -56,8 +56,6 @@ public class AreaController extends UIController {
     @Autowired
     private FeignFunctionService feignFunctionService;
 
-    @Autowired
-    private FeignAppService feignAppService;
 
 
 
@@ -79,13 +77,38 @@ public class AreaController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        super.initSelectApp(request,toucan,feignAppService);
-
-
         return "pages/area/add.html";
     }
 
 
+
+
+    /**
+     * 保存
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody OrgnazitionVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            List<String> appCodes = new ArrayList();
+            appCodes.add(toucan.getAppCode());
+            entity.setAppCodes(appCodes);
+            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignAreaService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 
