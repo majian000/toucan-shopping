@@ -24,9 +24,21 @@
                 <form class="layui-form layui-form-pane" id="functionSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">地区名称</label>
+                            <label class="layui-form-label">省</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                                <input type="text" name="province" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">市</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="city" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">区县</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="area" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
@@ -44,10 +56,10 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="functionTreeTable" lay-filter="functionTreeTableFilter"></table>
+        <table class="layui-hide" id="areaTreeTable" lay-filter="areaTreeTableFilter"></table>
 
         <!-- 操作列 -->
-        <script type="text/html" id="functionTreeTableToolbar">
+        <script type="text/html" id="areaTreeTableToolbar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -96,7 +108,7 @@
                 treeSpid: -1,
                 treeIdName: 'id',
                 treePidName: 'pid',
-                elem: '#functionTreeTable',
+                elem: '#areaTreeTable',
                 where:getFormParam(),
                 url: '[[@{/}]]function/tree/table',
                 toolbar: '#toolbarDemo',
@@ -104,10 +116,19 @@
                 cols: [
                     [
                         {type: "checkbox", width: 50},
-                        {field: 'name', width: 400,  title: '地区名称'},
-                        {field: 'url', title: '链接'},
-                        {field: 'permission', title: '权限'},
-                        {field: 'functionSort', title: '排序'},
+                        {field: 'code', width: 400,  title: '编码'},
+                        {field: 'parentCode', width: 400,  title: '上级编码'},
+                        {field: 'province', title: '省'},
+                        {field: 'city', title: '市'},
+                        {field: 'area', title: '区县'},
+                        {field: 'areaSort', title: '排序'},
+                        {field: 'isMunicipality', title: '直辖市', templet: function (d) {
+                                if (d.isMunicipality == 1) {
+                                    return '是';
+                                } else {
+                                    return '否';
+                                }
+                            }},
                         {field: 'createAdminUsername', title: '创建人'},
                         {field: 'createDate',  title: '创建时间'},
                         {field: 'updateAdminUsername',  title: '修改人'},
@@ -119,29 +140,11 @@
                                     return '禁用';
                                 }
                             }},
-                        {
-                            field: 'type', width: 80, align: 'center', templet: function (d) {
-                                if (d.type == 0) {
-                                    return '<span class="layui-badge layui-bg-blue">目录</span>';
-                                }else if (d.type == 1) {
-                                    return '<span class="layui-badge-rim">菜单</span>';
-                                }else  if (d.type == 2) {
-                                    return '<span class="layui-badge layui-bg-gray">按钮</span>';
-                                }else  if (d.type == 3) {
-                                    return '<span class="layui-badge layui-bg-gray">工具条按钮</span>';
-                                }else  if (d.type == 4) {
-                                    return '<span class="layui-badge layui-bg-gray">API</span>';
-                                }else  if (d.type == 5) {
-                                    return '<span class="layui-badge layui-bg-gray">页面控件</span>';
-                                }
-                                return '<span class="layui-badge layui-bg-black">应用</span>';
-                            }, title: '类型'
-                        },
-                        {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
+                        {templet: '#areaTreeTableToolbar', width: 120, align: 'center', title: '操作'}
                     ]
                 ],
                 done: function () {
-                    treetable.foldAll("#functionTreeTable");
+                    treetable.foldAll("#areaTreeTable");
                     layer.closeAll('loading');
                 }
             });
@@ -161,7 +164,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(functionTreeTableFilter)', function (obj) {
+        table.on('toolbar(areaTreeTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加地区',
@@ -176,7 +179,7 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('functionTreeTable')
+                var checkStatus = table.checkStatus('areaTreeTable')
                     , data = checkStatus.data;
                 layer.confirm('确定删除地区?', function (index) {
                     $.ajax({
@@ -201,11 +204,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(functionTreeTableFilter)', function (obj) {
+        table.on('checkbox(areaTreeTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(functionTreeTableFilter)', function (obj) {
+        table.on('tool(areaTreeTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
                 if(data.type==null)

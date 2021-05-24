@@ -113,18 +113,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="functionSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number" th:value="${model.functionSort}"  >
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
-        <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
-            <input type="radio" name="enableStatus" value="1" title="启用" checked>
-            <input type="radio" name="enableStatus" value="0" title="禁用">
-        </div>
-        <div class="layui-input-block" th:if="${model.enableStatus eq 0}" >
-            <input type="radio" name="enableStatus" value="1" title="启用" >
-            <input type="radio" name="enableStatus" value="0" title="禁用" checked>
+            <input type="number" name="areaSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number" th:value="${model.functionSort}"  >
         </div>
     </div>
     <div class="layui-form-item layui-form-text">

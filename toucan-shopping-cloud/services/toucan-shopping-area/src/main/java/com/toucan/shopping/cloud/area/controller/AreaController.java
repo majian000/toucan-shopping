@@ -417,7 +417,7 @@ public class AreaController {
      */
     @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryAppOrgnazitionTreeTable(@RequestBody RequestJsonVO requestJsonVO){
+    public ResultObjectVO queryTreeTable(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {

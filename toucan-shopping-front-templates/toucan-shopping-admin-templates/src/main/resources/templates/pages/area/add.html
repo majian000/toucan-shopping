@@ -17,66 +17,51 @@
 </head>
 <body>
 <div class="layui-form layuimini-form">
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">功能名称</label>
+        <label class="layui-form-label required">类型</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入功能名称" value="" class="layui-input">
+            <input type="radio" name="type" value="1" title="省" checked="">
+            <input type="radio" name="type" value="2" title="市">
+            <input type="radio" name="type" value="3" title="区县" >
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">功能链接</label>
+        <label class="layui-form-label required">省</label>
         <div class="layui-input-block">
-            <input type="text" name="url"  maxlength="500" lay-reqtext="链接不能为空" placeholder="请输入功能链接" value="" class="layui-input">
+            <input type="text" name="province" lay-verify="required" maxlength="20" lay-reqtext="省" placeholder="请输入省名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">权限标识</label>
+        <label class="layui-form-label required">市</label>
         <div class="layui-input-block">
-            <input type="text" name="permission" lay-verify="required" maxlength="255" lay-reqtext="权限标识不能为空" placeholder="请输入功能权限标识" value="" class="layui-input">
+            <input type="text" name="city" lay-verify="required" maxlength="20" lay-reqtext="市" placeholder="请输入市名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">功能类型</label>
+        <label class="layui-form-label required">区县</label>
         <div class="layui-input-block">
-            <input type="radio" name="type" value="0" title="目录" checked="">
-            <input type="radio" name="type" value="1" title="菜单">
-            <input type="radio" name="type" value="2" title="按钮" >
-            <input type="radio" name="type" value="3" title="工具条按钮" >
-            <input type="radio" name="type" value="4" title="API" >
-            <input type="radio" name="type" value="5" title="页面控件" >
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">功能内容</label>
-        <div class="layui-input-block">
-            <textarea name="functionText" class="layui-textarea" maxlength="500" placeholder="功能内容"></textarea>
+            <input type="text" name="area" lay-verify="required" maxlength="20" lay-reqtext="区县" placeholder="请输入区县名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">上级功能</label>
+        <label class="layui-form-label">编码</label>
         <div class="layui-input-block">
-            <input type="hidden" name="pid" id="pid">
+            <input type="text" name="code"  maxlength="20" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">上级节点</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="parentCode" id="parentCode">
             <input type="hidden" name="appCode" id="appCode">
-            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级功能" value="" class="layui-input" >
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label ">图标</label>
-        <div class="layui-input-block">
-            <input type="text" name="icon"  maxlength="60"  placeholder="请输入功能图标" value="" class="layui-input">
+            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级节点" value="" class="layui-input" >
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="functionSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">状态</label>
-        <div class="layui-input-block">
-            <input type="radio" name="enableStatus" value="1" title="启用" checked="">
-            <input type="radio" name="enableStatus" value="0" title="禁用">
+            <input type="number" name="areaSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
