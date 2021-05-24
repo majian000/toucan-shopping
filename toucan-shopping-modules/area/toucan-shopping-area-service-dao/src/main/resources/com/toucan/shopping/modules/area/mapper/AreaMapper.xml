@@ -9,7 +9,7 @@
         <result column="province" jdbcType="VARCHAR" property="province" />
         <result column="city" jdbcType="VARCHAR" property="city" />
         <result column="area" jdbcType="VARCHAR" property="area" />
-        <result column="area_sort" jdbcType="INTEGER" property="area_sort" />
+        <result column="area_sort" jdbcType="INTEGER" property="areaSort" />
         <result column="is_municipality" jdbcType="INTEGER" property="isMunicipality" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />

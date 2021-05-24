@@ -153,7 +153,7 @@ public class AdminController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByEntity(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();

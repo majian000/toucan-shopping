@@ -76,6 +76,7 @@
             form = layui.form,
             table = layui.table;
         var treetable = layui.treetable;
+        var loadding;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -103,6 +104,7 @@
 
         function loadTreeTable()
         {
+            loadding = layer.load();
             treetable.render({
                 treeColIndex: 1,
                 treeSpid: -1,
@@ -116,11 +118,8 @@
                 cols: [
                     [
                         {type: "checkbox", width: 50},
-                        {field: 'code', width: 400,  title: '编码'},
-                        {field: 'parentCode', width: 400,  title: '上级编码'},
-                        {field: 'province', title: '省'},
-                        {field: 'city', title: '市'},
-                        {field: 'area', title: '区县'},
+                        {field: 'name', title: '名称'},
+                        {field: 'code', width: 100,  title: '编码'},
                         {field: 'areaSort', title: '排序'},
                         {field: 'isMunicipality', title: '直辖市', templet: function (d) {
                                 if (d.isMunicipality == 1) {
@@ -146,6 +145,7 @@
                 done: function () {
                     treetable.foldAll("#areaTreeTable");
                     layer.closeAll('loading');
+                    layer.close(loadding);
                 }
             });
 
@@ -155,7 +155,7 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            
+
             loadTreeTable();
 
             return false;

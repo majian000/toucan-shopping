@@ -14,6 +14,16 @@ import java.util.List;
 @Data
 public class AreaVO extends Area {
 
+    /**
+     * 省、市、区县都放会在这里
+     */
+    private String name;
+
+    /**
+     * 上级ID
+     */
+    private Long pid;
+
     private List<AreaVO> children;
 
 

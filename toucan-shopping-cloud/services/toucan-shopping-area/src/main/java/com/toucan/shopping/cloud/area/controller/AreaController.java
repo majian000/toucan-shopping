@@ -489,10 +489,14 @@ public class AreaController {
             //拿到树节点中所有创建人和修改人
             getCreateAdminIdAndUpdateAdminId(ids,areas);
 
-            if(!CollectionUtils.isEmpty(areas))
+            if(!CollectionUtils.isEmpty(ids))
             {
                 AdminVO query = new AdminVO();
-                Long[] idArray = new Long[areas.size()];
+                Long[] idArray = new Long[ids.size()];
+                for(int i=0;i<ids.size();i++)
+                {
+                    idArray[i]=ids.get(i);
+                }
                 query.setIds(idArray);
                 RequestJsonVO adminRequestJsonVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
                 resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
@@ -506,6 +510,27 @@ public class AreaController {
                 }
             }
 
+            if(!CollectionUtils.isEmpty(areas))
+            {
+                for(AreaVO avo:areas)
+                {
+                    if("-1".equals(avo.getParentCode()))
+                    {
+                        avo.setPid(-1L);
+                        continue;
+                    }
+                    for(AreaVO vo:areas)
+                    {
+                        if(avo.getParentCode()!=null&&vo.getCode()!=null&&
+                                avo.getParentCode().equals(vo.getCode()))
+                        {
+                            avo.setPid(vo.getId());
+                            break;
+                        }
+                    }
+
+                }
+            }
 
             resultObjectVO.setData(areas);
 

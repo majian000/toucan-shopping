@@ -26,7 +26,7 @@ public interface FeignAdminService {
 
 
 
-    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/queryListByEntity",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryListByEntity(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
     /**
