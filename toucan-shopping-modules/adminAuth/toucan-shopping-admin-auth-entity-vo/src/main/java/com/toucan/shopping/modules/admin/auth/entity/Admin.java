@@ -87,4 +87,8 @@ public class Admin {
      */
     private String loginToken;
 
+
+    private Long[] ids;
+
+
 }

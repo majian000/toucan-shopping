@@ -14,8 +14,6 @@ import java.util.List;
 public class AdminVO extends Admin {
 
 
-    private Long[] ids;
-
 
     /**
      * 前台传入

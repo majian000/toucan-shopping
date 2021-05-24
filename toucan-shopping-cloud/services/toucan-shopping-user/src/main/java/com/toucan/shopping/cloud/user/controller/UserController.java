@@ -236,7 +236,7 @@ public class UserController {
                             userCreateMessage.setNickName(userDetail.getNickName());
                             userCreateMessage.setSex(userDetail.getSex());
                             userCreateMessage.setDeleteStatus(user.getDeleteStatus());
-                            userCreateMessage.setType((short)1);
+                            userCreateMessage.setType((short)0); //默认为买家
 
                             //放入队列
                             newUserMessageQueue.push(userCreateMessage);
