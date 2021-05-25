@@ -418,50 +418,17 @@ public class AreaController {
     }
 
 
-    /**
-     * 拿到创建人和修改人
-     * @param adminIds
-     * @param areas
-     */
-    private void getCreateAdminIdAndUpdateAdminId(List<String> adminIds,List<AreaVO>  areas)
+    public boolean existsAdminId(List<String> adminIds,String adminId)
     {
-        if(CollectionUtils.isEmpty(areas)) {
-            for (AreaVO areaVO : areas) {
-                if (areaVO.getCreateAdminId() != null) {
-                    adminIds.add(areaVO.getCreateAdminId());
-                }
-                if (areaVO.getUpdateAdminId() != null) {
-                    adminIds.add(areaVO.getUpdateAdminId());
-                }
-                getCreateAdminIdAndUpdateAdminId(adminIds, areaVO.getChildren());
+        for (String aid : adminIds) {
+            if (aid != null && aid.equals(adminId)) {
+                return true;
             }
         }
+        return false;
     }
 
 
-
-    /**
-     * 设置创建人和修改人
-     * @param adminVos
-     * @param areas
-     */
-    private void setCreateAdminNameAndUpdateAdminName(List<AdminVO> adminVos,List<AreaVO>  areas)
-    {
-        if(CollectionUtils.isEmpty(areas)) {
-            for (AreaVO areaVO : areas) {
-                for(AdminVO adminVO:adminVos)
-                {
-                    if (areaVO.getCreateAdminId() != null&&areaVO.getCreateAdminId().equals(adminVO.getAdminId())) {
-                        areaVO.setCreateAdminUsername(adminVO.getUsername());
-                    }
-                    if (areaVO.getUpdateAdminId() != null&&areaVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
-                        areaVO.setUpdateAdminUsername(adminVO.getUsername());
-                    }
-                }
-                setCreateAdminNameAndUpdateAdminName(adminVos, areaVO.getChildren());
-            }
-        }
-    }
 
 
     /**
@@ -487,7 +454,16 @@ public class AreaController {
             List<AreaVO>  areas = areaService.findTreeTable(queryPageInfo);
             List<String> adminIds = new ArrayList<String>();
             //拿到树节点中所有创建人和修改人
-            getCreateAdminIdAndUpdateAdminId(adminIds,areas);
+            if(!CollectionUtils.isEmpty(areas)) {
+                for (AreaVO areaVO : areas) {
+                    if (areaVO.getCreateAdminId() != null&&!"-1".equals(areaVO.getCreateAdminId())&&!existsAdminId(adminIds,areaVO.getCreateAdminId())) {
+                        adminIds.add(areaVO.getCreateAdminId());
+                    }
+                    if (areaVO.getUpdateAdminId() != null&&!"-1".equals(areaVO.getUpdateAdminId())&&!existsAdminId(adminIds,areaVO.getUpdateAdminId())) {
+                        adminIds.add(areaVO.getUpdateAdminId());
+                    }
+                }
+            }
 
             if(!CollectionUtils.isEmpty(adminIds))
             {
@@ -502,10 +478,22 @@ public class AreaController {
                 resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
                 if(resultObjectVO.isSuccess())
                 {
-                    List<AdminVO> admins = (List)resultObjectVO.formatData(ArrayList.class);
+                    List<AdminVO> admins = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AdminVO.class);
                     if(!CollectionUtils.isEmpty(admins))
                     {
-                        setCreateAdminNameAndUpdateAdminName(admins,areas);
+                        if(!CollectionUtils.isEmpty(areas)) {
+                            for (AreaVO areaVO : areas) {
+                                for(AdminVO adminVO:admins)
+                                {
+                                    if (areaVO.getCreateAdminId() != null&&areaVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                                        areaVO.setCreateAdminUsername(adminVO.getUsername());
+                                    }
+                                    if (areaVO.getUpdateAdminId() != null&&areaVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                                        areaVO.setUpdateAdminUsername(adminVO.getUsername());
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
