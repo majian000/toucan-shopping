@@ -90,5 +90,7 @@ public class Admin {
 
     private Long[] ids;
 
+    private String[] adminIds;
+
 
 }

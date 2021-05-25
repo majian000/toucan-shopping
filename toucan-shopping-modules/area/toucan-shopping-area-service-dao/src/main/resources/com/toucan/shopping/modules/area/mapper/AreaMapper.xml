@@ -36,6 +36,10 @@
                 and ba.id = #{id}
             </if>
 
+            <if test="code!=null and code!=''">
+                and ba.code = #{code}
+            </if>
+
             <if test="parentCode!=null">
                  and ba.parent_code = #{parentCode}
             </if>
@@ -62,8 +66,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Area" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_area(code,parent_code,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
-        values(#{code},#{parentCode},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+        insert into t_area(code,parent_code,pid,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
+        values(#{code},#{parentCode},#{pid},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
     </insert>
 
 

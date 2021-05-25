@@ -40,4 +40,6 @@ public class AreaTreeInfo extends PageInfo<Area> {
     //==============================================
 
 
+    private String appCode; //所属应用
+
 }

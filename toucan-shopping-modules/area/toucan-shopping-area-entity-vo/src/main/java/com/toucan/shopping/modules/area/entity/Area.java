@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.area.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,11 +23,18 @@ public class Area {
     private Short isMunicipality=0; //是否直辖市 0:否 1:是
     private Long areaSort; //排序
     private Short type; //1省 2市 3区县
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
-    private Date updateDate; //创建时间
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate; //修改时间
+
     private String appCode; //所属应用
-    private Long createAdminId; //创建人ID
-    private Long updateAdminId; //修改人ID
+    private String createAdminId; //创建人ID
+    private String updateAdminId; //修改人ID
     private String remark; //备注
 
     /**

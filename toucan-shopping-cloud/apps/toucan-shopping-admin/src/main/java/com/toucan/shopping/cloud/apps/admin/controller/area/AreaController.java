@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.admin.auth.entity.OrgnazitionApp;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
+import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -92,13 +93,11 @@ public class AreaController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody OrgnazitionVO entity)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody AreaVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            List<String> appCodes = new ArrayList();
-            appCodes.add(toucan.getAppCode());
-            entity.setAppCodes(appCodes);
+            entity.setAppCode("10001001");
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignAreaService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -123,7 +122,8 @@ public class AreaController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AreaVO query = new AreaVO();
-            query.setCode("10001001");
+            //设置为商城的应用编码
+            query.setAppCode("10001001");
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             return feignAreaService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
@@ -145,12 +145,11 @@ public class AreaController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO treeTable(HttpServletRequest request, OrgnazitionTreeInfo queryPageInfo)
+    public ResultObjectVO treeTable(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            queryPageInfo.setAppCode(toucan.getAppCode());
-            queryPageInfo.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            queryPageInfo.setAppCode("10001001");
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignAreaService.queryAreaTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;

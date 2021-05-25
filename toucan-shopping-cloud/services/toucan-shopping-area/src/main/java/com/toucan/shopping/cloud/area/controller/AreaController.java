@@ -420,20 +420,20 @@ public class AreaController {
 
     /**
      * 拿到创建人和修改人
-     * @param ids
+     * @param adminIds
      * @param areas
      */
-    private void getCreateAdminIdAndUpdateAdminId(List<Long> ids,List<AreaVO>  areas)
+    private void getCreateAdminIdAndUpdateAdminId(List<String> adminIds,List<AreaVO>  areas)
     {
         if(CollectionUtils.isEmpty(areas)) {
             for (AreaVO areaVO : areas) {
                 if (areaVO.getCreateAdminId() != null) {
-                    ids.add(areaVO.getCreateAdminId());
+                    adminIds.add(areaVO.getCreateAdminId());
                 }
                 if (areaVO.getUpdateAdminId() != null) {
-                    ids.add(areaVO.getUpdateAdminId());
+                    adminIds.add(areaVO.getUpdateAdminId());
                 }
-                getCreateAdminIdAndUpdateAdminId(ids, areaVO.getChildren());
+                getCreateAdminIdAndUpdateAdminId(adminIds, areaVO.getChildren());
             }
         }
     }
@@ -451,10 +451,10 @@ public class AreaController {
             for (AreaVO areaVO : areas) {
                 for(AdminVO adminVO:adminVos)
                 {
-                    if (areaVO.getCreateAdminId() != null&&areaVO.getCreateAdminId().longValue()==adminVO.getId().longValue()) {
+                    if (areaVO.getCreateAdminId() != null&&areaVO.getCreateAdminId().equals(adminVO.getAdminId())) {
                         areaVO.setCreateAdminUsername(adminVO.getUsername());
                     }
-                    if (areaVO.getUpdateAdminId() != null&&areaVO.getUpdateAdminId().longValue()==adminVO.getId().longValue()) {
+                    if (areaVO.getUpdateAdminId() != null&&areaVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
                         areaVO.setUpdateAdminUsername(adminVO.getUsername());
                     }
                 }
@@ -485,19 +485,19 @@ public class AreaController {
 
             //查询所有结构树
             List<AreaVO>  areas = areaService.findTreeTable(queryPageInfo);
-            List<Long> ids = new ArrayList<Long>();
+            List<String> adminIds = new ArrayList<String>();
             //拿到树节点中所有创建人和修改人
-            getCreateAdminIdAndUpdateAdminId(ids,areas);
+            getCreateAdminIdAndUpdateAdminId(adminIds,areas);
 
-            if(!CollectionUtils.isEmpty(ids))
+            if(!CollectionUtils.isEmpty(adminIds))
             {
                 AdminVO query = new AdminVO();
-                Long[] idArray = new Long[ids.size()];
-                for(int i=0;i<ids.size();i++)
+                String[] adminIdArray = new String[adminIds.size()];
+                for(int i=0;i<adminIds.size();i++)
                 {
-                    idArray[i]=ids.get(i);
+                    adminIdArray[i]=adminIds.get(i);
                 }
-                query.setIds(idArray);
+                query.setAdminIds(adminIdArray);
                 RequestJsonVO adminRequestJsonVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
                 resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
                 if(resultObjectVO.isSuccess())

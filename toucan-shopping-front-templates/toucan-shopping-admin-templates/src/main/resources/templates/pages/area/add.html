@@ -29,25 +29,25 @@
     <div class="layui-form-item" id="provinceDiv">
         <label class="layui-form-label required" >省</label>
         <div class="layui-input-block">
-            <input type="text" name="province" lay-verify="required" maxlength="20" lay-reqtext="省" placeholder="请输入省名称" value="" class="layui-input">
+            <input type="text" name="province" id="province"  maxlength="20" lay-reqtext="省不能为空" placeholder="请输入省名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item" id="cityDiv" >
         <label class="layui-form-label required" >市</label>
         <div class="layui-input-block">
-            <input type="text" name="city" lay-verify="required" maxlength="20" lay-reqtext="市" placeholder="请输入市名称" value="" class="layui-input">
+            <input type="text" name="city" id="city"  maxlength="20" lay-reqtext="市不能为空" placeholder="请输入市名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item" id="areaDiv">
         <label class="layui-form-label required" >区县</label>
         <div class="layui-input-block">
-            <input type="text" name="area" lay-verify="required" maxlength="20" lay-reqtext="区县" placeholder="请输入区县名称" value="" class="layui-input">
+            <input type="text" name="area" id="area" maxlength="20" lay-reqtext="区县不能为空" placeholder="请输入区县名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">编码</label>
+        <label class="layui-form-label required ">编码</label>
         <div class="layui-input-block">
-            <input type="text" name="code"  maxlength="20" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
+            <input type="text" name="code"   lay-verify="required"  maxlength="20" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -96,8 +96,27 @@
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            if(data.field.type=="1")
+            {
+                if(data.field.province==null||data.field.province=="") {
+                    layer.msg("请输入省份名称");
+                    return false;
+                }
+            }else if(data.field.type=="2")
+            {
+                if(data.field.city==null||data.field.city=="") {
+                    layer.msg("请输入市名称");
+                    return false;
+                }
+            }else if(data.field.type=="3")
+            {
+                if(data.field.area==null||data.field.area=="") {
+                    layer.msg("请输入区县名称");
+                    return false;
+                }
+            }
             $.ajax({
-                url:"[[@{/function/save}]]",
+                url:"[[@{/area/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -133,14 +152,17 @@
                 $("#provinceDiv").show();
                 $("#cityDiv").hide();
                 $("#areaDiv").hide();
+
             }else if(typeValue=="2") {
                 $("#provinceDiv").hide();
                 $("#cityDiv").show();
                 $("#areaDiv").hide();
+
             }else if(typeValue=="3") {
                 $("#provinceDiv").hide();
                 $("#cityDiv").hide();
                 $("#areaDiv").show();
+
             }
         });
 
