@@ -62,7 +62,7 @@
             </if>
             and t.delete_status = 0
         </where>
-
+         order by t.function_sort desc
     </select>
 
 
@@ -178,6 +178,8 @@
         </foreach>
         )ds
         where ds.delete_status=0 and ds.pid = #{parentId}
+
+        order by ds.function_sort desc
 
     </select>
 
