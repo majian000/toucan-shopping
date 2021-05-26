@@ -28,39 +28,39 @@
 
 
     <select id="queryList" resultMap="areaMap" parameterType="com.toucan.shopping.modules.area.entity.Area">
-        select ba.* from t_area ba
+        select t.* from t_area ba
         <where>
             1=1
 
             <if test="id!=null">
-                and ba.id = #{id}
+                and t.id = #{id}
             </if>
 
             <if test="code!=null and code!=''">
-                and ba.code = #{code}
+                and t.code = #{code}
             </if>
 
             <if test="parentCode!=null">
-                 and ba.parent_code = #{parentCode}
+                 and t.parent_code = #{parentCode}
             </if>
 
             <if test="province!=null and province!=''">
-                and ba.province = #{province}
+                and t.province = #{province}
             </if>
 
             <if test="city!=null and city!=''">
-                and ba.city = #{city}
+                and t.city = #{city}
             </if>
 
             <if test="area!=null and area!=''">
-                and ba.area = #{area}
+                and t.area = #{area}
             </if>
 
             <if test="appCode!=null and appCode!='' ">
-                and ba.app_code = #{appCode}
+                and t.app_code = #{appCode}
             </if>
 
-            and ba.delete_status = 0
+            and t.delete_status = 0
 
         </where>
     </select>
@@ -93,9 +93,15 @@
     </update>
 
     <select id="queryByParentCode" resultMap="areaMap" >
-        select ba.* from t_area bc
-         where 1=1 and ba.parent_code=#{parentCode}  and ba.app_code=#{appCode} and ba.delete_status=0 order by ba.category_sort desc
+        select t.* from t_area t
+         where 1=1 and t.parent_code=#{parentCode}  and t.app_code=#{appCode} and t.delete_status=0 order by t.area_sort desc
 
+    </select>
+
+
+
+    <select id="findListByPid" resultMap="areaMap" parameterType="java.lang.Long">
+        select * from t_area t where  1=1 and t.pid = #{pid} and t.delete_status = 0
     </select>
 
 
@@ -106,8 +112,8 @@
         select * from t_area t
         <where>
             1=1
-            <if test="name!=null and name!=''">
-                and t.name  like concat('%',#{name},'%')
+            <if test="code!=null and code!=''">
+                and t.code=#{code}
             </if>
             and t.delete_status = 0
         </where>

@@ -66,4 +66,12 @@ public interface AreaService {
 
 
 
+    /**
+     * 查询所有子节点
+     * @param children
+     * @param query
+     */
+    void queryChildren(List<Area> children,Area query);
+
+
 }

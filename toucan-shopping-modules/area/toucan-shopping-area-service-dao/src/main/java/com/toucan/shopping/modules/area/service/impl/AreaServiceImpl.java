@@ -131,6 +131,17 @@ public class AreaServiceImpl implements AreaService {
     }
 
 
+    @Override
+    public void queryChildren(List<Area> children, Area query) {
+        List<Area> areas = areaMapper.findListByPid(query.getId());
+        children.addAll(areas);
+        for(Area area:areas)
+        {
+            queryChildren(children,area);
+        }
+    }
+
+
 
     public boolean existsParent(List<AreaVO> nodes,AreaVO node)
     {

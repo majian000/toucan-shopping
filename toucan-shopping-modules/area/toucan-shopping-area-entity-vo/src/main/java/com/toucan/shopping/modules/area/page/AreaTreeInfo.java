@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 组织机构列表分页查询
+ * 地区列表分页查询
  */
 @Data
 @NoArgsConstructor
@@ -21,10 +21,9 @@ public class AreaTreeInfo extends PageInfo<Area> {
 
     // ===============查询条件===================
 
-    /**
-     * 机构名称
-     */
-    private String name;
+    private String code;
+
+
 
     /**
      * 启用状态 0:禁用 1启用

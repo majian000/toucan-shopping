@@ -212,11 +212,11 @@ public class AreaController {
 
 
     /**
-     * 根据ID删除类别
+     * 根据ID删除
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
     public ResultObjectVO deleteById(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
     {
@@ -257,27 +257,19 @@ public class AreaController {
             }
 
 
-
-            if(StringUtils.isEmpty(area.getCode()))
-            {
-                logger.info("编码为空 param:"+ JSONObject.toJSON(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("编码不能为空!");
-                return resultObjectVO;
-            }
-
             Area queryArea = new Area();
             queryArea.setId(area.getId());
             queryArea.setDeleteStatus((short)0);
-            queryArea.setAppCode(area.getAppCode());
 
-            if(CollectionUtils.isEmpty(areaService.queryList(queryArea)))
+            List<Area> areas = areaService.queryList(queryArea);
+            if(CollectionUtils.isEmpty(areas))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该类别!");
+                resultObjectVO.setMsg("不存在该地区!");
                 return resultObjectVO;
             }
 
+            area = areas.get(0);
             areaService.deleteChildrenByParentCode(area.getAppCode(),area.getCode());
             int row = areaService.deleteById(area.getAppCode(),area.getId());
             if (row <=0) {
@@ -331,6 +323,72 @@ public class AreaController {
 
         return resultObjectVO;
     }
+
+
+
+    /**
+     * 批量删除功能项
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<Area> areas = JSONObject.parseArray(requestVo.getEntityJson(),Area.class);
+            if(CollectionUtils.isEmpty(areas))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找地区ID");
+                return resultObjectVO;
+            }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(Area area:areas) {
+                if(area.getId()!=null) {
+                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
+                    appResultObjectVO.setData(area);
+
+
+                    List<Area> chidlren = new ArrayList<Area>();
+                    areaService.queryChildren(chidlren,area);
+
+                    //把当前功能项添加进去,循环这个集合
+                    chidlren.add(area);
+
+                    for(Area a:chidlren) {
+                        //删除当前功能项
+                        int row = areaService.deleteById(a.getAppCode(),a.getId());
+                        if (row < 1) {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("请求失败,请重试!");
+                            continue;
+                        }
+
+                    }
+
+                }
+            }
+            resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
 
     /**
@@ -494,6 +552,15 @@ public class AreaController {
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            //将查询的这个节点设置为顶级节点
+            if(StringUtils.isNotEmpty(queryPageInfo.getCode())) {
+                if(!CollectionUtils.isEmpty(areas)) {
+                    for (Area area : areas) {
+                        area.setPid(-1L);
                     }
                 }
             }

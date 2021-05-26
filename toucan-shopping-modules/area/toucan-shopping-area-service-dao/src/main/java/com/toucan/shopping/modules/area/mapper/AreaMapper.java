@@ -33,4 +33,8 @@ public interface AreaMapper {
      * @return
      */
     List<AreaVO> findTreeTableByPageInfo(AreaTreeInfo areaTreeInfo);
+
+
+
+    List<Area> findListByPid(Long pid);
 }

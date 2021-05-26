@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.admin.auth.entity.OrgnazitionApp;
 import com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.admin.auth.vo.OrgnazitionVO;
+import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -161,6 +162,84 @@ public class AreaController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+    /**
+     * 删除功能项
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            Area entity =new Area();
+            entity.setId(Long.parseLong(id));
+            entity.setAppCode("10001001");
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+
+            String entityJson = JSONObject.toJSONString(entity);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(toucan.getAppCode());
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignAreaService.deleteById(SignUtil.sign(requestVo),requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 删除应用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AreaVO> areaVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(areaVOS))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            for(AreaVO areaVO:areaVOS)
+            {
+                areaVO.setAppCode("10001001");
+            }
+            String entityJson = JSONObject.toJSONString(areaVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(toucan.getAppCode());
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignAreaService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 
 }

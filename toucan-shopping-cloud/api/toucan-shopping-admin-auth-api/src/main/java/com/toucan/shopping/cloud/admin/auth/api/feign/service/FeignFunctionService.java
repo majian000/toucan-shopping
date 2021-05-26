@@ -41,7 +41,7 @@ public interface FeignFunctionService {
     
     
     /**
-     * 根据ID删除指定角色
+     * 根据ID删除
      * @param signHeader
      * @param requestVo
      * @return
