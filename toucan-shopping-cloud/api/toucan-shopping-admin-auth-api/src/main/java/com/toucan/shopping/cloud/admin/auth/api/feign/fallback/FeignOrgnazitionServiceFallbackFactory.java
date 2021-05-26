@@ -33,7 +33,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.save faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignOrgnazitionService.save faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -48,7 +48,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.update faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignOrgnazitionService.update faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -63,7 +63,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.update faild sign {} params {} ",signHeader,JSONObject.toJSON(requestJsonVO));
+                logger.warn("FeignOrgnazitionService.update faild sign {} params {} ",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -79,7 +79,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.deleteById faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignOrgnazitionService.deleteById faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -94,7 +94,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.findById faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignOrgnazitionService.findById faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -109,7 +109,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.deleteByIds faild sign {}  params {}", signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignOrgnazitionService.deleteByIds faild sign {}  params {}", signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -125,7 +125,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.queryOrgnazationTree faild sign {}  params {}", signHeader,JSONObject.toJSON(requestJsonVO));
+                logger.warn("FeignOrgnazitionService.queryOrgnazationTree faild sign {}  params {}", signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -141,7 +141,7 @@ public class FeignOrgnazitionServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignOrgnazitionService.queryAdminOrgnazitionTree faild sign {}  params {}", signHeader,JSONObject.toJSON(requestJsonVO));
+                logger.warn("FeignOrgnazitionService.queryAdminOrgnazitionTree faild sign {}  params {}", signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

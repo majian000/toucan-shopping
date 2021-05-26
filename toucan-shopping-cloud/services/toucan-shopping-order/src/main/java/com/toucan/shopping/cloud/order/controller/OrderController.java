@@ -76,7 +76,7 @@ public class OrderController {
                     resultObjectVO.setMsg("订单创建失败");
                     return resultObjectVO;
                 }
-                logger.info("保存订单 提交本地事务{}", JSONObject.toJSON(order));
+                logger.info("保存订单 提交本地事务{}", JSONObject.toJSONString(order));
                 List<OrderItem> orderItems = orderItemService.createOrderItem(createOrderVo.getProductSkuList(), createOrderVo.getBuyMap(), order);
                 if (CollectionUtils.isEmpty(orderItems)) {
                     logger.warn("子订单创建失败 param:" + JSONObject.toJSONString(createOrderVo));

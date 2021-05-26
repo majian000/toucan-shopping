@@ -90,7 +90,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 orderItemMapper.insert(orderItem);
 
                 if (orderItem.getId() == null) {
-                    logger.info("下单失败: param:" + JSONObject.toJSON(order));
+                    logger.info("下单失败: param:" + JSONObject.toJSONString(order));
                     throw new IllegalArgumentException("创建订单失败");
                 }
                 orderItemPersistence.add(orderItem);

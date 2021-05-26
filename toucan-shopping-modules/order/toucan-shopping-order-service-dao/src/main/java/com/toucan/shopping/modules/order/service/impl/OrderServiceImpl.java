@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 
             this.create(order);
             if (order.getId() == null) {
-                logger.info("下单失败: userId:" + userId+" orderNo:"+orderNo+" productSkuList:"+JSONObject.toJSONString(productSkuList)+" buyMap:"+JSONObject.toJSON(buyMap));
+                logger.info("下单失败: userId:" + userId+" orderNo:"+orderNo+" productSkuList:"+JSONObject.toJSONString(productSkuList)+" buyMap:"+JSONObject.toJSONString(buyMap));
                 throw new IllegalArgumentException("创建订单失败");
             }
 

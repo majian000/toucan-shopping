@@ -32,7 +32,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用用户中心登录服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("调用用户中心登录服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -48,7 +48,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用用户中心查询登录Token服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("调用用户中心查询登录Token服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -64,7 +64,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用用户中心查询是否在线服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("调用用户中心查询是否在线服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -79,7 +79,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminService.queryListByEntity faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminService.queryListByEntity faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -94,7 +94,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminService.save faild sign {} params {}", signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminService.save faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -109,7 +109,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminService.update faild sign {} params {}", signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminService.update faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -124,7 +124,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminService.list faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminService.list faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -139,7 +139,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminService.findById faild sign {} params {} ",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminService.findById faild sign {} params {} ",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -155,7 +155,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.logout faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.logout faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -170,7 +170,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.updatePassword faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.updatePassword faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -185,7 +185,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.deleteById faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.deleteById faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -200,7 +200,7 @@ public class FeignAdminServiceFallbackFactory implements FallbackFactory<FeignAd
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.deleteByIds faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.deleteByIds faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

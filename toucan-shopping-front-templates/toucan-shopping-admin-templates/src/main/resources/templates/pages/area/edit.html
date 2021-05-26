@@ -18,64 +18,79 @@
 <body>
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}" />
+    <input type="hidden" id="selectType" th:value="${model.type}" />
     <div class="layui-form-item" >
         <label class="layui-form-label required">类型</label>
-        <div class="layui-input-block" >
+        <div class="layui-input-block" th:if="${model.type eq 1}" >
             <input type="radio" name="type" lay-filter="type" value="1" title="省" checked="">
             <input type="radio" name="type" lay-filter="type" value="2" title="市">
             <input type="radio" name="type" lay-filter="type" value="3" title="区县" >
+        </div>
+        <div class="layui-input-block" th:if="${model.type eq 2}" >
+            <input type="radio" name="type" lay-filter="type" value="1" title="省" >
+            <input type="radio" name="type" lay-filter="type" value="2" title="市" checked="">
+            <input type="radio" name="type" lay-filter="type" value="3" title="区县" >
+        </div>
+        <div class="layui-input-block" th:if="${model.type eq 3}" >
+            <input type="radio" name="type" lay-filter="type" value="1" title="省" >
+            <input type="radio" name="type" lay-filter="type" value="2" title="市">
+            <input type="radio" name="type" lay-filter="type" value="3" title="区县" checked="">
         </div>
     </div>
     <div class="layui-form-item" id="provinceDiv">
         <label class="layui-form-label required" >省</label>
         <div class="layui-input-block">
-            <input type="text" name="province" id="province"  maxlength="20" lay-reqtext="省不能为空" placeholder="请输入省名称" value="" class="layui-input">
+            <input type="text" name="province" id="province" th:value="${model.province}"  maxlength="20" lay-reqtext="省不能为空" placeholder="请输入省名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item" id="cityDiv" >
         <label class="layui-form-label required" >市</label>
         <div class="layui-input-block">
-            <input type="text" name="city" id="city"  maxlength="20" lay-reqtext="市不能为空" placeholder="请输入市名称" value="" class="layui-input">
+            <input type="text" name="city" id="city"  th:value="${model.city}" maxlength="20" lay-reqtext="市不能为空" placeholder="请输入市名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item" id="areaDiv">
         <label class="layui-form-label required" >区县</label>
         <div class="layui-input-block">
-            <input type="text" name="area" id="area" maxlength="20" lay-reqtext="区县不能为空" placeholder="请输入区县名称" value="" class="layui-input">
+            <input type="text" name="area" id="area" th:value="${model.area}"  maxlength="20" lay-reqtext="区县不能为空" placeholder="请输入区县名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required ">编码</label>
         <div class="layui-input-block">
-            <input type="text" name="code"   lay-verify="required"  maxlength="20" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
+            <input type="text" name="code"   lay-verify="required" th:value="${model.code}"   maxlength="20" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">上级节点</label>
         <div class="layui-input-block">
-            <input type="hidden" name="parentCode" id="parentCode">
-            <input type="hidden" name="pid" id="pid">
-            <input type="hidden" name="appCode" id="appCode">
-            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级节点" value="" class="layui-input" >
+            <input type="hidden" name="parentCode" id="parentCode" th:value="${model.parentCode}" >
+            <input type="hidden" name="pid" id="pid" th:value="${model.pid}" >
+            <input type="hidden" name="appCode" id="appCode" th:value="${model.appCode}" >
+            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级节点" th:value="${model.parentName}"  value="" class="layui-input" >
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">直辖市</label>
-        <div class="layui-input-block">
+        <div class="layui-input-block" th:if="${model.isMunicipality eq 0}" >
             <input type="radio" name="isMunicipality" value="0" title="否" checked="">
             <input type="radio" name="isMunicipality" value="1" title="是">
+        </div>
+        <div class="layui-input-block" th:if="${model.isMunicipality eq 1}" >
+            <input type="radio" name="isMunicipality" value="0" title="否">
+            <input type="radio" name="isMunicipality" value="1" title="是"  checked="">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="areaSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="number" name="areaSort"    placeholder="请输入排序"  th:value="${model.areaSort}"  value="" class="layui-input" lay-verify="number">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
+            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息" th:text="${model.remark}" ></textarea>
         </div>
     </div>
 
@@ -141,6 +156,53 @@
         });
 
 
+        //初始化默认
+        var selectType = $("#selectType").val();
+        if(selectType=="1") {
+            $("#provinceDiv").show();
+            $("#cityDiv").hide();
+            $("#areaDiv").hide();
+
+        }else if(selectType=="2") {
+            $("#provinceDiv").hide();
+            $("#cityDiv").show();
+            $("#areaDiv").hide();
+
+        }else if(selectType=="3") {
+            $("#provinceDiv").hide();
+            $("#cityDiv").hide();
+            $("#areaDiv").show();
+
+        }
+
+        form.on('radio(type)', function (data) {
+            var typeValue = data.value;
+            if(typeValue=="1") {
+                $("#provinceDiv").show();
+                $("#cityDiv").hide();
+                $("#areaDiv").hide();
+
+                $("#city").val("");
+                $("#area").val("");
+
+            }else if(typeValue=="2") {
+                $("#provinceDiv").hide();
+                $("#cityDiv").show();
+                $("#areaDiv").hide();
+
+                $("#province").val("");
+                $("#area").val("");
+
+            }else if(typeValue=="3") {
+                $("#provinceDiv").hide();
+                $("#cityDiv").hide();
+                $("#areaDiv").show();
+
+                $("#province").val("");
+                $("#city").val("");
+            }
+        });
+
         $("#selectPid").click(function(){
             loadding = layer.load();
             index = layer.open({
@@ -150,27 +212,23 @@
                 maxmin:true,
                 shadeClose: true,
                 area: ['20%', '60%'],
-                content: "<div id='appFunctionTree'></div>",
+                content: "<div id='areaTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]function/query/app/function/tree",
+                        url:"[[@{/}]]area/query/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
                         success:function(data){
                             if(data.code==1)
                             {
-                                for(var i=0;i<data.data.length;i++)
-                                {
-                                    var node = data.data[i];
-                                    node.title=node.appCode+" "+node.title;
-                                }
                                 //渲染
                                 var inst1 = tree.render({
-                                    elem: '#appFunctionTree'  //绑定元素
+                                    elem: '#areaTree'  //绑定元素
                                     ,data: data.data,
                                     click: function(obj){
                                         $("#selectPid").val(obj.data.title);
+                                        $("#parentCode").val(obj.data.code);
                                         $("#pid").val(obj.data.id);
                                         $("#appCode").val(obj.data.appCode);
                                         layer.close(index);

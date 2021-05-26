@@ -20,6 +20,12 @@ public class AreaVO extends Area {
     private String name;
 
 
+    /**
+     * 上级节点名称
+     */
+    private String parentName;
+
+
     private List<AreaVO> children;
 
 

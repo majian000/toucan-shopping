@@ -61,7 +61,7 @@ public class AdminCategoryController {
 
             if(StringUtils.isEmpty(category.getName()))
             {
-                logger.info("类别名称为空 param:"+ JSONObject.toJSON(category));
+                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(category));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别名称不能为空!");
                 return resultObjectVO;
@@ -121,7 +121,7 @@ public class AdminCategoryController {
 
             if(StringUtils.isEmpty(category.getName()))
             {
-                logger.info("类别名称为空 param:"+ JSONObject.toJSON(category));
+                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(category));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别名称不能为空!");
                 return resultObjectVO;
@@ -130,7 +130,7 @@ public class AdminCategoryController {
 
             if(category.getId()==null)
             {
-                logger.info("类别ID为空 param:"+ JSONObject.toJSON(category));
+                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(category));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别ID不能为空!");
                 return resultObjectVO;
@@ -195,7 +195,7 @@ public class AdminCategoryController {
 
             if(category.getId()==null)
             {
-                logger.info("类别ID为空 param:"+ JSONObject.toJSON(category));
+                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(category));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别ID不能为空!");
                 return resultObjectVO;

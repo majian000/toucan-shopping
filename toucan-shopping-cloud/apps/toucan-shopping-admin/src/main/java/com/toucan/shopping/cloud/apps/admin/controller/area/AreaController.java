@@ -86,6 +86,61 @@ public class AreaController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            Area entity = new Area();
+            entity.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            ResultObjectVO resultObjectVO = feignAreaService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<Area> areas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Area.class);
+                    if(!CollectionUtils.isEmpty(areas))
+                    {
+                        AreaVO areaVO = new AreaVO();
+                        BeanUtils.copyProperties(areaVO,areas.get(0));
+                        //如果是顶级节点,上级节点就是根节点
+                        if(areaVO.getPid().longValue()==-1)
+                        {
+                            areaVO.setParentName("根节点");
+                        }else {
+                            Area queryParentArea = new Area();
+                            queryParentArea.setId(areaVO.getPid());
+                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParentArea);
+                            resultObjectVO = feignAreaService.findById(SignUtil.sign(requestJsonVO), requestJsonVO);
+                            if (resultObjectVO.isSuccess()) {
+                                List<Area> parentAreaList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Area.class);
+                                if (!CollectionUtils.isEmpty(parentAreaList)) {
+                                    if (parentAreaList.get(0).getType().shortValue() == 1) {
+                                        areaVO.setParentName(parentAreaList.get(0).getProvince());
+                                    } else if (parentAreaList.get(0).getType().shortValue() == 2) {
+                                        areaVO.setParentName(parentAreaList.get(0).getCity());
+                                    } else if (parentAreaList.get(0).getType().shortValue() == 3) {
+                                        areaVO.setParentName(parentAreaList.get(0).getArea());
+                                    }
+                                }
+                            }
+                        }
+                        request.setAttribute("model",areaVO);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/area/edit.html";
+    }
+
+
+
+
+
     /**
      * 保存
      * @param entity
@@ -111,6 +166,33 @@ public class AreaController extends UIController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody AreaVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignAreaService.update(requestJsonVO.sign(),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 

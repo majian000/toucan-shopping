@@ -28,7 +28,7 @@
 
 
     <select id="queryList" resultMap="areaMap" parameterType="com.toucan.shopping.modules.area.entity.Area">
-        select t.* from t_area ba
+        select t.* from t_area t
         <where>
             1=1
 

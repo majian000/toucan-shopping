@@ -66,7 +66,7 @@ public class AreaController {
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSON(requestJsonVO));
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到应用编码!");
             return resultObjectVO;
@@ -77,7 +77,7 @@ public class AreaController {
 
             if(area.getAppCode()==null)
             {
-                logger.info("没有找到应用编码: param:"+ JSONObject.toJSON(area));
+                logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(area));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到应用编码!");
                 return resultObjectVO;
@@ -86,7 +86,7 @@ public class AreaController {
 
             if(StringUtils.isEmpty(area.getCode()))
             {
-                logger.info("编码为空 param:"+ JSONObject.toJSON(area));
+                logger.info("编码为空 param:"+ JSONObject.toJSONString(area));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("编码不能为空!");
                 return resultObjectVO;
@@ -122,93 +122,6 @@ public class AreaController {
 
 
 
-    /**
-     * 更新地区编码
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO update(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSON(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
-
-        try {
-            Area area = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
-
-            if(area.getAppCode()==null)
-            {
-                logger.info("没有找到应用编码: param:"+ JSONObject.toJSON(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到应用编码!");
-                return resultObjectVO;
-            }
-
-
-            if(StringUtils.isEmpty(area.getCode()))
-            {
-                logger.info("编码为空 param:"+ JSONObject.toJSON(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("编码不能为空!");
-                return resultObjectVO;
-            }
-
-
-            if(area.getId()==null)
-            {
-                logger.info("类别ID为空 param:"+ JSONObject.toJSON(area));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("类别ID不能为空!");
-                return resultObjectVO;
-            }
-
-            Area queryArea = new Area();
-            queryArea.setCode(area.getCode());
-            queryArea.setDeleteStatus((short)0);
-            queryArea.setAppCode(area.getAppCode());
-
-            List<Area> areaList = areaService.queryList(queryArea);
-            if(!CollectionUtils.isEmpty(areaList))
-            {
-                if(area.getId() != areaList.get(0).getId())
-                {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("该地区编码已存在!");
-                    return resultObjectVO;
-                }
-            }
-
-            area.setUpdateDate(new Date());
-            int row = areaService.update(area);
-            if (row != 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
-                return resultObjectVO;
-            }
-        }catch(Exception e)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
 
 
     /**
@@ -218,7 +131,7 @@ public class AreaController {
      */
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -230,7 +143,7 @@ public class AreaController {
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSON(requestJsonVO));
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到应用编码!");
             return resultObjectVO;
@@ -241,7 +154,7 @@ public class AreaController {
 
             if(area.getAppCode()==null)
             {
-                logger.info("没有找到应用编码: param:"+ JSONObject.toJSON(area));
+                logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(area));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到应用编码!");
                 return resultObjectVO;
@@ -250,7 +163,7 @@ public class AreaController {
 
             if(area.getId()==null)
             {
-                logger.info("ID为空 param:"+ JSONObject.toJSON(area));
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(area));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("ID不能为空!");
                 return resultObjectVO;
@@ -487,7 +400,121 @@ public class AreaController {
     }
 
 
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
 
+        try {
+            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AreaVO.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到功能项ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该功能项
+            Area query=new Area();
+            query.setId(entity.getId());
+            List<Area> areas = areaService.queryList(query);
+            if(CollectionUtils.isEmpty(areas))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,地区不存在!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(areas);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 編輯
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AreaVO.class);
+
+            if(StringUtils.isEmpty(entity.getCode()))
+            {
+                logger.info("编码为空 param:"+ JSONObject.toJSONString(entity));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("编码不能为空!");
+                return resultObjectVO;
+            }
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                return resultObjectVO;
+            }
+
+
+            AreaVO query=new AreaVO();
+            query.setId(entity.getId());
+            List<Area> areas = areaService.queryList(query);
+            if(CollectionUtils.isEmpty(areas))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("该地区不存在!");
+                return resultObjectVO;
+            }
+
+            entity.setUpdateDate(new Date());
+            int row = areaService.update(entity);
+            if (row < 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    
 
     /**
      * 查询树表格

@@ -47,7 +47,7 @@ public class AdminProductSkuController {
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSON(requestJsonVO));
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到应用!");
             return resultObjectVO;

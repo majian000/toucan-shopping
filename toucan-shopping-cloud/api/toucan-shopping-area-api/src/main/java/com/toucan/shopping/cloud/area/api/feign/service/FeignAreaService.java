@@ -29,6 +29,14 @@ public interface FeignAreaService {
     @RequestMapping(value="/query/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryAreaTreeTable(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 根据ID查询
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
 
@@ -64,6 +72,15 @@ public interface FeignAreaService {
     ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+
+    /**
+     * 编辑
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update",method = RequestMethod.POST)
+    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
 }

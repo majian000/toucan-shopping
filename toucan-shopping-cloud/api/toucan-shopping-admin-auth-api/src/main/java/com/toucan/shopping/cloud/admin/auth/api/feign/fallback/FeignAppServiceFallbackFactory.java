@@ -32,7 +32,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("请求创建应用服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求创建应用服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -47,7 +47,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("请求修改应用服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求修改应用服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -62,7 +62,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("请求查询应用服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求查询应用服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -77,7 +77,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("请求删除应用服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求删除应用服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -92,7 +92,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAppService.findById失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignAppService.findById失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -107,7 +107,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("请求批量删除应用服务失败 params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("请求批量删除应用服务失败 params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -122,7 +122,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("请求查询应用列表失败 {} params {}",signHeader, JSONObject.toJSON(requestVo));
+                logger.warn("请求查询应用列表失败 {} params {}",signHeader, JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -137,7 +137,7 @@ public class FeignAppServiceFallbackFactory implements FallbackFactory<FeignAppS
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAppService.findByCode faild sign {} params {}", signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAppService.findByCode faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

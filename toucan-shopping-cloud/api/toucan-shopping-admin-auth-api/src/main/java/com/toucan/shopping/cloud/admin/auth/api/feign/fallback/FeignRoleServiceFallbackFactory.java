@@ -32,7 +32,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.save faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignRoleService.save faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -47,7 +47,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.update faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignRoleService.update faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -62,7 +62,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.listPage faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignRoleService.listPage faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -77,7 +77,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.queryRoleTree faild  sign {} params {} ",signHeader, JSONObject.toJSON(requestJsonVO));
+                logger.warn("FeignRoleService.queryRoleTree faild  sign {} params {} ",signHeader, JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -92,7 +92,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.deleteById faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignRoleService.deleteById faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -107,7 +107,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.findById faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignRoleService.findById faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -122,7 +122,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignRoleService.deleteByIds faild params:"+ JSONObject.toJSON(requestVo));
+                logger.warn("FeignRoleService.deleteByIds faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

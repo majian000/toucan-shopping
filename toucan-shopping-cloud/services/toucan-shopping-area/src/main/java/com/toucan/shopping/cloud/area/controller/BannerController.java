@@ -67,7 +67,7 @@ public class BannerController {
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSON(requestJsonVO));
+            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到应用编码!");
             return resultObjectVO;

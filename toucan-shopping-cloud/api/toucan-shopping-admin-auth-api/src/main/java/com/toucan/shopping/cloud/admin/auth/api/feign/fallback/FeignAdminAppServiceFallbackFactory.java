@@ -33,7 +33,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.save faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.save faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -48,7 +48,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.queryListByEntity faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.queryListByEntity faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -63,7 +63,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.deleteByAppCode faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.deleteByAppCode faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
@@ -78,7 +78,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignAdminAppService.queryAppListByAdminId faild sign {} params {}",signHeader,JSONObject.toJSON(requestVo));
+                logger.warn("FeignAdminAppService.queryAppListByAdminId faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;

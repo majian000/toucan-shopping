@@ -153,16 +153,24 @@
                 $("#cityDiv").hide();
                 $("#areaDiv").hide();
 
+                $("#city").val("");
+                $("#area").val("");
+
             }else if(typeValue=="2") {
                 $("#provinceDiv").hide();
                 $("#cityDiv").show();
                 $("#areaDiv").hide();
+
+                $("#province").val("");
+                $("#area").val("");
 
             }else if(typeValue=="3") {
                 $("#provinceDiv").hide();
                 $("#cityDiv").hide();
                 $("#areaDiv").show();
 
+                $("#province").val("");
+                $("#city").val("");
             }
         });
 

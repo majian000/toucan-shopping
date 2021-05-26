@@ -98,7 +98,7 @@ public class CreateOrderListener {
             {
                 throw new IllegalArgumentException("订单创建失败");
             }
-            logger.info("保存订单 提交本地事务{}",JSONObject.toJSON(order));
+            logger.info("保存订单 提交本地事务{}",JSONObject.toJSONString(order));
             List<OrderItem> orderItems = orderItemService.createOrderItem(productSkus,buyMap,order);
             if(CollectionUtils.isEmpty(orderItems))
             {
