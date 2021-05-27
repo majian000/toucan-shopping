@@ -21,8 +21,8 @@ public class Category {
     private String href; //点击类别跳转路径
     private Date createDate; //创建时间
     private Date updateDate; //创建时间
-    private Long createAdminId; //创建人ID
-    private Long updateAdminId; //修改人ID
+    private String createAdminId; //创建人ID
+    private String updateAdminId; //修改人ID
     private String remark; //备注
 
     /**

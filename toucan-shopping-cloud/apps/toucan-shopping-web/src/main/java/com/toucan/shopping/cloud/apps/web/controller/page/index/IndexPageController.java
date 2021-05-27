@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.redis.BannerRedisKey;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
-import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryUserService;
+import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -50,7 +50,7 @@ public class IndexPageController {
     private FeignBannerService feignBannerService;
 
     @Autowired
-    private FeignCategoryUserService feignCategoryUserService;
+    private FeignCategoryService feignCategoryService;
 
 
 
@@ -141,7 +141,7 @@ public class IndexPageController {
                 CategoryVO categoryVO = new CategoryVO();
                 categoryVO.setAreaCode("110000");
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryUserService.queryCategoryTreeByAreaCode(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                resultObjectVO = feignCategoryService.queryCategoryTreeByAreaCode(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
                     stringRedisTemplate.opsForValue().set(categoryKey, JSONObject.toJSONString(resultObjectVO.getData()));
                     stringRedisTemplate.expire(categoryKey, CATEGORY_KEY_MILLISECOND, TimeUnit.SECONDS);

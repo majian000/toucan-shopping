@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.category.mapper;
 
 import com.toucan.shopping.modules.category.entity.Category;
+import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,4 +23,13 @@ public interface CategoryMapper {
     int deleteById(Long id);
 
     int update(Category category);
+
+    /**
+     * 查询表格树
+     * @param queryTreeInfo
+     * @return
+     */
+    List<CategoryVO> findTreeTableByPageInfo(CategoryTreeInfo queryTreeInfo);
+
+
 }

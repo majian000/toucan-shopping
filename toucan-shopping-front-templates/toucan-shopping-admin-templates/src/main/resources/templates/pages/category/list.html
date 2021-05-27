@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+
+    <span th:replace="common_page::common"></span>
+</head>
+<body>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="functionSearchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">编码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="code" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="categoryTreeTable" lay-filter="categoryTreeTableFilter"></table>
+
+        <!-- 操作列 -->
+        <script type="text/html" id="categoryTreeTableToolbar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
+<script th:src="@{/js/common/selectApp.js}" charset="utf-8"></script>
+
+<script>
+
+    layui.use(['form', 'table', 'treetable'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var treetable = layui.treetable;
+        var loadding;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#functionSearchForm").serializeJson();
+            return formParam;
+        }
+
+        function loadTreeTable()
+        {
+            loadding = layer.load();
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: -1,
+                treeIdName: 'id',
+                treePidName: 'pid',
+                elem: '#categoryTreeTable',
+                where:getFormParam(),
+                url: '[[@{/}]]category/tree/table',
+                toolbar: '#toolbarDemo',
+                page: false,
+                cols: [
+                    [
+                        {type: "checkbox", width: 50},
+                        {field: 'name', title: '名称'},
+                        {field: 'code', width: 100,  title: '编码'},
+                        {field: 'areaSort', title: '排序'},
+                        {field: 'isMunicipality', title: '直辖市', templet: function (d) {
+                                if (d.isMunicipality == 1) {
+                                    return '是';
+                                } else {
+                                    return '否';
+                                }
+                            }},
+                        {field: 'createAdminUsername', title: '创建人'},
+                        {field: 'createDate',  title: '创建时间'},
+                        {field: 'updateAdminUsername',  title: '修改人'},
+                        {field: 'updateDate',  title: '修改时间'},
+                        {templet: '#categoryTreeTableToolbar', width: 120, align: 'center', title: '操作'}
+                    ]
+                ],
+                done: function () {
+                    treetable.foldAll("#categoryTreeTable");
+                    layer.closeAll('loading');
+                    layer.close(loadding);
+                }
+            });
+
+        }
+
+        loadTreeTable();
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+
+            loadTreeTable();
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(categoryTreeTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加类别',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/category/addPage}]]",
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('categoryTreeTable')
+                    , data = checkStatus.data;
+                layer.confirm('确定删除类别?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            loadTreeTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(categoryTreeTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(categoryTreeTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                if(data.type==null)
+                {
+                    layer.msg("不能修改该节点");
+                    return false;
+                }
+                var index = layer.open({
+                    title: '编辑类别',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]category/editPage/'+data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定删除该类别?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            loadTreeTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

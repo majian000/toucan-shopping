@@ -3,8 +3,11 @@ package com.toucan.shopping.modules.category.service;
 
 
 import com.toucan.shopping.modules.category.entity.Category;
+import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
+import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface CategoryService {
@@ -34,5 +37,26 @@ public interface CategoryService {
      * @return
      */
     List<CategoryVO> queryTree(String areaCode)  throws Exception;
+
+
+
+
+    /**
+     * 从一个集合中找到所有子节点并设置上
+     * @param categoryVOS
+     * @param currentNode
+     */
+    void setChildren(List<Category> categoryVOS, CategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException ;
+
+
+    /**
+     * 查询树表格
+     * @param queryTreeInfo
+     * @return
+     */
+    List<CategoryVO> findTreeTable(CategoryTreeInfo queryTreeInfo);
+
+
+
 
 }

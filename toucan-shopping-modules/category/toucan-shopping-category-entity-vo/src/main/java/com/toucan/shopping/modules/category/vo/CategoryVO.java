@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.category.vo;
 
+import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.entity.CategoryImg;
 import lombok.Data;
 
@@ -11,29 +12,32 @@ import java.util.List;
  * @author majian
  */
 @Data
-public class CategoryVO {
+public class CategoryVO extends Category {
 
-    private Long id; //主键
-    private Long parentId; //上级类别
-    private String name; //类别名称
-    private Long categorySort; //排序
-    private String createDate; //创建时间
-    private Long createUserId; //创建人ID
-    private String icon; //图标
-    private Integer showStatus; //显示状态 0隐藏 1显示
-    private String href; //点击类别跳转路径
 
     private String areaCode; //地区编码
-    private Integer type; //类型 1:pc端 2:移动端
+
 
     /**
-     * 删除状态 0未删除 1已删除
+     * 上级节点名称
      */
-    private Short deleteStatus;
+    private String parentName;
+
 
     private List<CategoryVO> children;
 
     private List<CategoryImg> categoryImgs;
+
+
+    /**
+     * 创建人
+     */
+    private String createAdminUsername;
+
+    /**
+     * 修改人
+     */
+    private String updateAdminUsername;
 
     private Long[] idArray; //ID数组
 }

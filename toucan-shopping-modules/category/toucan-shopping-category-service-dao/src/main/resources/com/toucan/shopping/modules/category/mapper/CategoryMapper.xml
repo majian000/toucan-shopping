@@ -13,10 +13,16 @@
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-        <result column="create_admin_id" jdbcType="BIGINT" property="createAdminId" />
-        <result column="update_admin_id" jdbcType="BIGINT" property="updateAdminId" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
     </resultMap>
+
+
+    <resultMap id="categoryVOMap" type="com.toucan.shopping.modules.category.vo.CategoryVO" extends="categoryMap">
+
+    </resultMap>
+
 
     <select id="queryList" resultMap="categoryMap" parameterType="com.toucan.shopping.modules.category.vo.CategoryVO">
         select bc.* from t_category bc
@@ -85,6 +91,20 @@
     <select id="queryByParentId" resultMap="categoryMap" >
         select bc.* from t_category bc
          where 1=1 and bc.parent_id=#{parentId}   and bc.delete_status=0 order by bc.category_sort desc
+
+    </select>
+
+
+    <select id="findTreeTableByPageInfo" resultMap="categoryVOMap" parameterType="com.toucan.shopping.modules.category.page.CategoryTreeInfo">
+
+        select * from t_category t
+        <where>
+            1=1
+            <if test="name!=null and name!=''">
+                and t.name=#{name}
+            </if>
+            and t.delete_status = 0
+        </where>
 
     </select>
 

@@ -5,7 +5,9 @@ import com.toucan.shopping.modules.category.entity.CategoryArea;
 import com.toucan.shopping.modules.category.mapper.CategoryAreaMapper;
 import com.toucan.shopping.modules.category.mapper.CategoryImgMapper;
 import com.toucan.shopping.modules.category.mapper.CategoryMapper;
+import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.service.CategoryService;
+import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -135,5 +137,40 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
     }
+
+
+
+
+    public void setChildren(List<Category> categorys, CategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
+        for (Category category : categorys) {
+            //为当前参数的子节点
+            if(category.getParentId().longValue()==currentNode.getId().longValue())
+            {
+                CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                BeanUtils.copyProperties(categoryTreeVO, category);
+
+                categoryTreeVO.setChildren(new ArrayList<CategoryVO>());
+                currentNode.getChildren().add(categoryTreeVO);
+
+                //查找当前节点的子节点
+                setChildren(categorys,categoryTreeVO);
+            }
+        }
+    }
+
+
+
+
+    @Override
+    public List<CategoryVO> findTreeTable(CategoryTreeInfo queryTreeInfo) {
+        List<CategoryVO> retNodes = new ArrayList<CategoryVO>();
+        List<CategoryVO> nodes = categoryMapper.findTreeTableByPageInfo(queryTreeInfo);
+        if(!CollectionUtils.isEmpty(nodes))
+        {
+            retNodes.addAll(nodes);
+        }
+        return retNodes;
+    }
+
 
 }
