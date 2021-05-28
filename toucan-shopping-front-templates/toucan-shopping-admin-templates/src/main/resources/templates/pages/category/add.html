@@ -19,35 +19,15 @@
 <div class="layui-form layuimini-form">
 
     <div class="layui-form-item" >
-        <label class="layui-form-label required">类型</label>
-        <div class="layui-input-block" >
-            <input type="radio" name="type" lay-filter="type" value="1" title="省" checked="">
-            <input type="radio" name="type" lay-filter="type" value="2" title="市">
-            <input type="radio" name="type" lay-filter="type" value="3" title="区县" >
+        <label class="layui-form-label required" >名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" id="name"  lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入类别名称" value="" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item" id="provinceDiv">
-        <label class="layui-form-label required" >省</label>
+    <div class="layui-form-item" >
+        <label class="layui-form-label " >图标</label>
         <div class="layui-input-block">
-            <input type="text" name="province" id="province"  maxlength="20" lay-reqtext="省不能为空" placeholder="请输入省名称" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item" id="cityDiv" >
-        <label class="layui-form-label required" >市</label>
-        <div class="layui-input-block">
-            <input type="text" name="city" id="city"  maxlength="20" lay-reqtext="市不能为空" placeholder="请输入市名称" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item" id="areaDiv">
-        <label class="layui-form-label required" >区县</label>
-        <div class="layui-input-block">
-            <input type="text" name="area" id="area" maxlength="20" lay-reqtext="区县不能为空" placeholder="请输入区县名称" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required ">编码</label>
-        <div class="layui-input-block">
-            <input type="text" name="code"   lay-verify="required"  maxlength="20" lay-reqtext="编码不能为空" placeholder="请输入编码" value="" class="layui-input">
+            <input type="text" name="icon" id="icon"  maxlength="200" lay-reqtext="图标不能为空" placeholder="请输入类别图标" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -60,16 +40,29 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">直辖市</label>
+        <label class="layui-form-label required">类型</label>
         <div class="layui-input-block">
-            <input type="radio" name="isMunicipality" value="0" title="否" checked="">
-            <input type="radio" name="isMunicipality" value="1" title="是">
+            <input type="radio" name="type" value="1" title="pc端" checked="">
+            <input type="radio" name="type" value="2" title="移动端">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="areaSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="number" name="categorySort"  placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="showStatus" value="1" title="显示" checked="">
+            <input type="radio" name="showStatus" value="0" title="隐藏" >
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <label class="layui-form-label" >跳转路径</label>
+        <div class="layui-input-block">
+            <input type="text" name="href" id="href"  maxlength="200" placeholder="请输入类别图标" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
@@ -96,27 +89,8 @@
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            if(data.field.type=="1")
-            {
-                if(data.field.province==null||data.field.province=="") {
-                    layer.msg("请输入省份名称");
-                    return false;
-                }
-            }else if(data.field.type=="2")
-            {
-                if(data.field.city==null||data.field.city=="") {
-                    layer.msg("请输入市名称");
-                    return false;
-                }
-            }else if(data.field.type=="3")
-            {
-                if(data.field.area==null||data.field.area=="") {
-                    layer.msg("请输入区县名称");
-                    return false;
-                }
-            }
             $.ajax({
-                url:"[[@{/area/save}]]",
+                url:"[[@{/category/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -141,43 +115,10 @@
         });
 
 
-        //默认显示省
-        $("#provinceDiv").show();
-        $("#cityDiv").hide();
-        $("#areaDiv").hide();
-
-        form.on('radio(type)', function (data) {
-            var typeValue = data.value;
-            if(typeValue=="1") {
-                $("#provinceDiv").show();
-                $("#cityDiv").hide();
-                $("#areaDiv").hide();
-
-                $("#city").val("");
-                $("#area").val("");
-
-            }else if(typeValue=="2") {
-                $("#provinceDiv").hide();
-                $("#cityDiv").show();
-                $("#areaDiv").hide();
-
-                $("#province").val("");
-                $("#area").val("");
-
-            }else if(typeValue=="3") {
-                $("#provinceDiv").hide();
-                $("#cityDiv").hide();
-                $("#areaDiv").show();
-
-                $("#province").val("");
-                $("#city").val("");
-            }
-        });
-
         $("#selectPid").click(function(){
             loadding = layer.load();
             index = layer.open({
-                title: '选择上级功能',
+                title: '选择上级节点',
                 type: 1,
                 shade: 0.2,
                 maxmin:true,
@@ -186,7 +127,7 @@
                 content: "<div id='areaTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]area/query/tree",
+                        url:"[[@{/}]]category/query/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
@@ -199,9 +140,7 @@
                                     ,data: data.data,
                                     click: function(obj){
                                         $("#selectPid").val(obj.data.title);
-                                        $("#parentCode").val(obj.data.code);
-                                        $("#pid").val(obj.data.id);
-                                        $("#appCode").val(obj.data.appCode);
+                                        $("#parentId").val(obj.data.id);
                                         layer.close(index);
                                     }
                                 });

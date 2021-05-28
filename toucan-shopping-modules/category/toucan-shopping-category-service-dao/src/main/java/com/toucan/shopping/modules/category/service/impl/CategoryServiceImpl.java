@@ -149,8 +149,10 @@ public class CategoryServiceImpl implements CategoryService {
             {
                 CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
                 BeanUtils.copyProperties(categoryTreeVO, category);
-
+                categoryTreeVO.setTitle(category.getName());
+                categoryTreeVO.setText(category.getName());
                 categoryTreeVO.setChildren(new ArrayList<CategoryVO>());
+
                 currentNode.getChildren().add(categoryTreeVO);
 
                 //查找当前节点的子节点

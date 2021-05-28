@@ -24,7 +24,7 @@
                 <form class="layui-form layui-form-pane" id="functionSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">编码</label>
+                            <label class="layui-form-label">名称</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="code" autocomplete="off" class="layui-input">
                             </div>
@@ -94,8 +94,8 @@
         {
             loadding = layer.load();
             treetable.render({
-                treeColIndex: 1,
-                treeSpid: -1,
+                treeColIndex: 1, //树形图标显示在第几列
+                treeSpid: -1, //最上级的父级id
                 treeIdName: 'id',
                 treePidName: 'parentId',
                 elem: '#categoryTreeTable',

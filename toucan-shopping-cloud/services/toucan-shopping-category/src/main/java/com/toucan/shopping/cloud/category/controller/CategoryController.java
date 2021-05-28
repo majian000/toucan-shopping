@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.service.CategoryService;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -45,6 +46,8 @@ public class CategoryController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private IdGenerator idGenerator;
 
 
 
@@ -90,6 +93,7 @@ public class CategoryController {
                 return resultObjectVO;
             }
 
+            category.setId(idGenerator.id());
             category.setCreateDate(new Date());
             int row = categoryService.save(category);
             if (row != 1) {
@@ -422,15 +426,19 @@ public class CategoryController {
             if(!CollectionUtils.isEmpty(categoryList))
             {
                 List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
-                for(Category area : categoryList)
+                for(Category category : categoryList)
                 {
-                    if(area.getParentId().longValue()==-1) {
-                        CategoryTreeVO areaTreeVO = new CategoryTreeVO();
-                        BeanUtils.copyProperties(areaTreeVO, area);
-                        categoryTreeVOS.add(areaTreeVO);
+                    if(category.getParentId().longValue()==-1) {
+                        CategoryTreeVO treeVO = new CategoryTreeVO();
+                        BeanUtils.copyProperties(treeVO, category);
 
-                        areaTreeVO.setChildren(new ArrayList<CategoryVO>());
-                        categoryService.setChildren(categoryList,areaTreeVO);
+                        treeVO.setTitle(category.getName());
+                        treeVO.setText(category.getName());
+
+                        categoryTreeVOS.add(treeVO);
+
+                        treeVO.setChildren(new ArrayList<CategoryVO>());
+                        categoryService.setChildren(categoryList,treeVO);
                     }
                 }
 
