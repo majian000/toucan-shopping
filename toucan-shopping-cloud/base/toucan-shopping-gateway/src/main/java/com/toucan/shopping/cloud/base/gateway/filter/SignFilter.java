@@ -93,13 +93,13 @@ public class SignFilter implements GlobalFilter, Ordered {
 
                     //提取request body部分
                     Flux<DataBuffer> body = request.getBody();
-                    AtomicReference<String> bodyRef = new AtomicReference<>();//缓存读取的request body信息
+                    StringBuilder builder = new StringBuilder();
                     body.subscribe(dataBuffer -> {
                         CharBuffer charBuffer = StandardCharsets.UTF_8.decode(dataBuffer.asByteBuffer());
                         DataBufferUtils.release(dataBuffer);
-                        bodyRef.set(charBuffer.toString());
+                        builder.append(charBuffer.toString());
                     });
-                    String requestBody = bodyRef.get();//获取request body
+                    String requestBody = builder.toString();//获取request body
                     logger.info(" 请求体 {}", requestBody);
 
                     if (StringUtils.isEmpty(requestBody)) {
