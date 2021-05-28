@@ -141,6 +141,36 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                 resultObjectVO.setMsg("请求失败,请稍候重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍候重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.deleteByIds faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍候重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍候重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.deleteById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍候重试");
+                return resultObjectVO;
+            }
         };
     }
 }

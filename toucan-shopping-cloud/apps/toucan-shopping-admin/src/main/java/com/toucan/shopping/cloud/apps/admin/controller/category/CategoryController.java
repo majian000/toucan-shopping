@@ -230,80 +230,75 @@ public class CategoryController extends UIController {
 
 
 
-//    /**
-//     * 删除
-//     * @param request
-//     * @return
-//     */
-//    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-//    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
-//    @ResponseBody
-//    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
-//    {
-//        ResultObjectVO resultObjectVO = new ResultObjectVO();
-//        try {
-//            if(StringUtils.isEmpty(id))
-//            {
-//                resultObjectVO.setMsg("请求失败,请传入ID");
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                return resultObjectVO;
-//            }
-//            Area entity =new Area();
-//            entity.setId(Long.parseLong(id));
-//            entity.setAppCode("10001001");
-//            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-//
-//            String entityJson = JSONObject.toJSONString(entity);
-//            RequestJsonVO requestVo = new RequestJsonVO();
-//            requestVo.setAppCode(toucan.getAppCode());
-//            requestVo.setEntityJson(entityJson);
-//            resultObjectVO = feignCategoryService.deleteById(SignUtil.sign(requestVo),requestVo);
-//        }catch(Exception e)
-//        {
-//            resultObjectVO.setMsg("请求失败,请重试");
-//            resultObjectVO.setCode(TableVO.FAILD);
-//            logger.warn(e.getMessage(),e);
-//        }
-//        return resultObjectVO;
-//    }
-//
-//
-//
-//    /**
-//     * 删除
-//     * @param request
-//     * @return
-//     */
-//    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-//    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-//    @ResponseBody
-//    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<AreaVO> areaVOS)
-//    {
-//        ResultObjectVO resultObjectVO = new ResultObjectVO();
-//        try {
-//            if(CollectionUtils.isEmpty(areaVOS))
-//            {
-//                resultObjectVO.setMsg("请求失败,请传入ID");
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                return resultObjectVO;
-//            }
-//            for(AreaVO areaVO:areaVOS)
-//            {
-//                areaVO.setAppCode("10001001");
-//            }
-//            String entityJson = JSONObject.toJSONString(areaVOS);
-//            RequestJsonVO requestVo = new RequestJsonVO();
-//            requestVo.setAppCode(toucan.getAppCode());
-//            requestVo.setEntityJson(entityJson);
-//            resultObjectVO = feignCategoryService.deleteByIds(SignUtil.sign(requestVo), requestVo);
-//        }catch(Exception e)
-//        {
-//            resultObjectVO.setMsg("请求失败,请重试");
-//            resultObjectVO.setCode(TableVO.FAILD);
-//            logger.warn(e.getMessage(),e);
-//        }
-//        return resultObjectVO;
-//    }
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            Category entity =new Category();
+            entity.setId(Long.parseLong(id));
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+
+            String entityJson = JSONObject.toJSONString(entity);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(toucan.getAppCode());
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignCategoryService.deleteById(SignUtil.sign(requestVo),requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<CategoryVO> categoryVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(categoryVOS))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String entityJson = JSONObject.toJSONString(categoryVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(toucan.getAppCode());
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignCategoryService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 

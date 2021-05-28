@@ -30,6 +30,10 @@ public interface CategoryService {
 
     List<Category> findByParentId(Long parentId);
 
+    /**
+     * 删除所有子节点
+     * @param id
+     */
     void deleteChildrenByParentId(Long id);
 
     /**
@@ -57,6 +61,13 @@ public interface CategoryService {
     List<CategoryVO> findTreeTable(CategoryTreeInfo queryTreeInfo);
 
 
+
+    /**
+     * 查询所有子节点
+     * @param children
+     * @param query
+     */
+    void queryChildren(List<Category> children,Category query);
 
 
 }

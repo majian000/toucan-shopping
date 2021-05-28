@@ -141,6 +141,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 
 
+
     public void setChildren(List<Category> categorys, CategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
         for (Category category : categorys) {
             //为当前参数的子节点
@@ -170,6 +171,17 @@ public class CategoryServiceImpl implements CategoryService {
             retNodes.addAll(nodes);
         }
         return retNodes;
+    }
+
+
+    @Override
+    public void queryChildren(List<Category> children, Category query) {
+        List<Category> categoryList = categoryMapper.queryByParentId(query.getId());
+        children.addAll(categoryList);
+        for(Category category:categoryList)
+        {
+            queryChildren(children,category);
+        }
     }
 
 

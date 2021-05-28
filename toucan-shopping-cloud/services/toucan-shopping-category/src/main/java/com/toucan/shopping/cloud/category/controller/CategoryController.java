@@ -115,7 +115,7 @@ public class CategoryController {
      */
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO update(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -554,13 +554,84 @@ public class CategoryController {
 
 
     /**
-     * 編輯
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            Category category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
+
+
+
+            if(category.getId()==null)
+            {
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(category));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+
+
+            CategoryVO queryCategory = new CategoryVO();
+            queryCategory.setId(category.getId());
+
+            List<Category> categoryList = categoryService.queryList(queryCategory);
+            if(CollectionUtils.isEmpty(categoryList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("不存在该类别!");
+                return resultObjectVO;
+            }
+
+            category = categoryList.get(0);
+            categoryService.deleteChildrenByParentId(category.getId());
+            int row = categoryService.deleteById(category.getId());
+            if (row <=0) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 批量删除功能项
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -570,42 +641,40 @@ public class CategoryController {
         }
 
         try {
-            CategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),CategoryVO.class);
-
-            if(StringUtils.isEmpty(entity.getName()))
-            {
-                logger.info("名称为空 param:"+ JSONObject.toJSONString(entity));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("名称不能为空!");
-                return resultObjectVO;
-            }
-            if(entity.getId()==null)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入ID");
-                return resultObjectVO;
-            }
-
-
-            CategoryVO query=new CategoryVO();
-            query.setId(entity.getId());
-            List<Category> categorys = categoryService.queryList(query);
+            List<Category> categorys = JSONObject.parseArray(requestVo.getEntityJson(),Category.class);
             if(CollectionUtils.isEmpty(categorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该地区不存在!");
+                resultObjectVO.setMsg("请求失败,没有找ID");
                 return resultObjectVO;
             }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(Category category:categorys) {
+                if(category.getId()!=null) {
+                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
+                    appResultObjectVO.setData(category);
 
-            entity.setUpdateDate(new Date());
-            int row = categoryService.update(entity);
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
-                return resultObjectVO;
+
+                    List<Category> chidlren = new ArrayList<Category>();
+                    categoryService.queryChildren(chidlren,category);
+
+                    //把当前节点添加进去,循环这个集合
+                    chidlren.add(category);
+
+                    for(Category c:chidlren) {
+                        //删除当前功能项
+                        int row = categoryService.deleteById(c.getId());
+                        if (row < 1) {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("请求失败,请重试!");
+                            continue;
+                        }
+
+                    }
+
+                }
             }
-
-            resultObjectVO.setData(entity);
+            resultObjectVO.setData(resultObjectVOList);
 
         }catch(Exception e)
         {
@@ -616,7 +685,6 @@ public class CategoryController {
         }
         return resultObjectVO;
     }
-
 
 
 
