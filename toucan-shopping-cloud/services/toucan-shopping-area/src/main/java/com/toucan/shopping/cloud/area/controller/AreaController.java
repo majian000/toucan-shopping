@@ -469,6 +469,16 @@ public class AreaController {
         try {
             AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AreaVO.class);
 
+
+            if(entity.getId().longValue()==entity.getPid().longValue())
+            {
+                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(entity));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级节点不能为自己!");
+                return resultObjectVO;
+            }
+
+
             if(StringUtils.isEmpty(entity.getCode()))
             {
                 logger.info("编码为空 param:"+ JSONObject.toJSONString(entity));

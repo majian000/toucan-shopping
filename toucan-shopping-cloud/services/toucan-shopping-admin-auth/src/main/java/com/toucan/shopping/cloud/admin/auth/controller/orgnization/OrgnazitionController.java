@@ -138,6 +138,14 @@ public class OrgnazitionController {
 
         try {
             OrgnazitionVO entity = JSONObject.parseObject(requestVo.getEntityJson(),OrgnazitionVO.class);
+
+            if(entity.getId().longValue()==entity.getPid().longValue())
+            {
+                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(entity));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级节点不能为自己!");
+                return resultObjectVO;
+            }
             if(StringUtils.isEmpty(entity.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);

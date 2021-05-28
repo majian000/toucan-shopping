@@ -67,8 +67,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.category.entity.Category" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_category(parent_id,icon,name,type,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{parentId},#{icon},#{name},#{type},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_category(id,parent_id,icon,name,type,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{parentId},#{icon},#{name},#{type},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 
@@ -83,7 +83,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.category.entity.Category">
-        update t_category set name=#{name},remark=#{remark},type=#{type},icon=#{icon},
+        update t_category set name=#{name},remark=#{remark},type=#{type},icon=#{icon},parent_id=#{parentId},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>
@@ -101,7 +101,8 @@
         <where>
             1=1
             <if test="name!=null and name!=''">
-                and t.name=#{name}
+                and t.name like concat('%',#{name},'%')
+
             </if>
             and t.delete_status = 0
         </where>

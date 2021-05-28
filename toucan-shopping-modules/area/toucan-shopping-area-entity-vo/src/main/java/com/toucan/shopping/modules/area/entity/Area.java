@@ -1,5 +1,7 @@
 package com.toucan.shopping.modules.area.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +15,9 @@ import java.util.Date;
  */
 @Data
 public class Area {
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
     private String code; //编码
     private String parentCode; //上级编码

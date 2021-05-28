@@ -134,6 +134,13 @@ public class CategoryController {
             Category category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
 
 
+            if(category.getId().longValue()==category.getParentId().longValue())
+            {
+                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(category));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级节点不能为自己!");
+                return resultObjectVO;
+            }
 
             if(StringUtils.isEmpty(category.getName()))
             {
@@ -159,7 +166,7 @@ public class CategoryController {
             List<Category> categoryList = categoryService.queryList(queryCategory);
             if(!CollectionUtils.isEmpty(categoryList))
             {
-                if(category.getId() != categoryList.get(0).getId())
+                if(category.getId().longValue() != categoryList.get(0).getId().longValue())
                 {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("该类别名称已存在!");
@@ -544,7 +551,25 @@ public class CategoryController {
                 }
             }
 
-            //TODO:判断每个节点,如果集合中不存在父节点,那么就将这个节点设置为顶级节点
+
+            //判断每个节点,如果集合中不存在父节点,那么就将这个节点设置为顶级节点
+            boolean isFind =false;
+            for(CategoryVO c:categoryVOS)
+            {
+                isFind=false;
+                for(CategoryVO cv:categoryVOS)
+                {
+                    if(c.getParentId().longValue()==cv.getId().longValue())
+                    {
+                        isFind=true;
+                        break;
+                    }
+                }
+                if(!isFind)
+                {
+                    c.setParentId(-1L);
+                }
+            }
 
             resultObjectVO.setData(categoryVOS);
 

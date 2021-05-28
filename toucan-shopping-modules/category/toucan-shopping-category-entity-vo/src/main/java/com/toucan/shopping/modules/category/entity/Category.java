@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.category.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,7 +14,14 @@ import java.util.Date;
  */
 @Data
 public class Category {
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+
     private Long parentId; //上级类别
     private String name; //类别名称
     private Integer type; //类型 1:pc端 2:移动端

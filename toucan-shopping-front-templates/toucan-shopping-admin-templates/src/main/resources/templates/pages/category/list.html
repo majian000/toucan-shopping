@@ -26,7 +26,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="code" autocomplete="off" class="layui-input">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
@@ -106,7 +106,7 @@
                 cols: [
                     [
                         {type: "checkbox", width: 50},
-                        {field: 'name', title: '名称'},
+                        {field: 'name', width: 200, title: '名称'},
                         {field: 'icon', width: 100,  title: '图标'},
                         {field: 'categorySort', title: '排序'},
                         {field: 'type', title: '类型', templet: function (d) {
@@ -194,11 +194,6 @@
         table.on('tool(categoryTreeTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                if(data.type==null)
-                {
-                    layer.msg("不能修改该节点");
-                    return false;
-                }
                 var index = layer.open({
                     title: '编辑类别',
                     type: 2,
