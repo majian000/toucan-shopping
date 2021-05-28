@@ -849,6 +849,7 @@ public class UserController {
             UserDetail query = new UserDetail();
             query.setUserMainId(userRegistVO.getUserMainId());
             List<UserDetail> userDetails = userDetailService.findListByEntity(query);
+            int row = 0;
             if(CollectionUtils.isNotEmpty(userDetails))
             {
                 UserDetail userDetail = userDetails.get(0);
@@ -858,25 +859,39 @@ public class UserController {
                 userDetail.setHeadSculpture(userRegistVO.getHeadSculpture()); //头像
                 userDetail.setSex(userRegistVO.getSex()); //性别
                 userDetail.setType(userRegistVO.getType()); //用户类型
-                int row = userDetailService.update(userDetail);
-                if(row<=0)
-                {
-                    logger.warn("修改用户详情失败 {}", requestJsonVO.getEntityJson());
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
-                }else {
+                row= userDetailService.update(userDetail);
+            }else{
+                UserDetail userDetail = new UserDetail();
+                userDetail.setId(idGenerator.id());
+                userDetail.setUserMainId(userRegistVO.getUserMainId()); //用户ID
+                userDetail.setNickName(userRegistVO.getNickName()); //昵称
+                userDetail.setTrueName(userRegistVO.getTrueName()); //姓名
+                userDetail.setIdCard(userRegistVO.getIdCard()); //身份证
+                userDetail.setHeadSculpture(userRegistVO.getHeadSculpture()); //头像
+                userDetail.setSex(userRegistVO.getSex()); //性别
+                userDetail.setType(userRegistVO.getType()); //用户类型
+                userDetail.setCreateDate(new Date());
+                userDetail.setDeleteStatus((short)0);
 
-                    //更新缓存
-                    try {
-                        updateDetailToElasticsearch(userRegistVO);
-                    } catch (Exception e) {
-                        logger.warn(e.getMessage(), e);
-                        resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("更新用户缓存出现异常");
-                    }
-                }
+                row= userDetailService.save(userDetail);
             }
 
+            if(row<=0)
+            {
+                logger.warn("修改用户详情失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试");
+            }else {
+
+                //更新缓存
+                try {
+                    updateDetailToElasticsearch(userRegistVO);
+                } catch (Exception e) {
+                    logger.warn(e.getMessage(), e);
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新用户缓存出现异常");
+                }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
