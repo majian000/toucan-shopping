@@ -124,6 +124,10 @@
                     {field: 'mobilePhone', width: 200, title: '手机号'},
                     {field: 'nickName', width: 240, title: '昵称'},
                     {field: 'email', width: 240, title: '邮箱'},
+                    {field: 'httpHeadSculpture', width: 80, title: '头像',
+                        templet: function (row) {
+                            return "<a href='"+row.httpHeadSculpture+"' target='_blank'><img src='"+row.httpHeadSculpture+"' width='30' height='30'  /></a>";
+                        }},
                     {field: 'username', width: 240, title: '用户名'},
                     {field: 'trueName', width: 240, title: '真实姓名'},
                     {field: 'idCard', width: 240, title: '身份证'},

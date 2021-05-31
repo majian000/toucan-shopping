@@ -109,6 +109,11 @@ public class UserVO {
      */
     private String headSculpture;
 
+    /**
+     * 头像
+     */
+    private String httpHeadSculpture;
+
 
     /**
      * 身份证

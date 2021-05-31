@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
@@ -42,6 +43,9 @@ public class UserController extends UIController {
 
     @Value("${toucan.app-code}")
     private String appCode;
+
+    @Value("${fastdfs.http.url}")
+    private String fastDfsHttpUrl;
 
     @Autowired
     private Toucan toucan;
@@ -247,8 +251,15 @@ public class UserController extends UIController {
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
+                    List<UserVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),UserVO.class);
+                    for(UserVO userVO:list)
+                    {
+                        if(userVO.getHeadSculpture()!=null) {
+                            userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                        }
+                    }
                     if(tableVO.getCount()>0) {
-                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
+                        tableVO.setData((List)list);
                     }
                 }
             }

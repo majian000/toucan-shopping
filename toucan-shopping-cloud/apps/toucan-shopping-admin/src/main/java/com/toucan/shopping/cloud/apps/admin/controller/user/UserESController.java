@@ -40,6 +40,9 @@ public class UserESController  extends UIController {
     @Value("${toucan.app-code}")
     private String appCode;
 
+    @Value("${fastdfs.http.url}")
+    private String fastDfsHttpUrl;
+
     @Autowired
     private Toucan toucan;
 
@@ -98,6 +101,12 @@ public class UserESController  extends UIController {
                     for(UserElasticSearchVO userElasticSearchVO:searchAfterPage.getUserElasticSearchVOS())
                     {
                         userElasticSearchVO.setUserId(String.valueOf(userElasticSearchVO.getId()));
+                    }
+                    for(UserElasticSearchVO userElasticSearchVO:searchAfterPage.getUserElasticSearchVOS())
+                    {
+                        if(userElasticSearchVO.getHeadSculpture()!=null) {
+                            userElasticSearchVO.setHttpHeadSculpture(fastDfsHttpUrl + userElasticSearchVO.getHeadSculpture());
+                        }
                     }
                     tableVO.setData((List) searchAfterPage.getUserElasticSearchVOS());
                     tableVO.setSortValues(searchAfterPage.getSortValues());
