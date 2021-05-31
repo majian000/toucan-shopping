@@ -135,7 +135,12 @@ public class UserESController  extends UIController {
         try {
             List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(Long.parseLong(userMainId));
             if(CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
-                request.setAttribute("model", userElasticSearchVOS.get(0));
+                UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                if(userElasticSearchVO.getHeadSculpture()!=null)
+                {
+                    userElasticSearchVO.setHttpHeadSculpture(fastDfsHttpUrl+userElasticSearchVO.getHeadSculpture());
+                }
+                request.setAttribute("model", userElasticSearchVO);
             }
         }catch(Exception e)
         {

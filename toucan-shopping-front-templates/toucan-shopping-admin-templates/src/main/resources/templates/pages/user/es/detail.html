@@ -58,6 +58,12 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">头像预览</label>
+        <div class="layui-input-block">
+            <img th:src="${model.httpHeadSculpture}" th:width="240" th:height="220">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">身份证</label>
         <div class="layui-input-block">
             <input type="text" name="idCard"  maxlength="30"  placeholder="请输入身份证" value="" class="layui-input" th:value="${model.idCard}" >

@@ -193,6 +193,9 @@ public class UserController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
+                if(userVO.getHeadSculpture()!=null) {
+                    userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                }
                 request.setAttribute("model", userVO);
             }
         }catch(Exception e)
