@@ -188,6 +188,8 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
         if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
         {
+            //强制刷新
+            deleteResponse.forcedRefresh();
             return true;
         }
         return false;
