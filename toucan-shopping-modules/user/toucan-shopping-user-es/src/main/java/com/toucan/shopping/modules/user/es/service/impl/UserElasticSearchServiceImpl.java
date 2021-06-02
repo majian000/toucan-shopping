@@ -14,6 +14,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -86,7 +87,9 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
             }
             updateBody.endObject();
             request.doc(updateBody);
-            restHighLevelClient.update(request, RequestOptions.DEFAULT);
+            UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
+            //强制刷新
+            updateResponse.forcedRefresh();
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
         }
