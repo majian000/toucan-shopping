@@ -8,6 +8,8 @@ import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.es.vo.SearchAfterPage;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -24,6 +26,7 @@ import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -175,6 +178,19 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
             }
         }
         return userElasticSearchVOS;
+    }
+
+    @Override
+    public boolean deleteById(String id) throws Exception {
+        //创建请求对象
+        DeleteRequest deleteRequest = new DeleteRequest(UserCacheElasticSearchConstant.USER_INDEX);
+        deleteRequest.id(id);
+        DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+        if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
+        {
+            return true;
+        }
+        return false;
     }
 
 

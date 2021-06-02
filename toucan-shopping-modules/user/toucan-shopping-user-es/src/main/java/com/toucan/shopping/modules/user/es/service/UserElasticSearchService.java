@@ -48,6 +48,13 @@ public interface UserElasticSearchService {
 
 
     /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    boolean deleteById(String id) throws Exception;
+
+    /**
      * 根据ID查询
      * @param userMainId
      * @return
