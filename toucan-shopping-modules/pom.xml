@@ -43,6 +43,8 @@
         <module>common/toucan-shopping-layui</module>
         <!--elasticsearch公共模块 -->
         <module>common/toucan-shopping-elasticsearch</module>
+        <!--fastdfs模块 -->
+        <module>common/toucan-shopping-fastdfs</module>
 
         <!--用户中心操作es -->
         <module>user/toucan-shopping-user-es</module>
