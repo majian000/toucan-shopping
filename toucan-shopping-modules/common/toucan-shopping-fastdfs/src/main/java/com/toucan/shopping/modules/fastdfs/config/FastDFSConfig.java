@@ -47,6 +47,7 @@ public class FastDFSConfig {
         FastDFSClient fastDFSClient = new FastDFSClient();
 
         try {
+            logger.info(" 初始化 fastdfs客户端.......");
             ClientGlobal.setG_connect_timeout(connectTimeout);
             ClientGlobal.setG_network_timeout(networkTimeout);
             ClientGlobal.setG_charset(charset);
@@ -71,8 +72,10 @@ public class FastDFSConfig {
             fastDFSClient.trackerServer = fastDFSClient.trackerClient.getConnection();
             fastDFSClient.storageServer = null;
             fastDFSClient.storageClient = new StorageClient1(fastDFSClient.trackerServer, fastDFSClient.storageServer);
+
         }catch(Exception e)
         {
+            logger.info(" 初始化 fastdfs客户端 异常.......");
             logger.warn(e.getMessage(),e);
         }
         return fastDFSClient;
