@@ -14,7 +14,7 @@ public class AdminCenterRedisKey {
      */
     public static String getLoginTokenGroupKey(String adminIdOrUserId)
     {
-        return adminIdOrUserId+"_LOGIN_TOKENS";
+        return "TOUCAN_ADMIN_AUTH:LOGIN_TOKENS:"+adminIdOrUserId+"_LOGIN_TOKENS";
     }
 
 

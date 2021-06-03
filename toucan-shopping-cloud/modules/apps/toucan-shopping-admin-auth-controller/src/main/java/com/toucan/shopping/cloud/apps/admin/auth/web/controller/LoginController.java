@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.apps.admin.auth.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.cloud.apps.admin.auth.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
@@ -88,7 +89,7 @@ public class LoginController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            String vcodeRedisKey = appCode+"_vcode_"+ClientVCodeId;
+            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(appCode,ClientVCodeId);
 
             Object vCodeObject = stringRedisTemplate.opsForValue().get(vcodeRedisKey);
             if(vCodeObject==null)
@@ -158,7 +159,7 @@ public class LoginController {
             //生成客户端验证码ID
             String vcodeKey = GlobalUUID.uuid();
 
-            String vcodeRedisKey = appCode+"_vcode_"+vcodeKey;
+            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(appCode,vcodeKey);
             stringRedisTemplate.opsForValue().set(vcodeRedisKey,code);
             stringRedisTemplate.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
 

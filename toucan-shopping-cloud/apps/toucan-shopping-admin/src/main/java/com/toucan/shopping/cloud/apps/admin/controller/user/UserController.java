@@ -1070,7 +1070,8 @@ public class UserController extends UIController {
 
 
     @RequestMapping("/upload/head/sculpture")
-    public ResultObjectVO  upload(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
+    @ResponseBody
+    public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(0);
