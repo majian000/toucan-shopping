@@ -60,6 +60,7 @@ public class FastDFSConfig {
 
             for(int i = 0; i < szTrackerServers.length; ++i) {
                 String[] parts = szTrackerServers[i].split("\\:", 2);
+                logger.info(" 初始化 地址:{} 端口:{} ",parts[0].trim(),parts[1].trim());
                 if (parts.length != 2) {
                     throw new MyException("the value of item \"tracker_server\" is invalid, the correct format is host:port");
                 }
