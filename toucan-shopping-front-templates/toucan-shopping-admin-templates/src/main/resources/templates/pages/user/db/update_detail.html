@@ -35,7 +35,15 @@
     <div class="layui-form-item">
         <label class="layui-form-label">头像</label>
         <div class="layui-input-block">
-            <input type="text" name="headSculpture"  maxlength="100"  placeholder="请输入头像" value="" class="layui-input" th:value="${model.headSculpture}">
+            <button type="button" class="layui-btn" id="uploadHeadSculpture">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像预览</label>
+        <div class="layui-input-block">
+            <img th:src="${model.httpHeadSculpture}" id="previewHeadSculpture" th:width="240" th:height="220">
         </div>
     </div>
 
@@ -93,10 +101,26 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form'], function () {
+    layui.use(['form','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
+        var upload = layui.upload;
+
+        var userMainId = $("#userMainId").val();
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadHeadSculpture' //绑定元素
+            ,url: '/user/upload/head/sculpture' //上传接口
+            ,data:{userMainId:userMainId}
+            ,done: function(res){
+                $("#previewHeadSculpture").src("");
+            }
+            ,error: function(){
+                layer.msg("上传头像异常");
+            }
+        });
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 

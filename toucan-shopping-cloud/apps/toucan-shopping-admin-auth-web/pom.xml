@@ -104,6 +104,11 @@
             <artifactId>toucan-shopping-layui</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-fastdfs</artifactId>
+        </dependency>
+
 
 
     </dependencies>

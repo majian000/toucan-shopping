@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.apps.admin.constant.UserConstant;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
@@ -14,6 +15,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.fastdfs.util.FastDFSClient;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.User;
@@ -21,6 +23,7 @@ import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.vo.UserRegistVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -46,6 +50,9 @@ public class UserController extends UIController {
 
     @Value("${fastdfs.http.url}")
     private String fastDfsHttpUrl;
+
+    @Autowired
+    private FastDFSClient fastDFSClient;
 
     @Autowired
     private Toucan toucan;
@@ -1059,6 +1066,60 @@ public class UserController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+    @RequestMapping("/upload/head/sculpture")
+    public ResultObjectVO  upload(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String groupPath = fastDFSClient.uploadFile(file.getBytes());
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("头像上传失败");
+            }
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(userMainId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+            ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(userResultObjectVO.isSuccess())
+            {
+                userVO = (UserVO) userResultObjectVO.formatData(UserVO.class);
+                //如果不是默认头像就删除掉这个人的上一个头像
+                if(!UserConstant.HEAD_SCULPTURE.equals(userVO.getHeadSculpture())&&StringUtils.isNotEmpty(userVO.getHeadSculpture()))
+                {
+                    int ret = fastDFSClient.delete_file(userVO.getHeadSculpture());
+                    if(ret!=0)
+                    {
+                        logger.warn("删除旧头像失败 {} ",userVO.getHeadSculpture());
+                    }
+                }
+                userVO.setHeadSculpture(groupPath);
+
+                //商城应用编码
+                String shoppingAppCode = "10001001";
+                requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
+                userResultObjectVO = feignUserService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
+                if(!userResultObjectVO.isSuccess())
+                {
+                    resultObjectVO.setCode(1);
+                    resultObjectVO.setMsg("修改头像失败");
+                }
+            }
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(1);
+            resultObjectVO.setMsg("头像上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
+
 
 
 }
