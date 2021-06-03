@@ -1107,6 +1107,12 @@ public class UserController extends UIController {
                 {
                     resultObjectVO.setCode(1);
                     resultObjectVO.setMsg("修改头像失败");
+
+                    //设置预览头像
+                    if(userVO.getHeadSculpture()!=null) {
+                        userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                    }
+                    resultObjectVO.setData(userVO);
                 }
             }
         }catch (Exception e)
