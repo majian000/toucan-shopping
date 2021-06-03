@@ -39,6 +39,7 @@
                 <i class="layui-icon">&#xe67c;</i>上传图片
             </button>
         </div>
+        <input type="hidden" id="headSculpture" name="headSculpture" >
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">头像预览</label>
@@ -114,7 +115,12 @@
             ,url: '/user/upload/head/sculpture' //上传接口
             ,data:{userMainId:userMainId}
             ,done: function(res){
-                $("#previewHeadSculpture").src(res.data.httpHeadSculpture);
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewHeadSculpture").attr("src",res.data.httpHeadSculpture);
+                $("#headSculpture").val(res.data.headSculpture);
             }
             ,error: function(){
                 layer.msg("上传头像异常");

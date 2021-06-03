@@ -5,12 +5,16 @@ import lombok.Value;
 import org.csource.common.MyException;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
 @Data
 public class FastDFSClient {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public TrackerClient trackerClient = null;
     public TrackerServer trackerServer = null;
@@ -34,9 +38,9 @@ public class FastDFSClient {
         try {
             result = storageClient.upload_file1(fileName, extName, metas);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         } catch (MyException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         }
         return result;
     }
@@ -74,9 +78,9 @@ public class FastDFSClient {
         try {
             result = storageClient.upload_file1(fileContent, extName, metas);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         } catch (MyException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         }
         return result;
     }
@@ -115,18 +119,20 @@ public class FastDFSClient {
                     output.write(b);
                     result=0;
                 }
-            }catch (Exception e){} //用户可能取消了下载
+            }catch (Exception e){
+                logger.warn(e.getMessage(),e);
+            } //用户可能取消了下载
             finally {
                 if (output != null){
                     try {
                         output.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.warn(e.getMessage(),e);
                     }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         }
         return result;
     }
@@ -140,9 +146,9 @@ public class FastDFSClient {
         try {
             b = storageClient.download_file1(path);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         } catch (MyException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         }
         return b;
     }
@@ -158,9 +164,9 @@ public class FastDFSClient {
         try {
             result = storageClient.delete_file(group, storagePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         } catch (MyException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         }
         return  result;
     }
@@ -176,9 +182,9 @@ public class FastDFSClient {
         try {
             result = storageClient.delete_file1(storagePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         } catch (MyException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         }
         return  result;
     }
@@ -193,7 +199,7 @@ public class FastDFSClient {
         try {
             return storageClient.get_file_info(groupName, remoteFileName);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage(),e);
         }
         return null;
     }

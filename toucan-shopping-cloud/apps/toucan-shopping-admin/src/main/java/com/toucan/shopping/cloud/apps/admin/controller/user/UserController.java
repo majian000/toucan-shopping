@@ -172,6 +172,9 @@ public class UserController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 userVO =  (UserVO) resultObjectVO.formatData(UserVO.class);
+                if(userVO.getHeadSculpture()!=null) {
+                    userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                }
                 request.setAttribute("model", userVO);
             }
         }catch(Exception e)
@@ -1076,7 +1079,14 @@ public class UserController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(0);
         try{
-            String groupPath = fastDFSClient.uploadFile(file.getBytes());
+            String fileName = file.getOriginalFilename();
+            String fileExt = ".jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+            }
+            String groupPath = fastDFSClient.uploadFile(file.getBytes(),fileExt);
 
             if(StringUtils.isEmpty(groupPath))
             {
@@ -1107,7 +1117,7 @@ public class UserController extends UIController {
                 if(!userResultObjectVO.isSuccess())
                 {
                     resultObjectVO.setCode(1);
-                    resultObjectVO.setMsg("修改头像失败");
+                    resultObjectVO.setMsg(userResultObjectVO.getMsg());
 
                     //设置预览头像
                     if(userVO.getHeadSculpture()!=null) {
