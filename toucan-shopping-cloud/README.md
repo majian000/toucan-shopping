@@ -57,6 +57,7 @@
     3.apache-zookeeper-3.6.2
     4.kafka_2.12-2.7.0
     5.elasticsearch-7.10.2
+    6.FastDFS_v5.08
 
 ##### 第三方配置
 
