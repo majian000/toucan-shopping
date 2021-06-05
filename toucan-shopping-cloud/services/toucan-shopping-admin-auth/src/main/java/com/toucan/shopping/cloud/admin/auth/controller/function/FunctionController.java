@@ -233,8 +233,6 @@ public class FunctionController {
                 return resultObjectVO;
             }
 
-            //更新子节点的应用编码
-            functionService.updateChildAppCode(entity);
 
             //如果修改了上级功能项,删除旧的角色功能关联
             if(functions.get(0).getPid().longValue()!=entity.getPid().longValue())
