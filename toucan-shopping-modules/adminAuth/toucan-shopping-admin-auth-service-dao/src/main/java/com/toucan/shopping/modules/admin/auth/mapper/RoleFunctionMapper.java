@@ -19,6 +19,8 @@ public interface RoleFunctionMapper {
 
     int deleteByFunctionId(String functionId);
 
+    int deleteByFunctionIdArray(String[] functionIdArray);
+
     List<RoleFunction> findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url,String appCode,String[] roleIdArray);
 
     Long findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url,String appCode,String[] roleIdArray);

@@ -237,6 +237,20 @@ public class FunctionController {
             //如果修改了上级功能项,删除旧的角色功能关联
             if(functions.get(0).getPid().longValue()!=entity.getPid().longValue())
             {
+                //删除所有子节点与角色关联
+                List<Function> children = new ArrayList<Function>();
+                functionService.queryChildren(children,functions.get(0));
+                if(!CollectionUtils.isEmpty(children))
+                {
+                    String[] functionIdArray= new String[children.size()];
+                    for(int i=0;i<children.size();i++)
+                    {
+                        functionIdArray[i] = children.get(i).getFunctionId();
+                    }
+                    roleFunctionService.deleteByFunctionIdArray(functionIdArray);
+                }
+
+                //删除当前节点与角色关联
                 roleFunctionService.deleteByFunctionId(functions.get(0).getFunctionId());
             }
 

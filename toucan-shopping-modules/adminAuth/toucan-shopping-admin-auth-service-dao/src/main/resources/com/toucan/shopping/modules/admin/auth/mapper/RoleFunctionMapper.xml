@@ -98,4 +98,14 @@
         update t_sa_role_function set delete_status=1  where function_id = #{functionId}
     </update>
 
+
+    <update id="deleteByFunctionIdArray" >
+        update t_sa_role_function set delete_status=1
+         where 1=1
+         and function_id in
+        <foreach item="item" index="index" collection="functionIdArray" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
 </mapper>

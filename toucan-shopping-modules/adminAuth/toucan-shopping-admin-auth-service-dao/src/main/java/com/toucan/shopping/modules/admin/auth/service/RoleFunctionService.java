@@ -45,6 +45,12 @@ public interface RoleFunctionService {
     int deleteByFunctionId(String functionId);
 
     /**
+     * 删除指定功能项下的关联
+     * @param functionId
+     * @return
+     */
+    int deleteByFunctionIdArray(String[] functionId);
+    /**
      * 根据用户ID 权限URL 和应用编码查询所有角关联
      * @param url
      * @param appCode
