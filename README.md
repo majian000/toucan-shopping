@@ -9,6 +9,12 @@
     采用技术spring cloud、spring config、lombok、mybatis、eureka、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
 
+### 访问
+    http://8.140.187.184:8083/ 商城网站
+
+### 数据库
+    表结构存放在resources/数据库备份目录下
+    注意:由于开发中会修改表字段,该备份不会实时更新,私信mmdrss@163.com可找我要最新表结构
 
 
 #### 参与贡献
