@@ -78,13 +78,6 @@ public class BannerController {
             bannerId = idGenerator.id();
             BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
 
-            if(StringUtils.isEmpty(bannerVO.getAppCode()))
-            {
-                logger.warn("编码为空 param:"+ requestJsonVO.getEntityJson());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("编码不能为空!");
-                return resultObjectVO;
-            }
             if(bannerVO.getAreaCodeArray()==null||bannerVO.getAreaCodeArray().length<=0)
             {
                 logger.warn("关联地区编码为空 param:"+ requestJsonVO.getEntityJson());

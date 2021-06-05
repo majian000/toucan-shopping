@@ -12,7 +12,6 @@
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
@@ -48,8 +47,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Banner"  keyProperty="id" >
-        insert into t_banner(id,title,img_path,click_path,position,banner_sort,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
-        values(#{id},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+        insert into t_banner(id,title,img_path,click_path,position,banner_sort,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 

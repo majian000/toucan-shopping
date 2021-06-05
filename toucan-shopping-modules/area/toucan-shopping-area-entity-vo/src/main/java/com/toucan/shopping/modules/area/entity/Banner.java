@@ -21,7 +21,6 @@ public class Banner  {
     private Long createAdminId; //创建人ID
     private Long updateAdminId; //修改人ID
 
-    private String appCode; //所属应用
 
     private Date createDate; //创建时间
 
