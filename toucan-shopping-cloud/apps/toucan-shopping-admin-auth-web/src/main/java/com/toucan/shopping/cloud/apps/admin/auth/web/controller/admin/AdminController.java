@@ -73,9 +73,6 @@ public class AdminController extends UIController {
     {
         super.initSelectApp(request,toucan,feignAppService);
 
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/admin/listPage",feignFunctionService);
-
         return "pages/admin/add.html";
     }
 

@@ -161,7 +161,7 @@
         table.on('toolbar(adminTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加账号',
+                    title: '添加轮播图',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -175,7 +175,7 @@
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('adminTable')
                     , data = checkStatus.data;
-                layer.confirm('确定删除账号?', function (index) {
+                layer.confirm('确定删除轮播图?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]banner/delete/ids",
                         contentType: "application/json; charset=utf-8",
@@ -298,7 +298,7 @@
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该账号?', function (index) {
+                layer.confirm('确定删除该轮播图?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]banner/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",

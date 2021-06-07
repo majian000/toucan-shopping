@@ -18,22 +18,44 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">账号</label>
+        <label class="layui-form-label required">标题</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" maxlength="20" lay-reqtext="名称不能为空" placeholder="请输入账号" value="" class="layui-input">
-            <tip>填写账号。</tip>
+            <input type="text" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入标题" value="" class="layui-input">
+            <tip>填写标题。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">密码</label>
+        <label class="layui-form-label required">点击跳转</label>
         <div class="layui-input-block">
-            <input type="password" name="password" lay-verify="required" maxlength="10" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            <input type="text" name="clickPath" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入点击跳转" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">确认密码</label>
+        <label class="layui-form-label">头像</label>
         <div class="layui-input-block">
-            <input type="password" name="password2" lay-verify="required" maxlength="10" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            <button type="button" class="layui-btn" id="uploadHeadSculpture">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <input type="hidden" id="headSculpture" name="headSculpture" >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像预览</label>
+        <div class="layui-input-block">
+            <!--th:src="${model.httpHeadSculpture}"-->
+            <img  id="previewHeadSculpture" th:width="240" th:height="220">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置</label>
+        <div class="layui-input-block">
+            <input type="radio" name="position" value="0" title="门户首页" checked="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="bannerSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
@@ -43,13 +65,6 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">账号状态</label>
-        <div class="layui-input-block">
-            <input type="radio" name="enableStatus" value="1" title="启用" checked="">
-            <input type="radio" name="enableStatus" value="0" title="禁用">
-        </div>
-    </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
