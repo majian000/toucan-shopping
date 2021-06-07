@@ -104,42 +104,18 @@
  | services/toucan-shopping-app-center          | 8099                   | 权限中台服务                                      |
 
     
-    
-    
-    
-    
-    
-    
-
 
 ##### 应用层  
     
-    1.apps/toucan-shopping-web
-    端口号:8083
-    前端界面服务
-
-    2.apps/toucan-shopping-admin
-    端口号:8086
-    后台管理端
-
-    3.apps/toucan-shopping-admin
-    端口号:8088
-    用户中心界面
-    
-    4.apps/toucan-shopping-admin-auth-web
-    端口号:8098
-    权限中台界面
-
-    5.apps/toucan-shopping-scheduler
-    端口号:8092
-    商城调度任务端
-
-    6.apps/toucan-shopping-user-scheduler
-    端口号:8097
-    用户中心任务调度
-
-    
-    
+ | 服务名                                        | 端口号                 | 说明                                             |
+ | --------------------------------------------- | -------------------- | ---------------------------------------------------|
+ | apps/toucan-shopping-web                      | 8083                 | 前端界面服务                                       |
+ | apps/toucan-shopping-admin                    | 8086                 | 后台管理端                                         |
+ | apps/toucan-shopping-admin                    | 8088                 | 用户中心界面                                       |
+ | apps/toucan-shopping-admin-auth-web           | 8098                 | 权限中台界面                                       |
+ | apps/toucan-shopping-scheduler                | 8092                 | 商城调度任务端                                     |
+ | apps/toucan-shopping-user-scheduler           | 8097                 | 用户中心任务调度                                   |
+ 
     
 
 #### 应用编码
