@@ -78,63 +78,38 @@
 ##### 数据库
 
     备份路径 resources/数据库备份/微服务版
-    
-
+ 
 ##### 基础服务层
-    1.base/toucan-shopping-config-server
-    端口号:9090
-    配置中心服务
-
-    2.base/toucan-shopping-eureka
-    端口号:8081
-    服务中心
-
-    3.base/toucan-shopping-gateway
-    端口号:8089
-    服务网关
+ | 服务名                                        | 端口号                 | 说明                                             |
+ | --------------------------------------------- | -------------------- | ---------------------------------------------------|
+ | base/toucan-shopping-config-server           | 9090                  | 配置中心服务                                       |
+ | base/toucan-shopping-eureka                  | 8081                   | 服务中心                                           |
+ | base/toucan-shopping-gateway                 | 8089                   | 服务网关                                           |
+ 
+   
     
 ##### 业务服务层
     
-    1.services/toucan-shopping-product
-    端口号:8082
-    商品服务
+ | 服务名                                        | 端口号                 | 说明                                             |
+ | --------------------------------------------- | -------------------- | ---------------------------------------------------|
+ | services/toucan-shopping-product             | 8082                   | 商品服务                                          |
+ | services/toucan-shopping-order               | 8084                   | 订单服务、支付服务                                |
+ | services/toucan-shopping-second-kill         | 8085                   | 秒杀服务,使用请参考该项目目录下的README.MD        |
+ | services/toucan-shopping-category            | 8090                   | 类别服务                                          |
+ | services/toucan-shopping-stock               | 8093                   | 库存服务                                          |
+ | services/toucan-shopping-area                | 8094                   | 地区编码、收货地区服务                            |
+ | services/toucan-shopping-content             | 8095                   | 新闻资讯服务                                      |
+ | services/toucan-shopping-column              | 8096                   | 栏目服务                                          |
+ | services/toucan-shopping-user-center         | 8087                   | 用户中心服务                                      |
+ | services/toucan-shopping-app-center          | 8099                   | 权限中台服务                                      |
 
-    2.services/toucan-shopping-order
-    端口号:8084
-    订单服务、支付服务
-
-    3.services/toucan-shopping-second-kill
-    端口号:8085
-    秒杀服务,使用请参考该项目目录下的README.MD
-    
-    4.services/toucan-shopping-category
-    端口号:8090
-    类别服务
-    
-    5.services/toucan-shopping-stock
-    端口号:8093
-    库存服务
-    
-    6.services/toucan-shopping-area
-    端口号:8094
-    地区编码、收货地区服务
     
     
-    7.services/toucan-shopping-content
-    端口号:8095
-    新闻资讯服务
     
-    8.services/toucan-shopping-column
-    端口号:8096
-    栏目服务
     
-    9.services/toucan-shopping-user-center
-    端口号:8087
-    用户中心服务
     
-    11.services/toucan-shopping-app-center
-    端口号:8099
-    权限中台服务
+    
+    
 
 
 ##### 应用层  
