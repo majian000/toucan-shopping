@@ -17,14 +17,8 @@ public class BannerArea {
     private Date updateDate; //创建时间
     private Long createAdminId; //创建人ID
     private Long updateAdminId; //修改人ID
-
-
-    private String appCode; //所属应用
-
     private Date createDate; //创建时间
-
     private String remark; //备注
-
     /**
      * 删除状态 0未删除 1已删除
      */

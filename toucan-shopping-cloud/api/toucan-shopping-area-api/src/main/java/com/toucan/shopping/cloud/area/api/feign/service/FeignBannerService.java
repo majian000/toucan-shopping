@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-area-proxy/banner/user",fallbackFactory = FeignBannerServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-area-proxy/banner",fallbackFactory = FeignBannerServiceFallbackFactory.class)
 public interface FeignBannerService {
 
 

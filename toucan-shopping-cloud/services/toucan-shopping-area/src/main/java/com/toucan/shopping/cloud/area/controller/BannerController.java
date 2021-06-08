@@ -28,10 +28,10 @@ import java.util.List;
 
 
 /**
- * 管理端轮播图操作
+ * 轮播图操作
  */
 @RestController
-@RequestMapping("/banner/admin")
+@RequestMapping("/banner")
 public class BannerController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

@@ -6,12 +6,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
+import com.toucan.shopping.modules.area.entity.BannerArea;
+import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
+import com.toucan.shopping.modules.area.vo.BannerAreaVO;
 import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -36,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 轮播图管理
@@ -55,6 +60,9 @@ public class BannerController extends UIController {
 
     @Autowired
     private FeignFunctionService feignFunctionService;
+
+    @Autowired
+    private FeignBannerAreaService feignBannerAreaService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -138,18 +146,78 @@ public class BannerController extends UIController {
 
 
 
+    public void setTreeNodeSelect(AtomicLong id,AreaTreeVO parentTreeVO,List<AreaTreeVO> areaTreeVOList,List<BannerArea> bannerAreas)
+    {
+        for(AreaTreeVO areaTreeVO:areaTreeVOList)
+        {
+            areaTreeVO.setId(id.incrementAndGet());
+            areaTreeVO.setNodeId(areaTreeVO.getId());
+            areaTreeVO.setPid(parentTreeVO.getId());
+            areaTreeVO.setParentId(areaTreeVO.getPid());
+            for(BannerArea bannerArea:bannerAreas) {
+                if(areaTreeVO.getCode().equals(bannerArea.getAreaCode())) {
+                    //设置节点被选中
+                    areaTreeVO.getState().setChecked(true);
+                }
+            }
+            if(!CollectionUtils.isEmpty(areaTreeVO.getChildren()))
+            {
+                setTreeNodeSelect(id,areaTreeVO,areaTreeVO.getChildren(),bannerAreas);
+            }
+        }
+    }
+
+    /**
+     * 查询地区树
+     * @param request
+     * @return
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/area/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/area/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryTree(HttpServletRequest request)
+    public ResultObjectVO queryFunctionTree(HttpServletRequest request,String bannerId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            //查询地区树
             AreaVO query = new AreaVO();
-            //设置为商城的应用编码
-            query.setAppCode("10001001");
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignAreaService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            query.setAppCode(appCode);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+
+            resultObjectVO = feignAreaService.queryTree(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<AreaTreeVO> areaTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AreaTreeVO.class);
+
+                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
+                AtomicLong id = new AtomicLong();
+                BannerAreaVO queryBannerAreaVo = new BannerAreaVO();
+                queryBannerAreaVo.setBannerId(Long.parseLong(bannerId));
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
+
+
+                resultObjectVO = feignBannerAreaService.queryBannerAreaList(requestJsonVO.sign(),requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<BannerArea> bannerAreas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerArea.class);
+                    if(!CollectionUtils.isEmpty(bannerAreas)) {
+                        for(AreaTreeVO areaTreeVO:areaTreeVOList) {
+                            areaTreeVO.setId(id.incrementAndGet());
+                            areaTreeVO.setNodeId(areaTreeVO.getId());
+                            areaTreeVO.setText(areaTreeVO.getTitle());
+                            for(BannerArea bannerArea:bannerAreas) {
+                                if(areaTreeVO.getCode().equals(bannerArea.getAreaCode())) {
+                                    //设置节点被选中
+                                    areaTreeVO.getState().setChecked(true);
+                                }
+                            }
+                            setTreeNodeSelect(id,areaTreeVO,areaTreeVO.getChildren(), bannerAreas);
+                        }
+                    }
+                }
+                resultObjectVO.setData(areaTreeVOList);
+            }
+            return resultObjectVO;
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");

@@ -11,6 +11,15 @@ import java.util.List;
 @Data
 public class AreaTreeVO extends AreaVO {
 
+    /**
+     * 节点ID
+     */
+    private Long nodeId;
+
+    /**
+     * 上级节点ID
+     */
+    private Long parentId;
 
     /**
      * 节点标题
@@ -26,6 +35,9 @@ public class AreaTreeVO extends AreaVO {
      * 标签
      */
     private List<String> tags;
+
+
+    private List<AreaTreeVO> children;
 
     /**
      * 子节点

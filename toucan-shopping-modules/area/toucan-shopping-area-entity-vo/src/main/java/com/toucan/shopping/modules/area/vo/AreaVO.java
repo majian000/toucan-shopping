@@ -26,8 +26,6 @@ public class AreaVO extends Area {
     private String parentName;
 
 
-    private List<AreaVO> children;
-
 
     /**
      * 创建人
