@@ -105,7 +105,6 @@ public class BannerController {
                 bannerArea.setId(idGenerator.id());
                 bannerArea.setAreaCode(areaCode);
                 bannerArea.setBannerId(banner.getId());
-                bannerArea.setAppCode(requestJsonVO.getAppCode());
                 bannerArea.setCreateDate(new Date());
                 bannerAreas[i]=bannerArea;
             }
@@ -162,7 +161,6 @@ public class BannerController {
                 for(int i=0;i<bannerVO.getAreaCodeArray().length;i++)
                 {
                     BannerArea bannerArea = new BannerArea();
-                    bannerArea.setAppCode(requestJsonVO.getAppCode());
                     bannerArea.setAreaCode(bannerVO.getAreaCodeArray()[i]);
                     List<BannerArea> bannerAreaList = bannerAreaService.queryList(bannerArea);
                     if(CollectionUtils.isNotEmpty(bannerAreaList))
