@@ -228,7 +228,7 @@ public class AreaController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/tree/table",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO treeTable(HttpServletRequest request, AreaTreeInfo queryPageInfo)
+    public ResultObjectVO queryTreeTable(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

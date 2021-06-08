@@ -162,13 +162,12 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public List<AreaVO> findTreeTable(AreaTreeInfo areaTreeInfo) {
-        List<AreaVO> retNodes = new ArrayList<AreaVO>();
         List<AreaVO> nodes = areaMapper.findTreeTableByPageInfo(areaTreeInfo);
         if(!CollectionUtils.isEmpty(nodes))
         {
-            retNodes.addAll(nodes);
-            for(AreaVO node:nodes)
+            for(int i =0 ;i<nodes.size();i++)
             {
+                AreaVO node = nodes.get(i);
                 if(node.getType()==1)
                 {
                     node.setName(node.getProvince());
@@ -179,9 +178,18 @@ public class AreaServiceImpl implements AreaService {
                 {
                     node.setName(node.getArea());
                 }
+                //判断当前节点是不是父节点
+                for(int j=0;j<nodes.size();j++)
+                {
+                   if(node.getId().longValue()==nodes.get(j).getPid().longValue())
+                   {
+                       node.setParent(true);
+                       break;
+                   }
+                }
             }
         }
-        return retNodes;
+        return nodes;
     }
 
     @Override
