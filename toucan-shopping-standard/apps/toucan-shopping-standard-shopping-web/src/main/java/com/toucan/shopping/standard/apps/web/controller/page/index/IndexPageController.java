@@ -114,7 +114,6 @@ public class IndexPageController {
                     for(int i=0;i<bannerVO.getAreaCodeArray().length;i++)
                     {
                         BannerArea bannerArea = new BannerArea();
-                        bannerArea.setAppCode(toucan.getAppCode());
                         bannerArea.setAreaCode(bannerVO.getAreaCodeArray()[i]);
                         List<BannerArea> bannerAreaList = bannerAreaService.queryList(bannerArea);
                         if(CollectionUtils.isNotEmpty(bannerAreaList))
