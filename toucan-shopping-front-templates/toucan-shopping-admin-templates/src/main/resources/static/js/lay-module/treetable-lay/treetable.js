@@ -60,7 +60,7 @@ layui.define(['layer', 'table'], function (exports) {
 
             // 重写参数
             param.url = undefined;
-            param.data = data;
+            param.data = mData;
             param.page = {
                 count: param.data.length,
                 limit: param.data.length
