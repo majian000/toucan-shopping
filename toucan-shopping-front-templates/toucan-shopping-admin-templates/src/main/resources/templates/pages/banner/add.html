@@ -53,6 +53,12 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label required">关联城市</label>
+        <div class="layui-input-block">
+            <input type="text" readonly  id="selectArea" lay-verify="required"  placeholder="请选择关联城市" value="" class="layui-input" >
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
             <input type="number" name="bannerSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
@@ -116,6 +122,53 @@
             return false;
         });
 
+
+        $("#selectArea").click(function(){
+            loadding = layer.load();
+            index = layer.open({
+                title: '选择关联城市',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+                shadeClose: true,
+                area: ['20%', '60%'],
+                content: "<div id='areaTree'></div>",
+                success:function(layero){
+                    $.ajax({
+                        url:"[[@{/}]]banner/query/area/tree",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:null,
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#areaTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        $("#selectPid").val(obj.data.title);
+                                        $("#parentCode").val(obj.data.code);
+                                        $("#pid").val(obj.data.id);
+                                        $("#appCode").val(obj.data.appCode);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
     });
 </script>
 </body>

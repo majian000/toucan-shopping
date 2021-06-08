@@ -35,6 +35,21 @@ public class FeignBannerServiceFallbackFactory implements FallbackFactory<FeignB
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignBannerService.save失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
         };
     }
 }

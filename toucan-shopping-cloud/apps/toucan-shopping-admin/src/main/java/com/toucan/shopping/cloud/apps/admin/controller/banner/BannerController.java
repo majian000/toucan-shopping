@@ -5,11 +5,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
+import com.toucan.shopping.modules.area.vo.AreaVO;
+import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -59,6 +62,8 @@ public class BannerController extends UIController {
     @Autowired
     private FeignBannerService feignBannerService;
 
+    @Autowired
+    private FeignAreaService feignAreaService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -103,6 +108,55 @@ public class BannerController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return tableVO;
+    }
+
+
+    /**
+     * 保存
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody BannerVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setId(idGenerator.id());
+            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignBannerService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/area/tree",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryTree(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AreaVO query = new AreaVO();
+            //设置为商城的应用编码
+            query.setAppCode("10001001");
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            return feignAreaService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
     }
 
 

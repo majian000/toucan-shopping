@@ -18,8 +18,8 @@ public class Banner  {
     private Integer position; //类型 0:首页顶部
     private Integer bannerSort; //排序 从大到小
     private Date updateDate; //创建时间
-    private Long createAdminId; //创建人ID
-    private Long updateAdminId; //修改人ID
+    private String createAdminId; //创建人ID
+    private String updateAdminId; //修改人ID
 
 
     private Date createDate; //创建时间
