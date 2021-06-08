@@ -19,6 +19,7 @@ public interface BannerAreaService {
      */
     int save(BannerArea entity);
 
+    int saves(BannerArea[] entitys);
 
     int deleteByBannerId(Long bannerId);
 }

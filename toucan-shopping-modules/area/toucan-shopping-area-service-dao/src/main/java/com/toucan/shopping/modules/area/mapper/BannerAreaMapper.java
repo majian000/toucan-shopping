@@ -17,6 +17,7 @@ public interface BannerAreaMapper {
 
     int deleteByBannerId(Long bannerId);
 
+    int inserts(BannerArea[] entitys);
 
 
 

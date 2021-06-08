@@ -97,7 +97,7 @@ public class BannerController {
                 return resultObjectVO;
             }
 
-            //保存轮播图与地区关联
+            BannerArea[] bannerAreas=new BannerArea[bannerVO.getAreaCodeArray().length];
             for(int i=0;i<bannerVO.getAreaCodeArray().length;i++)
             {
                 String areaCode = bannerVO.getAreaCodeArray()[i];
@@ -107,11 +107,13 @@ public class BannerController {
                 bannerArea.setBannerId(banner.getId());
                 bannerArea.setAppCode(requestJsonVO.getAppCode());
                 bannerArea.setCreateDate(new Date());
-                row = bannerAreaService.save(bannerArea);
-                if(row<=0)
-                {
-                    throw new IllegalArgumentException("保存地区轮播图关联失败");
-                }
+                bannerAreas[i]=bannerArea;
+            }
+            //保存轮播图与地区关联
+            row = bannerAreaService.saves(bannerAreas);
+            if(row<=0)
+            {
+                throw new IllegalArgumentException("保存地区轮播图关联失败");
             }
         }catch(Exception e)
         {

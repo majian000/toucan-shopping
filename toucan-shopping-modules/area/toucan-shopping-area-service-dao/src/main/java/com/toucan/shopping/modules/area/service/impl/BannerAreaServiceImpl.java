@@ -29,6 +29,11 @@ public class BannerAreaServiceImpl implements BannerAreaService {
     }
 
     @Override
+    public int saves(BannerArea[] entitys) {
+        return bannerAreaMapper.inserts(entitys);
+    }
+
+    @Override
     public int deleteByBannerId(Long bannerId) {
         return bannerAreaMapper.deleteByBannerId(bannerId);
     }

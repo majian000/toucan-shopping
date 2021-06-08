@@ -46,6 +46,15 @@
     </insert>
 
 
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_banner_area(id,banner_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.bannerId},#{entity.areaCode},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId})
+        </foreach>
+
+    </insert>
+
 
     <update id="deleteByBannerId">
         update t_banner_area  set delete_status=1 where banner_id=#{bannerId}  and delete_status=0
