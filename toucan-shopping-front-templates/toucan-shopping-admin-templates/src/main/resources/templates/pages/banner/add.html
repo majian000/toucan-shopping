@@ -210,9 +210,9 @@
                 success:function(layero){
                     loadding = layer.load();
                     $.ajax({
-                        url:"[[@{/}]]function/query/role/function/tree",
+                        url:"[[@{/}]]banner/query/area/tree",
                         type:'POST',
-                        data:{appCode:data.appCode,roleId:data.roleId},
+                        data:{bannerId:null},
                         success:function(data){
                             if(data.code==1)
                             {
@@ -250,7 +250,7 @@
                     var selectNodes = areaTree.getCheckbarNodesParam("areaTree");
                     if(selectNodes==null||selectNodes.length<=0)
                     {
-                        layer.msg("请选择权限");
+                        layer.msg("请选择地区");
                         return false;
                     }
                     var areaArray =  new Array();
@@ -262,19 +262,6 @@
                     for (var j = 0; j < areaArray.length; j++) {
                         areaArray[j]={functionId:areaArray[j].functionId};
                     }
-                    $.ajax({
-                        url: "[[@{/}]]role/connect/functions",
-                        contentType: "application/json; charset=utf-8",
-                        type: 'POST',
-                        data: JSON.stringify({functions:areaArray,roleId: data.roleId, appCode: data.appCode}),
-                        success: function (data) {
-                            if (data.code == 0) {
-                                layer.msg(data.msg);
-                                return false;
-                            }
-                            layer.close(index);
-                        }
-                    });
                 }
             });
             $(window).on("resize", function () {

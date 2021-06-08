@@ -162,7 +162,7 @@ public class BannerController extends UIController {
             }
             if(!CollectionUtils.isEmpty(areaTreeVO.getChildren()))
             {
-                setTreeNodeSelect(id,areaTreeVO,areaTreeVO.getChildren(),bannerAreas);
+                setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(),bannerAreas);
             }
         }
     }
@@ -211,7 +211,7 @@ public class BannerController extends UIController {
                                     areaTreeVO.getState().setChecked(true);
                                 }
                             }
-                            setTreeNodeSelect(id,areaTreeVO,areaTreeVO.getChildren(), bannerAreas);
+                            setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(), bannerAreas);
                         }
                     }
                 }

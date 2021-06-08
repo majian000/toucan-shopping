@@ -36,9 +36,6 @@ public class AreaTreeVO extends AreaVO {
      */
     private List<String> tags;
 
-
-    private List<AreaTreeVO> children;
-
     /**
      * 子节点
      */
