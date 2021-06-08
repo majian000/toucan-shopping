@@ -44,19 +44,19 @@ layui.define(['layer', 'table'], function (exports) {
             }
 
             // 对数据进行排序
-            var sort = function (s_pid, data) {
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].pid == s_pid) {
-                        var len = mData.length;
-                        if (len > 0 && mData[len - 1].id == s_pid) {
-                            mData[len - 1].isParent = true;
-                        }
-                        mData.push(data[i]);
-                        sort(data[i].id, data);
-                    }
-                }
-            };
-            sort(param.treeSpid, tNodes);
+            // var sort = function (s_pid, data) {
+            //     for (var i = 0; i < data.length; i++) {
+            //         if (data[i].pid == s_pid) {
+            //             var len = mData.length;
+            //             if (len > 0 && mData[len - 1].id == s_pid) {
+            //                 mData[len - 1].isParent = true;
+            //             }
+            //             mData.push(data[i]);
+            //             sort(data[i].id, data);
+            //         }
+            //     }
+            // };
+            // sort(param.treeSpid, tNodes);
 
             // 重写参数
             param.url = undefined;
