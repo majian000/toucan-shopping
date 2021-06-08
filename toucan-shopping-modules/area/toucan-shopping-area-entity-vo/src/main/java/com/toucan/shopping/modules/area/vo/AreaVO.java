@@ -19,10 +19,6 @@ public class AreaVO extends Area {
      */
     private String name;
 
-    /**
-     * layui 重写组件相关(是否是父节点)
-     */
-    private boolean isParent = false;
 
     /**
      * 上级节点名称

@@ -178,15 +178,6 @@ public class AreaServiceImpl implements AreaService {
                 {
                     node.setName(node.getArea());
                 }
-                //判断当前节点是不是父节点
-                for(int j=0;j<nodes.size();j++)
-                {
-                   if(node.getId().longValue()==nodes.get(j).getPid().longValue())
-                   {
-                       node.setParent(true);
-                       break;
-                   }
-                }
             }
         }
         return nodes;
