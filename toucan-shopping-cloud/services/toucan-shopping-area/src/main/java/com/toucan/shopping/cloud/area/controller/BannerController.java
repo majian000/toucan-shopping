@@ -197,4 +197,122 @@ public class BannerController {
 
 
 
+
+
+    /**
+     * 删除指定
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Banner entity = JSONObject.parseObject(requestVo.getEntityJson(),Banner.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该数据
+            BannerVO query=new BannerVO();
+            query.setId(entity.getId());
+            List<Banner> adminList = bannerService.queryList(query);
+            if(CollectionUtils.isEmpty(adminList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,轮播图不存在!");
+                return resultObjectVO;
+            }
+
+            int row = bannerService.deleteById(entity.getId());
+            if (row < 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+
+            //删除与地区关联
+            bannerAreaService.deleteByBannerId(entity.getId());
+
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 批量删除
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<Banner> banners = JSONObject.parseArray(requestVo.getEntityJson(),Banner.class);
+            if(CollectionUtils.isEmpty(banners))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(Banner banner:banners) {
+                if(banner.getId()!=null) {
+                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
+                    appResultObjectVO.setData(banner);
+
+                    int row = bannerService.deleteById(banner.getId());
+                    if (row < 1) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,请重试!");
+                        continue;
+                    }
+                    //删除与地区关联
+                    bannerAreaService.deleteByBannerId(banner.getId());
+
+                }
+            }
+            resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
 }
