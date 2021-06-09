@@ -16,9 +16,8 @@ public interface BannerMapper {
 
     int insert(Banner banner);
 
-
     int deleteById(Long id);
 
-
+    int update(Banner banner);
 
 }

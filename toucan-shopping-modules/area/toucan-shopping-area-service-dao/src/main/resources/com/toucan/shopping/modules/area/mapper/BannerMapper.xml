@@ -51,6 +51,11 @@
         values(#{id},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.area.entity.Banner">
+        update t_banner set title=#{title},img_path=#{imgPath},position=#{position},banner_sort=#{bannerSort},remark=#{remark},
+          update_admin_id=#{updateAdminId},update_date=#{updateDate}
+          where id=#{id}
+    </update>
 
 
     <update id="deleteById">

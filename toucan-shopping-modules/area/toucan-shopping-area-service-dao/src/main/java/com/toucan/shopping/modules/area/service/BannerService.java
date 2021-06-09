@@ -24,4 +24,8 @@ public interface BannerService {
 
     int deleteById(Long id);
 
+    int update(Banner banner);
+
+
+
 }

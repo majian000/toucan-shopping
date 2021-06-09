@@ -41,5 +41,10 @@ public class BannerServiceImpl implements BannerService {
         return bannerMapper.deleteById(id);
     }
 
+    @Override
+    public int update(Banner banner) {
+        return bannerMapper.update(banner);
+    }
+
 
 }
