@@ -130,6 +130,91 @@ public class BannerController {
 
 
     /**
+     * 編輯
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            BannerVO entity = JSONObject.parseObject(requestVo.getEntityJson(),BannerVO.class);
+
+            if(StringUtils.isEmpty(entity.getTitle()))
+            {
+                logger.info("标题为空 param:"+ JSONObject.toJSONString(entity));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("标题不能为空!");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(entity.getClickPath()))
+            {
+                logger.info("点击连接为空 param:"+ JSONObject.toJSONString(entity));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("点击连接不能为空!");
+                return resultObjectVO;
+            }
+
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                return resultObjectVO;
+            }
+
+            entity.setUpdateDate(new Date());
+            int row = bannerService.update(entity);
+            if (row < 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+            //删除轮播图地区关联
+            bannerAreaService.deleteByBannerId(entity.getId());
+
+            BannerArea[] bannerAreas=new BannerArea[entity.getAreaCodeArray().length];
+            for(int i=0;i<entity.getAreaCodeArray().length;i++)
+            {
+                String areaCode = entity.getAreaCodeArray()[i];
+                BannerArea bannerArea = new BannerArea();
+                bannerArea.setId(idGenerator.id());
+                bannerArea.setAreaCode(areaCode);
+                bannerArea.setBannerId(entity.getId());
+                bannerArea.setCreateDate(new Date());
+                bannerAreas[i]=bannerArea;
+            }
+            //保存轮播图与地区关联
+            row = bannerAreaService.saves(bannerAreas);
+            if(row<=0)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,保存地区轮播图关联失败");
+            }
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
      * 查询列表
      * @param requestJsonVO
      * @return
