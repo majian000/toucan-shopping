@@ -634,7 +634,7 @@ public class AreaController {
             List<Area> areas = areaService.queryList(query);
             if(!CollectionUtils.isEmpty(areas))
             {
-                List<AreaVO> areaTreeVOS = new ArrayList<AreaVO>();
+                List<AreaTreeVO> areaTreeVOS = new ArrayList<AreaTreeVO>();
                 for(Area area : areas)
                 {
                     if("-1".equals(area.getParentCode())) {
@@ -655,19 +655,19 @@ public class AreaController {
                         }
                         areaTreeVOS.add(areaTreeVO);
 
-                        areaTreeVO.setChildren(new ArrayList<AreaVO>());
+                        areaTreeVO.setChildren(new ArrayList<AreaTreeVO>());
                         areaService.setChildren(areas,areaTreeVO);
                     }
                 }
 
                 AreaTreeVO rootTreeVO = new AreaTreeVO();
-                rootTreeVO.setTitle("根节点");
+                rootTreeVO.setTitle("中国");
                 rootTreeVO.setCode("-1");
                 rootTreeVO.setPid(-1L);
                 rootTreeVO.setId(-1L);
-                rootTreeVO.setText("根节点");
+                rootTreeVO.setText("中国");
                 rootTreeVO.setChildren(areaTreeVOS);
-                List<AreaVO> rootAreaTreeVOS = new ArrayList<AreaVO>();
+                List<AreaTreeVO> rootAreaTreeVOS = new ArrayList<AreaTreeVO>();
                 rootAreaTreeVOS.add(rootTreeVO);
                 resultObjectVO.setData(rootAreaTreeVOS);
 
