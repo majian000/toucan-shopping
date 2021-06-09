@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.area.vo;
 
 import com.toucan.shopping.modules.common.vo.bootstrap.State;
+import com.toucan.shopping.modules.common.vo.layui.dtree.CheckArr;
 import lombok.Data;
 
 import java.util.List;
@@ -42,6 +43,11 @@ public class AreaTreeVO extends AreaVO {
     private List<AreaTreeVO> nodes;
 
 
+
+    /**
+     * 节点属性
+     */
+    private CheckArr checkArr = new CheckArr();
 
     /**
      * 节点属性
