@@ -113,6 +113,10 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
+                    {field: 'httpImgPath', width: 80, title: '预览',
+                        templet: function (row) {
+                            return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
+                        }},
                     {field: 'imgPath',  title: '图片路径'},
                     {field: 'clickPath',  title: '点击路径'},
                     {field: 'position', title: '类型',

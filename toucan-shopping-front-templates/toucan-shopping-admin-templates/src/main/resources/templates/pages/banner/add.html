@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
     <style>
         body {
             background-color: #ffffff;
@@ -16,6 +18,9 @@
     </style>
 </head>
 <body>
+
+<span th:replace="common_page::common"></span>
+
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
         <label class="layui-form-label required">标题</label>
@@ -33,17 +38,16 @@
     <div class="layui-form-item">
         <label class="layui-form-label">头像</label>
         <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="uploadHeadSculpture">
+            <button type="button" class="layui-btn" id="uploadBannerImg">
                 <i class="layui-icon">&#xe67c;</i>上传图片
             </button>
         </div>
-        <input type="hidden" id="headSculpture" name="headSculpture" >
+        <input type="hidden" id="imgPath" name="imgPath" >
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">头像预览</label>
         <div class="layui-input-block">
-            <!--th:src="${model.httpHeadSculpture}"-->
-            <img  id="previewHeadSculpture" th:width="240" th:height="220">
+            <img  id="previewBannerImg" th:width="240" th:height="220">
         </div>
     </div>
     <div class="layui-form-item">
@@ -79,26 +83,22 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form','tree','dtree'], function () {
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form','tree','dtree','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
 
+        var upload = layui.upload;
         var dtree = layui.dtree;
         var areaTree;
         var areaTreeDataArray = new Array();
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            if(data.field.password!=data.field.password2)
-            {
-                layer.msg("密码与确认密码不一致");
-                return false;
-            }
-            var appCodes = [];
-            $('input[name=appCodes]:checked').each(function() {
-                appCodes.push($(this).val());
-            });
             data.field.appCodes=appCodes;
             $.ajax({
                 url:"[[@{/banner/save}]]",
@@ -195,7 +195,23 @@
             }
         }
 
-        
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadBannerImg' //绑定元素
+            ,url: '/banner/upload/img' //上传接口
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewBannerImg").attr("src",res.data.httpImgPath);
+                $("#imgPath").val(res.data.imgPath);
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
+
         $("#selectArea").click(function(){
             loadding = layer.load();
             index = layer.open({

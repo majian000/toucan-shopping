@@ -31,4 +31,6 @@ public class Banner  {
      */
     private Short deleteStatus;
 
+    private String httpImgPath;
+
 }

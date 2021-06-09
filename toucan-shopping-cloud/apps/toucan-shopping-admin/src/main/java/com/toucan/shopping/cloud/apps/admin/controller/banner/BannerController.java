@@ -25,6 +25,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.fastdfs.util.FastDFSClient;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -54,8 +56,14 @@ public class BannerController extends UIController {
     @Value("${toucan.app-code}")
     private String appCode;
 
+    @Value("${fastdfs.http.url}")
+    private String fastDfsHttpUrl;
+
     @Autowired
     private Toucan toucan;
+
+    @Autowired
+    private FastDFSClient fastDFSClient;
 
 
     @Autowired
@@ -104,8 +112,15 @@ public class BannerController extends UIController {
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
+                    List<BannerVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BannerVO.class);
+                    for(BannerVO bannerVO:list)
+                    {
+                        if(bannerVO.getImgPath()!=null) {
+                            bannerVO.setHttpImgPath(fastDfsHttpUrl + bannerVO.getImgPath());
+                        }
+                    }
                     if(tableVO.getCount()>0) {
-                        tableVO.setData((List<Object>) resultObjectDataMap.get("list"));
+                        tableVO.setData((List)list);
                     }
                 }
             }
@@ -117,6 +132,44 @@ public class BannerController extends UIController {
         }
         return tableVO;
     }
+
+
+
+    @RequestMapping("/upload/img")
+    @ResponseBody
+    public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String fileName = file.getOriginalFilename();
+            String fileExt = ".jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+            }
+            String groupPath = fastDFSClient.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("头像上传失败");
+            }
+            BannerVO bannerVO = new BannerVO();
+            bannerVO.setImgPath(groupPath);
+            bannerVO.setHttpImgPath(fastDfsHttpUrl+groupPath);
+            resultObjectVO.setData(bannerVO);
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(1);
+            resultObjectVO.setMsg("头像上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
+
 
 
     /**

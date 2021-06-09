@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.apps.admin.constant.UserConstant;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
@@ -1100,7 +1099,7 @@ public class UserController extends UIController {
             {
                 userVO = (UserVO) userResultObjectVO.formatData(UserVO.class);
                 //如果不是默认头像就删除掉这个人的上一个头像
-                if(!UserConstant.HEAD_SCULPTURE.equals(userVO.getHeadSculpture())&&StringUtils.isNotEmpty(userVO.getHeadSculpture()))
+                if(!toucan.getUser().getDefaultHeadSculpture().equals(userVO.getHeadSculpture())&&StringUtils.isNotEmpty(userVO.getHeadSculpture()))
                 {
                     int ret = fastDFSClient.delete_file(userVO.getHeadSculpture());
                     if(ret!=0)

@@ -37,4 +37,6 @@ public class Toucan {
 
     private UserCenterScheduler userCenterScheduler;
 
+    private User user;
+
 }
