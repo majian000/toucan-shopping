@@ -71,7 +71,6 @@ public class FastDFSConfig {
 
             fastDFSClient.trackerClient = new TrackerClient();
             fastDFSClient.trackerServer = fastDFSClient.trackerClient.getConnection();
-            fastDFSClient.storageServer = null;
             fastDFSClient.storageClient = new StorageClient1(fastDFSClient.trackerServer, fastDFSClient.storageServer);
 
         }catch(Exception e)

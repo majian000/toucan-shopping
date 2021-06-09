@@ -143,7 +143,7 @@ public class BannerController extends UIController {
         resultObjectVO.setCode(0);
         try{
             String fileName = file.getOriginalFilename();
-            String fileExt = ".jpg";
+            String fileExt = "jpg";
             if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
             {
                 fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
@@ -234,7 +234,7 @@ public class BannerController extends UIController {
         try {
             //查询地区树
             AreaVO query = new AreaVO();
-            query.setAppCode(appCode);
+            query.setAppCode("10001001");
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
 
             resultObjectVO = feignAreaService.queryTree(requestJsonVO.sign(),requestJsonVO);
@@ -245,7 +245,9 @@ public class BannerController extends UIController {
                 //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
                 AtomicLong id = new AtomicLong();
                 BannerAreaVO queryBannerAreaVo = new BannerAreaVO();
-                queryBannerAreaVo.setBannerId(Long.parseLong(bannerId));
+                if(StringUtils.isNotEmpty(bannerId)) {
+                    queryBannerAreaVo.setBannerId(Long.parseLong(bannerId));
+                }
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
 
 

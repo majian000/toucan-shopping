@@ -5,7 +5,6 @@
     <resultMap id="bannerAreaMap" type="com.toucan.shopping.modules.area.entity.BannerArea" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="banner_id" jdbcType="BIGINT" property="bannerId" />
-        <result column="areaCode" jdbcType="VARCHAR" property="areaCode" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -31,9 +30,6 @@
                 and t.area_code = #{areaCode}
             </if>
 
-            <if test="appCode!=null and appCode!='' ">
-                and t.app_code = #{appCode}
-            </if>
 
             and t.delete_status = 0
 
@@ -43,8 +39,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.BannerArea"  keyProperty="id" >
-        insert into t_banner_area(id,banner_id,area_code,create_date,update_date,app_code,create_admin_id,update_admin_id)
-        values(#{id},#{bannerId},#{areaCode},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+        insert into t_banner_area(id,banner_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{bannerId},#{areaCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 

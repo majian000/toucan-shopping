@@ -51,7 +51,7 @@ public class BannerAreaController {
 
             if(query.getBannerId()==null)
             {
-                throw new IllegalArgumentException("bannerId为空");
+                query.setBannerId(-1L);
             }
 
             List<BannerArea> bannerAreas = bannerAreaService.queryList(query);
