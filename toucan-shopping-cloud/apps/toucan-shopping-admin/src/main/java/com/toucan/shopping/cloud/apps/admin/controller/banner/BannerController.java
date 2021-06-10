@@ -250,12 +250,31 @@ public class BannerController extends UIController {
                 }
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
 
-
                 resultObjectVO = feignBannerAreaService.queryBannerAreaList(requestJsonVO.sign(),requestJsonVO);
+                List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
                 if(resultObjectVO.isSuccess())
                 {
                     List<BannerArea> bannerAreas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerArea.class);
                     if(!CollectionUtils.isEmpty(bannerAreas)) {
+                        //只保留省市节点
+                        for(AreaTreeVO areaTreeVO:areaTreeVOList) {
+                            //直辖市
+                            if(areaTreeVO.getIsMunicipality().shortValue()==1) {
+                                releaseAreaTreeVOList.add(areaTreeVO);
+                            }else{ //省
+                                //遍历所有市节点,删除区县节点
+                                if(CollectionUtils.isEmpty(areaTreeVO.getChildren()))
+                                {
+                                    List<AreaTreeVO> chilren = JSONArray.parseArray(JSONObject.toJSONString(areaTreeVO.getChildren()),AreaTreeVO.class);
+                                    for(AreaVO cityTreeVO:chilren) {
+                                        //删除区县节点
+                                        cityTreeVO.setChildren(null);
+                                    }
+                                    areaTreeVO.setChildren(chilren);
+                                }
+                            }
+                        }
+
                         for(AreaTreeVO areaTreeVO:areaTreeVOList) {
                             areaTreeVO.setId(id.incrementAndGet());
                             areaTreeVO.setNodeId(areaTreeVO.getId());
@@ -270,7 +289,7 @@ public class BannerController extends UIController {
                         }
                     }
                 }
-                resultObjectVO.setData(areaTreeVOList);
+                resultObjectVO.setData(releaseAreaTreeVOList);
             }
             return resultObjectVO;
         }catch(Exception e)
