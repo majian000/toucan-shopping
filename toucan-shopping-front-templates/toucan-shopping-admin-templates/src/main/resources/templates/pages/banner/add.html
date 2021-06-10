@@ -97,9 +97,10 @@
         var areaTree;
         var areaTreeDataArray = new Array();
 
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            data.field.appCodes=appCodes;
+            data.field.areaArray=areaArray;
             $.ajax({
                 url:"[[@{/banner/save}]]",
                 contentType: "application/json; charset=utf-8",
@@ -167,7 +168,7 @@
         /**
          * 拿到上级节点信息
          */
-        function getParentNode(areaArray,pid)
+        function getParentNode(areaArray,areaNames,pid)
         {
             for(var i=0;i<areaTreeDataArray.length;i++)
             {
@@ -185,11 +186,12 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        areaArray.push({id:areaTreeDataArray[i].id,functionId:areaTreeDataArray[i].functionId})
+                        areaArray.push({id:areaTreeDataArray[i].id,areaCode:areaTreeDataArray[i].areaCode})
+                        areaNames+=" "+areaTreeDataArray[i].text;
                     }
                     if(areaTreeDataArray[i].pid!=-1) {
                         //找到这个节点的上级节点
-                        getParentNode(areaArray, areaTreeDataArray[i].pid);
+                        getParentNode(areaArray,areaNames, areaTreeDataArray[i].pid);
                     }
                 }
             }
@@ -270,13 +272,16 @@
                         return false;
                     }
                     var areaArray =  new Array();
+                    var areaNames = "";
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        areaArray.push({id:selectNodeObject.id,functionId:selectNodeObject.functionId});
-                        getParentNode(areaArray,selectNodeObject.pid);
+                        areaArray.push({id:selectNodeObject.id,areaCode:selectNodeObject.areaCode});
+                        areaNames+=" "+selectNodeObject.text;
+                        getParentNode(areaArray,areaNames,selectNodeObject.pid);
                     }
+                    $("#selectArea").val(areaNames);
                     for (var j = 0; j < areaArray.length; j++) {
-                        areaArray[j]={functionId:areaArray[j].functionId};
+                        areaArray[j]={areaCode:areaArray[j].areaCode};
                     }
                 }
             });
