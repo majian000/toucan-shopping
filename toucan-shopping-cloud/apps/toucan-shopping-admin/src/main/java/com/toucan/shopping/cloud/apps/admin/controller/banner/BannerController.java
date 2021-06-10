@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.area.entity.BannerArea;
+import com.toucan.shopping.modules.area.page.BannerPageInfo;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.area.vo.BannerAreaVO;
@@ -100,7 +101,7 @@ public class BannerController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, AdminPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, BannerPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -254,19 +255,19 @@ public class BannerController extends UIController {
                 List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
                 if(resultObjectVO.isSuccess())
                 {
-                    List<BannerArea> bannerAreas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerArea.class);
-                    if(!CollectionUtils.isEmpty(bannerAreas)) {
-                        //只保留省市节点
-                        for(AreaTreeVO areaTreeVO:areaTreeVOList) {
+                    //只保留省市节点
+                    AreaTreeVO rootTree = areaTreeVOList.get(0);
+                    if(!CollectionUtils.isEmpty(rootTree.getChildren())) {
+                        List<AreaTreeVO> rootChilren = JSONArray.parseArray(JSONObject.toJSONString(rootTree.getChildren()), AreaTreeVO.class);
+                        for (AreaTreeVO areaTreeVO : rootChilren) {
                             //直辖市
-                            if(areaTreeVO.getIsMunicipality().shortValue()==1) {
-                                releaseAreaTreeVOList.add(areaTreeVO);
-                            }else{ //省
+                            if (areaTreeVO.getIsMunicipality().shortValue() == 1) {
+                                areaTreeVO.setChildren(null);
+                            } else { //省
                                 //遍历所有市节点,删除区县节点
-                                if(CollectionUtils.isEmpty(areaTreeVO.getChildren()))
-                                {
-                                    List<AreaTreeVO> chilren = JSONArray.parseArray(JSONObject.toJSONString(areaTreeVO.getChildren()),AreaTreeVO.class);
-                                    for(AreaVO cityTreeVO:chilren) {
+                                if (!CollectionUtils.isEmpty(areaTreeVO.getChildren())) {
+                                    List<AreaTreeVO> chilren = JSONArray.parseArray(JSONObject.toJSONString(areaTreeVO.getChildren()), AreaTreeVO.class);
+                                    for (AreaVO cityTreeVO : chilren) {
                                         //删除区县节点
                                         cityTreeVO.setChildren(null);
                                     }
@@ -274,8 +275,12 @@ public class BannerController extends UIController {
                                 }
                             }
                         }
-
-                        for(AreaTreeVO areaTreeVO:areaTreeVOList) {
+                        rootTree.setChildren(rootChilren);
+                    }
+                    releaseAreaTreeVOList.add(rootTree);
+                    List<BannerArea> bannerAreas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerArea.class);
+                    if(!CollectionUtils.isEmpty(bannerAreas)) {
+                        for(AreaTreeVO areaTreeVO:releaseAreaTreeVOList) {
                             areaTreeVO.setId(id.incrementAndGet());
                             areaTreeVO.setNodeId(areaTreeVO.getId());
                             areaTreeVO.setText(areaTreeVO.getTitle());

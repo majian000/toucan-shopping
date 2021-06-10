@@ -4,10 +4,12 @@ import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.mapper.AreaMapper;
 import com.toucan.shopping.modules.area.mapper.BannerMapper;
+import com.toucan.shopping.modules.area.page.BannerPageInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
 import com.toucan.shopping.modules.area.service.BannerService;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.area.vo.BannerVO;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,15 @@ public class BannerServiceImpl implements BannerService {
     @Override
     public int update(Banner banner) {
         return bannerMapper.update(banner);
+    }
+
+    @Override
+    public PageInfo<BannerVO> queryListPage(BannerPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<BannerVO> pageInfo = new PageInfo();
+        pageInfo.setList(bannerMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(bannerMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 
 

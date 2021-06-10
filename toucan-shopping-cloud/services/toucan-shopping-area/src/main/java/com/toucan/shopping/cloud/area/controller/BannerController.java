@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.entity.BannerArea;
+import com.toucan.shopping.modules.area.page.BannerPageInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
 import com.toucan.shopping.modules.area.service.BannerAreaService;
 import com.toucan.shopping.modules.area.service.BannerService;
 import com.toucan.shopping.modules.area.vo.BannerAreaVO;
 import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -239,36 +241,9 @@ public class BannerController {
             return resultObjectVO;
         }
         try {
-            BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
-            if(bannerVO.getAreaCodeArray()!=null&&bannerVO.getAreaCodeArray().length>0)
-            {
-                List<Long> bannerIdList = new ArrayList<Long>();
-                for(int i=0;i<bannerVO.getAreaCodeArray().length;i++)
-                {
-                    BannerArea bannerArea = new BannerArea();
-                    bannerArea.setAreaCode(bannerVO.getAreaCodeArray()[i]);
-                    List<BannerArea> bannerAreaList = bannerAreaService.queryList(bannerArea);
-                    if(CollectionUtils.isNotEmpty(bannerAreaList))
-                    {
-                        for(BannerArea ba:bannerAreaList) {
-                            if(ba!=null) {
-                                bannerIdList.add(ba.getBannerId());
-                            }
-                        }
-                    }
-                }
-                if(CollectionUtils.isNotEmpty(bannerIdList))
-                {
-                    Long[] bannerIdArray = new Long[bannerIdList.size()];
-                    for(int i=0;i<bannerIdList.size();i++)
-                    {
-                        bannerIdArray[i]=bannerIdList.get(i);
-                    }
-                    bannerVO.setIdArray(bannerIdArray);
-                }
-
-            }
-            resultObjectVO.setData(bannerService.queryList(bannerVO));
+            BannerPageInfo adminPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerPageInfo.class);
+            PageInfo<BannerVO> pageInfo =  bannerService.queryListPage(adminPageInfo);
+            resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

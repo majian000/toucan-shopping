@@ -17,6 +17,18 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
     </resultMap>
 
+
+    <resultMap id="bannerVOMap" type="com.toucan.shopping.modules.area.vo.BannerVO" extends="bannerMap" >
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="title!=null and title!='' ">
+            and tu.title  like concat('%',#{title},'%')
+
+        </if>
+    </sql>
+
     <select id="queryList" resultMap="bannerMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
         select ba.* from t_banner ba
         <where>
@@ -34,16 +46,36 @@
                 </foreach>
             </if>
 
-            <if test="appCode!=null and appCode!='' ">
-                and ba.app_code = #{appCode}
-            </if>
-
               and ba.delete_status = 0
 
         </where>
     </select>
 
 
+    <select id="queryListPage" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
+        select tu.* from (
+         select t.* from t_banner t
+        )tu
+        <where>
+            1=1 and tu.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by tu.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
+        select count(*) from (
+          select t.* from t_banner t
+        )tu
+        <where>
+            1=1 and tu.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Banner"  keyProperty="id" >

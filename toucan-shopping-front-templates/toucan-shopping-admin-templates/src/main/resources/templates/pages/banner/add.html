@@ -96,11 +96,16 @@
         var dtree = layui.dtree;
         var areaTree;
         var areaTreeDataArray = new Array();
-
+        var areaArray =  new Array();
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            data.field.areaArray=areaArray;
+            var areaCodeArray = new Array();
+            for(var i=0;i<areaArray.length;i++)
+            {
+                areaCodeArray[i] = areaArray[i].code;
+            }
+            data.field.areaCodeArray=areaCodeArray;
             $.ajax({
                 url:"[[@{/banner/save}]]",
                 contentType: "application/json; charset=utf-8",
@@ -271,18 +276,19 @@
                         layer.msg("请选择地区");
                         return false;
                     }
-                    var areaArray =  new Array();
+                    areaArray =  new Array();
                     var areaNames = "";
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        areaArray.push({id:selectNodeObject.id,areaCode:selectNodeObject.areaCode});
+                        areaArray.push({id:selectNodeObject.id,code:selectNodeObject.code});
                         areaNames+=" "+selectNodeObject.text;
                         getParentNode(areaArray,areaNames,selectNodeObject.pid);
                     }
                     $("#selectArea").val(areaNames);
                     for (var j = 0; j < areaArray.length; j++) {
-                        areaArray[j]={areaCode:areaArray[j].areaCode};
+                        areaArray[j]={code:areaArray[j].code};
                     }
+                    layer.close(index);
                 }
             });
             $(window).on("resize", function () {
