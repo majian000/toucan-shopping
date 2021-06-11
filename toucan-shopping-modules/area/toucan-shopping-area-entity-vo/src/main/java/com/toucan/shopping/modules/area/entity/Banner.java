@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.area.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -17,11 +19,18 @@ public class Banner  {
     private String clickPath; //点击路径
     private Integer position; //类型 0:首页顶部
     private Integer bannerSort; //排序 从大到小
+
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateDate; //创建时间
     private String createAdminId; //创建人ID
     private String updateAdminId; //修改人ID
 
 
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
 
     private String remark; //备注
