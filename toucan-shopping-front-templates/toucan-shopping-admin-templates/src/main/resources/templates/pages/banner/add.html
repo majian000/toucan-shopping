@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">头像</label>
+        <label class="layui-form-label required">预览图</label>
         <div class="layui-input-block">
             <button type="button" class="layui-btn" id="uploadBannerImg">
                 <i class="layui-icon">&#xe67c;</i>上传图片
@@ -45,9 +45,32 @@
         <input type="hidden" id="imgPath" name="imgPath" >
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">头像预览</label>
+        <label class="layui-form-label">预览</label>
         <div class="layui-input-block">
             <img  id="previewBannerImg" th:width="240" th:height="220">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">开始展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">结束展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" readonly >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">显示状态</label>
+        <div class="layui-input-block">
+            <select name="showStatus" lay-verify="required" lay-search="">
+                <option value="1" selected>显示</option>
+                <option value="0">隐藏</option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
@@ -87,7 +110,7 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form','tree','dtree','upload'], function () {
+    }).use(['form','tree','dtree','upload','laydate'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
@@ -97,9 +120,31 @@
         var areaTree;
         var areaTreeDataArray = new Array();
         var areaArray =  new Array();
+        var laydate = layui.laydate;
+
+
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+        });
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+
+            if(data.field.imgPath==null||data.field.imgPath=="")
+            {
+                layer.msg("请上传轮播图");
+                return false;
+            }
+
             var areaCodeArray = new Array();
             for(var i=0;i<areaArray.length;i++)
             {

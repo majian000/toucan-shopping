@@ -60,6 +60,19 @@
                 and t.app_code = #{appCode}
             </if>
 
+            <if test="idArray!=null and idArray.length>0 ">
+                and t.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="codeArray!=null and codeArray.length>0 ">
+                and t.code in
+                <foreach item="item" index="index" collection="codeArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
             and t.delete_status = 0
 
         </where>

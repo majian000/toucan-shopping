@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
+import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.entity.BannerArea;
 import com.toucan.shopping.modules.area.page.BannerPageInfo;
@@ -24,6 +25,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -137,6 +139,107 @@ public class BannerController extends UIController {
 
 
 
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            Banner banner =new Banner();
+            banner.setId(Long.parseLong(id));
+            banner.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+
+            String entityJson = JSONObject.toJSONString(banner);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            //先查询出实体对象,后面删除文件服务器的资源
+            resultObjectVO = feignBannerService.findById(requestVo.sign(), requestVo);
+            List<BannerVO> bannerVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),BannerVO.class);
+            if(resultObjectVO.isSuccess()) {
+                resultObjectVO = feignBannerService.deleteById(SignUtil.sign(requestVo),requestVo);
+                if(!CollectionUtils.isEmpty(bannerVOS))
+                {
+                    banner = bannerVOS.get(0);
+                    int ret = fastDFSClient.delete_file(banner.getImgPath());
+                    if(ret!=0)
+                    {
+                        logger.warn("删除服务器中关联图片失败 {} ",banner.getImgPath());
+                        resultObjectVO.setMsg("删除关联图片资源失败");
+                        resultObjectVO.setCode(TableVO.FAILD);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(HttpServletRequest request, @RequestBody List<BannerVO> bannerVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(bannerVOS))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String entityJson = JSONObject.toJSONString(bannerVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignBannerService.deleteByIds(SignUtil.sign(requestVo), requestVo);
+            if(resultObjectVO.isSuccess()) {
+                if(!CollectionUtils.isEmpty(bannerVOS))
+                {
+                    for(BannerVO bannerVO:bannerVOS) {
+                        int ret = fastDFSClient.delete_file(bannerVO.getImgPath());
+                        if (ret != 0) {
+                            logger.warn("删除服务器中关联图片失败 {} ", bannerVO.getImgPath());
+                            resultObjectVO.setMsg("删除关联图片资源失败");
+                            resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
     @RequestMapping("/upload/img")
     @ResponseBody
     public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file)
@@ -155,7 +258,7 @@ public class BannerController extends UIController {
 
             if(StringUtils.isEmpty(groupPath))
             {
-                throw new RuntimeException("头像上传失败");
+                throw new RuntimeException("上传失败");
             }
             BannerVO bannerVO = new BannerVO();
             bannerVO.setImgPath(groupPath);
@@ -164,7 +267,7 @@ public class BannerController extends UIController {
         }catch (Exception e)
         {
             resultObjectVO.setCode(1);
-            resultObjectVO.setMsg("头像上传失败");
+            resultObjectVO.setMsg("上传失败");
             logger.warn(e.getMessage(),e);
         }
 
@@ -213,6 +316,7 @@ public class BannerController extends UIController {
                 if(areaTreeVO.getCode().equals(bannerArea.getAreaCode())) {
                     //设置节点被选中
                     areaTreeVO.getState().setChecked(true);
+                    break;
                 }
             }
             if(!CollectionUtils.isEmpty(areaTreeVO.getChildren()))
@@ -240,6 +344,31 @@ public class BannerController extends UIController {
                     {
                         banner = bannerVOS.get(0);
                         banner.setHttpImgPath(fastDfsHttpUrl + banner.getImgPath());
+                        if(banner.getStartShowDate()!=null) {
+                            banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS));
+                        }
+
+                        if(banner.getEndShowDate()!=null) {
+                            banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS));
+                        }
+
+                        if(!CollectionUtils.isEmpty(banner.getAreas()))
+                        {
+                            StringBuilder areaNames = new StringBuilder();
+                            for(int i=0;i<banner.getAreas().size();i++)
+                            {
+                                Area area = banner.getAreas().get(i);
+                                if(area!=null) {
+                                    areaNames.append(area.getCity());
+                                }
+                                if(i+1<banner.getAreas().size())
+                                {
+                                    areaNames.append(",");
+                                }
+                            }
+                            banner.setAreaNames(areaNames.toString());
+                        }
+
                         request.setAttribute("model",banner);
                     }
                 }
@@ -249,7 +378,7 @@ public class BannerController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/admin/edit.html";
+        return "pages/banner/edit.html";
     }
 
 
@@ -289,7 +418,7 @@ public class BannerController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/area/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryFunctionTree(HttpServletRequest request,String bannerId)
+    public ResultObjectVO queryAreaTree(HttpServletRequest request,String bannerId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

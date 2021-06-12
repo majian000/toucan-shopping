@@ -46,4 +46,11 @@ public class Area {
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
+
+
+
+    private Long[] idArray; //ID数组
+
+    private String[] codeArray; //编码数组
+
 }

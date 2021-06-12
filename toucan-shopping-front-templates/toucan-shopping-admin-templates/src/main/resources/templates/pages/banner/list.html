@@ -45,9 +45,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="adminTable" lay-filter="adminTableFilter"></table>
+        <table class="layui-hide" id="bannerTable" lay-filter="bannerTableFilter"></table>
 
-        <script type="text/html" id="adminTableBar">
+        <script type="text/html" id="bannerTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -96,7 +96,7 @@
         }
 
         table.render({
-            elem: '#adminTable',
+            elem: '#bannerTable',
             url: "[[@{/}]]banner/list",
             method:'POST',
             where:getFormParam(),
@@ -113,12 +113,25 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
+                    {field: 'title',  title: '标题'},
                     {field: 'httpImgPath', width: 80, title: '预览',
                         templet: function (row) {
                             return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
                         }},
+                    {field: 'startShowDate',  title: '开始展示时间'},
+                    {field: 'endShowDate',  title: '结束展示时间'},
                     {field: 'imgPath',  title: '图片路径'},
                     {field: 'clickPath',  title: '点击路径'},
+                    {field: 'showStatus', title: '显示状态',
+                        templet: function (row) {
+                            if(row.showStatus == "0"){
+                                return "隐藏"
+                            }else
+                            if(row.showStatus == "1"){
+                                return "显示"
+                            }
+                            return row.showStatus;
+                        }},
                     {field: 'position', title: '类型',
                         templet: function (row) {
                             if(row.position == "0"){
@@ -134,7 +147,7 @@
                     {field: 'createDate',  title: '创建时间'},
                     {field: 'updateAdminUsername',  title: '修改人'},
                     {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#adminTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#bannerTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -146,7 +159,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('adminTable', {
+            table.reload('bannerTable', {
                 page: {
                     curr: 1
                 }
@@ -162,7 +175,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(adminTableFilter)', function (obj) {
+        table.on('toolbar(bannerTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加轮播图',
@@ -176,8 +189,8 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('adminTable')
+            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('bannerTable')
                     , data = checkStatus.data;
                 layer.confirm('确定删除轮播图?', function (index) {
                     $.ajax({
@@ -189,7 +202,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('adminTable', {
+                            table.reload('bannerTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -280,16 +293,16 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(adminTableFilter)', function (obj) {
+        table.on('checkbox(bannerTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(adminTableFilter)', function (obj) {
+        table.on('tool(bannerTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
                 var index = layer.open({
-                    title: '编辑用户',
+                    title: '编辑轮播图',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -311,7 +324,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('adminTable', {
+                            table.reload('bannerTable', {
                                 page: {
                                     curr: 1
                                 }

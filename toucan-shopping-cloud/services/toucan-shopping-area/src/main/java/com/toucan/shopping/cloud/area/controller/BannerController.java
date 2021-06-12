@@ -48,6 +48,9 @@ public class BannerController {
     @Autowired
     private IdGenerator idGenerator;
 
+    @Autowired
+    private AreaService areaService;
+
 
 
     /**
@@ -162,9 +165,26 @@ public class BannerController {
             if(CollectionUtils.isEmpty(banners))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,账号不存在!");
+                resultObjectVO.setMsg("请求失败,不存在!");
                 return resultObjectVO;
             }
+            //查询出所有轮播图地区关联
+            BannerArea queryBannerArea = new BannerArea();
+            queryBannerArea.setBannerId(bannerVO.getId());
+            List<BannerArea> bannerAreas = bannerAreaService.queryList(queryBannerArea);
+            if(CollectionUtils.isNotEmpty(bannerAreas)) {
+                String[] areaIdArray = new String[bannerAreas.size()];
+                for(int i=0;i<bannerAreas.size();i++)
+                {
+                    areaIdArray[i]= bannerAreas.get(i).getAreaCode();
+                }
+                Area queryArea = new Area();
+                queryArea.setCodeArray(areaIdArray);
+
+                //设置这个轮播图下关联的所有地区
+                banners.get(0).setAreas(areaService.queryList(queryArea));
+            }
+
             resultObjectVO.setData(banners);
 
         }catch(Exception e)
@@ -400,6 +420,7 @@ public class BannerController {
 
                     int row = bannerService.deleteById(banner.getId());
                     if (row < 1) {
+                        logger.warn("删除轮播图失败，id:{}",banner.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
                         resultObjectVO.setMsg("请求失败,请重试!");
                         continue;
