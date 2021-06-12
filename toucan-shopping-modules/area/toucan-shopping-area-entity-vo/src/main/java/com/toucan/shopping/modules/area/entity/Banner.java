@@ -70,6 +70,11 @@ public class Banner  {
      */
     private String areaNames;
 
+    /**
+     * 关联所有地区编码
+     */
+    private String areaCodes;
+
 
 
 }

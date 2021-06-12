@@ -355,18 +355,22 @@ public class BannerController extends UIController {
                         if(!CollectionUtils.isEmpty(banner.getAreas()))
                         {
                             StringBuilder areaNames = new StringBuilder();
+                            StringBuilder areaCodes = new StringBuilder();
                             for(int i=0;i<banner.getAreas().size();i++)
                             {
                                 Area area = banner.getAreas().get(i);
                                 if(area!=null) {
                                     areaNames.append(area.getCity());
+                                    areaCodes.append(area.getCode());
                                 }
                                 if(i+1<banner.getAreas().size())
                                 {
                                     areaNames.append(",");
+                                    areaCodes.append(",");
                                 }
                             }
                             banner.setAreaNames(areaNames.toString());
+                            banner.setAreaCodes(areaCodes.toString());
                         }
 
                         request.setAttribute("model",banner);

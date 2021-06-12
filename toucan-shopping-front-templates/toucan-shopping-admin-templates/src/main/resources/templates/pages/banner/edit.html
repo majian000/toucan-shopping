@@ -23,6 +23,7 @@
 
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden"  id="selectAreaCodes" th:value="${model.areaCodes}">
     <div class="layui-form-item">
         <label class="layui-form-label required">标题</label>
         <div class="layui-input-block">
@@ -129,6 +130,17 @@
         var areaArray =  new Array();
         var laydate = layui.laydate;
 
+        var selectAreaCodes = $("#selectAreaCodes").val();
+        if(selectAreaCodes!=null)
+        {
+            var selectAreaCodeArray =selectAreaCodes.split(",");
+            if(selectAreaCodeArray!=null) {
+                for (var i = 0; i < selectAreaCodeArray.length; i++) {
+                    areaArray[i]={code:selectAreaCodeArray[i]};
+                }
+            }
+        }
+
 
 
         //初始化时间控件
@@ -159,7 +171,7 @@
             }
             data.field.areaCodeArray=areaCodeArray;
             $.ajax({
-                url:"[[@{/banner/save}]]",
+                url:"[[@{/banner/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -243,7 +255,7 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        areaArray.push({id:areaTreeDataArray[i].id,areaCode:areaTreeDataArray[i].areaCode})
+                        areaArray.push({id:areaTreeDataArray[i].id,code:areaTreeDataArray[i].areaCode})
                         areaNames+=" "+areaTreeDataArray[i].text;
                     }
                     if(areaTreeDataArray[i].pid!=-1) {
