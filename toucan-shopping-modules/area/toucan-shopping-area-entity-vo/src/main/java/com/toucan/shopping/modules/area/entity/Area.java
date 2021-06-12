@@ -22,6 +22,13 @@ public class Area {
     private String code; //编码
     private String parentCode; //上级编码
     private String province; //省
+
+
+    /**
+     * 上级节点ID
+     */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long pid; //上级ID
     private String city; //市
     private String area; //区县

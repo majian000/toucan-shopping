@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.area.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.common.vo.bootstrap.State;
 import com.toucan.shopping.modules.common.vo.layui.dtree.CheckArr;
 import lombok.Data;
@@ -20,6 +23,8 @@ public class AreaTreeVO extends AreaVO {
     /**
      * 上级节点ID
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long parentId;
 
     /**
