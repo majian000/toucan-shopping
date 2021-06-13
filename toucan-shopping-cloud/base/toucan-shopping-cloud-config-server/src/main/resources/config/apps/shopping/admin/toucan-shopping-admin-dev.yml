@@ -64,7 +64,7 @@ ribbon:
 
 toucan:
   user:
-    default-head_sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
+    default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
   app-name: 商城后台
   app-code: 10001002 #自定义应用编码
   #雪花算法ID相关
@@ -85,3 +85,10 @@ toucan:
     path-patterns: /**
     #忽略拦截
     exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
+  modules:
+    areaCache:
+      redis:
+        host: 127.0.0.1
+        port: 6379
+        password:
+        timeout:

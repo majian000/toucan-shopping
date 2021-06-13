@@ -39,4 +39,5 @@ public class Toucan {
 
     private User user;
 
+    private Modules modules;
 }

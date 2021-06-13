@@ -4,6 +4,7 @@ package com.toucan.shopping.cloud.user.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
@@ -71,6 +72,9 @@ public class UserController {
 
     @Autowired
     private UserEmailService userEmailService;
+
+    @Autowired
+    private Toucan toucan;
 
 
     @Autowired
@@ -216,6 +220,7 @@ public class UserController {
                         userDetail.setId(idGenerator.id());
                         userDetail.setUserMainId(user.getUserMainId());
                         userDetail.setNickName("用户"+userRegistVO.getMobilePhone());
+                        userDetail.setHeadSculpture(toucan.getUser().getDefaultHeadSculpture());
                         userDetail.setSex((short)1);
                         userDetail.setCreateDate(new Date());
                         userDetail.setDeleteStatus((short) 0);
