@@ -342,7 +342,7 @@
 
                     <#if banners??>
                         <#list banners as banner>
-                        <li><img src="${banner.imgPath!}" width="740" height="401" onclick="javascript:window.open('${banner.clickPath!}')" /></li>
+                        <li><img src="${banner.httpImgPath!}" width="740" height="401" onclick="javascript:window.open('${banner.clickPath!}')" /></li>
                         </#list>
                     </#if>
 

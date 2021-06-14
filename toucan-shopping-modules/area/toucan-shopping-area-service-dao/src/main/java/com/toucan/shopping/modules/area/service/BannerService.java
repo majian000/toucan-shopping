@@ -16,6 +16,8 @@ public interface BannerService {
 
     List<BannerVO> queryList(BannerVO banner);
 
+    List<BannerVO> queryIndexList(BannerVO banner);
+
 
     /**
      * 保存实体

@@ -15,6 +15,8 @@ public interface BannerMapper {
 
     List<BannerVO> queryList(BannerVO entity);
 
+    List<BannerVO> queryIndexList(BannerVO entity);
+
     int insert(Banner banner);
 
     int deleteById(Long id);

@@ -34,6 +34,11 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
+    public List<BannerVO> queryIndexList(BannerVO banner) {
+        return bannerMapper.queryIndexList(banner);
+    }
+
+    @Override
     public int save(Banner banner) {
         return bannerMapper.insert(banner);
     }

@@ -61,6 +61,18 @@
     </select>
 
 
+    <select id="queryIndexList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
+        select ba.* from t_banner ba
+        <where>
+            1=1
+                <![CDATA[ and ba.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%T:%s')    ]]>
+                <![CDATA[ and ba.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%T:%s')    ]]>
+                and ba.position = 0
+                and ba.delete_status = 0
+
+        </where>
+    </select>
+
     <select id="queryListPage" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
         select tu.* from (
          select t.* from t_banner t

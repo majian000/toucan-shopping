@@ -104,13 +104,13 @@ public class IndexPageController {
     {
         List<BannerVO> banners = null;
         try {
-            List<BannerVO> bannerVOS = bannerRedisService.queryWebIndexBanner();
-            if(CollectionUtils.isEmpty(bannerVOS)) {
+            banners = bannerRedisService.queryWebIndexBanner();
+            if(CollectionUtils.isEmpty(banners)) {
                 BannerVO bannerVO = new BannerVO();
                 bannerVO.setStartShowDate(new Date());
                 bannerVO.setEndShowDate(new Date());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), bannerVO);
-                ResultObjectVO resultObjectVO = feignBannerService.queryList(SignUtil.sign(requestJsonVO), requestJsonVO);
+                ResultObjectVO resultObjectVO = feignBannerService.queryIndexList(SignUtil.sign(requestJsonVO), requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerVO.class);
                     //批量刷新轮播图到缓存

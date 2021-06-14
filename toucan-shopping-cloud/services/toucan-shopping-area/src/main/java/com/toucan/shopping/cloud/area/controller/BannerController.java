@@ -470,6 +470,62 @@ public class BannerController {
     }
 
 
+    /**
+     * 查询PD端首页列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/index/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryIndexList(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
+            //查询PC端首页轮播图
+            List<BannerVO> bannerVOS = bannerService.queryIndexList(bannerVO);
+            if(CollectionUtils.isNotEmpty(bannerVOS))
+            {
+                for(BannerVO bv:bannerVOS)
+                {
+                    //查询出所有轮播图地区关联
+                    BannerArea queryBannerArea = new BannerArea();
+                    queryBannerArea.setBannerId(bannerVO.getId());
+                    List<BannerArea> bannerAreas = bannerAreaService.queryList(queryBannerArea);
+                    if(CollectionUtils.isNotEmpty(bannerAreas)) {
+                        String[] areaCodeArray = new String[bannerAreas.size()];
+                        for(int i=0;i<bannerAreas.size();i++)
+                        {
+                            areaCodeArray[i]= bannerAreas.get(i).getAreaCode();
+                        }
+                        bv.setAreaCodeArray(areaCodeArray);;
+                    }
+                }
+            }
+            resultObjectVO.setData(bannerVOS);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
     /**
      * 删除指定
