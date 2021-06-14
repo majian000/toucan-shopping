@@ -58,6 +58,8 @@
         <module>area/toucan-shopping-area-entity-vo</module>
         <!--地区编码服务类和DAO -->
         <module>area/toucan-shopping-area-service-dao</module>
+        <!--地区功能 缓存模块 -->
+        <module>area/toucan-shopping-area-cache</module>
 
 
         <!--权限服务实体和VO -->
@@ -226,6 +228,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.area</groupId>
                 <artifactId>toucan-shopping-area-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.area</groupId>
+                <artifactId>toucan-shopping-area-cache</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
