@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +58,8 @@ public class BannerController {
     @Autowired
     private BannerRedisService bannerRedisService;
 
+    @Value("${fastdfs.http.url}")
+    private String fastDfsHttpUrl;
 
     /**
      * 保存轮播图
@@ -174,9 +177,10 @@ public class BannerController {
                         List<BannerVO> bannerVOS = bannerService.queryList(query);
                         if(CollectionUtils.isNotEmpty(bannerVOS))
                         {
+                            BannerVO bannerVO = bannerVOS.get(0);
                             //查询出所有轮播图地区关联
                             BannerArea queryBannerArea = new BannerArea();
-                            queryBannerArea.setBannerId(bannerVOS.get(0).getId());
+                            queryBannerArea.setBannerId(bannerVO.getId());
                             List<BannerArea> bannerAreas = bannerAreaService.queryList(queryBannerArea);
                             String[] areaCodeArray = new String[bannerAreas.size()];
                             for(int i=0;i<bannerAreas.size();i++)
@@ -184,9 +188,12 @@ public class BannerController {
                                 areaCodeArray[i]= bannerAreas.get(i).getAreaCode();
                             }
                             //设置关联地区编码
-                            bannerVOS.get(0).setAreaCodeArray(areaCodeArray);
+                            bannerVO.setAreaCodeArray(areaCodeArray);
+                            if(bannerVO.getImgPath()!=null) {
+                                bannerVO.setHttpImgPath(fastDfsHttpUrl +bannerVO.getImgPath());
+                            }
                             //刷新缓存
-                            bannerRedisService.flush(bannerVOS.get(0));
+                            bannerRedisService.flush(bannerVO);
                         }
                     }catch(Exception e)
                     {

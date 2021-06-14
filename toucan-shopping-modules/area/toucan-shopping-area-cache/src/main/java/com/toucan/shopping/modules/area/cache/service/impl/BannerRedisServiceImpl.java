@@ -26,7 +26,7 @@ public class BannerRedisServiceImpl implements BannerRedisService {
         Object bannersRedisObject = redisTemplate.opsForValue().get(BannerRedisKey.getWebIndexBanner());
         List<BannerVO> bannerVOList=null;
         if(bannersRedisObject!=null) {
-            bannerVOList=JSONArray.parseArray(JSONObject.toJSONString(bannersRedisObject), BannerVO.class);
+            bannerVOList=JSONArray.parseArray(String.valueOf(bannersRedisObject), BannerVO.class);
         }else{
             bannerVOList=new ArrayList<BannerVO>();
         }
