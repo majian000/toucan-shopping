@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface BannerService {
 
-    List<Banner> queryList(BannerVO banner);
+    List<BannerVO> queryList(BannerVO banner);
 
 
     /**

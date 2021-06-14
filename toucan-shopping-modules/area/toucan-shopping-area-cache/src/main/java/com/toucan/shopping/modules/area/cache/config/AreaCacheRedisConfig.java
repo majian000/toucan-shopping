@@ -31,12 +31,22 @@ public class AreaCacheRedisConfig {
     @Autowired
     private Toucan toucan;
 
+    @Bean
+    @Qualifier("areaCacheRedisTemplate")
+    public RedisTemplate<String, Object> areaCacheRedisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(areaCacheRedisConnectionFactory());
+        return redisTemplate;
+    }
+
+
     /**
      * 连接配置
      * @return
      */
     @Bean
-    public RedisConnectionFactory connectionFactory() {
+    @Qualifier("areaCacheRedisConnectionFactory")
+    public RedisConnectionFactory areaCacheRedisConnectionFactory() {
         log.info(" 初始化地区模块 redis缓存功能.............");
         try {
             Map<String, Object> source = new HashMap<String, Object>();

@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface BannerMapper {
 
-    List<Banner> queryList(BannerVO entity);
+    List<BannerVO> queryList(BannerVO entity);
 
     int insert(Banner banner);
 

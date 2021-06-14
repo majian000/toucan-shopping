@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignBannerService {
 
 
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO queryList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 保存

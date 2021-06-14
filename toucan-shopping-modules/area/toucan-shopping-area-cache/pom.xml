@@ -28,6 +28,11 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.area</groupId>
+            <artifactId>toucan-shopping-area-entity-vo</artifactId>
+        </dependency>
+
         <!--集成redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

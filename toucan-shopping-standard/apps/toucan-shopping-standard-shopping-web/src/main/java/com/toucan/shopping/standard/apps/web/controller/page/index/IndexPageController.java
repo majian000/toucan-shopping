@@ -137,7 +137,7 @@ public class IndexPageController {
 
                 }
 
-                List<Banner> bannerList = bannerService.queryList(bannerVO);
+                List<BannerVO> bannerList = bannerService.queryList(bannerVO);
                 if (CollectionUtils.isNotEmpty(bannerList)) {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(bannerList), Banner.class);
                     //保存轮播图到redis

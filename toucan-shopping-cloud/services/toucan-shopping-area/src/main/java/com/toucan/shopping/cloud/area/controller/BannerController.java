@@ -22,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -72,9 +74,9 @@ public class BannerController {
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            logger.warn("没有找到对象编码: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
+            resultObjectVO.setMsg("没有找到对象编码!");
             return resultObjectVO;
         }
 
@@ -133,6 +135,58 @@ public class BannerController {
     }
 
 
+
+    /**
+     * 刷新redis缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/cache/redis",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushRedisCache(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            BannerVO bannerVO = JSONObject.parseObject(requestVo.getEntityJson(),BannerVO.class);
+            if(bannerVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该对象
+            BannerVO query=new BannerVO();
+            query.setId(bannerVO.getId());
+            List<BannerVO> banners = bannerService.queryList(query);
+            if(CollectionUtils.isEmpty(banners))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,不存在!");
+                return resultObjectVO;
+            }
+
+
+            resultObjectVO.setData(banners);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+    
+    
+
     /**
      * 根据ID查询
      * @param requestVo
@@ -158,10 +212,10 @@ public class BannerController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该应用
+            //查询是否存在该对象
             BannerVO query=new BannerVO();
             query.setId(bannerVO.getId());
-            List<Banner> banners = bannerService.queryList(query);
+            List<BannerVO> banners = bannerService.queryList(query);
             if(CollectionUtils.isEmpty(banners))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -289,9 +343,9 @@ public class BannerController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -303,9 +357,9 @@ public class BannerController {
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
+            resultObjectVO.setMsg("没有找到对象!");
             return resultObjectVO;
         }
         try {
@@ -324,6 +378,62 @@ public class BannerController {
 
 
 
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
+            List<BannerVO> bannerVOS = bannerService.queryList(bannerVO);
+            if(CollectionUtils.isNotEmpty(bannerVOS))
+            {
+                for(BannerVO bv:bannerVOS)
+                {
+                    //查询出所有轮播图地区关联
+                    BannerArea queryBannerArea = new BannerArea();
+                    queryBannerArea.setBannerId(bannerVO.getId());
+                    List<BannerArea> bannerAreas = bannerAreaService.queryList(queryBannerArea);
+                    if(CollectionUtils.isNotEmpty(bannerAreas)) {
+                        String[] areaCodeArray = new String[bannerAreas.size()];
+                        for(int i=0;i<bannerAreas.size();i++)
+                        {
+                            areaCodeArray[i]= bannerAreas.get(i).getAreaCode();
+                        }
+                        bv.setAreaCodeArray(areaCodeArray);;
+                    }
+                }
+            }
+            resultObjectVO.setData(bannerVOS);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
 
 
@@ -355,7 +465,7 @@ public class BannerController {
             //查询是否存在该数据
             BannerVO query=new BannerVO();
             query.setId(entity.getId());
-            List<Banner> adminList = bannerService.queryList(query);
+            List<BannerVO> adminList = bannerService.queryList(query);
             if(CollectionUtils.isEmpty(adminList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);

@@ -32,7 +32,7 @@
         </if>
     </sql>
 
-    <select id="queryList" resultMap="bannerMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
+    <select id="queryList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
         select ba.* from t_banner ba
         <where>
             1=1
@@ -41,6 +41,12 @@
                 and ba.id = #{id}
             </if>
 
+            <if test="startShowDate!=null">
+                 <![CDATA[  ba.startShowDate >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
+            <if test="endShowDate!=null">
+                <![CDATA[  ba.endShowDate <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
 
             <if test="idArray!=null ">
                 and ba.id in

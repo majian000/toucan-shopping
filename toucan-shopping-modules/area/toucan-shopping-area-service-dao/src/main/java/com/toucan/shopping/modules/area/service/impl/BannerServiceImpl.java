@@ -29,7 +29,7 @@ public class BannerServiceImpl implements BannerService {
 
 
     @Override
-    public List<Banner> queryList(BannerVO entity) {
+    public List<BannerVO> queryList(BannerVO entity) {
         return bannerMapper.queryList(entity);
     }
 
