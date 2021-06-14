@@ -496,7 +496,7 @@ public class BannerController {
         }
         try {
             BannerVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), BannerVO.class);
-            //查询PC端首页轮播图
+            //查询首页轮播图
             List<BannerVO> bannerVOS = bannerService.queryIndexList(bannerVO);
             if(CollectionUtils.isNotEmpty(bannerVOS))
             {
@@ -514,6 +514,7 @@ public class BannerController {
                         }
                         bv.setAreaCodeArray(areaCodeArray);;
                     }
+                    bv.setHttpImgPath(fastDfsHttpUrl+bv.getImgPath());
                 }
             }
             resultObjectVO.setData(bannerVOS);

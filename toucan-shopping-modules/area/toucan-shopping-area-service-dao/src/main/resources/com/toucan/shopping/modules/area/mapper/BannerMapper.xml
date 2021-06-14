@@ -42,10 +42,10 @@
             </if>
 
             <if test="startShowDate!=null">
-                 <![CDATA[ and ba.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%T:%s')    ]]>
+                 <![CDATA[ and ba.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
             </if>
             <if test="endShowDate!=null">
-                <![CDATA[ and ba.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%T:%s')    ]]>
+                <![CDATA[ and ba.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
             </if>
 
             <if test="idArray!=null ">
@@ -65,8 +65,8 @@
         select ba.* from t_banner ba
         <where>
             1=1
-                <![CDATA[ and ba.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%T:%s')    ]]>
-                <![CDATA[ and ba.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%T:%s')    ]]>
+                <![CDATA[ and ba.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+                <![CDATA[ and ba.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
                 and ba.position = 0
                 and ba.delete_status = 0
 
