@@ -239,6 +239,38 @@ public class BannerController extends UIController {
     }
 
 
+    /**
+     * 刷新redis缓存
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/flush/cache",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushCache(HttpServletRequest request, @RequestBody List<BannerVO> bannerVOS)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(CollectionUtils.isEmpty(bannerVOS))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String entityJson = JSONObject.toJSONString(bannerVOS);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignBannerService.flushCache(SignUtil.sign(requestVo), requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
     @RequestMapping("/upload/img")
     @ResponseBody

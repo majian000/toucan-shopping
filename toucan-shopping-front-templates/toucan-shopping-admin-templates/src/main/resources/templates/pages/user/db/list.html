@@ -186,6 +186,11 @@
             }  else if (obj.event === 'disabledToolbar') {  // 监听删除操作
                 var checkStatus = table.checkStatus('userTable')
                     , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
                 layer.confirm('确定停用?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]user/disabled/ids",

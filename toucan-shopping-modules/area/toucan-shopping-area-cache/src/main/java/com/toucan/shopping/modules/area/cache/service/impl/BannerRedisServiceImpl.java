@@ -30,7 +30,19 @@ public class BannerRedisServiceImpl implements BannerRedisService {
         }else{
             bannerVOList=new ArrayList<BannerVO>();
         }
-        bannerVOList.add(bannerVO);
+        boolean find =false;
+        for(int i=0;i<bannerVOList.size();i++)
+        {
+            if(bannerVO.getId().longValue()==bannerVOList.get(i).getId().longValue()) {
+                bannerVOList.set(i, bannerVO);
+                find = true;
+                break;
+            }
+        }
+        if(!find)
+        {
+            bannerVOList.add(bannerVO);
+        }
         //保存轮播图到redis
         redisTemplate.opsForValue().set(BannerRedisKey.getWebIndexBanner(), JSONObject.toJSONString(bannerVOList));
     }

@@ -192,11 +192,48 @@
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
                 var checkStatus = table.checkStatus('bannerTable')
                     , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
                 layer.confirm('确定删除轮播图?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]banner/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('bannerTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'flushCache') {  // 监听删除操作
+                var checkStatus = table.checkStatus('bannerTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定刷新缓存?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]banner/flush/cache",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
                         data:JSON.stringify(data),
                         success:function(data){
                             layer.msg(data.msg);

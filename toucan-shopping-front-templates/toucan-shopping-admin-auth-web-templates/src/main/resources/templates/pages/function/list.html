@@ -187,6 +187,11 @@
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('functionTreeTable')
                     , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
                 layer.confirm('确定删除功能?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]function/delete/ids",

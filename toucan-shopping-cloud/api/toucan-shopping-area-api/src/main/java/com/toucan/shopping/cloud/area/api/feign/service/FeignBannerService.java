@@ -19,7 +19,11 @@ public interface FeignBannerService {
 
 
     @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO queryList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO flushCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestVo);
 
     /**
      * 保存

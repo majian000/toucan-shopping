@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.area.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.area.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.entity.BannerArea;
@@ -53,6 +54,8 @@ public class BannerController {
     @Autowired
     private AreaService areaService;
 
+    @Autowired
+    private BannerRedisService bannerRedisService;
 
 
     /**
@@ -137,13 +140,13 @@ public class BannerController {
 
 
     /**
-     * 刷新redis缓存
+     * 批量刷新缓存
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/cache/redis",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO flushRedisCache(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -153,27 +156,49 @@ public class BannerController {
         }
 
         try {
-            BannerVO bannerVO = JSONObject.parseObject(requestVo.getEntityJson(),BannerVO.class);
-            if(bannerVO.getId()==null)
+            List<BannerVO> banners = JSONObject.parseArray(requestVo.getEntityJson(),BannerVO.class);
+            if(CollectionUtils.isEmpty(banners))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,没有找到ID");
                 return resultObjectVO;
             }
-
-            //查询是否存在该对象
-            BannerVO query=new BannerVO();
-            query.setId(bannerVO.getId());
-            List<BannerVO> banners = bannerService.queryList(query);
-            if(CollectionUtils.isEmpty(banners))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,不存在!");
-                return resultObjectVO;
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(BannerVO banner:banners) {
+                if(banner.getId()!=null) {
+                    ResultObjectVO appResultObjectVO = new ResultObjectVO();
+                    appResultObjectVO.setData(banner);
+                    try{
+                        BannerVO query = new BannerVO();
+                        query.setId(banner.getId());
+                        List<BannerVO> bannerVOS = bannerService.queryList(query);
+                        if(CollectionUtils.isNotEmpty(bannerVOS))
+                        {
+                            //查询出所有轮播图地区关联
+                            BannerArea queryBannerArea = new BannerArea();
+                            queryBannerArea.setBannerId(bannerVOS.get(0).getId());
+                            List<BannerArea> bannerAreas = bannerAreaService.queryList(queryBannerArea);
+                            String[] areaCodeArray = new String[bannerAreas.size()];
+                            for(int i=0;i<bannerAreas.size();i++)
+                            {
+                                areaCodeArray[i]= bannerAreas.get(i).getAreaCode();
+                            }
+                            //设置关联地区编码
+                            bannerVOS.get(0).setAreaCodeArray(areaCodeArray);
+                            //刷新缓存
+                            bannerRedisService.flush(bannerVOS.get(0));
+                        }
+                    }catch(Exception e)
+                    {
+                        logger.warn("刷新轮播图缓存失败，id:{}",banner.getId());
+                        logger.warn(e.getMessage(),e);
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,请重试!");
+                        continue;
+                    }
+                }
             }
-
-
-            resultObjectVO.setData(banners);
+            resultObjectVO.setData(resultObjectVOList);
 
         }catch(Exception e)
         {
@@ -184,7 +209,8 @@ public class BannerController {
         }
         return resultObjectVO;
     }
-    
+
+
     
 
     /**
@@ -227,13 +253,13 @@ public class BannerController {
             queryBannerArea.setBannerId(bannerVO.getId());
             List<BannerArea> bannerAreas = bannerAreaService.queryList(queryBannerArea);
             if(CollectionUtils.isNotEmpty(bannerAreas)) {
-                String[] areaIdArray = new String[bannerAreas.size()];
+                String[] areaCodeArray = new String[bannerAreas.size()];
                 for(int i=0;i<bannerAreas.size();i++)
                 {
-                    areaIdArray[i]= bannerAreas.get(i).getAreaCode();
+                    areaCodeArray[i]= bannerAreas.get(i).getAreaCode();
                 }
                 Area queryArea = new Area();
-                queryArea.setCodeArray(areaIdArray);
+                queryArea.setCodeArray(areaCodeArray);
 
                 //设置这个轮播图下关联的所有地区
                 banners.get(0).setAreas(areaService.queryList(queryArea));
