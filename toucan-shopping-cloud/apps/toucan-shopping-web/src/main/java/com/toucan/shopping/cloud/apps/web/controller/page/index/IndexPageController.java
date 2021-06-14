@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.page.index;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.area.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.area.constant.BannerRedisKey;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +55,8 @@ public class IndexPageController {
     @Autowired
     private FeignCategoryService feignCategoryService;
 
+    @Autowired
+    private BannerRedisService bannerRedisService;
 
 
     /**
@@ -98,28 +102,28 @@ public class IndexPageController {
      */
     public void queryBanners(HttpServletRequest request)
     {
-        List<Banner> banners = null;
+        List<BannerVO> banners = null;
         try {
-            Object bannersRedisObject = stringRedisTemplate.opsForValue().get(BannerRedisKey.getWebIndexBanner());
-            if(bannersRedisObject==null) {
+            List<BannerVO> bannerVOS = bannerRedisService.queryWebIndexBanner();
+            if(CollectionUtils.isEmpty(bannerVOS)) {
                 BannerVO bannerVO = new BannerVO();
                 bannerVO.setStartShowDate(new Date());
                 bannerVO.setEndShowDate(new Date());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), bannerVO);
                 ResultObjectVO resultObjectVO = feignBannerService.queryList(SignUtil.sign(requestJsonVO), requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
-                    banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Banner.class);
-                    //保存轮播图到redis
-                    stringRedisTemplate.opsForValue().set(BannerRedisKey.getWebIndexBanner(),JSONObject.toJSONString(resultObjectVO.getData()));
+                    banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerVO.class);
+                    //批量刷新轮播图到缓存
+                    bannerRedisService.flushs(banners);
+                    //重新查询一次
+                    banners = bannerRedisService.queryWebIndexBanner();
                 }else{
-                    banners = new ArrayList<Banner>();
+                    banners = new ArrayList<BannerVO>();
                 }
-            }else{
-                banners = JSONArray.parseArray(String.valueOf(bannersRedisObject), Banner.class);
             }
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
-            banners = new ArrayList<Banner>();
+            banners = new ArrayList<BannerVO>();
         }
 
         //TODO:增加判断 当前地区是否和轮播图的地区一致

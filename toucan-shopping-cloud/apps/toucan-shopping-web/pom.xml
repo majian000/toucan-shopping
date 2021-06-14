@@ -143,6 +143,11 @@
             <artifactId>toucan-shopping-web-templates</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.area</groupId>
+            <artifactId>toucan-shopping-area-cache</artifactId>
+        </dependency>
+
     </dependencies>
 
 
