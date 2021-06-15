@@ -221,7 +221,7 @@
                         }
                     });
                 });
-            }else if (obj.event === 'flushCache') {  // 监听删除操作
+            }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
                 var checkStatus = table.checkStatus('bannerTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
@@ -235,6 +235,33 @@
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('bannerTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('bannerTable')
+                    , data = checkStatus.data;
+                layer.confirm('确定清空PC首页缓存?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]banner/clear/index/cache",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:null,
                         success:function(data){
                             layer.msg(data.msg);
 
@@ -375,119 +402,6 @@
                         }
                     });
                 });
-            }else if (obj.event == 'role') {
-                index = layer.open({
-                    title: '选择角色',
-                    type: 1,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['20%', '60%'],
-                    btn: ['确定'],
-                    content: "<ul id='roleTree' class='dtree' data-id='0'></ul>",
-                    success:function(layero){
-                        loadding = layer.load();
-                        $.ajax({
-                            url:"[[@{/}]]role/query/banner/role/tree",
-                            contentType: "application/json; charset=utf-8",
-                            type:'POST',
-                            data:JSON.stringify({adminId:data.adminId}),
-                            success:function(data){
-                                if(data.code==1)
-                                {
-                                    //已选择节点
-                                    roleTreeDataArray = new Array();
-                                    var idArray = new Array();
-                                    getCheckdNodeId(data.data,idArray);
-                                    roleTree = dtree.render({
-                                        elem: "#roleTree",//html中的id值
-                                        data:data.data,
-                                        checkbarType: "no-all",
-                                        width:'100%',
-                                        checkbar: true,  //开启复选框
-                                        checkbarData: "choose",// 记录选中（默认）， "change"：记录变更， "all"：记录全部， "halfChoose"："记录选中和半选（V2.5.0新增）"
-                                        done: function (res, $ul, first) {
-                                            if (first) {
-                                                if(idArray!=null&&idArray.length>0) {
-                                                    dtree.chooseDataInit("roleTree", idArray); //"001001,001002"被选中的子节点id
-                                                    dtree.initNoAllCheck("roleTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
-                                                }
-                                            }
-
-                                        }
-                                    });
-                                }
-                            },
-                            complete:function()
-                            {
-                                layer.close(loadding);
-                            }
-                        });
-
-                    },
-                    yes: function(index, layero){
-                        var selectNodes = roleTree.getCheckbarNodesParam("roleTree");
-                        if(selectNodes==null||selectNodes.length<=0)
-                        {
-                            layer.msg("请选择角色");
-                            return false;
-                        }
-                        var rolesArray =  new Array();
-                        for (var i = 0; i < selectNodes.length; i++) {
-                            var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                            rolesArray.push({roleId:selectNodeObject.roleId,appCode:selectNodeObject.appCode});
-                            getParentNode(rolesArray,selectNodeObject.pid);
-                        }
-
-                        $.ajax({
-                            url: "[[@{/}]]banner/connect/roles",
-                            contentType: "application/json; charset=utf-8",
-                            type: 'POST',
-                            data: JSON.stringify({roles:rolesArray,adminId:data.adminId}),
-                            success: function (data) {
-                                if (data.code == 0) {
-                                    layer.msg(data.msg);
-                                    return false;
-                                }
-                                layer.close(index);
-                            }
-                        });
-                    }
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-
-            }if (obj.event == 'orgnazition') {
-
-                var index = layer.open({
-                    title: '选择组织机构',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '[[@{/}]]banner/selectOrgnazitionPage/'+data.adminId
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            }else if (obj.event == 'password') {
-
-                var index = layer.open({
-                    title: '修改密码',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '[[@{/}]]banner/passwordPage/'+data.id
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
             }
         });
 
