@@ -23,7 +23,7 @@ public class BannerRedisServiceImpl implements BannerRedisService {
     private RedisTemplate redisTemplate;
 
     @Override
-    public void flush(BannerVO bannerVO) {
+    public void flushWebIndexCache(BannerVO bannerVO) {
         Object bannersRedisObject = redisTemplate.opsForValue().get(BannerRedisKey.getWebIndexBanner());
         List<BannerVO> bannerVOList=null;
         if(bannersRedisObject!=null) {
@@ -49,7 +49,7 @@ public class BannerRedisServiceImpl implements BannerRedisService {
     }
 
     @Override
-    public void flushs(List<BannerVO> bannerVOS) {
+    public void flushWebIndexCaches(List<BannerVO> bannerVOS) {
         Object bannersRedisObject = redisTemplate.opsForValue().get(BannerRedisKey.getWebIndexBanner());
         List<BannerVO> bannerVOList=null;
         if(bannersRedisObject!=null) {
@@ -118,6 +118,11 @@ public class BannerRedisServiceImpl implements BannerRedisService {
             }
         }
         return Arrays.asList(bannerVOArray);
+    }
+
+    @Override
+    public boolean clearWebIndexBanner() {
+        return redisTemplate.delete(BannerRedisKey.getWebIndexBanner());
     }
 
 

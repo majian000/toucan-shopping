@@ -194,7 +194,7 @@ public class BannerController {
                                 bannerVO.setHttpImgPath(fastDfsHttpUrl +bannerVO.getImgPath());
                             }
                             //刷新缓存
-                            bannerRedisService.flush(bannerVO);
+                            bannerRedisService.flushWebIndexCache(bannerVO);
                         }
                     }catch(Exception e)
                     {

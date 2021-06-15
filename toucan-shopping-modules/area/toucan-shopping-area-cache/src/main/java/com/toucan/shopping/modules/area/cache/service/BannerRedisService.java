@@ -10,19 +10,25 @@ public interface BannerRedisService {
      * 刷新缓存
      * @param bannerVO
      */
-    void flush(BannerVO bannerVO);
+    void flushWebIndexCache(BannerVO bannerVO);
 
     /**
      * 刷新缓存
      * @param bannerVOS
      */
-    void flushs(List<BannerVO> bannerVOS);
+    void flushWebIndexCaches(List<BannerVO> bannerVOS);
 
     /**
      * 查询商城首页缓存
      * @return
      */
     List<BannerVO> queryWebIndexBanner();
+
+    /**
+     * 查询商城首页缓存
+     * @return
+     */
+    boolean clearWebIndexBanner();
 
 }
 
