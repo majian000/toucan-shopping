@@ -114,7 +114,7 @@ public class IndexPageController {
                 if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
                     banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerVO.class);
                     //批量刷新轮播图到缓存
-                    bannerRedisService.flushs(banners);
+                    bannerRedisService.flushWebIndexCaches(banners);
                     //重新查询一次
                     banners = bannerRedisService.queryWebIndexBanner();
                 }else{
