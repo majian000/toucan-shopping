@@ -12,4 +12,10 @@ public class Modules {
      * 地区缓存模块
      */
     private AreaCache areaCache;
+
+    /**
+     * 类别缓存模块
+     */
+    private CategoryCache categoryCache;
+
 }

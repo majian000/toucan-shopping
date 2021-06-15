@@ -72,6 +72,8 @@
         <module>category/toucan-shopping-category-entity-vo</module>
         <!--类别服务Service和DAO -->
         <module>category/toucan-shopping-category-service-dao</module>
+        <!--类别 缓存模块 -->
+        <module>category/toucan-shopping-category-cache</module>
 
         <!--栏目实体和VO -->
         <module>column/toucan-shopping-column-entity-vo</module>
@@ -242,6 +244,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.category</groupId>
                 <artifactId>toucan-shopping-category-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.category</groupId>
+                <artifactId>toucan-shopping-category-cache</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

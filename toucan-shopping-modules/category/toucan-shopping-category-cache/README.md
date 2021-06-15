@@ -3,13 +3,13 @@
     犀鸟电商平台致力于快速搭建属于自己的电商网站
 
 ## 模块介绍
-    地区服务缓存公共类
+    类别服务缓存公共类
     
     
 ## 配置
     toucan:
       modules:
-        areaCache:
+        categoryCache:
           redis:
             select: single # 可选值 single:单实例 cluster:集群
             timeout: 10000

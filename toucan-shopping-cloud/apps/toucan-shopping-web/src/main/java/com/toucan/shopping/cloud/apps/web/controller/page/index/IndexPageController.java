@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.vo.BannerVO;
+import com.toucan.shopping.modules.category.constant.CategoryRedisKey;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -59,10 +60,6 @@ public class IndexPageController {
     private BannerRedisService bannerRedisService;
 
 
-    /**
-     * 类别缓存有效期1小时
-     */
-    private final long CATEGORY_KEY_MILLISECOND=1000*60*60*8;
 
 
 //    /**
@@ -140,8 +137,7 @@ public class IndexPageController {
     {
         try {
             ResultObjectVO resultObjectVO = new ResultObjectVO();
-            String categoryKey = toucan.getAppCode()+"_INDEX_CATEGORYS";
-            Object CategoryTreeObject = stringRedisTemplate.opsForValue().get(categoryKey);
+            Object CategoryTreeObject = stringRedisTemplate.opsForValue().get(CategoryRedisKey.getWebIndexKey());
             if(CategoryTreeObject!=null)
             {
                 request.setAttribute("categorys",JSONArray.parseArray(String.valueOf(CategoryTreeObject), CategoryVO.class));
@@ -151,9 +147,7 @@ public class IndexPageController {
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
                 resultObjectVO = feignCategoryService.queryCategoryTreeByAreaCode(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
-                    stringRedisTemplate.opsForValue().set(categoryKey, JSONObject.toJSONString(resultObjectVO.getData()));
-                    stringRedisTemplate.expire(categoryKey, CATEGORY_KEY_MILLISECOND, TimeUnit.SECONDS);
-
+                    stringRedisTemplate.opsForValue().set(CategoryRedisKey.getWebIndexKey(), JSONObject.toJSONString(resultObjectVO.getData()));
                     request.setAttribute("categorys", resultObjectVO.getData());
                 }else{
                     request.setAttribute("categorys", new ArrayList<CategoryVO>());
