@@ -324,6 +324,34 @@ public class CategoryController {
 
 
 
+    /**
+     * 批量刷新缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushWebIndexCache(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
     /**

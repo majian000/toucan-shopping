@@ -166,13 +166,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryVO> findTreeTable(CategoryTreeInfo queryTreeInfo) {
-        List<CategoryVO> retNodes = new ArrayList<CategoryVO>();
-        List<CategoryVO> nodes = categoryMapper.findTreeTableByPageInfo(queryTreeInfo);
-        if(!CollectionUtils.isEmpty(nodes))
-        {
-            retNodes.addAll(nodes);
-        }
-        return retNodes;
+        return categoryMapper.findTreeTableByPageInfo(queryTreeInfo);
     }
 
 

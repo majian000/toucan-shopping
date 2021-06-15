@@ -148,7 +148,7 @@ public class BannerController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushWebIndexCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
