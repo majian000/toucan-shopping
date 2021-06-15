@@ -245,9 +245,9 @@ public class BannerController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/flush/cache",method = RequestMethod.POST)
+    @RequestMapping(value = "/flush/index/cache",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO flushCache(HttpServletRequest request, @RequestBody List<BannerVO> bannerVOS)
+    public ResultObjectVO flushIndexCache(HttpServletRequest request, @RequestBody List<BannerVO> bannerVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -261,7 +261,7 @@ public class BannerController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignBannerService.flushCache(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = feignBannerService.flushWebIndexCache(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
@@ -271,6 +271,29 @@ public class BannerController extends UIController {
         return resultObjectVO;
     }
 
+    /**
+     * 清空PC首页缓存
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/clear/index/cache",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO clearIndexCache(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            BannerVO bannerVO = new BannerVO();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, bannerVO);
+            resultObjectVO = feignBannerService.clearWebIndexCache(requestJsonVO.sign(),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     @RequestMapping("/upload/img")
     @ResponseBody

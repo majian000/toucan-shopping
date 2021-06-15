@@ -52,7 +52,7 @@ public class FeignBannerServiceFallbackFactory implements FallbackFactory<FeignB
             }
 
             @Override
-            public ResultObjectVO flushCache(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO flushWebIndexCache(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -76,6 +76,21 @@ public class FeignBannerServiceFallbackFactory implements FallbackFactory<FeignB
                     return resultObjectVO;
                 }
                 logger.warn("FeignBannerService.queryPcIndexList失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignBannerService.clearWebIndexCache失败 header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

@@ -229,9 +229,9 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定刷新缓存?', function (index) {
+                layer.confirm('确定刷新PC首页缓存?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]banner/flush/cache",
+                        url:"[[@{/}]]banner/flush/index/cache",
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         data:JSON.stringify(data),

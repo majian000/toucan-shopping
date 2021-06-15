@@ -22,12 +22,34 @@ public interface FeignBannerService {
     ResultObjectVO queryList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
-    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO flushCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestVo);
+    /**
+     * 清空首页缓存
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO flushWebIndexCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询首页缓存
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
     @RequestMapping(value="/query/index/list",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryIndexList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 清空首页缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO clearWebIndexCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestVo);
 
     /**
      * 保存

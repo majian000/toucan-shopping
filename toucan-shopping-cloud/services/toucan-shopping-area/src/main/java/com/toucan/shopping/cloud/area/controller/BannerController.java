@@ -148,9 +148,9 @@ public class BannerController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO flushWebIndexCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -219,7 +219,26 @@ public class BannerController {
     }
 
 
-    
+
+    /**
+     * 清空首页缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO clearWebIndexCache(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            resultObjectVO.setData(bannerRedisService.clearWebIndexBanner());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 根据ID查询
