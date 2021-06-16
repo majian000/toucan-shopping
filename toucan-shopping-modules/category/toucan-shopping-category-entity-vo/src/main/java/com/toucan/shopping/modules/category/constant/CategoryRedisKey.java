@@ -12,7 +12,7 @@ public class CategoryRedisKey {
      */
     public static String getWebIndexKey()
     {
-        return appCode+":WEB:INDEX:CATEGORY";
+        return "TOUCAN_SHOPPING_WEB:INDEX:CATEGORY";
     }
 
 }

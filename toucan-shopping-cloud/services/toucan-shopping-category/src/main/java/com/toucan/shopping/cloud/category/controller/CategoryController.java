@@ -475,37 +475,22 @@ public class CategoryController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
-
             List<Category> categoryList = categoryService.queryList(query);
-            if(!CollectionUtils.isEmpty(categoryList))
-            {
+            if(!CollectionUtils.isEmpty(categoryList)) {
                 List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
                 for(Category category : categoryList)
                 {
                     if(category.getParentId().longValue()==-1) {
                         CategoryTreeVO treeVO = new CategoryTreeVO();
                         BeanUtils.copyProperties(treeVO, category);
-
                         treeVO.setTitle(category.getName());
                         treeVO.setText(category.getName());
-
                         categoryTreeVOS.add(treeVO);
-
                         treeVO.setChildren(new ArrayList<CategoryVO>());
                         categoryService.setChildren(categoryList,treeVO);
                     }
                 }
-
-                CategoryTreeVO rootTreeVO = new CategoryTreeVO();
-                rootTreeVO.setTitle("根节点");
-                rootTreeVO.setParentId(-1L);
-                rootTreeVO.setId(-1L);
-                rootTreeVO.setText("根节点");
-                rootTreeVO.setChildren(categoryTreeVOS);
-                List<CategoryVO> rootCategoryTreeVOS = new ArrayList<CategoryVO>();
-                rootCategoryTreeVOS.add(rootTreeVO);
-                resultObjectVO.setData(rootCategoryTreeVOS);
-
+                resultObjectVO.setData(categoryTreeVOS);
             }
 
         }catch(Exception e)
