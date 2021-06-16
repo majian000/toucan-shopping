@@ -32,6 +32,10 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.queryList(category);
     }
 
+    @Override
+    public List<Category> queryPcIndexList(CategoryVO category) {
+        return categoryMapper.queryPcIndexList(category);
+    }
 
 
     @Transactional

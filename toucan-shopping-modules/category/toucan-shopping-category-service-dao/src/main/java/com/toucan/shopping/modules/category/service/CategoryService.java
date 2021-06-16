@@ -14,6 +14,8 @@ public interface CategoryService {
 
     List<Category> queryList(CategoryVO category);
 
+    List<Category> queryPcIndexList(CategoryVO category);
+
     /**
      * 保存实体
      * @param category

@@ -9,6 +9,7 @@
         <result column="icon" jdbcType="VARCHAR" property="icon" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="category_sort" jdbcType="INTEGER" property="categorySort" />
         <result column="href" jdbcType="VARCHAR" property="href" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -64,6 +65,16 @@
     </select>
 
 
+    <select id="queryPcIndexList" resultMap="categoryMap" parameterType="com.toucan.shopping.modules.category.vo.CategoryVO">
+        select bc.* from t_category bc
+        <where>
+            1=1
+            and bc.show_status = 1
+            and bc.type = 1
+            and bc.delete_status = 0
+        </where>
+        order by bc.category_sort desc
+    </select>
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.category.entity.Category" useGeneratedKeys="true" keyProperty="id" >

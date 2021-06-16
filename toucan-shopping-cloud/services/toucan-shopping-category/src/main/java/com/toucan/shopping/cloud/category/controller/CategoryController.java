@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
 import com.toucan.shopping.modules.category.service.CategoryService;
@@ -49,6 +50,8 @@ public class CategoryController {
     @Autowired
     private IdGenerator idGenerator;
 
+    @Autowired
+    private CategoryRedisService categoryRedisService;
 
 
     /**
@@ -339,9 +342,26 @@ public class CategoryController {
             resultObjectVO.setMsg("请求失败,没有找到实体对象");
             return resultObjectVO;
         }
-
         try {
+            CategoryVO query = new CategoryVO();
+            List<Category> categoryList = categoryService.queryPcIndexList(query);
+            if(!CollectionUtils.isEmpty(categoryList)) {
+                List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
+                for(Category category : categoryList)
+                {
+                    if(category.getParentId().longValue()==-1) {
+                        CategoryTreeVO treeVO = new CategoryTreeVO();
+                        BeanUtils.copyProperties(treeVO, category);
+                        treeVO.setTitle(category.getName());
+                        treeVO.setText(category.getName());
+                        categoryTreeVOS.add(treeVO);
 
+                        treeVO.setChildren(new ArrayList<CategoryVO>());
+                        categoryService.setChildren(categoryList,treeVO);
+                    }
+                }
+                categoryRedisService.flushWebIndexCaches(categoryTreeVOS);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -352,6 +372,26 @@ public class CategoryController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 清空首页缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO clearWebIndexCache(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            resultObjectVO.setData(categoryRedisService.clearWebIndexCache());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 
@@ -475,7 +515,7 @@ public class CategoryController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             CategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
-            List<Category> categoryList = categoryService.queryList(query);
+            List<Category> categoryList = categoryService.queryPcIndexList(query);
             if(!CollectionUtils.isEmpty(categoryList)) {
                 List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
                 for(Category category : categoryList)

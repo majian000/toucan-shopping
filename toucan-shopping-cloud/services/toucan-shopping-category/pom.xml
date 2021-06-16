@@ -100,6 +100,10 @@
             <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.category</groupId>
+            <artifactId>toucan-shopping-category-cache</artifactId>
+        </dependency>
 
     </dependencies>
 

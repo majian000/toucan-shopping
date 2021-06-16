@@ -13,6 +13,7 @@ public interface CategoryMapper {
 
     List<Category> queryList(CategoryVO category);
 
+    List<Category> queryPcIndexList(CategoryVO category);
 
     int insert(Category category);
 
