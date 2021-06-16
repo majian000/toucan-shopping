@@ -188,6 +188,65 @@
                         }
                     });
                 });
+            }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
+                var checkStatus = table.checkStatus('categoryTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定刷新PC首页缓存?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/flush/index/cache",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('categoryTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('categoryTable')
+                    , data = checkStatus.data;
+                layer.confirm('确定清空PC首页缓存?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/clear/index/cache",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:null,
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('categoryTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
             }
         });
 
