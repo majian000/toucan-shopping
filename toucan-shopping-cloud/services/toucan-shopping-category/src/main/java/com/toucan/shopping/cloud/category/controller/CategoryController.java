@@ -354,6 +354,39 @@ public class CategoryController {
                         BeanUtils.copyProperties(treeVO, category);
                         treeVO.setTitle(category.getName());
                         treeVO.setText(category.getName());
+                        if(StringUtils.isNotEmpty(treeVO.getName()))
+                        {
+                            StringBuilder linkhtml = new StringBuilder();
+                            if(treeVO.getName().indexOf("#")!=-1&&treeVO.getHref().indexOf("#")!=-1)
+                            {
+                                String[] names = treeVO.getName().split("#");
+                                String[] hrefs = treeVO.getHref().split("#");
+                                if(names.length==hrefs.length) {
+                                    for (int i = 0; i < names.length; i++) {
+                                        linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\">");
+                                        linkhtml.append(names[i]);
+                                        linkhtml.append("</a>");
+                                        if(i+1<=names.length)
+                                        {
+                                            linkhtml.append("<a class=\"category_a\" >/</a>");
+                                        }
+                                    }
+                                }else{
+                                    for (int i = 0; i < names.length; i++) {
+                                        linkhtml.append("<a class=\"category_a\" href=\"#\">");
+                                        linkhtml.append(names[i]);
+                                        linkhtml.append("</a>");
+                                        if(i+1<=names.length)
+                                        {
+                                            linkhtml.append("<a class=\"category_a\" >/</a>");
+                                        }
+                                    }
+                                }
+                            }else{
+                                linkhtml.append("<a class=\"category_a\" href=\""+treeVO.getHref()+"\">"+treeVO.getName()+"</a>");
+                            }
+                            treeVO.setRootLinks(linkhtml.toString());
+                        }
                         categoryTreeVOS.add(treeVO);
 
                         treeVO.setChildren(new ArrayList<CategoryVO>());

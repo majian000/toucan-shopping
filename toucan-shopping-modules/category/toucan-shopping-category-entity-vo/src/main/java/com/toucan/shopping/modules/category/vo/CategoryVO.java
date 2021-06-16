@@ -39,4 +39,9 @@ public class CategoryVO extends Category {
     private String updateAdminUsername;
 
     private Long[] idArray; //ID数组
+
+    /**
+     * 所有根节点链接
+     */
+    private String rootLinks;
 }
