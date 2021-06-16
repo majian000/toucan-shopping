@@ -1,8 +1,6 @@
 package com.toucan.shopping.modules.category.service.impl;
 
 import com.toucan.shopping.modules.category.entity.Category;
-import com.toucan.shopping.modules.category.entity.CategoryArea;
-import com.toucan.shopping.modules.category.mapper.CategoryAreaMapper;
 import com.toucan.shopping.modules.category.mapper.CategoryImgMapper;
 import com.toucan.shopping.modules.category.mapper.CategoryMapper;
 import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
@@ -25,8 +23,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    @Autowired
-    private CategoryAreaMapper categoryAreaMapper;
 
     @Autowired
     private CategoryImgMapper categoryImgMapper;
@@ -65,45 +61,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.queryByParentId(parentId);
     }
 
-    /**
-     * 拿到指定应用的类别树
-     */
-    public List<CategoryVO> queryTree(String areaCode) throws Exception {
-        List<CategoryVO> categoryVoList=new ArrayList<CategoryVO>();
-        //拿到所有关联关系
-        List<CategoryArea> categoryAreas = categoryAreaMapper.queryListByAreaCode(areaCode);
-        if(CollectionUtils.isNotEmpty(categoryAreas))
-        {
-            Long[] categoryIdArray = new Long[categoryAreas.size()];
-            for(int i=0;i<categoryAreas.size();i++)
-            {
-                categoryIdArray[i]=categoryAreas.get(i).getCategoryId();
-            }
-            CategoryVO categoryVO = new CategoryVO();
-            categoryVO.setIdArray(categoryIdArray);
-            categoryVO.setShowStatus(1);
-            //拿到地区下关联所有类别
-            List<Category> categoryList =this.queryList(categoryVO);
-            if(CollectionUtils.isNotEmpty(categoryList))
-            {
-                //先查出顶级节点
-                for(Category category:categoryList)
-                {
-                    if(category.getParentId()==-1L)
-                    {
-                        CategoryVO rootCategoryVO = new CategoryVO();
-                        BeanUtils.copyProperties(rootCategoryVO,category);
-                        //设置类别广告图片
-                        rootCategoryVO.setCategoryImgs(categoryImgMapper.queryListByCategoryId(rootCategoryVO.getId()));
-                        categoryVoList.add(rootCategoryVO);
-                        //开始填充下级节点
-                        setChildrenByParentId(rootCategoryVO,categoryList);
-                    }
-                }
-            }
-        }
-        return categoryVoList;
-    }
 
 
     public void setChildrenByParentId(CategoryVO categoryVO,List<Category> categoryList) throws InvocationTargetException, IllegalAccessException {

@@ -354,43 +354,6 @@ public class CategoryController {
 
 
 
-    /**
-     * 查询指定应用下所有类别,并返回子节点
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/query/tree/area/code",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO queryCategoryTreeByAreaCode(@RequestBody RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.warn("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        try {
-            CategoryVO categoryVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),CategoryVO.class);
-            if(StringUtils.isEmpty(categoryVO.getAreaCode()))
-            {
-                logger.warn("地区编码为空 {} ",requestJsonVO.getEntityJson());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("地区编码为空!");
-                return resultObjectVO;
-            }
-
-            resultObjectVO.setData(categoryService.queryTree(categoryVO.getAreaCode()));
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
-        }
-
-        return resultObjectVO;
-    }
 
 
     /**
@@ -452,6 +415,62 @@ public class CategoryController {
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            CategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
+
+            List<Category> categoryList = categoryService.queryList(query);
+            if(!CollectionUtils.isEmpty(categoryList))
+            {
+                List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
+                for(Category category : categoryList)
+                {
+                    if(category.getParentId().longValue()==-1) {
+                        CategoryTreeVO treeVO = new CategoryTreeVO();
+                        BeanUtils.copyProperties(treeVO, category);
+
+                        treeVO.setTitle(category.getName());
+                        treeVO.setText(category.getName());
+
+                        categoryTreeVOS.add(treeVO);
+
+                        treeVO.setChildren(new ArrayList<CategoryVO>());
+                        categoryService.setChildren(categoryList,treeVO);
+                    }
+                }
+
+                CategoryTreeVO rootTreeVO = new CategoryTreeVO();
+                rootTreeVO.setTitle("根节点");
+                rootTreeVO.setParentId(-1L);
+                rootTreeVO.setId(-1L);
+                rootTreeVO.setText("根节点");
+                rootTreeVO.setChildren(categoryTreeVOS);
+                List<CategoryVO> rootCategoryTreeVOS = new ArrayList<CategoryVO>();
+                rootCategoryTreeVOS.add(rootTreeVO);
+                resultObjectVO.setData(rootCategoryTreeVOS);
+
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 查询PC端首页类别树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/web/index/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryWebIndexTree(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

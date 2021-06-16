@@ -15,7 +15,6 @@ import java.util.List;
 public class CategoryVO extends Category {
 
 
-    private String areaCode; //地区编码
 
 
     /**

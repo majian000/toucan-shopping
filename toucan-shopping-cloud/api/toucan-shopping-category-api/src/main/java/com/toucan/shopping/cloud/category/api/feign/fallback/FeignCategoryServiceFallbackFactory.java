@@ -67,20 +67,6 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                 return resultObjectVO;
             }
 
-            @Override
-            public ResultObjectVO queryCategoryTreeByAreaCode(String signHeader, RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍候重试");
-                    return resultObjectVO;
-                }
-                logger.warn("FeignCategoryService.queryCategoryTreeByAreaCode faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍候重试");
-                return resultObjectVO;
-            }
 
             @Override
             public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
@@ -137,6 +123,21 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryService.queryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍候重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO queryWebIndexTree(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍候重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.queryWebIndexTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍候重试");
                 return resultObjectVO;

@@ -36,13 +36,6 @@ public interface CategoryService {
      */
     void deleteChildrenByParentId(Long id);
 
-    /**
-     * 填充类别树
-     * @return
-     */
-    List<CategoryVO> queryTree(String areaCode)  throws Exception;
-
-
 
 
     /**

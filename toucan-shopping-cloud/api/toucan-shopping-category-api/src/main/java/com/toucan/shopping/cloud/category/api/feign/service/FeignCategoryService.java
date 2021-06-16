@@ -23,8 +23,6 @@ public interface FeignCategoryService {
     @RequestMapping(value = "/query/ids",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
-    @RequestMapping(value = "/query/tree/area/code",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryCategoryTreeByAreaCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -68,6 +66,17 @@ public interface FeignCategoryService {
      */
     @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     ResultObjectVO queryTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 查询商城首页类别树
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/web/index/tree",method = RequestMethod.POST)
+    ResultObjectVO queryWebIndexTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
 

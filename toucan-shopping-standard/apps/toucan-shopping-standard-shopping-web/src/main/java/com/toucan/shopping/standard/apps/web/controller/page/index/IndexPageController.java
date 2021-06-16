@@ -171,17 +171,16 @@ public class IndexPageController {
                 request.setAttribute("categorys",JSONArray.parseArray(String.valueOf(CategoryTreeObject), CategoryVO.class));
             }else {
                 CategoryVO categoryVO = new CategoryVO();
-                categoryVO.setAreaCode("110000");
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                List<CategoryVO> categoryVOS = categoryService.queryTree(categoryVO.getAreaCode());
-                if (CollectionUtils.isNotEmpty(categoryVOS)) {
-                    stringRedisTemplate.opsForValue().set(categoryKey, JSONObject.toJSONString(categoryVOS));
-                    stringRedisTemplate.expire(categoryKey, CATEGORY_KEY_MILLISECOND, TimeUnit.SECONDS);
-
-                    request.setAttribute("categorys", categoryVOS);
-                }else{
-                    request.setAttribute("categorys", new ArrayList<CategoryVO>());
-                }
+//                List<CategoryVO> categoryVOS = categoryService.queryTree(categoryVO.getAreaCode());
+//                if (CollectionUtils.isNotEmpty(categoryVOS)) {
+//                    stringRedisTemplate.opsForValue().set(categoryKey, JSONObject.toJSONString(categoryVOS));
+//                    stringRedisTemplate.expire(categoryKey, CATEGORY_KEY_MILLISECOND, TimeUnit.SECONDS);
+//
+//                    request.setAttribute("categorys", categoryVOS);
+//                }else{
+//                    request.setAttribute("categorys", new ArrayList<CategoryVO>());
+//                }
             }
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);

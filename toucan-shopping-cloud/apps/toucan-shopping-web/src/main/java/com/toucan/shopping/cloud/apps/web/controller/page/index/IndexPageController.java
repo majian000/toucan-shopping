@@ -143,9 +143,8 @@ public class IndexPageController {
                 request.setAttribute("categorys",JSONArray.parseArray(String.valueOf(CategoryTreeObject), CategoryVO.class));
             }else {
                 CategoryVO categoryVO = new CategoryVO();
-                categoryVO.setAreaCode("110000");
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryCategoryTreeByAreaCode(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                resultObjectVO = feignCategoryService.queryWebIndexTree(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                 if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
                     stringRedisTemplate.opsForValue().set(CategoryRedisKey.getWebIndexKey(), JSONObject.toJSONString(resultObjectVO.getData()));
                     request.setAttribute("categorys", resultObjectVO.getData());
