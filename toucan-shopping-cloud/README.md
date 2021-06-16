@@ -23,32 +23,7 @@
 
 
 #### 安装教程
-    
-    建议java jdk 1.8.0_181及以上
-    按顺序依次启动下面项目
-
-    xshell linux
-##### 配置中心
-    源码:base/toucan-shopping-config-server
-    启动:nohup java -jar toucan-shopping-config-server-1.0-SNAPSHOT.jar &
-    查看:ps aux|grep toucan-shopping-config-server
-
-##### 服务中心
-    源码:base/toucan-shopping-eureka
-    启动:nohup java -jar toucan-shopping-eureka-1.0-SNAPSHOT.jar  &
-    查看:ps aux|grep toucan-shopping-eureka
-    
-##### 网关服务
-    源码:base/toucan-shopping-gateway
-    启动:nohup java -jar toucan-shopping-gateway-1.0-SNAPSHOT.jar &
-    查看:ps aux|grep toucan-shopping-gateway
-    
-    
-##### 用户服务
-    源码:services/toucan-shopping-user
-    启动:nohup java -jar toucan-shopping-user-1.0-SNAPSHOT.jar  &
-    查看:ps aux|grep toucan-shopping-user
-    
+    参考resources/上线相关/微服务版/生产环境.md
     
 
 ##### 依赖第三方

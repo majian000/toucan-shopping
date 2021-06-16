@@ -31,6 +31,15 @@
 
 
     <#include "/title.html"/>
+
+    <style>
+        .category_a{
+            color:#00F
+        }
+        a.category_a:hover{
+            color:#ff4e00
+        }
+    </style>
 </head>
 <body>
 <!--Begin Header Begin-->
@@ -58,7 +67,8 @@
                              <li>
                                 <div class="fj">
                                     <span class="n_img"><span></span><img src="${category.icon!}" /></span>
-                                    <span class="fl">${category.name!}</span>
+                                    <span class="fl"><a class="category_a" >${category.name!}</a></span>
+
                                 </div>
                                 <div class="zj">
                                     <#list category.children as cc>
@@ -66,7 +76,7 @@
                                             <div class="zj_l_c">
                                                 <h2>${cc.name!}</h2>
                                                 <#list cc.children as ccc>
-                                                    <a href="#">${ccc.name!}</a>|
+                                                    <a href="#" class="category_a" >${ccc.name!}</a>|
                                                  </#list>
                                             </div>
                                         </div>
