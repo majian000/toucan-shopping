@@ -486,6 +486,7 @@ public class CategoryController {
                         treeVO.setTitle(category.getName());
                         treeVO.setText(category.getName());
                         categoryTreeVOS.add(treeVO);
+
                         treeVO.setChildren(new ArrayList<CategoryVO>());
                         categoryService.setChildren(categoryList,treeVO);
                     }

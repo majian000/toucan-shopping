@@ -144,6 +144,36 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
+            public ResultObjectVO flushWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍候重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.flushWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍候重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍候重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.clearWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍候重试");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)

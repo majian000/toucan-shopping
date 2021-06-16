@@ -153,7 +153,53 @@ public class CategoryController extends UIController {
     }
 
 
+    /**
+     * 刷新redis缓存
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/flush/index/cache",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushIndexCache(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestVo =  RequestJsonVOGenerator.generator(appCode, new CategoryVO());
+            resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestVo), requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
+
+    /**
+     * 清空PC首页缓存
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/clear/index/cache",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO clearIndexCache(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            CategoryVO bannerVO = new CategoryVO();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, bannerVO);
+            resultObjectVO = feignCategoryService.clearWebIndexCache(requestJsonVO.sign(),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 修改

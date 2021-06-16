@@ -33,7 +33,7 @@ public interface FeignBannerService {
 
 
     /**
-     * 查询首页缓存
+     * 查询首页列表
      * @param signHeader
      * @param requestJsonVO
      * @return

@@ -30,7 +30,7 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
             //先删除已有缓存
             redisTemplate.delete(CategoryRedisKey.getWebIndexKey());
         }
-        //保存轮播图到redis
+        //保存到redis
         redisTemplate.opsForValue().set(CategoryRedisKey.getWebIndexKey(), JSONObject.toJSONString(categoryVOS));
     }
 
@@ -43,25 +43,7 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
         }else{
             categoryVOList=new ArrayList<CategoryVO>();
         }
-        CategoryVO[] categoryVOArray = new CategoryVO[categoryVOList.size()];
-        for(int i=0;i<categoryVOList.size();i++)
-        {
-            categoryVOArray[i] = categoryVOList.get(i);
-        }
-        //进行排序
-        for(int j=0;j<categoryVOArray.length;j++)
-        {
-            for(int p=j+1;p<categoryVOArray.length;p++)
-            {
-                //降序排列,值越大越在前面
-                if(categoryVOArray[j].getCategorySort()!=null&&categoryVOArray[p].getCategorySort()!=null&&categoryVOArray[j].getCategorySort().intValue()<=categoryVOArray[p].getCategorySort().intValue()){
-                    CategoryVO tmp = categoryVOArray[j];
-                    categoryVOArray[j] = categoryVOArray[p];
-                    categoryVOArray[p] = tmp;
-                }
-            }
-        }
-        return Arrays.asList(categoryVOArray);
+        return categoryVOList;
     }
 
     @Override

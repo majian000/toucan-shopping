@@ -148,6 +148,11 @@
             <artifactId>toucan-shopping-area-cache</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.category</groupId>
+            <artifactId>toucan-shopping-category-cache</artifactId>
+        </dependency>
+
     </dependencies>
 
 
