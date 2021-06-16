@@ -38,7 +38,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.category.entity.CategoryArea" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insert" parameterType="com.toucan.shopping.modules.category.entity.CategoryImg" useGeneratedKeys="true" keyProperty="id" >
         insert into t_category_img(category_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
         values(#{categoryId},#{areaCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>

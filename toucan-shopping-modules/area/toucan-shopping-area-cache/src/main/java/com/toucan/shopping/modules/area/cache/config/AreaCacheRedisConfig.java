@@ -69,7 +69,6 @@ public class AreaCacheRedisConfig {
      * @return
      */
     @Bean
-    @Qualifier("areaCacheRedisConnectionFactory")
     public RedisConnectionFactory areaCacheRedisConnectionFactory() {
         log.info(" 初始化地区模块 redis缓存功能.............");
         try {
