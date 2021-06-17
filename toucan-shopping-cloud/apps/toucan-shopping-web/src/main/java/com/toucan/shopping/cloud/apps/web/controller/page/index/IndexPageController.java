@@ -9,7 +9,7 @@ import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.vo.BannerVO;
-//import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
+import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.constant.CategoryRedisKey;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -57,9 +57,9 @@ public class IndexPageController {
 
     @Autowired
     private BannerRedisService bannerRedisService;
-//
-//    @Autowired
-//    private CategoryRedisService categoryRedisService;
+
+    @Autowired
+    private CategoryRedisService categoryRedisService;
 
 
 
@@ -137,29 +137,29 @@ public class IndexPageController {
      */
     public void queryCategorys(HttpServletRequest request)
     {
-//        try {
-//            ResultObjectVO resultObjectVO = new ResultObjectVO();
-//            Object CategoryTreeObject = categoryRedisService.queryWebIndexCache();
-//            if(CategoryTreeObject!=null)
-//            {
-//                request.setAttribute("categorys",JSONArray.parseArray(String.valueOf(CategoryTreeObject), CategoryVO.class));
-//            }else {
-//                CategoryVO categoryVO = new CategoryVO();
-//                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-//                resultObjectVO = feignCategoryService.queryWebIndexTree(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
-//                if (resultObjectVO.isSuccess()) {
-//                    //刷新首页缓存
-//                    categoryRedisService.flushWebIndexCaches(JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), CategoryVO.class));
-//                    request.setAttribute("categorys", resultObjectVO.getData());
-//                }else{
-//                    request.setAttribute("categorys", new ArrayList<CategoryVO>());
-//                }
-//            }
-//        } catch (Exception e) {
-//            logger.warn(e.getMessage(),e);
-//
-//            request.setAttribute("categorys", new ArrayList<CategoryVO>());
-//        }
+        try {
+            ResultObjectVO resultObjectVO = new ResultObjectVO();
+            List<CategoryVO>  categoryVOS = categoryRedisService.queryWebIndexCache();
+            if(!CollectionUtils.isEmpty(categoryVOS))
+            {
+                request.setAttribute("categorys",categoryVOS);
+            }else {
+                CategoryVO categoryVO = new CategoryVO();
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
+                resultObjectVO = feignCategoryService.queryWebIndexTree(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    //刷新首页缓存
+                    categoryRedisService.flushWebIndexCaches(JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), CategoryVO.class));
+                    request.setAttribute("categorys", resultObjectVO.getData());
+                }else{
+                    request.setAttribute("categorys", new ArrayList<CategoryVO>());
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("categorys", new ArrayList<CategoryVO>());
+        }
 
     }
 

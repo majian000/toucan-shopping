@@ -69,7 +69,6 @@ public class CategoryCacheRedisConfig {
      * 连接配置
      * @return
      */
-    @Bean
     public RedisConnectionFactory categoryCacheRedisConnectionFactory() {
         log.info(" 初始化类别模块 redis缓存功能.............");
         try {
@@ -101,6 +100,7 @@ public class CategoryCacheRedisConfig {
                 }
                 //根据配置和客户端配置创建连接
                 LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisClusterConfiguration, lettuceClientConfiguration);
+                lettuceConnectionFactory.afterPropertiesSet();
                 return lettuceConnectionFactory;
             } else {
                 //单机模式
@@ -112,6 +112,7 @@ public class CategoryCacheRedisConfig {
                 }
                 //根据配置和客户端配置创建连接工厂
                 LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration, lettuceClientConfiguration);
+                lettuceConnectionFactory.afterPropertiesSet();
                 return lettuceConnectionFactory;
 
             }
