@@ -146,11 +146,9 @@ public class IndexPageController {
             }else {
                 CategoryVO categoryVO = new CategoryVO();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryWebIndexTree(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
-                    //刷新首页缓存
-                    categoryRedisService.flushWebIndexCaches(JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), CategoryVO.class));
-                    request.setAttribute("categorys", resultObjectVO.getData());
+                    request.setAttribute("categorys", categoryRedisService.queryWebIndexCache());
                 }else{
                     request.setAttribute("categorys", new ArrayList<CategoryVO>());
                 }

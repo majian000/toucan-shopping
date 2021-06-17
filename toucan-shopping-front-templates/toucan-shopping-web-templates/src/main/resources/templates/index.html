@@ -70,7 +70,7 @@
                              <li>
                                 <div class="fj">
                                     <span class="n_img"><span></span><img src="${category.icon!}" /></span>
-                                    <span class="fl"><a class="category_a" >${category.name!}</a></span>
+                                    <span class="fl">${category.rootLinks!}</span>
 
                                 </div>
                                 <div class="zj">
@@ -79,7 +79,7 @@
                                             <div class="zj_l_c">
                                                 <h2>${cc.name!}</h2>
                                                 <#list cc.children as ccc>
-                                                    <a href="#" class="category_a" >${ccc.name!}</a>|
+                                                    <a href="#"  >${ccc.name!}</a>|
                                                  </#list>
                                             </div>
                                         </div>

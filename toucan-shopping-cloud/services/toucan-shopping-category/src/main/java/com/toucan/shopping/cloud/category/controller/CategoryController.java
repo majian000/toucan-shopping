@@ -357,16 +357,16 @@ public class CategoryController {
                         if(StringUtils.isNotEmpty(treeVO.getName()))
                         {
                             StringBuilder linkhtml = new StringBuilder();
-                            if(treeVO.getName().indexOf("#")!=-1&&treeVO.getHref().indexOf("#")!=-1)
+                            if(treeVO.getName().indexOf("&toucan_spliter&")!=-1&&treeVO.getHref().indexOf("&toucan_spliter&")!=-1)
                             {
-                                String[] names = treeVO.getName().split("#");
-                                String[] hrefs = treeVO.getHref().split("#");
+                                String[] names = treeVO.getName().split("&toucan_spliter&");
+                                String[] hrefs = treeVO.getHref().split("&toucan_spliter&");
                                 if(names.length==hrefs.length) {
                                     for (int i = 0; i < names.length; i++) {
                                         linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
-                                        if(i+1<=names.length)
+                                        if(i+1<names.length)
                                         {
                                             linkhtml.append("<a class=\"category_a\" >/</a>");
                                         }
@@ -376,7 +376,7 @@ public class CategoryController {
                                         linkhtml.append("<a class=\"category_a\" href=\"#\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
-                                        if(i+1<=names.length)
+                                        if(i+1<names.length)
                                         {
                                             linkhtml.append("<a class=\"category_a\" >/</a>");
                                         }
