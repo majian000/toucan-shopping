@@ -94,7 +94,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.category.entity.Category">
-        update t_category set name=#{name},remark=#{remark},type=#{type},icon=#{icon},parent_id=#{parentId},
+        update t_category set name=#{name},href=#{href},remark=#{remark},type=#{type},icon=#{icon},parent_id=#{parentId},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>
