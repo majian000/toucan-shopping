@@ -1,18 +1,16 @@
 package com.toucan.shopping.modules.column.vo;
 
-import com.toucan.shopping.modules.column.entity.Column;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
+import com.toucan.shopping.modules.column.entity.ColumnBanner;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
- * 栏目地区VO
+ * 栏目轮播图VO
  *
  * @author majian
  */
 @Data
-public class ColumnAreaVO extends ColumnArea {
+public class ColumnBannerVO extends ColumnBanner {
 
     private Long[] idArray; //ID数组
 
