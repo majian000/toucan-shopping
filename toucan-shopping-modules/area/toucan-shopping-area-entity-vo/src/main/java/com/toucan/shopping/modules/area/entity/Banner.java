@@ -24,7 +24,7 @@ public class Banner  {
     private String title; //标题
     private String imgPath; //图片路径
     private String clickPath; //点击路径
-    private Integer position; //位置 -1:其他 0:门户首页顶部
+    private Integer position; //位置 0:门户首页顶部 1:栏目轮播图
     private Integer bannerSort; //排序 从大到小
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
