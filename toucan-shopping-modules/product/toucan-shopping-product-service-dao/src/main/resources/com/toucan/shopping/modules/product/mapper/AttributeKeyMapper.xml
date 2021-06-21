@@ -32,27 +32,23 @@
 
 
     <select id="queryListPage" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">
-        select tu.* from (
          select t.* from t_attribute_key t
-        )tu
         <where>
-            1=1 and tu.delete_status = 0
+            1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
         </where>
-        order by tu.id desc
+        order by t.id desc
         limit #{start},#{limit}
     </select>
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.AttributeKeyPageInfo">
-        select count(*) from (
-          select t.* from t_attribute_key t
-        )tu
-        <where>
-            1=1 and tu.delete_status = 0
+          select count(*) from t_attribute_key t
+            <where>
+                1=1 and t.delete_status = 0
 
-            <include refid="queryListPageWhere" />
-        </where>
+                <include refid="queryListPageWhere" />
+            </where>
 
     </select>
 

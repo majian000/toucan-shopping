@@ -357,9 +357,9 @@ public class CategoryController {
                         if(StringUtils.isNotEmpty(treeVO.getName()))
                         {
                             StringBuilder linkhtml = new StringBuilder();
-                            if(treeVO.getName().indexOf("&toucan_spliter&")!=-1&&treeVO.getHref().indexOf("&toucan_spliter&")!=-1)
+                            if(treeVO.getName().indexOf("/")!=-1&&treeVO.getHref().indexOf("&toucan_spliter&")!=-1)
                             {
-                                String[] names = treeVO.getName().split("&toucan_spliter&");
+                                String[] names = treeVO.getName().split("/");
                                 String[] hrefs = treeVO.getHref().split("&toucan_spliter&");
                                 if(names.length==hrefs.length) {
                                     for (int i = 0; i < names.length; i++) {
@@ -481,7 +481,7 @@ public class CategoryController {
 
 
     /**
-     * 查询地区树
+     * 查询树
      * @param requestJsonVO
      * @return
      */

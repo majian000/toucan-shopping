@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
@@ -18,6 +19,7 @@ import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.area.vo.BannerAreaVO;
 import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -51,7 +53,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 商品属性键管理
  */
 @Controller
-@RequestMapping("/attributeKey")
+@RequestMapping("/product/attributeKey")
 public class AttributeKeyController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -69,13 +71,18 @@ public class AttributeKeyController extends UIController {
     private FeignAttributeKeyService feignAttributeKeyService;
 
 
+    @Autowired
+    private FeignCategoryService feignCategoryService;
+
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/attributeKey/listPage",feignFunctionService);
-        return "pages/attributeKey/list.html";
+        super.initButtons(request,toucan,"/product/attributeKey/listPage",feignFunctionService);
+        return "pages/product/attributeKey/list.html";
     }
 
 
@@ -140,6 +147,41 @@ public class AttributeKeyController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request)
+    {
+
+        return "pages/product/attributeKey/add.html";
+    }
+
+
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryTree(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            CategoryVO query = new CategoryVO();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            return feignCategoryService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 

@@ -23,10 +23,10 @@
 
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">属性键</label>
+        <label class="layui-form-label required">属性名</label>
         <div class="layui-input-block">
-            <input type="text" name="attributeName" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入标题" value="" class="layui-input">
-            <tip>填写属性键。</tip>
+            <input type="text" name="attributeName" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入属性名" value="" class="layui-input">
+            <tip>填写属性名。</tip>
         </div>
     </div>
     <div class="layui-form-item">
@@ -71,7 +71,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/banner/save}]]",
+                url:"[[@{/product/attributeKey/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -107,7 +107,7 @@
                 content: "<div id='categoryTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]category/query/tree",
+                        url:"[[@{/}]]product/attributeKey/query/category/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,

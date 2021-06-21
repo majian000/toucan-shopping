@@ -25,9 +25,9 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">标题</label>
+                            <label class="layui-form-label">属性名</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="attributeName" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -45,9 +45,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="bannerTable" lay-filter="bannerTableFilter"></table>
+        <table class="layui-hide" id="attributeKeyTable" lay-filter="attributeKeyTableFilter"></table>
 
-        <script type="text/html" id="bannerTableBar">
+        <script type="text/html" id="attributeKeyTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -96,8 +96,8 @@
         }
 
         table.render({
-            elem: '#bannerTable',
-            url: "[[@{/}]]banner/list",
+            elem: '#attributeKeyTable',
+            url: "[[@{/}]]product/attributeKey/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -113,41 +113,14 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'title',  title: '标题'},
-                    {field: 'httpImgPath', width: 80, title: '预览',
-                        templet: function (row) {
-                            return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
-                        }},
-                    {field: 'startShowDate',  title: '开始展示时间'},
-                    {field: 'endShowDate',  title: '结束展示时间'},
-                    {field: 'imgPath',  title: '图片路径'},
-                    {field: 'clickPath',  title: '点击路径'},
-                    {field: 'showStatus', title: '显示状态',
-                        templet: function (row) {
-                            if(row.showStatus == "0"){
-                                return "隐藏"
-                            }else
-                            if(row.showStatus == "1"){
-                                return "显示"
-                            }
-                            return row.showStatus;
-                        }},
-                    {field: 'position', title: '类型',
-                        templet: function (row) {
-                            if(row.position == "0"){
-                                return "首页顶部"
-                            }else
-                            if(row.position == "1"){
-                                return "栏目左侧"
-                            }
-                            return row.position;
-                        }},
-                    {field: 'bannerSort',  title: '排序'},
+                    {field: 'attributeName',  title: '属性名'},
+                    {field: 'categoryId',  title: '所属类别'},
+                    {field: 'attributeSort',  title: '排序'},
                     {field: 'createAdminUsername', title: '创建人'},
                     {field: 'createDate',  title: '创建时间'},
                     {field: 'updateAdminUsername',  title: '修改人'},
                     {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#bannerTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -159,7 +132,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('bannerTable', {
+            table.reload('attributeKeyTable', {
                 page: {
                     curr: 1
                 }
@@ -175,31 +148,31 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(bannerTableFilter)', function (obj) {
+        table.on('toolbar(attributeKeyTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加轮播图',
+                    title: '添加属性名',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/banner/addPage}]]",
+                    content: "[[@{/product/attributeKey/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
+                var checkStatus = table.checkStatus('attributeKeyTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除轮播图?', function (index) {
+                layer.confirm('确定删除属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]banner/delete/ids",
+                        url:"[[@{/}]]product/attributeKey/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -207,66 +180,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
-                    , data = checkStatus.data;
-                if(data==null||data.length<=0)
-                {
-                    layer.msg("请选择要操作的记录");
-                    return;
-                }
-                layer.confirm('确定刷新PC首页缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]banner/flush/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('bannerTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
-                    , data = checkStatus.data;
-                layer.confirm('确定清空PC首页缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]banner/clear/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:null,
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('attributeKeyTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -357,38 +271,38 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(bannerTableFilter)', function (obj) {
+        table.on('checkbox(attributeKeyTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(bannerTableFilter)', function (obj) {
+        table.on('tool(attributeKeyTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
                 var index = layer.open({
-                    title: '编辑轮播图',
+                    title: '编辑属性名',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]banner/editPage/'+data.id
+                    content: '[[@{/}]]product/attributeKey/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该轮播图?', function (index) {
+                layer.confirm('确定删除该属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]banner/delete/"+data.id,
+                        url:"[[@{/}]]product/attributeKey/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('attributeKeyTable', {
                                 page: {
                                     curr: 1
                                 }

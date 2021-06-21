@@ -292,6 +292,8 @@ public class BannerController extends UIController {
         return resultObjectVO;
     }
 
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping("/upload/img")
     @ResponseBody
     public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file)
