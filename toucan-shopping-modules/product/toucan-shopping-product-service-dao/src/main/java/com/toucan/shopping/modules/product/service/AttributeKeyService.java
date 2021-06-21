@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.product.service;
 
 
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 
@@ -17,5 +18,12 @@ public interface AttributeKeyService {
     PageInfo<AttributeKeyVO> queryListPage(AttributeKeyPageInfo queryPageInfo);
 
 
+
+    /**
+     * 保存实体
+     * @param attributeKey
+     * @return
+     */
+    int save(AttributeKey attributeKey);
 
 }

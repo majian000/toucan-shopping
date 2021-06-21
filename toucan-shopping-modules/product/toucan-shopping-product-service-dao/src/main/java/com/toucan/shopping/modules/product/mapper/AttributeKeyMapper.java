@@ -12,6 +12,9 @@ import java.util.List;
 @Mapper
 public interface AttributeKeyMapper {
 
+
+    int insert(AttributeKey attributeKey);
+
     /**
      * 查询列表页
      * @param pageInfo

@@ -4,6 +4,7 @@
 
     <resultMap id="attributeKeyMap" type="com.toucan.shopping.modules.product.entity.AttributeKey" >
         <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="attribute_name" jdbcType="VARCHAR" property="attributeName" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -21,6 +22,13 @@
     <sql id="queryListPageWhere">
 
     </sql>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey"  keyProperty="id" >
+        insert into t_attribute_key(id,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+    </insert>
 
 
     <select id="queryListPage" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">

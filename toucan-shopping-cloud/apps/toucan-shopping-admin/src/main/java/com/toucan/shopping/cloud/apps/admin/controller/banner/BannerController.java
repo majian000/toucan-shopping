@@ -77,9 +77,6 @@ public class BannerController extends UIController {
     private FeignBannerAreaService feignBannerAreaService;
 
     @Autowired
-    private IdGenerator idGenerator;
-
-    @Autowired
     private FeignBannerService feignBannerService;
 
     @Autowired
@@ -344,7 +341,6 @@ public class BannerController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setId(idGenerator.id());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignBannerService.save(SignUtil.sign(requestJsonVO),requestJsonVO);

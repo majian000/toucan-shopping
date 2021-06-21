@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
@@ -76,6 +77,70 @@ public class AttributeKeyController {
 
         return resultObjectVO;
     }
+
+
+
+
+
+
+    /**
+     * 保存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.warn("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.warn("没有找到对象编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            AttributeKeyVO vo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyVO.class);
+
+            if(vo.getCategoryId()==null)
+            {
+                logger.warn("关联类别为空 param:"+ requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("关联类别为空!");
+                return resultObjectVO;
+            }
+
+            AttributeKey entity = new AttributeKey();
+            BeanUtils.copyProperties(entity,vo);
+            entity.setId(idGenerator.id());
+            entity.setCreateDate(new Date());
+            int row = attributeKeyService.save(entity);
+            if (row <= 0) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请重试!");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("保存失败,请重试!");
+            logger.warn(e.getMessage(),e);
+
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 
