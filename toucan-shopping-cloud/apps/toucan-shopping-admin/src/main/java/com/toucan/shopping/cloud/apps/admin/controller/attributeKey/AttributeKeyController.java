@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.controller.productKey;
+package com.toucan.shopping.cloud.apps.admin.controller.attributeKey;
 
 
 import com.alibaba.fastjson.JSONArray;
@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.entity.BannerArea;
@@ -48,46 +49,31 @@ import java.util.concurrent.atomic.AtomicLong;
  * 商品属性键管理
  */
 @Controller
-@RequestMapping("/product/key")
-public class ProductKeyController extends UIController {
+@RequestMapping("/attributeKey")
+public class AttributeKeyController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${toucan.app-code}")
     private String appCode;
 
-    @Value("${fastdfs.http.url}")
-    private String fastDfsHttpUrl;
-
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FastDFSClient fastDFSClient;
-
 
     @Autowired
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignBannerAreaService feignBannerAreaService;
+    private FeignAttributeKeyService feignAttributeKeyService;
 
-    @Autowired
-    private IdGenerator idGenerator;
-
-    @Autowired
-    private FeignBannerService feignBannerService;
-
-    @Autowired
-    private FeignAreaService feignAreaService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/productKey/listPage",feignFunctionService);
-        return "pages/productKey/list.html";
+        super.initButtons(request,toucan,"/attributeKey/listPage",feignFunctionService);
+        return "pages/attributeKey/list.html";
     }
 
 
@@ -105,7 +91,7 @@ public class ProductKeyController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignBannerService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignAttributeKeyService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -113,12 +99,6 @@ public class ProductKeyController extends UIController {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<BannerVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BannerVO.class);
-                    for(BannerVO bannerVO:list)
-                    {
-                        if(bannerVO.getImgPath()!=null) {
-                            bannerVO.setHttpImgPath(fastDfsHttpUrl + bannerVO.getImgPath());
-                        }
-                    }
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List)list);
                     }

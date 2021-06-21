@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.AttributeKeyMapper">
+
+    <resultMap id="attributeKeyMap" type="com.toucan.shopping.modules.product.entity.AttributeKey" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+
+    <resultMap id="attributeKeyVOMap" type="com.toucan.shopping.modules.area.vo.BannerVO" extends="attributeKeyMap" >
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+    </sql>
+
+
+    <select id="queryListPage" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">
+        select tu.* from (
+         select t.* from t_attribute_key t
+        )tu
+        <where>
+            1=1 and tu.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by tu.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
+        select count(*) from (
+          select t.* from t_attribute_key t
+        )tu
+        <where>
+            1=1 and tu.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+</mapper>
