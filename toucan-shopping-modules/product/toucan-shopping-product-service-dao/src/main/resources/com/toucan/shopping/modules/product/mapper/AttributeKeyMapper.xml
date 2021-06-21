@@ -16,7 +16,7 @@
     </resultMap>
 
 
-    <resultMap id="attributeKeyVOMap" type="com.toucan.shopping.modules.area.vo.BannerVO" extends="attributeKeyMap" >
+    <resultMap id="attributeKeyVOMap" type="com.toucan.shopping.modules.product.vo.AttributeKeyVO" extends="attributeKeyMap" >
     </resultMap>
 
     <sql id="queryListPageWhere">
@@ -44,7 +44,7 @@
     </select>
 
 
-    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.AttributeKeyPageInfo">
         select count(*) from (
           select t.* from t_attribute_key t
         )tu
