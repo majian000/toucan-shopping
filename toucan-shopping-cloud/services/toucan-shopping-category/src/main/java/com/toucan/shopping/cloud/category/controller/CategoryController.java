@@ -450,7 +450,7 @@ public class CategoryController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到功能项ID");
+                resultObjectVO.setMsg("请求失败,没有找到ID");
                 return resultObjectVO;
             }
 
@@ -461,7 +461,7 @@ public class CategoryController {
             if(CollectionUtils.isEmpty(categorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,地区不存在!");
+                resultObjectVO.setMsg("请求失败,对象不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(categorys);
@@ -477,7 +477,52 @@ public class CategoryController {
     }
 
 
+    /**
+     * 根据ID数组查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/idArray",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findByIdArray(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
 
+        try {
+            CategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),CategoryVO.class);
+            if(entity.getIdArray()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID数组");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该功能项
+            CategoryVO query=new CategoryVO();
+            query.setIdArray(entity.getIdArray());
+            List<Category> categorys = categoryService.queryList(query);
+            if(CollectionUtils.isEmpty(categorys))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,不存在!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(categorys);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

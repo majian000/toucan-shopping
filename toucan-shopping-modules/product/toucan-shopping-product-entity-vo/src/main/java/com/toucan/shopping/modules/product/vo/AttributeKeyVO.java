@@ -11,4 +11,7 @@ import lombok.Data;
 @Data
 public class AttributeKeyVO extends AttributeKey {
 
+
+    private String categoryName; //类别名称
+
 }

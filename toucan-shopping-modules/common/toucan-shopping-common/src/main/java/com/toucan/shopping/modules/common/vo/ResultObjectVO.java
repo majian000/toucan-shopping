@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.common.vo;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
@@ -33,6 +34,13 @@ public class ResultObjectVO<T> extends ResultVO {
     {
         if(data!=null) {
             return JSONObject.parseObject(JSONObject.toJSONString(data),clazz);
+        }
+        return null;
+    }
+    public Object formatDataArray(Class clazz)
+    {
+        if(data!=null) {
+            return JSONArray.parseArray(JSONObject.toJSONString(data),clazz);
         }
         return null;
     }

@@ -24,6 +24,8 @@ public interface FeignCategoryService {
     ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+    @RequestMapping(value = "/find/idArray",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    ResultObjectVO findByIdArray(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询

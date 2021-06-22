@@ -32,13 +32,13 @@ import com.toucan.shopping.modules.fastdfs.util.FastDFSClient;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -108,6 +108,38 @@ public class AttributeKeyController extends UIController {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<AttributeKeyVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),AttributeKeyVO.class);
+                    if(CollectionUtils.isNotEmpty(list))
+                    {
+                        Long[] categoryIds = new Long[list.size()];
+                        for(int i=0;i<list.size();i++)
+                        {
+                            AttributeKeyVO attributeKeyVO = list.get(i);
+                            categoryIds[i] = attributeKeyVO.getCategoryId();
+                        }
+                        //查询类别名称
+                        CategoryVO queryCategoryVO = new CategoryVO();
+                        queryCategoryVO.setIdArray(categoryIds);
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
+                        resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataArray(CategoryVO.class);
+                            if(CollectionUtils.isNotEmpty(categoryVOS))
+                            {
+                                for(AttributeKeyVO attributeKeyVO:list)
+                                {
+                                    for(CategoryVO categoryVO:categoryVOS)
+                                    {
+                                        if(attributeKeyVO.getCategoryId().longValue()==categoryVO.getId().longValue())
+                                        {
+                                            attributeKeyVO.setCategoryName(categoryVO.getName());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List)list);
                     }

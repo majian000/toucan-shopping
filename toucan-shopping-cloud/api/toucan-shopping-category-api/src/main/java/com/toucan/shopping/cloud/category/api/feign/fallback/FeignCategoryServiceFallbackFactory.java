@@ -67,6 +67,21 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO findByIdArray(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍候重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.findByIdArray faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍候重试");
+                return resultObjectVO;
+            }
+
 
             @Override
             public ResultObjectVO findById(String signHeader, RequestJsonVO requestVo) {
