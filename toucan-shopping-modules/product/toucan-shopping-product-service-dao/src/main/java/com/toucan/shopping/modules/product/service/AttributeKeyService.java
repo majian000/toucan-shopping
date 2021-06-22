@@ -26,4 +26,12 @@ public interface AttributeKeyService {
      */
     int save(AttributeKey attributeKey);
 
+
+    /**
+     * 修改实体
+     * @param attributeKey
+     * @return
+     */
+    int update(AttributeKey attributeKey);
+
 }

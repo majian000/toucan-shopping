@@ -29,4 +29,12 @@ public interface AttributeKeyMapper {
      */
     Long queryListPageCount(AttributeKeyPageInfo pageInfo);
 
+
+    /**
+     * 修改
+     * @param attributeKey
+     * @return
+     */
+    int update(AttributeKey attributeKey);
+
 }

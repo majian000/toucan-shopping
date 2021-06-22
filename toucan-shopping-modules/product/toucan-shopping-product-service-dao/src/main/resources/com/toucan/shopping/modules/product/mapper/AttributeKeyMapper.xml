@@ -42,6 +42,14 @@
     </select>
 
 
+
+    <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey">
+        update t_attribute_key set attribute_name=#{attributeName},category_id=#{categoryId},attribute_sort=#{attributeSort},remark=#{remark},
+          update_admin_id=#{updateAdminId},update_date=#{updateDate}
+          where id=#{id}
+    </update>
+
+
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.AttributeKeyPageInfo">
           select count(*) from t_attribute_key t
             <where>

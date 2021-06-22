@@ -27,5 +27,15 @@ public interface FeignAttributeKeyService {
     ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 修改
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update",method = RequestMethod.POST)
+    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+
+
 
 }

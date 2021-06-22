@@ -31,5 +31,10 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
         return attributeKeyMapper.insert(attributeKey);
     }
 
+    @Override
+    public int update(AttributeKey attributeKey) {
+        return attributeKeyMapper.update(attributeKey);
+    }
+
 
 }
