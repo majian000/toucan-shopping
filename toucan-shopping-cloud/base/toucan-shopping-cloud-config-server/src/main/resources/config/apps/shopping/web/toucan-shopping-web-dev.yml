@@ -95,7 +95,7 @@ toucan:
   modules:
     areaCache:
       redis:
-        select: single # 可选值 single:单实例 cluster:集群
+        select: cluster # 可选值 single:单实例 cluster:集群
         timeout: 10000
         password: #多个集群要求每个密码统一
         #单实例
@@ -107,12 +107,12 @@ toucan:
         maxRedirects: 3 #最大连接转移数
         #jedis pool配置
         maxActive: 50 #最大活跃数
-        maxWait: 15 #最大等待数
+        maxWaitMillis: 15 #最大等待数
         maxIdle: 50 #最大核心线程数
         minIdle: 0 #最小核心线程数
     categoryCache:
       redis:
-        select: single # 可选值 single:单实例 cluster:集群
+        select: cluster # 可选值 single:单实例 cluster:集群
         timeout: 10000
         password: #多个集群要求每个密码统一
         #单实例
@@ -124,6 +124,6 @@ toucan:
         maxRedirects: 3 #最大连接转移数
         #jedis pool配置
         maxActive: 50 #最大活跃数
-        maxWait: 15 #最大等待数
+        maxWaitMillis: 15 #最大等待数
         maxIdle: 50 #最大核心线程数
         minIdle: 0 #最小核心线程数

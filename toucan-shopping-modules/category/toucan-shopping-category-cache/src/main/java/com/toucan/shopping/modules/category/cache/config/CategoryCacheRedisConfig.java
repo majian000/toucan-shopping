@@ -79,7 +79,7 @@ public class CategoryCacheRedisConfig {
             GenericObjectPoolConfig genericObjectPoolConfig =
                     new GenericObjectPoolConfig();
             genericObjectPoolConfig.setMaxTotal(toucan.getModules().getCategoryCache().getRedis().getMaxActive());
-            genericObjectPoolConfig.setMaxWaitMillis(toucan.getModules().getCategoryCache().getRedis().getMaxWait());
+            genericObjectPoolConfig.setMaxWaitMillis(toucan.getModules().getCategoryCache().getRedis().getMaxWaitMillis());
             genericObjectPoolConfig.setMaxIdle(toucan.getModules().getCategoryCache().getRedis().getMaxIdle());
             genericObjectPoolConfig.setMinIdle(toucan.getModules().getCategoryCache().getRedis().getMinIdle());
 

@@ -60,8 +60,8 @@ public class Redis {
     private int maxActive;
 
     //等待数
-    @Value("${toucan.modules.areaCache.redis.maxWait:-1}")
-    private int maxWait;
+    @Value("${toucan.modules.areaCache.redis.maxWaitMillis:-1}")
+    private int maxWaitMillis;
 
     //最大核心线程数
     @Value("${toucan.modules.areaCache.redis.maxIdle:8}")

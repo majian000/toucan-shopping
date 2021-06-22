@@ -50,6 +50,6 @@ toucan:
         maxRedirects: 3 #最大连接转移数
         #jedis pool配置
         maxActive: 50 #最大活跃数
-        maxWait: 15 #最大等待数
+        maxWaitMillis: 15 #最大等待数
         maxIdle: 50 #最大核心线程数
         minIdle: 0 #最小核心线程数

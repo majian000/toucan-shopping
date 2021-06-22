@@ -78,7 +78,7 @@ public class AreaCacheRedisConfig {
             GenericObjectPoolConfig genericObjectPoolConfig =
                     new GenericObjectPoolConfig();
             genericObjectPoolConfig.setMaxTotal(toucan.getModules().getAreaCache().getRedis().getMaxActive());
-            genericObjectPoolConfig.setMaxWaitMillis(toucan.getModules().getAreaCache().getRedis().getMaxWait());
+            genericObjectPoolConfig.setMaxWaitMillis(toucan.getModules().getAreaCache().getRedis().getMaxWaitMillis());
             genericObjectPoolConfig.setMaxIdle(toucan.getModules().getAreaCache().getRedis().getMaxIdle());
             genericObjectPoolConfig.setMinIdle(toucan.getModules().getAreaCache().getRedis().getMinIdle());
 
