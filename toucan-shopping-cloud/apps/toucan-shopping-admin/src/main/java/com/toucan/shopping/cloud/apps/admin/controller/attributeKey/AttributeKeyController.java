@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.attributeKey;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
@@ -10,6 +11,7 @@ import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
+import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.entity.BannerArea;
@@ -70,9 +72,11 @@ public class AttributeKeyController extends UIController {
     @Autowired
     private FeignAttributeKeyService feignAttributeKeyService;
 
-
     @Autowired
     private FeignCategoryService feignCategoryService;
+
+    @Autowired
+    private FeignAdminService feignAdminService;
 
 
 
@@ -111,10 +115,18 @@ public class AttributeKeyController extends UIController {
                     if(CollectionUtils.isNotEmpty(list))
                     {
                         Long[] categoryIds = new Long[list.size()];
+                        List<String> adminIdList = new ArrayList<String>();
                         for(int i=0;i<list.size();i++)
                         {
                             AttributeKeyVO attributeKeyVO = list.get(i);
                             categoryIds[i] = attributeKeyVO.getCategoryId();
+                            if(attributeKeyVO.getCreateAdminId()!=null) {
+                                adminIdList.add(attributeKeyVO.getCreateAdminId());
+                            }
+                            if(attributeKeyVO.getUpdateAdminId()!=null)
+                            {
+                                adminIdList.add(attributeKeyVO.getUpdateAdminId());
+                            }
                         }
                         //查询类别名称
                         CategoryVO queryCategoryVO = new CategoryVO();
@@ -139,6 +151,36 @@ public class AttributeKeyController extends UIController {
                                 }
                             }
                         }
+
+                        //查询创建人和修改人
+                        String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+                        adminIdList.toArray(createOrUpdateAdminIds);
+                        AdminVO queryAdminVO = new AdminVO();
+                        queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+                        resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataArray(AdminVO.class);
+                            if(CollectionUtils.isNotEmpty(adminVOS))
+                            {
+                                for(AttributeKeyVO attributeKeyVO:list)
+                                {
+                                    for(AdminVO adminVO:adminVOS)
+                                    {
+                                        if(attributeKeyVO.getCreateAdminId()!=null&&attributeKeyVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                                        {
+                                            attributeKeyVO.setCreateAdminName(adminVO.getUsername());
+                                        }
+                                        if(attributeKeyVO.getUpdateAdminId()!=null&&attributeKeyVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                                        {
+                                            attributeKeyVO.setUpdateAdminName(adminVO.getUsername());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List)list);
