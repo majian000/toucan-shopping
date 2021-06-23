@@ -34,4 +34,8 @@ public interface AttributeKeyService {
      */
     int update(AttributeKey attributeKey);
 
+
+
+    List<AttributeKeyVO> queryList(AttributeKeyVO query);
+
 }

@@ -21,6 +21,8 @@ import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.area.vo.BannerAreaVO;
 import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
+import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -32,6 +34,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.fastdfs.util.FastDFSClient;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -243,7 +246,7 @@ public class AttributeKeyController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody BannerVO entity)
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody AttributeKeyVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -262,6 +265,58 @@ public class AttributeKeyController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
+            attributeKeyVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, attributeKeyVO);
+            ResultObjectVO resultObjectVO = feignAttributeKeyService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<AttributeKeyVO> attributeKeyVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AttributeKeyVO.class);
+                    if(!CollectionUtils.isEmpty(attributeKeyVOS))
+                    {
+                        attributeKeyVO = attributeKeyVOS.get(0);
+
+                        //查询类别名称
+                        CategoryVO queryCategoryVO = new CategoryVO();
+                        queryCategoryVO.setId(attributeKeyVO.getCategoryId());
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
+                        resultObjectVO = feignCategoryService.findById(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataArray(CategoryVO.class);
+                            if(CollectionUtils.isNotEmpty(categoryVOS))
+                            {
+                                for(CategoryVO categoryVO:categoryVOS)
+                                {
+                                    if(attributeKeyVO.getCategoryId().longValue()==categoryVO.getId().longValue())
+                                    {
+                                        attributeKeyVO.setCategoryName(categoryVO.getName());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        request.setAttribute("model",attributeKeyVO);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/product/attributeKey/edit.html";
+    }
+
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO queryTree(HttpServletRequest request)
@@ -270,7 +325,8 @@ public class AttributeKeyController extends UIController {
         try {
             CategoryVO query = new CategoryVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignCategoryService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignCategoryService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");

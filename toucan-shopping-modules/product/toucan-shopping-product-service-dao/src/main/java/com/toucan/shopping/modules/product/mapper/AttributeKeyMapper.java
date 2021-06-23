@@ -12,6 +12,8 @@ import java.util.List;
 @Mapper
 public interface AttributeKeyMapper {
 
+    List<AttributeKeyVO> queryList(AttributeKeyVO entity);
+
 
     int insert(AttributeKey attributeKey);
 

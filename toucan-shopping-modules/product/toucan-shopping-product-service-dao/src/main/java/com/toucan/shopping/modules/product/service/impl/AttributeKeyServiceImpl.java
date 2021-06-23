@@ -9,6 +9,8 @@ import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AttributeKeyServiceImpl implements AttributeKeyService {
 
@@ -34,6 +36,11 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
     @Override
     public int update(AttributeKey attributeKey) {
         return attributeKeyMapper.update(attributeKey);
+    }
+
+    @Override
+    public List<AttributeKeyVO> queryList(AttributeKeyVO query) {
+        return attributeKeyMapper.queryList(query);
     }
 
 

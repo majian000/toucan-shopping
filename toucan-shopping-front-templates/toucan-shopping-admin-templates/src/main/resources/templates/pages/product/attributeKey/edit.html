@@ -23,7 +23,6 @@
 
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" id="id" th:value="${model.id}">
-    <input type="hidden"  id="selectAreaCodes" th:value="${model.areaCodes}">
     <div class="layui-form-item">
         <label class="layui-form-label required">属性名</label>
         <div class="layui-input-block">
@@ -35,7 +34,7 @@
         <label class="layui-form-label required">所属分类</label>
         <div class="layui-input-block">
             <input type="hidden" name="categoryId" id="categoryId" th:value="${model.categoryId}">
-            <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择所属分类" value="" class="layui-input" >
+            <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择所属分类" th:value="${model.categoryName}" class="layui-input" >
         </div>
     </div>
     <div class="layui-form-item">
@@ -73,7 +72,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/product/attributeKey/save}]]",
+                url:"[[@{/product/attributeKey/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -121,6 +120,11 @@
                                     elem: '#categoryTree'  //绑定元素
                                     ,data: data.data,
                                     click: function(obj){
+                                        if(obj.data.id==-1)
+                                        {
+                                            layer.msg("不能选择根节点");
+                                            return;
+                                        }
                                         $("#selectCategoryId").val(obj.data.title);
                                         $("#categoryId").val(obj.data.id);
                                         layer.close(index);
