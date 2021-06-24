@@ -111,15 +111,15 @@
 
 
     <springProfile name="dev">
-        <logger name="com.toucan.shopping" level="debug"/>
-        <root level="debug">
+        <logger name="com.toucan.shopping" level="info"/>
+        <root level="info">
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>
 
     <springProfile name="test">
-        <logger name="com.toucan.shopping" level="debug"/>
-        <root level="debug">
+        <logger name="com.toucan.shopping" level="info"/>
+        <root level="info">
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>
