@@ -78,6 +78,9 @@ public class BannerController extends UIController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private FeignAdminService feignAdminService;
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String listPage(HttpServletRequest request)
@@ -110,6 +113,48 @@ public class BannerController extends UIController {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<BannerVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BannerVO.class);
+
+
+                    //查询创建人和修改人
+                    List<String> adminIdList = new ArrayList<String>();
+                    for(int i=0;i<list.size();i++)
+                    {
+                        BannerVO bannerVO = list.get(i);
+                        if(bannerVO.getCreateAdminId()!=null) {
+                            adminIdList.add(bannerVO.getCreateAdminId());
+                        }
+                        if(bannerVO.getUpdateAdminId()!=null)
+                        {
+                            adminIdList.add(bannerVO.getUpdateAdminId());
+                        }
+                    }
+                    String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+                    adminIdList.toArray(createOrUpdateAdminIds);
+                    AdminVO queryAdminVO = new AdminVO();
+                    queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+                    resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataArray(AdminVO.class);
+                        if(!CollectionUtils.isEmpty(adminVOS))
+                        {
+                            for(BannerVO bannerVO:list)
+                            {
+                                for(AdminVO adminVO:adminVOS)
+                                {
+                                    if(bannerVO.getCreateAdminId()!=null&&bannerVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                                    {
+                                        bannerVO.setCreateAdminName(adminVO.getUsername());
+                                    }
+                                    if(bannerVO.getUpdateAdminId()!=null&&bannerVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                                    {
+                                        bannerVO.setUpdateAdminName(adminVO.getUsername());
+                                    }
+                                }
+                            }
+                        }
+                    }
                     for(BannerVO bannerVO:list)
                     {
                         if(bannerVO.getImgPath()!=null) {

@@ -16,4 +16,10 @@ public class BannerVO extends Banner {
     private Long[] idArray; //主键列表
 
     private String[] areaCodeArray; //地区编码列表
+
+
+
+    private String createAdminName; //创建人ID
+    private String updateAdminName; //修改人ID
+
 }
