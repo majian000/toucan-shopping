@@ -153,6 +153,11 @@
             <artifactId>toucan-shopping-product-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-image-upload</artifactId>
+        </dependency>
+
     </dependencies>
 
 

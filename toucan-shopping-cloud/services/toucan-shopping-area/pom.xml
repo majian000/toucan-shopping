@@ -106,7 +106,10 @@
             <groupId>com.toucan.shopping.modules.area</groupId>
             <artifactId>toucan-shopping-area-cache</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-image-upload</artifactId>
+        </dependency>
 
     </dependencies>
 

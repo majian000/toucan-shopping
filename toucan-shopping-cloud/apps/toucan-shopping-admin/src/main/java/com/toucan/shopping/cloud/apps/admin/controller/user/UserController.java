@@ -14,7 +14,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.fastdfs.util.FastDFSClient;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.User;
@@ -47,11 +47,8 @@ public class UserController extends UIController {
     @Value("${toucan.app-code}")
     private String appCode;
 
-    @Value("${fastdfs.http.url}")
-    private String fastDfsHttpUrl;
-
     @Autowired
-    private FastDFSClient fastDFSClient;
+    private ImageUploadService imageUploadService;
 
     @Autowired
     private Toucan toucan;
@@ -172,7 +169,7 @@ public class UserController extends UIController {
             {
                 userVO =  (UserVO) resultObjectVO.formatData(UserVO.class);
                 if(userVO.getHeadSculpture()!=null) {
-                    userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
                 request.setAttribute("model", userVO);
             }
@@ -203,7 +200,7 @@ public class UserController extends UIController {
             {
                 userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
                 if(userVO.getHeadSculpture()!=null) {
-                    userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
                 request.setAttribute("model", userVO);
             }
@@ -267,7 +264,7 @@ public class UserController extends UIController {
                     for(UserVO userVO:list)
                     {
                         if(userVO.getHeadSculpture()!=null) {
-                            userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                            userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                         }
                     }
                     if(tableVO.getCount()>0) {
@@ -1085,7 +1082,7 @@ public class UserController extends UIController {
                 fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
 
             }
-            String groupPath = fastDFSClient.uploadFile(file.getBytes(),fileExt);
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
 
             if(StringUtils.isEmpty(groupPath))
             {
@@ -1101,7 +1098,7 @@ public class UserController extends UIController {
                 //如果不是默认头像就删除掉这个人的上一个头像
                 if(!toucan.getUser().getDefaultHeadSculpture().equals(userVO.getHeadSculpture())&&StringUtils.isNotEmpty(userVO.getHeadSculpture()))
                 {
-                    int ret = fastDFSClient.delete_file(userVO.getHeadSculpture());
+                    int ret = imageUploadService.deleteFile(userVO.getHeadSculpture());
                     if(ret!=0)
                     {
                         logger.warn("删除旧头像失败 {} ",userVO.getHeadSculpture());
@@ -1120,7 +1117,7 @@ public class UserController extends UIController {
 
                     //设置预览头像
                     if(userVO.getHeadSculpture()!=null) {
-                        userVO.setHttpHeadSculpture(fastDfsHttpUrl + userVO.getHeadSculpture());
+                        userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                     }
                     resultObjectVO.setData(userVO);
                 }

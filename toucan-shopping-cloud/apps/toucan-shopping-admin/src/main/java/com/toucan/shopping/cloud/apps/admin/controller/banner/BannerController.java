@@ -29,7 +29,7 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.fastdfs.util.FastDFSClient;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -60,15 +60,8 @@ public class BannerController extends UIController {
     @Value("${toucan.app-code}")
     private String appCode;
 
-    @Value("${fastdfs.http.url}")
-    private String fastDfsHttpUrl;
-
     @Autowired
     private Toucan toucan;
-
-    @Autowired
-    private FastDFSClient fastDFSClient;
-
 
     @Autowired
     private FeignFunctionService feignFunctionService;
@@ -81,6 +74,9 @@ public class BannerController extends UIController {
 
     @Autowired
     private FeignAreaService feignAreaService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -117,7 +113,7 @@ public class BannerController extends UIController {
                     for(BannerVO bannerVO:list)
                     {
                         if(bannerVO.getImgPath()!=null) {
-                            bannerVO.setHttpImgPath(fastDfsHttpUrl + bannerVO.getImgPath());
+                            bannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() + bannerVO.getImgPath());
                         }
                     }
                     if(tableVO.getCount()>0) {
@@ -170,7 +166,7 @@ public class BannerController extends UIController {
                 if(!CollectionUtils.isEmpty(bannerVOS))
                 {
                     banner = bannerVOS.get(0);
-                    int ret = fastDFSClient.delete_file(banner.getImgPath());
+                    int ret = imageUploadService.deleteFile(banner.getImgPath());
                     if(ret!=0)
                     {
                         logger.warn("删除服务器中关联图片失败 {} ",banner.getImgPath());
@@ -217,7 +213,7 @@ public class BannerController extends UIController {
                 if(!CollectionUtils.isEmpty(bannerVOS))
                 {
                     for(BannerVO bannerVO:bannerVOS) {
-                        int ret = fastDFSClient.delete_file(bannerVO.getImgPath());
+                        int ret = imageUploadService.deleteFile(bannerVO.getImgPath());
                         if (ret != 0) {
                             logger.warn("删除服务器中关联图片失败 {} ", bannerVO.getImgPath());
                             resultObjectVO.setMsg("删除关联图片资源失败");
@@ -308,7 +304,7 @@ public class BannerController extends UIController {
                 fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
 
             }
-            String groupPath = fastDFSClient.uploadFile(file.getBytes(),fileExt);
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
 
             if(StringUtils.isEmpty(groupPath))
             {
@@ -316,7 +312,7 @@ public class BannerController extends UIController {
             }
             BannerVO bannerVO = new BannerVO();
             bannerVO.setImgPath(groupPath);
-            bannerVO.setHttpImgPath(fastDfsHttpUrl+groupPath);
+            bannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+groupPath);
             resultObjectVO.setData(bannerVO);
         }catch (Exception e)
         {
@@ -396,7 +392,7 @@ public class BannerController extends UIController {
                     if(!CollectionUtils.isEmpty(bannerVOS))
                     {
                         banner = bannerVOS.get(0);
-                        banner.setHttpImgPath(fastDfsHttpUrl + banner.getImgPath());
+                        banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
                         if(banner.getStartShowDate()!=null) {
                             banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS));
                         }

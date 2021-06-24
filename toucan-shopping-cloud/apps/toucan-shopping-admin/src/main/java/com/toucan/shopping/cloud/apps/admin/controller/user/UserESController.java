@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.user.entity.User;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
@@ -40,8 +41,8 @@ public class UserESController  extends UIController {
     @Value("${toucan.app-code}")
     private String appCode;
 
-    @Value("${fastdfs.http.url}")
-    private String fastDfsHttpUrl;
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     @Autowired
     private Toucan toucan;
@@ -105,7 +106,7 @@ public class UserESController  extends UIController {
                     for(UserElasticSearchVO userElasticSearchVO:searchAfterPage.getUserElasticSearchVOS())
                     {
                         if(userElasticSearchVO.getHeadSculpture()!=null) {
-                            userElasticSearchVO.setHttpHeadSculpture(fastDfsHttpUrl + userElasticSearchVO.getHeadSculpture());
+                            userElasticSearchVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userElasticSearchVO.getHeadSculpture());
                         }
                     }
                     tableVO.setData((List) searchAfterPage.getUserElasticSearchVOS());
@@ -172,7 +173,7 @@ public class UserESController  extends UIController {
                 UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
                 if(userElasticSearchVO.getHeadSculpture()!=null)
                 {
-                    userElasticSearchVO.setHttpHeadSculpture(fastDfsHttpUrl+userElasticSearchVO.getHeadSculpture());
+                    userElasticSearchVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+userElasticSearchVO.getHeadSculpture());
                 }
                 request.setAttribute("model", userElasticSearchVO);
             }

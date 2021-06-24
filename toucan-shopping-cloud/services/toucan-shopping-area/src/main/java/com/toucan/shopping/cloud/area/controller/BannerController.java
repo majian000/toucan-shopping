@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -58,8 +59,8 @@ public class BannerController {
     @Autowired
     private BannerRedisService bannerRedisService;
 
-    @Value("${fastdfs.http.url}")
-    private String fastDfsHttpUrl;
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 保存轮播图
@@ -191,7 +192,7 @@ public class BannerController {
                             //设置关联地区编码
                             bannerVO.setAreaCodeArray(areaCodeArray);
                             if(bannerVO.getImgPath()!=null) {
-                                bannerVO.setHttpImgPath(fastDfsHttpUrl +bannerVO.getImgPath());
+                                bannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() +bannerVO.getImgPath());
                             }
                             //刷新缓存
                             bannerRedisService.flushWebIndexCache(bannerVO);
@@ -533,7 +534,7 @@ public class BannerController {
                         }
                         bv.setAreaCodeArray(areaCodeArray);;
                     }
-                    bv.setHttpImgPath(fastDfsHttpUrl+bv.getImgPath());
+                    bv.setHttpImgPath(imageUploadService.getImageHttpPrefix()+bv.getImgPath());
                 }
             }
             resultObjectVO.setData(bannerVOS);
