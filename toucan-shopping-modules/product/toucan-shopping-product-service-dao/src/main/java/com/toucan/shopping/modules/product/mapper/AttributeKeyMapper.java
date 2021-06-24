@@ -39,4 +39,6 @@ public interface AttributeKeyMapper {
      */
     int update(AttributeKey attributeKey);
 
+    int deleteById(Long id);
+
 }

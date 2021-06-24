@@ -33,6 +33,10 @@
                 and t.id = #{id}
             </if>
 
+            <if test="categoryId!=null">
+                and t.category_id = #{categoryId}
+            </if>
+
             <if test="idArray!=null ">
                 and t.id in
                 <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
@@ -80,6 +84,12 @@
             </where>
 
     </select>
+
+
+
+    <update id="deleteById">
+        update t_attribute_key  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
 
 
 </mapper>

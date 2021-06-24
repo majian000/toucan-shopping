@@ -35,6 +35,9 @@ public interface AttributeKeyService {
     int update(AttributeKey attributeKey);
 
 
+    int deleteById(Long id);
+
+
 
     List<AttributeKeyVO> queryList(AttributeKeyVO query);
 

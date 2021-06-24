@@ -46,4 +46,26 @@ public interface FeignAttributeKeyService {
 
 
 
+
+    /**
+     * 根据ID删除指定
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 批量删除
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
+
+
+
 }

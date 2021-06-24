@@ -39,6 +39,11 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
     }
 
     @Override
+    public int deleteById(Long id) {
+        return attributeKeyMapper.deleteById(id);
+    }
+
+    @Override
     public List<AttributeKeyVO> queryList(AttributeKeyVO query) {
         return attributeKeyMapper.queryList(query);
     }
