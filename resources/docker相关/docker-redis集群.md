@@ -18,9 +18,9 @@ docker start redis-node1
 拉取镜像
 docker  pull  redis:5.0.5
 创建Redis容器
-docker create --name redis-node1 -v /data/redis-data/node1:/data -p 6379:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-1.conf
-docker create --name redis-node2 -v /data/redis-data/node2:/data -p 6380:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-2.conf
-docker create --name redis-node3 -v /data/redis-data/node3:/data -p 6381:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-3.conf
+docker create --name redis-node1 -v /data/redis-data/node1:/data -p 6380:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-1.conf
+docker create --name redis-node2 -v /data/redis-data/node2:/data -p 6381:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-2.conf
+docker create --name redis-node3 -v /data/redis-data/node3:/data -p 6382:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-3.conf
 
 
 
