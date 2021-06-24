@@ -98,6 +98,12 @@ M: 70b20812b3650470231962bad26208c0e10fde12 172.17.0.3:6379
 root@de27a476b730:/data#
 
 
+通过客户端连接集群
+ docker exec -it redis-node1 /bin/bash
+ redis-cli -c -p 6379
+ 
+ 
+
 
 
 删除容器
