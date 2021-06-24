@@ -80,6 +80,54 @@ public class AttributeKeyController {
 
 
 
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AttributeKeyVO attributeKeyVO = JSONObject.parseObject(requestVo.getEntityJson(),AttributeKeyVO.class);
+            if(attributeKeyVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该对象
+            AttributeKeyVO query=new AttributeKeyVO();
+            query.setId(attributeKeyVO.getId());
+            List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(query);
+            if(CollectionUtils.isEmpty(attributeKeyVOS))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,不存在!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(attributeKeyVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
 

@@ -119,6 +119,11 @@
                                     elem: '#categoryTree'  //绑定元素
                                     ,data: data.data,
                                     click: function(obj){
+                                        if(obj.data.id==-1)
+                                        {
+                                            layer.msg("不能选择根节点");
+                                            return;
+                                        }
                                         $("#selectCategoryId").val(obj.data.title);
                                         $("#categoryId").val(obj.data.id);
                                         layer.close(index);

@@ -18,4 +18,7 @@ public class AttributeKeyVO extends AttributeKey {
     private String updateAdminName; //修改人ID
 
 
+    private Long[] idArray; //主键列表
+
+
 }
