@@ -21,6 +21,13 @@
 
     <sql id="queryListPageWhere">
 
+        <if test="attributeName!=null and attributeName!='' ">
+            and t.attribute_name  like concat('%',#{attributeName},'%')
+        </if>
+
+        <if test="categoryId!=null">
+            and t.category_id = #{categoryId}
+        </if>
     </sql>
 
 
@@ -28,6 +35,11 @@
         select t.* from t_attribute_key t
         <where>
             1=1
+
+            <if test="attributeName!=null and attributeName!='' ">
+                and t.attribute_name  like concat('%',#{attributeName},'%')
+
+            </if>
 
             <if test="id!=null">
                 and t.id = #{id}

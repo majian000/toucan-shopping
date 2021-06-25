@@ -22,10 +22,9 @@ public class AttributeKeyPageInfo extends PageInfo<AttributeKeyVO> {
     private Integer id;
 
 
-    /**
-     * 标题
-     */
-    private String title;
+    private String attributeName; //属性名
+
+    private Long categoryId; //所属类别
 
 
     private Long[] idArray; //ID数组

@@ -13,6 +13,7 @@ eureka:
       defaultZone: http://localhost:8081/eureka
 
 
+
 #开启饥饿加载
 ribbon:
   ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
@@ -21,8 +22,11 @@ ribbon:
     clients: "toucan-shopping-category,\
               toucan-shopping-order,\
               toucan-shopping-product,\
+              toucan-shopping-admin-auth,\
+              toucan-shopping-column,\
+              toucan-shopping-user,\
+              toucan-shopping-area,\
               toucan-shopping-stock"
-
 
 
 spring:

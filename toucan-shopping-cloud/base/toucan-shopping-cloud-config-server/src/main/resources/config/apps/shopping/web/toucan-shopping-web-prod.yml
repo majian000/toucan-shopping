@@ -57,6 +57,7 @@ hystrix:
 
 
 
+
 #开启饥饿加载
 ribbon:
   OkToRetryOnAllOperations: true #开启重试机制
@@ -69,6 +70,7 @@ ribbon:
               toucan-shopping-order,\
               toucan-shopping-product,\
               toucan-shopping-user,\
+              toucan-shopping-area,\
               toucan-shopping-gateway,\
               toucan-shopping-stock"
 
