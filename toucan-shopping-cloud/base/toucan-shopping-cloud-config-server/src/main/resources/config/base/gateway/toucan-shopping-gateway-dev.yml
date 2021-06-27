@@ -3,7 +3,7 @@ server:
   port: 8089
 eureka:
   instance:
-    lease-expiration-duration-in-seconds: 1 #心跳1秒
+    lease-expiration-duration-in-seconds: 3 #3秒没有心跳就剔除
     lease-renewal-interval-in-seconds: 1 #心跳1秒
     prefer-ip-address: true
     instance-id: 127.0.0.1:8089    #使用IP地址注册
