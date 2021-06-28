@@ -39,6 +39,7 @@ spring:
                             classpath:/config/apps/shopping/adminAuth,\
                             classpath:/config/apps/scheduler/shopping,\
                             classpath:/config/apps/scheduler/user,\
+                            classpath:/config/apps/scheduler/seller,\
                             classpath:/config/apps/shopping/admin,"
 
   profiles:

@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.business.app;
+package com.toucan.shopping.cloud.seller.app;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.mybatis.spring.annotation.MapperScan;
@@ -10,12 +10,12 @@ import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableDiscoveryClient
-@MapperScan({"com.toucan.shopping.modules.business.mapper",
+@MapperScan({"com.toucan.shopping.modules.seller.mapper",
         "com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScans({@ComponentScan("com.toucan.shopping")})
-public class CloudBusinessServiceApplication {
+public class CloudSellerServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CloudBusinessServiceApplication.class, args);
+        SpringApplication.run(CloudSellerServiceApplication.class, args);
     }
 }

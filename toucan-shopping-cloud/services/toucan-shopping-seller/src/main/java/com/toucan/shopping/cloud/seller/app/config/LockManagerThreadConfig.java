@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.business.app.config;
+package com.toucan.shopping.cloud.seller.app.config;
 
 
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;

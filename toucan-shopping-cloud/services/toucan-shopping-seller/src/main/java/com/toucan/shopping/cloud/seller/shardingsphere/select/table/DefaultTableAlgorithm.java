@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.business.shardingsphere.select.table;
+package com.toucan.shopping.cloud.seller.shardingsphere.select.table;
 
 
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;

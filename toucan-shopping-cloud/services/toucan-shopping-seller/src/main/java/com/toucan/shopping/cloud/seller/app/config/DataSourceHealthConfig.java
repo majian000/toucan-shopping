@@ -1,18 +1,4 @@
-package com.toucan.shopping.cloud.business.app.config;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.actuate.autoconfigure.jdbc.DataSourceHealthContributorAutoConfiguration;
-import org.springframework.boot.actuate.health.AbstractHealthIndicator;
-import org.springframework.boot.actuate.jdbc.DataSourceHealthIndicator;
-import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
-
-import javax.sql.DataSource;
-import java.util.Map;
+package com.toucan.shopping.cloud.seller.app.config;
 
 /**
  * 数据源健康监控重写实现

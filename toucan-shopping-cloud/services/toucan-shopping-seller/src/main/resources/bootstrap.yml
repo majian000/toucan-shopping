@@ -14,7 +14,7 @@ logging:
 spring:
   profiles: prod
   application:
-    name: toucan-shopping-business
+    name: toucan-shopping-seller
   cloud:
     config: #指定配置中心服务端
       username: toucan_sp #用户名
@@ -28,7 +28,7 @@ spring:
 spring:
   profiles: dev
   application:
-    name: toucan-shopping-business
+    name: toucan-shopping-seller
   cloud:
     config: #指定配置中心服务端
       username: toucan_sp #用户名
@@ -42,7 +42,7 @@ spring:
 spring:
   profiles: test
   application:
-    name: toucan-shopping-business
+    name: toucan-shopping-seller
   cloud:
     config: #指定配置中心服务端
       username: toucan_sp #用户名
