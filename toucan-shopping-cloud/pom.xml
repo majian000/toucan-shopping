@@ -74,7 +74,8 @@
         <module>services/toucan-shopping-user</module>
         <!--管理员权限中台 -->
         <module>services/toucan-shopping-admin-auth</module>
-
+        <!--商户服务 -->
+        <module>services/toucan-shopping-business</module>
 
         <!-- ===============================================-->
 

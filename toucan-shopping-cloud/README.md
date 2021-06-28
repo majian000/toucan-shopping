@@ -77,6 +77,7 @@
  | services/toucan-shopping-column              | 8096                   | 栏目服务                                          |
  | services/toucan-shopping-user-center         | 8087                   | 用户中心服务                                      |
  | services/toucan-shopping-app-center          | 8099                   | 权限中台服务                                      |
+ | services/toucan-shopping-business            | 8100                   | 商户服务                                          |
 
     
 
