@@ -17,7 +17,6 @@ public class AttributeValue {
     private String attributeValue; //属性值
     private Integer attributeSort; //排序
     private String createDate; //创建时间
-    private String appCode; //所属应用
     private Long createUserId; //创建人ID
 
 }
