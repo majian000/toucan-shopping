@@ -82,48 +82,8 @@
             <artifactId>toucan-shopping-lock-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-product-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-order-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.product</groupId>
-            <artifactId>toucan-shopping-product-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.order</groupId>
-            <artifactId>toucan-shopping-order-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.order</groupId>
-            <artifactId>toucan-shopping-order-no</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-category-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.stock</groupId>
-            <artifactId>toucan-shopping-stock-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-stock-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.area</groupId>
-            <artifactId>toucan-shopping-area-entity-vo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-area-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
