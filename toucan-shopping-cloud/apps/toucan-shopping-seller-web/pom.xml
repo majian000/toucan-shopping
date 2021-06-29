@@ -137,11 +137,11 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence-event</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.toucan.shopping.front.templates</groupId>
-            <artifactId>toucan-shopping-web-templates</artifactId>
+            <artifactId>toucan-shopping-seller-web-templates</artifactId>
         </dependency>
+
 
     </dependencies>
 

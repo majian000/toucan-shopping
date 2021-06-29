@@ -32,6 +32,8 @@
         <module>toucan-shopping-admin-templates</module>
         <!--权限中台界面模板 -->
         <module>toucan-shopping-admin-auth-web-templates</module>
+        <!--卖家客户端界面模板 -->
+        <module>toucan-shopping-seller-web-templates</module>
 
         <!-- ===============================================-->
 
@@ -68,6 +70,12 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.front.templates</groupId>
+                <artifactId>toucan-shopping-seller-web-templates</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

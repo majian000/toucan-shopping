@@ -1,0 +1,542 @@
+@media only screen and (max-width: 1400px) {
+    .hero-banner-part {
+        padding: 110px 0;
+    }
+    .hero-content h1 {
+        padding: 0 85px;
+    }
+    .banner-slider .fa-caret-left {
+        left: 10%;
+    }
+    .banner-slider .fa-caret-right {
+        right: 10%;
+    }
+    .testimonial-slider .fa-caret-left {
+        left: 0;
+    }
+    .testimonial-slider .fa-caret-right {
+        right: 0;
+    }
+    
+}
+
+@media only screen and (min-width: 1200px) {
+    .happy-client-part .clients-img {
+        padding: 0 70px 0 0;
+    }
+
+}
+
+@media only screen and (max-width: 1199px) {
+    .nav-btn {
+        margin-left: 0;
+    }
+    .navbar-custom > li {
+        padding-right: 16px;
+    }
+    .choose-us-part,
+    .choose-us-part.on-about-page {
+        background-image: none;
+    }
+    .about-part {
+        padding-top: 75px;
+        padding-bottom: 75px;
+    }
+    .happy-client-part .clients-img {
+        padding: 0;
+    }
+    .location-box {
+        margin-left: 0;
+    }
+    .error-content {
+        margin-left: 80px;
+    }
+    
+}
+
+@media only screen and (min-width: 992px) {
+    .main-nav .nav-link {
+        padding-top: 33px;
+        padding-bottom: 33px;
+    }
+    
+}
+
+@media only screen and (max-width: 991px) {
+    .dropdown-toggle::after {
+        margin-top: 10px;
+        margin-right: 6px;
+        float: right;
+    }
+    .navbar-light .navbar-toggler {
+        border: none;
+        color: white;
+        padding: 0;
+        font-size: 25px;
+    }
+    .navbar-toggler:focus {
+        border: none;
+        outline: none;
+    }
+    .nav-btn,
+    .navbar-custom > li > a:before {
+        display: none;
+    }
+    .navbar-collapse > ul {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .main-nav {
+        padding: 5px 15px;
+    }
+    .hero-content h1 {
+        padding: 0;
+        font-size: 50px;
+    }
+    .clients-img {
+        padding: 0 50px;
+    }
+    .clients-info {
+        padding: 30px 50px 0;
+    }
+    .testimonial-slider .fa-caret-left,
+    .testimonial-slider .fa-caret-right {
+        top: 45%;
+    }
+    .about-part {
+        padding-bottom: 130px;
+    }
+    .about-img {
+        margin-left: 0;
+    }
+    .details-check-box {
+        margin-left: 0;
+    }
+    .details-question span {
+        font-size: 12px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .details-question h4 {
+        font-size: 22px;
+        margin-left: 20px;
+    }
+    .details-ans {
+        padding-left: 50px;
+    }
+    .book-appoinment-part {
+        background-image: none;
+    }
+    .footer-column h3 {
+        margin-bottom: 35px;
+    }
+    .footer-logo {
+        margin-bottom: 20px;
+    }
+    .contact-part {
+        padding-bottom: 105px;
+    }
+    .get-touch {
+        max-width: none;
+        margin-bottom: 40px;
+    }
+    .get-touch h3,
+    .location-box h3 {
+        margin-bottom: 35px;
+    }
+    .location-box iframe {
+        width: 100%;
+    }
+    .error-part {
+        padding-top: 100px;
+        padding-bottom: 115px;
+    }
+    .error-content {
+        margin-left: 0;
+        margin-top: -25px;
+    }
+    
+}
+
+
+@media only screen and (max-width: 767px) {  
+    .topber {
+        display: none;
+    }
+    .hero-content h1 {
+        font-size: 40px;
+    }
+    .section-heading-content h2 {
+        font-size: 38px;
+    }
+    .location-box iframe {
+        height: 300px;
+    }
+    .error-part {
+        padding-bottom: 100px;
+    }
+    .error-content {
+        max-width: none;
+        margin-bottom: 55px;
+    }
+    .trust-content h2 {
+        margin-bottom: 30px;
+    }
+    .trust-part .text-right {
+        text-align: left !important;
+    }
+    
+}
+
+
+@media only screen and (max-width: 575px) {
+    .hero-content h1 {
+        font-size: 38px;
+    }
+    .section-heading-content h2 {
+        font-size: 35px;
+    }
+    .all-comments + .all-comments {
+        margin-left: 50px;
+    }
+    .experience-content h2 {
+        padding: 0px 40px;
+    }
+    
+}
+
+
+@media screen and (max-width:420px) {
+    .logo {
+        width: 150px;
+    }
+    .navbar-custom li a:hover:before {
+        bottom: 0px;
+        width: 50px;
+    }
+    .nav-btn {
+        margin-left: 0;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .hero-banner-part {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+    .hero-content h1 {
+        font-size: 33px;
+        margin-bottom: 30px;
+    }
+    .trust-content h2,
+    .section-heading-content h2 {
+        font-size: 30px;
+    }
+    .banner-slider .fa-caret-left {
+        left: 3%;
+        top: 60%;
+    }
+    .banner-slider .fa-caret-right {
+        right: 3%;
+        top: 60%;
+    }
+    .page-title-content h2 {
+        font-size: 35px;
+    }
+    .theme-btn {
+        font-size: 14px;
+        padding: 12px 32px;
+    }
+    .practice-area {
+        padding-top: 60px;
+        padding-bottom: 30px;
+    }
+    .practice-area.on-practice-page {
+        padding-top: 65px;
+        padding-bottom: 30px;
+    }
+    .section-heading-content {
+        margin-bottom: 40px;
+    }
+    .appoinment-from h3,
+    .section-heading-content h2 {
+        font-size: 28px;
+    }
+    .section-heading-content span {
+        font-size: 16px;
+    }
+    .grid-practice-area {
+        margin-bottom: 30px;
+    }
+    .grid-practice-area h3 {
+        font-size: 20px;
+    }
+    .read-more-btn {
+        font-size: 14px;
+    }
+    .experience-part {
+        padding: 50px 0px;
+    }
+    .experience-content h2 {
+        padding: 0px 40px;
+        font-size: 26px;
+    }
+    .about-content h2,
+    .pratice-details-content h2 {
+        font-size: 26px;
+    }
+    .choose-us-part {
+        padding-top: 60px;
+        padding-bottom: 35px;
+    }
+    .grid-choose-info {
+        margin-bottom: 30px;
+    }
+    .grid-choose-info h3 {
+        font-size: 20px;
+    }
+    .attorneys-part {
+        padding-top: 60px;
+        padding-bottom: 35px;
+    }
+    .grid-expert-attorneys {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    .grid-expert-attorneys h3 {
+        font-size: 22px;
+    }
+    .clients-img {
+        padding: 0;
+    }
+    .clients-info {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .testimonial-part {
+        padding-top: 65px;
+        padding-bottom: 60px;
+    }
+    .attorneys-page.attorneys-part {
+        padding-top: 65px;
+        padding-bottom: 15px;
+    }
+    .blog-part {
+        padding-top: 60px;
+        padding-bottom: 35px;
+    }
+    .publish-info {
+        flex-wrap: wrap;
+    }
+    .publish-info .author {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .about-part {
+        padding-bottom: 85px;
+        padding-top: 30px;
+    }
+    .pratice-details-part {
+        padding-top: 65px;
+        padding-bottom: 40px;
+    }
+    .book-appoinment-part,
+    .happy-client-part {
+        padding-top: 65px;
+        padding-bottom: 65px;
+    }
+    .footer-top {
+        padding-top: 65px;
+        padding-bottom: 15px;
+    }
+    .blog-post-part,
+    .blog-details,
+    .gallery-part {
+        padding-top: 65px;
+        padding-bottom: 65px;
+    }
+    .blog-post-part .grid-blog {
+        margin-bottom: 30px;
+    }
+    .blog-post {
+        margin-bottom: 55px;
+    }
+    .serach_btn,
+    .blog-catagory,
+    .recent-post,
+    .popular-tag {
+        margin-bottom: 40px;
+    }
+    .blog-details-content img {
+        margin-bottom: 30px;
+    }
+    .blog-details-content h3 a {
+        font-size: 25px;
+    }
+    .all-comments + .all-comments {
+        margin-left: 30px;
+    }
+    .comment-content {
+        margin-left: 20px;
+    }
+    .tags-bar {
+        margin-top: 40px;
+        margin-bottom: 45px;
+    }
+    .important-tag {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    .comment-input {
+        margin-top: 40px;
+    }
+    .questions-part {
+        padding-top: 55px;
+        padding-bottom: 55px;
+    }
+    .contact-part {
+        padding-top: 65px;
+        padding-bottom: 60px;
+    }
+    .get-touch h3,
+    .location-box h3 {
+        font-size: 28px;
+    }
+    .location-box iframe {
+        height: 250px;
+    }
+    .error-part {
+        padding-top: 85px;
+        padding-bottom: 75px;
+    }
+    .error-content h2 {
+        font-size: 60px;
+    }
+    .error-content h3 {
+        font-size: 20px;
+    }
+    .gallery-part {
+        padding-bottom: 25px;
+    }
+    .happy-client-part {
+        padding-bottom: 35px;
+    }
+
+}
+
+@media screen and (max-width:360px) {
+    .logo {
+        width: 150px;
+    }
+
+    .navbar-custom li a:hover:before {
+        bottom: 0px;
+        width: 50px;
+    }
+
+    .nav-btn {
+        margin-left: 0;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+    }
+
+    .hero-banner-part {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+    .hero-content h1 {
+        font-size: 25px;
+    }
+    .theme-btn {
+        font-size: 14px;
+        padding: 8px 28px;
+    }
+
+    .section-heading-content {
+        margin-bottom: 40px;
+    }
+
+    .section-heading-content h2 {
+        font-size: 26px;
+    }
+
+    .section-heading-content span {
+        font-size: 16px;
+    }
+
+    .grid-practice-area {
+        margin-bottom: 30px;
+    }
+
+    .grid-practice-area h3 {
+        font-size: 20px;
+    }
+
+    .read-more-btn {
+        font-size: 14px;
+    }
+    
+    .grid-choose-info {
+        margin-bottom: 30px;
+    }
+
+    .grid-choose-info h3 {
+        font-size: 20px;
+    }
+
+    .grid-expert-attorneys {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .grid-expert-attorneys h3 {
+        font-size: 22px;
+    }
+
+    .testimonial-part {
+        padding-bottom: 45px;
+    }
+    
+    .clients-info {
+        padding: 20px 0px;
+    }
+
+    .clients-info h4 {
+        font-size: 22px;
+    }
+
+    .blog-info {
+        padding: 25px 15px;
+    }
+
+    .blog-title {
+        font-size: 20px;
+    }
+
+    .view-details-btn {
+        font-size: 14px;
+    }
+
+    .footer-logo {
+        width: 150px;
+    }
+
+    .footer-column h3 {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+    .another-page-links ul li {
+        margin: 0 1px;
+    }
+    .all-comments {
+        display: block !important;
+    }
+    .comment-content {
+        margin-left: 0;
+    }
+
+   
+}
