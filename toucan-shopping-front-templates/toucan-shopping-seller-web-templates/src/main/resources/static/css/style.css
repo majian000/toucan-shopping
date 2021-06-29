@@ -198,7 +198,7 @@ img {
 
 .main-nav {
     padding: 0 15px;
-    background: #d49943;
+    /*background: #d49943;*/
 
 }
 
@@ -216,14 +216,14 @@ img {
     z-index: -1;
     transition: 0.5s;
     border-radius: 5px;
-    background: #fdfdfd;
+    background: #000000;
     transform: translate(-50%);
 }
 
 .navbar-custom > li > a {
     position: relative;
     font-size: 16px;
-    color: #fff !important;
+    color: #000000 !important;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     text-transform: capitalize;
@@ -318,7 +318,7 @@ a.theme-btn {
     display: inline-block;
     padding: 15px 40px;
     border-radius: 30px;
-    background: #d49943;
+    background: #ff4e00;
     transition: all .3s;
 
 }
@@ -1866,8 +1866,8 @@ span {
 .footer-top {
     padding-top: 110px;
     padding-bottom: 60px;
-    background: #222222;
-    border-bottom: 2px solid #3c3b3b;
+    background: #f6f6f6;
+    border-bottom: 2px solid #f6f6f6;
     ;
 }
 
