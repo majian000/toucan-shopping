@@ -2,11 +2,6 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.index;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
-import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.modules.area.vo.BannerVO;
-import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
