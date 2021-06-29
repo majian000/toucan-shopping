@@ -77,7 +77,7 @@
  | services/toucan-shopping-column              | 8096                   | 栏目服务                                          |
  | services/toucan-shopping-user-center         | 8087                   | 用户中心服务                                      |
  | services/toucan-shopping-app-center          | 8099                   | 权限中台服务                                      |
- | services/toucan-shopping-business            | 8100                   | 商户服务                                          |
+ | services/toucan-shopping-seller              | 8100                   | 卖家服务                                          |
 
     
 
@@ -91,7 +91,7 @@
  | apps/toucan-shopping-admin-auth-web           | 8098                 | 权限中台界面                                       |
  | apps/toucan-shopping-scheduler                | 8092                 | 商城调度任务端                                     |
  | apps/toucan-shopping-user-scheduler           | 8097                 | 用户中心任务调度                                   |
- | apps/toucan-shopping-seller-web               | 8101                   | 卖家WEB端                                         |
+ | apps/toucan-shopping-seller-web               | 8101                 | 卖家WEB端                                         |
  
     
 

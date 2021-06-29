@@ -35,11 +35,12 @@ spring:
                             classpath:/config/services/user,\
                             classpath:/config/services/app,\
                             classpath:/config/services/adminAuth,\
+                            classpath:/config/services/seller,\
                             classpath:/config/apps/shopping/web,\
                             classpath:/config/apps/shopping/adminAuth,\
                             classpath:/config/apps/scheduler/shopping,\
                             classpath:/config/apps/scheduler/user,\
-                            classpath:/config/apps/scheduler/seller,\
+                            classpath:/config/apps/shopping/sellerWeb,\
                             classpath:/config/apps/shopping/admin,"
 
   profiles:
