@@ -1906,7 +1906,7 @@ span {
 
 .footer-column h3 {
     font-size: 26px;
-    color: #fff;
+    color: #000000;
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     margin-bottom: 50px;
@@ -1917,7 +1917,7 @@ span {
 }
 
 .news-blog-title {
-    color: #bebebe !important;
+    color: #000000 !important;
     font-size: 18px;
     font-family: 'Playfair Display', serif;
     font-weight: 400;
@@ -1925,7 +1925,7 @@ span {
 }
 
 .news-blog-title:hover {
-    color: #d49943 !important;
+    color: #000000 !important;
 }
 
 .footer-column ul li {
@@ -1934,7 +1934,7 @@ span {
 
 .footer-column ul li a {
     font-size: 16px;
-    color: #bebebe;
+    color: #000000;
     font-weight: 500;
     display: block;
     transition: all .3s;
