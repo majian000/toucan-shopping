@@ -20,10 +20,6 @@ div{
 	float:left;
 	border:1px;
 }
-#logo img{
-	width:170px;
-	height:60px;
-}
 #logo b{
 	display:block;
 	width:110px;
@@ -276,10 +272,10 @@ div{
 	position:relative;
 }
 .login-form .login-box .login-btn .btn-img{
-	border:1px solid #e85356;
+	border:1px solid #ff4e00;
 	display:block;
 	width:302px;
-	background:#e4393c;
+	background:#ff4e00;
 	height:31px;
 	line-height:31px;
 	color:#fff;

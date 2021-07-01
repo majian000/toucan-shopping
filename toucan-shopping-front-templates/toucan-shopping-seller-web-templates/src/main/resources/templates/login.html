@@ -3,26 +3,21 @@
 	
 	<meta name="Keywords" content="关键词123">
     <meta name="Description" content="描述">
-    <link rel="stylesheet" href="../static/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/login.css">
-    <script src="../static/js/jquery-3.1.1.min.js"></script>
-    <script src="../static/js/checkcode.js"></script>
+    <link rel="stylesheet" href="${basePath}/static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="${basePath}/static/css/login.css">
+    <script src="${basePath}/static/js/jquery-3.1.1.min.js"></script>
+    <script src="${basePath}/static/js/checkcode.js"></script>
 	<title>登录页面</title>
 </head>
 <body>
 <!-- **************头部页面开始****** -->
 <div class="w">
 	<div id="logo">
-		<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/index.html">
-			<img src="../static/images/search_logo.png" alt="">
+		<a href="${basePath}/index">
+			<img src="${basePath}/static/images/logo.png" alt="">
 		</a>
 		<b></b>
 	</div>
-	<!-- 左边登录logo结束 -->
-	<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html#" class="q_link fr">
-		<b class="fl"></b>
-		登录页面，调查问卷
-	</a>
 </div>
 <!-- ************头部页面结束********** -->
 <div id="content">
@@ -82,7 +77,7 @@
                         <div id="o-authcode" class="item item-vcode item-fore3 hide ">
                         	<input type="text" name="" id="authcode" class="itxt itxt02" tabindex="3">
                         	<input type="button" id="code" class="verify-code" value="MHAR">
-                        	<a href="javascript:;" onclick="createCode();">看不清换一张</a>
+                        	<a href="javascript:;" onclick="createCode();">换一张</a>
                         </div>
                         <!-- 自动登录开始fore4 -->
                         <div class="item item-fore4">
@@ -106,7 +101,7 @@
   			  	</div>
   			  </div>
   			  <!-- mc结束 2input+自动登录+登录按钮-->
-  				
+
   			</div>
   			<!-- login-box结束（账户登录） -->
   			<!-- 二维码登陆开始 （扫码登录）-->
@@ -118,9 +113,9 @@
   						<a href="javascript:void(0)" class="refresh-btn">刷新</a>
   					</div>
   					<div class="qrcode-main">
-  					    
+
   						<div class="qrcode-img" style="">
-  							<img src="../static/images/code.png" alt="">
+  							<img src="${basePath}/static/images/code.png" alt="">
   							<div class="qrcode-error-02 hide" id="J-qrcodeerror" style="display: none;">
   								<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html#none">
   									<span class="error-icon"></span>
@@ -131,7 +126,7 @@
   								</a>
   							</div>
   						</div>
-  						 
+
   						<div class="qrcode-help" style="display: none;"></div>
   					</div>
   					<!-- 二维码结束 -->
@@ -196,9 +191,9 @@
   	</div>
   	<!-- w结束 -->
   	<!-- 中间广告部分开始 -->
-  	<div class="login-banner" style="background-color: #fc3343">
+  	<div class="login-banner" style="background-color: #f5f5f6">
   		<div class="w">
-  			<div id="banner-bg" class="i-inner" style="background: url(../static/images/a1.jpg);"></div>
+  			<div id="banner-bg" class="i-inner" style="background: url(${basePath}/static/images/l_img.png);"></div>
   		</div>
   	</div>
   	<!-- 中间背景广告结束 -->
@@ -216,26 +211,18 @@
 			|
 			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">人才招聘</a>
 			|
-			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">商家入驻</a>
-			|
 			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">广告服务</a>
-			|
-			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">手机京东</a>
 			|
 			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">友情链接</a>
 			|
 			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">销售联盟</a>
-			|
-			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">京东社区</a>
-			|
-			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">京东公益</a>
 			|
 			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">English site</a>
 		</div>
 	</div>
 </div>
 <!-- 底部页面结束 -->
-	
+
 
 
 <script type="text/javascript">

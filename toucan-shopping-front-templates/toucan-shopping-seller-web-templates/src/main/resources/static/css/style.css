@@ -399,6 +399,7 @@ span {
 .practice-area {
     padding-top: 100px;
     padding-bottom: 55px;
+    text-align: center;
 }
 
 .practice-area.on-practice-page {
