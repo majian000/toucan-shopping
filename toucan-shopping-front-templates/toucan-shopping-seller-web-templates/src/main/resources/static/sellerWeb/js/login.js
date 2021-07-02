@@ -8,14 +8,17 @@ function login()
     var password=$("#password").val();
     if(username=="")
     {
-        $("#login_msg").text("请输入账号");
+        $("#login_msg").html("<b></b> 请输入账号");
+        $("#login_msg").attr("class","msg-warn ");
         return ;
     }
     if(password=="")
     {
-        $("#login_msg").text("请输入密码");
+        $("#login_msg").html("<b></b> 请输入密码");
+        $("#login_msg").attr("class","msg-warn ");
         return ;
     }
+    $("#login_msg").attr("class","msg-warn hide ");
     $.ajax({
         type: "POST",
         url: basePath+"/api/user/login/password",

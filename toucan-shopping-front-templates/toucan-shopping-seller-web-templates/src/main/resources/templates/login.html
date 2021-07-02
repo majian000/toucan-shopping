@@ -8,6 +8,9 @@
     <script src="${basePath}/static/js/jquery-3.1.1.min.js"></script>
 	<script src="${basePath}/static/sellerWeb/js/login.js"></script>
 	<title>登录页面</title>
+    <#include "/common_js.html"/>
+
+
 </head>
 <body>
 <!-- **************头部页面开始****** -->
@@ -38,12 +41,7 @@
   			  <div class="mt tab-h"></div>
   			  <!-- 登录提示信息开始 -->
   			  <div class="msg-wrap">
-  			  	  <div class="msg-warn">
-  					  <b></b>
-  					公共场所不建议自动登录，以防账号丢失
-  				  </div>
-  				  <div class="msg-error hide">
-  					  <b></b>
+  			  	  <div id="login_msg" class="msg-warn hide ">
   				  </div>
   			  </div>
   			  <!-- 登录提示信息结束 -->
