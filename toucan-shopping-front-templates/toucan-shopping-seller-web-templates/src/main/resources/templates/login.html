@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="${basePath}/static/css/base.css">
     <link rel="stylesheet" type="text/css" href="${basePath}/static/css/login.css">
     <script src="${basePath}/static/js/jquery-3.1.1.min.js"></script>
-    <script src="${basePath}/static/js/checkcode.js"></script>
+	<script src="${basePath}/static/sellerWeb/js/login.js"></script>
 	<title>登录页面</title>
 </head>
 <body>
@@ -51,26 +51,18 @@
   			  	<div class="form">
   			  		<form action="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html" id="formlogin" method="post" onsubmit="return false;">
   			  			<input type="hidden" name="" class="hide" id="" value="">
-  			  			<input type="hidden" name="" class="hide" id="" value="">
-  			  			<input type="hidden" name="" class="hide" id="" value="">
-  			  			<input type="hidden" name="" class="hide" id="" value="">
-  			  			<input type="hidden" name="" class="hide" id="" value="">
-  			  			<input type="hidden" name="" class="hide" id="" value="">
-  			  			<input type="hidden" name="" class="hide" id="" value="">
   			  			<!-- 用户名输入框fore1 -->
   			  			<div class="item item-fore1 item-error">
-  			  				<label for="loginname" class="login-label name-label"></label>
-  			  				<input type="text" name="loginname" id="loginname" class="itxt" tabindex="1" autocomplete="off" placeholder="邮箱/用户名/已验证手机">
+  			  				<label for="username" class="login-label name-label"></label>
+  			  				<input type="text" name="username" id="username" class="itxt" tabindex="1" autocomplete="off" placeholder="邮箱/用户名/已验证手机">
   			  				<span class="clear-btn" style="display:inline;"></span>
   			  			</div>
   			  			<!-- 密码输入框fore2 -->
   			  			<div id="entry" class="item item-fore2" style="visibility: visible">
-  			  				<label class="login-label pwd-label" for="nloginpwd"></label>
-  			  				<input type="password" name="" id="nloginpwd" class="itxt itxt-error" tabindex="2" autocomplete="off" placeholder="密码">
+  			  				<label class="login-label pwd-label" for="password"></label>
+  			  				<input type="password" name="password" id="password" class="itxt itxt-error" tabindex="2" autocomplete="off" placeholder="密码">
   			  				<span class="clear-btn" style="display: inline;"></span>
   			  				<span class="capslock" style="display: none;">
-  			  					<b></b>
-  			  					大小写锁定已打开
   			  				</span>
   			  			</div>
   			  			<!-- 图片验证码开始 fore3-->
@@ -94,7 +86,7 @@
                         <!-- 登录按钮开始 -->
                         <div class="item item-fore5">
                         	<div class="login-btn">
-                        		<a href="javascript:;" class="btn-img btn-entry" id="loginsubmit" tabindex="6" onclick="validate()">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
+                        		<a href="javascript:;" class="btn-img btn-entry" id="loginsubmit" tabindex="6" onclick="login()">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
                         	</div>
                         </div>
   			  		</form>
@@ -249,8 +241,7 @@
 		if(($("#loginname").val() !="" )&&($("#nloginpwd").val() !="")){
 		$("#o-authcode").css({"display":"block"});	
 	}
-	}) 
-	createCode();
-	
+	});
+
 </script>
 </body></html>
