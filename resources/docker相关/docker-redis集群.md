@@ -18,9 +18,9 @@ docker start redis-node1
 拉取镜像
 docker  pull  redis:5.0.5
 创建Redis容器(端口映射模式)
-docker create --name redis-node1 -v /data/redis-data/node1:/data -p 6380:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-1.conf
-docker create --name redis-node2 -v /data/redis-data/node2:/data -p 6381:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-2.conf
-docker create --name redis-node3 -v /data/redis-data/node3:/data -p 6382:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-3.conf
+docker create --name redis-node1 -v /data/redis-data/node1:/data -p 6380:6379 -p 16380:16379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-1.conf
+docker create --name redis-node2 -v /data/redis-data/node2:/data -p 6381:6379 -p 16381:16379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-2.conf
+docker create --name redis-node3 -v /data/redis-data/node3:/data -p 6382:6379 -p 16382:16379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-3.conf
 
 创建redis容器(host共享端口模式) 注:windows、macos系统下 这个模式无效
 docker create --name redis-node1 --net host -v /data/redis-data/node1:/data redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-1.conf --port 6380
@@ -129,7 +129,17 @@ root@de27a476b730:/data#
 通过客户端连接集群
  docker exec -it redis-node1 /bin/bash
  redis-cli -c -p 6379
- 
+ 172.17.0.2:6379> set a a
+ -> Redirected to slot [15495] located at 172.17.0.4:6379
+ OK
+ 172.17.0.4:6379> set b b
+ -> Redirected to slot [3300] located at 172.17.0.2:6379
+ OK
+ 172.17.0.2:6379> set c c
+ -> Redirected to slot [7365] located at 172.17.0.3:6379
+ OK
+ 172.17.0.3:6379>
+ 可以看到根据不同的hash路由到不同的redis节点
  
 
 
