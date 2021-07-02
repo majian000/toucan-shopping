@@ -82,6 +82,12 @@ docker inspect redis-node3
 
 
 
+进入容器安装ping
+docker exec -it redis-node1 /bin/bash
+apt-get update
+apt-get install iputils-ping
+
+
 进入容器连接各个redis形成集群
 docker exec -it redis-node1 /bin/bash
 连接集群
