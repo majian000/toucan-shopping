@@ -27,9 +27,14 @@ docker create --name redis-node1 --net host -v /data/redis-data/node1:/data redi
 docker create --name redis-node2 --net host -v /data/redis-data/node2:/data redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-2.conf --port 6381
 docker create --name redis-node3 --net host -v /data/redis-data/node3:/data redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-3.conf --port 6382
 
+创建redis容器(指定IP)
+docker create --name redis-node1 --network redis-cluster-net --ip 172.26.208.5 -v /data/redis-data/node1:/data -p 6380:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-1.conf
+docker create --name redis-node2 --network redis-cluster-net --ip 172.26.208.6 -v /data/redis-data/node2:/data -p 6381:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-2.conf
+docker create --name redis-node3 --network redis-cluster-net --ip 172.26.208.7 -v /data/redis-data/node3:/data -p 6382:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-3.conf
+
 
 创建网络
-docker network create --subnet=172.26.208.0/24 redis-cluster-net
+docker network create --subnet=192.168.8.0/24 redis-cluster-net
 
 查看网络
 docker network ls
@@ -39,11 +44,6 @@ docker network inspect redis-cluster-net
 
 删除网络
 docker network rm redis-cluster-net
-
-创建redis容器(指定IP)
-docker create --name redis-node1 --network redis-cluster-net --ip 172.26.208.5 -v /data/redis-data/node1:/data -p 6380:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-1.conf
-docker create --name redis-node2 --network redis-cluster-net --ip 172.26.208.6 -v /data/redis-data/node2:/data -p 6381:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-2.conf
-docker create --name redis-node3 --network redis-cluster-net --ip 172.26.208.7 -v /data/redis-data/node3:/data -p 6382:6379 redis:5.0.5 --cluster-enabled yes --cluster-config-file nodes-node-3.conf
 
 
 查看创建的容器
@@ -85,7 +85,7 @@ docker inspect redis-node3
 进入容器连接各个redis形成集群
 docker exec -it redis-node1 /bin/bash
 连接集群
-redis-cli --cluster create 172.17.0.2:6379  172.17.0.3:6379 172.17.0.4:6379 --cluster-replicas 0
+redis-cli --cluster create 172.26.208.5:6379  172.26.208.6:6379 172.26.208.7:6379 --cluster-replicas 0
 输入yes
 结果如下:
 C:\Users\Administrator>docker exec -it redis-node1 /bin/bash
@@ -147,7 +147,8 @@ redis-cli -h 192.168.8.210 -p 6380
 a88533adfc5ff1b8010c81dd8413cb6fa40850a4 172.17.0.4:6379@16379 master - 0 1624607156373 3 connected 10923-16383
 22a0d04f3539bf3a004d5b39d79a2588ec9f43f2 172.17.0.3:6379@16379 master - 0 1624607155370 2 connected 5461-10922
 44ead3cddf5b1e70ccb954dbb8894d9f66589d01 172.17.0.2:6379@16379 myself,master - 0 1624607154000 1 connected 0-5460
-执行cluster forget 22a0d04f3539bf3a004d5b39d79a2588ec9f43f2
+执行
+cluster forget 22a0d04f3539bf3a004d5b39d79a2588ec9f43f2
 cluster forget 44ead3cddf5b1e70ccb954dbb8894d9f66589d01
 
 
