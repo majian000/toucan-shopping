@@ -16,6 +16,15 @@ setenforce 0
 修改虚拟中centos分辨率
 xrandr -s  15
 
+将docker加到root组
+sudo groupadd docker 
+
+关闭防火墙
+systemctl stop firewalld.service
+
+关闭防火墙开机启动
+systemctl disable firewalld.service
+
 
 ==============================================创建集群
 
