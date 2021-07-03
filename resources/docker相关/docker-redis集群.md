@@ -9,7 +9,12 @@ docker create --name redis-node1 -v /data/redis-data/node1:/data -p 6379:6379 re
 启动容器
 docker start redis-node1
 
+关闭selinux
+getenforce
+setenforce 0
 
+修改虚拟中centos分辨率
+xrandr -s  15
 
 
 ==============================================创建集群
@@ -90,8 +95,11 @@ apt-get install iputils-ping
 
 进入容器连接各个redis形成集群
 docker exec -it redis-node1 /bin/bash
-连接集群
+连接集群(根据你的创建方式选择不同的)
 redis-cli --cluster create 172.26.208.5:6379  172.26.208.6:6379 172.26.208.7:6379 --cluster-replicas 0
+或
+redis-cli --cluster create 192.168.80.129:6380  192.168.80.129:6381 192.168.80.129:6382 --cluster-replicas 0
+
 输入yes
 结果如下:
 C:\Users\Administrator>docker exec -it redis-node1 /bin/bash
