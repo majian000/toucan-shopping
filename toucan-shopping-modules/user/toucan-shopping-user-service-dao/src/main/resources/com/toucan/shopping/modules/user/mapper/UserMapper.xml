@@ -100,6 +100,11 @@
         select * from t_user bu where 1=1 and bu.id = #{id} and bu.delete_status = 0
     </select>
 
+
+    <select id="findByUserMainId" resultMap="userMap" parameterType="java.lang.Long">
+        select * from t_user bu where 1=1 and bu.user_main_id = #{id} and bu.delete_status = 0
+    </select>
+
     <select id="findListByUserMainId" resultMap="userMap" parameterType="java.lang.Long">
         select * from t_user bu where 1=1 and bu.user_main_id = #{userMainId} and bu.delete_status = 0
     </select>

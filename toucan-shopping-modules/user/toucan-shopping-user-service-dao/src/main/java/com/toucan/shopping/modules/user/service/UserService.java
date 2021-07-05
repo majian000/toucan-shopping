@@ -22,6 +22,8 @@ public interface UserService {
 
     List<User> findById(Long id);
 
+    List<User> findByUserMainId(Long id);
+
     int updateEnableStatus(Short enableStatus,Long userMainId);
 
     /**

@@ -28,11 +28,13 @@ function login()
         success: function (result) {
             if(result.code<=0)
             {
-                $("#login_msg").text(result.msg);
+                $("#login_msg").attr("class","msg-warn ");
+                $("#login_msg").html("<b></b> "+result.msg);
             }else{
                 if(!window.localStorage)
                 {
-                    $("#login_msg").text("浏览器太旧了,请升级浏览器");
+                    $("#login_msg").attr("class","msg-warn ");
+                    $("#login_msg").text("<b></b> 浏览器太旧了,请升级浏览器");
                     return;
                 }
 
@@ -42,7 +44,8 @@ function login()
             }
         },
         error: function (result) {
-            $("#login_msg").text("登陆失败,请重试");
+            $("#login_msg").attr("class","msg-warn ");
+            $("#login_msg").html("<b></b>  登陆失败,请重试");
         }
     });
 }

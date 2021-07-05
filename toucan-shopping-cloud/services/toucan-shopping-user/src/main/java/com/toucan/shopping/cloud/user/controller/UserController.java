@@ -1118,7 +1118,7 @@ public class UserController {
                 }
             }
 
-            List<User> users = userService.findById(userId);
+            List<User> users = userService.findByUserMainId(userId);
             if(CollectionUtils.isEmpty(users))
             {
                 resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);

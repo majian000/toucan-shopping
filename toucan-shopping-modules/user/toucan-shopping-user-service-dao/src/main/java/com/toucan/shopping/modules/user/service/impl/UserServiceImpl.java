@@ -52,6 +52,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findByUserMainId(Long id) {
+        return userMapper.findByUserMainId(id);
+    }
+
+    @Override
     public int updateEnableStatus(Short enableStatus,Long userMainId) {
         return userMapper.updateEnableStatus(enableStatus,userMainId);
     }

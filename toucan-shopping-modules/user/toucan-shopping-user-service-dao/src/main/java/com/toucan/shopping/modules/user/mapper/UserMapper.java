@@ -31,4 +31,6 @@ public interface UserMapper {
     List<User> findListByUserMainId(Long userMainId);
 
     int updatePasswordByUserMainId(Long userMainId, String password);
+
+    List<User> findByUserMainId(Long id);
 }
