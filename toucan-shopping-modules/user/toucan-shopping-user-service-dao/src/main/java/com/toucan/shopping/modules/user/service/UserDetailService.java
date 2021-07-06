@@ -17,6 +17,7 @@ public interface UserDetailService {
 
     List<UserDetail> findById(Long id);
 
+    List<UserDetail> findByUserMainId(Long id);
 
     List<UserDetail> queryListByUserId(Long[] userIdArray);
 }

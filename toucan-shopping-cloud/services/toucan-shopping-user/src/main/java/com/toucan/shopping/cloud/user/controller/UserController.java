@@ -1232,6 +1232,112 @@ public class UserController {
     }
 
 
+    /**
+     * 判断是否实名
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/verify/real/name",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO verifyRealName(@RequestBody RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setData(false);
+        if (requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+
+        UserLoginVO userLogin = JSONObject.parseObject(requestVo.getEntityJson(),UserLoginVO.class);
+        if(userLogin==null)
+        {
+            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到账号");
+            return resultObjectVO;
+        }
+        logger.info(" 用户登录 {} ",requestVo.getEntityJson());
+
+        try {
+            boolean lockStatus = redisLock.lock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+            //如果当前输入的是手机号判断手机号是否存在
+            Long userId = 0L;
+            if(PhoneUtils.isChinaPhoneLegal(userLogin.getLoginUserName()))
+            {
+                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(userLogin.getLoginUserName());
+                if(!CollectionUtils.isEmpty(userMobilePhones))
+                {
+                    if(userMobilePhones.get(0)!=null&&userMobilePhones.get(0).getUserMainId()!=null) {
+                        userId = userMobilePhones.get(0).getUserMainId();
+                    }
+                }
+
+            }else if(EmailUtils.isEmail(userLogin.getLoginUserName())) //如果输入邮箱,拿到邮箱对应的用户主ID
+            {
+                List<UserEmail> userEmails = userEmailService.findListByEmail(userLogin.getLoginUserName());
+                if(!CollectionUtils.isEmpty(userEmails))
+                {
+                    if(userEmails.get(0)!=null&&userEmails.get(0).getUserMainId()!=null) {
+                        userId = userEmails.get(0).getUserMainId();
+                    }
+                }
+            }else if(UsernameUtils.isUsername(userLogin.getLoginUserName())) //如果输入用户名,拿到用户名对应的用户主ID
+            {
+                List<UserUserName> userUserNames = userUserNameService.findListByUserName(userLogin.getLoginUserName());
+                if(!CollectionUtils.isEmpty(userUserNames))
+                {
+                    if(userUserNames.get(0)!=null&&userUserNames.get(0).getUserMainId()!=null) {
+                        userId = userUserNames.get(0).getUserMainId();
+                    }
+                }
+            }
+
+            List<User> users = userService.findByUserMainId(userId);
+            if(CollectionUtils.isEmpty(users))
+            {
+                resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
+                resultObjectVO.setMsg("查询失败,没有找到该用户");
+            }else {
+                User userEntity = users.get(0);
+                //判断用户启用状态
+                if(userEntity.getEnableStatus().shortValue()==1) {
+                    List<UserDetail> userDetails = userDetailService.findByUserMainId(userEntity.getUserMainId());
+                    if(CollectionUtils.isEmpty(userDetails))
+                    {
+                        resultObjectVO.setData(false);
+                    }else{
+                        for(UserDetail userDetail:userDetails)
+                        {
+                            //如果输入了真实姓名和身份证账号
+                            if(StringUtils.isNotEmpty(userDetail.getTrueName())&&StringUtils.isNotEmpty(userDetail.getIdCard()))
+                            {
+                                resultObjectVO.setData(true);
+                                break;
+                            }
+                        }
+                    }
+                }else{
+
+                    resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
+                    resultObjectVO.setMsg("查询失败,该用户被禁用");
+                }
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
+        }
+        return resultObjectVO;
+    }
 
 
 

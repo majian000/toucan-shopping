@@ -110,6 +110,16 @@ public interface FeignUserService {
 
 
     /**
+     * 查询是否实名
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/verify/real/name",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO verifyRealName(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
      * 根据手机号查询用户
      * @param requestJsonVO
      * @return

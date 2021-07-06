@@ -48,6 +48,11 @@ public class UserDetailServiceImpl implements UserDetailService {
     }
 
     @Override
+    public List<UserDetail> findByUserMainId(Long id) {
+        return userDetailMapper.findByUserMainId(id);
+    }
+
+    @Override
     public List<UserDetail> queryListByUserId(Long[] userIdArray) {
         return userDetailMapper.queryListByUserId(userIdArray);
     }

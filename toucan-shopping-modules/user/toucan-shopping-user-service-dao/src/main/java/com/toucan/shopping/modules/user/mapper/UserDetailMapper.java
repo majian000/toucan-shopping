@@ -21,4 +21,6 @@ public interface UserDetailMapper {
 
     int update(UserDetail entity);
 
+    List<UserDetail> findByUserMainId(Long id);
+
 }

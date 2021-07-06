@@ -23,6 +23,15 @@ public class UserCenterLoginRedisKey {
     }
 
 
+    /**
+     * 判断是否实名锁
+     * @param mobile
+     * @return
+     */
+    public static String getVerifyRealNameLockKey(String mobile)
+    {
+        return appCode +"_USER_VERIFY_REAL_NAME_"+mobile+"_LOCK";
+    }
 
 
 
