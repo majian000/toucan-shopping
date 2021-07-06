@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.scheduler.vo;
 
 import com.toucan.shopping.modules.common.vo.ResultVO;
 
-public class ShoppingUserResultVo extends ResultVO {
+public class UserResultVo extends ResultVO {
     /**
      * 没有找到的用户
      */

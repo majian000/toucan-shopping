@@ -116,7 +116,7 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/verify/real/name",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO verifyRealName(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO verifyRealName(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
     /**

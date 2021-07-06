@@ -37,10 +37,12 @@ function login()
                     $("#login_msg").text("<b></b> 浏览器太旧了,请升级浏览器");
                     return;
                 }
+                window.localStorage.removeItem("uid");
+                window.localStorage.removeItem("lt");
 
                 window.localStorage.setItem("uid", result.data.id);
                 window.localStorage.setItem("lt", result.data.loginToken);
-                window.location.href=basePath+"/page/user/info";
+                window.location.href=basePath+"/page/shop/shop_regist/"+result.data.id;
             }
         },
         error: function (result) {

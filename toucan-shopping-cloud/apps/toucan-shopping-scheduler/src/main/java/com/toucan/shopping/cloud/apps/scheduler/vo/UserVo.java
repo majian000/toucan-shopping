@@ -9,7 +9,7 @@ import java.util.List;
  * 商城用户
  */
 @Data
-public class ShoppingUserVo {
+public class UserVo {
     private Integer id;
 
 

@@ -1248,56 +1248,31 @@ public class UserController {
             return resultObjectVO;
         }
 
-        UserLoginVO userLogin = JSONObject.parseObject(requestVo.getEntityJson(),UserLoginVO.class);
-        if(userLogin==null)
+        UserVO userVo = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
+        if(userVo==null)
         {
             resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
             resultObjectVO.setMsg("请求失败,没有找到账号");
             return resultObjectVO;
         }
+        if(userVo.getUserMainId() == null)
+        {
+            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到用户主ID");
+            return resultObjectVO;
+        }
         logger.info(" 用户登录 {} ",requestVo.getEntityJson());
 
+        String userMainId = String.valueOf(userVo.getUserMainId());
         try {
-            boolean lockStatus = redisLock.lock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
+            boolean lockStatus = redisLock.lock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;
             }
 
-            //如果当前输入的是手机号判断手机号是否存在
-            Long userId = 0L;
-            if(PhoneUtils.isChinaPhoneLegal(userLogin.getLoginUserName()))
-            {
-                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(userLogin.getLoginUserName());
-                if(!CollectionUtils.isEmpty(userMobilePhones))
-                {
-                    if(userMobilePhones.get(0)!=null&&userMobilePhones.get(0).getUserMainId()!=null) {
-                        userId = userMobilePhones.get(0).getUserMainId();
-                    }
-                }
-
-            }else if(EmailUtils.isEmail(userLogin.getLoginUserName())) //如果输入邮箱,拿到邮箱对应的用户主ID
-            {
-                List<UserEmail> userEmails = userEmailService.findListByEmail(userLogin.getLoginUserName());
-                if(!CollectionUtils.isEmpty(userEmails))
-                {
-                    if(userEmails.get(0)!=null&&userEmails.get(0).getUserMainId()!=null) {
-                        userId = userEmails.get(0).getUserMainId();
-                    }
-                }
-            }else if(UsernameUtils.isUsername(userLogin.getLoginUserName())) //如果输入用户名,拿到用户名对应的用户主ID
-            {
-                List<UserUserName> userUserNames = userUserNameService.findListByUserName(userLogin.getLoginUserName());
-                if(!CollectionUtils.isEmpty(userUserNames))
-                {
-                    if(userUserNames.get(0)!=null&&userUserNames.get(0).getUserMainId()!=null) {
-                        userId = userUserNames.get(0).getUserMainId();
-                    }
-                }
-            }
-
-            List<User> users = userService.findByUserMainId(userId);
+            List<User> users = userService.findByUserMainId(userVo.getUserMainId());
             if(CollectionUtils.isEmpty(users))
             {
                 resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
@@ -1334,7 +1309,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
+            redisLock.unLock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
