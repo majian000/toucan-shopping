@@ -26,13 +26,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -310,6 +310,48 @@ public class UserApiController extends BaseController {
         }
 
         return resultObjectVO;
+    }
+
+
+
+    @RequestMapping(value="/vcode", method = RequestMethod.GET)
+    public void verifyCode(HttpServletResponse response) {
+        OutputStream outputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            int w = 200, h = 80;
+            //生成4位验证码
+            String code = VerifyCodeUtil.generateVerifyCode(4);
+
+
+            //生成客户端验证码ID
+            String vcodeKey = GlobalUUID.uuid();
+
+            String vcodeRedisKey = this.getAppCode()+"_vcode_"+vcodeKey;
+            stringRedisTemplate.opsForValue().set(vcodeRedisKey,code);
+            stringRedisTemplate.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+
+            Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeKey);
+            clientVCodeId.setPath("/");
+            //60秒过期
+            clientVCodeId.setMaxAge(60);
+            response.addCookie(clientVCodeId);
+
+            VerifyCodeUtil.outputImage(w, h, outputStream, code);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(),e);
+        }finally{
+            if(outputStream!=null)
+            {
+                try {
+                    outputStream.flush();
+                    outputStream.close();
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+        }
     }
 
 

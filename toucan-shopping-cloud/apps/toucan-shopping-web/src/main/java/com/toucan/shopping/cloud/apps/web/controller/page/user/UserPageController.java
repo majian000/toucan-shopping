@@ -35,4 +35,11 @@ public class UserPageController {
         return "user/info";
     }
 
+    @RequestMapping("/trueName")
+    public String trueName()
+    {
+        return "user/true_name";
+    }
+
+
 }
