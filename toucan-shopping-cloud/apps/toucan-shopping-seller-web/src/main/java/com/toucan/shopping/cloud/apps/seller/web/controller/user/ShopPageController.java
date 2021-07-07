@@ -44,6 +44,7 @@ public class ShopPageController extends BaseController {
                     return "shop_regist";
                 }else{
                     //TODO:跳转到实名页面
+                    //TODO:个人开店只需要实名就可以 企业开店 需要上传公司资质相关
                     int a=0;
                 }
             }
