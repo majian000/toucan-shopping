@@ -50,12 +50,12 @@
 </div>
 <!--End Header End-->
 <!--Begin Login Begin-->
-<div class="log_bg">
+<div >
     <div class="top">
         <#include "/logo.html"/>
     </div>
-	<div class="regist">
-		<div class="reg_c" style="width:100%;height:400px;">
+	<div >
+		<div  style="width:100%;">
         	<form>
             <table border="0" style="width:450px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
               <tr height="50" valign="top">
@@ -69,8 +69,38 @@
                 <td><input type="text" id="trueName" value="" class="l_user"  maxlength="11"/></td>
               </tr>
                 <tr height="50">
-                    <td align="right"><font color="#ff4e00">*</font>&nbsp;身份证 &nbsp;</td>
+                    <td align="right"><font color="#ff4e00">*</font>&nbsp;证件类型 &nbsp;</td>
+                    <td>
+                        <select class="l_select" >
+                            <option>身份证</option>
+                            <option>护照</option>
+                            <option>海外</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr height="50">
+                    <td align="right"><font color="#ff4e00">*</font>&nbsp;证件号码 &nbsp;</td>
                     <td><input type="text" id="idCard" value="" class="l_user"  maxlength="11"/></td>
+                </tr>
+                <tr height="50">
+                    <td align="right">&nbsp; &nbsp;</td>
+                    <td>
+                        &nbsp;&nbsp;<img    src="${basePath}/static/images/id_card1.png" >
+                    </td>
+                </tr>
+                <tr height="50">
+                    <td align="right"><font color="#ff4e00">*</font>&nbsp;证件正面 &nbsp;</td>
+                    <td><input type="file" ></td>
+                </tr>
+                <tr height="50">
+                    <td align="right">&nbsp; &nbsp;</td>
+                    <td>
+                        &nbsp;&nbsp;<img    src="${basePath}/static/images/id_card2.png" >
+                    </td>
+                </tr>
+                <tr height="50">
+                    <td align="right"><font color="#ff4e00">*</font>&nbsp;证件背面 &nbsp;</td>
+                    <td><input type="file" ></td>
                 </tr>
               <tr height="50">
                 <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
