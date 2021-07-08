@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
+import com.toucan.shopping.modules.user.redis.UserCenterTrueNameApproveKey;
 import com.toucan.shopping.modules.user.service.*;
 import com.toucan.shopping.modules.user.vo.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -51,6 +52,8 @@ public class UserTrueNameApproveController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private RedisLock redisLock;
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -68,35 +71,50 @@ public class UserTrueNameApproveController {
             return resultObjectVO;
         }
         UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
+        if(StringUtils.isEmpty(userTrueNameApprove.getTrueName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,真实姓名不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userTrueNameApprove.getIdCard()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件号码不能为空");
+            return resultObjectVO;
+        }
+        if(userTrueNameApprove.getIdcardType()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件类型不能为空");
+            return resultObjectVO;
+        }
+        if(userTrueNameApprove.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg1()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件正面照片不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg2()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件背面照片不能为空");
+            return resultObjectVO;
+        }
+        String userMainId = String.valueOf(userTrueNameApprove.getUserMainId());
         try {
-            if(StringUtils.isEmpty(userTrueNameApprove.getTrueName()))
-            {
+
+
+            boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
+            if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,真实姓名不能为空");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(userTrueNameApprove.getIdCard()))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,证件号码不能为空");
-                return resultObjectVO;
-            }
-            if(userTrueNameApprove.getIdcardType()==null)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,证件类型不能为空");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg1()))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,证件正面照片不能为空");
-                return resultObjectVO;
-            }
-            if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg2()))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,证件背面照片不能为空");
+                resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;
             }
             userTrueNameApprove.setId(idGenerator.id());
@@ -113,6 +131,8 @@ public class UserTrueNameApproveController {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
