@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.user.mapper.UserTrueNameApproveRecordMapper">
+
+    <resultMap id="userTrueNameApproveRecordMap" type="com.toucan.shopping.modules.user.entity.UserTrueNameApproveRecord" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="approve_id" jdbcType="BIGINT" property="approveId" />
+        <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        
+    </resultMap>
+
+
+    <select id="findListByEntity" resultMap="userTrueNameApproveRecordMap" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApproveRecord">
+        select * from t_user_true_name_approve_record t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApproveRecord" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_user_true_name_approve_record(user_main_id,approve_status,reject_text,create_admin_id,create_date,delete_status)
+        values(#{userMainId},#{approveStatus},#{rejectText},#{createAdminId},#{createDate},#{deleteStatus})
+    </insert>
+
+</mapper>

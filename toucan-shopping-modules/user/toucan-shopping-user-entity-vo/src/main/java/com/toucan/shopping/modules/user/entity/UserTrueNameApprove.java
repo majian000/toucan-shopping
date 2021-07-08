@@ -58,6 +58,11 @@ public class UserTrueNameApprove {
     private Integer approveStatus;
 
     /**
+     * 证件类型 1身份证 2护照 3海外
+     */
+    private Integer idcardType;
+
+    /**
      * 驳回原因
      */
     private String rejectText;

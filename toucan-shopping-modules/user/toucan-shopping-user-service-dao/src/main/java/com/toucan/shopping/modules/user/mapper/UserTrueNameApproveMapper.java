@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 
+/**
+ * 用户实名制审核
+ */
 @Mapper
 public interface UserTrueNameApproveMapper {
 
