@@ -45,13 +45,12 @@ public class UserTrueNameApproveController {
     @Autowired
     private IdGenerator idGenerator;
 
+    @Autowired
+    private UserTrueNameApproveService userTrueNameApproveService;
 
     @Autowired
     private Toucan toucan;
 
-
-    @Autowired
-    private NewUserMessageQueue newUserMessageQueue;
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -68,11 +67,47 @@ public class UserTrueNameApproveController {
             resultObjectVO.setMsg("请求失败,没有找到应用编码");
             return resultObjectVO;
         }
-        UserTrueNameApproveVO userTrueNameApproveVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApproveVO.class);
+        UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
         try {
-
-//            List<UserMobilePhone> userEntityList = userMobilePhoneService.findListByMobilePhone(userTrueNameApproveVO.getMobilePhone());
-//            resultObjectVO.setData(userEntityList);
+            if(StringUtils.isEmpty(userTrueNameApprove.getTrueName()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,真实姓名不能为空");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(userTrueNameApprove.getIdCard()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,证件号码不能为空");
+                return resultObjectVO;
+            }
+            if(userTrueNameApprove.getIdcardType()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,证件类型不能为空");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg1()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,证件正面照片不能为空");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg2()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,证件背面照片不能为空");
+                return resultObjectVO;
+            }
+            userTrueNameApprove.setId(idGenerator.id());
+            int ret = userTrueNameApproveService.save(userTrueNameApprove);
+            if(ret<=0)
+            {
+                logger.warn("保存用户实名审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userTrueNameApprove.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试");
+            }
+            resultObjectVO.setData(userTrueNameApprove);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
