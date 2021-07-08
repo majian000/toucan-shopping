@@ -9,6 +9,7 @@
         <result column="true_name" jdbcType="VARCHAR" property="trueName" />
         <result column="head_sculpture" jdbcType="VARCHAR" property="headSculpture" />
         <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+        <result column="idcard_type" jdbcType="INTEGER" property="idcardType" />
         <result column="sex" jdbcType="INTEGER" property="sex" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />

@@ -16,5 +16,9 @@ import java.util.Date;
 public class UserTrueNameApproveVO extends UserTrueNameApprove {
 
 
+    /**
+     * 验证码
+     */
+    private String vcode;
 
 }

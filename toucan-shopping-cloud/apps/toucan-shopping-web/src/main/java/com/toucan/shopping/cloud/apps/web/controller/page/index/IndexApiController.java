@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.controller.api.index;
+package com.toucan.shopping.cloud.apps.web.controller.page.index;
 
 import com.toucan.shopping.modules.common.properties.Toucan;
 import org.slf4j.Logger;

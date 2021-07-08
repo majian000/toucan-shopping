@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.controller.api.user;
+package com.toucan.shopping.cloud.apps.web.controller.page.user;
 
 
 import com.alibaba.fastjson.JSONObject;

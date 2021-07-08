@@ -71,10 +71,10 @@
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件类型 &nbsp;</td>
                     <td>
-                        <select class="l_select" >
-                            <option>身份证</option>
-                            <option>护照</option>
-                            <option>海外</option>
+                        <select class="l_select" id="idcardType">
+                            <option value="1">身份证</option>
+                            <option value="2">护照</option>
+                            <option value="3" >海外</option>
                         </select>
                     </td>
                 </tr>
@@ -85,7 +85,7 @@
                 <tr height="50">
                     <td align="right">&nbsp; &nbsp;</td>
                     <td>
-                        &nbsp;&nbsp;<img    src="${basePath}/static/images/id_card1.png" >
+                        &nbsp;&nbsp;<img src="${basePath}/static/images/id_card1.png" >
                     </td>
                 </tr>
                 <tr height="50">
@@ -95,7 +95,7 @@
                 <tr height="50">
                     <td align="right">&nbsp; &nbsp;</td>
                     <td>
-                        &nbsp;&nbsp;<img    src="${basePath}/static/images/id_card2.png" >
+                        &nbsp;&nbsp;<img src="${basePath}/static/images/id_card2.png" >
                     </td>
                 </tr>
                 <tr height="50">
@@ -105,7 +105,7 @@
               <tr height="50">
                 <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                 <td>
-                    <input type="text" value="" id="regist_vcode" class="l_ipt" />
+                    <input type="text" value="" id="utm_vcode" class="l_ipt" />
                     <span style="vertical-align: middle">
                         &nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" >
                     </span>

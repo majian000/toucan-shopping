@@ -10,6 +10,7 @@
         <result column="idcard_img1" jdbcType="VARCHAR" property="idcardImg1" />
         <result column="idcard_img2" jdbcType="VARCHAR" property="idcardImg2" />
         <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="idcard_type" jdbcType="INTEGER" property="idcardType" />
         <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />

@@ -37,6 +37,11 @@ public class UserDetail {
     private String idCard;
 
     /**
+     * 证件类型 1身份证 2护照 3海外
+     */
+    private Integer idcardType;
+
+    /**
      * 用户ID,用该字段分库分表
      */
     private Long userMainId;
