@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper
 public interface UserAppMapper {
 
-    public int insert(UserApp userApp);
+    int insert(UserApp entity);
 
-    public List<UserApp> findListByEntity(UserApp userApp);
+    List<UserApp> findListByEntity(UserApp entity);
 
 
 }
