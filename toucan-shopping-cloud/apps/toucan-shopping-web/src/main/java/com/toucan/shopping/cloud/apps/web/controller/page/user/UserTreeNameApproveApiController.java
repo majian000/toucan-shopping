@@ -72,7 +72,7 @@ public class UserTreeNameApproveApiController extends BaseController {
 
 
 
-    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM,login = false)
+    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request,UserTrueNameApproveVO userTrueNameApproveVO){
@@ -80,7 +80,7 @@ public class UserTreeNameApproveApiController extends BaseController {
         if(userTrueNameApproveVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("保存失败,没有找到实名信息");
+            resultObjectVO.setMsg("请求失败,没有找到实名信息");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userTrueNameApproveVO.getTrueName()))
@@ -166,20 +166,26 @@ public class UserTreeNameApproveApiController extends BaseController {
                 String idcard2ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg2File().getBytes(),ImageUtils.getImageExt(idcard2ImgFileName));
                 userTrueNameApproveVO.setIdcardImg2(idcard2ImgFilePath);
 
+                logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
+
                 userTrueNameApproveVO.setApproveStatus(1);
                 userTrueNameApproveVO.setIdcardImg1File(null);
                 userTrueNameApproveVO.setIdcardImg2File(null);
                 requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
-
-                logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
-
+                resultObjectVO = feignUserTrueNameApproveService.save(requestJsonVO.sign(),requestJsonVO);
+                if(!resultObjectVO.isSuccess())
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍后重试!");
+                    return resultObjectVO;
+                }
                 resultObjectVO.setData(null);
             }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
             redisLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
         }
