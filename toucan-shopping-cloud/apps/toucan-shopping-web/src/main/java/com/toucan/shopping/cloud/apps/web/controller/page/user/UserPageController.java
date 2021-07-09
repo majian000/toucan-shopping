@@ -28,9 +28,6 @@ public class UserPageController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
-
 
     @RequestMapping("/regist")
     public String regist()
@@ -51,32 +48,6 @@ public class UserPageController extends BaseController {
         return "user/info";
     }
 
-    @RequestMapping("/trueName")
-    public String trueName(HttpServletRequest request)
-    {
-        try {
-            //从请求头中拿到uid
-            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
-            UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
-            queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
-            //查询当前人的实名审核记录
-            ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
-                if(CollectionUtils.isNotEmpty(userTrueNameApproves))
-                {
-                    request.setAttribute("userTrueNameApprove",userTrueNameApproves.get(0));
-                }
-            }
-
-        }catch (Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "user/true_name";
-    }
 
 
 }

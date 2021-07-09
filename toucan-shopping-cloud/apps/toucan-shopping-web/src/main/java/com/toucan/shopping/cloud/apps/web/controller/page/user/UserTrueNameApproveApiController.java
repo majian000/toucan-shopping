@@ -72,7 +72,7 @@ public class UserTrueNameApproveApiController extends BaseController {
 
 
 
-    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM,login=false)
+    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request,UserTrueNameApproveVO userTrueNameApproveVO){
