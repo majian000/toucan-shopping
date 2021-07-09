@@ -25,6 +25,22 @@
             <if test="id!=null">
                 and t.id = #{id}
             </if>
+
+            <if test="userMainId!=null">
+                and t.user_main_id = #{userMainId}
+            </if>
+
+            <if test="trueName!=null and trueName!=''">
+                and t.true_name = #{trueName}
+            </if>
+
+            <if test="idCard!=null and idCard!=''">
+                and t.id_card = #{idCard}
+            </if>
+
+            <if test="approveStatus!=null ">
+                and t.approve_status = #{approveStatus}
+            </if>
             and t.delete_status = 0
         </where>
 

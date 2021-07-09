@@ -27,7 +27,10 @@ spring:
     enabled: true
     content-type: text/html
     template-loader-path: classpath:/templates/
-
+  servlet:
+    multipart:
+      max-file-size: 5MB  #单个文件最大5MB
+      max-request-size: 15MB #单次请求上传文件最大15NB
 
 
 eureka:

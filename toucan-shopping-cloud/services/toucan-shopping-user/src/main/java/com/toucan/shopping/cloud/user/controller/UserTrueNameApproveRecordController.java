@@ -64,6 +64,8 @@ public class UserTrueNameApproveRecordController {
                 resultObjectVO.setMsg("请求失败,审核状态不能为空");
                 return resultObjectVO;
             }
+
+
             userTrueNameApproveRecord.setId(idGenerator.id());
             int ret = userTrueNameApproveRecordService.save(userTrueNameApproveRecord);
             if(ret<=0)

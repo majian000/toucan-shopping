@@ -115,6 +115,18 @@ public class UserTrueNameApproveController {
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;
             }
+            //查询是否存在审核中
+            UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
+            queryUserTrueNameApprove.setUserMainId(userTrueNameApprove.getUserMainId());
+            queryUserTrueNameApprove.setApproveStatus(userTrueNameApprove.getApproveStatus());
+            List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
+            if(CollectionUtils.isNotEmpty(userTrueNameApproves))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,实名验证正在审核中");
+                return resultObjectVO;
+            }
+
             userTrueNameApprove.setId(idGenerator.id());
             int ret = userTrueNameApproveService.save(userTrueNameApprove);
             if(ret<=0)

@@ -158,7 +158,10 @@
             <artifactId>toucan-shopping-user-auth-spring-boot-starter</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-image-upload</artifactId>
+        </dependency>
 
     </dependencies>
 

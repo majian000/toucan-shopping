@@ -6,6 +6,7 @@ import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -13,6 +14,7 @@ import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
@@ -60,12 +62,15 @@ public class UserTreeNameApproveApiController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
 
+    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM,login = false)
     @RequestMapping(value="/save")
     @ResponseBody
-    public ResultObjectVO save(UserTrueNameApproveVO userTrueNameApproveVO){
+    public ResultObjectVO save(HttpServletRequest request,UserTrueNameApproveVO userTrueNameApproveVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(userTrueNameApproveVO==null)
         {
@@ -91,29 +96,43 @@ public class UserTreeNameApproveApiController extends BaseController {
             resultObjectVO.setMsg("请求失败,证件类型不能为空");
             return resultObjectVO;
         }
-        if(StringUtils.isEmpty(userTrueNameApproveVO.getIdcardImg1()))
+        if(userTrueNameApproveVO.getIdcardImg1File()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请求失败,证件正面照片不能为空");
             return resultObjectVO;
         }
-        if(StringUtils.isEmpty(userTrueNameApproveVO.getIdcardImg2()))
+        if(userTrueNameApproveVO.getIdcardImg2File()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("请求失败,证件背面照片不能为空");
             return resultObjectVO;
         }
 
-        if(userTrueNameApproveVO.getUserMainId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,用户ID不能为空");
-            return resultObjectVO;
-        }
 
-        String userMainId = String.valueOf(userTrueNameApproveVO.getUserMainId());
 
+        String userMainId="-1";
         try {
+
+            //从请求头中拿到uid
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
+
+            if(userTrueNameApproveVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,用户ID不能为空");
+                return resultObjectVO;
+            }
+
+            String idcard1ImgFileName = userTrueNameApproveVO.getIdcardImg1File().getOriginalFilename();
+            String idcard2ImgFileName = userTrueNameApproveVO.getIdcardImg2File().getOriginalFilename();
+            if(!ImageUtils.isImage(idcard1ImgFileName)||!ImageUtils.isImage(idcard2ImgFileName))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
+                return resultObjectVO;
+            }
             boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -121,7 +140,9 @@ public class UserTreeNameApproveApiController extends BaseController {
                 return resultObjectVO;
             }
 
-
+            userTrueNameApproveVO.setApproveStatus(1);
+            userTrueNameApproveVO.setIdcardImg1File(null);
+            userTrueNameApproveVO.setIdcardImg2File(null);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
 
             logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
