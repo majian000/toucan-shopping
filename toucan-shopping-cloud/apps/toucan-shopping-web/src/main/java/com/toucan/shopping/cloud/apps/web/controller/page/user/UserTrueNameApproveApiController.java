@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController("apiUserTreeNameApproveApiController")
 @RequestMapping("/api/user/true/name/approve")
-public class UserTreeNameApproveApiController extends BaseController {
+public class UserTrueNameApproveApiController extends BaseController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -156,6 +156,7 @@ public class UserTreeNameApproveApiController extends BaseController {
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("请求失败,已存在用户实名审核的记录");
+                    resultObjectVO.setData(null);
                     return resultObjectVO;
                 }
 
