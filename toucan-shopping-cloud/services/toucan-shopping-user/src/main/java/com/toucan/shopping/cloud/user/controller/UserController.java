@@ -2,10 +2,15 @@ package com.toucan.shopping.cloud.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.user.queue.NewUserMessageQueue;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.*;
@@ -16,11 +21,6 @@ import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.service.*;
 import com.toucan.shopping.modules.user.vo.*;
-import com.toucan.shopping.cloud.user.queue.NewUserMessageQueue;
-import com.toucan.shopping.modules.common.generator.IdGenerator;
-import com.toucan.shopping.modules.common.vo.RequestJsonVO;
-import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -1130,8 +1130,8 @@ public class UserController {
                     String pwdMd5 = MD5Util.md5(userLogin.getPassword());
                     //登录成功 生成token
                     if (pwdMd5.equals(userEntity.getPassword())) {
-                        String loginTokenGroupKey = UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userEntity.getId()));
-                        String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getId()), requestJsonVO.getAppCode());
+                        String loginTokenGroupKey = UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userEntity.getUserMainId()));
+                        String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
                         //判断是否已有登录token,如果有将删除掉
                         if (stringRedisTemplate.opsForHash().keys(loginTokenGroupKey) != null) {
                             long deleteRows = 0;
@@ -1150,7 +1150,7 @@ public class UserController {
                         stringRedisTemplate.expire(loginTokenGroupKey,
                                 UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
-                        userLogin.setId(userId);
+                        userLogin.setUserMainId(userId);
                         userLogin.setLoginToken(token);
                         userLogin.setPassword(null);
 
@@ -1198,7 +1198,7 @@ public class UserController {
         try{
             String entityJson = requestVo.getEntityJson();
             UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
-            if(userLoginVO.getId()==null)
+            if(userLoginVO.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请传入用户ID");
@@ -1210,8 +1210,8 @@ public class UserController {
                 resultObjectVO.setMsg("请求失败,请传入loginToken");
                 return resultObjectVO;
             }
-            String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userLoginVO.getId()));
-            String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getId()),requestVo.getAppCode());
+            String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userLoginVO.getUserMainId()));
+            String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
             Object loginTokenObject = stringRedisTemplate.opsForHash().get(loginTokenGroupKey,loginTokenAppKey);
             if (loginTokenObject != null) {

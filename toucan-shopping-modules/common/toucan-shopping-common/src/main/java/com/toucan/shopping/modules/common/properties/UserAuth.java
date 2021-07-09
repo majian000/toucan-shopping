@@ -6,7 +6,7 @@ import lombok.Data;
  * 自定义配置
  */
 @Data
-public class AdminAuth {
+public class UserAuth {
 
     /**
      * 权限中台名称
@@ -23,17 +23,13 @@ public class AdminAuth {
      * 后台管理端 toucan-atuh-header:adminId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
      * 或商城C端 toucan-atuh-header:userId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
      */
-    private String httpToucanAuthHeader = "toucan-atuh-header";
+    private String httpToucanAuthHeader = "ts-atuh";
 
     /**
      * 默认登录页
      */
     private String loginPage;
 
-    /**
-     * 没有权限跳转页面
-     */
-    private String page403;
 
     /**
      * 拦截指定路径

@@ -110,6 +110,7 @@
 
         <!-- =====================插件层====================== -->
         <module>stater/toucan-shopping-admin-auth-spring-boot-starter</module>
+        <module>stater/toucan-shopping-user-auth-spring-boot-starter</module>
         <!-- ===============================================-->
 
 

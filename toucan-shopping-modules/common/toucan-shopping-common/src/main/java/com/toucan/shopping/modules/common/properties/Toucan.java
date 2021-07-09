@@ -33,7 +33,15 @@ public class Toucan {
     //数据中心ID (0~31)
     private Integer datacenterId;
 
+    /**
+     * 权限中台
+     */
     private AdminAuth adminAuth;
+
+    /**
+     * 用户中心
+     */
+    private UserAuth userAuth;
 
     private UserCenterScheduler userCenterScheduler;
 

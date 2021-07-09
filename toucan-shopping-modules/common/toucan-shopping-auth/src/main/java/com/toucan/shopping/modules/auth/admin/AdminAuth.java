@@ -33,7 +33,6 @@ public @interface AdminAuth {
 	 * 用户类型
 	 */
 	public static int USERTYPE_ADMIN =0;
-	public static int USERTYPE_USER =1;
 
 
 	/**

@@ -11,13 +11,11 @@ import java.lang.annotation.*;
 @Inherited
 public @interface UserAuth {
 
-
 	/**
-	 * 校验方式 0本地验证 1权限中台验证
+	 * 校验方式 0本地验证 1用户中心验证
 	 */
 	public static int VERIFYMETHOD_LOCAL =0;
-	public static int VERIFYMETHOD_USER_CENTER =1;
-
+	public static int VERIFYMETHOD_USER_AUTH =1;
 
 	/**
 	 * 请求类型 0 json 1 form
@@ -27,10 +25,18 @@ public @interface UserAuth {
 
 
 	/**
+	 * 用户类型
+	 */
+	public static int USERTYPE_USER =1;
+
+
+	/**
 	 * 校验方式
 	 * @return
 	 */
-	public int verifyMethod() default VERIFYMETHOD_USER_CENTER;
+	public int verifyMethod() default VERIFYMETHOD_LOCAL;
+
+
 
 	/**
 	 * 登录校验
@@ -38,11 +44,19 @@ public @interface UserAuth {
 	 */
 	public boolean login() default true;
 
+
 	/**
 	 * 请求类型 0 json 1 form
 	 * @return
 	 */
 	public int requestType() default REQUEST_JSON;
+
+
+	/**
+	 * 用户类型 1普通账户
+	 * @return
+	 */
+	public int userType() default USERTYPE_USER;
 
 
 

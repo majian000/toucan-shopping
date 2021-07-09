@@ -139,7 +139,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         ResultObjectVO resultVO = new ResultObjectVO();
         resultVO.setCode(ResultVO.SUCCESS);
-        if (handler instanceof HandlerMethod) {
+        if (handler instanceof HandlerMethod&&toucan.getAdminAuth().isEnabled()) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             AdminAuth authAnnotation = method.getAnnotation(AdminAuth.class);
@@ -147,7 +147,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 response.setCharacterEncoding(Charset.defaultCharset().name());
 
                 if (authAnnotation != null) {
-                    //由用户中心做权限判断
+                    //由权限中台做权限判断
                     if (authAnnotation.verifyMethod() == AdminAuth.VERIFYMETHOD_ADMIN_AUTH) {
                         //拿到权限中台账号服务
                         FeignAdminService feignAdminService = springContextHolder.getBean(FeignAdminService.class);

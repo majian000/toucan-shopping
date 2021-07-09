@@ -5,3 +5,6 @@
     
     1.toucan-shopping-admin-auth-spring-boot-starter
     权限中台插件,用于验证管理员登录等
+    
+    2.toucan-shopping-user-auth-spring-boot-starter
+    用户中心插件,用于验证用户登录会话等

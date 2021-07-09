@@ -9,22 +9,13 @@ import lombok.Data;
  * 用户登录
  */
 @Data
-public class UserLoginVO {
+public class UserLoginVO extends UserVO {
 
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long id;
 
     /**
      * 手机号、邮箱、用户名
      */
     private String loginUserName;
-
-    /**
-     * 密码
-     */
-    private String password;
 
 
 
@@ -39,20 +30,5 @@ public class UserLoginVO {
      */
     private String appCode;
 
-
-    /**
-     * 邮箱
-     */
-    private String email;
-
-    /**
-     * 手机号
-     */
-    private String mobilePhone;
-
-    /**
-     * 用户名
-     */
-    private String username;
 
 }
