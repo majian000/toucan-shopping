@@ -230,6 +230,13 @@
             </dependency>
 
             <dependency>
+                <groupId>com.toucan.shopping.cloud.starter</groupId>
+                <artifactId>toucan-shopping-user-auth-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.toucan.shopping.cloud.modules.apps</groupId>
                 <artifactId>toucan-shopping-admin-auth-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
