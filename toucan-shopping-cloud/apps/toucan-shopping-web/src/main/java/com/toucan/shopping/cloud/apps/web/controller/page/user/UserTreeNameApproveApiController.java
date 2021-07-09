@@ -72,7 +72,7 @@ public class UserTreeNameApproveApiController extends BaseController {
 
 
 
-    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM,login=false)
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request,UserTrueNameApproveVO userTrueNameApproveVO){
@@ -160,18 +160,30 @@ public class UserTreeNameApproveApiController extends BaseController {
                 }
 
                 //身份证 正面上传
-                String idcard1ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg1File().getBytes(),ImageUtils.getImageExt(idcard1ImgFileName));
+                String idcard1ImgExt = ImageUtils.getImageExt(idcard1ImgFileName);
+                if(idcard1ImgExt.indexOf(".")!=-1)
+                {
+                    idcard1ImgExt = idcard1ImgExt.substring(idcard1ImgExt.indexOf(".")+1,idcard1ImgExt.length());
+                }
+                String idcard1ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg1File().getBytes(),idcard1ImgExt);
                 userTrueNameApproveVO.setIdcardImg1(idcard1ImgFilePath);
                 //身份证 背面上传
-                String idcard2ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg2File().getBytes(),ImageUtils.getImageExt(idcard2ImgFileName));
+                String idcard2ImgExt = ImageUtils.getImageExt(idcard2ImgFileName);
+                if(idcard2ImgExt.indexOf(".")!=-1)
+                {
+                    idcard2ImgExt = idcard2ImgExt.substring(idcard2ImgExt.indexOf(".")+1,idcard2ImgExt.length());
+                }
+                String idcard2ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg2File().getBytes(),idcard2ImgExt);
                 userTrueNameApproveVO.setIdcardImg2(idcard2ImgFilePath);
 
-                logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
 
                 userTrueNameApproveVO.setApproveStatus(1);
                 userTrueNameApproveVO.setIdcardImg1File(null);
                 userTrueNameApproveVO.setIdcardImg2File(null);
                 requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
+
+                logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
+
                 resultObjectVO = feignUserTrueNameApproveService.save(requestJsonVO.sign(),requestJsonVO);
                 if(!resultObjectVO.isSuccess())
                 {

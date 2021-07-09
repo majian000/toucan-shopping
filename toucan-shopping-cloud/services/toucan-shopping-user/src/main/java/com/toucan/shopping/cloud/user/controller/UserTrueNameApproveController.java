@@ -128,6 +128,7 @@ public class UserTrueNameApproveController {
             }
 
             userTrueNameApprove.setId(idGenerator.id());
+            userTrueNameApprove.setDeleteStatus((short)0);
             int ret = userTrueNameApproveService.save(userTrueNameApprove);
             if(ret<=0)
             {

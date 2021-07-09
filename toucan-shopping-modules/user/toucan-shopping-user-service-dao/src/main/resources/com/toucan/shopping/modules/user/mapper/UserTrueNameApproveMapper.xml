@@ -47,9 +47,9 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApprove" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_user_true_name_approve(user_main_id,true_name,id_card,idcard_img1,idcard_img2,approve_status,create_date,delete_status)
-        values(#{userMainId},#{trueName},#{idCard},#{idcardImg1},#{idcardImg2},#{approveStatus},#{createDate},#{deleteStatus})
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApprove" useGeneratedKeys="false" keyProperty="id" >
+        insert into t_user_true_name_approve(id,user_main_id,true_name,id_card,idcard_img1,idcard_img2,approve_status,create_date,delete_status)
+        values(#{id},#{userMainId},#{trueName},#{idCard},#{idcardImg1},#{idcardImg2},#{approveStatus},#{createDate},#{deleteStatus})
     </insert>
 
 </mapper>
