@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.user.entity.*;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
+import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterTrueNameApproveKey;
@@ -144,6 +145,49 @@ public class UserTrueNameApproveController {
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
             redisLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 查询列表页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserTrueNameApprovePageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), UserTrueNameApprovePageInfo.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+
+            //查询列表页
+            resultObjectVO.setData(userTrueNameApproveService.queryListPage(queryPageInfo));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }
         return resultObjectVO;
     }

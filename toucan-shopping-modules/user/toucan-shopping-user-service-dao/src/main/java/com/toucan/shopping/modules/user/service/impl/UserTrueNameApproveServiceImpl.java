@@ -1,9 +1,11 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.UserApp;
 import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
 import com.toucan.shopping.modules.user.mapper.UserAppMapper;
 import com.toucan.shopping.modules.user.mapper.UserTrueNameApproveMapper;
+import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.service.UserAppService;
 import com.toucan.shopping.modules.user.service.UserTrueNameApproveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +30,15 @@ public class UserTrueNameApproveServiceImpl implements UserTrueNameApproveServic
     @Override
     public List<UserTrueNameApprove> findListByEntity(UserTrueNameApprove entity) {
         return userTrueNameApproveMapper.findListByEntity(entity);
+    }
+
+
+    @Override
+    public PageInfo<UserTrueNameApprove> queryListPage(UserTrueNameApprovePageInfo queryPageInfo) {
+        PageInfo<UserTrueNameApprove> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(userTrueNameApproveMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(userTrueNameApproveMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 }

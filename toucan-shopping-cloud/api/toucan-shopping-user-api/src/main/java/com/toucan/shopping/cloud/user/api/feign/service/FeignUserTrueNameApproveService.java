@@ -37,4 +37,13 @@ public interface FeignUserTrueNameApproveService {
     @RequestMapping(value="/queryByUserMainId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByUserMainId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询列表页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO listPage(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 }

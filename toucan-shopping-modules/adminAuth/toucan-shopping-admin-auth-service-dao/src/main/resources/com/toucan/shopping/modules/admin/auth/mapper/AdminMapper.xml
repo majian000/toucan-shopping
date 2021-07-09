@@ -24,8 +24,9 @@
 
         <if test="username!=null and username!='' ">
             and tu.username  like concat('%',#{username},'%')
-
         </if>
+
+
         <if test="idArray!=null ">
             and tu.id in
             <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
