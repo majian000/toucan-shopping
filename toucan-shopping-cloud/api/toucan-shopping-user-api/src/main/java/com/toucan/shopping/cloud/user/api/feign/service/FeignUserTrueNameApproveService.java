@@ -12,14 +12,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * 用户审核服务
+ * 用户实名审核服务
  */
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-user-proxy/user/true/name/approve",fallbackFactory = FeignUserTrueNameApproveServiceFallbackFactory.class)
 public interface FeignUserTrueNameApproveService {
 
 
+    /**
+     * 保存用户实名
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 根据用户主ID查询
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/queryByUserMainId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryByUserMainId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

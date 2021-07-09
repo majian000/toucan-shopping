@@ -6,6 +6,7 @@ import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
@@ -19,6 +20,7 @@ import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
+import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
 import com.toucan.shopping.modules.user.redis.UserCenterTrueNameApproveKey;
 import com.toucan.shopping.modules.user.vo.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -64,6 +66,9 @@ public class UserTreeNameApproveApiController extends BaseController {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
 
 
 
@@ -140,10 +145,24 @@ public class UserTreeNameApproveApiController extends BaseController {
                 return resultObjectVO;
             }
 
+            UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
+            queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
+            resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                if(CollectionUtils.isNotEmpty(userTrueNameApproves))
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,已存在用户实名审核的记录");
+                    return resultObjectVO;
+                }
+            }
             userTrueNameApproveVO.setApproveStatus(1);
             userTrueNameApproveVO.setIdcardImg1File(null);
             userTrueNameApproveVO.setIdcardImg2File(null);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
+            requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
 
             logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
 

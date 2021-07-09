@@ -38,6 +38,21 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryByUserMainId(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserTrueNameApproveService.queryByUserMainId失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
         };
     }
 }
