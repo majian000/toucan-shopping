@@ -158,15 +158,23 @@ public class UserTreeNameApproveApiController extends BaseController {
                     resultObjectVO.setMsg("请求失败,已存在用户实名审核的记录");
                     return resultObjectVO;
                 }
+
+                //身份证 正面上传
+                String idcard1ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg1File().getBytes(),ImageUtils.getImageExt(idcard1ImgFileName));
+                userTrueNameApproveVO.setIdcardImg1(idcard1ImgFilePath);
+                //身份证 背面上传
+                String idcard2ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg2File().getBytes(),ImageUtils.getImageExt(idcard2ImgFileName));
+                userTrueNameApproveVO.setIdcardImg2(idcard2ImgFilePath);
+
+                userTrueNameApproveVO.setApproveStatus(1);
+                userTrueNameApproveVO.setIdcardImg1File(null);
+                userTrueNameApproveVO.setIdcardImg2File(null);
+                requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
+
+                logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
+
+                resultObjectVO.setData(null);
             }
-            userTrueNameApproveVO.setApproveStatus(1);
-            userTrueNameApproveVO.setIdcardImg1File(null);
-            userTrueNameApproveVO.setIdcardImg2File(null);
-            requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
-
-            logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
-
-            resultObjectVO.setData(null);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

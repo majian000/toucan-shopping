@@ -42,4 +42,17 @@ public class ImageUtils {
         return false;
     }
 
+    public static String getImageExt(String fileName)
+    {
+        if(StringUtils.isEmpty(fileName))
+        {
+            return "";
+        }
+        String fileUpperName = fileName.toUpperCase();
+        if(fileUpperName.indexOf(".")!=-1) {
+            return fileUpperName.substring(fileUpperName.lastIndexOf("."), fileUpperName.length());
+        }
+        return "";
+    }
+
 }
