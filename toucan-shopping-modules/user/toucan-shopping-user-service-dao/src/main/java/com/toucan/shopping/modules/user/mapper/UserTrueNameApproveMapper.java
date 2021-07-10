@@ -21,6 +21,6 @@ public interface UserTrueNameApproveMapper {
 
     Long queryListPageCount(UserTrueNameApprovePageInfo queryPageInfo);
 
-
+    int deleteById(Long id);
 
 }

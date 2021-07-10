@@ -41,4 +41,9 @@ public class UserTrueNameApproveServiceImpl implements UserTrueNameApproveServic
         pageInfo.setTotal(userTrueNameApproveMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public int deleteById(Long id) {
+        return userTrueNameApproveMapper.deleteById(id);
+    }
 }

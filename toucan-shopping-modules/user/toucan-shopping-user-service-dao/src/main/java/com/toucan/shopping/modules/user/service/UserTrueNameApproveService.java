@@ -32,4 +32,13 @@ public interface UserTrueNameApproveService {
      * @return
      */
     PageInfo<UserTrueNameApprove> queryListPage(UserTrueNameApprovePageInfo queryPageInfo);
+
+
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 }

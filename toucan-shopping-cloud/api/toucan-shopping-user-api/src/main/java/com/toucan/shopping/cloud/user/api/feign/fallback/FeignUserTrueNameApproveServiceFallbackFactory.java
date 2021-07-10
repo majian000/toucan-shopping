@@ -55,7 +55,7 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
             }
 
             @Override
-            public ResultObjectVO listPage(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -64,6 +64,36 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserTrueNameApproveService.listPage失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserTrueNameApproveService.deleteById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO deleteByIds(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserTrueNameApproveService.deleteByIds失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;

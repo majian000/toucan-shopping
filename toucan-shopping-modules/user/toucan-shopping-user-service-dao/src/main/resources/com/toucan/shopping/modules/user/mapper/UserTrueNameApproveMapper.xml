@@ -93,4 +93,12 @@
 
     </select>
 
+
+
+
+    <update id="deleteById">
+        update t_user_true_name_approve  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
 </mapper>

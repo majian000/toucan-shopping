@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -222,8 +223,10 @@ public class UserTrueNameApproveApiController extends BaseController {
 
 
                 userTrueNameApproveVO.setApproveStatus(1);
+                userTrueNameApproveVO.setCreateDate(new Date());
                 userTrueNameApproveVO.setIdcardImg1File(null);
                 userTrueNameApproveVO.setIdcardImg2File(null);
+
                 requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
 
                 logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());

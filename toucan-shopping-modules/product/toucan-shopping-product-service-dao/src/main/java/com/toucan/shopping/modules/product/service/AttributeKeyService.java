@@ -35,10 +35,19 @@ public interface AttributeKeyService {
     int update(AttributeKey attributeKey);
 
 
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
     int deleteById(Long id);
 
 
-
+    /**
+     * 根据查询对象查询列表
+     * @param query
+     * @return
+     */
     List<AttributeKeyVO> queryList(AttributeKeyVO query);
 
 }
