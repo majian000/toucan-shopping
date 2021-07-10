@@ -35,40 +35,39 @@ public class UserTrueNameApprovePageController extends BaseController {
     @RequestMapping("/page")
     public String page(HttpServletRequest request)
     {
-//        try {
-//            //从请求头中拿到uid
-//            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
-//            UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
-//            queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
-//            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
-//            //查询当前人的实名审核记录
-//            ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
-//            if(resultObjectVO.isSuccess())
-//            {
-//                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
-//                if(CollectionUtils.isNotEmpty(userTrueNameApproves))
-//                {
-//                    UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);
-//                    if(userTrueNameApprove.getApproveStatus().intValue()==3)
-//                    {
-//                        //审核通过
-//                        return "user/true_name_success";
-//                    }
-//                    if(userTrueNameApprove.getApproveStatus().intValue()==2)
-//                    {
-//                        //审核驳回
-//                        return "user/true_name_faild";
-//                    }
-//                    request.setAttribute("userTrueNameApprove",userTrueNameApprove);
-//                }
-//            }
-//
-//        }catch (Exception e)
-//        {
-//            logger.warn(e.getMessage(),e);
-//        }
-//        return "user/true_name";
-        return "user/true_name_faild";
+        try {
+            //从请求头中拿到uid
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
+            queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
+            //查询当前人的实名审核记录
+            ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                if(CollectionUtils.isNotEmpty(userTrueNameApproves))
+                {
+                    UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);
+                    if(userTrueNameApprove.getApproveStatus().intValue()==3)
+                    {
+                        //审核通过
+                        return "user/true_name_success";
+                    }
+                    if(userTrueNameApprove.getApproveStatus().intValue()==2)
+                    {
+                        //审核驳回
+                        return "user/true_name_faild";
+                    }
+                    request.setAttribute("userTrueNameApprove",userTrueNameApprove);
+                }
+            }
+
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "user/true_name";
     }
 
 
