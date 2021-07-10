@@ -12,10 +12,12 @@ function submitTrueName()
     $('#utnform').ajaxSubmit({
         url: basePath+'/api/user/true/name/approve/save',
         type:'POST',
-        contentType: "application/json; charset=utf-8",
-        headers:{"ts_auth":"uid="+window.localStorage.getItem("uid")+";lt="+window.localStorage.getItem("lt")},
+        headers:{"ts-auth":"uid="+window.localStorage.getItem("uid")+";lt="+window.localStorage.getItem("lt")},
         success: function (data) {
-
+            if(data.code==401)
+            {
+                window.location.href=basePath+data.data;
+            }
         }
     });
 

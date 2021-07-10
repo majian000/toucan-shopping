@@ -69,7 +69,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                             logger.info("权限HTTP请求头为" + toucan.getUserAuth().getHttpToucanAuthHeader());
                             String authHeader = request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader());
                             //ajax请求
-                            if (authAnnotation.requestType() == UserAuth.REQUEST_JSON) {
+                            if (authAnnotation.requestType() == UserAuth.REQUEST_JSON||authAnnotation.requestType() == UserAuth.REQUEST_AJAX) {
                                 //JSON类型请求
                                 RequestWrapper RequestWrapper = new RequestWrapper((HttpServletRequest) request);
                                 String jsonBody = new String(RequestWrapper.body);
@@ -77,8 +77,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 
                                 if (StringUtils.isEmpty(authHeader)) {
                                     logger.warn("权限请求头为空 " + toucan.getUserAuth().getHttpToucanAuthHeader() + " : " + authHeader);
-                                    resultVO.setCode(ResultVO.FAILD);
+                                    resultVO.setCode(ResultVO.HTTPCODE_401);
                                     resultVO.setMsg("访问失败,请检查请求权限参数");
+                                    //默认登录页面
+                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -86,15 +88,19 @@ public class AuthInterceptor implements HandlerInterceptor {
 
                                 if (authHeader.indexOf("lt") == -1) {
                                     logger.info("lt不能为空 " + jsonBody);
-                                    resultVO.setCode(ResultVO.FAILD);
+                                    resultVO.setCode(ResultVO.HTTPCODE_401);
                                     resultVO.setMsg("lt不能为空");
+                                    //默认登录页面
+                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
                                 if (authHeader.indexOf("uid") == -1) {
                                     logger.info("uid不能为空 " + jsonBody);
-                                    resultVO.setCode(ResultVO.FAILD);
+                                    resultVO.setCode(ResultVO.HTTPCODE_401);
                                     resultVO.setMsg("uid不能为空");
+                                    //默认登录页面
+                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -111,24 +117,38 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
                                 if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
-                                    resultVO.setCode(ResultVO.FAILD);
+                                    resultVO.setCode(ResultVO.HTTPCODE_401);
                                     resultVO.setMsg("请求头参数异常");
+                                    //默认登录页面
+                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
                                 //在这里调用用户中心 判断登录
                                 UserLoginVO queryUserLogin = new UserLoginVO();
-                                queryUserLogin.setUserMainId(Long.parseLong(uid));
-                                queryUserLogin.setLoginToken(lt);
-
+                                try {
+                                    queryUserLogin.setUserMainId(Long.parseLong(uid));
+                                    queryUserLogin.setLoginToken(lt);
+                                }catch(Exception e)
+                                {
+                                    logger.info("请求头参数异常 " + authHeader);
+                                    resultVO.setCode(ResultVO.HTTPCODE_401);
+                                    resultVO.setMsg("请求头参数异常");
+                                    //默认登录页面
+                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
+                                    responseWrite(response, JSONObject.toJSONString(resultVO));
+                                    return false;
+                                }
 
                                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
                                 ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
                                         || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
                                     logger.info("登录验证失败 " + authHeader);
-                                    resultVO.setCode(ResultVO.FAILD);
+                                    resultVO.setCode(ResultVO.HTTPCODE_401);
                                     resultVO.setMsg("登录超时,请重新登录");
+                                    //默认登录页面
+                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -183,7 +203,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 }
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
-                if (authAnnotation.requestType() == UserAuth.REQUEST_JSON) {
+                if (authAnnotation.requestType() == UserAuth.REQUEST_JSON||authAnnotation.requestType() == UserAuth.REQUEST_AJAX) {
                     resultVO.setCode(ResultVO.FAILD);
                     resultVO.setMsg("请求失败");
                     response.setContentType("application/json");

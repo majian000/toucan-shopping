@@ -35,7 +35,7 @@ function login()
                 window.localStorage.removeItem("uid");
                 window.localStorage.removeItem("lt");
 
-                window.localStorage.setItem("uid", result.data.id);
+                window.localStorage.setItem("uid", result.data.userMainId);
                 window.localStorage.setItem("lt", result.data.loginToken);
                 window.location.href=basePath+"/page/user/info";
             }

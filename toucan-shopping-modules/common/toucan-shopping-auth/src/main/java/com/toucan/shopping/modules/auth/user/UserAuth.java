@@ -22,6 +22,7 @@ public @interface UserAuth {
 	 */
 	public static int REQUEST_JSON =0;
 	public static int REQUEST_FORM=1;
+	public static int REQUEST_AJAX=2;
 
 
 	/**
