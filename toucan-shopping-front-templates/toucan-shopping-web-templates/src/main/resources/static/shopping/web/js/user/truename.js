@@ -8,28 +8,16 @@ function submitTrueName()
     var idCardValue=$("#idCard").val();
     var vcodeValue=$("#utm_vcode").val();
 
-    $.ajax(
-        {
-            url:basePath+"/api/user/true/name/approve/save",
-            type:'POST',
-            dateType:'JSON',
 
-            headers:{"ts_auth":"uid="+window.localStorage.getItem("uid")+";lt="+window.localStorage.getItem("lt")},
-            data:{
-                trueName:trueNameValue,
-                idcardType:idcardTypeValue,
-                idCard:idCardValue,
-                vcode:vcodeValue
-            },
-            success:function(data){
-                if(result.code<=0)
-                {
-                    $("#regist_msg").text(result.msg);
-                    $("#regist_msg").css("color","red");
-                }
-            },
-            error:function(data){
-            }
+    $('#utnform').ajaxSubmit({
+        url: basePath+'/api/user/true/name/approve/save',
+        type:'POST',
+        contentType: "application/json; charset=utf-8",
+        headers:{"ts_auth":"uid="+window.localStorage.getItem("uid")+";lt="+window.localStorage.getItem("lt")},
+        success: function (data) {
+
         }
-    );
+    });
+
+
 }

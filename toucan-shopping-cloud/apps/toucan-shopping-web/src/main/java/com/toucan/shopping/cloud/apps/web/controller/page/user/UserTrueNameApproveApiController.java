@@ -4,6 +4,8 @@ package com.toucan.shopping.cloud.apps.web.controller.page.user;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
+import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
+import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
@@ -138,6 +140,47 @@ public class UserTrueNameApproveApiController extends BaseController {
                 resultObjectVO.setMsg("请求失败,请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
                 return resultObjectVO;
             }
+
+            if(StringUtils.isEmpty(userTrueNameApproveVO.getVcode()))
+            {
+                resultObjectVO.setMsg("请求失败,请输入验证码");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            String cookie = request.getHeader("Cookie");
+            if(StringUtils.isEmpty(cookie))
+            {
+                resultObjectVO.setMsg("请求失败,请检查是否禁用Cookie");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
+            if(StringUtils.isEmpty(ClientVCodeId))
+            {
+                resultObjectVO.setMsg("请求失败,验证码异常");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),ClientVCodeId);
+            Object vCodeObject = stringRedisTemplate.opsForValue().get(vcodeRedisKey);
+            if(vCodeObject==null)
+            {
+                resultObjectVO.setMsg("请求失败,验证码过期请刷新页面");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            if(!StringUtils.equals(userTrueNameApproveVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+            {
+                resultObjectVO.setMsg("请求失败,验证码输入有误");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            //删除缓存中验证码
+            stringRedisTemplate.delete(vcodeRedisKey);
+
+
             boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);

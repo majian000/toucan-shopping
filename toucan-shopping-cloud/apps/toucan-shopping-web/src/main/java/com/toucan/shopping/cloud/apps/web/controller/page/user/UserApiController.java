@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.page.user;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
@@ -325,13 +326,12 @@ public class UserApiController extends BaseController {
 
 
             //生成客户端验证码ID
-            String vcodeKey = GlobalUUID.uuid();
-
-            String vcodeRedisKey = this.getAppCode()+"_vcode_"+vcodeKey;
+            String vcodeUuid = GlobalUUID.uuid();
+            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
             stringRedisTemplate.opsForValue().set(vcodeRedisKey,code);
             stringRedisTemplate.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
 
-            Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeKey);
+            Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
             //60秒过期
             clientVCodeId.setMaxAge(60);

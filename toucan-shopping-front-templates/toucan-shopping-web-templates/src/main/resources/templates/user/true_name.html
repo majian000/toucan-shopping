@@ -56,7 +56,7 @@
     </div>
 	<div >
 		<div  style="width:100%;">
-        	<form>
+        	<form id="utnform" method="post">
             <table border="0" style="width:450px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
               <tr height="50" valign="top">
               	<td width="150">&nbsp;</td>
@@ -66,12 +66,12 @@
               </tr>
               <tr height="50">
                 <td align="right"><font color="#ff4e00">*</font>&nbsp;姓名 &nbsp;</td>
-                <td><input type="text" id="trueName" value="" class="l_user"  maxlength="11"/></td>
+                <td><input type="text" id="trueName" name="trueName" value="" class="l_user"  maxlength="11"/></td>
               </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件类型 &nbsp;</td>
                     <td>
-                        <select class="l_select" id="idcardType">
+                        <select class="l_select" id="idcardType" name="idcardType">
                             <option value="1">身份证</option>
                             <option value="2">护照</option>
                             <option value="3" >海外</option>
@@ -80,7 +80,7 @@
                 </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件号码 &nbsp;</td>
-                    <td><input type="text" id="idCard" value="" class="l_num"  maxlength="11"/></td>
+                    <td><input type="text" id="idCard" name="idCard" value="" class="l_num"  maxlength="11"/></td>
                 </tr>
                 <tr height="50">
                     <td align="right">&nbsp; &nbsp;</td>
@@ -90,7 +90,7 @@
                 </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件正面 &nbsp;</td>
-                    <td><input type="file" ></td>
+                    <td><input type="file" name="idcardImg1File" ></td>
                 </tr>
                 <tr height="50">
                     <td align="right">&nbsp; &nbsp;</td>
@@ -100,12 +100,12 @@
                 </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件背面 &nbsp;</td>
-                    <td><input type="file" ></td>
+                    <td><input type="file" name="idcardImg2File" ></td>
                 </tr>
               <tr height="50">
                 <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                 <td>
-                    <input type="text" value="" id="utm_vcode" class="l_ipt" />
+                    <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
                     <span style="vertical-align: middle">
                         &nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" >
                     </span>
