@@ -54,6 +54,11 @@ public class UserTrueNameApprovePageController extends BaseController {
                 if(CollectionUtils.isNotEmpty(userTrueNameApproves))
                 {
                     UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);
+                    if(userTrueNameApprove.getApproveStatus().intValue()==1)
+                    {
+                        //审核中
+                        return "user/true_name_submit_success";
+                    }
                     if(userTrueNameApprove.getApproveStatus().intValue()==3)
                     {
                         //审核通过
@@ -64,7 +69,6 @@ public class UserTrueNameApprovePageController extends BaseController {
                         //审核驳回
                         return "user/true_name_faild";
                     }
-                    request.setAttribute("userTrueNameApprove",userTrueNameApprove);
                 }
             }
 
