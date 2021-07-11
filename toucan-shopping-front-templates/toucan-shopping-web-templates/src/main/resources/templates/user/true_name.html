@@ -58,7 +58,7 @@
 	<div >
 		<div  style="width:100%;">
         	<form id="utnform" method="post">
-            <table border="0" style="width:450px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
+            <table border="0" style="width:650px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
               <tr height="50" valign="top">
               	<td width="150">&nbsp;</td>
                 <td>
@@ -67,7 +67,11 @@
               </tr>
               <tr height="50">
                 <td align="right"><font color="#ff4e00">*</font>&nbsp;姓名 &nbsp;</td>
-                <td><input type="text" id="trueName" name="trueName" value="" class="l_user"  maxlength="11"/></td>
+                <td>
+                    <input type="text" id="trueName" name="trueName"  value="" class="l_user"  maxlength="11"/>
+                    &nbsp;&nbsp;
+                    <a id="trueName_msg" style="color:#ff4e00;"></a>
+                </td>
               </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件类型 &nbsp;</td>
@@ -81,7 +85,11 @@
                 </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件号码 &nbsp;</td>
-                    <td><input type="text" id="idCard" name="idCard" value="" class="l_num"  maxlength="11"/></td>
+                    <td>
+                        <input type="text" id="idCard" name="idCard" value="" class="l_num"  maxlength="11"/>
+                        &nbsp;&nbsp;
+                        <a id="idCard_msg" style="color:#ff4e00;"></a>
+                    </td>
                 </tr>
                 <tr height="50">
                     <td align="right">&nbsp; &nbsp;</td>
@@ -91,7 +99,10 @@
                 </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件正面 &nbsp;</td>
-                    <td><input type="file" name="idcardImg1File" ></td>
+                    <td>
+                        <input type="file" name="idcardImg1File" id="idcardImg1File" >
+                        <a id="idcardImg1File_msg" style="color:#ff4e00;"></a>
+                    </td>
                 </tr>
                 <tr height="50">
                     <td align="right">&nbsp; &nbsp;</td>
@@ -101,25 +112,31 @@
                 </tr>
                 <tr height="50">
                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件背面 &nbsp;</td>
-                    <td><input type="file" name="idcardImg2File" ></td>
+                    <td>
+                        <input type="file" name="idcardImg2File" id="idcardImg2File" >
+                        <a id="idcardImg2File_msg" style="color:#ff4e00;"></a>
+                    </td>
                 </tr>
               <tr height="50">
                 <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                 <td>
                     <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
                     <span style="vertical-align: middle">
-                        &nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" >
+                        &nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" > 点击图片刷新
                     </span>
+                    <a id="utm_vcode_msg" style="color:#ff4e00;"></a>
                 </td>
               </tr>
               <tr height="60">
               	<td>&nbsp;</td>
                 <td><input type="button" value="保存" class="log_btn" onclick="submitTrueName();"/></td>
               </tr>
-                <tr height="30">
+                <tr height="50">
                     <td align="right"></td>
                     <td>
-                        <a id="regist_msg" ></a>
+                        <a id="tn_msg" style="color:#ff4e00;"></a>
+                        <br>
+                        <br>
                     </td>
                 </tr>
             </table>

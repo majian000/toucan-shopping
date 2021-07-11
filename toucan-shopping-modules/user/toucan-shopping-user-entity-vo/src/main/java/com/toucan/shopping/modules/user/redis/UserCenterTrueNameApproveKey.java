@@ -16,9 +16,19 @@ public class UserCenterTrueNameApproveKey {
      */
     public static String getSaveApproveLockKey(String userMainId)
     {
-        return appCode +"_user_true_name_save_"+userMainId+"_lock";
+        return "TOUCAN_SHOPPING_WEB:INDEX:USER_TRUE_NAME:SAVE:"+userMainId+"_LOCK";
     }
 
 
+
+    /**
+     * 保存用户实名审核锁
+     * @param userMainId
+     * @return
+     */
+    public static String getSaveApproveLockKeyForService(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_WEB:SERVICE:INDEX:USER_TRUE_NAME:SAVE:"+userMainId+"_LOCK";
+    }
 
 }

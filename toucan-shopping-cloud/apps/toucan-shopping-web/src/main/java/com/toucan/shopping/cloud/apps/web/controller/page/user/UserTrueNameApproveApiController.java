@@ -106,13 +106,13 @@ public class UserTrueNameApproveApiController extends BaseController {
         }
         if(userTrueNameApproveVO.getIdcardImg1File()==null)
         {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD-2);
             resultObjectVO.setMsg("请求失败,证件正面照片不能为空");
             return resultObjectVO;
         }
         if(userTrueNameApproveVO.getIdcardImg2File()==null)
         {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setCode(ResultObjectVO.FAILD-3);
             resultObjectVO.setMsg("请求失败,证件背面照片不能为空");
             return resultObjectVO;
         }
@@ -137,7 +137,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             String idcard2ImgFileName = userTrueNameApproveVO.getIdcardImg2File().getOriginalFilename();
             if(!ImageUtils.isImage(idcard1ImgFileName)||!ImageUtils.isImage(idcard2ImgFileName))
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setCode(ResultObjectVO.FAILD-4);
                 resultObjectVO.setMsg("请求失败,请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
                 return resultObjectVO;
             }
@@ -152,7 +152,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             String cookie = request.getHeader("Cookie");
             if(StringUtils.isEmpty(cookie))
             {
-                resultObjectVO.setMsg("请求失败,请检查是否禁用Cookie");
+                resultObjectVO.setMsg("请求失败,请重新刷新验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -167,7 +167,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             Object vCodeObject = stringRedisTemplate.opsForValue().get(vcodeRedisKey);
             if(vCodeObject==null)
             {
-                resultObjectVO.setMsg("请求失败,验证码过期请刷新页面");
+                resultObjectVO.setMsg("请求失败,验证码过期请刷新");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }

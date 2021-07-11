@@ -110,10 +110,10 @@ public class UserTrueNameApproveController {
         }
         String userMainId = String.valueOf(userTrueNameApprove.getUserMainId());
         try {
-            boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
+            boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求失败,请稍候重试");
                 return resultObjectVO;
             }
             //查询是否存在审核中
@@ -144,7 +144,7 @@ public class UserTrueNameApproveController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
+            redisLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
         }
         return resultObjectVO;
     }

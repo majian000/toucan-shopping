@@ -53,7 +53,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         ResultObjectVO resultVO = new ResultObjectVO();
         resultVO.setCode(ResultVO.SUCCESS);
-        if (handler instanceof HandlerMethod&&toucan.getAdminAuth().isEnabled()) {
+        if (handler!=null&&handler instanceof HandlerMethod&&toucan.getUserAuth().isEnabled()) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             UserAuth authAnnotation = method.getAnnotation(UserAuth.class);

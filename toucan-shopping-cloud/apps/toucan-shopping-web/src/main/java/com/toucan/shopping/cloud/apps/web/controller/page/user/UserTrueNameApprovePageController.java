@@ -31,6 +31,11 @@ public class UserTrueNameApprovePageController extends BaseController {
     @Autowired
     private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
 
+    @RequestMapping("/submit_success")
+    public String submit_success(HttpServletRequest request){
+        return "user/true_name_submit_success";
+    }
+
 
     @RequestMapping("/page")
     public String page(HttpServletRequest request)

@@ -21,6 +21,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -295,13 +296,31 @@ public class UserApiController extends BaseController {
         if(!UserRegistUtil.checkPwd(userLoginVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("登录失败,请输入6至15位的密码");
             return resultObjectVO;
         }
         try {
             userLoginVO.setAppCode(this.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userLoginVO);
             resultObjectVO = feignUserService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                userLoginVO = (UserLoginVO)resultObjectVO.formatData(UserLoginVO.class);
+                //UID
+                Cookie uidCookie = new Cookie("uid",String.valueOf(userLoginVO.getUserMainId()));
+                uidCookie.setPath("/");
+                //5小时过期
+                uidCookie.setMaxAge(18000);
+                response.addCookie(uidCookie);
+
+                //TOKEN
+                Cookie ltCookie = new Cookie("lt",userLoginVO.getLoginToken());
+                ltCookie.setPath("/");
+                //5小时过期
+                ltCookie.setMaxAge(18000);
+                response.addCookie(ltCookie);
+
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
