@@ -67,7 +67,8 @@ public class UserTrueNameApprovePageController extends BaseController {
                     if(userTrueNameApprove.getApproveStatus().intValue()==2)
                     {
                         //审核驳回
-                        return "user/true_name_faild";
+                        request.setAttribute("userTrueNameApprove",userTrueNameApprove);
+                        return "user/true_name";
                     }
                 }
             }
