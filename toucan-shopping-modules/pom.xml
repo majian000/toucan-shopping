@@ -101,6 +101,8 @@
         <!--库存Service和DAO -->
         <module>stock/toucan-shopping-stock-service-dao</module>
 
+        <!--消息实体和VO -->
+        <module>message/toucan-shopping-message-entity-vo</module>
 
         <!-- ===============================================-->
 
@@ -331,6 +333,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-fastdfs</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.message</groupId>
+                <artifactId>toucan-shopping-message-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
