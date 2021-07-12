@@ -24,15 +24,25 @@ public class UserTrueNameApproveVO extends UserTrueNameApprove {
     private String vcode;
 
     /**
-     * 身份证正面文件
+     * 身份证正面照片
      */
     private MultipartFile idcardImg1File;
 
     /**
-     * 身份证背面文件
+     * 身份证背面照片
      */
     private MultipartFile idcardImg2File;
 
+
+    /**
+     * 正面照片
+     */
+    private String httpIdcardImg1;
+
+    /**
+     * 背面照片
+     */
+    private String httpIdcardImg2;
 
 
 

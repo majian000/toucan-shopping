@@ -25,16 +25,9 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">属性名</label>
+                            <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="attributeName" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">所属分类</label>
-                            <div class="layui-input-inline">
-                                <input type="hidden" name="categoryId" id="categoryId">
-                                <input type="text" readonly  id="selectCategoryId"  class="layui-input" >
+                                <input type="text" name="trueName" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -53,9 +46,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="attributeKeyTable" lay-filter="attributeKeyTableFilter"></table>
+        <table class="layui-hide" id="userTrueNameApproveTable" lay-filter="userTrueNameApproveTableFilter"></table>
 
-        <script type="text/html" id="attributeKeyTableBar">
+        <script type="text/html" id="userTrueNameApproveTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -104,8 +97,8 @@
         }
 
         table.render({
-            elem: '#attributeKeyTable',
-            url: "[[@{/}]]product/attributeKey/list",
+            elem: '#userTrueNameApproveTable',
+            url: "[[@{/}]]/user/true/name/approve/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -121,14 +114,45 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'attributeName',  title: '属性名'},
-                    {field: 'categoryName',  title: '所属类别'},
-                    {field: 'attributeSort',  title: '排序'},
-                    {field: 'createAdminName', title: '创建人'},
+                    {field: 'trueName',  title: '真实姓名'},
+                    {field: 'idCard',  title: '证件号码'},
+                    {field: 'idcardImg1', width: 80, title: '证件正面',
+                        templet: function (row) {
+                            return "<a href='"+row.httpIdcardImg1+"' target='_blank'><img src='"+row.httpIdcardImg1+"' width='30' height='30'  /></a>";
+                        }},
+                    {field: 'idcardImg2', width: 80, title: '证件背面',
+                        templet: function (row) {
+                            return "<a href='"+row.httpIdcardImg2+"' target='_blank'><img src='"+row.httpIdcardImg2+"' width='30' height='30'  /></a>";
+                        }},
+                    {field: 'idcardType', width: 80, title: '证件类型',
+                        templet: function (row) {
+                            if(row.idcardType == "1"){
+                                return "身份证"
+                            }
+                            if(row.idcardType == "2"){
+                                return "护照"
+                            }
+                            if(row.idcardType == "3"){
+                                return "海外"
+                            }
+                            return row.idcardType;
+                        }},
+                    {field: 'approveStatus', width: 80, title: '审核状态',
+                        templet: function (row) {
+                            if(row.approveStatus == "1"){
+                                return "审核中"
+                            }
+                            if(row.approveStatus == "2"){
+                                return "审核通过"
+                            }
+                            if(row.approveStatus == "3"){
+                                return "审核驳回"
+                            }
+                            return row.approveStatus;
+                        }},
+                    {field: 'rejectText',  title: '驳回原因'},
                     {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#userTrueNameApproveTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -140,7 +164,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('attributeKeyTable', {
+            table.reload('userTrueNameApproveTable', {
                 page: {
                     curr: 1
                 }
@@ -158,76 +182,13 @@
         });
 
 
-        $("#selectCategoryId").click(function(){
-            loadding = layer.load();
-            index = layer.open({
-                title: '选择所属分类',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-                shadeClose: true,
-                area: ['20%', '60%'],
-                content: "<div id='categoryTree'></div>",
-                success:function(layero){
-                    $.ajax({
-                        url:"[[@{/}]]product/attributeKey/query/category/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#categoryTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
-                                        $("#selectCategoryId").val(obj.data.title);
-                                        $("#categoryId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
-
-                }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-
-        });
-
 
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(attributeKeyTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '添加属性名',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: "[[@{/product/attributeKey/addPage}]]",
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('attributeKeyTable')
+        table.on('toolbar(userTrueNameApproveTableFilter)', function (obj) {
+            if (obj.event === 'deleteToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('userTrueNameApproveTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -236,7 +197,7 @@
                 }
                 layer.confirm('确定删除属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/delete/ids",
+                        url:"[[@{/}]]/user/true/name/approve/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -244,7 +205,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
+                            table.reload('userTrueNameApproveTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -262,111 +223,24 @@
         });
 
 
-
-
-        /**
-         * 拿到所有选中节点的ID
-         * @param data
-         * @param idArray
-         */
-        function getCheckdNodeId(data,idArray)
-        {
-            for(var i=0;i<data.length;i++)
-            {
-                roleTreeDataArray.push(data[i]);
-                if(data[i].state.checked==true)
-                {
-                    idArray.push(data[i].id);
-                }
-                if(data[i].children!=null&&data[i].children.length>0)
-                {
-                    getCheckdNodeId(data[i].children,idArray);
-                }
-            }
-        }
-
-
-        /**
-         * 拿到指定节点对象
-         */
-        function getNodeObject(nodeId)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-                if(roleTreeDataArray[i].id==nodeId)
-                {
-                    return roleTreeDataArray[i];
-                }
-            }
-            return null;
-        }
-
-
-        /**
-         * 拿到上级节点信息
-         */
-        function getParentNode(rolesArray,pid)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-
-                if(roleTreeDataArray[i].id==pid)
-                {
-                    var exists=false;
-                    //判断上级节点ID是否已经保存了
-                    for(var j=0;j<rolesArray.length;j++)
-                    {
-                        if(rolesArray[j].id==pid) {
-                            exists = true;
-                        }
-                    }
-                    //避免上级节点ID重复保存两份
-                    if(!exists)
-                    {
-                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
-                    }
-                    if(roleTreeDataArray[i].pid!=-1) {
-                        //找到这个节点的上级节点
-                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
-                    }
-                }
-            }
-        }
-
-
         //监听表格复选框选择
-        table.on('checkbox(attributeKeyTableFilter)', function (obj) {
+        table.on('checkbox(userTrueNameApproveTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(attributeKeyTableFilter)', function (obj) {
+        table.on('tool(userTrueNameApproveTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'edit') {
-
-                var index = layer.open({
-                    title: '编辑属性名',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '[[@{/}]]product/attributeKey/editPage/'+data.id
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event == 'delete') {
+            if (obj.event == 'delete') {
                 layer.confirm('确定删除该属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/delete/"+data.id,
+                        url:"[[@{/}]]/user/true/name/approve/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
+                            table.reload('userTrueNameApproveTable', {
                                 page: {
                                     curr: 1
                                 }
