@@ -135,8 +135,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     String loginToken = LoginTokenUtil.generatorToken(queryUserLogin.getUserMainId());
                                     if(!lt.equals(loginToken))
                                     {
-                                        resultVO.setCode(ResultVO.FAILD);
+                                        logger.info(" 校验loginToken不一致 {} loginToken {}" ,authHeader,loginToken);
+                                        resultVO.setCode(ResultVO.HTTPCODE_401);
                                         resultVO.setMsg("请重新登录");
+                                        responseWrite(response, JSONObject.toJSONString(resultVO));
                                         return false;
                                     }
                                 }catch(Exception e)
