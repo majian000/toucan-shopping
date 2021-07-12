@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.common.wrapper.RequestWrapper;
+import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -63,7 +64,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 if (authAnnotation != null) {
                     //由用户中心做权限判断
                     if (authAnnotation.verifyMethod() == UserAuth.VERIFYMETHOD_USER_AUTH) {
-                        //拿到权限中台账号服务
+                        //拿到用户中心账号服务
                         FeignUserService feignUserService = springContextHolder.getBean(FeignUserService.class);
                         if (authAnnotation.login()) {
                             logger.info("权限HTTP请求头为" + toucan.getUserAuth().getHttpToucanAuthHeader());
@@ -129,6 +130,15 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 try {
                                     queryUserLogin.setUserMainId(Long.parseLong(uid));
                                     queryUserLogin.setLoginToken(lt);
+
+                                    //判断登录token和传过来的token是否一致
+                                    String loginToken = LoginTokenUtil.generatorToken(queryUserLogin.getUserMainId());
+                                    if(!lt.equals(loginToken))
+                                    {
+                                        resultVO.setCode(ResultVO.FAILD);
+                                        resultVO.setMsg("请重新登录");
+                                        return false;
+                                    }
                                 }catch(Exception e)
                                 {
                                     logger.info("请求头参数异常 " + authHeader);
@@ -183,11 +193,22 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 
                                 //在这里调用权限中台 判断登录
-                                UserLoginVO queryUserLongVO = new UserLoginVO();
-                                queryUserLongVO.setUserMainId(Long.parseLong(uid));
-                                queryUserLongVO.setLoginToken(lt);
+                                UserLoginVO queryUserLoginVO = new UserLoginVO();
+                                queryUserLoginVO.setUserMainId(Long.parseLong(uid));
+                                queryUserLoginVO.setLoginToken(lt);
 
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLongVO);
+
+                                //判断登录token和传过来的token是否一致
+                                String loginToken = LoginTokenUtil.generatorToken(queryUserLoginVO.getUserMainId());
+                                if(!lt.equals(loginToken))
+                                {
+                                    logger.info("登录token校验失败 {} loginToken {}" + authHeader,loginToken);
+                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                                            + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+                                    return false;
+                                }
+
+                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLoginVO);
                                 ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
                                         || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {

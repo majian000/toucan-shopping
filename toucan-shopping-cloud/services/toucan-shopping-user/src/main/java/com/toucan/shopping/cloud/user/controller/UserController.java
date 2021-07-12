@@ -20,6 +20,7 @@ import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.service.*;
+import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import com.toucan.shopping.modules.user.vo.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1143,7 +1144,7 @@ public class UserController {
                             } while (deleteRows <= 0 && tryCount < 50);
                         }
 
-                        String token = UUID.randomUUID().toString().replace("-", "");
+                        String token = LoginTokenUtil.generatorToken(userEntity.getUserMainId());
                         stringRedisTemplate.opsForHash().put(loginTokenGroupKey,
                                 loginTokenAppKey, token);
                         //设置登录token1个小时超时
