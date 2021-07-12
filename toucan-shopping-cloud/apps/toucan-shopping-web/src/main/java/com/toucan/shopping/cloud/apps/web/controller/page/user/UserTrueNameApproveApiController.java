@@ -195,48 +195,54 @@ public class UserTrueNameApproveApiController extends BaseController {
             resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
-                if(CollectionUtils.isNotEmpty(userTrueNameApproves))
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,已存在用户实名审核的记录");
-                    resultObjectVO.setData(null);
-                    return resultObjectVO;
-                }
-
                 //身份证 正面上传
                 String idcard1ImgExt = ImageUtils.getImageExt(idcard1ImgFileName);
-                if(idcard1ImgExt.indexOf(".")!=-1)
-                {
-                    idcard1ImgExt = idcard1ImgExt.substring(idcard1ImgExt.indexOf(".")+1,idcard1ImgExt.length());
+                if (idcard1ImgExt.indexOf(".") != -1) {
+                    idcard1ImgExt = idcard1ImgExt.substring(idcard1ImgExt.indexOf(".") + 1, idcard1ImgExt.length());
                 }
-                String idcard1ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg1File().getBytes(),idcard1ImgExt);
+                String idcard1ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg1File().getBytes(), idcard1ImgExt);
                 userTrueNameApproveVO.setIdcardImg1(idcard1ImgFilePath);
                 //身份证 背面上传
                 String idcard2ImgExt = ImageUtils.getImageExt(idcard2ImgFileName);
-                if(idcard2ImgExt.indexOf(".")!=-1)
-                {
-                    idcard2ImgExt = idcard2ImgExt.substring(idcard2ImgExt.indexOf(".")+1,idcard2ImgExt.length());
+                if (idcard2ImgExt.indexOf(".") != -1) {
+                    idcard2ImgExt = idcard2ImgExt.substring(idcard2ImgExt.indexOf(".") + 1, idcard2ImgExt.length());
                 }
-                String idcard2ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg2File().getBytes(),idcard2ImgExt);
+                String idcard2ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg2File().getBytes(), idcard2ImgExt);
                 userTrueNameApproveVO.setIdcardImg2(idcard2ImgFilePath);
 
+                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                if(CollectionUtils.isNotEmpty(userTrueNameApproves)) {
+                    UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);
 
-                userTrueNameApproveVO.setApproveStatus(1);
-                userTrueNameApproveVO.setCreateDate(new Date());
-                userTrueNameApproveVO.setIdcardImg1File(null);
-                userTrueNameApproveVO.setIdcardImg2File(null);
+                    userTrueNameApproveVO.setId(userTrueNameApprove.getId());
+                    userTrueNameApproveVO.setUpdateDate(new Date());
+                    userTrueNameApproveVO.setIdcardImg1File(null);
+                    userTrueNameApproveVO.setIdcardImg2File(null);
+                    userTrueNameApproveVO.setApproveStatus(1);
 
-                requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),userTrueNameApproveVO);
+                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userTrueNameApproveVO);
 
-                logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
+                    logger.info(" 用户实名重新发起 {} ", requestJsonVO.getEntityJson());
 
-                resultObjectVO = feignUserTrueNameApproveService.save(requestJsonVO.sign(),requestJsonVO);
-                if(!resultObjectVO.isSuccess())
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试!");
+                    resultObjectVO = feignUserTrueNameApproveService.update(requestJsonVO.sign(), requestJsonVO);
+
                     return resultObjectVO;
+                }else{
+                    userTrueNameApproveVO.setApproveStatus(1);
+                    userTrueNameApproveVO.setCreateDate(new Date());
+                    userTrueNameApproveVO.setIdcardImg1File(null);
+                    userTrueNameApproveVO.setIdcardImg2File(null);
+
+                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userTrueNameApproveVO);
+
+                    logger.info(" 用户实名审核 {} ", requestJsonVO.getEntityJson());
+
+                    resultObjectVO = feignUserTrueNameApproveService.save(requestJsonVO.sign(), requestJsonVO);
+                    if (!resultObjectVO.isSuccess()) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,请稍后重试!");
+                        return resultObjectVO;
+                    }
                 }
                 resultObjectVO.setData(null);
             }

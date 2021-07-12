@@ -72,6 +72,10 @@ public class UserTrueNameApprove {
      */
     private Date createDate;
 
+    /**
+     * 修改时间
+     */
+    private Date updateDate;
 
 
     /**

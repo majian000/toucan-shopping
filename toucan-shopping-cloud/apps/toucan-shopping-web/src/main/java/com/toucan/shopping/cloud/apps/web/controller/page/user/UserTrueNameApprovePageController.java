@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.page.user;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
+import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -31,12 +32,60 @@ public class UserTrueNameApprovePageController extends BaseController {
     @Autowired
     private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/submit_success")
     public String submit_success(HttpServletRequest request){
         return "user/true_name_submit_success";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/update")
+    public String updatePage(HttpServletRequest request)
+    {
+        try {
+            //从请求头中拿到uid
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
+            queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
+            //查询当前人的实名审核记录
+            ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                if(CollectionUtils.isNotEmpty(userTrueNameApproves))
+                {
+                    UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);
+                    if(userTrueNameApprove.getApproveStatus().intValue()==1)
+                    {
+                        //审核中
+                        return "user/true_name_submit_success";
+                    }
+                    if(userTrueNameApprove.getApproveStatus().intValue()==2)
+                    {
+                        //审核通过
+                        return "user/true_name_success";
+                    }
+                    if(userTrueNameApprove.getApproveStatus().intValue()==3)
+                    {
+                        request.setAttribute("userTrueNameApprove",userTrueNameApprove);
+                        //审核驳回
+                        return "user/true_name_update";
+                    }
+                }
+            }
 
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "user/true_name_update";
+    }
+
+
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/page")
     public String page(HttpServletRequest request)
     {
@@ -59,16 +108,16 @@ public class UserTrueNameApprovePageController extends BaseController {
                         //审核中
                         return "user/true_name_submit_success";
                     }
-                    if(userTrueNameApprove.getApproveStatus().intValue()==3)
+                    if(userTrueNameApprove.getApproveStatus().intValue()==2)
                     {
                         //审核通过
                         return "user/true_name_success";
                     }
-                    if(userTrueNameApprove.getApproveStatus().intValue()==2)
+                    if(userTrueNameApprove.getApproveStatus().intValue()==3)
                     {
                         //审核驳回
-                        request.setAttribute("userTrueNameApprove",userTrueNameApprove);
-                        return "user/true_name";
+                        request.setAttribute("rejectText",userTrueNameApprove.getRejectText());
+                        return "user/true_name_faild";
                     }
                 }
             }

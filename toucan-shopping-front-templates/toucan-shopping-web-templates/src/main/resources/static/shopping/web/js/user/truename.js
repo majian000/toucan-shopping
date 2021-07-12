@@ -45,6 +45,7 @@ function submitTrueName()
                 window.location.href=basePath+data.data;
             }else  if(data.code==0)
             {
+                $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {

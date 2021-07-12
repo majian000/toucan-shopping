@@ -31,4 +31,17 @@ public class UserCenterTrueNameApproveKey {
         return "TOUCAN_SHOPPING_WEB:SERVICE:INDEX:USER_TRUE_NAME:SAVE:"+userMainId+"_LOCK";
     }
 
+
+
+
+    /**
+     * 修改用户实名审核锁
+     * @param userMainId
+     * @return
+     */
+    public static String getUpdateApproveLockKeyForService(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_WEB:SERVICE:INDEX:USER_TRUE_NAME:UPDATE:"+userMainId+"_LOCK";
+    }
+
 }

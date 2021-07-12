@@ -13,6 +13,7 @@
         <result column="idcard_type" jdbcType="INTEGER" property="idcardType" />
         <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         
     </resultMap>
@@ -70,6 +71,12 @@
     </insert>
 
 
+    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApprove"  >
+        update t_user_true_name_approve set idcard_type=#{idcardType} , true_name=#{trueName},
+        id_card=#{idCard},idcard_img1=#{idcardImg1},idcard_img2=#{idcardImg2},
+        approve_status=#{approveStatus},update_date=#{updateDate},reject_text=#{rejectText}
+          where user_main_id=#{userMainId} and id=#{id} and delete_status = 0
+    </update>
 
     <select id="queryListPage" resultMap="userTrueNameApproveMap" parameterType="com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo">
         select t.* from t_user_true_name_approve t

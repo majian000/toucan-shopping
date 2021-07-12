@@ -26,6 +26,11 @@ public class UserTrueNameApproveServiceImpl implements UserTrueNameApproveServic
         return userTrueNameApproveMapper.insert(entity);
     }
 
+    @Override
+    public int update(UserTrueNameApprove entity) {
+        return userTrueNameApproveMapper.update(entity);
+    }
+
 
     @Override
     public List<UserTrueNameApprove> findListByEntity(UserTrueNameApprove entity) {

@@ -124,7 +124,7 @@ public class UserTrueNameApproveController {
             if(CollectionUtils.isNotEmpty(userTrueNameApproves))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,实名验证正在审核中");
+                resultObjectVO.setMsg("保存失败,实名认证正在审核中");
                 return resultObjectVO;
             }
 
@@ -150,7 +150,111 @@ public class UserTrueNameApproveController {
     }
 
 
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
+        if(userTrueNameApprove.getId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,ID为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userTrueNameApprove.getTrueName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,真实姓名不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userTrueNameApprove.getIdCard()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件号码不能为空");
+            return resultObjectVO;
+        }
+        if(userTrueNameApprove.getIdcardType()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件类型不能为空");
+            return resultObjectVO;
+        }
+        if(userTrueNameApprove.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg1()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件正面照片不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userTrueNameApprove.getIdcardImg2()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,证件背面照片不能为空");
+            return resultObjectVO;
+        }
 
+        String userMainId = String.valueOf(userTrueNameApprove.getUserMainId());
+        try {
+            boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍候重试");
+                return resultObjectVO;
+            }
+            //查询是否存在审核中
+            UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
+            queryUserTrueNameApprove.setUserMainId(userTrueNameApprove.getUserMainId());
+            List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
+            if(CollectionUtils.isNotEmpty(userTrueNameApproves))
+            {
+                for(int i=0;i<userTrueNameApproves.size();i++) {
+                    if(userTrueNameApproves.get(i).getApproveStatus().intValue()==1) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,实名认证正在审核中");
+                        return resultObjectVO;
+                    }else if(userTrueNameApproves.get(i).getApproveStatus().intValue()==2) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,实名认证已完成");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            userTrueNameApprove.setDeleteStatus((short)0);
+            int ret = userTrueNameApproveService.update(userTrueNameApprove);
+            if(ret<=0)
+            {
+                logger.warn("保存用户实名审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userTrueNameApprove.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试");
+            }
+            resultObjectVO.setData(userTrueNameApprove);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
 
 
     /**
