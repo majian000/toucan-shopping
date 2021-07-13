@@ -152,6 +152,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                         //拿到权限中台账号服务
                         FeignAdminService feignAdminService = springContextHolder.getBean(FeignAdminService.class);
                         if (authAnnotation.login()) {
+                            String aidKey = toucan.getAppCode()+"_aid=";
+                            String ltKey = toucan.getAppCode()+"_lt=";
+
                             logger.info("权限HTTP请求头为" + toucan.getAdminAuth().getHttpToucanAuthHeader());
                             String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
                             //ajax请求
@@ -170,17 +173,17 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
                                 logger.info(" auth header " + authHeader);
 
-                                if (authHeader.indexOf("lt") == -1) {
-                                    logger.info("lt不能为空 " + jsonBody);
+                                if (authHeader.indexOf(ltKey) == -1) {
+                                    logger.info(ltKey+"不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.FAILD);
-                                    resultVO.setMsg("lt不能为空");
+                                    resultVO.setMsg(ltKey+"不能为空");
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                if (authHeader.indexOf("aid") == -1) {
-                                    logger.info("aid不能为空 " + jsonBody);
+                                if (authHeader.indexOf(aidKey) == -1) {
+                                    logger.info(aidKey+"不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.FAILD);
-                                    resultVO.setMsg("aid不能为空");
+                                    resultVO.setMsg(aidKey+"不能为空");
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -188,10 +191,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String aid = "-1";
                                 String lt = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("aid=") != -1) {
+                                    if (authHeaderArray[i].indexOf(aidKey) != -1) {
                                         aid = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("lt=") != -1) {
+                                    if (authHeaderArray[i].indexOf(ltKey) != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
                                 }
@@ -243,10 +246,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String aid = "-1";
                                 String lt = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("aid=") != -1) {
+                                    if (authHeaderArray[i].indexOf(aidKey) != -1) {
                                         aid = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("lt=") != -1) {
+                                    if (authHeaderArray[i].indexOf(ltKey) != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
                                 }

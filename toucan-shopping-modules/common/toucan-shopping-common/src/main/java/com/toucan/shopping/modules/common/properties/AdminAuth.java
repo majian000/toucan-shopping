@@ -20,10 +20,9 @@ public class AdminAuth {
 
     /**
      * HTTP权限请求头,默认值为toucan-atuh-header
-     * 后台管理端 toucan-atuh-header:adminId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
-     * 或商城C端 toucan-atuh-header:userId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d
+     * 后台管理端 Cookie:10001002_aid=d10590b318544049ba2104d1f5517a7d;10001002_lt=d10590b318544049ba2104d1f5517a7d
      */
-    private String httpToucanAuthHeader = "toucan-atuh-header";
+    private String httpToucanAuthHeader = "Cookie";
 
     /**
      * 默认登录页

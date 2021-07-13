@@ -190,7 +190,7 @@ public class AdminController extends UIController {
     {
         try {
             Admin admin = new Admin();
-            admin.setAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            admin.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, admin);
             ResultObjectVO resultObjectVO = feignAdminService.queryListByEntity(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -244,7 +244,7 @@ public class AdminController extends UIController {
             appCodes.add(toucan.getAppCode());
             entity.setAppCodes(appCodes);
             entity.setId(idGenerator.id());
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
             {
                 entity.setAdminApps(new ArrayList<AdminApp>());
@@ -283,7 +283,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            adminRoleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            adminRoleVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             adminRoleVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminRoleVO);
             resultObjectVO = feignAdminRoleService.saveRoles(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -309,7 +309,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            adminOrgnazitionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            adminOrgnazitionVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             adminOrgnazitionVO.setCreateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, adminOrgnazitionVO);
             resultObjectVO = feignAdminOrgnazitionService.saveOrgnazitions(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -334,7 +334,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignAdminService.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -360,7 +360,7 @@ public class AdminController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignAdminService.updatePassword(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -391,7 +391,7 @@ public class AdminController extends UIController {
             List<String> appCodes= new ArrayList<String>();
             appCodes.add(toucan.getAppCode());
             entity.setAppCodes(appCodes);
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
             {
@@ -470,7 +470,7 @@ public class AdminController extends UIController {
             }
             Admin admin =new Admin();
             admin.setId(Long.parseLong(id));
-            admin.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            admin.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
             String entityJson = JSONObject.toJSONString(admin);
             RequestJsonVO requestVo = new RequestJsonVO();

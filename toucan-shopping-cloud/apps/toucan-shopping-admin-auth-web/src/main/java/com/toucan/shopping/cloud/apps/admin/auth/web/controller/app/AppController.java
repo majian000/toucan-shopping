@@ -113,7 +113,7 @@ public class AppController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            app.setCreateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            app.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
             resultObjectVO = feignAppService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
@@ -138,7 +138,7 @@ public class AppController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, app);
             resultObjectVO = feignAppService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
@@ -207,7 +207,7 @@ public class AppController extends UIController {
             }
             App app =new App();
             app.setId(Long.parseLong(id));
-            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            app.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
             String entityJson = JSONObject.toJSONString(app);
             RequestJsonVO requestVo = new RequestJsonVO();

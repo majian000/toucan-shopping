@@ -118,16 +118,16 @@ public class LoginController {
                 if(resultObjectVO.getData()!=null)
                 {
                     Admin admin = JSONObject.parseObject(JSON.toJSONString(resultObjectVO.getData()), Admin.class);
-                    Cookie adminIdCookie = new Cookie("aid",admin.getAdminId());
+                    Cookie adminIdCookie = new Cookie(toucan.getAppCode()+"_aid",admin.getAdminId());
                     adminIdCookie.setPath("/");
-                    //10小时过期
-                    adminIdCookie.setMaxAge(36000);
+                    //永久有效
+                    adminIdCookie.setMaxAge(Integer.MAX_VALUE);
                     response.addCookie(adminIdCookie);
 
-                    Cookie loginTokenCookie = new Cookie("lt",admin.getLoginToken());
+                    Cookie loginTokenCookie = new Cookie(toucan.getAppCode()+"_lt",admin.getLoginToken());
                     loginTokenCookie.setPath("/");
-                    //10小时过期
-                    loginTokenCookie.setMaxAge(36000);
+                    //永久有效
+                    loginTokenCookie.setMaxAge(Integer.MAX_VALUE);
                     response.addCookie(loginTokenCookie);
                 }
             }

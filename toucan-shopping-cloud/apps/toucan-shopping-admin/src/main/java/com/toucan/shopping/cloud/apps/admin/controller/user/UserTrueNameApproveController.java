@@ -138,7 +138,7 @@ public class UserTrueNameApproveController extends UIController {
             }
             AttributeKey attributeKey =new AttributeKey();
             attributeKey.setId(Long.parseLong(id));
-            attributeKey.setUpdateAdminId(AuthHeaderUtil.getAdminId(request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            attributeKey.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
             String entityJson = JSONObject.toJSONString(attributeKey);
             RequestJsonVO requestVo = new RequestJsonVO();
