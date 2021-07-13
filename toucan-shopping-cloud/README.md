@@ -85,9 +85,8 @@
     
  | 服务名                                        | 端口号                 | 说明                                             |
  | --------------------------------------------- | -------------------- | ---------------------------------------------------|
- | apps/toucan-shopping-web                      | 8083                 | 前端界面服务                                       |
- | apps/toucan-shopping-admin                    | 8086                 | 后台管理端                                         |
- | apps/toucan-shopping-admin                    | 8088                 | 用户中心界面                                       |
+ | apps/toucan-shopping-web                      | 8083                 | 商城C端界面                                       |
+ | apps/toucan-shopping-admin                    | 8088                 | 商城管理界面                                       |
  | apps/toucan-shopping-admin-auth-web           | 8098                 | 权限中台界面                                       |
  | apps/toucan-shopping-scheduler                | 8092                 | 商城调度任务端                                     |
  | apps/toucan-shopping-user-scheduler           | 8097                 | 用户中心任务调度                                   |
