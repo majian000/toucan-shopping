@@ -20,6 +20,14 @@ public interface UserTrueNameApproveService {
     int save(UserTrueNameApprove entity);
 
     /**
+     * 保存实名审核对象
+     * @param entity
+     * @return
+     */
+    int update(UserTrueNameApprove entity);
+
+
+    /**
      * 查询列表
      * @param entity
      * @return

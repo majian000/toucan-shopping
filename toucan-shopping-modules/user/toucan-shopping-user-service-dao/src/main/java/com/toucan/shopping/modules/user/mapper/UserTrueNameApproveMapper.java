@@ -15,6 +15,8 @@ public interface UserTrueNameApproveMapper {
 
     int insert(UserTrueNameApprove entity);
 
+    int update(UserTrueNameApprove entity);
+
     List<UserTrueNameApprove> findListByEntity(UserTrueNameApprove entity);
 
     List<UserTrueNameApprove> queryListPage(UserTrueNameApprovePageInfo queryPageInfo);

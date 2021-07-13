@@ -29,6 +29,15 @@ public interface FeignUserTrueNameApproveService {
 
 
     /**
+     * 修改用户实名
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+    /**
      * 根据用户主ID查询
      * @param signHeader
      * @param requestJsonVO

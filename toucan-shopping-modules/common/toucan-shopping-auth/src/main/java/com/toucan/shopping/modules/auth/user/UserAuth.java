@@ -35,7 +35,7 @@ public @interface UserAuth {
 	 * 校验方式
 	 * @return
 	 */
-	public int verifyMethod() default VERIFYMETHOD_LOCAL;
+	public int verifyMethod() default VERIFYMETHOD_USER_AUTH;
 
 
 
