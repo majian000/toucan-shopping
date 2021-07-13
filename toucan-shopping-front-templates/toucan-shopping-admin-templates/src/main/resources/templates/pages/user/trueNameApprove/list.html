@@ -25,7 +25,7 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">姓名</label>
+                            <label class="layui-form-label">真实姓名</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="trueName" autocomplete="off" class="layui-input">
                             </div>
@@ -98,7 +98,7 @@
 
         table.render({
             elem: '#userTrueNameApproveTable',
-            url: "[[@{/}]]/user/true/name/approve/list",
+            url: "[[@{/}]]user/true/name/approve/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -114,6 +114,7 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
+                    {field: 'userMainId',  title: '用户ID'},
                     {field: 'trueName',  title: '真实姓名'},
                     {field: 'idCard',  title: '证件号码'},
                     {field: 'idcardImg1', width: 80, title: '证件正面',

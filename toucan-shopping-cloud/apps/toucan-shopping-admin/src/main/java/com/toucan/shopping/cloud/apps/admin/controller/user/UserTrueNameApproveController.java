@@ -18,6 +18,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
@@ -64,6 +65,8 @@ public class UserTrueNameApproveController extends UIController {
     @Autowired
     private FeignAdminService feignAdminService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -98,6 +101,15 @@ public class UserTrueNameApproveController extends UIController {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<UserTrueNameApproveVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),UserTrueNameApproveVO.class);
+                    for(UserTrueNameApproveVO userTrueNameApproveVO:list)
+                    {
+                        if(userTrueNameApproveVO.getIdcardImg1()!=null) {
+                            userTrueNameApproveVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userTrueNameApproveVO.getIdcardImg1());
+                        }
+                        if(userTrueNameApproveVO.getIdcardImg2()!=null) {
+                            userTrueNameApproveVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userTrueNameApproveVO.getIdcardImg2());
+                        }
+                    }
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List)list);
                     }
