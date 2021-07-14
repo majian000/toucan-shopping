@@ -114,18 +114,18 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'userMainId',  title: '用户ID'},
+                    {field: 'userMainId', width: 150, title: '用户ID'},
                     {field: 'trueName',  title: '真实姓名'},
-                    {field: 'idCard',  title: '证件号码'},
-                    {field: 'idcardImg1', width: 80, title: '证件正面',
+                    {field: 'idCard',  width: 200, title: '证件号码'},
+                    {field: 'idcardImg1', width: 150, title: '证件正面',
                         templet: function (row) {
                             return "<a href='"+row.httpIdcardImg1+"' target='_blank'><img src='"+row.httpIdcardImg1+"' width='30' height='30'  /></a>";
                         }},
-                    {field: 'idcardImg2', width: 80, title: '证件背面',
+                    {field: 'idcardImg2', width: 150, title: '证件背面',
                         templet: function (row) {
                             return "<a href='"+row.httpIdcardImg2+"' target='_blank'><img src='"+row.httpIdcardImg2+"' width='30' height='30'  /></a>";
                         }},
-                    {field: 'idcardType', width: 80, title: '证件类型',
+                    {field: 'idcardType', width: 150, title: '证件类型',
                         templet: function (row) {
                             if(row.idcardType == "1"){
                                 return "身份证"
@@ -138,7 +138,7 @@
                             }
                             return row.idcardType;
                         }},
-                    {field: 'approveStatus', width: 80, title: '审核状态',
+                    {field: 'approveStatus', width: 150, title: '审核状态',
                         templet: function (row) {
                             if(row.approveStatus == "1"){
                                 return "审核中"
@@ -151,8 +151,8 @@
                             }
                             return row.approveStatus;
                         }},
-                    {field: 'rejectText',  title: '驳回原因'},
-                    {field: 'createDate',  title: '创建时间'},
+                    {field: 'rejectText',width: 150,  title: '驳回原因'},
+                    {field: 'createDate', width: 150, title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#userTrueNameApproveTableBar', align: "center"}
                 ]
             ],
@@ -231,12 +231,12 @@
 
         table.on('tool(userTrueNameApproveTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'delete') {
-                layer.confirm('确定删除该属性名?', function (index) {
+            if (obj.event == 'pass') {
+                layer.confirm('确定审核通过?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]/user/true/name/approve/delete/"+data.id,
+                        url:"[[@{/}]]user/true/name/approve/pass/"+data.id,
                         contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
+                        type:'POST',
                         success:function(data){
                             layer.msg(data.msg);
 

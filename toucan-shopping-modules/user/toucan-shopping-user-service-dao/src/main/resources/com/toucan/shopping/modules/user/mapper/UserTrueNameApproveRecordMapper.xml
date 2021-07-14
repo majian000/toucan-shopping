@@ -28,9 +28,9 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApproveRecord" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_user_true_name_approve_record(user_main_id,approve_status,reject_text,create_admin_id,create_date,delete_status)
-        values(#{userMainId},#{approveStatus},#{rejectText},#{createAdminId},#{createDate},#{deleteStatus})
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApproveRecord"  keyProperty="id" >
+        insert into t_user_true_name_approve_record(id,user_main_id,approve_id,approve_status,reject_text,create_admin_id,create_date,delete_status)
+        values(#{id},#{userMainId},#{approveId},#{approveStatus},#{rejectText},#{createAdminId},#{createDate},#{deleteStatus})
     </insert>
 
 </mapper>

@@ -74,7 +74,7 @@ public class UserTrueNameApproveController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/user/trueNameApprove/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/user/true/name/approve/listPage",feignFunctionService);
         return "pages/user/trueNameApprove/list.html";
     }
 
@@ -136,7 +136,7 @@ public class UserTrueNameApproveController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/pass/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/pass/{id}",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id)
     {
