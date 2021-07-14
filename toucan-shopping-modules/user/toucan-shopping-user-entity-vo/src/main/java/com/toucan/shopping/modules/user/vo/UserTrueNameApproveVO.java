@@ -44,6 +44,11 @@ public class UserTrueNameApproveVO extends UserTrueNameApprove {
      */
     private String httpIdcardImg2;
 
+    /**
+     * 审核管理员ID
+     */
+    private String approveAdminId;
+
 
 
 }

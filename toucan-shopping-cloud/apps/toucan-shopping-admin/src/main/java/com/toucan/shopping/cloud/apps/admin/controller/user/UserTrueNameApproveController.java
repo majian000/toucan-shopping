@@ -7,7 +7,6 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -20,8 +19,9 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.product.entity.AttributeKey;
-import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
+import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
+import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
+import com.toucan.shopping.modules.user.vo.UserTrueNameApproveRecordVO;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -88,7 +88,7 @@ public class UserTrueNameApproveController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, UserTrueNameApprovePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -131,14 +131,14 @@ public class UserTrueNameApproveController extends UIController {
 
 
     /**
-     * 删除
+     * 审核通过
      * @param request
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/pass/{id}",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -148,15 +148,12 @@ public class UserTrueNameApproveController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            AttributeKey attributeKey =new AttributeKey();
-            attributeKey.setId(Long.parseLong(id));
-            attributeKey.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-
-            String entityJson = JSONObject.toJSONString(attributeKey);
-            RequestJsonVO requestVo = new RequestJsonVO();
-            requestVo.setAppCode(appCode);
-            requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignUserTrueNameApproveService.deleteById(requestVo.sign(), requestVo);
+            UserTrueNameApproveVO userTrueNameApproveVO =new UserTrueNameApproveVO();
+            userTrueNameApproveVO.setId(Long.parseLong(id));
+            //设置审核人
+            userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
+            resultObjectVO = feignUserTrueNameApproveService.passById(requestJsonVO.sign(), requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

@@ -57,12 +57,12 @@ public interface FeignUserTrueNameApproveService {
 
 
     /**
-     * 删除指定
+     * 通过指定审核
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    @RequestMapping(value="/pass/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO passById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
 

@@ -85,7 +85,7 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
             }
 
             @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
+            public ResultObjectVO passById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -93,7 +93,7 @@ public class FeignUserTrueNameApproveServiceFallbackFactory implements FallbackF
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserTrueNameApproveService.deleteById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserTrueNameApproveService.passById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
                 return resultObjectVO;

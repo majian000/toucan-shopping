@@ -51,6 +51,9 @@ public class UserTrueNameApproveController {
     private UserTrueNameApproveService userTrueNameApproveService;
 
     @Autowired
+    private UserTrueNameApproveRecordService userTrueNameApproveRecordService;
+
+    @Autowired
     private Toucan toucan;
 
     @Autowired
@@ -336,13 +339,13 @@ public class UserTrueNameApproveController {
 
 
     /**
-     * 删除指定
+     * 通过指定
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/pass/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO passById(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -352,24 +355,50 @@ public class UserTrueNameApproveController {
         }
 
         try {
-            UserTrueNameApprove entity = JSONObject.parseObject(requestVo.getEntityJson(),UserTrueNameApprove.class);
-            if(entity.getId()==null)
+            UserTrueNameApproveVO userTrueNameApproveVO = JSONObject.parseObject(requestVo.getEntityJson(),UserTrueNameApproveVO.class);
+            if(userTrueNameApproveVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,没有找到ID");
                 return resultObjectVO;
             }
 
-            int row = userTrueNameApproveService.deleteById(entity.getId());
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
-                return resultObjectVO;
+            UserTrueNameApprove queryUserTrueNameApprove= new UserTrueNameApprove();
+            queryUserTrueNameApprove.setId(userTrueNameApproveVO.getId());
+            List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
+
+            if(CollectionUtils.isNotEmpty(userTrueNameApproves))
+            {
+                UserTrueNameApprove userTrueNameApprove =  userTrueNameApproves.get(0);
+                userTrueNameApprove.setApproveStatus(2); //设置审核通过
+                int ret = userTrueNameApproveService.update(userTrueNameApprove);
+                if(ret>0) {
+
+                    if (ret <= 0) {
+                        logger.warn("实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,请稍后重试");
+                        return resultObjectVO;
+                    }
+                    //保存审核记录
+                    UserTrueNameApproveRecord userTrueNameApproveRecord = new UserTrueNameApproveRecord();
+                    userTrueNameApproveRecord.setId(idGenerator.id());
+                    userTrueNameApproveRecord.setApproveId(userTrueNameApprove.getId()); //审核主表ID
+                    userTrueNameApproveRecord.setUserMainId(userTrueNameApprove.getUserMainId());
+                    userTrueNameApproveRecord.setApproveStatus(1);
+                    userTrueNameApproveRecord.setCreateAdminId(userTrueNameApproveVO.getApproveAdminId()); //审核管理员
+                    userTrueNameApproveRecord.setCreateDate(new Date());
+                    userTrueNameApproveRecord.setDeleteStatus((short)0);
+                    userTrueNameApproveRecordService.save(userTrueNameApproveRecord);
+
+                    resultObjectVO.setData(userTrueNameApproves);
+                    return resultObjectVO;
+                }
             }
 
-
-            resultObjectVO.setData(entity);
-
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+            return resultObjectVO;
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
