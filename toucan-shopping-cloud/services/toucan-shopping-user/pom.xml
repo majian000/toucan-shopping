@@ -75,10 +75,6 @@
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-lock-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-auth</artifactId>
         </dependency>
 
@@ -99,6 +95,11 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.user</groupId>
             <artifactId>toucan-shopping-user-service-dao</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.skylark</groupId>
+            <artifactId>toucan-shopping-skylark-lock</artifactId>
         </dependency>
 
     </dependencies>

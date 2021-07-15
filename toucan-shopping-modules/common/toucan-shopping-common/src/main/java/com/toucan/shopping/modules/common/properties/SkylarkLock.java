@@ -13,4 +13,9 @@ public class SkylarkLock {
      * redis 配置
      */
     private Redis redis;
+
+    /**
+     * 中间件类型
+     */
+    private String type;
 }

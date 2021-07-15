@@ -28,7 +28,10 @@
             <artifactId>toucan-shopping-common</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common-web</artifactId>
+        </dependency>
         <!--集成redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
