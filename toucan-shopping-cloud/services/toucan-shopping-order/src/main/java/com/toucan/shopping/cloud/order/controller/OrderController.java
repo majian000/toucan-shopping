@@ -3,7 +3,6 @@ package com.toucan.shopping.cloud.order.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.service.OrderItemService;
@@ -14,6 +13,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.order.vo.CreateOrderVo;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +38,9 @@ public class OrderController {
     @Autowired
     private OrderItemService orderItemService;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
 
 

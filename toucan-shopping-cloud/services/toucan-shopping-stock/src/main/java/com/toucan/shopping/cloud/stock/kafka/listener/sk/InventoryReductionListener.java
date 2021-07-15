@@ -1,9 +1,9 @@
 package com.toucan.shopping.cloud.stock.kafka.listener.sk;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
+import com.toucan.shopping.modules.common.properties.SkylarkLock;
 import com.toucan.shopping.modules.product.message.InventoryReductionMessage;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.modules.stock.service.ProductSkuStockService;
@@ -28,7 +28,7 @@ public class InventoryReductionListener {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
 
     @Autowired

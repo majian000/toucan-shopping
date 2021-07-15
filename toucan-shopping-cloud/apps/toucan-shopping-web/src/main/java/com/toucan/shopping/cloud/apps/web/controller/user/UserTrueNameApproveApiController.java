@@ -8,13 +8,13 @@ import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
 import com.toucan.shopping.modules.user.redis.UserCenterTrueNameApproveKey;
@@ -44,7 +44,7 @@ public class UserTrueNameApproveApiController extends BaseController {
 
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -171,7 +171,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             stringRedisTemplate.delete(vcodeRedisKey);
 
 
-            boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
+            boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -241,7 +241,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
+            skylarkLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }

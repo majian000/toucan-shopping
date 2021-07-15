@@ -6,7 +6,7 @@ import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
+import com.toucan.shopping.modules.common.properties.SkylarkLock;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -45,7 +45,7 @@ public class UserApiController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -151,7 +151,7 @@ public class UserApiController extends BaseController {
 //        }
 //
 //        try {
-//            boolean lockStatus = redisLock.lock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
+//            boolean lockStatus = skylarkLock.lock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
 //            if (!lockStatus) {
 //                resultObjectVO.setCode(ResultObjectVO.FAILD);
 //                resultObjectVO.setMsg("超时重试");
@@ -165,12 +165,12 @@ public class UserApiController extends BaseController {
 //            //默认3分钟过期
 //            stringRedisTemplate.expire(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),60*3, TimeUnit.SECONDS);
 //
-//            redisLock.unLock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
+//            skylarkLock.unLock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
 //
 //        }catch(Exception e)
 //        {
 //
-//            redisLock.unLock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
+//            skylarkLock.unLock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
 //            logger.warn(e.getMessage(),e);
 //
 //            resultObjectVO.setCode(ResultVO.FAILD);

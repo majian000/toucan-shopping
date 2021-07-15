@@ -3,7 +3,6 @@ package com.toucan.shopping.second.kill.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -17,6 +16,7 @@ import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.message.InventoryReductionMessage;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.modules.stock.util.StockRedisKeyUtil;
 import com.toucan.shopping.second.kill.service.SecondKillService;
@@ -48,7 +48,7 @@ public class SecondKillController {
     private FeignProductSkuService feignProductSkuService;
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -171,7 +171,7 @@ public class SecondKillController {
                 return resultObjectVO;
             }
 
-            boolean lockStatus = redisLock.lock(lockKey,userId);
+            boolean lockStatus = skylarkLock.lock(lockKey,userId);
             if(!lockStatus)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -187,7 +187,7 @@ public class SecondKillController {
 
                 Integer stock = Integer.parseInt(String.valueOf(redisTemplate.opsForValue().get(stockKey)));
                 if (stock <= 0) {
-                    redisLock.unLock(lockKey, userId);
+                    skylarkLock.unLock(lockKey, userId);
 
                     //设置结束状态
                     redisTemplate.opsForValue().set(productActivityKey,"0");
@@ -262,11 +262,11 @@ public class SecondKillController {
 
 
 
-                redisLock.unLock(lockKey, userId);
+                skylarkLock.unLock(lockKey, userId);
                 resultObjectVO.setMsg("恭喜抢到了");
             }catch (Exception e)
             {
-                redisLock.unLock(lockKey, userId);
+                skylarkLock.unLock(lockKey, userId);
                 logger.warn(e.getMessage(),e);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请重试");

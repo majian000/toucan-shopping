@@ -31,8 +31,8 @@
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-lock-redis</artifactId>
+            <groupId>com.toucan.shopping.modules.skylark</groupId>
+            <artifactId>toucan-shopping-skylark-lock</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.product</groupId>

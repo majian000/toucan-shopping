@@ -3,7 +3,6 @@ package com.toucan.shopping.cloud.apps.web.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -19,6 +18,7 @@ import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.vo.CreateOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.stock.entity.ProductSkuStock;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
 import com.toucan.shopping.modules.stock.vo.InventoryReductionVo;
@@ -57,7 +57,7 @@ public class ProductApiController {
     private FeignProductSkuStockService feignProductSkuStockService;
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private EventProcessService eventProcessService;
@@ -112,9 +112,9 @@ public class ProductApiController {
                         throw new IllegalArgumentException("没有找到商品");
                     }
                     String productBuyKey = ProductRedisKeyUtil.getProductBuyKey(appCode, productSku.getUuid());
-                    boolean lockStatus = redisLock.lock(productBuyKey, userId);
+                    boolean lockStatus = skylarkLock.lock(productBuyKey, userId);
                     while (!lockStatus) {
-                        lockStatus = redisLock.lock(productBuyKey, userId);
+                        lockStatus = skylarkLock.lock(productBuyKey, userId);
                     }
                     lockKeys.add(productBuyKey);
                 }
@@ -279,7 +279,7 @@ public class ProductApiController {
         }finally{
             //释放所有商品锁
             for(String lockKey:lockKeys) {
-                redisLock.unLock(lockKey, userId);
+                skylarkLock.unLock(lockKey, userId);
             }
         }
 

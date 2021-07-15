@@ -7,7 +7,6 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionServi
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -16,13 +15,13 @@ import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.User;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.vo.UserRegistVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,7 @@ public class UserController extends UIController {
     private FeignUserService feignUserService;
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private UserElasticSearchService userElasticSearchService;
@@ -451,7 +450,7 @@ public class UserController extends UIController {
         String lockKey = toucan.getAppCode()+"_user_regist_mobile_"+mobilePhone;
         try {
 
-            boolean lockStatus = redisLock.lock(lockKey, user.getMobilePhone());
+            boolean lockStatus = skylarkLock.lock(lockKey, user.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -527,7 +526,7 @@ public class UserController extends UIController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
-            redisLock.unLock(lockKey, mobilePhone);
+            skylarkLock.unLock(lockKey, mobilePhone);
         }
         return resultObjectVO;
     }
@@ -566,7 +565,7 @@ public class UserController extends UIController {
         String lockKey = toucan.getAppCode()+"_user_update_detail_"+userMainId;
         try {
 
-            boolean lockStatus = redisLock.lock(lockKey, userMainId);
+            boolean lockStatus = skylarkLock.lock(lockKey, userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -583,7 +582,7 @@ public class UserController extends UIController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
-            redisLock.unLock(lockKey, userMainId);
+            skylarkLock.unLock(lockKey, userMainId);
         }
         return resultObjectVO;
     }
@@ -679,7 +678,7 @@ public class UserController extends UIController {
         String lockKey = toucan.getAppCode()+"_user_reset_password_"+user.getUserMainId();
         try {
 
-            boolean lockStatus = redisLock.lock(lockKey, userMainId);
+            boolean lockStatus = skylarkLock.lock(lockKey, userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -699,7 +698,7 @@ public class UserController extends UIController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
-            redisLock.unLock(lockKey, userMainId);
+            skylarkLock.unLock(lockKey, userMainId);
         }
         return resultObjectVO;
     }
@@ -744,7 +743,7 @@ public class UserController extends UIController {
         String lockKey = toucan.getAppCode()+"_user_regist_mobile_"+mobilePhone;
         try {
 
-            boolean lockStatus = redisLock.lock(lockKey, user.getMobilePhone());
+            boolean lockStatus = skylarkLock.lock(lockKey, user.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -763,7 +762,7 @@ public class UserController extends UIController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
-            redisLock.unLock(lockKey, mobilePhone);
+            skylarkLock.unLock(lockKey, mobilePhone);
         }
         return resultObjectVO;
     }
@@ -806,7 +805,7 @@ public class UserController extends UIController {
         String lockKey = toucan.getAppCode()+"_user_regist_email_"+email;
         try {
 
-            boolean lockStatus = redisLock.lock(lockKey, user.getEmail());
+            boolean lockStatus = skylarkLock.lock(lockKey, user.getEmail());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -825,7 +824,7 @@ public class UserController extends UIController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
-            redisLock.unLock(lockKey, email);
+            skylarkLock.unLock(lockKey, email);
         }
         return resultObjectVO;
     }
@@ -868,7 +867,7 @@ public class UserController extends UIController {
         String lockKey = toucan.getAppCode()+"_user_regist_username_"+username;
         try {
 
-            boolean lockStatus = redisLock.lock(lockKey, user.getUsername());
+            boolean lockStatus = skylarkLock.lock(lockKey, user.getUsername());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -887,7 +886,7 @@ public class UserController extends UIController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
-            redisLock.unLock(lockKey, username);
+            skylarkLock.unLock(lockKey, username);
         }
         return resultObjectVO;
     }

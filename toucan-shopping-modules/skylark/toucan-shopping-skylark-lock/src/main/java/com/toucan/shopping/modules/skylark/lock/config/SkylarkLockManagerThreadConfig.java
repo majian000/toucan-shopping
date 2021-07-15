@@ -1,8 +1,6 @@
-package com.toucan.shopping.cloud.user.app.config;
+package com.toucan.shopping.modules.skylark.lock.config;
 
 
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
-import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockManagerThread;
 import com.toucan.shopping.modules.skylark.lock.redis.SkylarkRedisLock;
 import com.toucan.shopping.modules.skylark.lock.redis.impl.SkylarkRedisLockImpl;
 import com.toucan.shopping.modules.skylark.lock.redis.thread.SkylarkRedisLockManagerThread;
@@ -19,7 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * 锁管理器线程启动
  */
 @Configuration
-public class LockManagerThreadConfig {
+public class SkylarkLockManagerThreadConfig {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

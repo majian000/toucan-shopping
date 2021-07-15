@@ -1,13 +1,13 @@
 package com.toucan.shopping.modules.order.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.mapper.OrderMapper;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.product.entity.ProductBuy;
 import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private OrderMapper orderMapper;
