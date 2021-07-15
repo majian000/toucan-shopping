@@ -18,4 +18,8 @@ public class Modules {
      */
     private CategoryCache categoryCache;
 
+    /**
+     * 云雀 分布式锁
+     */
+    private SkylarkLock skylarkLock;
 }

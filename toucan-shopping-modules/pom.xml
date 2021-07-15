@@ -104,6 +104,9 @@
         <!--消息实体和VO -->
         <module>message/toucan-shopping-message-entity-vo</module>
 
+        <!-- 云雀分布式锁-->
+        <module>skylark/toucan-shopping-skylark-lock</module>
+
         <!-- ===============================================-->
 
     </modules>

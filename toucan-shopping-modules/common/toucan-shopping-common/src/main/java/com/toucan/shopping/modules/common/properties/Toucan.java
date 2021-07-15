@@ -45,7 +45,15 @@ public class Toucan {
 
     private UserCenterScheduler userCenterScheduler;
 
+    /**
+     * 用户配置
+     */
     private User user;
 
+    /**
+     * 第三方模块
+     */
     private Modules modules;
+
+
 }
