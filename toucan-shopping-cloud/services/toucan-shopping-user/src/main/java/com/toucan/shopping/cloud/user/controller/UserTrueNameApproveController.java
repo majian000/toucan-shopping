@@ -2,24 +2,15 @@ package com.toucan.shopping.cloud.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.user.queue.NewUserMessageQueue;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
-import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.user.constant.UserLoginConstant;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.*;
-import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
-import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;
-import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
-import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
-import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterTrueNameApproveKey;
 import com.toucan.shopping.modules.user.service.*;
 import com.toucan.shopping.modules.user.vo.*;
@@ -28,11 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用户实名制审核
@@ -57,7 +46,7 @@ public class UserTrueNameApproveController {
     private Toucan toucan;
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -113,7 +102,7 @@ public class UserTrueNameApproveController {
         }
         String userMainId = String.valueOf(userTrueNameApprove.getUserMainId());
         try {
-            boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
+            boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍候重试");
@@ -147,7 +136,7 @@ public class UserTrueNameApproveController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
+            skylarkLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
         }
         return resultObjectVO;
     }
@@ -214,7 +203,7 @@ public class UserTrueNameApproveController {
 
         String userMainId = String.valueOf(userTrueNameApprove.getUserMainId());
         try {
-            boolean lockStatus = redisLock.lock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
+            boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍候重试");
@@ -254,7 +243,7 @@ public class UserTrueNameApproveController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
+            skylarkLock.unLock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
         }
         return resultObjectVO;
     }

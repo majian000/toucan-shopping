@@ -4,13 +4,13 @@ package com.toucan.shopping.cloud.user.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.user.queue.NewUserMessageQueue;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.*;
@@ -47,7 +47,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -171,7 +171,7 @@ public class UserController {
 
 
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -256,7 +256,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+            skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
         }
         return resultObjectVO;
     }
@@ -313,7 +313,7 @@ public class UserController {
 
         String userMainId = String.valueOf(userRegistVO.getUserMainId());
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -348,7 +348,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
+            skylarkLock.unLock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
@@ -403,7 +403,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -472,7 +472,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
+            skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
         }
         return resultObjectVO;
     }
@@ -588,7 +588,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -657,7 +657,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
+            skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
         }
         return resultObjectVO;
     }
@@ -846,7 +846,7 @@ public class UserController {
             return resultObjectVO;
         }
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -904,7 +904,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+            skylarkLock.unLock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
         }
         return resultObjectVO;
     }
@@ -1080,7 +1080,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = redisLock.lock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
+            boolean lockStatus = skylarkLock.lock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -1176,7 +1176,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
+            skylarkLock.unLock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
         }
 
         return resultObjectVO;
@@ -1272,7 +1272,7 @@ public class UserController {
 
         String userMainId = String.valueOf(userVo.getUserMainId());
         try {
-            boolean lockStatus = redisLock.lock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
+            boolean lockStatus = skylarkLock.lock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -1316,7 +1316,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
+            skylarkLock.unLock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
@@ -2219,7 +2219,7 @@ public class UserController {
         }
 
         try {
-            boolean lockStatus = redisLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -2288,7 +2288,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            redisLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
+            skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
         }
         return resultObjectVO;
     }

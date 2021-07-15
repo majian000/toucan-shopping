@@ -2,10 +2,10 @@ package com.toucan.shopping.cloud.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.redis.UserCenterSendRegistSmsRedisKey;
@@ -36,7 +36,7 @@ public class SmsController {
     private UserService userService;
 
     @Autowired
-    private RedisLock redisLock;
+    private SkylarkLock skylarkLock;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -88,7 +88,7 @@ public class SmsController {
 
         try {
 
-            boolean lockStatus = redisLock.lock(UserCenterSendRegistSmsRedisKey.getSendRegistVerifyCodeLockKey(userSmsVO.getMobilePhone()), userSmsVO.getMobilePhone());
+            boolean lockStatus = skylarkLock.lock(UserCenterSendRegistSmsRedisKey.getSendRegistVerifyCodeLockKey(userSmsVO.getMobilePhone()), userSmsVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("超时重试");
@@ -106,7 +106,7 @@ public class SmsController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("发送短信验证码失败,请稍后重试");
         }finally {
-            redisLock.unLock(UserCenterSendRegistSmsRedisKey.getSendRegistVerifyCodeLockKey(userSmsVO.getMobilePhone()), userSmsVO.getMobilePhone());
+            skylarkLock.unLock(UserCenterSendRegistSmsRedisKey.getSendRegistVerifyCodeLockKey(userSmsVO.getMobilePhone()), userSmsVO.getMobilePhone());
         }
 
         return resultObjectVO;
