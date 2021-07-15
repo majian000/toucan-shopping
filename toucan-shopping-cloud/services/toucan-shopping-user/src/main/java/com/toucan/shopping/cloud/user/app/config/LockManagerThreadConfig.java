@@ -3,11 +3,16 @@ package com.toucan.shopping.cloud.user.app.config;
 
 import com.toucan.shopping.modules.common.lock.redis.RedisLock;
 import com.toucan.shopping.modules.common.lock.redis.thread.RedisLockManagerThread;
+import com.toucan.shopping.modules.skylark.lock.redis.SkylarkRedisLock;
+import com.toucan.shopping.modules.skylark.lock.redis.impl.SkylarkRedisLockImpl;
+import com.toucan.shopping.modules.skylark.lock.redis.thread.SkylarkRedisLockManagerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
@@ -21,23 +26,20 @@ public class LockManagerThreadConfig {
 
 
     @Autowired
-    private RedisLock redisLock;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private SkylarkRedisLock redisLock;
 
 
     @Bean
-    public RedisLockManagerThread redisLockManagerThread()
+    public SkylarkRedisLockManagerThread redisLockManagerThread()
     {
-        logger.info("初始化应用编码 RedisLockManagerThread(锁管理器).......");
+        logger.info("初始化 SkylarkRedisLockManagerThread(云雀锁管理器).......");
 
         //设置全局锁表
-        RedisLockManagerThread.globalLockTable = "toucan_shopping_"+RedisLockManagerThread.globalLockTable;
+        SkylarkRedisLockManagerThread.globalLockTable = "toucan_shopping_"+SkylarkRedisLockManagerThread.globalLockTable;
 
-        RedisLockManagerThread lockManagerThread = new RedisLockManagerThread();
+        SkylarkRedisLockManagerThread lockManagerThread = new SkylarkRedisLockManagerThread();
         lockManagerThread.setRedisLock(redisLock);
-        lockManagerThread.setStringRedisTemplate(stringRedisTemplate);
+        lockManagerThread.setRedisTemplate(((SkylarkRedisLockImpl)redisLock).getRedisTemplate());
 
         lockManagerThread.start();
         return lockManagerThread;

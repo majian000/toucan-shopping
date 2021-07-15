@@ -7,6 +7,7 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 
@@ -42,7 +43,7 @@ public class SkylarkRedisLockManagerThread extends Thread {
      */
     public static boolean enableLockManager =true;
 
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate redisTemplate;
 
     private SkylarkRedisLock redisLock;
 
@@ -51,14 +52,14 @@ public class SkylarkRedisLockManagerThread extends Thread {
         while(SkylarkRedisLockManagerThread.enableLockManager) {
             try {
                 logger.info("锁管理线程启动 查询表:"+ SkylarkRedisLockManagerThread.globalLockTable);
-                Set<Object> lockKeys = stringRedisTemplate.opsForHash().keys(SkylarkRedisLockManagerThread.globalLockTable);
+                Set<Object> lockKeys = redisTemplate.opsForHash().keys(SkylarkRedisLockManagerThread.globalLockTable);
                 if(!CollectionUtils.isEmpty(lockKeys)) {
                     Iterator lockKeyIterator = lockKeys.iterator();
                     while(lockKeyIterator.hasNext()) {
                         //拿到锁的创建时间
                         String lockKey = String.valueOf(lockKeyIterator.next());
                         //如果对象为空 lockCreateTime的值将为"null"
-                        String lockCreateTime =  String.valueOf(stringRedisTemplate.opsForHash().get(SkylarkRedisLockManagerThread.globalLockTable, lockKey));
+                        String lockCreateTime =  String.valueOf(redisTemplate.opsForHash().get(SkylarkRedisLockManagerThread.globalLockTable, lockKey));
                         //如果这个锁已经很久没释放,将强制释放这个锁
                         if("null".equals(lockCreateTime)||StringUtils.isEmpty(lockCreateTime)||DateUtils.currentDate().getTime()-Long.parseLong(lockCreateTime)>= SkylarkRedisLockManagerThread.lockTimeOutMillisecond)
                         {
@@ -68,10 +69,10 @@ public class SkylarkRedisLockManagerThread extends Thread {
                                 ((SkylarkRedisLockImpl)redisLock).getThreadHashMap().get(lockKey).setLoop(false);
                                 ((SkylarkRedisLockImpl)redisLock).getThreadHashMap().remove(lockKey);
                             }
-                            stringRedisTemplate.opsForValue().getOperations().delete(lockKey);
+                            redisTemplate.opsForValue().getOperations().delete(lockKey);
 
                             //从锁表中删除这个锁
-                            stringRedisTemplate.opsForHash().delete(SkylarkRedisLockManagerThread.globalLockTable,((Object)lockKey));
+                            redisTemplate.opsForHash().delete(SkylarkRedisLockManagerThread.globalLockTable,((Object)lockKey));
                         }
                     }
                 }
