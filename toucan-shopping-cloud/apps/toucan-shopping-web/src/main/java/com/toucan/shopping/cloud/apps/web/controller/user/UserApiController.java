@@ -312,6 +312,13 @@ public class UserApiController extends BaseController {
                 uidCookie.setMaxAge(18000);
                 response.addCookie(uidCookie);
 
+                //用户昵称
+                Cookie unameCookie = new Cookie(toucan.getAppCode()+"_unickname",userLoginVO.getNickName());
+                unameCookie.setPath("/");
+                //5小时过期
+                unameCookie.setMaxAge(18000);
+                response.addCookie(unameCookie);
+
                 //TOKEN
                 Cookie ltCookie = new Cookie(toucan.getAppCode()+"_lt",userLoginVO.getLoginToken());
                 ltCookie.setPath("/");

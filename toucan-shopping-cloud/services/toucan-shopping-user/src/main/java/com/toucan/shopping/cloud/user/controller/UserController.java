@@ -1155,6 +1155,12 @@ public class UserController {
                         userLogin.setLoginToken(token);
                         userLogin.setPassword(null);
 
+                        List<UserDetail> userDetails = userDetailService.findByUserMainId(userLogin.getUserMainId());
+                        if(CollectionUtils.isNotEmpty(userDetails))
+                        {
+                            userLogin.setNickName(userDetails.get(0).getNickName());
+                        }
+
                         resultObjectVO.setData(userLogin);
 
                     }
