@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.controller.api;
+package com.toucan.shopping.cloud.apps.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

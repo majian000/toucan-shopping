@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.controller.page.user;
+package com.toucan.shopping.cloud.apps.web.controller.user;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;

@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.controller.page.user;
+package com.toucan.shopping.cloud.apps.web.controller.user;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -21,7 +21,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
-import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -307,14 +306,14 @@ public class UserApiController extends BaseController {
             {
                 userLoginVO = (UserLoginVO)resultObjectVO.formatData(UserLoginVO.class);
                 //UID
-                Cookie uidCookie = new Cookie("uid",String.valueOf(userLoginVO.getUserMainId()));
+                Cookie uidCookie = new Cookie(toucan.getAppCode()+"_uid",String.valueOf(userLoginVO.getUserMainId()));
                 uidCookie.setPath("/");
                 //5小时过期
                 uidCookie.setMaxAge(18000);
                 response.addCookie(uidCookie);
 
                 //TOKEN
-                Cookie ltCookie = new Cookie("lt",userLoginVO.getLoginToken());
+                Cookie ltCookie = new Cookie(toucan.getAppCode()+"_lt",userLoginVO.getLoginToken());
                 ltCookie.setPath("/");
                 //5小时过期
                 ltCookie.setMaxAge(18000);
