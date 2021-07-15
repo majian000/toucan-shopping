@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 public class UserAuthHeaderUtil {
 
 
-    public static String getUserMainId(String authHeader) throws Exception {
+    public static String getUserMainId(String appCode,String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
             throw new IllegalArgumentException("请求头参数无效");
@@ -23,7 +23,7 @@ public class UserAuthHeaderUtil {
 
 
 
-    public static String getToken(String authHeader) throws Exception {
+    public static String getToken(String appCode,String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
             throw new IllegalArgumentException("请求头参数无效");

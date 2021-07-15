@@ -4,6 +4,7 @@ import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -30,6 +31,9 @@ public class UserTrueNameApprovePageController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
+    private Toucan toucan;
+
+    @Autowired
     private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
@@ -44,7 +48,7 @@ public class UserTrueNameApprovePageController extends BaseController {
     {
         try {
             //从请求头中拿到uid
-            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
             queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
@@ -91,7 +95,7 @@ public class UserTrueNameApprovePageController extends BaseController {
     {
         try {
             //从请求头中拿到uid
-            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
             queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
