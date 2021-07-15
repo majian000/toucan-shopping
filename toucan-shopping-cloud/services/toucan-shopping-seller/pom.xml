@@ -86,20 +86,6 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-user-es</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-user-entity-vo</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.user</groupId>
-            <artifactId>toucan-shopping-user-service-dao</artifactId>
-        </dependency>
 
     </dependencies>
 
