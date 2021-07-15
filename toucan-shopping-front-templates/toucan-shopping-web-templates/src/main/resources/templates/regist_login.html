@@ -1,7 +1,7 @@
-<span id="userInfo">
+<span id="userInfo" style="display:none">
     <span class="fr">
         <div class="ss_list">
-            <a href="#">用户昵称</a>
+            <a href="#" >用户昵称</a>
                 <div class="ss_list_bg">
                     <div class="s_city_t"></div>
                     <div class="ss_list_c">
@@ -13,6 +13,21 @@
             </div>
     </span>
 </span>
-<span id="registOrLogin">
+<span id="registOrLogin" style="display:none">
 你好，请<a href="${basePath}/page/user/login">登录</a>&nbsp; <a href="${basePath}/page/user/regist" style="color:#ff4e00;">免费注册</a>
 </span>
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/common.js"></script>
+
+<script>
+    $(function () {
+        var unickname = $.cookie(appCode+"_unickname");
+        if(unickname!=null&&unickname!="")
+        {
+            alert(unickname);
+            $("#userInfo").show();
+        }else{
+            $("#registOrLogin").show();
+        }
+    });
+</script>
