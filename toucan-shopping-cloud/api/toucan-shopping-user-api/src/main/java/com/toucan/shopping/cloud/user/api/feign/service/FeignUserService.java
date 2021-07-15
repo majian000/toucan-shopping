@@ -109,6 +109,9 @@ public interface FeignUserService {
     ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryLoginInfo(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
     /**
      * 查询是否实名
      * @param signHeader

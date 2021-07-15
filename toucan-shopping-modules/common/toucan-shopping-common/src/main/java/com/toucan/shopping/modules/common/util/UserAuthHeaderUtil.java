@@ -13,7 +13,7 @@ public class UserAuthHeaderUtil {
 
         }
 
-        String adminId = StringUtils.substringAfter(authHeader,"uid=");
+        String adminId = StringUtils.substringAfter(authHeader,appCode+"_uid=");
         if(adminId.indexOf(";")!=-1)
         {
             adminId=adminId.substring(0,adminId.indexOf(";"));
@@ -30,7 +30,7 @@ public class UserAuthHeaderUtil {
 
         }
 
-        String token = StringUtils.substringAfter(authHeader,"lt=");
+        String token = StringUtils.substringAfter(authHeader,appCode+"_lt=");
         if(token.indexOf(";")!=-1)
         {
             token=token.substring(0,token.indexOf(";"));

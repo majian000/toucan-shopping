@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.user;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
+import com.toucan.shopping.modules.auth.user.UserAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ public class UserPageController extends BaseController {
     }
 
 
+    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/info")
     public String center()
     {

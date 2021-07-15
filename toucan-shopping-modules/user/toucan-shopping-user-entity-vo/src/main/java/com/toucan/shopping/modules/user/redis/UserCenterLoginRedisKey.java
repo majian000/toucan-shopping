@@ -6,7 +6,7 @@ public class UserCenterLoginRedisKey {
     public static String appCode = "10001002";
 
 
-    public static Integer LOGIN_TIMEOUT_SECOND=60*60; //没有任何操作,1小时超时
+    public static Integer LOGIN_TIMEOUT_SECOND=60*60*5; //没有任何操作,5小时超时
 
 
 
@@ -37,24 +37,32 @@ public class UserCenterLoginRedisKey {
 
 
     /**
-     * 登录token键
+     * 登录用户组键
      * @param userId
      * @return
      */
-    public static String getLoginTokenGroupKey(String userId)
+    public static String getLoginInfoGroupKey(String userId)
     {
-        return userId+"_LOGIN_TOKENS";
+        return "TOUCAN_SHOPPING_WEB:LOGIN_INFOS:"+userId+"_LOGIN_TOKENS";
     }
 
 
     /**
-     * 登录token app键
+     * 登录信息键
      * @return
      */
-    public static String getLoginTokenAppKey(String userId,String appCode)
+    public static String getLoginTokenAppKey(String userId, String appCode)
     {
         return appCode+"_LOGIN_TOKEN_"+userId;
     }
 
 
+    /**
+     * 登录信息键
+     * @return
+     */
+    public static String getLoginInfoAppKey(String userId, String appCode)
+    {
+        return appCode+"_LOGIN_INFO_"+userId;
+    }
 }

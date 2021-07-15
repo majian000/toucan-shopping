@@ -21,6 +21,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -257,10 +258,53 @@ public class UserApiController extends BaseController {
         return resultObjectVO;
     }
 
+    @RequestMapping(value="/info")
+    @ResponseBody
+    public ResultObjectVO info(HttpServletRequest httpServletRequest){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        try {
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+            resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍候重试");
+        }
+        return resultObjectVO;
+    }
 
 
 
 
+    @RequestMapping(value="/is/online")
+    @ResponseBody
+    public ResultObjectVO isOnline(HttpServletRequest httpServletRequest){
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        //在这里调用用户中心 判断登录
+        UserLoginVO queryUserLogin = new UserLoginVO();
+        try {
+            String uid = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String lt =  UserAuthHeaderUtil.getToken(toucan.getAppCode(),httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            queryUserLogin.setUserMainId(Long.parseLong(uid));
+            queryUserLogin.setLoginToken(lt);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
+            resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍候重试");
+        }
+        resultObjectVO.setData(false);
+        return resultObjectVO;
+    }
 
 
 
@@ -308,22 +352,15 @@ public class UserApiController extends BaseController {
                 //UID
                 Cookie uidCookie = new Cookie(toucan.getAppCode()+"_uid",String.valueOf(userLoginVO.getUserMainId()));
                 uidCookie.setPath("/");
-                //5小时过期
-                uidCookie.setMaxAge(18000);
+                //永不过期
+                uidCookie.setMaxAge(Integer.MAX_VALUE);
                 response.addCookie(uidCookie);
-
-                //用户昵称
-                Cookie unameCookie = new Cookie(toucan.getAppCode()+"_unickname",userLoginVO.getNickName());
-                unameCookie.setPath("/");
-                //5小时过期
-                unameCookie.setMaxAge(18000);
-                response.addCookie(unameCookie);
 
                 //TOKEN
                 Cookie ltCookie = new Cookie(toucan.getAppCode()+"_lt",userLoginVO.getLoginToken());
                 ltCookie.setPath("/");
-                //5小时过期
-                ltCookie.setMaxAge(18000);
+                //永不过期
+                ltCookie.setMaxAge(Integer.MAX_VALUE);
                 response.addCookie(ltCookie);
 
             }

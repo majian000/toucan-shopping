@@ -1131,25 +1131,23 @@ public class UserController {
                     String pwdMd5 = MD5Util.md5(userLogin.getPassword());
                     //登录成功 生成token
                     if (pwdMd5.equals(userEntity.getPassword())) {
-                        String loginTokenGroupKey = UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userEntity.getUserMainId()));
+                        String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userEntity.getUserMainId()));
                         String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
+                        String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
                         //判断是否已有登录token,如果有将删除掉
-                        if (stringRedisTemplate.opsForHash().keys(loginTokenGroupKey) != null) {
+                        if (stringRedisTemplate.opsForHash().keys(loginGroupKey) != null) {
                             long deleteRows = 0;
                             int tryCount = 0;
                             do {
 
-                                deleteRows = stringRedisTemplate.opsForHash().delete(loginTokenGroupKey, loginTokenAppKey);
+                                deleteRows = stringRedisTemplate.opsForHash().delete(loginGroupKey, loginTokenAppKey);
                                 tryCount++;
                             } while (deleteRows <= 0 && tryCount < 50);
                         }
 
                         String token = LoginTokenUtil.generatorToken(userEntity.getUserMainId());
-                        stringRedisTemplate.opsForHash().put(loginTokenGroupKey,
+                        stringRedisTemplate.opsForHash().put(loginGroupKey,
                                 loginTokenAppKey, token);
-                        //设置登录token1个小时超时
-                        stringRedisTemplate.expire(loginTokenGroupKey,
-                                UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
                         userLogin.setUserMainId(userId);
                         userLogin.setLoginToken(token);
@@ -1160,6 +1158,13 @@ public class UserController {
                         {
                             userLogin.setNickName(userDetails.get(0).getNickName());
                         }
+
+
+                        stringRedisTemplate.opsForHash().put(loginGroupKey,
+                                loginInfoAppKey, JSONObject.toJSONString(userLogin));
+                        //设置登录token5个小时超时
+                        stringRedisTemplate.expire(loginGroupKey,
+                                UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
                         resultObjectVO.setData(userLogin);
 
@@ -1183,7 +1188,46 @@ public class UserController {
     }
 
 
+    /**
+     * 判断是否在线
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryLoginInfo(@RequestBody RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        try{
+            String entityJson = requestVo.getEntityJson();
+            UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
+            if(userLoginVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入用户ID");
+                return resultObjectVO;
+            }
+            String loginGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
+            String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
+            Object loginTokenObject = stringRedisTemplate.opsForHash().get(loginGroupKey,loginInfoAppKey);
+            if(loginTokenObject!=null) {
+                resultObjectVO.setData(JSONObject.parseObject(String.valueOf(loginTokenObject),UserVO.class));
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 
@@ -1217,7 +1261,7 @@ public class UserController {
                 resultObjectVO.setMsg("请求失败,请传入loginToken");
                 return resultObjectVO;
             }
-            String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userLoginVO.getUserMainId()));
+            String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
             Object loginTokenObject = stringRedisTemplate.opsForHash().get(loginTokenGroupKey,loginTokenAppKey);

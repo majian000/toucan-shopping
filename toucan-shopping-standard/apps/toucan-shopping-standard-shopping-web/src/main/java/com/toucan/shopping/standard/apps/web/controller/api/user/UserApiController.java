@@ -412,7 +412,7 @@ public class UserApiController extends BaseController {
                     String pwdMd5 = MD5Util.md5(userLoginVO.getPassword());
                     //登录成功 生成token
                     if (pwdMd5.equals(userEntity.getPassword())) {
-                        String loginTokenGroupKey = UserCenterLoginRedisKey.getLoginTokenGroupKey(String.valueOf(userEntity.getId()));
+                        String loginTokenGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userEntity.getId()));
                         String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getId()), toucan.getAppCode());
                         //判断是否已有登录token,如果有将删除掉
                         if (stringRedisTemplate.opsForHash().keys(loginTokenGroupKey) != null) {
