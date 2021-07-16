@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
@@ -27,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -50,14 +50,12 @@ public class UserController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private ToucanStringRedisService toucanStringRedisService;
 
 
     @Autowired
     private IdGenerator idGenerator;
 
-    @Autowired
-    private UserRedisService userRedisService;
 
     @Autowired
     private UserElasticSearchService userElasticSearchService;
@@ -1135,17 +1133,17 @@ public class UserController {
                         String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
                         String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
                         //判断是否已有登录token,如果有将删除掉
-                        if (stringRedisTemplate.opsForHash().keys(loginGroupKey) != null) {
+                        if (toucanStringRedisService.keys(loginGroupKey) != null) {
                             long deleteRows = 0;
                             int tryCount = 0;
                             do {
-                                deleteRows = stringRedisTemplate.opsForHash().delete(loginGroupKey, loginTokenAppKey);
+                                deleteRows = toucanStringRedisService.delete(loginGroupKey, loginTokenAppKey);
                                 tryCount++;
                             } while (deleteRows <= 0 && tryCount < 50);
                         }
 
                         String token = LoginTokenUtil.generatorToken(userEntity.getUserMainId());
-                        stringRedisTemplate.opsForHash().put(loginGroupKey,
+                        toucanStringRedisService.put(loginGroupKey,
                                 loginTokenAppKey, token);
 
                         userLogin.setUserMainId(userId);
@@ -1159,10 +1157,10 @@ public class UserController {
                         }
 
 
-                        stringRedisTemplate.opsForHash().put(loginGroupKey,
+                        toucanStringRedisService.put(loginGroupKey,
                                 loginInfoAppKey, JSONObject.toJSONString(userLogin));
                         //设置登录token5个小时超时
-                        stringRedisTemplate.expire(loginGroupKey,
+                        toucanStringRedisService.expire(loginGroupKey,
                                 UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
                         resultObjectVO.setData(userLogin);
@@ -1213,7 +1211,7 @@ public class UserController {
             String loginGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
-            Object loginTokenObject = stringRedisTemplate.opsForHash().get(loginGroupKey,loginInfoAppKey);
+            Object loginTokenObject = toucanStringRedisService.get(loginGroupKey,loginInfoAppKey);
             if(loginTokenObject!=null) {
                 resultObjectVO.setData(JSONObject.parseObject(String.valueOf(loginTokenObject),UserVO.class));
             }
@@ -1263,13 +1261,13 @@ public class UserController {
             String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
-            Object loginTokenObject = stringRedisTemplate.opsForHash().get(loginTokenGroupKey,loginTokenAppKey);
+            Object loginTokenObject = toucanStringRedisService.get(loginTokenGroupKey,loginTokenAppKey);
             if (loginTokenObject != null) {
                 if(StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
                 {
                     //登录时长重置
                     //设置登录token1个小时超时
-                    stringRedisTemplate.expire(loginTokenGroupKey,UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                    toucanStringRedisService.expire(loginTokenGroupKey,UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
                     resultObjectVO.setData(true);
                 }

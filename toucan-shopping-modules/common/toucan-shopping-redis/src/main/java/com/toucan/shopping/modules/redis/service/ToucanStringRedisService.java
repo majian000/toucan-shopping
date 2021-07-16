@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.redis.service;
 
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public interface ToucanStringRedisService {
@@ -12,5 +13,13 @@ public interface ToucanStringRedisService {
     Boolean expire(String key, long timeout, TimeUnit unit);
 
     boolean delete(String key);
+
+    Set<String> keys(String pattern);
+
+    void put(String var1, String var2, String var3);
+
+    Object get(String var1, Object var2);
+
+    Long delete(String var1, Object... var2);
 }
 

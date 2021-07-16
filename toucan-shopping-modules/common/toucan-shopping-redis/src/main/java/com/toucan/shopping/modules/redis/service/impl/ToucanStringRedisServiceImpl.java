@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -34,5 +35,26 @@ public class ToucanStringRedisServiceImpl implements ToucanStringRedisService {
     @Override
     public boolean delete(String key) {
         return redisTemplate.opsForValue().getOperations().delete(key);
+    }
+
+    @Override
+    public Set<String> keys(String pattern) {
+        return redisTemplate.keys(pattern);
+    }
+
+    @Override
+    public void put(String var1, String var2, String var3) {
+        redisTemplate.opsForHash().put(var1,
+                var2, var3);
+    }
+
+    @Override
+    public Object get(String var1, Object var2) {
+        return redisTemplate.opsForHash().get(var1,var2);
+    }
+
+    @Override
+    public Long delete(String var1, Object... var2) {
+        return redisTemplate.opsForHash().delete(var1,var2);
     }
 }

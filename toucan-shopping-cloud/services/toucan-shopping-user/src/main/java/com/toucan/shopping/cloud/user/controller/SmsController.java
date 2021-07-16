@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
@@ -39,7 +40,7 @@ public class SmsController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private ToucanStringRedisService toucanStringRedisService;
 
     @Value("${toucan.app-code}")
     private String appCode;
