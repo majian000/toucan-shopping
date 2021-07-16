@@ -53,11 +53,6 @@ public @interface UserAuth {
 	public int requestType() default REQUEST_JSON;
 
 
-	/**
-	 * 用户类型 1普通账户
-	 * @return
-	 */
-	public int userType() default USERTYPE_USER;
 
 
 
