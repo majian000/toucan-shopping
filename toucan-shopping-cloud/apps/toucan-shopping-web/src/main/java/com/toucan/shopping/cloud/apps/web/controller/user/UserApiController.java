@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
@@ -29,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -55,7 +55,7 @@ public class UserApiController extends BaseController {
     private SkylarkLock redisLock;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private ToucanStringRedisService toucanStringRedisService;
 
 
     @Autowired
@@ -107,7 +107,7 @@ public class UserApiController extends BaseController {
                 }
             }
 
-            Object mobilePhoneValue = redisTemplate.opsForValue().get(UserRegistRedisKey.getVerifyCodeKey(mobilePhone));
+            Object mobilePhoneValue = toucanStringRedisService.get(UserRegistRedisKey.getVerifyCodeKey(mobilePhone));
             if(mobilePhoneValue==null||StringUtils.isNotEmpty(String.valueOf(mobilePhoneValue)))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -135,9 +135,9 @@ public class UserApiController extends BaseController {
             if(resultObjectVO.getCode().intValue()== ResultObjectVO.SUCCESS.intValue())
             {
                 //将验证码保存到缓存
-                redisTemplate.opsForValue().set(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
+                toucanStringRedisService.set(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
                 //默认1分钟过期
-                redisTemplate.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
+                toucanStringRedisService.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
             }
         }catch(Exception e)
         {
@@ -218,7 +218,7 @@ public class UserApiController extends BaseController {
             }
             //判断验证码
 
-            Object vcodeObject = redisTemplate.opsForValue().get(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
+            Object vcodeObject = toucanStringRedisService.get(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
             if(vcodeObject==null)
             {
                 //释放注册锁
@@ -246,7 +246,7 @@ public class UserApiController extends BaseController {
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 //删除验证码
-                redisTemplate.opsForValue().getOperations().delete(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
+                toucanStringRedisService.delete(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
             }
 
             resultObjectVO.setData(null);
@@ -349,7 +349,7 @@ public class UserApiController extends BaseController {
         try {
             //查询登录次数,失败3次要求输入验证码
             String loginFaildCountKey = UserLoginRedisKey.getLoginFaildCountKey(IPUtil.getRemoteAddr(request));
-            Object loginFaildCountValueObject = redisTemplate.opsForValue().get(loginFaildCountKey);
+            Object loginFaildCountValueObject = toucanStringRedisService.get(loginFaildCountKey);
             Integer faildCount = 0;
             if(loginFaildCountValueObject!=null)
             {
@@ -379,7 +379,7 @@ public class UserApiController extends BaseController {
                         return resultObjectVO;
                     }
                     String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
-                    Object vCodeObject = redisTemplate.opsForValue().get(vcodeRedisKey);
+                    Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
                     if(vCodeObject==null)
                     {
                         resultObjectVO.setMsg("登录失败,验证码过期,请刷新");
@@ -393,7 +393,7 @@ public class UserApiController extends BaseController {
                         return resultObjectVO;
                     }
                     //校验通过,删除验证码
-                    redisTemplate.delete(vcodeRedisKey);
+                    toucanStringRedisService.delete(vcodeRedisKey);
                 }
             }
 
@@ -420,11 +420,11 @@ public class UserApiController extends BaseController {
             }else{
                 if(loginFaildCountValueObject==null)
                 {
-                    redisTemplate.opsForValue().set(loginFaildCountKey,1);
+                    toucanStringRedisService.set(loginFaildCountKey,1);
                     //10分钟之内 输入错误3次 要求验证码
-                    redisTemplate.expire(loginFaildCountKey,60*10, TimeUnit.SECONDS);
+                    toucanStringRedisService.expire(loginFaildCountKey,60*10, TimeUnit.SECONDS);
                 }else {
-                    redisTemplate.opsForValue().set(loginFaildCountKey, faildCount + 1);
+                    toucanStringRedisService.set(loginFaildCountKey, faildCount + 1);
 
                     if(faildCount+1>3)
                     {
@@ -460,8 +460,8 @@ public class UserApiController extends BaseController {
             //生成客户端验证码ID
             String vcodeUuid = GlobalUUID.uuid();
             String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
-            redisTemplate.opsForValue().set(vcodeRedisKey,code);
-            redisTemplate.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            toucanStringRedisService.set(vcodeRedisKey,code);
+            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
 
             Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
@@ -533,9 +533,9 @@ public class UserApiController extends BaseController {
 //            //调用第三方短信接口
 //
 //            String code = NumberUtil.random(6);
-//            redisTemplate.opsForValue().set(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),code);
+//            toucanStringRedisService.opsForValue().set(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),code);
 //            //默认3分钟过期
-//            redisTemplate.expire(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),60*3, TimeUnit.SECONDS);
+//            toucanStringRedisService.expire(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),60*3, TimeUnit.SECONDS);
 //
 //            redisLock.unLock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
 //
