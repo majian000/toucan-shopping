@@ -7,6 +7,6 @@ public class VerifyCodeRedisKey {
 
     public static String getVerifyCodeKey(String appCode,String vcodeKey)
     {
-        return "TOUCAN_WEB:VERIFY_CODE:"+appCode+"_vcode_"+vcodeKey;
+        return "TOUCAN_SHOPPING_WEB:VERIFY_CODE:"+appCode+"_vcode_"+vcodeKey;
     }
 }

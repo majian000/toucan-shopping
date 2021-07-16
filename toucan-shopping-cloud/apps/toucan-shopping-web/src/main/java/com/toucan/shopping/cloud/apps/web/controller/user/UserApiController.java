@@ -2,7 +2,9 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
+import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.util.*;
@@ -27,7 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -53,7 +55,7 @@ public class UserApiController extends BaseController {
     private SkylarkLock redisLock;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate redisTemplate;
 
 
     @Autowired
@@ -105,7 +107,8 @@ public class UserApiController extends BaseController {
                 }
             }
 
-            if(StringUtils.isNotEmpty(stringRedisTemplate.opsForValue().get(UserRegistRedisKey.getVerifyCodeKey(mobilePhone))))
+            Object mobilePhoneValue = redisTemplate.opsForValue().get(UserRegistRedisKey.getVerifyCodeKey(mobilePhone));
+            if(mobilePhoneValue==null||StringUtils.isNotEmpty(String.valueOf(mobilePhoneValue)))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("已发送,请在1分钟后重新获取");
@@ -132,9 +135,9 @@ public class UserApiController extends BaseController {
             if(resultObjectVO.getCode().intValue()== ResultObjectVO.SUCCESS.intValue())
             {
                 //将验证码保存到缓存
-                stringRedisTemplate.opsForValue().set(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
+                redisTemplate.opsForValue().set(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),code);
                 //默认1分钟过期
-                stringRedisTemplate.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
+                redisTemplate.expire(UserRegistRedisKey.getVerifyCodeKey(userSmsVO.getMobilePhone()),60*1, TimeUnit.SECONDS);
             }
         }catch(Exception e)
         {
@@ -215,7 +218,7 @@ public class UserApiController extends BaseController {
             }
             //判断验证码
 
-            String vcodeObject = stringRedisTemplate.opsForValue().get(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
+            Object vcodeObject = redisTemplate.opsForValue().get(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
             if(vcodeObject==null)
             {
                 //释放注册锁
@@ -224,7 +227,7 @@ public class UserApiController extends BaseController {
                 resultObjectVO.setMsg("注册失败,请发送验证码");
                 return resultObjectVO;
             }
-            if(!user.getVcode().equals(vcodeObject))
+            if(!user.getVcode().equals(String.valueOf(vcodeObject)))
             {
                 //释放注册锁
                 redisLock.unLock(UserRegistRedisKey.getRegistLockKey(user.getMobilePhone()), user.getMobilePhone());
@@ -243,7 +246,7 @@ public class UserApiController extends BaseController {
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 //删除验证码
-                stringRedisTemplate.opsForValue().getOperations().delete(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
+                redisTemplate.opsForValue().getOperations().delete(UserRegistRedisKey.getVerifyCodeKey(user.getMobilePhone()));
             }
 
             resultObjectVO.setData(null);
@@ -315,7 +318,7 @@ public class UserApiController extends BaseController {
      */
     @RequestMapping(value="/login/password",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO loginByPassword(@RequestBody UserLoginVO userLoginVO, HttpServletResponse response, HttpServletRequest request) {
+    public ResultObjectVO loginByPassword(@RequestBody UserLoginVO userLoginVO,@RequestHeader("Cookie") String cookie, HttpServletResponse response, HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (userLoginVO == null) {
             resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
@@ -342,7 +345,59 @@ public class UserApiController extends BaseController {
             resultObjectVO.setMsg("登录失败,请输入6至15位的密码");
             return resultObjectVO;
         }
+
         try {
+            //查询登录次数,失败3次要求输入验证码
+            String loginFaildCountKey = UserLoginRedisKey.getLoginFaildCountKey(IPUtil.getRemoteAddr(request));
+            Object loginFaildCountValueObject = redisTemplate.opsForValue().get(loginFaildCountKey);
+            Integer faildCount = 0;
+            if(loginFaildCountValueObject!=null)
+            {
+                faildCount = Integer.parseInt(String.valueOf(loginFaildCountValueObject));
+                //判断验证码
+                if(faildCount>=3)
+                {
+                    if(StringUtils.isEmpty(userLoginVO.getVcode()))
+                    {
+                        resultObjectVO.setCode(resultObjectVO.FAILD);
+                        resultObjectVO.setMsg("登录失败,请输入验证码");
+                        return resultObjectVO;
+                    }
+
+                    if(StringUtils.isEmpty(cookie))
+                    {
+                        resultObjectVO.setMsg("登录失败,请检查是否禁用Cookie");
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        return resultObjectVO;
+                    }
+
+                    String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
+                    if(StringUtils.isEmpty(clientVCodeId))
+                    {
+                        resultObjectVO.setMsg("登录失败,验证码异常");
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        return resultObjectVO;
+                    }
+                    String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
+                    Object vCodeObject = redisTemplate.opsForValue().get(vcodeRedisKey);
+                    if(vCodeObject==null)
+                    {
+                        resultObjectVO.setMsg("登录失败,验证码过期,请刷新");
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        return resultObjectVO;
+                    }
+                    if(!StringUtils.equals(userLoginVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+                    {
+                        resultObjectVO.setMsg("登录失败,验证码输入有误");
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        return resultObjectVO;
+                    }
+                    //校验通过,删除验证码
+                    redisTemplate.delete(vcodeRedisKey);
+                }
+            }
+
+
             userLoginVO.setAppCode(this.getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userLoginVO);
             resultObjectVO = feignUserService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -362,6 +417,21 @@ public class UserApiController extends BaseController {
                 //永不过期
                 ltCookie.setMaxAge(Integer.MAX_VALUE);
                 response.addCookie(ltCookie);
+            }else{
+                if(loginFaildCountValueObject==null)
+                {
+                    redisTemplate.opsForValue().set(loginFaildCountKey,1);
+                    //10分钟之内 输入错误3次 要求验证码
+                    redisTemplate.expire(loginFaildCountKey,60*10, TimeUnit.SECONDS);
+                }else {
+                    redisTemplate.opsForValue().set(loginFaildCountKey, faildCount + 1);
+
+                    if(faildCount+1>3)
+                    {
+                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+                        resultObjectVO.setMsg("登录失败,次数达到3次,输入验证码");
+                    }
+                }
 
             }
         }catch(Exception e)
@@ -390,8 +460,8 @@ public class UserApiController extends BaseController {
             //生成客户端验证码ID
             String vcodeUuid = GlobalUUID.uuid();
             String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
-            stringRedisTemplate.opsForValue().set(vcodeRedisKey,code);
-            stringRedisTemplate.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(vcodeRedisKey,code);
+            redisTemplate.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
 
             Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
             clientVCodeId.setPath("/");
@@ -463,9 +533,9 @@ public class UserApiController extends BaseController {
 //            //调用第三方短信接口
 //
 //            String code = NumberUtil.random(6);
-//            stringRedisTemplate.opsForValue().set(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),code);
+//            redisTemplate.opsForValue().set(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),code);
 //            //默认3分钟过期
-//            stringRedisTemplate.expire(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),60*3, TimeUnit.SECONDS);
+//            redisTemplate.expire(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()),60*3, TimeUnit.SECONDS);
 //
 //            redisLock.unLock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
 //

@@ -55,4 +55,8 @@ public final class UserRegistConstant {
     public static Integer USERNAME_ERROR=-10;
 
 
+    /**
+     * 显示登录验证码
+     */
+    public static Integer SHOW_LOGIN_VERIFY_CODE=-11;
 }

@@ -17,7 +17,7 @@ public class UserRegistRedisKey {
      */
     public static String getVerifyCodeKey(String mobile)
     {
-        return appCode +"_"+smsRegistType+"_verifycode_"+mobile;
+        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+smsRegistType+"_verifycode_"+mobile;
     }
 
 
@@ -28,7 +28,7 @@ public class UserRegistRedisKey {
      */
     public static String getVerifyCodeLockKey(String mobile)
     {
-        return appCode +"_"+smsRegistType+"_verifycode_"+mobile+"_lock";
+        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+smsRegistType+"_verifycode_"+mobile+"_lock";
     }
 
 
@@ -39,6 +39,6 @@ public class UserRegistRedisKey {
      */
     public static String getRegistLockKey(String mobile)
     {
-        return appCode +"_"+smsRegistType+"_"+mobile+"_lock";
+        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+smsRegistType+"_"+mobile+"_lock";
     }
 }

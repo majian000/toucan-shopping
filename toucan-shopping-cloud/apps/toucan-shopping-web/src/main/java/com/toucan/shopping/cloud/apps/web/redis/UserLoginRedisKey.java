@@ -19,9 +19,18 @@ public class UserLoginRedisKey {
      */
     public static String getVerifyCodeLockKey(String smsType,String mobile)
     {
-        return appCode +"_"+smsType+"_"+mobile+"_lock";
+        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+smsType+"_"+mobile+"_lock";
     }
 
+    /**
+     * IP登录失败次数
+     * @param ip
+     * @return
+     */
+    public static String getLoginFaildCountKey(String ip)
+    {
+        return "TOUCAN_SHOPPING_WEB:LOGIN_FAILD_COUNT:"+appCode +"_"+ip;
+    }
 
     /**
      * 登录锁键
@@ -30,7 +39,7 @@ public class UserLoginRedisKey {
      */
     public static String getLoginLockKey(String username)
     {
-        return appCode +"_"+ methodType +"_"+username+"_lock";
+        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+ methodType +"_"+username+"_lock";
     }
 
     /**
@@ -40,7 +49,7 @@ public class UserLoginRedisKey {
      */
     public static String getLoginKey(String mobile)
     {
-        return appCode +"_"+ methodType +"_"+mobile;
+        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+ methodType +"_"+mobile;
     }
 
 }
