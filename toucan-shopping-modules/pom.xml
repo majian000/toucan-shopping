@@ -35,8 +35,6 @@
         <module>common/toucan-shopping-common-persistence</module>
         <!--权限注解 -->
         <module>common/toucan-shopping-auth</module>
-        <!--请求验证码注解 -->
-        <module>common/toucan-shopping-request-verify-code</module>
         <!-- 分布式锁-->
         <module>common/toucan-shopping-lock-redis</module>
         <!-- 公共事件持久层 -->

@@ -111,7 +111,6 @@
         <!-- =====================插件层====================== -->
         <module>stater/toucan-shopping-admin-auth-spring-boot-starter</module>
         <module>stater/toucan-shopping-user-auth-spring-boot-starter</module>
-        <module>stater/toucan-shopping-request-verify-code-spring-boot-starter</module>
         <!-- ===============================================-->
 
 
@@ -244,19 +243,6 @@
                 <scope>compile</scope>
             </dependency>
 
-            <dependency>
-                <groupId>com.toucan.shopping.cloud.starter</groupId>
-                <artifactId>toucan-shopping-request-verify-code-spring-boot-starter</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.toucan.shopping.modules.common</groupId>
-                <artifactId>toucan-shopping-request-verify-code</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
 
 
             <dependency>

@@ -43,11 +43,6 @@ public class Toucan {
      */
     private UserAuth userAuth;
 
-    /**
-     * 请求验证码
-     */
-    private RequestVerifyCode requestVerifyCode;
-
     private UserCenterScheduler userCenterScheduler;
 
     /**
