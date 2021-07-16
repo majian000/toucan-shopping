@@ -26,6 +26,11 @@ function login()
             if(result.code<=0)
             {
                 $("#login_msg").text(result.msg);
+                //显示验证码
+                if(result.code==-11)
+                {
+
+                }
             }else{
                 window.location.href=basePath+"/page/user/info";
             }
@@ -33,5 +38,9 @@ function login()
         error: function (result) {
             $("#login_msg").text("登陆失败,请重试");
         }
+    });
+
+    $("#refreshCaptcha").bind( 'click' ,function(){
+        $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
     });
 }

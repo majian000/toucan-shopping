@@ -31,7 +31,7 @@ public class UserPageController extends BaseController {
     }
 
 
-    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/info")
     public String center()
     {
