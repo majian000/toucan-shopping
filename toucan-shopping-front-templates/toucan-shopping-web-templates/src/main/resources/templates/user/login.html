@@ -73,10 +73,12 @@
                 <td>密&nbsp; &nbsp; 码</td>
                 <td><input type="password" id="password" name="password" value="" class="l_pwd" placeholder="请输入密码" maxlength="15" /></td>
               </tr>
-              <tr height="70">
+              <tr height="70" id="vcodetr" style="display:none">
                 <td>验证码</td>
-                <td><input type="text" id="vcode" name="vcode" class="l_ipt" placeholder="请输入验证码" maxlength="4" /></td>
-                <td><img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" ></td>
+                <td>
+                    <input type="text" id="vcode" name="vcode" style="vertical-align:middle;" class="l_ipt" placeholder="请输入验证码" maxlength="4" />
+                    <img id="refreshCaptcha" style="width:100px;height:40px;vertical-align:middle;"  src="${basePath}/api/user/vcode" >
+                </td>
               </tr>
               <tr>
               	<td>&nbsp;</td>

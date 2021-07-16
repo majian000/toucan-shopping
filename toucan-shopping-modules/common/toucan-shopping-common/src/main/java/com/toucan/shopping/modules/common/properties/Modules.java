@@ -22,4 +22,9 @@ public class Modules {
      * 云雀 分布式锁
      */
     private SkylarkLock skylarkLock;
+
+    /**
+     * redis封装
+     */
+    private ToucanRedis toucanRedis;
 }

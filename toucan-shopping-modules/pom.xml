@@ -47,6 +47,8 @@
         <module>common/toucan-shopping-fastdfs</module>
         <!--图片上传模块 -->
         <module>common/toucan-shopping-image-upload</module>
+        <!--redis封装 -->
+        <module>common/toucan-shopping-redis</module>
 
         <!--用户中心操作es -->
         <module>user/toucan-shopping-user-es</module>
@@ -350,6 +352,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.skylark</groupId>
                 <artifactId>toucan-shopping-skylark-lock</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-redis</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

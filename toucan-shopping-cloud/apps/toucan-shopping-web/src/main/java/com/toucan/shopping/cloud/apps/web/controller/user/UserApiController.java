@@ -359,7 +359,7 @@ public class UserApiController extends BaseController {
                 {
                     if(StringUtils.isEmpty(userLoginVO.getVcode()))
                     {
-                        resultObjectVO.setCode(resultObjectVO.FAILD);
+                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
                         resultObjectVO.setMsg("登录失败,请输入验证码");
                         return resultObjectVO;
                     }
@@ -367,7 +367,7 @@ public class UserApiController extends BaseController {
                     if(StringUtils.isEmpty(cookie))
                     {
                         resultObjectVO.setMsg("登录失败,请检查是否禁用Cookie");
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
                         return resultObjectVO;
                     }
 
@@ -375,7 +375,7 @@ public class UserApiController extends BaseController {
                     if(StringUtils.isEmpty(clientVCodeId))
                     {
                         resultObjectVO.setMsg("登录失败,验证码异常");
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
                         return resultObjectVO;
                     }
                     String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
@@ -383,13 +383,13 @@ public class UserApiController extends BaseController {
                     if(vCodeObject==null)
                     {
                         resultObjectVO.setMsg("登录失败,验证码过期,请刷新");
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
                         return resultObjectVO;
                     }
                     if(!StringUtils.equals(userLoginVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
                     {
                         resultObjectVO.setMsg("登录失败,验证码输入有误");
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
                         return resultObjectVO;
                     }
                     //校验通过,删除验证码

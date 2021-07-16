@@ -29,7 +29,7 @@ function login()
                 //显示验证码
                 if(result.code==-11)
                 {
-
+                    $("#vcodetr").show();
                 }
             }else{
                 window.location.href=basePath+"/page/user/info";
