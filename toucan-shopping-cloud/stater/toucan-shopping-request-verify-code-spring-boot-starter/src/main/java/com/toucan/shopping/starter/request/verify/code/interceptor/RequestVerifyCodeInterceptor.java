@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.spring.context.SpringContextHolder;
+import com.toucan.shopping.modules.common.util.IPUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -61,9 +62,10 @@ public class RequestVerifyCodeInterceptor implements HandlerInterceptor {
             RequestVerifyCode requestVerifyCode = method.getAnnotation(RequestVerifyCode.class);
             try {
                 response.setCharacterEncoding(Charset.defaultCharset().name());
-
                 if (requestVerifyCode != null)
                 {
+                    String ip = IPUtil.getRemoteAddr(request);
+
 
                 }
             } catch (Exception e) {

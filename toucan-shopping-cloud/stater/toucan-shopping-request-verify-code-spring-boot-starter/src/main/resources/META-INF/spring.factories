@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.toucan.shopping.starter.request.verify.code.config.RequestVerifyCodeConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.toucan.shopping.starter.request.verify.code.config.RequestVerifyCodeInterceptorConfig

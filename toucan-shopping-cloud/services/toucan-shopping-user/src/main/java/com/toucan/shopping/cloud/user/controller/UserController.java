@@ -1139,7 +1139,6 @@ public class UserController {
                             long deleteRows = 0;
                             int tryCount = 0;
                             do {
-
                                 deleteRows = stringRedisTemplate.opsForHash().delete(loginGroupKey, loginTokenAppKey);
                                 tryCount++;
                             } while (deleteRows <= 0 && tryCount < 50);

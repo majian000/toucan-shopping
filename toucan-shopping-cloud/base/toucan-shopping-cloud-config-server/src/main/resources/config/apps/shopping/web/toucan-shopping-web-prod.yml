@@ -98,6 +98,14 @@ toucan:
     path-patterns: /**
     #忽略拦截
     exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
+  request-verify-code:  #规定指定时间内超过设置次数将必须输入验证码
+    enabled: true
+    #验证码校验失败跳转页面
+    verify-faild-page: /verifyFaildPage
+    #拦截指定路径
+    path-patterns: /**
+    #忽略拦截
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
   modules:
     areaCache:
       redis:

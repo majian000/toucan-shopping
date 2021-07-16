@@ -2,6 +2,7 @@ package com.toucan.shopping.starter.request.verify.code.controller;
 
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
+import com.toucan.shopping.modules.common.util.IPUtil;
 import com.toucan.shopping.modules.common.util.VerifyCodeUtil;
 import com.toucan.shopping.starter.request.verify.code.redis.RequestVerifyCodeRedisKey;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,7 +34,7 @@ public class RequestVerifyCodeController {
     private StringRedisTemplate stringRedisTemplate;
 
     @RequestMapping(value="/vcode", method = RequestMethod.GET)
-    public void verifyCode(HttpServletResponse response) {
+    public void verifyCode(HttpServletRequest request,HttpServletResponse response) {
         OutputStream outputStream = null;
         try {
             outputStream = response.getOutputStream();
@@ -42,16 +44,9 @@ public class RequestVerifyCodeController {
 
 
             //生成客户端验证码ID
-            String vcodeUuid = GlobalUUID.uuid();
-            String vcodeRedisKey = RequestVerifyCodeRedisKey.getRequestVerifyCodeKey(toucan.getAppCode(),vcodeUuid);
+            String vcodeRedisKey = RequestVerifyCodeRedisKey.getRequestVerifyCodeKey(toucan.getAppCode(), IPUtil.getRemoteAddr(request));
             stringRedisTemplate.opsForValue().set(vcodeRedisKey,code);
             stringRedisTemplate.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
-
-            Cookie clientVCodeId = new Cookie(toucan.getAppCode()+"_requestClientVCodeId",vcodeUuid);
-            clientVCodeId.setPath("/");
-            //60秒过期
-            clientVCodeId.setMaxAge(60);
-            response.addCookie(clientVCodeId);
 
             VerifyCodeUtil.outputImage(w, h, outputStream, code);
         } catch (IOException e) {

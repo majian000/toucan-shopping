@@ -14,6 +14,10 @@ public class RequestVerifyCode {
      */
     private boolean enabled = false;
 
+    /**
+     * 请求验证失败页面
+     */
+    private String verifyFaildPage;
 
     /**
      * 拦截指定路径

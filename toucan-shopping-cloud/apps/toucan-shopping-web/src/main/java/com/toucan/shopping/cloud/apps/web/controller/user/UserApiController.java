@@ -6,6 +6,7 @@ import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.request.verify.code.RequestVerifyCode;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
@@ -313,6 +314,7 @@ public class UserApiController extends BaseController {
      * @param userLoginVO
      * @return
      */
+    @RequestVerifyCode(timeScope = 60,requestCount = 3)
     @RequestMapping(value="/login/password",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO loginByPassword(@RequestBody UserLoginVO userLoginVO, HttpServletResponse response, HttpServletRequest request) {
