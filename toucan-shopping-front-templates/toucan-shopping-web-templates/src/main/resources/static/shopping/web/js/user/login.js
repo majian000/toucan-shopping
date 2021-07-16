@@ -41,6 +41,6 @@ function login()
     });
 
     $("#refreshCaptcha").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        $("#refreshCaptcha").attr("src",basePath+"/api/user/login/faild/vcode?"+new Date().getTime());
     });
 }
