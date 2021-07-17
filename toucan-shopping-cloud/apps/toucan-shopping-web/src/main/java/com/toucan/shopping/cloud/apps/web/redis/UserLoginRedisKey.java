@@ -49,7 +49,7 @@ public class UserLoginRedisKey {
      */
     public static String getLoginKey(String mobile)
     {
-        return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+ methodType +"_"+mobile;
+        return "TOUCAN_SHOPPING_WEB:APPS:SHOPPING_WEB:"+appCode +"_"+ methodType +"_"+mobile;
     }
 
 }

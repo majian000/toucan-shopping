@@ -9,12 +9,19 @@ $(function () {
 
     if(ivcodeVal=="1")
     {
-        g_ivcode = true;
-        $("#ldiv").css("height","440px");
-        $("#vcodetr").show();
+        showVCode();
     }
 
 });
+
+function showVCode()
+{
+
+    g_ivcode = true;
+    $("#ldiv").css("height","440px");
+    $("#vcodetr").show();
+    $("#refreshCaptcha").attr("src",basePath+"/api/user/login/faild/vcode?"+new Date().getTime());
+}
 
 function login()
 {
@@ -53,9 +60,7 @@ function login()
                 //显示验证码
                 if(result.code==-11)
                 {
-                    g_ivcode = true;
-                    $("#ldiv").css("height","440px");
-                    $("#vcodetr").show();
+                    showVCode();
                 }
             }else{
                 window.location.href=basePath+"/page/user/info";
