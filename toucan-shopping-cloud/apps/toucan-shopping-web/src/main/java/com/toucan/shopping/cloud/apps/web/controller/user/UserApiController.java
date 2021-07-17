@@ -449,7 +449,6 @@ public class UserApiController extends BaseController {
                     {
                         //输入失败3次,需要输入验证码
                         resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
-                        resultObjectVO.setMsg("登录失败,密码输入有误");
                     }
                 }
                 //10分钟之内 输入错误3次 要求验证码
