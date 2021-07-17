@@ -1121,7 +1121,7 @@ public class UserController {
             if(CollectionUtils.isEmpty(users))
             {
                 resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
-                resultObjectVO.setMsg("登录失败,请检查用户名和密码");
+                resultObjectVO.setMsg("登录失败,没有找到该账号");
             }else {
                 User userEntity = users.get(0);
                 //判断用户启用状态
@@ -1165,6 +1165,9 @@ public class UserController {
 
                         resultObjectVO.setData(userLogin);
 
+                    }else{
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("登录失败,密码输入有误");
                     }
                 }else{
                     resultObjectVO.setCode(ResultVO.FAILD);

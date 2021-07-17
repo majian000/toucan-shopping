@@ -55,8 +55,9 @@
     </div>
 	<div class="login">
     	<div class="log_img"><img src="${basePath}/static/images/l_img.png" width="611" height="425" /></div>
-		<div class="log_c">
+		<div class="log_c" id="ldiv">
         	<form>
+                <input type="hidden" id="ivcode" value="${isShowInputVcode?string('1','0')}"/>
             <table border="0" style="width:370px; font-size:14px; margin-top:30px;" cellspacing="0" cellpadding="0">
               <tr height="50" valign="top">
               	<td width="55">&nbsp;</td>

@@ -1,6 +1,20 @@
 
 
 
+var g_ivcode = false;
+
+$(function () {
+
+    var ivcodeVal = $("#ivcode").val();
+
+    if(ivcodeVal=="1")
+    {
+        g_ivcode = true;
+        $("#ldiv").css("height","440px");
+        $("#vcodetr").show();
+    }
+
+});
 
 function login()
 {
@@ -16,11 +30,21 @@ function login()
         $("#login_msg").text("请输入密码");
         return ;
     }
+    var vcode=$("#vcode").val();
+    if(g_ivcode)
+    {
+
+        if(vcode=="")
+        {
+            $("#login_msg").text("请输入验证码");
+            return ;
+        }
+    }
     $.ajax({
         type: "POST",
         url: basePath+"/api/user/login/password",
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify({"loginUserName":username,"password":password}),
+        data:  JSON.stringify({"loginUserName":username,"password":password,"vcode":vcode}),
         dataType: "json",
         success: function (result) {
             if(result.code<=0)
@@ -29,6 +53,8 @@ function login()
                 //显示验证码
                 if(result.code==-11)
                 {
+                    g_ivcode = true;
+                    $("#ldiv").css("height","440px");
                     $("#vcodetr").show();
                 }
             }else{

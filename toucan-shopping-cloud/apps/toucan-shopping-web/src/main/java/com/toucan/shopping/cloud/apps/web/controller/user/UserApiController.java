@@ -364,21 +364,8 @@ public class UserApiController extends BaseController {
                         return resultObjectVO;
                     }
 
-                    if(StringUtils.isEmpty(cookie))
-                    {
-                        resultObjectVO.setMsg("登录失败,请检查是否禁用Cookie");
-                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
-                        return resultObjectVO;
-                    }
 
-                    String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
-                    if(StringUtils.isEmpty(clientVCodeId))
-                    {
-                        resultObjectVO.setMsg("登录失败,验证码异常");
-                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
-                        return resultObjectVO;
-                    }
-                    String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
+                    String vcodeRedisKey = VerifyCodeRedisKey.getLoginFaildVerifyCodeKey(this.getAppCode(),IPUtil.getRemoteAddr(request));
                     Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
                     if(vCodeObject==null)
                     {
@@ -404,6 +391,12 @@ public class UserApiController extends BaseController {
             if(resultObjectVO.isSuccess())
             {
                 userLoginVO = (UserLoginVO)resultObjectVO.formatData(UserLoginVO.class);
+                if(userLoginVO==null)
+                {
+                    resultObjectVO.setMsg("登陆失败,请重试");
+                    resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+                    return resultObjectVO;
+                }
                 //UID
                 Cookie uidCookie = new Cookie(toucan.getAppCode()+"_uid",String.valueOf(userLoginVO.getUserMainId()));
                 uidCookie.setPath("/");
@@ -457,7 +450,7 @@ public class UserApiController extends BaseController {
 
 
             //生成客户端验证码ID
-            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
+            String vcodeRedisKey = VerifyCodeRedisKey.getLoginFaildVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
             toucanStringRedisService.set(vcodeRedisKey,code);
             toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
 

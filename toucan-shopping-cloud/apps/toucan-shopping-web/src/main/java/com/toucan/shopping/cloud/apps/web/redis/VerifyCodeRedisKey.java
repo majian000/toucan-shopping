@@ -9,4 +9,12 @@ public class VerifyCodeRedisKey {
     {
         return "TOUCAN_SHOPPING_WEB:VERIFY_CODE:"+appCode+"_vcode_"+vcodeKey;
     }
+
+
+
+    public static String getLoginFaildVerifyCodeKey(String appCode,String vcodeKey)
+    {
+        return "TOUCAN_SHOPPING_WEB:LOGIN_FAILD_VERIFY_CODE:"+appCode+"_vcode_"+vcodeKey;
+    }
+
 }
