@@ -29,7 +29,7 @@ function login()
     var password=$("#password").val();
     if(username=="")
     {
-        $("#login_msg").text("请输入账号");
+        $("#login_msg").text("请输入用户名");
         return ;
     }
     if(password=="")
@@ -58,9 +58,13 @@ function login()
             {
                 $("#login_msg").text(result.msg);
                 //显示验证码
-                if(result.code==-11)
+                if(result.code==-11||result.code==-12)
                 {
                     showVCode();
+                    if(result.code==-12)
+                    {
+                        $("#vcode").val("");
+                    }
                 }
             }else{
                 window.location.href=basePath+"/page/user/info";

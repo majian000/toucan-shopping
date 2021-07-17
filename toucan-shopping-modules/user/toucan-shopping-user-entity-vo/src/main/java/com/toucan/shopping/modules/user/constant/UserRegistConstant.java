@@ -59,4 +59,11 @@ public final class UserRegistConstant {
      * 显示登录验证码
      */
     public static Integer SHOW_LOGIN_VERIFY_CODE=-11;
+
+
+    /**
+     * 显示登录验证码
+     */
+    public static Integer LOGIN_VERIFY_CODE_FAILD=-12;
+
 }

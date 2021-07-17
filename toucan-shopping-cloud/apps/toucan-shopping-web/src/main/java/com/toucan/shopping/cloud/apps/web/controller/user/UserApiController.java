@@ -336,7 +336,7 @@ public class UserApiController extends BaseController {
         if(StringUtils.isEmpty(userLoginVO.getLoginUserName()))
         {
             resultObjectVO.setCode(UserLoginConstant.USERNAME_NOT_FOUND);
-            resultObjectVO.setMsg("登录失败,请输入账号");
+            resultObjectVO.setMsg("登录失败,请输入用户名");
             return resultObjectVO;
         }
 
@@ -395,7 +395,7 @@ public class UserApiController extends BaseController {
                     if(!StringUtils.equals(userLoginVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
                     {
                         resultObjectVO.setMsg("登录失败,验证码输入有误");
-                        resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+                        resultObjectVO.setCode(UserRegistConstant.LOGIN_VERIFY_CODE_FAILD);
                         //释放锁
                         skylarkLock.unLock(UserLoginRedisKey.getLoginKey(userLoginVO.getLoginUserName()), userLoginVO.getLoginUserName());
 
