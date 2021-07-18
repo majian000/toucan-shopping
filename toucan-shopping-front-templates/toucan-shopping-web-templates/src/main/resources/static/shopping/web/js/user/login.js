@@ -59,15 +59,13 @@ function login()
         success: function (result) {
             if(result.code<=0)
             {
+                $("#vcode").val("");
+                $("#login_msg_c").show();
                 $("#login_msg").text(result.msg);
                 //显示验证码
                 if(result.code==-11||result.code==-12)
                 {
                     showVCode();
-                    if(result.code==-12)
-                    {
-                        $("#vcode").val("");
-                    }
                 }
             }else{
                 window.location.href=basePath+"/page/user/info";

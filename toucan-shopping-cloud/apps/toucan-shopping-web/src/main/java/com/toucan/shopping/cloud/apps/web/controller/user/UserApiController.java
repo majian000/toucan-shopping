@@ -421,15 +421,15 @@ public class UserApiController extends BaseController {
                     //UID
                     Cookie uidCookie = new Cookie(toucan.getAppCode() + "_uid", String.valueOf(userLoginVO.getUserMainId()));
                     uidCookie.setPath("/");
-                    //永不过期
-                    uidCookie.setMaxAge(Integer.MAX_VALUE);
+                    //1天时间不过期,如果设置为永不过期的话 客户端浏览器不能删除cookie
+                    uidCookie.setMaxAge(86400);
                     response.addCookie(uidCookie);
 
                     //TOKEN
                     Cookie ltCookie = new Cookie(toucan.getAppCode() + "_lt", userLoginVO.getLoginToken());
                     ltCookie.setPath("/");
-                    //永不过期
-                    ltCookie.setMaxAge(Integer.MAX_VALUE);
+                    //1天时间不过期,如果设置为永不过期的话 客户端浏览器不能删除cookie
+                    ltCookie.setMaxAge(86400);
                     response.addCookie(ltCookie);
 
                     //删除登录失败计数
