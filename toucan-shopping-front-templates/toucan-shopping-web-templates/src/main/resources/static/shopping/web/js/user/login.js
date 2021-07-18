@@ -29,11 +29,13 @@ function login()
     var password=$("#password").val();
     if(username=="")
     {
+        $("#login_msg_c").show();
         $("#login_msg").text("请输入用户名");
         return ;
     }
     if(password=="")
     {
+        $("#login_msg_c").show();
         $("#login_msg").text("请输入密码");
         return ;
     }
@@ -43,6 +45,7 @@ function login()
 
         if(vcode=="")
         {
+            $("#login_msg_c").show();
             $("#login_msg").text("请输入验证码");
             return ;
         }
@@ -71,6 +74,7 @@ function login()
             }
         },
         error: function (result) {
+            $("#login_msg_c").show();
             $("#login_msg").text("登陆失败,请重试");
         }
     });

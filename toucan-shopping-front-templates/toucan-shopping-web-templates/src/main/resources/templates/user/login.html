@@ -34,6 +34,15 @@
 
 
     <#include "/title.html"/>
+
+    <style>
+        .login_warn_icon{
+            width:16px;
+            height:17px;
+            overflow:hidden;
+            background:url(../../static/images/login-icons.png) -104px -24px no-repeat;
+        }
+    </style>
 </head>
 <body>  
 <!--Begin Header Begin-->
@@ -96,7 +105,10 @@
               </tr>
                 <tr height="30">
                     <td align="right"></td>
-                    <td>
+                    <td id="login_msg_c" style="display:none">
+                        <b class="login_warn_icon">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </b>
                         <a id="login_msg" style="color:#ff4e00;"></a>
                     </td>
                 </tr>
