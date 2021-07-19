@@ -23,10 +23,6 @@ public class IndexApiController {
 
 
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
-
 
 
 }
