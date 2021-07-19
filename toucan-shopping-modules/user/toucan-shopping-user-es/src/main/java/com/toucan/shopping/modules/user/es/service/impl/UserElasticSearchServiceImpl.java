@@ -218,12 +218,94 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         for(SearchHit searchHit:searchHitsHits) {
             String sourceString = searchHit.getSourceAsString();
             if (StringUtils.isNotEmpty(sourceString)){
-                logger.info("UserElasticSearchService queryById {}", sourceString);
+                logger.info("UserElasticSearchService queryByUserMainId {}", sourceString);
                 userElasticSearchVOS.add(JSONObject.parseObject(sourceString,UserElasticSearchVO.class));
             }
         }
         return userElasticSearchVOS;
     }
+
+
+    @Override
+    public List<UserElasticSearchVO> queryByMobilePhone(String mobilePhone) throws Exception{
+        List<UserElasticSearchVO> userElasticSearchVOS = new ArrayList<UserElasticSearchVO>();
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.size(10);
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("mobilePhone", mobilePhone));
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            String sourceString = searchHit.getSourceAsString();
+            if (StringUtils.isNotEmpty(sourceString)){
+                logger.info("UserElasticSearchService queryByMobilePhone {}", sourceString);
+                userElasticSearchVOS.add(JSONObject.parseObject(sourceString,UserElasticSearchVO.class));
+            }
+        }
+        return userElasticSearchVOS;
+    }
+
+
+    @Override
+    public List<UserElasticSearchVO> queryByEmail(String email) throws Exception{
+        List<UserElasticSearchVO> userElasticSearchVOS = new ArrayList<UserElasticSearchVO>();
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.size(10);
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("email", email));
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            String sourceString = searchHit.getSourceAsString();
+            if (StringUtils.isNotEmpty(sourceString)){
+                logger.info("UserElasticSearchService queryByEmail {}", sourceString);
+                userElasticSearchVOS.add(JSONObject.parseObject(sourceString,UserElasticSearchVO.class));
+            }
+        }
+        return userElasticSearchVOS;
+    }
+
+
+    @Override
+    public List<UserElasticSearchVO> queryByUsername(String username) throws Exception{
+        List<UserElasticSearchVO> userElasticSearchVOS = new ArrayList<UserElasticSearchVO>();
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.size(10);
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("username", username));
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            String sourceString = searchHit.getSourceAsString();
+            if (StringUtils.isNotEmpty(sourceString)){
+                logger.info("UserElasticSearchService queryByUsername {}", sourceString);
+                userElasticSearchVOS.add(JSONObject.parseObject(sourceString,UserElasticSearchVO.class));
+            }
+        }
+        return userElasticSearchVOS;
+    }
+
 
     @Override
     public SearchAfterPage queryListForSearchAfter(UserElasticSearchVO esUserVo, int size, Object[] searchAfter) throws Exception {

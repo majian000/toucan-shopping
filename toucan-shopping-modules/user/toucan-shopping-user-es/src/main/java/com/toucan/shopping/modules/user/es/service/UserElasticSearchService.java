@@ -61,6 +61,30 @@ public interface UserElasticSearchService {
      */
     List<UserElasticSearchVO> queryByUserMainId(Long userMainId) throws Exception;
 
+
+    /**
+     * 根据ID查询
+     * @param mobilePhone
+     * @return
+     */
+    List<UserElasticSearchVO> queryByMobilePhone(String mobilePhone) throws Exception;
+
+    /**
+     * 根据ID查询
+     * @param email
+     * @return
+     */
+    List<UserElasticSearchVO> queryByEmail(String email) throws Exception;
+
+
+    /**
+     * 根据ID查询
+     * @param username
+     * @return
+     */
+    List<UserElasticSearchVO> queryByUsername(String username) throws Exception;
+
+
     /**
      * 查询列表 search after方式
      * @param esUserVo

@@ -23,6 +23,7 @@ import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.service.*;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import com.toucan.shopping.modules.user.vo.*;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -71,6 +72,7 @@ public class UserController {
 
     @Autowired
     private UserEmailService userEmailService;
+
 
     @Autowired
     private Toucan toucan;
@@ -909,6 +911,99 @@ public class UserController {
 
 
     /**
+     * 刷新用户信息到elasticsearch
+     * @param userMainId
+     * @return
+     * @throws Exception
+     */
+    private ResultObjectVO flushUserElasticSearch(Long userMainId) throws Exception {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        //从缓存中查询用户对象
+        List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userMainId);
+        UserElasticSearchVO userElasticSearchVO = null;
+        if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+        {
+            userElasticSearchVO = userElasticSearchVOS.get(0);
+        }else{ //如果缓存不存在将重新推到缓存中
+            userElasticSearchVO = new UserElasticSearchVO();
+            //设置默认用户ID
+            userElasticSearchVO.setUserMainId(-1L);
+
+            User queryUser = new User();
+            queryUser.setUserMainId(userMainId);
+            List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
+            if(CollectionUtils.isNotEmpty(users)) {
+                User user = users.get(0);
+                userElasticSearchVO.setId(user.getId());
+                userElasticSearchVO.setUserMainId(user.getUserMainId());
+            }
+
+            userElasticSearchService.save(userElasticSearchVO);
+        }
+
+        User queryUser = new User();
+        queryUser.setUserMainId(userMainId);
+        List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
+        if(CollectionUtils.isNotEmpty(users)) {
+            User user = users.get(0);
+            userElasticSearchVO.setPassword(user.getPassword());
+            userElasticSearchVO.setEnableStatus(user.getEnableStatus());
+            userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
+            userElasticSearchVO.setCreateDate(user.getCreateDate());
+        }
+
+        if(userElasticSearchVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("刷新失败,没有找到缓存中该用户的用户ID");
+            return resultObjectVO;
+        }
+
+        //设置手机号
+        UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
+        queryUserMobilePhone.setUserMainId(userMainId);
+        List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobilePhone);
+        if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+            userElasticSearchVO.setMobilePhone(userMobilePhones.get(0).getMobilePhone());
+        }
+
+        //设置邮箱
+        UserEmail queryUserEmail = new UserEmail();
+        queryUserEmail.setUserMainId(userMainId);
+        List<UserEmail> userEmails = userEmailService.findListByEntity(queryUserEmail);
+        if(CollectionUtils.isNotEmpty(userEmails)) {
+            userElasticSearchVO.setEmail(userEmails.get(0).getEmail());
+        }
+
+        //设置用户名
+        UserUserName userUserName = new UserUserName();
+        userUserName.setUserMainId(userMainId);
+        List<UserUserName> userUserNames = userUserNameService.findListByEntity(userUserName);
+        if(CollectionUtils.isNotEmpty(userUserNames)) {
+            userElasticSearchVO.setUsername(userUserNames.get(0).getUsername());
+        }
+
+        UserDetail queryUserDetail = new UserDetail();
+        queryUserDetail.setUserMainId(userMainId);
+        List<UserDetail> userDetails = userDetailService.findListByEntity(queryUserDetail);
+        if(CollectionUtils.isNotEmpty(userDetails)) {
+            UserDetail userDetail = userDetails.get(0);
+            userElasticSearchVO.setNickName(userDetail.getNickName()); //昵称
+            userElasticSearchVO.setTrueName(userDetail.getTrueName()); //姓名
+            userElasticSearchVO.setIdCard(userDetail.getIdCard()); //身份证
+            userElasticSearchVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
+            userElasticSearchVO.setSex(userDetail.getSex()); //性别
+            userElasticSearchVO.setType(userDetail.getType()); //用户类型
+        }
+
+        userElasticSearchService.update(userElasticSearchVO);
+
+        return resultObjectVO;
+    }
+
+
+    /**
      * 刷新缓存
      * @param requestJsonVO
      * @return
@@ -944,85 +1039,7 @@ public class UserController {
         }
         try {
 
-            //从缓存中查询用户对象
-            List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userRegistVO.getUserMainId());
-            UserElasticSearchVO userElasticSearchVO = null;
-            if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
-            {
-                userElasticSearchVO = userElasticSearchVOS.get(0);
-            }else{ //如果缓存不存在将重新推到缓存中
-                userElasticSearchVO = new UserElasticSearchVO();
-                //设置默认用户ID
-                userElasticSearchVO.setUserMainId(-1L);
-
-                User queryUser = new User();
-                queryUser.setUserMainId(userRegistVO.getUserMainId());
-                List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
-                if(CollectionUtils.isNotEmpty(users)) {
-                    User user = users.get(0);
-                    userElasticSearchVO.setId(user.getId());
-                    userElasticSearchVO.setUserMainId(user.getUserMainId());
-                }
-
-                userElasticSearchService.save(userElasticSearchVO);
-            }
-
-            User queryUser = new User();
-            queryUser.setUserMainId(userRegistVO.getUserMainId());
-            List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
-            if(CollectionUtils.isNotEmpty(users)) {
-                User user = users.get(0);
-                userElasticSearchVO.setPassword(user.getPassword());
-                userElasticSearchVO.setEnableStatus(user.getEnableStatus());
-                userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
-                userElasticSearchVO.setCreateDate(user.getCreateDate());
-            }
-
-            if(userElasticSearchVO.getUserMainId()==null)
-            {
-                resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-                resultObjectVO.setMsg("刷新失败,没有找到缓存中该用户的用户ID");
-                return resultObjectVO;
-            }
-
-            //设置手机号
-            UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
-            queryUserMobilePhone.setUserMainId(userRegistVO.getUserMainId());
-            List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobilePhone);
-            if(CollectionUtils.isNotEmpty(userMobilePhones)) {
-                userElasticSearchVO.setMobilePhone(userMobilePhones.get(0).getMobilePhone());
-            }
-
-            //设置邮箱
-            UserEmail queryUserEmail = new UserEmail();
-            queryUserEmail.setUserMainId(userRegistVO.getUserMainId());
-            List<UserEmail> userEmails = userEmailService.findListByEntity(queryUserEmail);
-            if(CollectionUtils.isNotEmpty(userEmails)) {
-                userElasticSearchVO.setEmail(userEmails.get(0).getEmail());
-            }
-
-            //设置用户名
-            UserUserName userUserName = new UserUserName();
-            userUserName.setUserMainId(userRegistVO.getUserMainId());
-            List<UserUserName> userUserNames = userUserNameService.findListByEntity(userUserName);
-            if(CollectionUtils.isNotEmpty(userUserNames)) {
-                userElasticSearchVO.setUsername(userUserNames.get(0).getUsername());
-            }
-
-            UserDetail queryUserDetail = new UserDetail();
-            queryUserDetail.setUserMainId(userRegistVO.getUserMainId());
-            List<UserDetail> userDetails = userDetailService.findListByEntity(queryUserDetail);
-            if(CollectionUtils.isNotEmpty(userDetails)) {
-                UserDetail userDetail = userDetails.get(0);
-                userElasticSearchVO.setNickName(userDetail.getNickName()); //昵称
-                userElasticSearchVO.setTrueName(userDetail.getTrueName()); //姓名
-                userElasticSearchVO.setIdCard(userDetail.getIdCard()); //身份证
-                userElasticSearchVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
-                userElasticSearchVO.setSex(userDetail.getSex()); //性别
-                userElasticSearchVO.setType(userDetail.getType()); //用户类型
-            }
-
-            userElasticSearchService.update(userElasticSearchVO);
+            resultObjectVO = flushUserElasticSearch(userRegistVO.getUserMainId());
 
         }catch(Exception e)
         {
@@ -1085,96 +1102,151 @@ public class UserController {
                 return resultObjectVO;
             }
 
+
             //如果当前输入的是手机号判断手机号是否存在
             Long userId = 0L;
+            //先查询es,这样的好处是如果是正常用户进行缓存了,就不会浪费数据库查询的资源,直接读取es缓存即可
+            List<UserElasticSearchVO>  userElasticSearchVOS = null;
             if(PhoneUtils.isChinaPhoneLegal(userLogin.getLoginUserName()))
             {
-                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(userLogin.getLoginUserName());
-                if(!CollectionUtils.isEmpty(userMobilePhones))
+                try {
+                    //先查询es
+                    userElasticSearchVOS = userElasticSearchService.queryByMobilePhone(userLogin.getLoginUserName());
+                }catch(Exception e)
                 {
-                    if(userMobilePhones.get(0)!=null&&userMobilePhones.get(0).getUserMainId()!=null) {
-                        userId = userMobilePhones.get(0).getUserMainId();
-                    }
+                    logger.warn(e.getMessage(),e);
                 }
 
             }else if(EmailUtils.isEmail(userLogin.getLoginUserName())) //如果输入邮箱,拿到邮箱对应的用户主ID
             {
-                List<UserEmail> userEmails = userEmailService.findListByEmail(userLogin.getLoginUserName());
-                if(!CollectionUtils.isEmpty(userEmails))
+                try {
+                    //先查询es
+                    userElasticSearchVOS = userElasticSearchService.queryByEmail(userLogin.getLoginUserName());
+                }catch(Exception e)
                 {
-                    if(userEmails.get(0)!=null&&userEmails.get(0).getUserMainId()!=null) {
-                        userId = userEmails.get(0).getUserMainId();
-                    }
+                    logger.warn(e.getMessage(),e);
                 }
             }else if(UsernameUtils.isUsername(userLogin.getLoginUserName())) //如果输入用户名,拿到用户名对应的用户主ID
             {
-                List<UserUserName> userUserNames = userUserNameService.findListByUserName(userLogin.getLoginUserName());
-                if(!CollectionUtils.isEmpty(userUserNames))
+                try {
+                    //先查询es
+                    userElasticSearchVOS = userElasticSearchService.queryByUsername(userLogin.getLoginUserName());
+                }catch(Exception e)
                 {
-                    if(userUserNames.get(0)!=null&&userUserNames.get(0).getUserMainId()!=null) {
-                        userId = userUserNames.get(0).getUserMainId();
-                    }
+                    logger.warn(e.getMessage(),e);
                 }
             }
 
-            List<User> users = userService.findByUserMainId(userId);
-            if(CollectionUtils.isEmpty(users))
+            //先查询缓存
+            User userEntity=null;
+            if(CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                userEntity = new User();
+                for(int i=0;i<userElasticSearchVOS.size();i++) {
+                    UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(i);
+                    if(userElasticSearchVO.getUserMainId()!=null) {
+                        BeanUtils.copyProperties(userEntity,userElasticSearchVO);
+                    }
+                }
+            }
+            if(userEntity==null||userEntity.getUserMainId()==null||
+                    userEntity.getEnableStatus()==null||userEntity.getPassword()==null)  //es中缓存中如果不存在或者有问题,查询数据库并重新刷新
             {
-                resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
-                resultObjectVO.setMsg("登录失败,没有找到该账号");
-            }else {
-                User userEntity = users.get(0);
-                //判断用户启用状态
-                if(userEntity.getEnableStatus().shortValue()==1) {
-                    String pwdMd5 = MD5Util.md5(userLogin.getPassword());
-                    //登录成功 生成token
-                    if (pwdMd5.equals(userEntity.getPassword())) {
-                        String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userEntity.getUserMainId()));
-                        String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
-                        String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
-                        //判断是否已有登录token,如果有将删除掉
-                        if (toucanStringRedisService.keys(loginGroupKey) != null) {
-                            long deleteRows = 0;
-                            int tryCount = 0;
-                            do {
-                                deleteRows = toucanStringRedisService.delete(loginGroupKey, loginTokenAppKey);
-                                tryCount++;
-                            } while (deleteRows <= 0 && tryCount < 50);
+                if(PhoneUtils.isChinaPhoneLegal(userLogin.getLoginUserName()))
+                {
+                    List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(userLogin.getLoginUserName());
+                    if (!CollectionUtils.isEmpty(userMobilePhones)) {
+                        if (userMobilePhones.get(0) != null && userMobilePhones.get(0).getUserMainId() != null) {
+                            userId = userMobilePhones.get(0).getUserMainId();
                         }
-
-                        String token = LoginTokenUtil.generatorToken(userEntity.getUserMainId());
-                        toucanStringRedisService.put(loginGroupKey,
-                                loginTokenAppKey, token);
-
-                        userLogin.setUserMainId(userId);
-                        userLogin.setLoginToken(token);
-                        userLogin.setPassword(null);
-
-                        List<UserDetail> userDetails = userDetailService.findByUserMainId(userLogin.getUserMainId());
-                        if(CollectionUtils.isNotEmpty(userDetails))
-                        {
-                            userLogin.setNickName(userDetails.get(0).getNickName());
-                        }
-
-
-                        toucanStringRedisService.put(loginGroupKey,
-                                loginInfoAppKey, JSONObject.toJSONString(userLogin));
-                        //设置登录token5个小时超时
-                        toucanStringRedisService.expire(loginGroupKey,
-                                UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
-
-                        resultObjectVO.setData(userLogin);
-
-                    }else{
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("登录失败,密码输入有误");
                     }
-                }else{
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,用户已被禁用");
+
+                }else if(EmailUtils.isEmail(userLogin.getLoginUserName())) //如果输入邮箱,拿到邮箱对应的用户主ID
+                {
+                    List<UserEmail> userEmails = userEmailService.findListByEmail(userLogin.getLoginUserName());
+                    if (!CollectionUtils.isEmpty(userEmails)) {
+                        if (userEmails.get(0) != null && userEmails.get(0).getUserMainId() != null) {
+                            userId = userEmails.get(0).getUserMainId();
+                        }
+                    }
+                }else if(UsernameUtils.isUsername(userLogin.getLoginUserName())) //如果输入用户名,拿到用户名对应的用户主ID
+                {
+                    List<UserUserName> userUserNames = userUserNameService.findListByUserName(userLogin.getLoginUserName());
+                    if (!CollectionUtils.isEmpty(userUserNames)) {
+                        if (userUserNames.get(0) != null && userUserNames.get(0).getUserMainId() != null) {
+                            userId = userUserNames.get(0).getUserMainId();
+                        }
+                    }
+                }
+
+                List<User> users = userService.findByUserMainId(userId);
+                if (CollectionUtils.isEmpty(users)) {
+                    resultObjectVO.setCode(UserLoginConstant.NOT_REGIST);
+                    resultObjectVO.setMsg("登录失败,没有找到该账号");
+
+                    //释放锁
+                    skylarkLock.unLock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
+                    return resultObjectVO;
+                } else {
+                    userEntity = users.get(0);
+                    try{
+                        flushUserElasticSearch(userEntity.getUserMainId());
+                    }catch(Exception e)
+                    {
+                        logger.warn(e.getMessage(),e);
+                    }
                 }
             }
 
+
+
+            //判断用户启用状态
+            if (userEntity.getEnableStatus().shortValue() == 1) {
+                String pwdMd5 = MD5Util.md5(userLogin.getPassword());
+                //登录成功 生成token
+                if (pwdMd5.equals(userEntity.getPassword())) {
+                    String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userEntity.getUserMainId()));
+                    String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
+                    String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
+                    //判断是否已有登录token,如果有将删除掉
+                    if (toucanStringRedisService.keys(loginGroupKey) != null) {
+                        long deleteRows = 0;
+                        int tryCount = 0;
+                        do {
+                            deleteRows = toucanStringRedisService.delete(loginGroupKey, loginTokenAppKey);
+                            tryCount++;
+                        } while (deleteRows <= 0 && tryCount < 50);
+                    }
+
+                    String token = LoginTokenUtil.generatorToken(userEntity.getUserMainId());
+                    toucanStringRedisService.put(loginGroupKey,
+                            loginTokenAppKey, token);
+
+                    userLogin.setUserMainId(userEntity.getUserMainId());
+                    userLogin.setLoginToken(token);
+                    userLogin.setPassword(null);
+
+                    List<UserDetail> userDetails = userDetailService.findByUserMainId(userLogin.getUserMainId());
+                    if (CollectionUtils.isNotEmpty(userDetails)) {
+                        userLogin.setNickName(userDetails.get(0).getNickName());
+                    }
+
+
+                    toucanStringRedisService.put(loginGroupKey,
+                            loginInfoAppKey, JSONObject.toJSONString(userLogin));
+                    //设置登录token5个小时超时
+                    toucanStringRedisService.expire(loginGroupKey,
+                            UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+
+                    resultObjectVO.setData(userLogin);
+
+                } else {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("登录失败,密码输入有误");
+                }
+            } else {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,用户已被禁用");
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
