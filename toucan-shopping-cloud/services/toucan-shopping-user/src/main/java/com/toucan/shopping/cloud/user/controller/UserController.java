@@ -1341,7 +1341,7 @@ public class UserController {
                 if(StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
                 {
                     //登录时长重置
-                    //设置登录token1个小时超时
+                    //设置登录token5个小时超时
                     toucanStringRedisService.expire(loginTokenGroupKey,UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
                     resultObjectVO.setData(true);
