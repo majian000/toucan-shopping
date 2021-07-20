@@ -3,7 +3,9 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.IPUtil;
+import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ public class UserPageController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
+    private Toucan toucan;
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
@@ -56,8 +60,14 @@ public class UserPageController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/info")
-    public String center()
+    public String info(HttpServletRequest request)
     {
+        try {
+            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
         return "user/info";
     }
 
