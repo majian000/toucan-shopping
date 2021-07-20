@@ -97,6 +97,16 @@ public class SignFilter implements GlobalFilter, Ordered {
                     CountDownLatch downLatch = new CountDownLatch(1);
                     StringBuilder builder = new StringBuilder();
                     //阻塞读取
+//                    body.doOnComplete(()->{
+//                        downLatch.countDown();
+//                    });
+//                    body.doOnCancel(()->{
+//                        downLatch.countDown();
+//                    });
+//                    body.doOnTerminate(()->{
+//                        downLatch.countDown();
+//                    });
+
                     body.subscribe(dataBuffer -> {
                         try {
                             logger.info(" 开始读取请求体 ");
