@@ -98,10 +98,13 @@ public class SignFilter implements GlobalFilter, Ordered {
                     StringBuilder builder = new StringBuilder();
                     //阻塞读取
                     body.subscribe(dataBuffer -> {
+
+                                logger.info(" 开始读取请求体 ");
                                 CharBuffer charBuffer = StandardCharsets.UTF_8.decode(dataBuffer.asByteBuffer());
                                 DataBufferUtils.release(dataBuffer);
                                 builder.append(charBuffer.toString());
 
+                                logger.info(" 结束读取请求体 {} ",builder);
                                 //进行-1
                                 downLatch.countDown();
                             });
