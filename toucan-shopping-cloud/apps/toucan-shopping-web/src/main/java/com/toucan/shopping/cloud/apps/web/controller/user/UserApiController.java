@@ -233,6 +233,8 @@ public class UserApiController extends BaseController {
                 resultObjectVO.setMsg("注册失败,请发送验证码");
                 return resultObjectVO;
             }
+            //TODO:临时开放注册
+            vcodeObject="1234";
             if(!user.getVcode().equals(String.valueOf(vcodeObject)))
             {
                 //释放注册锁
