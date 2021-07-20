@@ -35,6 +35,17 @@
 
 
     <#include "/title.html"/>
+
+
+    <style>
+        .reigst_warn_icon{
+            width:16px;
+            height:17px;
+            overflow:hidden;
+            background:url(../../static/images/login-icons.png) -104px -24px no-repeat;
+        }
+    </style>
+
 </head>
 <body>  
 <!--Begin Header Begin-->
@@ -99,7 +110,10 @@
               </tr>
                 <tr height="30">
                     <td align="right"></td>
-                    <td>
+                    <td id="regist_msg_c" style="display:none">
+                        <b class="reigst_warn_icon">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </b>
                         <a id="regist_msg" ></a>
                     </td>
                 </tr>

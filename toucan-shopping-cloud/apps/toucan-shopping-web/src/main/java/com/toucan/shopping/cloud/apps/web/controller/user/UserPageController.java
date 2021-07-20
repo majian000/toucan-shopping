@@ -2,11 +2,16 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.IPUtil;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +35,11 @@ public class UserPageController extends BaseController {
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
+
+    @Autowired
+    private FeignUserService feignUserService;
+
+
 
     @RequestMapping("/regist")
     public String regist()
@@ -64,8 +74,20 @@ public class UserPageController extends BaseController {
     {
         try {
             String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
+            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            if(resultObectVO.isSuccess())
+            {
+                userVO = (UserVO)resultObectVO.formatData(UserVO.class);
+                request.setAttribute("user",userVO);
+            }else{
+                request.setAttribute("user",new UserVO());
+            }
         }catch (Exception e)
         {
+            request.setAttribute("user",new UserVO());
             logger.warn(e.getMessage(),e);
         }
         return "user/info";

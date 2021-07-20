@@ -109,8 +109,24 @@ public interface FeignUserService {
     ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 获取登录信息
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
     @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryLoginInfo(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 查询用户信息(从缓存和数据库中查询)
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/by/user/main/id/for/cache/db",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findByUserMainIdForCacheOrDB(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
     /**
      * 查询是否实名
