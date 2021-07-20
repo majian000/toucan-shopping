@@ -23,7 +23,7 @@
     $(function () {
 
         //查询信息
-        $.post(basePath+"/api/user/info",null,function(result){
+        $.post(basePath+"/api/user/info",{},function(result){
             if(result.code>0&&result.data!=null)
             {
                 $("#unickname").text(result.data.nickName);

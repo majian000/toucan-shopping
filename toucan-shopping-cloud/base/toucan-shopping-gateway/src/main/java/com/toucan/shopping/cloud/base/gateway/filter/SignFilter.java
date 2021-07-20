@@ -30,6 +30,7 @@ import reactor.core.publisher.Mono;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -93,12 +94,23 @@ public class SignFilter implements GlobalFilter, Ordered {
 
                     //提取request body部分
                     Flux<DataBuffer> body = request.getBody();
+                    CountDownLatch downLatch = new CountDownLatch(1);
                     StringBuilder builder = new StringBuilder();
+                    //阻塞读取
                     body.subscribe(dataBuffer -> {
-                        CharBuffer charBuffer = StandardCharsets.UTF_8.decode(dataBuffer.asByteBuffer());
-                        DataBufferUtils.release(dataBuffer);
-                        builder.append(charBuffer.toString());
-                    });
+                                CharBuffer charBuffer = StandardCharsets.UTF_8.decode(dataBuffer.asByteBuffer());
+                                DataBufferUtils.release(dataBuffer);
+                                builder.append(charBuffer.toString());
+
+                                //进行-1
+                                downLatch.countDown();
+                            });
+                    try {
+                        //开始阻塞,判断如果不为0
+                        downLatch.await();
+                    } catch (InterruptedException e) {
+                        logger.warn(e.getMessage(),e);
+                    }
                     String requestBody = builder.toString();//获取request body
                     logger.info(" 请求体 {}", requestBody);
 

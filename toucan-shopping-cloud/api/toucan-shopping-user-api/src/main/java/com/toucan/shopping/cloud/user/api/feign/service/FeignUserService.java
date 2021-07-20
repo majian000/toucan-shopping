@@ -105,7 +105,7 @@ public interface FeignUserService {
      * @param requestVo
      * @return
      */
-    @RequestMapping("/is/online")
+    @RequestMapping(value = "/is/online",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO isOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
@@ -115,7 +115,7 @@ public interface FeignUserService {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/login/info",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryLoginInfo(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
@@ -125,7 +125,7 @@ public interface FeignUserService {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/by/user/main/id/for/cache/db",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/by/user/main/id/for/cache/db",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findByUserMainIdForCacheOrDB(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
     /**
@@ -193,7 +193,7 @@ public interface FeignUserService {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/username/list/by/username",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/username/list/by/username",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findUsernameListByUsername(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
@@ -204,7 +204,7 @@ public interface FeignUserService {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/find/email/list/by/email",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/find/email/list/by/email",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findEmailListByEmail(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 

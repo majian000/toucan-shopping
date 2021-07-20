@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
  * 全局过滤器,记录所有请求以及限流等
  */
 @Component
-public class BBSGlobalFilter implements GlobalFilter, Ordered {
+public class ToucanGlobalFilter implements GlobalFilter, Ordered {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
