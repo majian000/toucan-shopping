@@ -31,6 +31,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -97,15 +98,6 @@ public class SignFilter implements GlobalFilter, Ordered {
                     CountDownLatch downLatch = new CountDownLatch(1);
                     StringBuilder builder = new StringBuilder();
                     //阻塞读取
-//                    body.doOnComplete(()->{
-//                        downLatch.countDown();
-//                    });
-//                    body.doOnCancel(()->{
-//                        downLatch.countDown();
-//                    });
-//                    body.doOnTerminate(()->{
-//                        downLatch.countDown();
-//                    });
 
                     body.subscribe(dataBuffer -> {
                         try {
@@ -123,8 +115,8 @@ public class SignFilter implements GlobalFilter, Ordered {
                         }
                     });
                     try {
-                        //开始阻塞,判断如果不为0
-                        downLatch.await();
+                        //开始阻塞,判断如果不为0,30秒超时
+                        downLatch.await(30000, TimeUnit.MILLISECONDS);
                     } catch (InterruptedException e) {
                         logger.warn(e.getMessage(),e);
                     }
