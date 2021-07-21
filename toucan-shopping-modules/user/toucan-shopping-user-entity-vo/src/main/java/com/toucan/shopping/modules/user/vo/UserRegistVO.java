@@ -14,5 +14,9 @@ public class UserRegistVO extends UserVO {
      */
     private List<UserApp> userApps;
 
+    /**
+     * 接受用户协议
+     */
+    private Integer acceptUserDoc;
 
 }

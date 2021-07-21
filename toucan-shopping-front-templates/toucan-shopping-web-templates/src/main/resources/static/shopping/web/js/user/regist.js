@@ -49,7 +49,14 @@ function regist()
     var passwordValue=$("#regist_password").val();
     var confirmPasswordValue=$("#regist_confirmPassword").val();
     var vcodeValue=$("#regist_vcode").val();
-    $.post(basePath+"/api/user/regist",{mobilePhone:mobilePhoneValue,password:passwordValue,confirmPassword:confirmPasswordValue,vcode:vcodeValue},function(result){
+    var acceptUserDoc = null;
+    $("input[name='acceptUserDoc']:checkbox").each(function () {
+        if ($(this).attr("checked")) {
+            acceptUserDoc = $(this).attr('value');
+        }
+    });
+
+    $.post(basePath+"/api/user/regist",{mobilePhone:mobilePhoneValue,password:passwordValue,confirmPassword:confirmPasswordValue,vcode:vcodeValue,acceptUserDoc:acceptUserDoc},function(result){
         if(result.code<=0)
         {
             $("#regist_msg_c").show();

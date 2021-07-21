@@ -174,6 +174,12 @@ public class UserApiController extends BaseController {
             resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
             return resultObjectVO;
         }
+        if(user.getAcceptUserDoc()==null||user.getAcceptUserDoc().intValue()!=1)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
+            resultObjectVO.setMsg("注册失败,请接受用户协议");
+            return resultObjectVO;
+        }
         if(StringUtils.isEmpty(user.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
