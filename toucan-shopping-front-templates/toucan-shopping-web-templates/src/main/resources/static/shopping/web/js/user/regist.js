@@ -51,8 +51,8 @@ function regist()
     var vcodeValue=$("#regist_vcode").val();
     var acceptUserDoc = null;
     $("input[name='acceptUserDoc']:checkbox").each(function () {
-        if ($(this).attr("checked")) {
-            acceptUserDoc = $(this).attr('value');
+        if($(this).prop('checked')) {
+            acceptUserDoc = $(this).val();
         }
     });
 
