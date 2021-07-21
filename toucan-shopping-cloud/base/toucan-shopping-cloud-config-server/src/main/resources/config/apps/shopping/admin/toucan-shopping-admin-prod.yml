@@ -1,0 +1,112 @@
+#========================后台管理界面 开发环境====================================
+
+server:
+  port: 8088
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: toucan-shopping-admin #应用名称
+  zipkin: #链路追踪
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://8.140.187.184:8081/eureka
+
+
+
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 120000
+        readTimeout: 120000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 120000 #请求时间超过2分钟生熔断
+      circuitBreaker:
+        requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
+
+
+
+#开启饥饿加载
+ribbon:
+  OkToRetryOnAllOperations: true #开启重试机制
+  MaxAutoRetriesNextServer: 2 #重试其他实例最大重试次数
+  MaxAutoRetries: 1 #同一实例重试次数
+  ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
+  eager-load:
+    enabled: true
+    clients: "toucan-shopping-category,\
+              toucan-shopping-order,\
+              toucan-shopping-product,\
+              toucan-shopping-admin-auth,\
+              toucan-shopping-gateway,\
+              toucan-shopping-column,\
+              toucan-shopping-user,\
+              toucan-shopping-area,\
+              toucan-shopping-stock"
+
+
+
+
+
+
+toucan:
+  user:
+    default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
+  app-name: 商城后台
+  app-code: 10001002 #自定义应用编码
+  #雪花算法ID相关
+  workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
+  datacenterId: 0 #数据中心ID (0~31)
+  admin-auth:
+    enabled: true
+    name: toucan-shopping-admin-auth
+    #HTTP权限请求头
+    # 例如 后台管理端 Cookie:10001002_aid=d10590b318544049ba2104d1f5517a7d;10001002_lt=d10590b318544049ba2104d1f5517a7d
+    http-toucan-auth-header: Cookie
+    #当前项目登录页
+    login-page: /login/page
+    #没有权限时跳转页面
+    page-403: /403
+    #拦截指定路径
+    path-patterns: /**
+    #忽略拦截
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
+  modules:
+    skylarkLock: #云雀分布式锁
+      type: redis #中间件类型
+      redis:
+        select: single # 可选值 single:单实例 cluster:集群
+        timeout: 10000
+        password: #多个集群要求每个密码统一
+        #单实例
+        host: 127.0.0.1
+        port: 6379
+        database: 0
+        #集群配置
+        hosts: 192.168.80.129:6380,192.168.80.129:6381,192.168.80.129:6382 #多个用,分割
+        maxRedirects: 3 #最大连接转移数
+        #jedis pool配置
+        maxActive: 50 #最大活跃数
+        maxWaitMillis: 15 #最大等待数
+        maxIdle: 50 #最大核心线程数
+        minIdle: 0 #最小核心线程数

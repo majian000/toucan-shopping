@@ -38,7 +38,7 @@ eureka:
     registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
     registerWithEureka: false
     serviceUrl:
-      defaultZone: http://localhost:8081/eureka
+      defaultZone: http://8.140.187.184:8081/eureka
 
 feign:
   hystrix:
