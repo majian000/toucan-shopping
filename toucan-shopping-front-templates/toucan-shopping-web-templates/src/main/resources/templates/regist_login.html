@@ -2,9 +2,15 @@
     <span class="fl">
         <div class="ss_list">
             <a href="${basePath}/page/user/info" id="unickname" >用户昵称</a>
-            <div class="ss_list_bg">
+            <div class="ss_list_bg" style="width:220px;   display:block">
                 <div class="s_city_t"></div>
-                <div class="ss_list_c">
+                <div class="ss_list_c" >
+                    <table style="width:100%">
+                        <tr >
+                            <td style="width:50%;align:left;"><img src="" id="headImg" style="width:65px;height:60px;"></td>
+                            <td align="right" style="width:50%" ><a>退出</a></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -26,7 +32,12 @@
         $.post(basePath+"/api/user/info",{},function(result){
             if(result.code>0&&result.data!=null)
             {
-                $("#unickname").text(result.data.nickName);
+                if(result.data.nickName!=null) {
+                    $("#unickname").text(result.data.nickName);
+                }
+                if(result.data.httpHeadSculpture!=null) {
+                    $("#headImg").attr("src", result.data.httpHeadSculpture);
+                }
                 $("#userInfo").show();
             }else{
 

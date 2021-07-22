@@ -1227,7 +1227,13 @@ public class UserController {
 
                     List<UserDetail> userDetails = userDetailService.findByUserMainId(userLogin.getUserMainId());
                     if (CollectionUtils.isNotEmpty(userDetails)) {
-                        userLogin.setNickName(userDetails.get(0).getNickName());
+                        UserDetail userDetail = userDetails.get(0);
+                        userLogin.setNickName(userDetail.getNickName());
+                        userLogin.setTrueName(userDetail.getTrueName()); //姓名
+                        userLogin.setIdCard(userDetail.getIdCard()); //身份证
+                        userLogin.setHeadSculpture(userDetail.getHeadSculpture()); //头像
+                        userLogin.setSex(userDetail.getSex()); //性别
+                        userLogin.setType(userDetail.getType()); //用户类型
                     }
 
 

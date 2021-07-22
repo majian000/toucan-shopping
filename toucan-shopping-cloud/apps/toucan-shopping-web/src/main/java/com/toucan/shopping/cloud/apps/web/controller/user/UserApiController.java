@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
@@ -66,6 +67,9 @@ public class UserApiController extends BaseController {
 
     @Autowired
     private FeignUserService feignUserService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
     @Autowired
@@ -283,10 +287,18 @@ public class UserApiController extends BaseController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         try {
-            UserVO userVO = new UserVO();
-            userVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+            UserVO queryUserVO = new UserVO();
+            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
             resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                UserVO userVO = (UserVO)resultObjectVO.formatData(UserVO.class);
+                if(StringUtils.isNotEmpty(userVO.getHeadSculpture())) {
+                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userVO.getHeadSculpture());
+                }
+                resultObjectVO.setData(userVO);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -476,6 +488,41 @@ public class UserApiController extends BaseController {
         }
 
         return resultObjectVO;
+    }
+
+
+
+    @RequestMapping(value="/login/faild/vcode", method = RequestMethod.GET)
+    public void loginFaildVerifyCode(HttpServletRequest request,HttpServletResponse response) {
+        OutputStream outputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            int w = 200, h = 80;
+            //生成4位验证码
+            String code = VerifyCodeUtil.generateVerifyCode(4);
+
+
+            //生成客户端验证码ID
+            String vcodeRedisKey = VerifyCodeRedisKey.getLoginFaildVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
+            toucanStringRedisService.set(vcodeRedisKey,code);
+            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+
+
+            VerifyCodeUtil.outputImage(w, h, outputStream, code);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(),e);
+        }finally{
+            if(outputStream!=null)
+            {
+                try {
+                    outputStream.flush();
+                    outputStream.close();
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+        }
     }
 
 
