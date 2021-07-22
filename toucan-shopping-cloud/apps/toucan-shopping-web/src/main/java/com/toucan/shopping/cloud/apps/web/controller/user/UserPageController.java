@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -94,5 +97,35 @@ public class UserPageController extends BaseController {
     }
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping(value="/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        try{
+            String uid = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            UserLoginVO userLoginVO = new UserLoginVO();
+            userLoginVO.setUserMainId(Long.parseLong(uid));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userLoginVO);
+            //删除缓存中的token 以及用户信息
+            ResultObjectVO resultObjectVO  = feignUserService.logout(requestJsonVO.sign(),requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }finally{
+            //UID
+            Cookie uidCookie = new Cookie(toucan.getAppCode() + "_uid","-1");
+            uidCookie.setPath("/");
+            //永不过期
+            uidCookie.setMaxAge(Integer.MAX_VALUE);
+            response.addCookie(uidCookie);
+
+            //TOKEN
+            Cookie ltCookie = new Cookie(toucan.getAppCode() + "_lt", "-1");
+            ltCookie.setPath("/");
+            //永不过期
+            ltCookie.setMaxAge(Integer.MAX_VALUE);
+            response.addCookie(ltCookie);
+        }
+        return "user/login";
+    }
 
 }

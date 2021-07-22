@@ -90,6 +90,15 @@ public interface FeignUserService {
     public ResultObjectVO loginByPassword(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
+
+    /**
+     * 退出登录
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    ResultObjectVO logout(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
     /**
      * 用户短信验证码登录
      * @param user

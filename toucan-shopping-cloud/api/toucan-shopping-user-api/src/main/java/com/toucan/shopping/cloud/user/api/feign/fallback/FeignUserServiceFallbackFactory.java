@@ -143,6 +143,21 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO logout(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.logout失败 params: {} ",requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("超时请重试");
+                return resultObjectVO;
+            }
+
 
             @Override
             public ResultObjectVO loginByVCode(User user) {

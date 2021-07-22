@@ -1301,6 +1301,42 @@ public class UserController {
         return resultObjectVO;
     }
 
+    /**
+     * 退出登录
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO logout(@RequestBody RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        try{
+            String entityJson = requestVo.getEntityJson();
+            UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
+            if(userLoginVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入用户ID");
+                return resultObjectVO;
+            }
+            String loginGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
+            //删除登录信息
+            toucanStringRedisService.delete(loginGroupKey);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**
