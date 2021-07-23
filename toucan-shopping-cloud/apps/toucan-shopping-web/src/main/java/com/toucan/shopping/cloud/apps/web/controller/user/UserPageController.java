@@ -53,19 +53,24 @@ public class UserPageController extends BaseController {
     @RequestMapping("/login")
     public String login(HttpServletRequest request)
     {
-        //查询登录次数,失败3次要求输入验证码
-        String loginFaildCountKey = UserLoginRedisKey.getLoginFaildCountKey(IPUtil.getRemoteAddr(request));
-        Object loginFaildCountValueObject = toucanStringRedisService.get(loginFaildCountKey);
-        if(loginFaildCountValueObject!=null) {
-            Integer faildCount = Integer.parseInt(String.valueOf(loginFaildCountValueObject));
-            if(faildCount>=3)
-            {
-                request.setAttribute("isShowInputVcode",true);
-            }else{
-                request.setAttribute("isShowInputVcode",false);
+        try {
+            //查询登录次数,失败3次要求输入验证码
+            String loginFaildCountKey = UserLoginRedisKey.getLoginFaildCountKey(IPUtil.getRemoteAddr(request));
+            Object loginFaildCountValueObject = toucanStringRedisService.get(loginFaildCountKey);
+            if (loginFaildCountValueObject != null) {
+                Integer faildCount = Integer.parseInt(String.valueOf(loginFaildCountValueObject));
+                if (faildCount >= 3) {
+                    request.setAttribute("isShowInputVcode", true);
+                } else {
+                    request.setAttribute("isShowInputVcode", false);
+                }
+            } else {
+                request.setAttribute("isShowInputVcode", false);
             }
-        }else{
-            request.setAttribute("isShowInputVcode",false);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            request.setAttribute("isShowInputVcode", false);
         }
         return "user/login";
     }
@@ -124,6 +129,9 @@ public class UserPageController extends BaseController {
             //永不过期
             ltCookie.setMaxAge(Integer.MAX_VALUE);
             response.addCookie(ltCookie);
+
+            request.setAttribute("isShowInputVcode", false);
+
         }
         return "user/login";
     }

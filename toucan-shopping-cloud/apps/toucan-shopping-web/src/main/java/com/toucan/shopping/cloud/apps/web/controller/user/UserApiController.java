@@ -294,7 +294,7 @@ public class UserApiController extends BaseController {
             if(resultObjectVO.isSuccess())
             {
                 UserVO userVO = (UserVO)resultObjectVO.formatData(UserVO.class);
-                if(StringUtils.isNotEmpty(userVO.getHeadSculpture())) {
+                if(userVO!=null&&StringUtils.isNotEmpty(userVO.getHeadSculpture())) {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userVO.getHeadSculpture());
                 }
                 resultObjectVO.setData(userVO);
