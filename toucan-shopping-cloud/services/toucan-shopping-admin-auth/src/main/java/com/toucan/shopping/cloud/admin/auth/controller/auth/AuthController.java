@@ -18,6 +18,7 @@ import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -87,6 +88,7 @@ public class AuthController {
             AdminRole queryAdminRole = new AdminRole();
             queryAdminRole.setAdminId(query.getAdminId());
             queryAdminRole.setAppCode(query.getAppCode());
+            queryAdminRole.setDeleteStatus((short)0);
 
             List<AdminRole> adminRoles = null;
             //先查询缓存,为了缓解数据库的查询压力
@@ -108,7 +110,9 @@ public class AuthController {
                     //同步缓存
                     if (CollectionUtils.isNotEmpty(adminRoles)) {
                         for (AdminRole adminRole : adminRoles) {
-                            adminRoleElasticSearchService.save((AdminRoleElasticSearchVO) adminRole);
+                            AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+                            BeanUtils.copyProperties(adminRoleElasticSearchVO,adminRole);
+                            adminRoleElasticSearchService.save(adminRoleElasticSearchVO);
                         }
                     }
                 }catch(Exception e)

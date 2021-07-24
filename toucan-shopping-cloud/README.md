@@ -39,9 +39,14 @@
 ###### 配置ElasticSearch
 
     1.创建索引
+    
+    1.1.用户中心缓存
     PUT http://localhost:9200/user_index?pretty
     
-    PUT http://localhost:9200/admin_role_index?pretty
+    1.2.权限中台缓存
+    PUT http://localhost:9200/admin_auth_admin_role_index?pretty    
+    PUT http://localhost:9200/admin_auth_role_function_index?pretty
+    PUT http://localhost:9200/admin_auth_function_index?pretty
 
     2.设置用户返回最大记录数
     PUT http://localhost:9200/user_index/_settings
