@@ -102,8 +102,10 @@ public class AuthController {
             //先查询缓存,为了缓解数据库的查询压力
             List<AdminRoleElasticSearchVO> adminRoleElasticSearchVOS = null;
             try {
+                AdminRoleElasticSearchVO queryAdminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+                BeanUtils.copyProperties(queryAdminRoleElasticSearchVO,queryAdminRole);
                 //查询管理员角色关联
-                adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity((AdminRoleElasticSearchVO) queryAdminRole);
+                adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity(queryAdminRoleElasticSearchVO);
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
@@ -146,7 +148,9 @@ public class AuthController {
                         List<Function> functionList = null;
                         try {
                             //查询功能项
-                            functionElasticSearchVOS = functionElasticSearchService.queryByEntity((FunctionElasticSearchVO) queryFunction);
+                            FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
+                            BeanUtils.copyProperties(queryFunctionElasticSearchVO,queryFunction);
+                            functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
                             if(CollectionUtils.isNotEmpty(functionElasticSearchVOS))
                             {
                                 functionList = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS),Function.class);
@@ -159,43 +163,45 @@ public class AuthController {
                         if(CollectionUtils.isEmpty(functionList))
                         {
                             functionList = functionService.findListByEntity(queryFunction);
-                            if(CollectionUtils.isNotEmpty(functionList))
-                            {
-                                for(Function function:functionList) {
-                                    try {
-                                        //同步到缓存
-                                        FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
-                                        BeanUtils.copyProperties(functionElasticSearchVO, function);
-                                        functionElasticSearchService.save(functionElasticSearchVO);
-                                    } catch (Exception e) {
-                                        logger.warn(e.getMessage(), e);
-                                    }
-                                    //查询这个功能项是否包含在这个管理员的角色与功能项的关联里
-                                    RoleFunctionVO queryRoleFunction = new RoleFunctionVO();
-                                    queryRoleFunction.setFunctionId(function.getFunctionId());
-                                    queryRoleFunction.setRoleId(roleId);
-                                    queryRoleFunction.setDeleteStatus((short) 0);
-                                    queryRoleFunction.setAppCode(query.getAppCode());
+                        }
+                        if(CollectionUtils.isNotEmpty(functionList))
+                        {
+                            for(Function function:functionList) {
+                                try {
+                                    //同步到缓存
+                                    FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
+                                    BeanUtils.copyProperties(functionElasticSearchVO, function);
+                                    functionElasticSearchService.save(functionElasticSearchVO);
+                                } catch (Exception e) {
+                                    logger.warn(e.getMessage(), e);
+                                }
+                                //查询这个功能项是否包含在这个管理员的角色与功能项的关联里
+                                RoleFunctionVO queryRoleFunction = new RoleFunctionVO();
+                                queryRoleFunction.setFunctionId(function.getFunctionId());
+                                queryRoleFunction.setRoleId(roleId);
+                                queryRoleFunction.setDeleteStatus((short) 0);
+                                queryRoleFunction.setAppCode(query.getAppCode());
 
-                                    List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = null;
-                                    try {
-                                        roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryByEntity((RoleFunctionElasticSearchVO) queryRoleFunction);
-                                        if(CollectionUtils.isNotEmpty(roleFunctionElasticSearchVOS))
-                                        {
-                                            count = roleFunctionElasticSearchVOS.size();
-                                        }
-                                    }catch(Exception e)
+                                List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = null;
+                                try {
+                                    RoleFunctionElasticSearchVO queryRoleFunctionElasticSearchVO = new RoleFunctionElasticSearchVO();
+                                    BeanUtils.copyProperties(queryRoleFunctionElasticSearchVO,queryRoleFunction);
+                                    roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryByEntity(queryRoleFunctionElasticSearchVO);
+                                    if(CollectionUtils.isNotEmpty(roleFunctionElasticSearchVOS))
                                     {
-                                        logger.warn(e.getMessage(),e);
+                                        count = roleFunctionElasticSearchVOS.size();
                                     }
-                                    //如果缓存为空,就查询数据库,如果数据库为空 才认为这个人没有权限
-                                    if(CollectionUtils.isEmpty(roleFunctionElasticSearchVOS))
+                                }catch(Exception e)
+                                {
+                                    logger.warn(e.getMessage(),e);
+                                }
+                                //如果缓存为空,就查询数据库,如果数据库为空 才认为这个人没有权限
+                                if(CollectionUtils.isEmpty(roleFunctionElasticSearchVOS))
+                                {
+                                    List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(queryRoleFunction);
+                                    if(CollectionUtils.isNotEmpty(roleFunctions))
                                     {
-                                        List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(queryRoleFunction);
-                                        if(CollectionUtils.isNotEmpty(roleFunctions))
-                                        {
-                                            count = roleFunctions.size();
-                                        }
+                                        count = roleFunctions.size();
                                     }
                                 }
                             }
