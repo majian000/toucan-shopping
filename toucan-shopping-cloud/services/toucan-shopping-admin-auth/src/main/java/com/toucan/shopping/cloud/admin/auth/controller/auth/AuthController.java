@@ -4,17 +4,14 @@ package com.toucan.shopping.cloud.admin.auth.controller.auth;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
+import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
+import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
+import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
-import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
-import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
-import com.toucan.shopping.modules.admin.auth.service.AdminService;
-import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
-import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
-import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
+import com.toucan.shopping.modules.admin.auth.service.*;
+import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -56,8 +53,19 @@ public class AuthController {
     @Autowired
     private AdminRoleElasticSearchService adminRoleElasticSearchService;
 
+    @Autowired
+    private FunctionElasticSearchService functionElasticSearchService;
+
+    @Autowired
+    private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
+
+    @Autowired
+    private FunctionService functionService;
+
     /**
      * 校验权限
+     * 首先从es中查询权限关联,如果es中没有就查询数据库就进行一次同步,如果数据库也没有 就认为没有权限
+     * 这样设计的好处是 让所有正常的用户请求全部走缓存,那些不正常的用户虽然最后也会查询到数据库层面,但是后续会做黑名单限制恶意用户的访问
      * @param requestVo
      * @return
      */
@@ -94,6 +102,7 @@ public class AuthController {
             //先查询缓存,为了缓解数据库的查询压力
             List<AdminRoleElasticSearchVO> adminRoleElasticSearchVOS = null;
             try {
+                //查询管理员角色关联
                 adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity((AdminRoleElasticSearchVO) queryAdminRole, 1);
             }catch(Exception e)
             {
@@ -122,19 +131,85 @@ public class AuthController {
             }
 
             if(CollectionUtils.isNotEmpty(adminRoles)) {
-                String[] roleIdArray = new String[adminRoles.size()];
+                Integer count = 0;
+                //遍历每一个角色
                 for(int i=0;i<adminRoles.size();i++) {
                     if(adminRoles.get(i)!=null) {
-                        roleIdArray[i] = adminRoles.get(i).getRoleId();
+                        String roleId = adminRoles.get(i).getRoleId();
+
+                        FunctionVO queryFunction = new FunctionVO();
+                        queryFunction.setUrl(query.getUrl());
+                        queryFunction.setAppCode(query.getAppCode());
+                        queryFunction.setDeleteStatus((short)0);
+                        queryFunction.setEnableStatus((short)1);
+                        List<FunctionElasticSearchVO> functionElasticSearchVOS = null;
+                        List<Function> functionList = null;
+                        try {
+                            //查询功能项
+                            functionElasticSearchVOS = functionElasticSearchService.queryByEntity((FunctionElasticSearchVO) queryFunction, 1);
+                            if(CollectionUtils.isNotEmpty(functionElasticSearchVOS))
+                            {
+                                functionList = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS),Function.class);
+                            }
+                        }catch(Exception e)
+                        {
+                            logger.warn(e.getMessage(),e);
+                        }
+                        //从数据库查询
+                        if(CollectionUtils.isEmpty(functionList))
+                        {
+                            functionList = functionService.findListByEntity(queryFunction);
+                            if(CollectionUtils.isNotEmpty(functionList))
+                            {
+                                for(Function function:functionList) {
+                                    try {
+                                        //同步到缓存
+                                        FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
+                                        BeanUtils.copyProperties(functionElasticSearchVO, function);
+                                        functionElasticSearchService.save(functionElasticSearchVO);
+                                    } catch (Exception e) {
+                                        logger.warn(e.getMessage(), e);
+                                    }
+                                    //查询这个功能项是否包含在这个管理员的角色与功能项的关联里
+                                    RoleFunctionVO queryRoleFunction = new RoleFunctionVO();
+                                    queryRoleFunction.setFunctionId(function.getFunctionId());
+                                    queryRoleFunction.setRoleId(roleId);
+                                    queryRoleFunction.setDeleteStatus((short) 0);
+                                    queryRoleFunction.setAppCode(query.getAppCode());
+
+                                    List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = null;
+                                    try {
+                                        roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryByEntity((RoleFunctionElasticSearchVO) queryRoleFunction, 1);
+                                        if(CollectionUtils.isNotEmpty(roleFunctionElasticSearchVOS))
+                                        {
+                                            count = roleFunctionElasticSearchVOS.size();
+                                        }
+                                    }catch(Exception e)
+                                    {
+                                        logger.warn(e.getMessage(),e);
+                                    }
+                                    //如果缓存为空,就查询数据库,如果数据库为空 才认为这个人没有权限
+                                    if(CollectionUtils.isEmpty(roleFunctionElasticSearchVOS))
+                                    {
+                                        List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(queryRoleFunction);
+                                        if(CollectionUtils.isNotEmpty(roleFunctions))
+                                        {
+                                            count = roleFunctions.size();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(count!=null&&count.intValue()>0)
+                        {
+                            //每次操作都延长登录会话1小时
+                            redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
+                                    AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                            resultObjectVO.setData(true);
+                            return resultObjectVO;
+                        }
+
                     }
-                }
-                Long count = roleFunctionService.findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(query.getUrl(),query.getAppCode(),roleIdArray);
-                if(count!=null&&count.longValue()>0)
-                {
-                    //每次操作都延长登录会话1小时
-                    redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                            AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
-                    resultObjectVO.setData(true);
                 }
             }
         }catch(Exception e)
