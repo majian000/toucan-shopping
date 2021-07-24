@@ -22,7 +22,10 @@ import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -31,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -142,14 +146,13 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     }
 
     @Override
-    public List<RoleFunctionElasticSearchVO> queryByEntity(RoleFunctionElasticSearchVO query, Integer size) throws Exception {
-        List<RoleFunctionElasticSearchVO> RoleFunctionElasticSearchVOS = new ArrayList<RoleFunctionElasticSearchVO>();
+    public List<RoleFunctionElasticSearchVO> queryByEntity(RoleFunctionElasticSearchVO query) throws Exception {
+        List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = new ArrayList<RoleFunctionElasticSearchVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(size);
         //设置查询条件
         if(query.getId()!=null) {
             searchSourceBuilder.query(QueryBuilders.termQuery("_id", query.getId()));
@@ -173,10 +176,10 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
             String sourceString = searchHit.getSourceAsString();
             if (StringUtils.isNotEmpty(sourceString)){
                 logger.info("UserElasticSearchService queryById {}", sourceString);
-                RoleFunctionElasticSearchVOS.add(JSONObject.parseObject(sourceString,RoleFunctionElasticSearchVO.class));
+                roleFunctionElasticSearchVOS.add(JSONObject.parseObject(sourceString,RoleFunctionElasticSearchVO.class));
             }
         }
-        return RoleFunctionElasticSearchVOS;
+        return roleFunctionElasticSearchVOS;
     }
 
 
@@ -196,5 +199,82 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     }
 
 
+    @Override
+    public boolean deleteByRoleId(String roleId,List<String> deleteFaildIdList) throws Exception {
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("roleId", roleId));
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            DeleteRequest deleteRequest = new DeleteRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+            deleteRequest.id(searchHit.getId());
+            DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+            if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
+            {
+                //强制刷新
+                deleteResponse.forcedRefresh();
+            }else{
+                //保存删除失败ID
+                deleteFaildIdList.add(searchHit.getId());
+            }
+        }
+        //没有删除失败的ID
+        if(CollectionUtils.isEmpty(deleteFaildIdList))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS) {
+        for(RoleFunctionElasticSearchVO roleFunctionElasticSearchVO:roleFunctionElasticSearchVOS)
+        {
+            save(roleFunctionElasticSearchVO);
+        }
+    }
+
+    @Override
+    public boolean deleteByFunctionId(String functionId,List<String> deleteFaildIdList) throws Exception {
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("functionId", functionId));
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            DeleteRequest deleteRequest = new DeleteRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+            deleteRequest.id(searchHit.getId());
+            DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+            if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
+            {
+                //强制刷新
+                deleteResponse.forcedRefresh();
+            }else{
+                //保存删除失败ID
+                deleteFaildIdList.add(searchHit.getId());
+            }
+        }
+        //没有删除失败的ID
+        if(CollectionUtils.isEmpty(deleteFaildIdList))
+        {
+            return true;
+        }
+        return false;
+    }
 
 }

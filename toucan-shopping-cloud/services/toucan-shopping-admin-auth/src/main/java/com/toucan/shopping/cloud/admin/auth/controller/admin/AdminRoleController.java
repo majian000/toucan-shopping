@@ -4,15 +4,18 @@ package com.toucan.shopping.cloud.admin.auth.controller.admin;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
+import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
+import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +45,8 @@ public class AdminRoleController {
     @Autowired
     private AdminAppService adminAppService;
 
+    @Autowired
+    private AdminRoleElasticSearchService adminRoleElasticSearchService;
 
 
     /**
@@ -105,6 +111,32 @@ public class AdminRoleController {
                 }
             }
             adminRoleService.saves(adminRoles);
+
+            try{
+                //同步缓存
+                List<String> deleteFaildIdList = new ArrayList<String>();
+                for(int i=0;i<adminApps.size();i++)
+                {
+                    //删除指定账号下的指定所有应用下的所有账号角色关联
+                    adminRoleElasticSearchService.deleteByAdminIdAndAppCodes(entity.getAdminId(),adminApps.get(i).getAppCode(),deleteFaildIdList);
+                }
+                if(adminRoles!=null&&adminRoles.length>0)
+                {
+                    AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS = new AdminRoleElasticSearchVO[length];
+                    for(int i=0;i<adminRoles.length;i++)
+                    {
+                        AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+                        if(adminRoles[i]!=null) {
+                            BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRoles[i]);
+                        }
+                        adminRoleElasticSearchVOS[i] = adminRoleElasticSearchVO;
+                    }
+                    adminRoleElasticSearchService.saves(adminRoleElasticSearchVOS);
+                }
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

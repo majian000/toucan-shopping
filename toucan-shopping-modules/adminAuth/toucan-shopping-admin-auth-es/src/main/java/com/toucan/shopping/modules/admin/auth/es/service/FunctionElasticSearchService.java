@@ -41,11 +41,10 @@ public interface FunctionElasticSearchService {
     /**
      * 根据对象查询
      * @param query 查询条件对象
-     * @param size 查询个数
      * @return
      * @throws Exception
      */
-    List<FunctionElasticSearchVO> queryByEntity(FunctionElasticSearchVO query, Integer size) throws Exception;
+    List<FunctionElasticSearchVO> queryByEntity(FunctionElasticSearchVO query) throws Exception;
 
     /**
      * 根据ID删除

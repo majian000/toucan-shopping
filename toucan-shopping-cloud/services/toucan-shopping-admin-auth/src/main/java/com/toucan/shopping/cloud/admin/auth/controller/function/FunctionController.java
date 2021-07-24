@@ -3,15 +3,19 @@ package com.toucan.shopping.cloud.admin.auth.controller.function;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.*;
+import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
+import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionElasticSearchVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +55,11 @@ public class FunctionController {
     @Autowired
     private RoleFunctionService roleFunctionService;
 
+    @Autowired
+    private FunctionElasticSearchService functionElasticSearchService;
 
+    @Autowired
+    private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
 
     /**
      * 添加功能项
@@ -91,6 +99,15 @@ public class FunctionController {
 
             resultObjectVO.setData(entity);
 
+            try{
+                //同步es缓存
+                FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
+                BeanUtils.copyProperties(functionElasticSearchVO,entity);
+                functionElasticSearchService.save(functionElasticSearchVO);
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -233,6 +250,16 @@ public class FunctionController {
                 return resultObjectVO;
             }
 
+            try{
+                //同步es缓存
+                FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
+                BeanUtils.copyProperties(functionElasticSearchVO,entity);
+                functionElasticSearchService.update(functionElasticSearchVO);
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
+
 
             //如果修改了上级功能项,删除旧的角色功能关联
             if(functions.get(0).getPid().longValue()!=entity.getPid().longValue())
@@ -252,6 +279,14 @@ public class FunctionController {
 
                 //删除当前节点与角色关联
                 roleFunctionService.deleteByFunctionId(functions.get(0).getFunctionId());
+
+                try{
+                    List<String> deleteFaildIdList = new ArrayList<String>();
+                    roleFunctionElasticSearchService.deleteByFunctionId(functions.get(0).getFunctionId(),deleteFaildIdList);
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
             }
 
             resultObjectVO.setData(entity);
@@ -438,6 +473,19 @@ public class FunctionController {
 
                 }
 
+
+                try{
+                    //刷新缓存 删除功能项、删除功能项与角色关联
+                    functionElasticSearchService.deleteById(String.valueOf(f.getId()));
+                    if (!CollectionUtils.isEmpty(roleFunction)) {
+                        List<String> deleteFaildIdList = new ArrayList<String>();
+                        roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
+                    }
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
+
             }
 
             resultObjectVO.setData(entity);
@@ -508,6 +556,18 @@ public class FunctionController {
                             roleFunctionService.deleteByFunctionId(f.getFunctionId());
                         }
 
+
+                        try{
+                            //刷新缓存 删除功能项、删除功能项与角色关联
+                            functionElasticSearchService.deleteById(String.valueOf(f.getId()));
+                            if (!CollectionUtils.isEmpty(roleFunction)) {
+                                List<String> deleteFaildIdList = new ArrayList<String>();
+                                roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
+                            }
+                        }catch(Exception e)
+                        {
+                            logger.warn(e.getMessage(),e);
+                        }
                     }
 
                 }

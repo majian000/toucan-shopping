@@ -41,11 +41,10 @@ public interface RoleFunctionElasticSearchService {
     /**
      * 根据对象查询
      * @param query 查询条件对象
-     * @param size 查询个数
      * @return
      * @throws Exception
      */
-    List<RoleFunctionElasticSearchVO> queryByEntity(RoleFunctionElasticSearchVO query, Integer size) throws Exception;
+    List<RoleFunctionElasticSearchVO> queryByEntity(RoleFunctionElasticSearchVO query) throws Exception;
 
     /**
      * 根据ID删除
@@ -54,5 +53,27 @@ public interface RoleFunctionElasticSearchService {
      */
     boolean deleteById(String id) throws Exception;
 
+    /**
+     * 根据角色ID删除
+     * @param roleId
+     * @return
+     * @throws Exception
+     */
+    boolean deleteByRoleId(String roleId,List<String> deleteFaildIdList) throws Exception;
+
+    /**
+     * 根据功能项ID删除
+     * @param functionId
+     * @param deleteFaildIdList
+     * @return
+     */
+    boolean deleteByFunctionId(String functionId,List<String> deleteFaildIdList) throws Exception;
+
+    /**
+     * 批量保存
+     * @param roleFunctionElasticSearchVOS
+     * @return
+     */
+    void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS);
 
 }

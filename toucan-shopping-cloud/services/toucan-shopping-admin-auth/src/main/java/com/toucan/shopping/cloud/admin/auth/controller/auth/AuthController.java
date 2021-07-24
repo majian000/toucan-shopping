@@ -103,7 +103,7 @@ public class AuthController {
             List<AdminRoleElasticSearchVO> adminRoleElasticSearchVOS = null;
             try {
                 //查询管理员角色关联
-                adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity((AdminRoleElasticSearchVO) queryAdminRole, 1);
+                adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity((AdminRoleElasticSearchVO) queryAdminRole);
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
@@ -146,7 +146,7 @@ public class AuthController {
                         List<Function> functionList = null;
                         try {
                             //查询功能项
-                            functionElasticSearchVOS = functionElasticSearchService.queryByEntity((FunctionElasticSearchVO) queryFunction, 1);
+                            functionElasticSearchVOS = functionElasticSearchService.queryByEntity((FunctionElasticSearchVO) queryFunction);
                             if(CollectionUtils.isNotEmpty(functionElasticSearchVOS))
                             {
                                 functionList = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS),Function.class);
@@ -179,7 +179,7 @@ public class AuthController {
 
                                     List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = null;
                                     try {
-                                        roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryByEntity((RoleFunctionElasticSearchVO) queryRoleFunction, 1);
+                                        roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryByEntity((RoleFunctionElasticSearchVO) queryRoleFunction);
                                         if(CollectionUtils.isNotEmpty(roleFunctionElasticSearchVOS))
                                         {
                                             count = roleFunctionElasticSearchVOS.size();

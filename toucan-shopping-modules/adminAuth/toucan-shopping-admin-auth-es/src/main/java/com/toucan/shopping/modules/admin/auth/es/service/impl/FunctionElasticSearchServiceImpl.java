@@ -151,14 +151,13 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
     }
 
     @Override
-    public List<FunctionElasticSearchVO> queryByEntity(FunctionElasticSearchVO query, Integer size) throws Exception {
+    public List<FunctionElasticSearchVO> queryByEntity(FunctionElasticSearchVO query) throws Exception {
         List<FunctionElasticSearchVO> FunctionElasticSearchVOS = new ArrayList<FunctionElasticSearchVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(size);
         //设置查询条件
         if(query.getId()!=null) {
             searchSourceBuilder.query(QueryBuilders.termQuery("_id", query.getId()));

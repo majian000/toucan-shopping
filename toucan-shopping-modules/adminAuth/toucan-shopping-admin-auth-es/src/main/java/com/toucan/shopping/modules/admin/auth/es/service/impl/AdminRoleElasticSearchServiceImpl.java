@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.constant.AdminRoleCacheElasticSearchConstant;
 import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -145,14 +146,13 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
     }
 
     @Override
-    public List<AdminRoleElasticSearchVO> queryByEntity(AdminRoleElasticSearchVO query, Integer size) throws Exception {
+    public List<AdminRoleElasticSearchVO> queryByEntity(AdminRoleElasticSearchVO query) throws Exception {
         List<AdminRoleElasticSearchVO> AdminRoleElasticSearchVOS = new ArrayList<AdminRoleElasticSearchVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(size);
         //设置查询条件
         if(query.getId()!=null) {
             searchSourceBuilder.query(QueryBuilders.termQuery("_id", query.getId()));
@@ -199,6 +199,54 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
         }
         return false;
     }
+
+    @Override
+    public boolean deleteByAdminIdAndAppCodes(String adminId,String appCode,List<String> deleteFaildIdList) throws Exception {
+        List<AdminRoleElasticSearchVO> AdminRoleElasticSearchVOS = new ArrayList<AdminRoleElasticSearchVO>();
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("adminId", adminId));
+        searchSourceBuilder.query(QueryBuilders.termQuery("appCode", appCode));
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            DeleteRequest deleteRequest = new DeleteRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+            deleteRequest.id(searchHit.getId());
+            DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+            if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
+            {
+                //强制刷新
+                deleteResponse.forcedRefresh();
+            }else{
+                //保存删除失败ID
+                deleteFaildIdList.add(searchHit.getId());
+            }
+        }
+        //没有删除失败的ID
+        if(CollectionUtils.isEmpty(deleteFaildIdList))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS) {
+
+        for(AdminRoleElasticSearchVO adminRoleElasticSearchVO:adminRoleElasticSearchVOS)
+        {
+            save(adminRoleElasticSearchVO);
+        }
+
+    }
+
 
 
 

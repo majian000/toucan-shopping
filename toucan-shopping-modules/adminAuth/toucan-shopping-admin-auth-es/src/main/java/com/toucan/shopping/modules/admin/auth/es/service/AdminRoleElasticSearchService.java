@@ -41,11 +41,10 @@ public interface AdminRoleElasticSearchService {
     /**
      * 根据对象查询
      * @param query 查询条件对象
-     * @param size 查询个数
      * @return
      * @throws Exception
      */
-    List<AdminRoleElasticSearchVO> queryByEntity(AdminRoleElasticSearchVO query,Integer size) throws Exception;
+    List<AdminRoleElasticSearchVO> queryByEntity(AdminRoleElasticSearchVO query) throws Exception;
 
     /**
      * 根据ID删除
@@ -55,4 +54,18 @@ public interface AdminRoleElasticSearchService {
     boolean deleteById(String id) throws Exception;
 
 
+    /**
+     * 删除指定账号下的指定所有应用下的所有账号角色关联
+     * @param adminId
+     * @param appCode
+     * @return
+     */
+    boolean deleteByAdminIdAndAppCodes(String adminId,String appCode,List<String> deleteFaildIdList) throws Exception;
+
+    /**
+     * 批量保存
+     * @param adminRoleElasticSearchVOS
+     * @return
+     */
+    void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS);
 }
