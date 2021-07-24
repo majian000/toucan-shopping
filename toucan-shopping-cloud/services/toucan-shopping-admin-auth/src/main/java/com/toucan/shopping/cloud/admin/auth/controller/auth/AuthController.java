@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
+import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
@@ -12,6 +13,7 @@ import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
+import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
 import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -50,6 +52,8 @@ public class AuthController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private AdminRoleElasticSearchService adminRoleElasticSearchService;
 
     /**
      * 校验权限
@@ -83,8 +87,36 @@ public class AuthController {
             AdminRole queryAdminRole = new AdminRole();
             queryAdminRole.setAdminId(query.getAdminId());
             queryAdminRole.setAppCode(query.getAppCode());
-            //查询这个账户下应用下的所有角色
-            List<AdminRole> adminRoles = adminRoleService.findListByEntity(queryAdminRole);
+
+            List<AdminRole> adminRoles = null;
+            //先查询缓存,为了缓解数据库的查询压力
+            List<AdminRoleElasticSearchVO> adminRoleElasticSearchVOS = null;
+            try {
+                adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity((AdminRoleElasticSearchVO) queryAdminRole, 1);
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
+            if(CollectionUtils.isNotEmpty(adminRoleElasticSearchVOS))
+            {
+                //将缓存数据进行格式化
+                adminRoles = JSONObject.parseArray(JSONObject.toJSONString(adminRoleElasticSearchVOS),AdminRole.class);
+            }else{
+                //查询这个账户下应用下的所有角色
+                adminRoles = adminRoleService.findListByEntity(queryAdminRole);
+                try {
+                    //同步缓存
+                    if (CollectionUtils.isNotEmpty(adminRoles)) {
+                        for (AdminRole adminRole : adminRoles) {
+                            adminRoleElasticSearchService.save((AdminRoleElasticSearchVO) adminRole);
+                        }
+                    }
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+
             if(CollectionUtils.isNotEmpty(adminRoles)) {
                 String[] roleIdArray = new String[adminRoles.size()];
                 for(int i=0;i<adminRoles.size();i++) {

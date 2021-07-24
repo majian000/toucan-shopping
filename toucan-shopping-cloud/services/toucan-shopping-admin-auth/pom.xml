@@ -89,6 +89,11 @@
             <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-es</artifactId>
+        </dependency>
+
     </dependencies>
 
 

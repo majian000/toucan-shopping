@@ -40,6 +40,8 @@
 
     1.创建索引
     PUT http://localhost:9200/user_index?pretty
+    
+    PUT http://localhost:9200/admin_role_index?pretty
 
     2.设置用户返回最大记录数
     PUT http://localhost:9200/user_index/_settings
