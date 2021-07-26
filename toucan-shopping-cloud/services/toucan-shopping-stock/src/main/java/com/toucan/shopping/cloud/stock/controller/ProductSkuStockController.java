@@ -164,7 +164,7 @@ public class ProductSkuStockController {
     @ResponseBody
     public ResultObjectVO inventoryReduction(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
-        ResultObjectVO resultObjectVO = new ResultObjectVO<>();
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null|| StringUtils.isEmpty(requestJsonVO.getEntityJson()))
         {
             logger.info("请求参数为空");
@@ -240,7 +240,7 @@ public class ProductSkuStockController {
     @ResponseBody
     public ResultObjectVO deductCacheStock(@RequestBody RequestJsonVO requestJsonVO)
     {
-        ResultObjectVO resultObjectVO = new ResultObjectVO<>();
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null|| StringUtils.isEmpty(requestJsonVO.getEntityJson()))
         {
             logger.info("请求参数为空");

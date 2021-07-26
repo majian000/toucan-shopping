@@ -103,7 +103,7 @@ public class UserTrueNameApprovePageController extends BaseController {
             ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                List<UserTrueNameApprove> userTrueNameApproves = resultObjectVO.formatDataArray(UserTrueNameApprove.class);
                 if(CollectionUtils.isNotEmpty(userTrueNameApproves))
                 {
                     UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);

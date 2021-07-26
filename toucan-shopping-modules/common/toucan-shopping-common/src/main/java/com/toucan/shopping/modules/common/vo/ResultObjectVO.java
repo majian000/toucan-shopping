@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ResultObjectVO extends ResultVO {
     private Integer code;
@@ -34,6 +36,15 @@ public class ResultObjectVO extends ResultVO {
     {
         if(data!=null) {
             return JSONObject.parseObject(JSONObject.toJSONString(data),clazz);
+        }
+        return null;
+    }
+
+
+    public <T> List<T> formatDataArray(Class<T> clazz)
+    {
+        if(data!=null) {
+            return JSONArray.parseArray(JSONObject.toJSONString(data),clazz);
         }
         return null;
     }
