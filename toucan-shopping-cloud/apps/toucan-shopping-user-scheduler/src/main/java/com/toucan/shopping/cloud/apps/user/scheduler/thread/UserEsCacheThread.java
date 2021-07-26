@@ -96,10 +96,20 @@ public class UserEsCacheThread extends Thread {
                                     BeanUtils.copyProperties(userElasticSearchVO, user);
                                     esUserService.save(userElasticSearchVO);
                                 } else {
-                                    //判断用户昵称是否做了修改
                                     UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(0);
+                                    //判断用户昵称是否做了修改
                                     if (!StringUtils.equals(userElasticSearchVO.getNickName(), user.getNickName())) {
                                         userElasticSearchVO.setNickName(user.getNickName());
+                                        isUpdate = true;
+                                    }
+                                    //判断用户性别是否做了修改
+                                    if (userElasticSearchVO.getSex().intValue()!=user.getSex().intValue()) {
+                                        userElasticSearchVO.setSex(user.getSex());
+                                        isUpdate = true;
+                                    }
+                                    //判断头像是否做了修改
+                                    if (!StringUtils.equals(userElasticSearchVO.getHeadSculpture(), user.getHeadSculpture())) {
+                                        userElasticSearchVO.setHeadSculpture(user.getHeadSculpture());
                                         isUpdate = true;
                                     }
 

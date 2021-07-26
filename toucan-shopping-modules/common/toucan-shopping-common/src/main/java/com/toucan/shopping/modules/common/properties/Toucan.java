@@ -43,7 +43,11 @@ public class Toucan {
      */
     private UserAuth userAuth;
 
+    /**
+     * 用户中心调度
+     */
     private UserCenterScheduler userCenterScheduler;
+
 
     /**
      * 用户配置

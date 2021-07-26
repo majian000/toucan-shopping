@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class AdminRole {
-    private Integer id;
+    private Long id;
 
 
     /**

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.mapper;
 
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
+import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -25,4 +26,22 @@ public interface AdminRoleMapper {
 
 
     List<AdminRole> listByAdminIdAndAppCode(String adminId,String appCode);
+
+
+
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    List<AdminRole> queryListPage(AdminRolePageInfo queryPageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param queryPageInfo
+     * @return
+     */
+    Long queryListPageCount(AdminRolePageInfo queryPageInfo);
+
+
 }

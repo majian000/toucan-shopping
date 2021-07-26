@@ -4,6 +4,8 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
+import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
+import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
 
@@ -30,5 +32,15 @@ public interface AdminRoleService {
     List<AdminRole> findListByAdminId(String adminId);
 
     List<AdminRole> listByAdminIdAndAppCode(String adminId,String appCode);
+
+
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<AdminRole> queryListPage(AdminRolePageInfo queryPageInfo);
+
+
 
 }
