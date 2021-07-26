@@ -81,6 +81,8 @@ public class AuthController {
             return resultObjectVO;
         }
         try {
+            //缓存是否可读取
+            boolean cacheIsRead = true;
             AuthVerifyVO query = JSONObject.parseObject(requestVo.getEntityJson(), AuthVerifyVO.class);
             if(StringUtils.isEmpty(query.getAdminId()))
             {
@@ -108,6 +110,7 @@ public class AuthController {
                 adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity(queryAdminRoleElasticSearchVO);
             }catch(Exception e)
             {
+                cacheIsRead = false;
                 logger.warn(e.getMessage(),e);
             }
             if(CollectionUtils.isNotEmpty(adminRoleElasticSearchVOS))
@@ -119,7 +122,7 @@ public class AuthController {
                 adminRoles = adminRoleService.findListByEntity(queryAdminRole);
                 try {
                     //同步缓存
-                    if (CollectionUtils.isNotEmpty(adminRoles)) {
+                    if (CollectionUtils.isNotEmpty(adminRoles)&&cacheIsRead) {
                         for (AdminRole adminRole : adminRoles) {
                             AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
                             BeanUtils.copyProperties(adminRoleElasticSearchVO,adminRole);
@@ -128,6 +131,7 @@ public class AuthController {
                     }
                 }catch(Exception e)
                 {
+                    cacheIsRead = false;
                     logger.warn(e.getMessage(),e);
                 }
             }
@@ -147,16 +151,18 @@ public class AuthController {
                         List<FunctionElasticSearchVO> functionElasticSearchVOS = null;
                         List<Function> functionList = null;
                         try {
-                            //查询功能项
-                            FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
-                            BeanUtils.copyProperties(queryFunctionElasticSearchVO,queryFunction);
-                            functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
-                            if(CollectionUtils.isNotEmpty(functionElasticSearchVOS))
-                            {
-                                functionList = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS),Function.class);
+                            if(cacheIsRead) {
+                                //查询功能项
+                                FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
+                                BeanUtils.copyProperties(queryFunctionElasticSearchVO, queryFunction);
+                                functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
+                                if (CollectionUtils.isNotEmpty(functionElasticSearchVOS)) {
+                                    functionList = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS), Function.class);
+                                }
                             }
                         }catch(Exception e)
                         {
+                            cacheIsRead = false;
                             logger.warn(e.getMessage(),e);
                         }
                         //从数据库查询
@@ -168,12 +174,15 @@ public class AuthController {
                         {
                             for(Function function:functionList) {
                                 try {
-                                    //同步到缓存
-                                    FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
-                                    BeanUtils.copyProperties(functionElasticSearchVO, function);
-                                    functionElasticSearchService.save(functionElasticSearchVO);
+                                    if(cacheIsRead) {
+                                        //同步到缓存
+                                        FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
+                                        BeanUtils.copyProperties(functionElasticSearchVO, function);
+                                        functionElasticSearchService.save(functionElasticSearchVO);
+                                    }
                                 } catch (Exception e) {
                                     logger.warn(e.getMessage(), e);
+                                    cacheIsRead = false;
                                 }
                                 //查询这个功能项是否包含在这个管理员的角色与功能项的关联里
                                 RoleFunctionVO queryRoleFunction = new RoleFunctionVO();
@@ -184,15 +193,17 @@ public class AuthController {
 
                                 List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = null;
                                 try {
-                                    RoleFunctionElasticSearchVO queryRoleFunctionElasticSearchVO = new RoleFunctionElasticSearchVO();
-                                    BeanUtils.copyProperties(queryRoleFunctionElasticSearchVO,queryRoleFunction);
-                                    roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryByEntity(queryRoleFunctionElasticSearchVO);
-                                    if(CollectionUtils.isNotEmpty(roleFunctionElasticSearchVOS))
-                                    {
-                                        count = roleFunctionElasticSearchVOS.size();
+                                    if(cacheIsRead) {
+                                        RoleFunctionElasticSearchVO queryRoleFunctionElasticSearchVO = new RoleFunctionElasticSearchVO();
+                                        BeanUtils.copyProperties(queryRoleFunctionElasticSearchVO, queryRoleFunction);
+                                        roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryByEntity(queryRoleFunctionElasticSearchVO);
+                                        if (CollectionUtils.isNotEmpty(roleFunctionElasticSearchVOS)) {
+                                            count = roleFunctionElasticSearchVOS.size();
+                                        }
                                     }
                                 }catch(Exception e)
                                 {
+                                    cacheIsRead = false;
                                     logger.warn(e.getMessage(),e);
                                 }
                                 //如果缓存为空,就查询数据库,如果数据库为空 才认为这个人没有权限

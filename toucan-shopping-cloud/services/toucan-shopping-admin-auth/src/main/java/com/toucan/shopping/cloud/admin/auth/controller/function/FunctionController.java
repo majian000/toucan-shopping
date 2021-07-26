@@ -640,6 +640,7 @@ public class FunctionController {
 
 
 
+
     /**
      * 返回指定人的指定应用的某个上级功能项下的按钮列表
      * 首先从es中查询权限关联,如果es中没有就查询数据库就进行一次同步,如果数据库也没有 就认为没有数据
@@ -653,6 +654,8 @@ public class FunctionController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            //缓存是否可读取
+            boolean cacheIsRead = true;
             FunctionVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionVO.class);
             AdminRoleElasticSearchVO queryAdminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
             queryAdminRoleElasticSearchVO.setAdminId(query.getAdminId());
@@ -667,13 +670,14 @@ public class FunctionController {
                 }
             }catch(Exception e)
             {
+                cacheIsRead = false;
                 logger.warn(e.getMessage(),e);
             }
             //将数据库数据同步到缓存
             if(CollectionUtils.isEmpty(adminRoles)) {
                 adminRoles = adminRoleService.listByAdminIdAndAppCode(query.getAdminId(), query.getAppCode());
                 try {
-                    if (CollectionUtils.isEmpty(adminRoles)) {
+                    if (!CollectionUtils.isEmpty(adminRoles)&&cacheIsRead) {
                         for (AdminRole adminRole : adminRoles) {
                             AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
                             BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRole);
@@ -697,23 +701,25 @@ public class FunctionController {
                 List<Function> functions = null;
                 List<FunctionElasticSearchVO> functionElasticSearchVOS = null;
                 try {
-                    //从缓存查询数据
-                    FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
-                    BeanUtils.copyProperties(queryFunctionElasticSearchVO,query);
-                    functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
-                    if(!CollectionUtils.isEmpty(functionElasticSearchVOS))
-                    {
-                        functions = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS),Function.class);
+                    if(cacheIsRead) {
+                        //从缓存查询数据
+                        FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
+                        BeanUtils.copyProperties(queryFunctionElasticSearchVO, query);
+                        functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
+                        if (!CollectionUtils.isEmpty(functionElasticSearchVOS)) {
+                            functions = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS), Function.class);
+                        }
                     }
                 }catch(Exception e)
                 {
+                    cacheIsRead = false;
                     logger.warn(e.getMessage(),e);
                 }
                 //从数据库查询
                 if(CollectionUtils.isEmpty(functions)) {
                     functions = functionService.findListByEntity(query);
                     try{ //同步到缓存
-                        if(!CollectionUtils.isEmpty(functions))
+                        if(!CollectionUtils.isEmpty(functions)&&cacheIsRead)
                         {
                             for (Function function : functions) {
                                 FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
@@ -723,6 +729,7 @@ public class FunctionController {
                         }
                     }catch(Exception e)
                     {
+                        cacheIsRead = false;
                         logger.warn(e.getMessage(),e);
                     }
                 }
@@ -738,6 +745,8 @@ public class FunctionController {
         }
         return resultObjectVO;
     }
+
+
 
 
 

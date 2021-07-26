@@ -52,38 +52,30 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     private RestHighLevelClient restHighLevelClient;
 
     @Override
-    public void save(RoleFunctionElasticSearchVO esVO) {
-        try {
-            IndexRequest request = new IndexRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
-            restHighLevelClient.index(request, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            logger.warn(e.getMessage(),e);
-        }
+    public void save(RoleFunctionElasticSearchVO esVO) throws Exception {
+        IndexRequest request = new IndexRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
+        restHighLevelClient.index(request, RequestOptions.DEFAULT);
 
     }
 
     @Override
-    public void update(RoleFunctionElasticSearchVO esVO) {
-        try {
-            UpdateRequest request = new UpdateRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX,String.valueOf(esVO.getId()));
-            XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
-            updateBody.field("id",esVO.getId());
-            updateBody.field("roleId",esVO.getRoleId());
-            updateBody.field("functionId",esVO.getFunctionId());
-            updateBody.field("appCode",esVO.getAppCode());
-            updateBody.field("createAdminId",esVO.getCreateAdminId());
-            updateBody.field("deleteStatus",esVO.getDeleteStatus());
-            if(esVO.getCreateDate()!=null) {
-                updateBody.field("createDate", esVO.getCreateDate().getTime());
-            }
-            updateBody.endObject();
-            request.doc(updateBody);
-            UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
-            //强制刷新
-            updateResponse.forcedRefresh();
-        } catch (IOException e) {
-            logger.warn(e.getMessage(),e);
+    public void update(RoleFunctionElasticSearchVO esVO) throws Exception{
+        UpdateRequest request = new UpdateRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX,String.valueOf(esVO.getId()));
+        XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
+        updateBody.field("id",esVO.getId());
+        updateBody.field("roleId",esVO.getRoleId());
+        updateBody.field("functionId",esVO.getFunctionId());
+        updateBody.field("appCode",esVO.getAppCode());
+        updateBody.field("createAdminId",esVO.getCreateAdminId());
+        updateBody.field("deleteStatus",esVO.getDeleteStatus());
+        if(esVO.getCreateDate()!=null) {
+            updateBody.field("createDate", esVO.getCreateDate().getTime());
         }
+        updateBody.endObject();
+        request.doc(updateBody);
+        UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
+        //强制刷新
+        updateResponse.forcedRefresh();
 
     }
 
@@ -235,7 +227,7 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     }
 
     @Override
-    public void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS) {
+    public void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS)  throws Exception{
         for(RoleFunctionElasticSearchVO roleFunctionElasticSearchVO:roleFunctionElasticSearchVOS)
         {
             save(roleFunctionElasticSearchVO);
