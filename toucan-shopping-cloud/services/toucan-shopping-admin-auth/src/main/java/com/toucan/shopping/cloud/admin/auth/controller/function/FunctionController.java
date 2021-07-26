@@ -100,10 +100,16 @@ public class FunctionController {
 
             resultObjectVO.setData(entity);
 
-            //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-            FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
-            BeanUtils.copyProperties(functionElasticSearchVO,entity);
-            functionElasticSearchService.save(functionElasticSearchVO);
+            try {
+                //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+                FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
+                BeanUtils.copyProperties(functionElasticSearchVO, entity);
+                functionElasticSearchService.save(functionElasticSearchVO);
+            }catch(Exception e) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("更新缓存出现异常");
+                logger.warn(e.getMessage(), e);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -246,11 +252,17 @@ public class FunctionController {
                 return resultObjectVO;
             }
 
-            //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-            FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
-            BeanUtils.copyProperties(functionElasticSearchVO,entity);
-            functionElasticSearchService.update(functionElasticSearchVO);
 
+            try{
+                //同步es缓存
+                FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
+                BeanUtils.copyProperties(functionElasticSearchVO,entity);
+                functionElasticSearchService.update(functionElasticSearchVO);
+            }catch(Exception e) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("更新缓存出现异常");
+                logger.warn(e.getMessage(), e);
+            }
 
             //如果修改了上级功能项,删除旧的角色功能关联
             if(functions.get(0).getPid().longValue()!=entity.getPid().longValue())
@@ -271,8 +283,15 @@ public class FunctionController {
                 //删除当前节点与角色关联
                 roleFunctionService.deleteByFunctionId(functions.get(0).getFunctionId());
 
-                List<String> deleteFaildIdList = new ArrayList<String>();
-                roleFunctionElasticSearchService.deleteByFunctionId(functions.get(0).getFunctionId(),deleteFaildIdList);
+
+                try {
+                    List<String> deleteFaildIdList = new ArrayList<String>();
+                    roleFunctionElasticSearchService.deleteByFunctionId(functions.get(0).getFunctionId(), deleteFaildIdList);
+                }catch(Exception e) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新缓存出现异常");
+                    logger.warn(e.getMessage(), e);
+                }
             }
 
             resultObjectVO.setData(entity);
@@ -459,11 +478,18 @@ public class FunctionController {
                 }
 
 
-                //刷新缓存 删除功能项、删除功能项与角色关联,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-                functionElasticSearchService.deleteById(String.valueOf(f.getId()));
-                if (!CollectionUtils.isEmpty(roleFunction)) {
-                    List<String> deleteFaildIdList = new ArrayList<String>();
-                    roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
+                try {
+                    //刷新缓存
+                    functionElasticSearchService.deleteById(String.valueOf(f.getId()));
+                    if (!CollectionUtils.isEmpty(roleFunction)) {
+                        List<String> deleteFaildIdList = new ArrayList<String>();
+                        roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(), deleteFaildIdList);
+                    }
+                }catch(Exception e)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新缓存出现异常");
+                    logger.warn(e.getMessage(),e);
                 }
 
             }
@@ -537,11 +563,18 @@ public class FunctionController {
                         }
 
 
-                        //刷新缓存 删除功能项、删除功能项与角色关联,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-                        functionElasticSearchService.deleteById(String.valueOf(f.getId()));
-                        if (!CollectionUtils.isEmpty(roleFunction)) {
-                            List<String> deleteFaildIdList = new ArrayList<String>();
-                            roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
+                        try{
+                            //刷新缓存
+                            functionElasticSearchService.deleteById(String.valueOf(f.getId()));
+                            if (!CollectionUtils.isEmpty(roleFunction)) {
+                                List<String> deleteFaildIdList = new ArrayList<String>();
+                                roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
+                            }
+                        }catch(Exception e)
+                        {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("更新缓存出现异常");
+                            logger.warn(e.getMessage(),e);
                         }
                     }
 
@@ -686,6 +719,7 @@ public class FunctionController {
                     }
                 }catch(Exception e)
                 {
+                    cacheIsRead = false;
                     logger.warn(e.getMessage(),e);
                 }
             }
