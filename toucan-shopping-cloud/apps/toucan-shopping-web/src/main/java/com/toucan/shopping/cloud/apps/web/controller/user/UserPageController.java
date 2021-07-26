@@ -88,7 +88,7 @@ public class UserPageController extends BaseController {
             ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
             if(resultObectVO.isSuccess())
             {
-                userVO = (UserVO)resultObectVO.formatData(UserVO.class);
+                userVO = resultObectVO.formatData(UserVO.class);
                 request.setAttribute("user",userVO);
             }else{
                 request.setAttribute("user",new UserVO());

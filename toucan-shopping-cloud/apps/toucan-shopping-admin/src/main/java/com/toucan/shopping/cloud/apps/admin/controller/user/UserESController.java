@@ -225,7 +225,7 @@ public class UserESController  extends UIController {
             resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                UserVO userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
+                UserVO userVO =  resultObjectVO.formatData(UserVO.class);
                 BeanUtils.copyProperties(userVO,userElasticSearchVO);
                 userElasticSearchService.update(userElasticSearchVO);
             }

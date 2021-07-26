@@ -166,7 +166,7 @@ public class UserController extends UIController {
             ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                userVO =  (UserVO) resultObjectVO.formatData(UserVO.class);
+                userVO =   resultObjectVO.formatData(UserVO.class);
                 if(userVO.getHeadSculpture()!=null) {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
@@ -197,7 +197,7 @@ public class UserController extends UIController {
             ResultObjectVO resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                userVO = (UserVO) resultObjectVO.formatData(UserVO.class);
+                userVO =  resultObjectVO.formatData(UserVO.class);
                 if(userVO.getHeadSculpture()!=null) {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
@@ -467,7 +467,7 @@ public class UserController extends UIController {
                 {
                     return resultObjectVO;
                 }
-                List userNames = (List)resultObjectVO.formatData(ArrayList.class);
+                List userNames = resultObjectVO.formatData(ArrayList.class);
                 if(!CollectionUtils.isEmpty(userNames))
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -1093,7 +1093,7 @@ public class UserController extends UIController {
             ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(userResultObjectVO.isSuccess())
             {
-                userVO = (UserVO) userResultObjectVO.formatData(UserVO.class);
+                userVO =  userResultObjectVO.formatData(UserVO.class);
                 //如果不是默认头像就删除掉这个人的上一个头像
                 if(!toucan.getUser().getDefaultHeadSculpture().equals(userVO.getHeadSculpture())&&StringUtils.isNotEmpty(userVO.getHeadSculpture()))
                 {

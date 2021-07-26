@@ -3,14 +3,12 @@ package com.toucan.shopping.cloud.admin.auth.controller.function;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.*;
+import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
-import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
-import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
-import com.toucan.shopping.modules.admin.auth.vo.FunctionElasticSearchVO;
-import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
+import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -60,6 +58,9 @@ public class FunctionController {
 
     @Autowired
     private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
+
+    @Autowired
+    private AdminRoleElasticSearchService adminRoleElasticSearchService;
 
     /**
      * 添加功能项
@@ -667,6 +668,8 @@ public class FunctionController {
 
     /**
      * 返回指定人的指定应用的某个上级功能项下的按钮列表
+     * 首先从es中查询权限关联,如果es中没有就查询数据库就进行一次同步,如果数据库也没有 就认为没有数据
+     * 这样设计的好处是 让所有正常的用户请求全部走缓存,那些不正常的用户虽然最后也会查询到数据库层面,但是后续会做黑名单限制恶意用户的访问
      * @param requestJsonVO
      * @return
      */
@@ -677,7 +680,37 @@ public class FunctionController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             FunctionVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionVO.class);
-            List<AdminRole> adminRoles = adminRoleService.listByAdminIdAndAppCode(query.getAdminId(),query.getAppCode());
+            AdminRoleElasticSearchVO queryAdminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+            queryAdminRoleElasticSearchVO.setAdminId(query.getAdminId());
+            queryAdminRoleElasticSearchVO.setAppCode(query.getAppCode());
+            List<AdminRole> adminRoles = null;
+            List<AdminRoleElasticSearchVO> adminRoleElasticSearchVOS = null;
+            try {
+                adminRoleElasticSearchVOS = adminRoleElasticSearchService.queryByEntity(queryAdminRoleElasticSearchVO);
+                if(!CollectionUtils.isEmpty(adminRoleElasticSearchVOS))
+                {
+                    adminRoles = JSONObject.parseArray(JSONObject.toJSONString(adminRoleElasticSearchVOS),AdminRole.class);
+                }
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
+            //将数据库数据同步到缓存
+            if(CollectionUtils.isEmpty(adminRoles)) {
+                adminRoles = adminRoleService.listByAdminIdAndAppCode(query.getAdminId(), query.getAppCode());
+                try {
+                    if (CollectionUtils.isEmpty(adminRoles)) {
+                        for (AdminRole adminRole : adminRoles) {
+                            AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+                            BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRole);
+                            adminRoleElasticSearchService.save(adminRoleElasticSearchVO);
+                        }
+                    }
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
+            }
             if(!CollectionUtils.isEmpty(adminRoles))
             {
                 String[] roleIdArray = new String[adminRoles.size()];
@@ -687,7 +720,38 @@ public class FunctionController {
                     roleIdArray[pos]=adminRole.getRoleId();
                     pos++;
                 }
-                List<Function> functions = functionService.findListByEntity(query);
+                List<Function> functions = null;
+                List<FunctionElasticSearchVO> functionElasticSearchVOS = null;
+                try {
+                    //从缓存查询数据
+                    FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
+                    BeanUtils.copyProperties(queryFunctionElasticSearchVO,query);
+                    functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
+                    if(!CollectionUtils.isEmpty(functionElasticSearchVOS))
+                    {
+                        functions = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS),Function.class);
+                    }
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
+                //从数据库查询
+                if(CollectionUtils.isEmpty(functions)) {
+                    functions = functionService.findListByEntity(query);
+                    try{ //同步到缓存
+                        if(!CollectionUtils.isEmpty(functions))
+                        {
+                            for (Function function : functions) {
+                                FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
+                                BeanUtils.copyProperties(functionElasticSearchVO, function);
+                                functionElasticSearchService.save(functionElasticSearchVO);
+                            }
+                        }
+                    }catch(Exception e)
+                    {
+                        logger.warn(e.getMessage(),e);
+                    }
+                }
                 if(!CollectionUtils.isEmpty(functions)) {
                     resultObjectVO.setData(functionService.queryListByRoleIdArrayAndParentId(roleIdArray,String.valueOf(functions.get(0).getId())));
                 }

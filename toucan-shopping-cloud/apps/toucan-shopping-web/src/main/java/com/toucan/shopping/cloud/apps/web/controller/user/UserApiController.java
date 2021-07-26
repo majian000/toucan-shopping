@@ -293,7 +293,7 @@ public class UserApiController extends BaseController {
             resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                UserVO userVO = (UserVO)resultObjectVO.formatData(UserVO.class);
+                UserVO userVO = resultObjectVO.formatData(UserVO.class);
                 if(userVO!=null&&StringUtils.isNotEmpty(userVO.getHeadSculpture())) {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userVO.getHeadSculpture());
                 }
@@ -432,7 +432,7 @@ public class UserApiController extends BaseController {
             resultObjectVO = feignUserService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                userLoginVO = (UserLoginVO)resultObjectVO.formatData(UserLoginVO.class);
+                userLoginVO = resultObjectVO.formatData(UserLoginVO.class);
                 if(userLoginVO==null)
                 {
                     resultObjectVO.setMsg("登陆失败,请重新输入");

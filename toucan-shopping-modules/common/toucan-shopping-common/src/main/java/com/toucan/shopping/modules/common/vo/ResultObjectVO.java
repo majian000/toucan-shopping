@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 @Data
-public class ResultObjectVO<T> extends ResultVO {
+public class ResultObjectVO extends ResultVO {
     private Integer code;
     private String msg;
-    private T data;
+    private Object data;
 
     public ResultObjectVO()
     {
@@ -30,17 +30,10 @@ public class ResultObjectVO<T> extends ResultVO {
         return false;
     }
 
-    public Object formatData(Class clazz)
+    public <T> T formatData(Class<T> clazz)
     {
         if(data!=null) {
             return JSONObject.parseObject(JSONObject.toJSONString(data),clazz);
-        }
-        return null;
-    }
-    public Object formatDataArray(Class clazz)
-    {
-        if(data!=null) {
-            return JSONArray.parseArray(JSONObject.toJSONString(data),clazz);
         }
         return null;
     }
