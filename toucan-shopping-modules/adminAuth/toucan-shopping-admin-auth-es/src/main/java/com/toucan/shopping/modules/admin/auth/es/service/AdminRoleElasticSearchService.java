@@ -11,13 +11,13 @@ public interface AdminRoleElasticSearchService {
      * 保存对象
      * @param esVO
      */
-    void save(AdminRoleElasticSearchVO esVO) throws Exception;
+    void save(AdminRoleElasticSearchVO esVO);
 
     /**
      * 更新对象
      * @param esVO
      */
-    void update(AdminRoleElasticSearchVO esVO) throws Exception;
+    void update(AdminRoleElasticSearchVO esVO);
 
     /**
      * 是否存在索引
@@ -67,5 +67,5 @@ public interface AdminRoleElasticSearchService {
      * @param adminRoleElasticSearchVOS
      * @return
      */
-    void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS) throws Exception;
+    void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS);
 }

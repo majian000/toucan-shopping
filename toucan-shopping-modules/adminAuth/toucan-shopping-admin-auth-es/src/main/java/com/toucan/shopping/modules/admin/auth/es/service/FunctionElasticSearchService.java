@@ -11,13 +11,13 @@ public interface FunctionElasticSearchService {
      * 保存对象
      * @param esVO
      */
-    void save(FunctionElasticSearchVO esVO) throws Exception;
+    void save(FunctionElasticSearchVO esVO);
 
     /**
      * 更新对象
      * @param esVO
      */
-    void update(FunctionElasticSearchVO esVO) throws Exception;
+    void update(FunctionElasticSearchVO esVO);
 
     /**
      * 是否存在索引

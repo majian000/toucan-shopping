@@ -11,13 +11,13 @@ public interface RoleFunctionElasticSearchService {
      * 保存对象
      * @param esVO
      */
-    void save(RoleFunctionElasticSearchVO esVO) throws Exception;
+    void save(RoleFunctionElasticSearchVO esVO);
 
     /**
      * 更新对象
      * @param esVO
      */
-    void update(RoleFunctionElasticSearchVO esVO) throws Exception;
+    void update(RoleFunctionElasticSearchVO esVO);
 
     /**
      * 是否存在索引
@@ -74,6 +74,6 @@ public interface RoleFunctionElasticSearchService {
      * @param roleFunctionElasticSearchVOS
      * @return
      */
-    void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS) throws Exception;
+    void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS);
 
 }

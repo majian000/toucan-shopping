@@ -52,30 +52,38 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
     private RestHighLevelClient restHighLevelClient;
 
     @Override
-    public void save(AdminRoleElasticSearchVO esVO) throws Exception{
-        IndexRequest request = new IndexRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
-        restHighLevelClient.index(request, RequestOptions.DEFAULT);
+    public void save(AdminRoleElasticSearchVO esVO) {
+        try {
+            IndexRequest request = new IndexRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
+            restHighLevelClient.index(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(),e);
+        }
 
     }
 
     @Override
-    public void update(AdminRoleElasticSearchVO esVO) throws Exception {
-        UpdateRequest request = new UpdateRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX,String.valueOf(esVO.getId()));
-        XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
-        updateBody.field("id",esVO.getId());
-        updateBody.field("adminId",esVO.getAdminId());
-        updateBody.field("roleId",esVO.getRoleId());
-        updateBody.field("appCode",esVO.getAppCode());
-        updateBody.field("createAdminId",esVO.getCreateAdminId());
-        updateBody.field("deleteStatus",esVO.getDeleteStatus());
-        if(esVO.getCreateDate()!=null) {
-            updateBody.field("createDate", esVO.getCreateDate().getTime());
+    public void update(AdminRoleElasticSearchVO esVO) {
+        try {
+            UpdateRequest request = new UpdateRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX,String.valueOf(esVO.getId()));
+            XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
+            updateBody.field("id",esVO.getId());
+            updateBody.field("adminId",esVO.getAdminId());
+            updateBody.field("roleId",esVO.getRoleId());
+            updateBody.field("appCode",esVO.getAppCode());
+            updateBody.field("createAdminId",esVO.getCreateAdminId());
+            updateBody.field("deleteStatus",esVO.getDeleteStatus());
+            if(esVO.getCreateDate()!=null) {
+                updateBody.field("createDate", esVO.getCreateDate().getTime());
+            }
+            updateBody.endObject();
+            request.doc(updateBody);
+            UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
+            //强制刷新
+            updateResponse.forcedRefresh();
+        } catch (IOException e) {
+            logger.warn(e.getMessage(),e);
         }
-        updateBody.endObject();
-        request.doc(updateBody);
-        UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
-        //强制刷新
-        updateResponse.forcedRefresh();
 
     }
 
@@ -230,7 +238,7 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
     }
 
     @Override
-    public void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS) throws Exception {
+    public void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS) {
 
         for(AdminRoleElasticSearchVO adminRoleElasticSearchVO:adminRoleElasticSearchVOS)
         {
