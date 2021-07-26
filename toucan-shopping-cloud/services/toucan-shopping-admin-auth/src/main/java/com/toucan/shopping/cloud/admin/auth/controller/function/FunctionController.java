@@ -107,6 +107,8 @@ public class FunctionController {
                 functionElasticSearchService.save(functionElasticSearchVO);
             }catch(Exception e)
             {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("更新缓存出现异常");
                 logger.warn(e.getMessage(),e);
             }
         }catch(Exception e)
@@ -258,6 +260,8 @@ public class FunctionController {
                 functionElasticSearchService.update(functionElasticSearchVO);
             }catch(Exception e)
             {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("更新缓存出现异常");
                 logger.warn(e.getMessage(),e);
             }
 
@@ -286,6 +290,8 @@ public class FunctionController {
                     roleFunctionElasticSearchService.deleteByFunctionId(functions.get(0).getFunctionId(),deleteFaildIdList);
                 }catch(Exception e)
                 {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新缓存出现异常");
                     logger.warn(e.getMessage(),e);
                 }
             }
@@ -484,6 +490,8 @@ public class FunctionController {
                     }
                 }catch(Exception e)
                 {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("更新缓存出现异常");
                     logger.warn(e.getMessage(),e);
                 }
 
@@ -567,6 +575,8 @@ public class FunctionController {
                             }
                         }catch(Exception e)
                         {
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("更新缓存出现异常");
                             logger.warn(e.getMessage(),e);
                         }
                     }
