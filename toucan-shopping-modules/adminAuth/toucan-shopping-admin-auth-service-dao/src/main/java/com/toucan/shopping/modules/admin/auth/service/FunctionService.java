@@ -30,14 +30,14 @@ public interface FunctionService {
      * @param entity
      * @return
      */
-    int save(Function entity)  throws Exception ;
+    int save(Function entity);
 
     /**
      * 更新
      * @param entity
      * @return
      */
-    int update(Function entity) throws Exception ;
+    int update(Function entity);
 
 
     /**
@@ -45,7 +45,7 @@ public interface FunctionService {
      * @param parentEntity
      * @return
      */
-    void updateChildAppCode(Function parentEntity) throws Exception ;
+    void updateChildAppCode(Function parentEntity);
 
     /**
      * 判断是否存在
@@ -66,7 +66,7 @@ public interface FunctionService {
      * @param id
      * @return
      */
-    int deleteById(Long id)  throws Exception;
+    int deleteById(Long id);
 
 
     /**

@@ -42,7 +42,7 @@ public interface RoleFunctionService {
      * @param functionId
      * @return
      */
-    int deleteByFunctionId(String functionId) throws Exception ;
+    int deleteByFunctionId(String functionId);
 
     /**
      * 删除指定功能项下的关联

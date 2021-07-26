@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.service.impl;
 
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
-import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.mapper.RoleFunctionMapper;
 import com.toucan.shopping.modules.admin.auth.mapper.RoleFunctionMapper;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
@@ -9,7 +8,6 @@ import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,8 +16,6 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     @Autowired
     private RoleFunctionMapper roleFunctionMapper;
 
-    @Autowired
-    private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
 
     @Override
     public List<RoleFunction> findListByEntity(RoleFunction entity) {
@@ -43,12 +39,8 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     }
 
     @Override
-    public int deleteByFunctionId(String functionId) throws Exception {
-        int row =  roleFunctionMapper.deleteByFunctionId(functionId);
-
-        List<String> deleteFaildIdList = new ArrayList<String>();
-        roleFunctionElasticSearchService.deleteByFunctionId(functionId,deleteFaildIdList);
-        return row;
+    public int deleteByFunctionId(String functionId) {
+        return roleFunctionMapper.deleteByFunctionId(functionId);
     }
 
     @Override

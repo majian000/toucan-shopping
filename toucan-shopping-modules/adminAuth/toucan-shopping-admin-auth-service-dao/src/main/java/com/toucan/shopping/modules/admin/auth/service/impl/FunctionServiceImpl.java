@@ -1,14 +1,9 @@
 package com.toucan.shopping.modules.admin.auth.service.impl;
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
-import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
-import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
-import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.mapper.FunctionMapper;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.FunctionService;
-import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
-import com.toucan.shopping.modules.admin.auth.vo.FunctionElasticSearchVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -32,18 +27,6 @@ public class FunctionServiceImpl implements FunctionService {
 
     @Autowired
     private FunctionMapper functionMapper;
-
-
-    @Autowired
-    private FunctionElasticSearchService functionElasticSearchService;
-
-    @Autowired
-    private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
-
-
-    @Autowired
-    private RoleFunctionService roleFunctionService;
-
 
     @Override
     public List<Function> findListByEntity(Function entity) {
@@ -96,35 +79,19 @@ public class FunctionServiceImpl implements FunctionService {
         return functionTreeVOS;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public int save(Function entity) throws Exception  {
-        int row = functionMapper.insert(entity);
-
-
-        //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-        FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
-        BeanUtils.copyProperties(functionElasticSearchVO,entity);
-        functionElasticSearchService.save(functionElasticSearchVO);
-
-        return row;
+    public int save(Function entity) {
+        return functionMapper.insert(entity);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     @Override
-    public int update(Function entity) throws Exception {
-        int row = functionMapper.update(entity);
-
-        //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-        FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
-        BeanUtils.copyProperties(functionElasticSearchVO, entity);
-        functionElasticSearchService.update(functionElasticSearchVO);
-
-        return row;
+    public int update(Function entity) {
+        return functionMapper.update(entity);
     }
 
     @Override
-    public void updateChildAppCode(Function parentEntity) throws Exception  {
+    public void updateChildAppCode(Function parentEntity) {
         List<FunctionVO> children = functionMapper.findListByPid(parentEntity.getId());
         if(!CollectionUtils.isEmpty(children)) {
             for (FunctionVO child : children) {
@@ -157,32 +124,9 @@ public class FunctionServiceImpl implements FunctionService {
         return pageInfo;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public int deleteById(Long id) throws Exception  {
-        int row= functionMapper.deleteById(id);
-
-        String functionId = String.valueOf(id);
-
-        //删除功能项下所有关联
-        RoleFunction queryRoleFunction = new RoleFunction();
-        queryRoleFunction.setFunctionId(functionId);
-
-        List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
-        if (!CollectionUtils.isEmpty(roleFunction)) {
-            row = roleFunctionService.deleteByFunctionId(functionId);
-        }
-
-
-        //刷新缓存 删除功能项、删除功能项与角色关联,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-        functionElasticSearchService.deleteById(functionId);
-        if (!CollectionUtils.isEmpty(roleFunction)) {
-            List<String> deleteFaildIdList = new ArrayList<String>();
-            roleFunctionElasticSearchService.deleteByFunctionId(functionId,deleteFaildIdList);
-        }
-
-
-        return row;
+    public int deleteById(Long id) {
+        return functionMapper.deleteById(id);
     }
 
     @Override

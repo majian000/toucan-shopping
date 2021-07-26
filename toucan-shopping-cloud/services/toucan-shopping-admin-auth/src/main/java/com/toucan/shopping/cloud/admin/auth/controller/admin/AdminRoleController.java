@@ -72,9 +72,68 @@ public class AdminRoleController {
                 throw new IllegalArgumentException("roles为空");
             }
 
-            //创建账户角色的前提是这个账户和操作这个账户的操作人属于同一个应用,这个操作人也只能操作他俩所属同一应用下面的所有角色
-            adminRoleService.deleteByAdminIdAndAppCodes(entity.getAdminId(),entity);
+            AdminApp queryAdminApp = new AdminApp();
+            queryAdminApp.setAdminId(entity.getCreateAdminId());
 
+            List<AdminApp> adminApps = adminAppService.findListByEntity(queryAdminApp);
+
+            if(CollectionUtils.isEmpty(adminApps))
+            {
+                throw new IllegalArgumentException("当前登录用户,关联应用列表为空");
+            }
+
+            //拿到当前这个账户的操作人可管理的所有应用
+            String[] appCodes = new String[adminApps.size()];
+            for(int i=0;i<adminApps.size();i++)
+            {
+                appCodes[i] = adminApps.get(i).getAppCode();
+            }
+            //创建账户角色的前提是这个账户和操作这个账户的操作人属于同一个应用,这个操作人也只能操作他俩所属同一应用下面的所有角色
+            adminRoleService.deleteByAdminIdAndAppCodes(entity.getAdminId(),appCodes);
+
+            int length=0;
+            for(AdminRole adminRole:entity.getRoles())
+            {
+                //-1为应用节点
+                if(!"-1".equals(adminRole.getRoleId())) {
+                    adminRole.setAdminId(entity.getAdminId());
+                    adminRole.setCreateAdminId(entity.getCreateAdminId());
+                    adminRole.setCreateDate(new Date());
+                    adminRole.setDeleteStatus((short) 0);
+                    length++;
+                }
+            }
+            AdminRole[] adminRoles = new AdminRole[length];
+            int pos = 0;
+            for(AdminRole adminRole:entity.getRoles()) {
+                //-1为应用节点
+                if (!"-1".equals(adminRole.getRoleId())) {
+                    adminRoles[pos] = adminRole;
+                    pos++;
+                }
+            }
+            adminRoleService.saves(adminRoles);
+
+            //同步缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+            List<String> deleteFaildIdList = new ArrayList<String>();
+            for(int i=0;i<adminApps.size();i++)
+            {
+                //删除指定账号下的指定所有应用下的所有账号角色关联
+                adminRoleElasticSearchService.deleteByAdminIdAndAppCodes(entity.getAdminId(),adminApps.get(i).getAppCode(),deleteFaildIdList);
+            }
+            if(adminRoles!=null&&adminRoles.length>0)
+            {
+                AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS = new AdminRoleElasticSearchVO[length];
+                for(int i=0;i<adminRoles.length;i++)
+                {
+                    AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+                    if(adminRoles[i]!=null) {
+                        BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRoles[i]);
+                    }
+                    adminRoleElasticSearchVOS[i] = adminRoleElasticSearchVO;
+                }
+                adminRoleElasticSearchService.saves(adminRoleElasticSearchVOS);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -101,6 +100,10 @@ public class FunctionController {
 
             resultObjectVO.setData(entity);
 
+            //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+            FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
+            BeanUtils.copyProperties(functionElasticSearchVO,entity);
+            functionElasticSearchService.save(functionElasticSearchVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -243,6 +246,10 @@ public class FunctionController {
                 return resultObjectVO;
             }
 
+            //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+            FunctionElasticSearchVO functionElasticSearchVO=new FunctionElasticSearchVO();
+            BeanUtils.copyProperties(functionElasticSearchVO,entity);
+            functionElasticSearchService.update(functionElasticSearchVO);
 
 
             //如果修改了上级功能项,删除旧的角色功能关联
@@ -264,6 +271,8 @@ public class FunctionController {
                 //删除当前节点与角色关联
                 roleFunctionService.deleteByFunctionId(functions.get(0).getFunctionId());
 
+                List<String> deleteFaildIdList = new ArrayList<String>();
+                roleFunctionElasticSearchService.deleteByFunctionId(functions.get(0).getFunctionId(),deleteFaildIdList);
             }
 
             resultObjectVO.setData(entity);
@@ -440,6 +449,22 @@ public class FunctionController {
                     continue;
                 }
 
+                //删除功能项下所有关联
+                RoleFunction queryRoleFunction = new RoleFunction();
+                queryRoleFunction.setFunctionId(f.getFunctionId());
+
+                List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
+                if (!CollectionUtils.isEmpty(roleFunction)) {
+                    row = roleFunctionService.deleteByFunctionId(f.getFunctionId());
+                }
+
+
+                //刷新缓存 删除功能项、删除功能项与角色关联,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+                functionElasticSearchService.deleteById(String.valueOf(f.getId()));
+                if (!CollectionUtils.isEmpty(roleFunction)) {
+                    List<String> deleteFaildIdList = new ArrayList<String>();
+                    roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
+                }
 
             }
 
@@ -500,6 +525,23 @@ public class FunctionController {
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
                             continue;
+                        }
+
+                        //删除功能项下所有关联
+                        RoleFunction queryRoleFunction = new RoleFunction();
+                        queryRoleFunction.setFunctionId(f.getFunctionId());
+
+                        List<RoleFunction> roleFunction = roleFunctionService.findListByEntity(queryRoleFunction);
+                        if (!CollectionUtils.isEmpty(roleFunction)) {
+                            roleFunctionService.deleteByFunctionId(f.getFunctionId());
+                        }
+
+
+                        //刷新缓存 删除功能项、删除功能项与角色关联,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+                        functionElasticSearchService.deleteById(String.valueOf(f.getId()));
+                        if (!CollectionUtils.isEmpty(roleFunction)) {
+                            List<String> deleteFaildIdList = new ArrayList<String>();
+                            roleFunctionElasticSearchService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
                         }
                     }
 
@@ -611,8 +653,6 @@ public class FunctionController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            //缓存是否可读取
-            boolean cacheIsRead = true;
             FunctionVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionVO.class);
             AdminRoleElasticSearchVO queryAdminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
             queryAdminRoleElasticSearchVO.setAdminId(query.getAdminId());
@@ -627,14 +667,13 @@ public class FunctionController {
                 }
             }catch(Exception e)
             {
-                cacheIsRead = false;
                 logger.warn(e.getMessage(),e);
             }
             //将数据库数据同步到缓存
             if(CollectionUtils.isEmpty(adminRoles)) {
                 adminRoles = adminRoleService.listByAdminIdAndAppCode(query.getAdminId(), query.getAppCode());
                 try {
-                    if (!CollectionUtils.isEmpty(adminRoles)&&cacheIsRead) {
+                    if (CollectionUtils.isEmpty(adminRoles)) {
                         for (AdminRole adminRole : adminRoles) {
                             AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
                             BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRole);
@@ -658,25 +697,23 @@ public class FunctionController {
                 List<Function> functions = null;
                 List<FunctionElasticSearchVO> functionElasticSearchVOS = null;
                 try {
-                    if(cacheIsRead) {
-                        //从缓存查询数据
-                        FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
-                        BeanUtils.copyProperties(queryFunctionElasticSearchVO, query);
-                        functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
-                        if (!CollectionUtils.isEmpty(functionElasticSearchVOS)) {
-                            functions = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS), Function.class);
-                        }
+                    //从缓存查询数据
+                    FunctionElasticSearchVO queryFunctionElasticSearchVO = new FunctionElasticSearchVO();
+                    BeanUtils.copyProperties(queryFunctionElasticSearchVO,query);
+                    functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
+                    if(!CollectionUtils.isEmpty(functionElasticSearchVOS))
+                    {
+                        functions = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS),Function.class);
                     }
                 }catch(Exception e)
                 {
-                    cacheIsRead = false;
                     logger.warn(e.getMessage(),e);
                 }
                 //从数据库查询
                 if(CollectionUtils.isEmpty(functions)) {
                     functions = functionService.findListByEntity(query);
                     try{ //同步到缓存
-                        if(!CollectionUtils.isEmpty(functions)&&cacheIsRead)
+                        if(!CollectionUtils.isEmpty(functions))
                         {
                             for (Function function : functions) {
                                 FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
@@ -686,7 +723,6 @@ public class FunctionController {
                         }
                     }catch(Exception e)
                     {
-                        cacheIsRead = false;
                         logger.warn(e.getMessage(),e);
                     }
                 }

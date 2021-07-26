@@ -5,7 +5,6 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public interface AdminRoleService {
 
     int save(AdminRole adminRole);
 
-    int saves(AdminRole[] adminRole) throws Exception ;
+    int saves(AdminRole[] adminRole);
 
     int deleteByRoleId(String roleId);
 
@@ -25,9 +24,10 @@ public interface AdminRoleService {
     /**
      * 删除指定账号下的指定所有应用下的所有账号角色关联
      * @param adminId
+     * @param appCodes
      * @return
      */
-    int deleteByAdminIdAndAppCodes(String adminId, AdminRoleVO entity) throws Exception;
+    int deleteByAdminIdAndAppCodes(String adminId,String[] appCodes);
 
     List<AdminRole> findListByAdminId(String adminId);
 
