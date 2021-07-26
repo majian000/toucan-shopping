@@ -114,30 +114,25 @@ public class AdminRoleController {
             }
             adminRoleService.saves(adminRoles);
 
-            try{
-                //同步缓存
-                List<String> deleteFaildIdList = new ArrayList<String>();
-                for(int i=0;i<adminApps.size();i++)
-                {
-                    //删除指定账号下的指定所有应用下的所有账号角色关联
-                    adminRoleElasticSearchService.deleteByAdminIdAndAppCodes(entity.getAdminId(),adminApps.get(i).getAppCode(),deleteFaildIdList);
-                }
-                if(adminRoles!=null&&adminRoles.length>0)
-                {
-                    AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS = new AdminRoleElasticSearchVO[length];
-                    for(int i=0;i<adminRoles.length;i++)
-                    {
-                        AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
-                        if(adminRoles[i]!=null) {
-                            BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRoles[i]);
-                        }
-                        adminRoleElasticSearchVOS[i] = adminRoleElasticSearchVO;
-                    }
-                    adminRoleElasticSearchService.saves(adminRoleElasticSearchVOS);
-                }
-            }catch(Exception e)
+            //同步缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+            List<String> deleteFaildIdList = new ArrayList<String>();
+            for(int i=0;i<adminApps.size();i++)
             {
-                logger.warn(e.getMessage(),e);
+                //删除指定账号下的指定所有应用下的所有账号角色关联
+                adminRoleElasticSearchService.deleteByAdminIdAndAppCodes(entity.getAdminId(),adminApps.get(i).getAppCode(),deleteFaildIdList);
+            }
+            if(adminRoles!=null&&adminRoles.length>0)
+            {
+                AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS = new AdminRoleElasticSearchVO[length];
+                for(int i=0;i<adminRoles.length;i++)
+                {
+                    AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+                    if(adminRoles[i]!=null) {
+                        BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRoles[i]);
+                    }
+                    adminRoleElasticSearchVOS[i] = adminRoleElasticSearchVO;
+                }
+                adminRoleElasticSearchService.saves(adminRoleElasticSearchVOS);
             }
         }catch(Exception e)
         {
