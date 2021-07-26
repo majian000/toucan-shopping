@@ -49,47 +49,39 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
     private RestHighLevelClient restHighLevelClient;
 
     @Override
-    public void save(FunctionElasticSearchVO esVO) {
-        try {
-            IndexRequest request = new IndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
-            restHighLevelClient.index(request, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            logger.warn(e.getMessage(),e);
-        }
+    public void save(FunctionElasticSearchVO esVO) throws Exception{
+        IndexRequest request = new IndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
+        restHighLevelClient.index(request, RequestOptions.DEFAULT);
 
     }
 
     @Override
-    public void update(FunctionElasticSearchVO esVO) {
-        try {
-            UpdateRequest request = new UpdateRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX,String.valueOf(esVO.getId()));
-            XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
-            updateBody.field("id",esVO.getId());
-            updateBody.field("functionId",esVO.getFunctionId());
-            updateBody.field("name",esVO.getName());
-            updateBody.field("url",esVO.getUrl());
-            updateBody.field("permission",esVO.getPermission());
-            updateBody.field("type",esVO.getType());
-            updateBody.field("functionText",esVO.getFunctionText());
-            updateBody.field("pid",esVO.getPid());
-            updateBody.field("enableStatus",esVO.getEnableStatus());
-            updateBody.field("icon",esVO.getIcon());
-            updateBody.field("remark",esVO.getRemark());
-            updateBody.field("functionSort",esVO.getFunctionSort());
-            updateBody.field("appCode",esVO.getAppCode());
-            updateBody.field("createAdminId",esVO.getCreateAdminId());
-            updateBody.field("deleteStatus",esVO.getDeleteStatus());
-            if(esVO.getCreateDate()!=null) {
-                updateBody.field("createDate", esVO.getCreateDate().getTime());
-            }
-            updateBody.endObject();
-            request.doc(updateBody);
-            UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
-            //强制刷新
-            updateResponse.forcedRefresh();
-        } catch (IOException e) {
-            logger.warn(e.getMessage(),e);
+    public void update(FunctionElasticSearchVO esVO) throws Exception {
+        UpdateRequest request = new UpdateRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX,String.valueOf(esVO.getId()));
+        XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
+        updateBody.field("id",esVO.getId());
+        updateBody.field("functionId",esVO.getFunctionId());
+        updateBody.field("name",esVO.getName());
+        updateBody.field("url",esVO.getUrl());
+        updateBody.field("permission",esVO.getPermission());
+        updateBody.field("type",esVO.getType());
+        updateBody.field("functionText",esVO.getFunctionText());
+        updateBody.field("pid",esVO.getPid());
+        updateBody.field("enableStatus",esVO.getEnableStatus());
+        updateBody.field("icon",esVO.getIcon());
+        updateBody.field("remark",esVO.getRemark());
+        updateBody.field("functionSort",esVO.getFunctionSort());
+        updateBody.field("appCode",esVO.getAppCode());
+        updateBody.field("createAdminId",esVO.getCreateAdminId());
+        updateBody.field("deleteStatus",esVO.getDeleteStatus());
+        if(esVO.getCreateDate()!=null) {
+            updateBody.field("createDate", esVO.getCreateDate().getTime());
         }
+        updateBody.endObject();
+        request.doc(updateBody);
+        UpdateResponse updateResponse = restHighLevelClient.update(request, RequestOptions.DEFAULT);
+        //强制刷新
+        updateResponse.forcedRefresh();
 
     }
 
