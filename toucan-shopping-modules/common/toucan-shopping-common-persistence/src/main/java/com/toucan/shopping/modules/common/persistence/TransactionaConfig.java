@@ -19,6 +19,7 @@ import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
+import org.springframework.transaction.interceptor.RollbackRuleAttribute;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 
@@ -41,6 +42,7 @@ public class TransactionaConfig {
         //如果当前没有事务就创建,如果已经存在就加入
         writeTransaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 
+
         //只读事务
         DefaultTransactionAttribute readOnlyTransaction = new DefaultTransactionAttribute();
         readOnlyTransaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -54,6 +56,7 @@ public class TransactionaConfig {
         source.addTransactionalMethod("insert*", writeTransaction);
         source.addTransactionalMethod("delete*", writeTransaction);
         source.addTransactionalMethod("remove*", writeTransaction);
+
 
         source.addTransactionalMethod("find*", readOnlyTransaction);
         source.addTransactionalMethod("query*", readOnlyTransaction);
