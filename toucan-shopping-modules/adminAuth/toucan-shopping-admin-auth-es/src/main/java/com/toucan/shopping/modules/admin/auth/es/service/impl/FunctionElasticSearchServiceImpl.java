@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.es.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.constant.FunctionCacheElasticSearchConstant;
 import com.toucan.shopping.modules.admin.auth.constant.RoleFunctionCacheElasticSearchConstant;
 import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
@@ -50,7 +51,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
     @Override
     public void save(FunctionElasticSearchVO esVO) {
         try {
-            IndexRequest request = new IndexRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
+            IndexRequest request = new IndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
             restHighLevelClient.index(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
@@ -61,7 +62,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
     @Override
     public void update(FunctionElasticSearchVO esVO) {
         try {
-            UpdateRequest request = new UpdateRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX,String.valueOf(esVO.getId()));
+            UpdateRequest request = new UpdateRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX,String.valueOf(esVO.getId()));
             XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
             updateBody.field("id",esVO.getId());
             updateBody.field("functionId",esVO.getFunctionId());
@@ -100,7 +101,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
             Map<String, Set<AliasMetadata>> map = getAliasesResponse.getAliases();
             Set<String> indices = map.keySet();
             for (String key : indices) {
-                if(key.toLowerCase().equals(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX))
+                if(key.toLowerCase().equals(FunctionCacheElasticSearchConstant.FUNCTION_INDEX))
                 {
                     return true;
                 }
@@ -115,7 +116,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
     @Override
     public void createIndex() {
         try {
-            CreateIndexRequest request = new CreateIndexRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+            CreateIndexRequest request = new CreateIndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
             restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         }catch(Exception e)
         {
@@ -129,7 +130,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
         List<FunctionElasticSearchVO> FunctionElasticSearchVOS = new ArrayList<FunctionElasticSearchVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        searchRequest.indices(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.size(10);
@@ -155,7 +156,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
         List<FunctionElasticSearchVO> FunctionElasticSearchVOS = new ArrayList<FunctionElasticSearchVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        searchRequest.indices(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         //设置查询条件
@@ -188,7 +189,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
     @Override
     public boolean deleteById(String id) throws Exception {
         //创建请求对象
-        DeleteRequest deleteRequest = new DeleteRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        DeleteRequest deleteRequest = new DeleteRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         deleteRequest.id(id);
         DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
         if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
