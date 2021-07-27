@@ -38,7 +38,12 @@
     GET http://localhost:9200/admin_auth_function_index/_search
     
     
-    
-    
+### 手动刷新缓存
+    1.刷新账号角色缓存
+    GET http://localhost:9001/adminRoleToESCache/flush/all
+    2.刷新角色功能项缓存    
+    GET http://localhost:9001/roleFunctionToESCache/flush/all
+    3.刷新功能项缓存
+    GET http://localhost:9001/functionToESCache/flush/all
     
     
