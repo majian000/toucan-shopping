@@ -109,6 +109,8 @@ public class RoleFunctionToESCacheController {
                 }
             } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
         } catch (Exception e) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("刷新失败!");
             logger.warn(e.getMessage(), e);
         }
 
