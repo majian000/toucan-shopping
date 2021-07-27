@@ -122,7 +122,7 @@ public class UserEsCacheThread extends Thread {
                             }
                         }
                     } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
-                    //休眠5秒
+                    //休眠10秒
                     this.sleep(10000);
                 }catch(Exception e)
                 {

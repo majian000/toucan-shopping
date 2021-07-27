@@ -193,6 +193,21 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
     }
 
     @Override
+    public boolean deleteAll() throws Exception {
+        //创建请求对象
+        DeleteRequest deleteRequest = new DeleteRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+        if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
+        {
+            //强制刷新
+            deleteResponse.forcedRefresh();
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
     public boolean deleteByAdminIdAndAppCodes(String adminId,String appCode,List<String> deleteFaildIdList) throws Exception {
         List<AdminRoleElasticSearchVO> AdminRoleElasticSearchVOS = new ArrayList<AdminRoleElasticSearchVO>();
         //创建请求对象

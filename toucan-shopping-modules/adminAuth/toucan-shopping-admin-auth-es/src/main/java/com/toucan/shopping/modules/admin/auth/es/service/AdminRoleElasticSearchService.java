@@ -53,6 +53,12 @@ public interface AdminRoleElasticSearchService {
      */
     boolean deleteById(String id) throws Exception;
 
+    /**
+     * 删除全部
+     * @return
+     * @throws Exception
+     */
+    boolean deleteAll() throws Exception;
 
     /**
      * 删除指定账号下的指定所有应用下的所有账号角色关联

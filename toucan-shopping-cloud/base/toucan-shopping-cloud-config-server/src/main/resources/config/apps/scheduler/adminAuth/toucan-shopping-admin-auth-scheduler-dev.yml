@@ -1,0 +1,68 @@
+#========================权限中台定时任务调度 开发环境====================================
+
+server:
+  port: 9001
+  servlet:
+    context-path: /toucan-shopping-admin-auth-scheduler
+spring:
+  application:
+    name: toucan-shopping-admin-auth-scheduler #应用名称
+  zipkin: #链路追踪
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true #开启重试机制
+eureka:
+  client:
+    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000 #请求时间超过10秒超时
+      circuitBreaker:
+        requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
+
+
+
+
+#开启饥饿加载
+ribbon:
+  OkToRetryOnAllOperations: true #开启重试机制
+  MaxAutoRetriesNextServer: 2 #重试其他实例最大重试次数
+  MaxAutoRetries: 1 #同一实例重试次数
+  ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
+  eager-load:
+    enabled: true
+    clients: "toucan-shopping-user,\
+              toucan-shopping-gateway"
+
+
+
+toucan:
+  machine-id: 2201 #机器编码
+  app-code: 10001001 #自定义应用编码
+  user-center-scheduler:
+    loop-es-cache: false #循环查询用户缓存到es
+  admin-auth-scheduler:
+    loop-es-cache: false #循环查询权限信息缓存到es

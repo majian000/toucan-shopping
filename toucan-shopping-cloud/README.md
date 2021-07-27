@@ -105,8 +105,8 @@
  | --------------------------------------------- | -------------------- | ---------------------------------------------------|
  | services/toucan-shopping-product             | 8082                   | 商品服务                                          |
  | services/toucan-shopping-order               | 8084                   | 订单服务、支付服务                                |
- | services/toucan-shopping-second-kill         | 8085                   | 秒杀服务,使用请参考该项目目录下的README.MD         |
- | services/toucan-shopping-category            | 8090                   | 类别服务                                         |
+ | services/toucan-shopping-second-kill         | 8085                   | 秒杀服务,使用请参考该项目目录下的README.MD        |
+ | services/toucan-shopping-category            | 8090                   | 类别服务                                          |
  | services/toucan-shopping-stock               | 8093                   | 库存服务                                          |
  | services/toucan-shopping-area                | 8094                   | 地区编码、收货地区服务                            |
  | services/toucan-shopping-content             | 8095                   | 新闻资讯服务                                      |
@@ -121,13 +121,15 @@
     
  | 服务名                                        | 端口号                 | 说明                                             |
  | --------------------------------------------- | -------------------- | ---------------------------------------------------|
- | apps/toucan-shopping-web                      | 8083                 | 商城C端界面                                       |
+ | apps/toucan-shopping-web                      | 8083                 | 商城C端界面                                        |
  | apps/toucan-shopping-admin                    | 8088                 | 商城管理界面                                       |
  | apps/toucan-shopping-admin-auth-web           | 8098                 | 权限中台界面                                       |
  | apps/toucan-shopping-scheduler                | 8092                 | 商城调度任务端                                     |
  | apps/toucan-shopping-user-scheduler           | 8097                 | 用户中心任务调度                                   |
- | apps/toucan-shopping-seller-web               | 8101                 | 卖家WEB端                                         |
+ | apps/toucan-shopping-seller-web               | 8101                 | 卖家WEB端                                          |
+ | toucan-shopping-admin-auth-scheduler          | 9001                 | 权限中台任务调度                                   |
  
+    
     
 
 #### 应用编码

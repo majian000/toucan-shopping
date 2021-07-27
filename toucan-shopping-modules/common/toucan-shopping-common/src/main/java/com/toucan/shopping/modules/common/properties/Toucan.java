@@ -49,6 +49,13 @@ public class Toucan {
     private UserCenterScheduler userCenterScheduler;
 
 
+
+    /**
+     * 权限中台调度
+     */
+    private AdminAuthScheduler adminAuthScheduler;
+
+
     /**
      * 用户配置
      */
