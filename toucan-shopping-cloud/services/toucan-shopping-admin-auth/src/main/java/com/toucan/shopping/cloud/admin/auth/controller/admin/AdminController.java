@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.admin.auth.service.AdminOrgnazitionService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.MD5Util;
@@ -55,6 +56,8 @@ public class AdminController {
     @Autowired
     private AdminOrgnazitionService adminOrgnazitionService;
 
+    @Autowired
+    private IdGenerator idGenerator;
 
     /**
      * 保存管理员账户
@@ -111,6 +114,7 @@ public class AdminController {
                 resultObjectVO.setMsg("账号已注册!");
                 return resultObjectVO;
             }
+            admin.setId(idGenerator.id());
             admin.setCreateDate(new Date());
             admin.setPassword(MD5Util.md5(admin.getPassword()));
             admin.setEnableStatus((short)1);

@@ -16,7 +16,7 @@ public interface AdminService {
      * @param admin
      * @return
      */
-    int save(Admin admin);
+    int save(Admin admin) throws Exception;
 
     /**
      * 修改账号

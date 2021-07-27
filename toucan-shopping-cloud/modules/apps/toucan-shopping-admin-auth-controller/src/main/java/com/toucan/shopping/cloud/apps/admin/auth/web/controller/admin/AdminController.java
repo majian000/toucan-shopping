@@ -61,9 +61,6 @@ public class AdminController extends UIController {
     private FeignAppService feignAppService;
 
     @Autowired
-    private IdGenerator idGenerator;
-
-    @Autowired
     private FeignAdminOrgnazitionService feignAdminOrgnazitionService;
 
 
@@ -243,7 +240,6 @@ public class AdminController extends UIController {
             List<String> appCodes= new ArrayList<String>();
             appCodes.add(toucan.getAppCode());
             entity.setAppCodes(appCodes);
-            entity.setId(idGenerator.id());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             if(!CollectionUtils.isEmpty(entity.getAppCodes()))
             {

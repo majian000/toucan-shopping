@@ -17,9 +17,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
-import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
-import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.springframework.transaction.interceptor.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Aspect
@@ -37,9 +38,15 @@ public class TransactionaConfig {
         logger.info("配置AOP全局事务处理.........");
 
         //开启事务
-        DefaultTransactionAttribute writeTransaction = new DefaultTransactionAttribute();
+        RuleBasedTransactionAttribute writeTransaction = new RuleBasedTransactionAttribute();
         //如果当前没有事务就创建,如果已经存在就加入
         writeTransaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        //设置回滚异常类(Exception.class)
+        RollbackRuleAttribute rollbackRuleAttribute = new RollbackRuleAttribute(Exception.class);
+        List<RollbackRuleAttribute> rollbackRuleAttributeList = new ArrayList<RollbackRuleAttribute>();
+        rollbackRuleAttributeList.add(rollbackRuleAttribute);
+        writeTransaction.setRollbackRules(rollbackRuleAttributeList);
+
 
         //只读事务
         DefaultTransactionAttribute readOnlyTransaction = new DefaultTransactionAttribute();
@@ -54,6 +61,8 @@ public class TransactionaConfig {
         source.addTransactionalMethod("insert*", writeTransaction);
         source.addTransactionalMethod("delete*", writeTransaction);
         source.addTransactionalMethod("remove*", writeTransaction);
+
+
 
         source.addTransactionalMethod("find*", readOnlyTransaction);
         source.addTransactionalMethod("query*", readOnlyTransaction);
