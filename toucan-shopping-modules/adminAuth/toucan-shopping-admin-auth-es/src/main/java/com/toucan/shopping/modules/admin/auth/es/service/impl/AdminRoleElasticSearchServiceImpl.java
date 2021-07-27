@@ -150,22 +150,24 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
         searchRequest.indices(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         //设置查询条件
         if(query.getId()!=null) {
-            searchSourceBuilder.query(QueryBuilders.termQuery("_id", query.getId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("_id", query.getId()));
         }
         if(query.getAdminId()!=null)
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("adminId", query.getAdminId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("adminId", query.getAdminId()));
         }
         if(query.getRoleId()!=null)
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("roleId", query.getRoleId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("roleId", query.getRoleId()));
         }
         if(query.getAppCode()!=null)
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("appCode", query.getAppCode()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("appCode", query.getAppCode()));
         }
+        searchSourceBuilder.query(boolQueryBuilder);
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);

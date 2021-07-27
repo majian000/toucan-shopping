@@ -726,13 +726,6 @@ public class FunctionController {
             }
             if(!CollectionUtils.isEmpty(adminRoles))
             {
-                String[] roleIdArray = new String[adminRoles.size()];
-                int pos =0 ;
-                for(AdminRole adminRole:adminRoles)
-                {
-                    roleIdArray[pos]=adminRole.getRoleId();
-                    pos++;
-                }
                 List<Function> functions = null;
                 List<FunctionElasticSearchVO> functionElasticSearchVOS = null;
                 try {
@@ -769,6 +762,15 @@ public class FunctionController {
                     }
                 }
                 if(!CollectionUtils.isEmpty(functions)) {
+
+                    String[] roleIdArray = new String[adminRoles.size()];
+                    int pos =0 ;
+                    for(AdminRole adminRole:adminRoles)
+                    {
+                        roleIdArray[pos]=adminRole.getRoleId();
+                        pos++;
+                    }
+
                     resultObjectVO.setData(functionService.queryListByRoleIdArrayAndParentId(roleIdArray,String.valueOf(functions.get(0).getId())));
                 }
             }

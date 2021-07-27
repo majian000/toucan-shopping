@@ -156,20 +156,22 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
         searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         //设置查询条件
         if(query.getId()!=null) {
-            searchSourceBuilder.query(QueryBuilders.termQuery("_id", query.getId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("_id", query.getId()));
         }
         if(query.getFunctionId()!=null) {
-            searchSourceBuilder.query(QueryBuilders.termQuery("functionId", query.getFunctionId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("functionId", query.getFunctionId()));
         }
         if(query.getRoleId()!=null) {
-            searchSourceBuilder.query(QueryBuilders.termQuery("roleId", query.getRoleId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("roleId", query.getRoleId()));
         }
         if(query.getAppCode()!=null)
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("appCode", query.getAppCode()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("appCode", query.getAppCode()));
         }
+        searchSourceBuilder.query(boolQueryBuilder);
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);

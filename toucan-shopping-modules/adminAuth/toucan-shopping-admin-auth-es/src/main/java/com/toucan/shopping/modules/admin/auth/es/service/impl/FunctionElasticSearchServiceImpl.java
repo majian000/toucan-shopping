@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.admin.auth.vo.FunctionElasticSearchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -20,12 +21,14 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
@@ -37,10 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service("esFunctionService")
 public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchService {
@@ -164,17 +164,28 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
         searchRequest.indices(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         //设置查询条件
         if(query.getId()!=null) {
-            searchSourceBuilder.query(QueryBuilders.termQuery("_id", query.getId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("_id", query.getId()));
         }
         if(query.getFunctionId()!=null) {
-            searchSourceBuilder.query(QueryBuilders.termQuery("functionId", query.getFunctionId()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("functionId", query.getFunctionId()));
+        }
+        if(query.getUrl()!=null) {
+            boolQueryBuilder.must(QueryBuilders.matchPhrasePrefixQuery("url", query.getUrl()));
+        }
+        if(query.getEnableStatus()!=null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("enableStatus", query.getEnableStatus()));
+        }
+        if(query.getPid()!=null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("pid", query.getPid()));
         }
         if(query.getAppCode()!=null)
         {
-            searchSourceBuilder.query(QueryBuilders.termQuery("appCode", query.getAppCode()));
+            boolQueryBuilder.must(QueryBuilders.termQuery("appCode", query.getAppCode()));
         }
+        searchSourceBuilder.query(boolQueryBuilder);
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
