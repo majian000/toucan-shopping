@@ -1,6 +1,6 @@
 package com.toucan.shopping.starter.sign.config;
 
-import com.toucan.shopping.starter.user.auth.interceptor.SignInterceptor;
+import com.toucan.shopping.starter.sign.interceptor.SignInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
