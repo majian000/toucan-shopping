@@ -32,6 +32,11 @@ ribbon:
 spring:
   application:
     name: toucan-shopping-gateway
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: mj_tocan_redis_7612
   zipkin: #链路追踪
     enabled: false
     base-url: http://localhost:9411
@@ -91,4 +96,9 @@ spring:
             - Path=/toucan-shopping-admin-auth-proxy/**
           filters:
             - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@pathKeyResolver}'
+                redis-rate-limiter.replenishRate: 900  #令牌桶每秒填充平均速率,QPS 900
+                redis-rate-limiter.burstCapacity: 1000 #令牌桶总容量
 

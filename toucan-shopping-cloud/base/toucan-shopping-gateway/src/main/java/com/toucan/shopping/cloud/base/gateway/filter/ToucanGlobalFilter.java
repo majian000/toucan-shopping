@@ -10,7 +10,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
- * 全局过滤器,记录所有请求以及限流等
+ * 全局过滤器
  */
 @Component
 public class ToucanGlobalFilter implements GlobalFilter, Ordered {
