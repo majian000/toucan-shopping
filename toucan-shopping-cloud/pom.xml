@@ -112,8 +112,12 @@
         <!-- ===============================================-->
 
         <!-- =====================插件层====================== -->
+        <!-- 权限中台插件-->
         <module>stater/toucan-shopping-admin-auth-spring-boot-starter</module>
+        <!-- 用户中心插件-->
         <module>stater/toucan-shopping-user-auth-spring-boot-starter</module>
+        <!--签名插件 -->
+        <module>stater/toucan-shopping-sign-spring-boot-starter</module>
         <!-- ===============================================-->
 
 

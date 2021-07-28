@@ -372,6 +372,13 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.starter</groupId>
+                <artifactId>toucan-shopping-sign-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

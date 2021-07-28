@@ -38,6 +38,11 @@ toucan:
   #雪花算法ID相关
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
   datacenterId: 0 #数据中心ID (0~31)
+  sign:
+    enabled: true
+    sign-header: toucan-sign-header
+    #拦截指定路径
+    path-patterns: /**
   modules:
     toucanRedis: #redis模块
       select: single # 可选值 single:单实例 cluster:集群

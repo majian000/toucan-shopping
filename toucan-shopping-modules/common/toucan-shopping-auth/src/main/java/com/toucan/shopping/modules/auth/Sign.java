@@ -17,11 +17,6 @@ public @interface Sign {
 
 	public static int JSON=0;
 
-	/**
-	 * 是否支持
-	 * @return
-	 */
-	public boolean sign() default true;
 
 	/**
 	 * 签名类型

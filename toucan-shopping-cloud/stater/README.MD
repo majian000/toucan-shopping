@@ -8,3 +8,6 @@
     
     2.toucan-shopping-user-auth-spring-boot-starter
     用户中心插件,用于验证用户登录会话等
+    
+    3.toucan-shopping-sign-spring-boot-starter
+    签名插件,校验请求签名
