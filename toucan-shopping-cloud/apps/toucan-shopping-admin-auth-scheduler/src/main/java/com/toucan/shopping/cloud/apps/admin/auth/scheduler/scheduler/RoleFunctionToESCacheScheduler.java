@@ -70,50 +70,51 @@ public class RoleFunctionToESCacheScheduler {
     @Scheduled(cron = "0 0 0 1/1 * ?")
     public void rerun()
     {
-        logger.info("缓存角色功能项关联信息到ElasticSearch 开始=====================");
-        try {
+        if(toucan.getAdminAuthScheduler().isLoopEsCache()) {
+            logger.info("缓存角色功能项关联信息到ElasticSearch 开始=====================");
+            try {
 
-            //删除索引
-            roleFunctionElasticSearchService.deleteIndex();
-
-
-            //如果不存在索引就创建一个
-            while (!roleFunctionElasticSearchService.existsIndex()) {
-                roleFunctionElasticSearchService.createIndex();
-            }
+                //删除索引
+                roleFunctionElasticSearchService.deleteIndex();
 
 
-            int page = 1;
-            int limit = 500;
-            PageInfo pageInfo = null;
-            do {
-                logger.info(" 查询账号角色-功能项关联列表 页码:{} 每页显示 {} ", page, limit);
-                RoleFunctionPageInfo query = new RoleFunctionPageInfo();
-                query.setLimit(limit);
-                query.setPage(page);
-                pageInfo = queryPage(query);
-                page++;
-                if (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList())) {
-                    String roleFunctionListJson = JSONObject.toJSONString(pageInfo.getList());
-                    List<RoleFunctionVO> roleFunctionVOS = JSONArray.parseArray(roleFunctionListJson, RoleFunctionVO.class);
+                //如果不存在索引就创建一个
+                while (!roleFunctionElasticSearchService.existsIndex()) {
+                    roleFunctionElasticSearchService.createIndex();
+                }
 
-                    logger.info("缓存角色-功能项关联列表 到Elasticsearch {}", roleFunctionListJson);
-                    for (RoleFunctionVO roleFunctionVO : roleFunctionVOS) {
-                        List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryById(roleFunctionVO.getId());
-                        //如果缓存不存在角色功能项将缓存起来
-                        if (CollectionUtils.isEmpty(roleFunctionElasticSearchVOS)) {
-                            RoleFunctionElasticSearchVO roleFunctionElasticSearchVO = new RoleFunctionElasticSearchVO();
-                            BeanUtils.copyProperties(roleFunctionElasticSearchVO, roleFunctionVO);
-                            roleFunctionElasticSearchService.save(roleFunctionElasticSearchVO);
+
+                int page = 1;
+                int limit = 500;
+                PageInfo pageInfo = null;
+                do {
+                    logger.info(" 查询账号角色-功能项关联列表 页码:{} 每页显示 {} ", page, limit);
+                    RoleFunctionPageInfo query = new RoleFunctionPageInfo();
+                    query.setLimit(limit);
+                    query.setPage(page);
+                    pageInfo = queryPage(query);
+                    page++;
+                    if (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList())) {
+                        String roleFunctionListJson = JSONObject.toJSONString(pageInfo.getList());
+                        List<RoleFunctionVO> roleFunctionVOS = JSONArray.parseArray(roleFunctionListJson, RoleFunctionVO.class);
+
+                        logger.info("缓存角色-功能项关联列表 到Elasticsearch {}", roleFunctionListJson);
+                        for (RoleFunctionVO roleFunctionVO : roleFunctionVOS) {
+                            List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryById(roleFunctionVO.getId());
+                            //如果缓存不存在角色功能项将缓存起来
+                            if (CollectionUtils.isEmpty(roleFunctionElasticSearchVOS)) {
+                                RoleFunctionElasticSearchVO roleFunctionElasticSearchVO = new RoleFunctionElasticSearchVO();
+                                BeanUtils.copyProperties(roleFunctionElasticSearchVO, roleFunctionVO);
+                                roleFunctionElasticSearchService.save(roleFunctionElasticSearchVO);
+                            }
                         }
                     }
-                }
-            } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+                } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
+            }
+            logger.info("缓存角色功能项关联信息到ElasticSearch 结束=====================");
         }
-        logger.info("缓存角色功能项关联信息到ElasticSearch 结束=====================");
     }
 
 }

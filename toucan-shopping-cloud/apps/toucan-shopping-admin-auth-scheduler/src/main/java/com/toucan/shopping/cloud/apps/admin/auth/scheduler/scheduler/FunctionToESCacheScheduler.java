@@ -70,50 +70,51 @@ public class FunctionToESCacheScheduler {
     @Scheduled(cron = "0 0 0 1/1 * ?")
     public void rerun()
     {
-        logger.info("缓存功能项信息到ElasticSearch 开始=====================");
-        try {
+        if(toucan.getAdminAuthScheduler().isLoopEsCache()) {
+            logger.info("缓存功能项信息到ElasticSearch 开始=====================");
+            try {
 
-            //删除索引
-            functionElasticSearchService.deleteIndex();
-
-
-            //如果不存在索引就创建一个
-            while (!functionElasticSearchService.existsIndex()) {
-                functionElasticSearchService.createIndex();
-            }
+                //删除索引
+                functionElasticSearchService.deleteIndex();
 
 
-            int page = 1;
-            int limit = 500;
-            PageInfo pageInfo = null;
-            do {
-                logger.info(" 查询账号功能项列表 页码:{} 每页显示 {} ", page, limit);
-                FunctionTreeInfo query = new FunctionTreeInfo();
-                query.setLimit(limit);
-                query.setPage(page);
-                pageInfo = queryPage(query);
-                page++;
-                if (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList())) {
-                    String functionListJson = JSONObject.toJSONString(pageInfo.getList());
-                    List<FunctionVO> functionVOS = JSONArray.parseArray(functionListJson, FunctionVO.class);
+                //如果不存在索引就创建一个
+                while (!functionElasticSearchService.existsIndex()) {
+                    functionElasticSearchService.createIndex();
+                }
 
-                    logger.info("缓存功能项关联列表 到Elasticsearch {}", functionListJson);
-                    for (FunctionVO functionVO : functionVOS) {
-                        List<FunctionElasticSearchVO> functionElasticSearchVOS = functionElasticSearchService.queryById(functionVO.getId());
-                        //如果缓存不存在功能项将缓存起来
-                        if (CollectionUtils.isEmpty(functionElasticSearchVOS)) {
-                            FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
-                            BeanUtils.copyProperties(functionElasticSearchVO, functionVO);
-                            functionElasticSearchService.save(functionElasticSearchVO);
+
+                int page = 1;
+                int limit = 500;
+                PageInfo pageInfo = null;
+                do {
+                    logger.info(" 查询账号功能项列表 页码:{} 每页显示 {} ", page, limit);
+                    FunctionTreeInfo query = new FunctionTreeInfo();
+                    query.setLimit(limit);
+                    query.setPage(page);
+                    pageInfo = queryPage(query);
+                    page++;
+                    if (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList())) {
+                        String functionListJson = JSONObject.toJSONString(pageInfo.getList());
+                        List<FunctionVO> functionVOS = JSONArray.parseArray(functionListJson, FunctionVO.class);
+
+                        logger.info("缓存功能项关联列表 到Elasticsearch {}", functionListJson);
+                        for (FunctionVO functionVO : functionVOS) {
+                            List<FunctionElasticSearchVO> functionElasticSearchVOS = functionElasticSearchService.queryById(functionVO.getId());
+                            //如果缓存不存在功能项将缓存起来
+                            if (CollectionUtils.isEmpty(functionElasticSearchVOS)) {
+                                FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
+                                BeanUtils.copyProperties(functionElasticSearchVO, functionVO);
+                                functionElasticSearchService.save(functionElasticSearchVO);
+                            }
                         }
                     }
-                }
-            } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+                } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
+            }
+            logger.info("缓存功能项信息到ElasticSearch 结束=====================");
         }
-        logger.info("缓存功能项信息到ElasticSearch 结束=====================");
     }
 
 }
