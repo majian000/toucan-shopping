@@ -32,6 +32,13 @@ public interface RoleFunctionElasticSearchService {
 
 
     /**
+     * 删除索引
+     * @return
+     * @throws Exception
+     */
+    boolean deleteIndex() throws Exception;
+
+    /**
      * 根据ID查询
      * @param id
      * @return

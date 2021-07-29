@@ -7,11 +7,16 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheRequest;
+import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.IndicesOptions;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
@@ -193,18 +198,13 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
     }
 
     @Override
-    public boolean deleteAll() throws Exception {
-        //创建请求对象
-        DeleteRequest deleteRequest = new DeleteRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
-        DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
-        if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
-        {
-            //强制刷新
-            deleteResponse.forcedRefresh();
-            return true;
-        }
-        return false;
+    public boolean deleteIndex() throws Exception {
+        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        deleteIndexRequest.indicesOptions(IndicesOptions.LENIENT_EXPAND_OPEN);
+        AcknowledgedResponse delete = restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
+        return delete.isAcknowledged();
     }
+
 
 
     @Override

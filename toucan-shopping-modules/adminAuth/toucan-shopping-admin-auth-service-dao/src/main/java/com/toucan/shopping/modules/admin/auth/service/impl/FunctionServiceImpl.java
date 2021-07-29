@@ -209,5 +209,4 @@ public class FunctionServiceImpl implements FunctionService {
         return functionMapper.queryListByRoleIdArrayAndParentId(roleIds,parentId);
     }
 
-
 }

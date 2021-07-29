@@ -13,6 +13,23 @@
         
     </resultMap>
 
+    <sql id="queryListPageWhere">
+
+        <if test="functionId!=null and functionId!=''">
+            and t.function_id = #{functionId}
+        </if>
+
+        <if test="roleId!=null and roleId!='' ">
+            and t.role_id = #{roleId}
+        </if>
+
+
+        <if test="appCode!=null and appCode!=''">
+            and t.app_code = #{appCode}
+        </if>
+    </sql>
+
+
 
     <select id="findListByEntity" resultMap="roleFunctionMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.RoleFunction">
         select * from t_sa_role_function t
@@ -107,5 +124,31 @@
             #{item}
         </foreach>
     </update>
+
+
+
+    <select id="queryListPage" resultMap="roleFunctionMap" parameterType="com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo">
+        select * from t_sa_role_function t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo">
+        select count(*) from (
+        select * from t_sa_role_function t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        )t
+    </select>
+
+
 
 </mapper>

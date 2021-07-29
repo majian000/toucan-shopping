@@ -120,4 +120,15 @@ public interface FeignFunctionService {
     @RequestMapping(value = "/query/admin/app/parent/url/one/child",method = RequestMethod.POST)
     ResultObjectVO queryOneChildsByAdminIdAndAppCodeAndParentUrl(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 列表分页
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
 }

@@ -8,11 +8,14 @@ import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSear
 import com.toucan.shopping.modules.admin.auth.vo.FunctionElasticSearchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.IndicesOptions;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
@@ -54,6 +57,16 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
         restHighLevelClient.index(request, RequestOptions.DEFAULT);
 
     }
+
+
+    @Override
+    public boolean deleteIndex() throws Exception {
+        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
+        deleteIndexRequest.indicesOptions(IndicesOptions.LENIENT_EXPAND_OPEN);
+        AcknowledgedResponse delete = restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
+        return delete.isAcknowledged();
+    }
+
 
     @Override
     public void update(FunctionElasticSearchVO esVO) throws Exception {

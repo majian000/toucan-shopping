@@ -10,7 +10,6 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -20,7 +19,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -50,7 +48,7 @@ public class AdminRoleToESCacheScheduler {
     private AdminRoleElasticSearchService adminRoleElasticSearchService;
 
 
-    public PageInfo queryUserPage(AdminRolePageInfo queryPageInfo) throws Exception
+    public PageInfo queryPage(AdminRolePageInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
         ResultObjectVO resultObjectVO = feignAdminRoleService.list(SignUtil.sign(requestJsonVO), requestJsonVO);
@@ -71,13 +69,16 @@ public class AdminRoleToESCacheScheduler {
     {
         logger.info("缓存账号角色信息到ElasticSearch 开始=====================");
         try {
+
+            //删除索引
+            adminRoleElasticSearchService.deleteIndex();
+
+
             //如果不存在索引就创建一个
             while (!adminRoleElasticSearchService.existsIndex()) {
                 adminRoleElasticSearchService.createIndex();
             }
 
-            //清空索引下所有数据
-            adminRoleElasticSearchService.deleteAll();
 
             int page = 1;
             int limit = 500;
@@ -87,7 +88,7 @@ public class AdminRoleToESCacheScheduler {
                 AdminRolePageInfo query = new AdminRolePageInfo();
                 query.setLimit(limit);
                 query.setPage(page);
-                pageInfo = queryUserPage(query);
+                pageInfo = queryPage(query);
                 page++;
                 if (pageInfo != null && org.apache.commons.collections.CollectionUtils.isNotEmpty(pageInfo.getList())) {
                     String adminRoleListJson = JSONObject.toJSONString(pageInfo.getList());

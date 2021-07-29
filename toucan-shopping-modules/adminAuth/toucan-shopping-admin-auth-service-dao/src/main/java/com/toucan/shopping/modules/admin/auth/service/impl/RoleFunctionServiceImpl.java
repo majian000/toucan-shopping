@@ -3,8 +3,10 @@ package com.toucan.shopping.modules.admin.auth.service.impl;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.mapper.RoleFunctionMapper;
 import com.toucan.shopping.modules.admin.auth.mapper.RoleFunctionMapper;
+import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +58,14 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     @Override
     public Long findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url, String appCode, String[] roleIdArray) {
         return roleFunctionMapper.findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(url,appCode,roleIdArray);
+    }
+
+    @Override
+    public PageInfo<RoleFunction> queryListPage(RoleFunctionPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<RoleFunction> pageInfo = new PageInfo();
+        pageInfo.setList(roleFunctionMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(roleFunctionMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 }

@@ -15,9 +15,20 @@ public interface FeignRoleFunctionService {
 
 
     @RequestMapping(value = "/save/functions",method = RequestMethod.POST)
-    public ResultObjectVO saveFunctions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO saveFunctions(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
     @RequestMapping(value = "/query/list",method = RequestMethod.POST)
     ResultObjectVO queryRoleFunctionList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+    /**
+     * 列表分页
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
 
 }

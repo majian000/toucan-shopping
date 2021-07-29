@@ -4,6 +4,8 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
+import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
+import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
 
@@ -67,4 +69,15 @@ public interface RoleFunctionService {
      * @return
      */
     Long findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds(String url,String appCode,String[] roleIdArray);
+
+
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<RoleFunction> queryListPage(RoleFunctionPageInfo queryPageInfo);
+
+
+
 }
