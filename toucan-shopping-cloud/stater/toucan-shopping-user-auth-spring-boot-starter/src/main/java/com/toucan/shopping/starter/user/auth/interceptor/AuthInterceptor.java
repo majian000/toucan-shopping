@@ -194,7 +194,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
 
-                                //在这里调用权限中台 判断登录
+                                //在这里调用用户中心 判断登录
                                 UserLoginVO queryUserLoginVO = new UserLoginVO();
                                 queryUserLoginVO.setUserMainId(Long.parseLong(uid));
                                 queryUserLoginVO.setLoginToken(lt);
