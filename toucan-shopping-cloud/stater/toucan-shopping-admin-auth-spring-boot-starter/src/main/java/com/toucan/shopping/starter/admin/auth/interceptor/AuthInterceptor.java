@@ -159,10 +159,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                             String authHeader = request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader());
                             //ajax请求
                             if (authAnnotation.requestType() == AdminAuth.REQUEST_JSON) {
+                                logger.info("request uri {} " , request.getRequestURI());
                                 //JSON类型请求
                                 RequestWrapper RequestWrapper = new RequestWrapper((HttpServletRequest) request);
                                 String jsonBody = new String(RequestWrapper.body);
-                                logger.info("recive param " + jsonBody);
+                                logger.info("recive param {} " , jsonBody);
 
                                 if (StringUtils.isEmpty(authHeader)) {
                                     logger.warn("权限请求头为空 " + toucan.getAdminAuth().getHttpToucanAuthHeader() + " : " + authHeader);

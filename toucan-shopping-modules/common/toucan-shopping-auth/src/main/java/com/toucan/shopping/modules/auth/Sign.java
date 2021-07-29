@@ -11,16 +11,14 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Sign {
 
-	/**
-	 * 校验方式 0 JSON签名
+	/*
+	 * 请求类型 0 json 1 form
 	 */
-
-	public static int JSON=0;
-
+	static int REQUEST_JSON =0;
 
 	/**
 	 * 签名类型
 	 */
-	public int type() default JSON;
+	int requestType() default REQUEST_JSON;
 	
 }
