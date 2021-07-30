@@ -91,6 +91,11 @@ ribbon:
 toucan:
   machine-id: 2201 #机器编码
   app-code: 10001001 #自定义应用编码
+  shopping-pc: #PC端页面静态化
+    freemarker:
+      mapping-url: /htmls/**
+      static-location: file:/usr/shopping/htmls/
+      ftl-location: classpath:/templates/
   user-auth:
     enabled: true
     name: toucan-shopping-user

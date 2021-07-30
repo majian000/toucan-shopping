@@ -79,9 +79,9 @@ toucan:
   datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端页面静态化
     freemarker:
-      mapping-url: /htmls
-      static-location: file://d:/shopping/htmls
-      ftl-location: classpath:/templates
+      mapping-url: /htmls/**
+      static-location: file:d:/shopping/htmls/
+      ftl-location: classpath:/templates/
   admin-auth:
     enabled: true
     name: toucan-shopping-admin-auth
