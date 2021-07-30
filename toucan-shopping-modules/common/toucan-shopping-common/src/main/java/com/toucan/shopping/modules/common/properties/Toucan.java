@@ -54,6 +54,11 @@ public class Toucan {
     private UserCenterScheduler userCenterScheduler;
 
 
+    /**
+     * 商城PC端
+     */
+    private ShoppingPC shoppingPC;
+
 
     /**
      * 权限中台调度

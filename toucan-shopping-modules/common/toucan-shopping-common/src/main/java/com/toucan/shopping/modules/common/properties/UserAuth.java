@@ -3,7 +3,7 @@ package com.toucan.shopping.modules.common.properties;
 import lombok.Data;
 
 /**
- * 自定义配置
+ * 用户中心权限
  */
 @Data
 public class UserAuth {

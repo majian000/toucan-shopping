@@ -49,6 +49,8 @@
         <module>common/toucan-shopping-image-upload</module>
         <!--redis封装 -->
         <module>common/toucan-shopping-redis</module>
+        <!--freemarker封装 -->
+        <module>common/toucan-shopping-freemarker</module>
 
         <!--用户中心操作es -->
         <module>user/toucan-shopping-user-es</module>
@@ -375,6 +377,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.starter</groupId>
                 <artifactId>toucan-shopping-sign-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-freemarker</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
