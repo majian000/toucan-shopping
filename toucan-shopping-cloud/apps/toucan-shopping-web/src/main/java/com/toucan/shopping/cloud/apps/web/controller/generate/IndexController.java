@@ -36,9 +36,9 @@ public class IndexController {
     @Autowired
     private IndexService indexService;
 
-    private void generateFile(HttpServletRequest httpServletRequest,String filePath)
+    private void generateFile(HttpServletRequest httpServletRequest,String filePath) throws Exception
     {
-        try{
+        try {
             URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingPC().getFreemarker().getFtlLocation());
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
             configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
@@ -72,7 +72,6 @@ public class IndexController {
                 template.process(params, fileWriterWithEncoding);
             }catch(Exception e)
             {
-                logger.warn(e.getMessage(),e);
                 throw e;
             }finally{
                 if(fileWriterWithEncoding!=null)
@@ -83,7 +82,7 @@ public class IndexController {
             }
         }catch(Exception e)
         {
-            logger.warn(e.getMessage(),e);
+            throw e;
         }
     }
 
