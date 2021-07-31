@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class IndexController {
      */
     @RequestMapping("/generate")
     @ResponseBody
-    public ResultObjectVO generate()
+    public ResultObjectVO generate(HttpServletRequest httpServletRequest)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
@@ -55,7 +56,13 @@ public class IndexController {
                 String templateAndStatisFileName = "index.html";
                 Template template = configuration.getTemplate(templateAndStatisFileName);
 
-                String outFilePath = toucan.getShoppingPC().getFreemarker().getStaticLocation()+"/"+templateAndStatisFileName;
+                String outDirePath = toucan.getShoppingPC().getFreemarker().getStaticLocation()+"/";
+                File direFile = new File(outDirePath);
+                if(!direFile.exists())
+                {
+                    direFile.mkdirs();
+                }
+                String outFilePath = outDirePath+templateAndStatisFileName;
                 File outFile = new File(outFilePath);
                 FileWriterWithEncoding fileWriterWithEncoding = null;
                 try {
@@ -67,6 +74,9 @@ public class IndexController {
 
                     //查询类别列表
                     params.put("categorys", indexService.queryCategorys());
+
+                    //设置basepath
+                    params.put("basePath",httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath());
 
 
                     template.process(params, fileWriterWithEncoding);

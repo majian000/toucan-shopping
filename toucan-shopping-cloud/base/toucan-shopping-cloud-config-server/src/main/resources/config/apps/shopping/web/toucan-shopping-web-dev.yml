@@ -93,8 +93,8 @@ toucan:
   shopping-pc: #PC端页面静态化
     freemarker:
       mapping-url: /htmls/**
-      static-location: file:d:/shopping/htmls/
-      ftl-location: /templates/
+      static-location: d:/toucan-shopping/htmls/
+      ftl-location: templates/
   user-auth:
     enabled: true
     name: toucan-shopping-user
