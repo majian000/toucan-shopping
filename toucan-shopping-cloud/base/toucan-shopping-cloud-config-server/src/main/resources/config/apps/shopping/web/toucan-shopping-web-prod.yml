@@ -95,8 +95,8 @@ toucan:
     freemarker:
       release-mapping-url: /htmls/release/**
       preview-mapping-url: /htmls/preview/**
-      release-location: /usr/toucan-shopping/htmls/release/
-      preview-location: /usr/toucan-shopping/htmls/preview/
+      release-location: /usr/toucan_shopping/htmls/release/
+      preview-location: /usr/toucan_shopping/htmls/preview/
       ftl-location: templates/
   user-auth:
     enabled: true
