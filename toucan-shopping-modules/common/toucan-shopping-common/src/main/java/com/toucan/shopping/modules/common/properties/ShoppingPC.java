@@ -9,6 +9,11 @@ import lombok.Data;
 public class ShoppingPC {
 
     /**
+     * PC端服务地址
+     */
+    private String ipList;
+
+    /**
      * freemarker自定义配置
      */
     private Freemarker freemarker;

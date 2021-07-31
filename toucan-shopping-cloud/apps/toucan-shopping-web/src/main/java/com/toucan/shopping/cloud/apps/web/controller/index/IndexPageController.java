@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.index;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.apps.web.service.IndexService;
 import com.toucan.shopping.modules.area.cache.service.BannerRedisService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
@@ -37,23 +38,7 @@ public class IndexPageController {
 
 
     @Autowired
-    private FeignAreaService feignAreaService;
-
-    @Autowired
-    private Toucan toucan;
-
-    @Autowired
-    private FeignBannerService feignBannerService;
-
-    @Autowired
-    private FeignCategoryService feignCategoryService;
-
-    @Autowired
-    private BannerRedisService bannerRedisService;
-
-    @Autowired
-    private CategoryRedisService categoryRedisService;
-
+    private IndexService indexService;
 
 
 
@@ -88,71 +73,7 @@ public class IndexPageController {
 //    }
 
 
-    /**
-     * 查询轮播图
-     * @param request
-     */
-    public void queryBanners(HttpServletRequest request)
-    {
-        List<BannerVO> banners = null;
-        try {
-            banners = bannerRedisService.queryWebIndexBanner();
-            if(CollectionUtils.isEmpty(banners)) {
-                BannerVO bannerVO = new BannerVO();
-                bannerVO.setStartShowDate(new Date());
-                bannerVO.setEndShowDate(new Date());
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), bannerVO);
-                ResultObjectVO resultObjectVO = feignBannerService.queryIndexList(SignUtil.sign(requestJsonVO), requestJsonVO);
-                if (resultObjectVO.getCode().intValue() == ResultObjectVO.SUCCESS.intValue()) {
-                    banners = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BannerVO.class);
-                    //批量刷新轮播图到缓存
-                    bannerRedisService.flushWebIndexCaches(banners);
-                    //重新查询一次
-                    banners = bannerRedisService.queryWebIndexBanner();
-                }else{
-                    banners = new ArrayList<BannerVO>();
-                }
-            }
-        } catch (Exception e) {
-            logger.warn(e.getMessage(),e);
-            banners = new ArrayList<BannerVO>();
-        }
 
-        //TODO:增加判断 当前地区是否和轮播图的地区一致
-
-        request.setAttribute("banners",banners);
-    }
-
-
-    /**
-     * 查询类别列表
-     * @param request
-     */
-    public void queryCategorys(HttpServletRequest request)
-    {
-        try {
-            ResultObjectVO resultObjectVO = new ResultObjectVO();
-            List<CategoryVO>  categoryVOS = categoryRedisService.queryWebIndexCache();
-            if(!CollectionUtils.isEmpty(categoryVOS))
-            {
-                request.setAttribute("categorys",categoryVOS);
-            }else {
-                CategoryVO categoryVO = new CategoryVO();
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
-                if (resultObjectVO.isSuccess()) {
-                    request.setAttribute("categorys", categoryRedisService.queryWebIndexCache());
-                }else{
-                    request.setAttribute("categorys", new ArrayList<CategoryVO>());
-                }
-            }
-        } catch (Exception e) {
-            logger.warn(e.getMessage(),e);
-
-            request.setAttribute("categorys", new ArrayList<CategoryVO>());
-        }
-
-    }
 
     @RequestMapping("/index")
     public String index(HttpServletRequest request)
@@ -161,10 +82,10 @@ public class IndexPageController {
 //        queryAreaTree(request);
 
         //查询轮播图
-        queryBanners(request);
+        request.setAttribute("banners",indexService.queryBanners());
 
         //查询类别列表
-        queryCategorys(request);
+        request.setAttribute("categorys", indexService.queryCategorys());
 
         //查询顶部栏目
 

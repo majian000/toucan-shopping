@@ -94,7 +94,7 @@ toucan:
     freemarker:
       mapping-url: /htmls/**
       static-location: file:d:/shopping/htmls/
-      ftl-location: classpath:/templates/
+      ftl-location: /templates/
   user-auth:
     enabled: true
     name: toucan-shopping-user
