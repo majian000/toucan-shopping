@@ -9,9 +9,14 @@ import lombok.Data;
 public class Freemarker {
 
     /**
-     * 静态资源路径
+     * 最终文件路径
      */
-    private String staticLocation;
+    private String releaseLocation;
+
+    /**
+     * 预览文件路径
+     */
+    private String previewLocation;
 
     /**
      * 模板路径
@@ -21,5 +26,11 @@ public class Freemarker {
     /**
      * 映射地址
      */
-    private String mappingUrl;
+    private String releaseMappingUrl;
+
+    /**
+     * 映射地址
+     */
+    private String previewMappingUrl;
+
 }

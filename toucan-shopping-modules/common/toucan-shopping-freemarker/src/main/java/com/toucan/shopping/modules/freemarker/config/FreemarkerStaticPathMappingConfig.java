@@ -23,11 +23,19 @@ public class FreemarkerStaticPathMappingConfig implements WebMvcConfigurer {
 
         if(toucan.getShoppingPC()!=null) {
             if(toucan.getShoppingPC().getFreemarker()!=null) {
-                logger.info("freemarker资源映射 {} to {}",toucan.getShoppingPC().getFreemarker().getStaticLocation(),
-                        toucan.getShoppingPC().getFreemarker().getMappingUrl());
+                logger.info("freemarker资源映射 {} to {}",toucan.getShoppingPC().getFreemarker().getReleaseLocation(),
+                        toucan.getShoppingPC().getFreemarker().getReleaseMappingUrl());
                 //配置资源映射
-                registry.addResourceHandler(toucan.getShoppingPC().getFreemarker().getMappingUrl())
-                        .addResourceLocations(toucan.getShoppingPC().getFreemarker().getStaticLocation());
+                registry.addResourceHandler(toucan.getShoppingPC().getFreemarker().getReleaseMappingUrl())
+                        .addResourceLocations("file:"+toucan.getShoppingPC().getFreemarker().getReleaseLocation());
+
+                logger.info("freemarker资源映射 {} to {}",toucan.getShoppingPC().getFreemarker().getPreviewLocation(),
+                        toucan.getShoppingPC().getFreemarker().getPreviewMappingUrl());
+                //配置资源映射
+                registry.addResourceHandler(toucan.getShoppingPC().getFreemarker().getPreviewMappingUrl())
+                        .addResourceLocations("file:"+toucan.getShoppingPC().getFreemarker().getPreviewLocation());
+
+
             }
         }
     }

@@ -36,62 +36,97 @@ public class IndexController {
     @Autowired
     private IndexService indexService;
 
+    private void generateFile(HttpServletRequest httpServletRequest,String filePath)
+    {
+        try{
+            URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingPC().getFreemarker().getFtlLocation());
+            Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
+            configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
+            //拿到首页模板
+            String templateAndStatisFileName = "index.html";
+            Template template = configuration.getTemplate(templateAndStatisFileName);
+
+            String outDirePath = filePath+"/";
+            File direFile = new File(outDirePath);
+            if(!direFile.exists())
+            {
+                direFile.mkdirs();
+            }
+            String outFilePath = outDirePath+templateAndStatisFileName;
+            File outFile = new File(outFilePath);
+            FileWriterWithEncoding fileWriterWithEncoding = null;
+            try {
+                fileWriterWithEncoding = new FileWriterWithEncoding(outFilePath, "UTF-8");
+                Map<String,Object> params= new HashMap<String,Object>();
+
+                //查询轮播图
+                params.put("banners",indexService.queryBanners());
+
+                //查询类别列表
+                params.put("categorys", indexService.queryCategorys());
+
+                //设置basepath
+                params.put("basePath",httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath());
+
+
+                template.process(params, fileWriterWithEncoding);
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                throw e;
+            }finally{
+                if(fileWriterWithEncoding!=null)
+                {
+                    fileWriterWithEncoding.flush();
+                    fileWriterWithEncoding.close();
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
 
     /**
-     * 生成html
+     * 生成最终文件
      * @return
      */
-    @RequestMapping("/generate")
+    @RequestMapping("/generate/release")
     @ResponseBody
-    public ResultObjectVO generate(HttpServletRequest httpServletRequest)
+    public ResultObjectVO generateRelease(HttpServletRequest httpServletRequest)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getFreemarker()!=null) {
+                //生成文件
+                generateFile(httpServletRequest,toucan.getShoppingPC().getFreemarker().getReleaseLocation());
+            }
 
-                URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingPC().getFreemarker().getFtlLocation());
-                Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
-                configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
-                //拿到首页模板
-                String templateAndStatisFileName = "index.html";
-                Template template = configuration.getTemplate(templateAndStatisFileName);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("生成失败,请稍后重试");
+        }
 
-                String outDirePath = toucan.getShoppingPC().getFreemarker().getStaticLocation()+"/";
-                File direFile = new File(outDirePath);
-                if(!direFile.exists())
-                {
-                    direFile.mkdirs();
-                }
-                String outFilePath = outDirePath+templateAndStatisFileName;
-                File outFile = new File(outFilePath);
-                FileWriterWithEncoding fileWriterWithEncoding = null;
-                try {
-                    fileWriterWithEncoding = new FileWriterWithEncoding(outFilePath, "UTF-8");
-                    Map<String,Object> params= new HashMap<String,Object>();
-
-                    //查询轮播图
-                    params.put("banners",indexService.queryBanners());
-
-                    //查询类别列表
-                    params.put("categorys", indexService.queryCategorys());
-
-                    //设置basepath
-                    params.put("basePath",httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath());
+        return resultObjectVO;
+    }
 
 
-                    template.process(params, fileWriterWithEncoding);
-                }catch(Exception e)
-                {
-                    logger.warn(e.getMessage(),e);
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("生成失败,请稍后重试");
-                }finally{
-                    if(fileWriterWithEncoding!=null)
-                    {
-                        fileWriterWithEncoding.flush();
-                        fileWriterWithEncoding.close();
-                    }
-                }
+    /**
+     * 生成预览文件
+     * @return
+     */
+    @RequestMapping("/generate/preview")
+    @ResponseBody
+    public ResultObjectVO generatePreview(HttpServletRequest httpServletRequest)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getFreemarker()!=null) {
+                //生成文件
+                generateFile(httpServletRequest,toucan.getShoppingPC().getFreemarker().getPreviewLocation());
             }
 
         }catch(Exception e)

@@ -93,8 +93,10 @@ toucan:
   app-code: 10001001 #自定义应用编码
   shopping-pc: #PC端页面静态化
     freemarker:
-      mapping-url: /htmls/**
-      static-location: /usr/toucan-shopping/htmls/
+      release-mapping-url: /htmls/release/**
+      preview-mapping-url: /htmls/preview/**
+      release-location: /usr/toucan-shopping/htmls/release/
+      preview-location: /usr/toucan-shopping/htmls/preview/
       ftl-location: templates/
   user-auth:
     enabled: true
