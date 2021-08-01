@@ -3,12 +3,14 @@ package com.toucan.shopping.cloud.apps.web.controller.generate;
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +34,8 @@ public class IndexController {
     @Autowired
     private Toucan toucan;
 
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     @Autowired
     private IndexService indexService;
@@ -39,9 +43,15 @@ public class IndexController {
     private void generateFile(HttpServletRequest httpServletRequest,String filePath) throws Exception
     {
         try {
-            URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingPC().getFreemarker().getFtlLocation());
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
-            configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
+            if("dev".equals(profile)) {
+                URL url = this.getClass().getClassLoader().getResource(toucan.getShoppingPC().getFreemarker().getFtlLocation());
+                configuration.setDirectoryForTemplateLoading(new File(url.getPath()));
+            }else if("prod".equals(profile))
+            {
+                configuration.setClassForTemplateLoading(this.getClass(),"/"+toucan.getShoppingPC().getFreemarker().getFtlLocation());
+                configuration.setTemplateLoader(new ClassTemplateLoader(this.getClass(),"/"+toucan.getShoppingPC().getFreemarker().getFtlLocation()));
+            }
             //拿到首页模板
             String templateAndStatisFileName = "index.html";
             Template template = configuration.getTemplate(templateAndStatisFileName);
