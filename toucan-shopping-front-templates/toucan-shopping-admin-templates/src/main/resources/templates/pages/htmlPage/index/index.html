@@ -17,16 +17,40 @@
 
 <span th:replace="common_page::common"></span>
 
-<div class="layuimini-container">
-    <div class="layuimini-main">
+<div class="layuimini-container" style="height:100%">
+    <div class="layuimini-main" >
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
                 <li class="layui-this">预览文件</li>
                 <li>最终效果</li>
             </ul>
-            <div class="layui-tab-content" style="height: 100px;">
-                <div class="layui-tab-item layui-show">内容不一样是要有，因为你可以监听tab事件（阅读下文档就是了）</div>
-                <div class="layui-tab-item">内容2</div>
+            <div class="layui-tab-content" >
+
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-tab">
+                        <ul class="layui-tab-title">
+                            <li th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div  th:class="${iterStat.index eq 0}?'layui-tab-item layui-show':'layui-tab-item' " th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:utext="${rhg.content}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-item">
+                    <div class="layui-tab">
+                        <ul class="layui-tab-title">
+                            <li th:each="rhg,iterStat : ${releaseHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div  th:class="${iterStat.index eq 0}?'layui-tab-item layui-show':'layui-tab-item' " th:each="rhg,iterStat : ${releaseHtmlGenerators}"  th:utext="${rhg.content}">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

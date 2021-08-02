@@ -46,17 +46,32 @@ public class IndexGeneratorController extends UIController {
                     {
                         HtmlGeneratorTab releaseHtmlGeneratorTable = new HtmlGeneratorTab();
                         releaseHtmlGeneratorTable.setName(ip);
-                        releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/htmls/release/index.html' style='width:100%;height:100%' ></iframe>");
+                        releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/htmls/release/index.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
                         releaseHtmlGeneratorTabList.add(releaseHtmlGeneratorTable);
 
                         HtmlGeneratorTab previewHtmlGeneratorTable = new HtmlGeneratorTab();
                         previewHtmlGeneratorTable.setName(ip);
-                        previewHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/htmls/preview/index.html' style='width:100%;height:100%' ></iframe>");
+                        previewHtmlGeneratorTable.setContent("<iframe src='http://"+ip+"/htmls/preview/index.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
                         previewHtmlGeneratorTabList.add(previewHtmlGeneratorTable);
                     }
                 }
+            }else{
+
+                HtmlGeneratorTab releaseHtmlGeneratorTable = new HtmlGeneratorTab();
+                releaseHtmlGeneratorTable.setName(ipList);
+                releaseHtmlGeneratorTable.setContent("<iframe src='http://"+ipList+"/htmls/release/index.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                releaseHtmlGeneratorTabList.add(releaseHtmlGeneratorTable);
+
+                HtmlGeneratorTab previewHtmlGeneratorTable = new HtmlGeneratorTab();
+                previewHtmlGeneratorTable.setName(ipList);
+                previewHtmlGeneratorTable.setContent("<iframe src='http://"+ipList+"/htmls/preview/index.html' style='width:100%;height:1000px;border:0px;' frameborder='0' ></iframe>");
+                previewHtmlGeneratorTabList.add(previewHtmlGeneratorTable);
             }
         }
+
+        request.setAttribute("releaseHtmlGenerators",releaseHtmlGeneratorTabList);
+        request.setAttribute("previewHtmlGenerators",previewHtmlGeneratorTabList);
+
         return "pages/htmlPage/index/index.html";
     }
 
