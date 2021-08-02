@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @RestController("htmlIndexController")
 @RequestMapping("/api/html/index")
-public class IndexController {
+public class IndexGeneratorController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
