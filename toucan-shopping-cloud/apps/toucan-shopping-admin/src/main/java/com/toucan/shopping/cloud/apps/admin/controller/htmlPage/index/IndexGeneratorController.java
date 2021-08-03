@@ -5,6 +5,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.apps.admin.vo.htmlPage.HtmlGeneratorTab;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +76,22 @@ public class IndexGeneratorController extends UIController {
         return "pages/htmlPage/index/index.html";
     }
 
+
+    /**
+     * 生成预览
+     * @return
+     */
+    public ResultObjectVO generatePreview()
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }
