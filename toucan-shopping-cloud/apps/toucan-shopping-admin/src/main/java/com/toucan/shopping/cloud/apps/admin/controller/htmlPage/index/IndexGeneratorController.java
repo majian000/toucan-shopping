@@ -1,11 +1,14 @@
 package com.toucan.shopping.cloud.apps.admin.controller.htmlPage.index;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.vo.htmlPage.HtmlGeneratorTab;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.HttpUtils;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,11 +86,56 @@ public class IndexGeneratorController extends UIController {
      */
     public ResultObjectVO generatePreview()
     {
+        String previewApi = "/api/html/index/generate/preview";
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-
+            if(toucan.getShoppingPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingPC().getIpList()))
+            {
+                String ipList = toucan.getShoppingPC().getIpList();
+                if(ipList.indexOf(",")!=-1)
+                {
+                    String[] ips = ipList.split(",");
+                    if(ips!=null&&ips.length>0)
+                    {
+                        for(String ip:ips)
+                        {
+                            String responseString = HttpUtils.get("http://"+ip+previewApi);
+                            if(StringUtils.isEmpty(responseString))
+                            {
+                                resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                                resultObjectVO.setCode(TableVO.FAILD);
+                                return resultObjectVO;
+                            }
+                            resultObjectVO = JSONObject.parseObject(responseString,ResultObjectVO.class);
+                            if(!resultObjectVO.isSuccess())
+                            {
+                                resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                                resultObjectVO.setCode(TableVO.FAILD);
+                                return resultObjectVO;
+                            }
+                        }
+                    }
+                }else{
+                    String responseString = HttpUtils.get("http://"+ipList+previewApi);
+                    if(StringUtils.isEmpty(responseString))
+                    {
+                        resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                        resultObjectVO.setCode(TableVO.FAILD);
+                        return resultObjectVO;
+                    }
+                    resultObjectVO = JSONObject.parseObject(responseString,ResultObjectVO.class);
+                    if(!resultObjectVO.isSuccess())
+                    {
+                        resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                        resultObjectVO.setCode(TableVO.FAILD);
+                        return resultObjectVO;
+                    }
+                }
+            }
         }catch(Exception e)
         {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
