@@ -12,14 +12,10 @@ import lombok.Data;
 @Data
 public class LikeProductVo extends ProductSkuVO {
 
-    /**
-     * 单位
-     */
-    private String unit;
 
     /**
-     *  数量
+     * 介绍
      */
-    private Integer num;
+    private String desc;
 
 }

@@ -58,11 +58,18 @@ public class IndexApiController {
 
             LikeProductVo likeProductVo1= new LikeProductVo();
             likeProductVo1.setPrice(99.5D);
-            likeProductVo1.setNum(10); //数量
-            likeProductVo1.setUnit("盒");
             likeProductVo1.setProductName("德亚全脂纯牛奶");
+            likeProductVo1.setDesc("200ml*48盒");
             likeProductVo1.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
             likeProductVos.add(likeProductVo1);
+
+
+            LikeProductVo likeProductVo2= new LikeProductVo();
+            likeProductVo2.setPrice(5288D);
+            likeProductVo2.setProductName("iphone 6S");
+            likeProductVo1.setDesc("Apple/苹果 iPhone 6s Plus公开版");
+            likeProductVo2.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            likeProductVos.add(likeProductVo2);
 
             resultObjectVO.setData(likeProductVos);
         }catch(Exception e)
