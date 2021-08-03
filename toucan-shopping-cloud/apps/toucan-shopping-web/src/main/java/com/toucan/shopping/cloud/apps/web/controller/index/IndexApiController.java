@@ -31,10 +31,49 @@ public class IndexApiController {
 
     @RequestMapping("/hot_product")
     @ResponseBody
-    public ResultObjectVO queryHotProduct(String mobilePhone) {
+    public ResultObjectVO queryHotProduct() {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             List<HotProductVo> hotProductVoList = new ArrayList<HotProductVo>();
+
+
+            HotProductVo hotProductVo1= new HotProductVo();
+            hotProductVo1.setPrice(99.5D);
+            hotProductVo1.setProductName("德亚全脂纯牛奶");
+            hotProductVo1.setDesc("200ml*48盒");
+            hotProductVo1.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot1.jpg");
+            hotProductVoList.add(hotProductVo1);
+
+
+            HotProductVo hotProductVo2= new HotProductVo();
+            hotProductVo2.setPrice(5288D);
+            hotProductVo2.setProductName("iphone 6S");
+            hotProductVo2.setDesc("Apple/苹果 iPhone 6s Plus公开版");
+            hotProductVo2.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot2.jpg");
+            hotProductVoList.add(hotProductVo2);
+
+            HotProductVo hotProductVo3= new HotProductVo();
+            hotProductVo3.setPrice(368D);
+            hotProductVo3.setProductName("倩碧特惠组合套装");
+            hotProductVo3.setDesc("倩碧补水组合套装8折促销");
+            hotProductVo3.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot3.jpg");
+            hotProductVoList.add(hotProductVo3);
+
+            HotProductVo hotProductVo4= new HotProductVo();
+            hotProductVo4.setPrice(280D);
+            hotProductVo4.setProductName("品利特级橄榄油");
+            hotProductVo4.setDesc("750ml*4瓶装组合 西班牙原装进口");
+            hotProductVo4.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            hotProductVoList.add(hotProductVo4);
+
+            HotProductVo hotProductVo5= new HotProductVo();
+            hotProductVo5.setPrice(280D);
+            hotProductVo5.setProductName("品利特级橄榄油");
+            hotProductVo5.setDesc("750ml*4瓶装组合 西班牙原装进口");
+            hotProductVo5.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            hotProductVoList.add(hotProductVo5);
+
+
             resultObjectVO.setData(hotProductVoList);
         }catch(Exception e)
         {
@@ -51,7 +90,7 @@ public class IndexApiController {
 
     @RequestMapping("/like_product")
     @ResponseBody
-    public ResultObjectVO queryLikeProduct(String mobilePhone) {
+    public ResultObjectVO queryLikeProduct() {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             List<LikeProductVo> likeProductVos = new ArrayList<LikeProductVo>();

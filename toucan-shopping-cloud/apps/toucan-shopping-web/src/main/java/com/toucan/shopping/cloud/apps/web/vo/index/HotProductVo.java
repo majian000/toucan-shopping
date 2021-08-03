@@ -19,13 +19,8 @@ import java.util.Map;
 public class HotProductVo extends ProductSkuVO {
 
     /**
-     * 单位
+     * 介绍
      */
-    private String unit;
-
-    /**
-     *  数量
-     */
-    private Integer num;
+    private String desc;
 
 }
