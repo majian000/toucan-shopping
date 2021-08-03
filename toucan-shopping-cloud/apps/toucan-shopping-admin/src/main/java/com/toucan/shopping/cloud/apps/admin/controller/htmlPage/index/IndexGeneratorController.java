@@ -7,15 +7,19 @@ import com.toucan.shopping.cloud.apps.admin.vo.htmlPage.HtmlGeneratorTab;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.HttpUtils;
+import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -84,11 +88,19 @@ public class IndexGeneratorController extends UIController {
      * 生成预览
      * @return
      */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/generate/preview",method = RequestMethod.POST)
+    @ResponseBody
     public ResultObjectVO generatePreview()
     {
         String previewApi = "/api/html/index/generate/preview";
+
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
+            Header header = new BasicHeader("ts_web_generator_token", MD5Util.md5("toucan_shopping_generator"));
+            List<Header> headers = new ArrayList<Header>();
+            headers.add(header);
+
             if(toucan.getShoppingPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingPC().getIpList()))
             {
                 String ipList = toucan.getShoppingPC().getIpList();
@@ -99,7 +111,7 @@ public class IndexGeneratorController extends UIController {
                     {
                         for(String ip:ips)
                         {
-                            String responseString = HttpUtils.get("http://"+ip+previewApi);
+                            String responseString = HttpUtils.get("http://"+ip+previewApi,headers);
                             if(StringUtils.isEmpty(responseString))
                             {
                                 resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
@@ -116,7 +128,7 @@ public class IndexGeneratorController extends UIController {
                         }
                     }
                 }else{
-                    String responseString = HttpUtils.get("http://"+ipList+previewApi);
+                    String responseString = HttpUtils.get("http://"+ipList+previewApi,headers);
                     if(StringUtils.isEmpty(responseString))
                     {
                         resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");

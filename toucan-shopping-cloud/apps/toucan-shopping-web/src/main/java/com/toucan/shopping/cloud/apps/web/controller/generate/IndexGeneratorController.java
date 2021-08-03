@@ -2,11 +2,13 @@ package com.toucan.shopping.cloud.apps.web.controller.generate;
 
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.output.FileWriterWithEncoding;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +109,20 @@ public class IndexGeneratorController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
+            String token = httpServletRequest.getHeader("ts_web_generator_token");
+            if(StringUtils.isEmpty(token))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("生成失败,签名为空");
+                return resultObjectVO;
+            }
+            String genToken = MD5Util.md5("toucan_shopping_generator");
+            if(!genToken.equals(token))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("生成失败,签名错误");
+                return resultObjectVO;
+            }
             if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getFreemarker()!=null) {
                 //生成文件
                 generateFile(httpServletRequest,toucan.getShoppingPC().getFreemarker().getReleaseLocation());
@@ -133,6 +149,20 @@ public class IndexGeneratorController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
+            String token = httpServletRequest.getHeader("ts_web_generator_token");
+            if(StringUtils.isEmpty(token))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("生成失败,签名为空");
+                return resultObjectVO;
+            }
+            String genToken = MD5Util.md5("toucan_shopping_generator");
+            if(!genToken.equals(token))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("生成失败,签名错误");
+                return resultObjectVO;
+            }
             if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getFreemarker()!=null) {
                 //生成文件
                 generateFile(httpServletRequest,toucan.getShoppingPC().getFreemarker().getPreviewLocation());
