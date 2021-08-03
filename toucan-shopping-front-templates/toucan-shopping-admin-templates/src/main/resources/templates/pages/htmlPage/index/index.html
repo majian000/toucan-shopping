@@ -68,30 +68,28 @@
 
         //生成预览
         $("#preview_btn").click(function() {
-            var index = layer.load();
+            var loadding = layer.load();
             $.ajax({
                 url:"[[@{/}]]index/html/generate/preview",
                 type:'POST',
                 success:function(data){
-                    layer.close(index);
                 },
                 complete:function(data){
-                    layer.close(index);
+                    layer.close(loadding);
                 }
             });
         });
 
         //生成最终文件
         $("#release_btn").click(function() {
-            var index = layer.load();
+            var loadding = layer.load();
             $.ajax({
                 url:"[[@{/}]]index/html/generate/release",
                 type:'POST',
                 success:function(data){
-                    layer.close(index);
                 },
                 complete:function(data){
-                    layer.close(index);
+                    layer.close(loadding);
                 }
             });
         });
