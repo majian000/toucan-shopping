@@ -19,8 +19,8 @@
 
 <div class="layuimini-container" style="height:100%">
     <div class="layuimini-main" >
-        <button type="button" class="layui-btn layui-btn-normal">生成预览文件</button>
-        <button type="button" class="layui-btn layui-btn-normal">生成最终文件</button>
+        <button type="button" id="preview_btn" class="layui-btn layui-btn-normal">生成预览文件</button>
+        <button type="button" id="release_btn" class="layui-btn layui-btn-normal">生成最终文件</button>
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
                 <li class="layui-this">预览文件</li>
@@ -62,15 +62,39 @@
 <script>
 
 
-    function generatePreview()
-    {
-
-    }
     layui.use('element', function(){
         var $ = layui.jquery
             ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
+        //生成预览
+        $("#preview_btn").click(function() {
+            var index = layer.load();
+            $.ajax({
+                url:"[[@{/}]]index/html/generate/preview",
+                type:'POST',
+                success:function(data){
+                    layer.close(index);
+                },
+                complete:function(data){
+                    layer.close(index);
+                }
+            });
+        });
 
+        //生成最终文件
+        $("#release_btn").click(function() {
+            var index = layer.load();
+            $.ajax({
+                url:"[[@{/}]]index/html/generate/release",
+                type:'POST',
+                success:function(data){
+                    layer.close(index);
+                },
+                complete:function(data){
+                    layer.close(index);
+                }
+            });
+        });
     });
 
 </script>

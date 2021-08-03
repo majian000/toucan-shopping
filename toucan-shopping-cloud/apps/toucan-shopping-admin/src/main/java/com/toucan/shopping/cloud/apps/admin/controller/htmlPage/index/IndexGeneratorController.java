@@ -153,5 +153,73 @@ public class IndexGeneratorController extends UIController {
         return resultObjectVO;
     }
 
+    /**
+     * 生成预览
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/generate/release",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO generateRelease()
+    {
+        String previewApi = "/api/html/index/generate/release";
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            Header header = new BasicHeader("ts_web_generator_token", MD5Util.md5("toucan_shopping_generator"));
+            List<Header> headers = new ArrayList<Header>();
+            headers.add(header);
+
+            if(toucan.getShoppingPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingPC().getIpList()))
+            {
+                String ipList = toucan.getShoppingPC().getIpList();
+                if(ipList.indexOf(",")!=-1)
+                {
+                    String[] ips = ipList.split(",");
+                    if(ips!=null&&ips.length>0)
+                    {
+                        for(String ip:ips)
+                        {
+                            String responseString = HttpUtils.get("http://"+ip+previewApi,headers);
+                            if(StringUtils.isEmpty(responseString))
+                            {
+                                resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                                resultObjectVO.setCode(TableVO.FAILD);
+                                return resultObjectVO;
+                            }
+                            resultObjectVO = JSONObject.parseObject(responseString,ResultObjectVO.class);
+                            if(!resultObjectVO.isSuccess())
+                            {
+                                resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                                resultObjectVO.setCode(TableVO.FAILD);
+                                return resultObjectVO;
+                            }
+                        }
+                    }
+                }else{
+                    String responseString = HttpUtils.get("http://"+ipList+previewApi,headers);
+                    if(StringUtils.isEmpty(responseString))
+                    {
+                        resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                        resultObjectVO.setCode(TableVO.FAILD);
+                        return resultObjectVO;
+                    }
+                    resultObjectVO = JSONObject.parseObject(responseString,ResultObjectVO.class);
+                    if(!resultObjectVO.isSuccess())
+                    {
+                        resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                        resultObjectVO.setCode(TableVO.FAILD);
+                        return resultObjectVO;
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }
