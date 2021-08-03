@@ -60,16 +60,38 @@ public class IndexApiController {
             likeProductVo1.setPrice(99.5D);
             likeProductVo1.setProductName("德亚全脂纯牛奶");
             likeProductVo1.setDesc("200ml*48盒");
-            likeProductVo1.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            likeProductVo1.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot1.jpg");
             likeProductVos.add(likeProductVo1);
 
 
             LikeProductVo likeProductVo2= new LikeProductVo();
             likeProductVo2.setPrice(5288D);
             likeProductVo2.setProductName("iphone 6S");
-            likeProductVo1.setDesc("Apple/苹果 iPhone 6s Plus公开版");
-            likeProductVo2.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            likeProductVo2.setDesc("Apple/苹果 iPhone 6s Plus公开版");
+            likeProductVo2.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot2.jpg");
             likeProductVos.add(likeProductVo2);
+
+            LikeProductVo likeProductVo3= new LikeProductVo();
+            likeProductVo3.setPrice(368D);
+            likeProductVo3.setProductName("倩碧特惠组合套装");
+            likeProductVo3.setDesc("倩碧补水组合套装8折促销");
+            likeProductVo3.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot3.jpg");
+            likeProductVos.add(likeProductVo3);
+
+            LikeProductVo likeProductVo4= new LikeProductVo();
+            likeProductVo4.setPrice(280D);
+            likeProductVo4.setProductName("品利特级橄榄油");
+            likeProductVo4.setDesc("750ml*4瓶装组合 西班牙原装进口");
+            likeProductVo4.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            likeProductVos.add(likeProductVo4);
+
+            LikeProductVo likeProductVo5= new LikeProductVo();
+            likeProductVo5.setPrice(280D);
+            likeProductVo5.setProductName("品利特级橄榄油");
+            likeProductVo5.setDesc("750ml*4瓶装组合 西班牙原装进口");
+            likeProductVo5.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            likeProductVos.add(likeProductVo5);
+
 
             resultObjectVO.setData(likeProductVos);
         }catch(Exception e)
