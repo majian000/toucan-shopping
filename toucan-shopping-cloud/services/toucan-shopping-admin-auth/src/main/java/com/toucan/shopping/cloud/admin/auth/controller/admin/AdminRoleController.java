@@ -135,7 +135,7 @@ public class AdminRoleController {
                 }
             }catch(Exception e)
             {
-                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setCode(ResultVO.SUCCESS);
                 resultObjectVO.setMsg("更新缓存出现异常");
                 logger.warn(e.getMessage(),e);
             }

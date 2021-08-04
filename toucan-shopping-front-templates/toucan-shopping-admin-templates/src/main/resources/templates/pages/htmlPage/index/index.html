@@ -28,7 +28,6 @@
 
                 <div class="layui-tab-item layui-show">
                     <span th:each="pb : ${previewTabButtons}" th:utext="${pb}"></span>
-                    <!--<button type="button" id="preview_btn" class="layui-btn layui-btn-normal">生成预览文件</button>-->
 
                     <div class="layui-tab">
                         <ul class="layui-tab-title">
@@ -43,7 +42,6 @@
 
                 <div class="layui-tab-item">
                     <span th:each="rb : ${releaseTabButtons}" th:utext="${rb}"></span>
-                    <!--<button type="button" id="release_btn" class="layui-btn layui-btn-normal">生成最终文件</button>-->
                     <div class="layui-tab">
                         <ul class="layui-tab-title">
                             <li th:each="rhg,iterStat : ${releaseHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>
@@ -63,8 +61,9 @@
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
 
-
-    layui.use('element', function(){
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).use(['form', 'table','element'], function(){
         var $ = layui.jquery
             ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
@@ -75,6 +74,11 @@
                 url:"[[@{/}]]index/html/generate/preview",
                 type:'POST',
                 success:function(data){
+                    layer.msg(data.msg);
+                    if(data.code=="1")
+                    {
+                        window.location.reload();
+                    }
                 },
                 complete:function(data){
                     layer.close(loadding);
@@ -89,6 +93,11 @@
                 url:"[[@{/}]]index/html/generate/release",
                 type:'POST',
                 success:function(data){
+                    layer.msg(data.msg);
+                    if(data.code=="1")
+                    {
+                        window.location.reload();
+                    }
                 },
                 complete:function(data){
                     layer.close(loadding);

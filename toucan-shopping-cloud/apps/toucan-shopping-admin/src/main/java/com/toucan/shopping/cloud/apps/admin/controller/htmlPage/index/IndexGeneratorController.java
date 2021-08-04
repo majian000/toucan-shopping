@@ -134,10 +134,10 @@ public class IndexGeneratorController extends UIController {
         request.setAttribute("previewHtmlGenerators",previewHtmlGeneratorTabList);
 
         //初始化预览文件选项卡里的按钮
-        this.initButtons(request,"previewTabButtons","/generate/preview");
+        this.initButtons(request,"previewTabButtons","/index/html/generate/preview");
 
         //初始化最终文件选项卡里的按钮
-        this.initButtons(request,"releaseTabButtons","/generate/release");
+        this.initButtons(request,"releaseTabButtons","/index/html/generate/release");
 
 
         return "pages/htmlPage/index/index.html";

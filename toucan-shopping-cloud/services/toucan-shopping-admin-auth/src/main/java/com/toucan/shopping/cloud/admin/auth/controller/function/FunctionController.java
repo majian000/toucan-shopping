@@ -107,7 +107,7 @@ public class FunctionController {
                 BeanUtils.copyProperties(functionElasticSearchVO, entity);
                 functionElasticSearchService.save(functionElasticSearchVO);
             }catch(Exception e) {
-                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setCode(ResultVO.SUCCESS);
                 resultObjectVO.setMsg("更新缓存出现异常");
                 logger.warn(e.getMessage(), e);
             }
@@ -260,7 +260,7 @@ public class FunctionController {
                 BeanUtils.copyProperties(functionElasticSearchVO,entity);
                 functionElasticSearchService.update(functionElasticSearchVO);
             }catch(Exception e) {
-                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setCode(ResultVO.SUCCESS);
                 resultObjectVO.setMsg("更新缓存出现异常");
                 logger.warn(e.getMessage(), e);
             }
@@ -289,7 +289,7 @@ public class FunctionController {
                     List<String> deleteFaildIdList = new ArrayList<String>();
                     roleFunctionElasticSearchService.deleteByFunctionId(functions.get(0).getFunctionId(), deleteFaildIdList);
                 }catch(Exception e) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setCode(ResultVO.SUCCESS);
                     resultObjectVO.setMsg("更新缓存出现异常");
                     logger.warn(e.getMessage(), e);
                 }
@@ -488,7 +488,7 @@ public class FunctionController {
                     }
                 }catch(Exception e)
                 {
-                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setCode(ResultVO.SUCCESS);
                     resultObjectVO.setMsg("更新缓存出现异常");
                     logger.warn(e.getMessage(),e);
                 }
@@ -573,7 +573,7 @@ public class FunctionController {
                             }
                         }catch(Exception e)
                         {
-                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setCode(ResultVO.SUCCESS);
                             resultObjectVO.setMsg("更新缓存出现异常");
                             logger.warn(e.getMessage(),e);
                         }
