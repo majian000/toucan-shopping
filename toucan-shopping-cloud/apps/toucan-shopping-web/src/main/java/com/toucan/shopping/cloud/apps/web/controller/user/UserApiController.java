@@ -517,7 +517,7 @@ public class UserApiController extends BaseController {
      */
     @RequestMapping(value="/find/password",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO findPassword(@RequestBody UserFindPasswordVO userFindPasswordVO) {
+    public ResultObjectVO findPassword(@RequestBody UserFindPasswordVO userFindPasswordVO,HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (userFindPasswordVO == null) {
             resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
@@ -532,8 +532,49 @@ public class UserApiController extends BaseController {
             return resultObjectVO;
         }
 
+        if(StringUtils.isEmpty(userFindPasswordVO.getVcode()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+            resultObjectVO.setMsg("请求失败,请输入验证码");
+            return resultObjectVO;
+        }
+
+        String cookie = request.getHeader("Cookie");
+        if(StringUtils.isEmpty(cookie))
+        {
+            resultObjectVO.setMsg("请求失败,请重新刷新验证码");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            return resultObjectVO;
+        }
 
         try {
+
+            String vcodeUuid = VCodeUtil.getClientVCodeId(cookie);
+            if(StringUtils.isEmpty(vcodeUuid))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请检查是否禁用了cookie");
+                return resultObjectVO;
+            }
+
+            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(), vcodeUuid);
+            Object vcodeObject = toucanStringRedisService.get(vcodeRedisKey);
+            if (vcodeObject == null) {
+                resultObjectVO.setMsg("请求失败,验证码过期请刷新");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            if(!StringUtils.equals(userFindPasswordVO.getVcode().toUpperCase(),String.valueOf(vcodeObject).toUpperCase()))
+            {
+                resultObjectVO.setMsg("请求失败,验证码输入有误");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            //删除缓存中验证码
+            toucanStringRedisService.delete(vcodeRedisKey);
+
 
             boolean lockStatus = skylarkLock.lock(UserLoginRedisKey.getFindPasswordKey(userFindPasswordVO.getFindUserName()), userFindPasswordVO.getFindUserName());
             if (!lockStatus) {
@@ -541,10 +582,6 @@ public class UserApiController extends BaseController {
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
-
-
-
-
 
         }catch(Exception e)
         {
