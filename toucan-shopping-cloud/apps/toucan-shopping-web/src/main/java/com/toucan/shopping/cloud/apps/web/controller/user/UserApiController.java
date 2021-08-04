@@ -17,9 +17,7 @@ import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
-import com.toucan.shopping.modules.user.vo.UserLoginVO;
-import com.toucan.shopping.modules.user.vo.UserRegistVO;
-import com.toucan.shopping.modules.user.vo.UserSmsVO;
+import com.toucan.shopping.modules.user.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -27,7 +25,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
-import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -509,6 +506,62 @@ public class UserApiController extends BaseController {
 
         return resultObjectVO;
     }
+
+
+
+
+    /**
+     * 找回密码
+     * @param userFindPasswordVO
+     * @return
+     */
+    @RequestMapping(value="/find/password",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findPassword(@RequestBody UserFindPasswordVO userFindPasswordVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (userFindPasswordVO == null) {
+            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到账号");
+            return resultObjectVO;
+        }
+
+        if(StringUtils.isEmpty(userFindPasswordVO.getFindUserName()))
+        {
+            resultObjectVO.setCode(UserLoginConstant.USERNAME_NOT_FOUND);
+            resultObjectVO.setMsg("请求失败,请输入账号");
+            return resultObjectVO;
+        }
+
+
+        try {
+
+            boolean lockStatus = skylarkLock.lock(UserLoginRedisKey.getFindPasswordKey(userFindPasswordVO.getFindUserName()), userFindPasswordVO.getFindUserName());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+
+
+
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+
+            //释放锁
+            skylarkLock.unLock(UserLoginRedisKey.getFindPasswordKey(userFindPasswordVO.getFindUserName()), userFindPasswordVO.getFindUserName());
+        }
+
+        return resultObjectVO;
+    }
+
+
 
 
 

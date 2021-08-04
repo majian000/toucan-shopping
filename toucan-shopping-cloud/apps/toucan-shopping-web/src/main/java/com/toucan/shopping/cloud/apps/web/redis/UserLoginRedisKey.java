@@ -52,4 +52,13 @@ public class UserLoginRedisKey {
         return "TOUCAN_SHOPPING_WEB:APPS:SHOPPING_WEB:"+appCode +"_"+ methodType +"_"+mobile;
     }
 
+    /**
+     * 找回密码键
+     * @param mobile
+     * @return
+     */
+    public static String getFindPasswordKey(String mobile)
+    {
+        return "TOUCAN_SHOPPING_WEB:APPS:SHOPPING_WEB:FINDPASSWORD"+appCode +"_"+ methodType +"_"+mobile;
+    }
 }
