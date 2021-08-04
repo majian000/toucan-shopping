@@ -10,7 +10,6 @@ public class UserAuthHeaderUtil {
         if(StringUtils.isEmpty(authHeader))
         {
             throw new IllegalArgumentException("请求头参数无效");
-
         }
 
         String adminId = StringUtils.substringAfter(authHeader,appCode+"_uid=");

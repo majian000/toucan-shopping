@@ -80,24 +80,6 @@ public class UserPageController extends BaseController {
     @RequestMapping("/info")
     public String info(HttpServletRequest request)
     {
-        try {
-            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
-            UserVO userVO = new UserVO();
-            userVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
-            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
-            if(resultObectVO.isSuccess())
-            {
-                userVO = resultObectVO.formatData(UserVO.class);
-                request.setAttribute("user",userVO);
-            }else{
-                request.setAttribute("user",new UserVO());
-            }
-        }catch (Exception e)
-        {
-            request.setAttribute("user",new UserVO());
-            logger.warn(e.getMessage(),e);
-        }
         return "user/info";
     }
 

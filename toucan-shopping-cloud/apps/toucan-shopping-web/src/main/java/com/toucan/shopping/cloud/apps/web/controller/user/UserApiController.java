@@ -166,9 +166,6 @@ public class UserApiController extends BaseController {
 
 
 
-
-
-
     @RequestMapping(value="/regist")
     @ResponseBody
     public ResultObjectVO regist(UserRegistVO user){
@@ -280,12 +277,10 @@ public class UserApiController extends BaseController {
         return resultObjectVO;
     }
 
-    @RequestMapping(value="/info")
+    @RequestMapping(value="/login/info")
     @ResponseBody
-    public ResultObjectVO info(HttpServletRequest httpServletRequest){
-
+    public ResultObjectVO loginInfo(HttpServletRequest httpServletRequest){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-
         try {
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
@@ -309,6 +304,34 @@ public class UserApiController extends BaseController {
     }
 
 
+
+
+    @UserAuth
+    @RequestMapping(value="/info")
+    @ResponseBody
+    public ResultObjectVO info(HttpServletRequest httpServletRequest){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
+            ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
+            if(resultObectVO.isSuccess())
+            {
+                userVO = resultObectVO.formatData(UserVO.class);
+                resultObjectVO.setData(userVO);
+            }else{
+                resultObjectVO.setData(new UserVO());
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍候重试");
+        }
+        return resultObjectVO;
+    }
 
 
     @RequestMapping(value="/is/online")

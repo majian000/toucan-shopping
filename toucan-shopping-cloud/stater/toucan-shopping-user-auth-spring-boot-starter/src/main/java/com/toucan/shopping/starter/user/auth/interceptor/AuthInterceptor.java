@@ -125,7 +125,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                //在这里调用用户中心 判断登录
+                                //判断当前的token和userId是否对应的上
                                 UserLoginVO queryUserLogin = new UserLoginVO();
                                 try {
                                     queryUserLogin.setUserMainId(Long.parseLong(uid));
@@ -152,6 +152,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
 
+                                //在这里调用用户中心 判断登录
                                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
                                 ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
