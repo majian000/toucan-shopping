@@ -27,8 +27,9 @@
             <div class="layui-tab-content" >
 
                 <div class="layui-tab-item layui-show">
+                    <span th:each="pb : ${previewButtons}" th:utext="${pb}"></span>
+                    <!--<button type="button" id="preview_btn" class="layui-btn layui-btn-normal">生成预览文件</button>-->
 
-                    <button type="button" id="preview_btn" class="layui-btn layui-btn-normal">生成预览文件</button>
                     <div class="layui-tab">
                         <ul class="layui-tab-title">
                             <li th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>
@@ -41,7 +42,8 @@
                 </div>
 
                 <div class="layui-tab-item">
-                    <button type="button" id="release_btn" class="layui-btn layui-btn-normal">生成最终文件</button>
+                    <span th:each="rb : ${releaseButtons}" th:utext="${rb}"></span>
+                    <!--<button type="button" id="release_btn" class="layui-btn layui-btn-normal">生成最终文件</button>-->
                     <div class="layui-tab">
                         <ul class="layui-tab-title">
                             <li th:each="rhg,iterStat : ${releaseHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>

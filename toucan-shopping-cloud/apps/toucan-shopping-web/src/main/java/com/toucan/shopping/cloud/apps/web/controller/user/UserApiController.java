@@ -317,11 +317,8 @@ public class UserApiController extends BaseController {
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
             ResultObjectVO resultObectVO = feignUserService.findByUserMainIdForCacheOrDB(requestJsonVO.sign(),requestJsonVO);
-            if(resultObectVO.isSuccess())
+            if(!resultObectVO.isSuccess())
             {
-                userVO = resultObectVO.formatData(UserVO.class);
-                resultObjectVO.setData(userVO);
-            }else{
                 resultObjectVO.setData(new UserVO());
             }
         }catch(Exception e)

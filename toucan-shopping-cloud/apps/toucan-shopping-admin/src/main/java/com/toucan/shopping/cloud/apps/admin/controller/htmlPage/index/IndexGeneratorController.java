@@ -1,15 +1,24 @@
 package com.toucan.shopping.cloud.apps.admin.controller.htmlPage.index;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.apps.admin.vo.htmlPage.HtmlGeneratorTab;
+import com.toucan.shopping.modules.admin.auth.entity.Function;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.HttpUtils;
 import com.toucan.shopping.modules.common.util.MD5Util;
+import com.toucan.shopping.modules.common.util.SignUtil;
+import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
@@ -34,6 +43,50 @@ public class IndexGeneratorController extends UIController {
 
     @Autowired
     private Toucan toucan;
+
+    @Autowired
+    private FeignFunctionService feignFunctionService;
+
+
+    /**
+     * 初始化界面按钮
+     * @param request
+     * @param url
+     */
+    public void initButtons(HttpServletRequest request,String key,String url)
+    {
+        try {
+            FunctionVO function = new FunctionVO();
+            function.setUrl(url);
+            function.setAppCode(toucan.getAppCode());
+            function.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),function);
+            ResultObjectVO resultObjectVO = feignFunctionService.queryOneChildsByAdminIdAndAppCodeAndParentUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
+                if(!CollectionUtils.isEmpty(functions))
+                {
+                    List<String> rowControls = new ArrayList<String>();
+
+                    for(Function buttonFunction:functions)
+                    {
+                        if(buttonFunction.getType().intValue()==5)
+                        {
+                            rowControls.add(buttonFunction.getFunctionText());
+                        }
+                    }
+
+                    request.setAttribute(key,rowControls);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute(key,new ArrayList<Function>());
+        }
+    }
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -79,6 +132,13 @@ public class IndexGeneratorController extends UIController {
 
         request.setAttribute("releaseHtmlGenerators",releaseHtmlGeneratorTabList);
         request.setAttribute("previewHtmlGenerators",previewHtmlGeneratorTabList);
+
+        //初始化预览文件选项卡里的按钮
+        this.initButtons(request,"previewButtons","/generate/preview");
+
+        //初始化最终文件选项卡里的按钮
+        this.initButtons(request,"releaseButtons","/generate/release");
+
 
         return "pages/htmlPage/index/index.html";
     }
