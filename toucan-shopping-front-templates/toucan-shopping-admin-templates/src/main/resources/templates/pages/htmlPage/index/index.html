@@ -27,7 +27,7 @@
             <div class="layui-tab-content" >
 
                 <div class="layui-tab-item layui-show">
-                    <span th:each="pb : ${previewButtons}" th:utext="${pb}"></span>
+                    <span th:each="pb : ${previewTabButtons}" th:utext="${pb}"></span>
                     <!--<button type="button" id="preview_btn" class="layui-btn layui-btn-normal">生成预览文件</button>-->
 
                     <div class="layui-tab">
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="layui-tab-item">
-                    <span th:each="rb : ${releaseButtons}" th:utext="${rb}"></span>
+                    <span th:each="rb : ${releaseTabButtons}" th:utext="${rb}"></span>
                     <!--<button type="button" id="release_btn" class="layui-btn layui-btn-normal">生成最终文件</button>-->
                     <div class="layui-tab">
                         <ul class="layui-tab-title">
