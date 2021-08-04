@@ -78,17 +78,6 @@ public class IndexPageController {
     @RequestMapping("/index")
     public String index(HttpServletRequest request)
     {
-        //查询地区树
-//        queryAreaTree(request);
-
-        //查询轮播图
-        request.setAttribute("banners",indexService.queryBanners());
-
-        //查询类别列表
-        request.setAttribute("categorys", indexService.queryCategorys());
-
-        //查询顶部栏目
-
         return "/htmls/release/index";
     }
 
