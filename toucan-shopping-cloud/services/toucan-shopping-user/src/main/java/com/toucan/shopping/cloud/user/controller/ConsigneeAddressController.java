@@ -3,14 +3,9 @@ package com.toucan.shopping.cloud.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
-import com.toucan.shopping.modules.common.page.PageInfo;
-import com.toucan.shopping.modules.common.util.GlobalUUID;
-import com.toucan.shopping.modules.common.util.MD5Util;
-import com.toucan.shopping.modules.common.util.UserRegistUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.redis.UserCenterConsigneeAddressKey;
@@ -20,16 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.transform.Result;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 收货地址 增删改查
@@ -124,4 +113,67 @@ public class ConsigneeAddressController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+
+    /**
+     * 删除指定
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ConsigneeAddress entity = JSONObject.parseObject(requestVo.getEntityJson(),ConsigneeAddress.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该角色
+            ConsigneeAddress query=new ConsigneeAddress();
+            query.setId(entity.getId());
+            List<ConsigneeAddress> adminList = consigneeAddressService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(adminList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,收货信息不存在!");
+                return resultObjectVO;
+            }
+
+
+            int row = consigneeAddressService.deleteById(entity.getId());
+            if (row < 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
 }
