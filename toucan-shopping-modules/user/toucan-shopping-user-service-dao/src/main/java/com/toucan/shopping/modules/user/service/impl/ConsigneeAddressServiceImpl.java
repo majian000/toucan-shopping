@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 收货地址服务
  * @author majian
@@ -39,6 +41,11 @@ public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
     @Override
     public int update(ConsigneeAddress entity) {
         return consigneeAddressMapper.update(entity);
+    }
+
+    @Override
+    public List<ConsigneeAddress> findListByEntity(ConsigneeAddress query) {
+        return consigneeAddressMapper.findListByEntity(query);
     }
 
 }

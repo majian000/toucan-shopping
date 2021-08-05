@@ -3,6 +3,8 @@ package com.toucan.shopping.modules.user.service;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.vo.UserSmsVO;
 
+import java.util.List;
+
 /**
  * 收货地址服务
  * @author majian
@@ -26,5 +28,7 @@ public interface ConsigneeAddressService {
      */
     int update(ConsigneeAddress entity);
 
+
+    List<ConsigneeAddress> findListByEntity(ConsigneeAddress query);
 
 }

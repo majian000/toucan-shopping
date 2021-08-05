@@ -1,9 +1,10 @@
 package com.toucan.shopping.modules.user.redis;
 
+/**
+ * 用户注册相关
+ */
 public class UserCenterRegistRedisKey {
 
-    //默认值,在启动的时候会被替换成配置文件的blackBird.appCode
-    public static String appCode = "10001002";
 
 
 
@@ -16,7 +17,7 @@ public class UserCenterRegistRedisKey {
      */
     public static String getRegistLockKey(String mobile)
     {
-        return appCode +"_user_regist_"+mobile+"_lock";
+        return "TOUCAN_SHOPPING_WEB:USER_REGIST_"+mobile+"_LOCK";
     }
 
 
@@ -28,7 +29,7 @@ public class UserCenterRegistRedisKey {
      */
     public static String getUpdateDetailLockKey(String mobile)
     {
-        return appCode +"_user_update_detail_"+mobile+"_lock";
+        return "TOUCAN_SHOPPING_WEB:USER_UPDATE_DETAIL_"+mobile+"_LOCK";
     }
     /**
      * 重置密码锁
@@ -37,7 +38,7 @@ public class UserCenterRegistRedisKey {
      */
     public static String getResetPasswordLockKey(String userMainId)
     {
-        return appCode +"_user_reset_password_"+userMainId+"_lock";
+        return "TOUCAN_SHOPPING_WEB:USER_RESET_PASSWORD_"+userMainId+"_LOCK";
     }
 
 

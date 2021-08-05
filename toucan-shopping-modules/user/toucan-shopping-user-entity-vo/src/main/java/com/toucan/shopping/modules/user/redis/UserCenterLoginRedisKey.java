@@ -1,9 +1,10 @@
 package com.toucan.shopping.modules.user.redis;
 
+/**
+ * 用户登录相关
+ */
 public class UserCenterLoginRedisKey {
 
-    //默认值,在启动的时候会被替换成配置文件的blackBird.appCode
-    public static String appCode = "10001002";
 
 
     public static Integer LOGIN_TIMEOUT_SECOND=60*60*5; //没有任何操作,5小时超时
@@ -19,7 +20,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginLockKey(String mobile)
     {
-        return appCode +"_USER_LOGIN_"+mobile+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_LOGIN_"+mobile+"_LOCK";
     }
 
 
@@ -30,7 +31,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getVerifyRealNameLockKey(String mobile)
     {
-        return appCode +"_USER_VERIFY_REAL_NAME_"+mobile+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_VERIFY_REAL_NAME_"+mobile+"_LOCK";
     }
 
 
@@ -53,7 +54,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginTokenAppKey(String userId, String appCode)
     {
-        return appCode+"_LOGIN_TOKEN_"+userId;
+        return "TOUCAN_SHOPPING_WEB:LOGIN_TOKEN_"+userId;
     }
 
 
@@ -63,6 +64,6 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginInfoAppKey(String userId, String appCode)
     {
-        return appCode+"_LOGIN_INFO_"+userId;
+        return "TOUCAN_SHOPPING_WEB:LOGIN_INFO_"+userId;
     }
 }

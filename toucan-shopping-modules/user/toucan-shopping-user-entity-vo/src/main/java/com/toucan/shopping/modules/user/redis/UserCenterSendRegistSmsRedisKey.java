@@ -1,11 +1,9 @@
 package com.toucan.shopping.modules.user.redis;
 
+/**
+ * 用户注册发送短信
+ */
 public class UserCenterSendRegistSmsRedisKey {
-
-    //默认值,在启动的时候会被替换成配置文件的blackBird.appCode
-    public static String appCode = "10001002";
-
-
 
 
 
@@ -16,7 +14,7 @@ public class UserCenterSendRegistSmsRedisKey {
      */
     public static String getSendRegistVerifyCodeLockKey(String mobile)
     {
-        return appCode +"_send_regist__verifycode_"+mobile+"_lock";
+        return "TOUCAN_SHOPPING_WEB:SEND_REGIST__VERIFYCODE_"+mobile+"_LOCK";
     }
 
 

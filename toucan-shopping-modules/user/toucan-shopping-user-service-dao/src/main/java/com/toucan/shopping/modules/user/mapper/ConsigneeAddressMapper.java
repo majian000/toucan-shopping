@@ -24,5 +24,6 @@ public interface ConsigneeAddressMapper {
 
     int update(ConsigneeAddress entity);
 
+    List<ConsigneeAddress> findListByEntity(ConsigneeAddress query);
 
 }

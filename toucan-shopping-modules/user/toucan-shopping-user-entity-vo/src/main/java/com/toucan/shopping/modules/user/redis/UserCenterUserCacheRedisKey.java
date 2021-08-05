@@ -1,9 +1,10 @@
 package com.toucan.shopping.modules.user.redis;
 
+/**
+ * 用户缓存
+ */
 public class UserCenterUserCacheRedisKey {
 
-    //默认值,在启动的时候会被替换成配置文件的blackBird.appCode
-    public static String appCode = "10001002";
 
 
 
@@ -14,7 +15,7 @@ public class UserCenterUserCacheRedisKey {
      */
     public static String getUserCacheMobilePhoneKey(String mobilePhone)
     {
-        return appCode +"_user_cache_mobile_phone_"+mobilePhone;
+        return "TOUCAN_SHOPPING_WEB:USER_CACHE_MOBILE_PHONE_"+mobilePhone;
     }
 
 
@@ -26,7 +27,7 @@ public class UserCenterUserCacheRedisKey {
      */
     public static String getUserCacheEmailKey(String email)
     {
-        return appCode +"_user_cache_email_"+email;
+        return "TOUCAN_SHOPPING_WEB:USER_CACHE_EMAIL_"+email;
     }
 
 }
