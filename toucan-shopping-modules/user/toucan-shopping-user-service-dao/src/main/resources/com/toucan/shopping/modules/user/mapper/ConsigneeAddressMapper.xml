@@ -18,6 +18,24 @@
 
     </resultMap>
 
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress" >
+        insert into t_consignee_address(id,user_main_id,name,address,phone,province_code,city_code,area_code,default_status,create_date,delete_status)
+        values(#{id},#{userMainId},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{defaultStatus},#{createDate},#{deleteStatus})
+    </insert>
+
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_consignee_address set delete_status=1 where id = #{id}
+    </update>
+
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
+        update t_consignee_address set  name=#{name},address=#{address},
+        phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},default_status=#{defaultStatus}
+        update_date=#{updateDate}
+          where id = #{id} and user_main_id=#{userMainId}
+    </update>
 
 
 </mapper>

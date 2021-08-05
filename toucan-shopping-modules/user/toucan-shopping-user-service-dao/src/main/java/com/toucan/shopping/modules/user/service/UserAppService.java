@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserAppService {
 
-    public int save(UserApp userApp);
+    int save(UserApp userApp);
 
     List<UserApp> findListByEntity(UserApp userApp);
 }

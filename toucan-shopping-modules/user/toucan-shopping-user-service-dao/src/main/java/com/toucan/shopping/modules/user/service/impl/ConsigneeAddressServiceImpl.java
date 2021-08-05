@@ -1,10 +1,13 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.mapper.ConsigneeAddressMapper;
 import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
 import com.toucan.shopping.modules.user.service.SmsService;
 import com.toucan.shopping.modules.user.vo.UserSmsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,10 +18,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
 
+    @Autowired
+    private ConsigneeAddressMapper consigneeAddressMapper;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
+    @Override
+    public int save(ConsigneeAddress entity) {
+        return consigneeAddressMapper.insert(entity);
+    }
 
+
+
+    @Override
+    public int deleteById(Long id) {
+        return consigneeAddressMapper.deleteById(id);
+    }
+
+    @Override
+    public int update(ConsigneeAddress entity) {
+        return consigneeAddressMapper.update(entity);
+    }
 
 }
