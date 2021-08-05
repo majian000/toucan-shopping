@@ -41,7 +41,7 @@ public class IndexApiController {
             hotProductVo1.setPrice(99.5D);
             hotProductVo1.setProductName("德亚全脂纯牛奶");
             hotProductVo1.setDesc("200ml*48盒");
-            hotProductVo1.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot1.jpg");
+            hotProductVo1.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot1.jpg");
             hotProductVoList.add(hotProductVo1);
 
 
@@ -49,28 +49,28 @@ public class IndexApiController {
             hotProductVo2.setPrice(5288D);
             hotProductVo2.setProductName("iphone 6S");
             hotProductVo2.setDesc("Apple/苹果 iPhone 6s Plus公开版");
-            hotProductVo2.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot2.jpg");
+            hotProductVo2.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot2.jpg");
             hotProductVoList.add(hotProductVo2);
 
             HotProductVo hotProductVo3= new HotProductVo();
             hotProductVo3.setPrice(368D);
             hotProductVo3.setProductName("倩碧特惠组合套装");
             hotProductVo3.setDesc("倩碧补水组合套装8折促销");
-            hotProductVo3.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot3.jpg");
+            hotProductVo3.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot3.jpg");
             hotProductVoList.add(hotProductVo3);
 
             HotProductVo hotProductVo4= new HotProductVo();
             hotProductVo4.setPrice(280D);
             hotProductVo4.setProductName("品利特级橄榄油");
             hotProductVo4.setDesc("750ml*4瓶装组合 西班牙原装进口");
-            hotProductVo4.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            hotProductVo4.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot4.jpg");
             hotProductVoList.add(hotProductVo4);
 
             HotProductVo hotProductVo5= new HotProductVo();
             hotProductVo5.setPrice(280D);
             hotProductVo5.setProductName("品利特级橄榄油");
             hotProductVo5.setDesc("750ml*4瓶装组合 西班牙原装进口");
-            hotProductVo5.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            hotProductVo5.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot4.jpg");
             hotProductVoList.add(hotProductVo5);
 
 
@@ -99,7 +99,7 @@ public class IndexApiController {
             likeProductVo1.setPrice(99.5D);
             likeProductVo1.setProductName("德亚全脂纯牛奶");
             likeProductVo1.setDesc("200ml*48盒");
-            likeProductVo1.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot1.jpg");
+            likeProductVo1.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot1.jpg");
             likeProductVos.add(likeProductVo1);
 
 
@@ -107,28 +107,28 @@ public class IndexApiController {
             likeProductVo2.setPrice(5288D);
             likeProductVo2.setProductName("iphone 6S");
             likeProductVo2.setDesc("Apple/苹果 iPhone 6s Plus公开版");
-            likeProductVo2.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot2.jpg");
+            likeProductVo2.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot2.jpg");
             likeProductVos.add(likeProductVo2);
 
             LikeProductVo likeProductVo3= new LikeProductVo();
             likeProductVo3.setPrice(368D);
             likeProductVo3.setProductName("倩碧特惠组合套装");
             likeProductVo3.setDesc("倩碧补水组合套装8折促销");
-            likeProductVo3.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot3.jpg");
+            likeProductVo3.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot3.jpg");
             likeProductVos.add(likeProductVo3);
 
             LikeProductVo likeProductVo4= new LikeProductVo();
             likeProductVo4.setPrice(280D);
             likeProductVo4.setProductName("品利特级橄榄油");
             likeProductVo4.setDesc("750ml*4瓶装组合 西班牙原装进口");
-            likeProductVo4.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            likeProductVo4.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot4.jpg");
             likeProductVos.add(likeProductVo4);
 
             LikeProductVo likeProductVo5= new LikeProductVo();
             likeProductVo5.setPrice(280D);
             likeProductVo5.setProductName("品利特级橄榄油");
             likeProductVo5.setDesc("750ml*4瓶装组合 西班牙原装进口");
-            likeProductVo5.setHttpPreviewImg("http://127.0.0.1:8083/static/images/hot4.jpg");
+            likeProductVo5.setHttpPreviewImg("http://8.140.187.184:8083/static/images/hot4.jpg");
             likeProductVos.add(likeProductVo5);
 
 
