@@ -1,8 +1,8 @@
-package com.toucan.shopping.modules.sller.service.impl;
+package com.toucan.shopping.modules.seller.service.impl;
 
-import com.toucan.shopping.modules.sller.entity.SllerShopCategory;
-import com.toucan.shopping.modules.sller.mapper.SllerShopCategoryMapper;
-import com.toucan.shopping.modules.sller.service.SllerShopCategoryService;
+import com.toucan.shopping.modules.seller.entity.SllerShopCategory;
+import com.toucan.shopping.modules.seller.mapper.SllerShopCategoryMapper;
+import com.toucan.shopping.modules.seller.service.SllerShopCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package com.toucan.shopping.modules.sller.service;
+package com.toucan.shopping.modules.seller.service;
 
 
-import com.toucan.shopping.modules.sller.entity.SllerShopApproveRecord;
+import com.toucan.shopping.modules.seller.entity.SllerShopApproveRecord;
 
 import java.util.List;
 

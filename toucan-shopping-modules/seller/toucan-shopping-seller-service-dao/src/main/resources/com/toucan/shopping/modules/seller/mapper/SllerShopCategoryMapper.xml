@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.sller.mapper.SllerShopCategoryMapper">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.SllerShopCategoryMapper">
 
-    <resultMap id="entityMap" type="com.toucan.shopping.modules.sller.entity.SllerShopCategory" >
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.seller.entity.SllerShopCategory" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
@@ -15,7 +15,7 @@
     </resultMap>
 
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.sller.entity.SllerShopCategory" >
+    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SllerShopCategory" >
         insert into t_sller_shop_category(id,user_main_id,shop_id,category_id,create_date,delete_status)
         values(#{id},#{userMainId},#{shopId},#{categoryId},#{createDate},#{deleteStatus})
     </insert>
@@ -27,13 +27,13 @@
 
 
 
-    <update id="update" parameterType="com.toucan.shopping.modules.sller.entity.SllerShopCategory">
+    <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SllerShopCategory">
         update t_sller_shop_category set  category_id=#{categoryId},update_date=#{updateDate},update_admin_id=#{updateAdminId}
           where id = #{id} and user_main_id=#{userMainId}
     </update>
 
 
-    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.sller.entity.SllerShopCategory">
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.entity.SllerShopCategory">
         select * from t_sller_shop_category t
         <where>
             1=1

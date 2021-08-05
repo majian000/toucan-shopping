@@ -1,7 +1,7 @@
-package com.toucan.shopping.modules.sller.service;
+package com.toucan.shopping.modules.seller.service;
 
 
-import com.toucan.shopping.modules.sller.entity.SllerShop;
+import com.toucan.shopping.modules.seller.entity.SllerShop;
 
 import java.util.List;
 

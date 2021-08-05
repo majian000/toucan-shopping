@@ -1,4 +1,4 @@
-package com.toucan.shopping.modules.sller.entity;
+package com.toucan.shopping.modules.seller.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;

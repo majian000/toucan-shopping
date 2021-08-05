@@ -1,6 +1,6 @@
-package com.toucan.shopping.modules.sller.mapper;
+package com.toucan.shopping.modules.seller.mapper;
 
-import com.toucan.shopping.modules.sller.entity.SllerShopCategory;
+import com.toucan.shopping.modules.seller.entity.SllerShopCategory;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

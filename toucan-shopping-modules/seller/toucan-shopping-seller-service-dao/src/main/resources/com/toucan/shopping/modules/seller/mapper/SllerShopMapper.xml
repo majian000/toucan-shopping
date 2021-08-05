@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.sller.mapper.SllerShopMapper">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.SllerShopMapper">
 
-    <resultMap id="entityMap" type="com.toucan.shopping.modules.sller.entity.SllerShop" >
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.seller.entity.SllerShop" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="public_shop_id" jdbcType="VARCHAR" property="publicShopId" />
@@ -18,7 +18,7 @@
 
     </resultMap>
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.sller.entity.SllerShop" >
+    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SllerShop" >
         insert into t_sller_shop(id,user_main_id,public_shop_id,name,approve_status,type,remark,create_date,delete_status)
         values(#{id},#{userMainId},#{publicShopId},#{name},#{approveStatus},#{type},#{remark},#{createDate},#{deleteStatus})
     </insert>
@@ -30,14 +30,14 @@
 
 
 
-    <update id="update" parameterType="com.toucan.shopping.modules.sller.entity.SllerShop">
+    <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SllerShop">
         update t_sller_shop set  name=#{name},approve_status=#{approveStatus},
         type=#{type},remark=#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId}
           where id = #{id} and user_main_id=#{userMainId}
     </update>
 
 
-    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.sller.entity.SllerShop">
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.entity.SllerShop">
         select * from t_sller_shop t
         <where>
             1=1
