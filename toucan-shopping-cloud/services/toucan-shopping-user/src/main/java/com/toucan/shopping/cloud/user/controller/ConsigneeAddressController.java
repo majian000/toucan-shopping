@@ -175,5 +175,66 @@ public class ConsigneeAddressController {
     }
 
 
+    /**
+     * 根据用户ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/list/userMainId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO listByUserMainId(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        ConsigneeAddressVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ConsigneeAddressVO.class);
+        if(StringUtils.isEmpty(consigneeAddressVO.getName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,收货人不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getAddress()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,收货地址不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getPhone()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,联系电话不能为空");
+            return resultObjectVO;
+        }
+        if(consigneeAddressVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            return resultObjectVO;
+        }
+        try {
+            //查询收货信息列表
+            ConsigneeAddress queryConsigneeAddress = new ConsigneeAddress();
+            queryConsigneeAddress.setUserMainId(consigneeAddressVO.getUserMainId());
+            resultObjectVO.setData(consigneeAddressService.findListByEntity(queryConsigneeAddress));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
 
 }
