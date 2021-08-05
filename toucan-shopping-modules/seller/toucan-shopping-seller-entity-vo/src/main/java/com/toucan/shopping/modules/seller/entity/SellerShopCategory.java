@@ -9,10 +9,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 商户审核记录
+ * 商户所属分类
  */
 @Data
-public class SllerShopApproveRecord {
+public class SellerShopCategory {
     /**
      * 主键 雪花算法生成
      */
@@ -35,23 +35,13 @@ public class SllerShopApproveRecord {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
 
-
-
     /**
-     * 审核状态 1:通过 2:驳回
+     * 所属类别
      */
-    private Integer approveStatus;
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long categoryId;
 
-    /**
-     * 审核回复
-     */
-    private String approveDesc;
-
-
-    /**
-     * 审核人
-     */
-    private String createAdminId;
 
     /**
      * 创建时间

@@ -12,7 +12,7 @@ import java.util.Date;
  * 商户店铺信息
  */
 @Data
-public class SllerShop {
+public class SellerShop {
     /**
      * 主键 雪花算法生成
      */

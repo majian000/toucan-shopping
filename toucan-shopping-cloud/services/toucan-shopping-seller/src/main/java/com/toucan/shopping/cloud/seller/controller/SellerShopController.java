@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.seller.controller;
 
 
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.seller.service.SellerShopService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

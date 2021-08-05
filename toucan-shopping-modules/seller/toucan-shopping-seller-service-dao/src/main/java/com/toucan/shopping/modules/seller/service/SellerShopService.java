@@ -1,18 +1,19 @@
 package com.toucan.shopping.modules.seller.service;
 
 
-import com.toucan.shopping.modules.seller.entity.SllerShopCategory;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
 
 import java.util.List;
 
 /**
- * 商户店铺类别服务
+ * 卖家店铺服务
  * @author majian
  * @date 2021-8-5 17:04:21
  */
-public interface SllerShopCategoryService {
+public interface SellerShopService {
 
-    int save(SllerShopCategory entity);
+
+    int save(SellerShop entity);
 
     /**
      * 根据ID删除
@@ -26,8 +27,9 @@ public interface SllerShopCategoryService {
      * @param entity
      * @return
      */
-    int update(SllerShopCategory entity);
+    int update(SellerShop entity);
 
 
-    List<SllerShopCategory> findListByEntity(SllerShopCategory query);
+    List<SellerShop> findListByEntity(SellerShop query);
+
 }

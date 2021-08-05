@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.seller.mapper.SllerShopCategoryMapper">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.SellerShopMapper">
 
-    <resultMap id="entityMap" type="com.toucan.shopping.modules.seller.entity.SllerShopCategory" >
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.seller.entity.SellerShop" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
-        <result column="shop_id" jdbcType="BIGINT" property="shopId" />
-        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="public_shop_id" jdbcType="VARCHAR" property="publicShopId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+
     </resultMap>
 
-
-    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SllerShopCategory" >
-        insert into t_sller_shop_category(id,user_main_id,shop_id,category_id,create_date,delete_status)
-        values(#{id},#{userMainId},#{shopId},#{categoryId},#{createDate},#{deleteStatus})
+    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop" >
+        insert into t_sller_shop(id,user_main_id,public_shop_id,name,approve_status,type,remark,create_date,delete_status)
+        values(#{id},#{userMainId},#{publicShopId},#{name},#{approveStatus},#{type},#{remark},#{createDate},#{deleteStatus})
     </insert>
 
 
     <update id="deleteById" parameterType="java.lang.Long">
-        update t_sller_shop_category set delete_status=1 where id = #{id}
+        update t_sller_shop set delete_status=1 where id = #{id}
     </update>
 
 
 
-    <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SllerShopCategory">
-        update t_sller_shop_category set  category_id=#{categoryId},update_date=#{updateDate},update_admin_id=#{updateAdminId}
+    <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
+        update t_sller_shop set  name=#{name},approve_status=#{approveStatus},
+        type=#{type},remark=#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId}
           where id = #{id} and user_main_id=#{userMainId}
     </update>
 
 
-    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.entity.SllerShopCategory">
-        select * from t_sller_shop_category t
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
+        select * from t_sller_shop t
         <where>
             1=1
             <if test="ids!=null ">

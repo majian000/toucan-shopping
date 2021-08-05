@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.seller.mapper.SllerShopApproveRecordMapper">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.SellerShopApproveRecordMapper">
 
-    <resultMap id="entityMap" type="com.toucan.shopping.modules.seller.entity.SllerShopApproveRecord" >
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.seller.entity.SellerShopApproveRecord" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />

@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.seller.service;
 
 
-import com.toucan.shopping.modules.seller.entity.SllerShopApproveRecord;
+import com.toucan.shopping.modules.seller.entity.SellerShopApproveRecord;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import java.util.List;
  * @author majian
  * @date 2021-8-5 17:04:21
  */
-public interface SllerShopApproveRecordService {
+public interface SellerShopApproveRecordService {
 
-    int save(SllerShopApproveRecord entity);
+    int save(SellerShopApproveRecord entity);
 
     /**
      * 根据ID删除
@@ -26,8 +26,8 @@ public interface SllerShopApproveRecordService {
      * @param entity
      * @return
      */
-    int update(SllerShopApproveRecord entity);
+    int update(SellerShopApproveRecord entity);
 
 
-    List<SllerShopApproveRecord> findListByEntity(SllerShopApproveRecord query);
+    List<SellerShopApproveRecord> findListByEntity(SellerShopApproveRecord query);
 }

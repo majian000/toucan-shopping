@@ -1,8 +1,8 @@
 package com.toucan.shopping.modules.seller.service.impl;
 
-import com.toucan.shopping.modules.seller.entity.SllerShop;
-import com.toucan.shopping.modules.seller.mapper.SllerShopMapper;
-import com.toucan.shopping.modules.seller.service.SllerShopService;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.mapper.SellerShopMapper;
+import com.toucan.shopping.modules.seller.service.SellerShopService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +16,17 @@ import java.util.List;
  * @date 2021-8-4 17:44:57
  */
 @Service
-public class SllerShopServiceImpl implements SllerShopService {
+public class SellerShopServiceImpl implements SellerShopService {
 
 
     @Autowired
-    private SllerShopMapper sllerShopMapper;
+    private SellerShopMapper sllerShopMapper;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Override
-    public int save(SllerShop entity) {
+    public int save(SellerShop entity) {
         return sllerShopMapper.insert(entity);
     }
 
@@ -38,12 +38,12 @@ public class SllerShopServiceImpl implements SllerShopService {
     }
 
     @Override
-    public int update(SllerShop entity) {
+    public int update(SellerShop entity) {
         return sllerShopMapper.update(entity);
     }
 
     @Override
-    public List<SllerShop> findListByEntity(SllerShop query) {
+    public List<SellerShop> findListByEntity(SellerShop query) {
         return sllerShopMapper.findListByEntity(query);
     }
 }

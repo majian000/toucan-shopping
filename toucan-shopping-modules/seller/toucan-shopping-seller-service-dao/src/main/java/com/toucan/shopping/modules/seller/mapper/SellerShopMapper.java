@@ -1,16 +1,16 @@
 package com.toucan.shopping.modules.seller.mapper;
 
-import com.toucan.shopping.modules.seller.entity.SllerShop;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 
 @Mapper
-public interface SllerShopMapper {
+public interface SellerShopMapper {
 
 
-    int insert(SllerShop entity);
+    int insert(SellerShop entity);
 
 
     /**
@@ -20,7 +20,7 @@ public interface SllerShopMapper {
      */
     int deleteById(Long id);
 
-    int update(SllerShop entity);
+    int update(SellerShop entity);
 
-    List<SllerShop> findListByEntity(SllerShop query);
+    List<SellerShop> findListByEntity(SellerShop query);
 }
