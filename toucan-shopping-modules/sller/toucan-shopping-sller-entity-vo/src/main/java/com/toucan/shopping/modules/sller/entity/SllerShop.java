@@ -61,6 +61,24 @@ public class SllerShop {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate;
 
+    /**
+     * 创建人
+     */
+    private String createAdminId;
+
+
+    /**
+     * 修改时间
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate;
+
+    /**
+     * 修改人
+     */
+    private String updateAdminId;
+
 
     /**
      * 删除状态 0未删除 1已删除

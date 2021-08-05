@@ -81,7 +81,14 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-auth</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.toucan.shopping.modules.sller</groupId>
+            <artifactId>toucan-shopping-sller-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.sller</groupId>
+            <artifactId>toucan-shopping-sller-service-dao</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
