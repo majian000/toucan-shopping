@@ -119,6 +119,7 @@ public class IndexGeneratorController {
             String genToken = MD5Util.md5("toucan_shopping_generator");
             if(!genToken.equals(token))
             {
+                logger.warn("签名验证失败,正确签名为 {}",genToken);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("生成失败,签名错误");
                 return resultObjectVO;
@@ -159,6 +160,7 @@ public class IndexGeneratorController {
             String genToken = MD5Util.md5("toucan_shopping_generator");
             if(!genToken.equals(token))
             {
+                logger.warn("签名验证失败,正确签名为 {}",genToken);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("生成失败,签名错误");
                 return resultObjectVO;
