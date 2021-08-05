@@ -110,6 +110,9 @@
         <!--消息实体和VO -->
         <module>message/toucan-shopping-message-entity-vo</module>
 
+        <!-- 卖家实体和VO -->
+        <module>sller/toucan-shopping-sller-entity-vo</module>
+
         <!-- 云雀分布式锁-->
         <module>skylark/toucan-shopping-skylark-lock</module>
 
@@ -377,6 +380,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.starter</groupId>
                 <artifactId>toucan-shopping-sign-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.sller</groupId>
+                <artifactId>toucan-shopping-sller-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
