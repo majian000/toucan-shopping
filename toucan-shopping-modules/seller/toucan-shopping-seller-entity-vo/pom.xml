@@ -15,8 +15,8 @@
     <description>卖家实体VO</description>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.toucan.shopping.modules.sller</groupId>
-    <artifactId>toucan-shopping-sller-entity-vo</artifactId>
+    <groupId>com.toucan.shopping.modules.seller</groupId>
+    <artifactId>toucan-shopping-seller-entity-vo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 

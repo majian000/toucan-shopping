@@ -15,8 +15,8 @@
     <description>卖家服务Service和DAO</description>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.toucan.shopping.modules.sller</groupId>
-    <artifactId>toucan-shopping-sller-service-dao</artifactId>
+    <groupId>com.toucan.shopping.modules.seller</groupId>
+    <artifactId>toucan-shopping-seller-service-dao</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -31,8 +31,8 @@
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.sller</groupId>
-            <artifactId>toucan-shopping-sller-entity-vo</artifactId>
+            <groupId>com.toucan.shopping.modules.seller</groupId>
+            <artifactId>toucan-shopping-seller-entity-vo</artifactId>
         </dependency>
     </dependencies>
 
