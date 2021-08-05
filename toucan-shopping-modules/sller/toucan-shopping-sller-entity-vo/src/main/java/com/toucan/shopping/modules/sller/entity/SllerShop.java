@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 卖家店铺信息
+ * 商户店铺信息
  */
 @Data
 public class SllerShop {

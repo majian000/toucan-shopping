@@ -112,6 +112,9 @@
 
         <!-- 卖家实体和VO -->
         <module>sller/toucan-shopping-sller-entity-vo</module>
+        <!--卖家Service和DAO -->
+        <module>sller/toucan-shopping-sller-service-dao</module>
+
 
         <!-- 云雀分布式锁-->
         <module>skylark/toucan-shopping-skylark-lock</module>
@@ -387,6 +390,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.sller</groupId>
                 <artifactId>toucan-shopping-sller-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.sller</groupId>
+                <artifactId>toucan-shopping-sller-service-dao</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
