@@ -101,4 +101,11 @@ spring:
                 key-resolver: '#{@pathKeyResolver}'
                 redis-rate-limiter.replenishRate: 900  #令牌桶每秒填充平均速率,QPS 900
                 redis-rate-limiter.burstCapacity: 1000 #令牌桶总容量
+        - id: toucan-shopping-seller-proxy
+          uri: lb://toucan-shopping-seller
+          predicates:
+            - Path=/toucan-shopping-seller-proxy/**
+          filters:
+            - StripPrefix=1
+
 

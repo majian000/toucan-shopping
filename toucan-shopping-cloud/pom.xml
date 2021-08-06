@@ -67,6 +67,8 @@
         <module>api/toucan-shopping-stock-api</module>
         <!--地区编码API -->
         <module>api/toucan-shopping-area-api</module>
+        <!--商户服务API -->
+        <module>api/toucan-shopping-seller-api</module>
 
 
 
