@@ -78,7 +78,21 @@ toucan:
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
   datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端配置
-    real-name-authentication-page: http://8.140.187.184/page/user/true/name/approve/page
+    real-name-authentication-page: http://localhost:8083/page/user/true/name/approve/page
+  user-auth:
+    enabled: true
+    name: toucan-shopping-user
+    #HTTP权限请求头
+    # 例如 商城C端 Cookie:uid=d10590b318544049ba2104d1f5517a7d;lt=d10590b318544049ba2104d1f5517a7d
+    http-toucan-auth-header: Cookie
+    #当前项目登录页
+    login-page: /login
+    #没有权限时跳转页面
+    page-403: /403
+    #拦截指定路径
+    path-patterns: /**
+    #忽略拦截
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
   modules:
     skylarkLock: #云雀分布式锁
       type: redis #中间件类型

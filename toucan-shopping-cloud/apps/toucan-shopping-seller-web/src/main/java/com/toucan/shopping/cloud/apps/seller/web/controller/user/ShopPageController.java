@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.user;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
@@ -40,6 +41,7 @@ public class ShopPageController extends BaseController {
      * 个人店铺申请
      * @return
      */
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/shop_regist/user")
     public String center(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {

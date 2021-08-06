@@ -126,7 +126,7 @@
  | apps/toucan-shopping-admin-auth-web           | 8098                 | 权限中台界面                                       |
  | apps/toucan-shopping-scheduler                | 8092                 | 商城调度任务端                                     |
  | apps/toucan-shopping-user-scheduler           | 8097                 | 用户中心任务调度                                   |
- | apps/toucan-shopping-seller-web               | 8101                 | 卖家WEB端                                          |
+ | apps/toucan-shopping-seller-web               | 8101                 | 商户WEB端                                          |
  | toucan-shopping-admin-auth-scheduler          | 9001                 | 权限中台任务调度                                   |
  
     
