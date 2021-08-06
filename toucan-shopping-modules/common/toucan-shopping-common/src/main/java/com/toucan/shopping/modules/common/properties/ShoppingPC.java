@@ -18,4 +18,8 @@ public class ShoppingPC {
      */
     private Freemarker freemarker;
 
+    /**
+     * 用户实名审核页面
+     */
+    private String realNameAuthenticationPage;
 }

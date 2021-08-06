@@ -3,6 +3,8 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.user;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -27,13 +32,21 @@ public class ShopPageController extends BaseController {
     private FeignUserService feignUserService;
 
 
-    @RequestMapping("/shop_regist/{uid}")
-    public String center(@PathVariable Long uid)
+    @Autowired
+    private Toucan toucan;
+
+
+    /**
+     * 个人店铺申请
+     * @return
+     */
+    @RequestMapping("/shop_regist/user")
+    public String center(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {
 
         try {
             UserVO userVO = new UserVO();
-            userVO.setUserMainId(uid);
+            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
             ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -43,9 +56,7 @@ public class ShopPageController extends BaseController {
                 {
                     return "shop_regist";
                 }else{
-                    //TODO:跳转到实名页面
-                    //TODO:个人开店只需要实名就可以 企业开店 需要上传公司资质相关
-                    int a=0;
+                    httpServletResponse.sendRedirect(toucan.getShoppingPC().getRealNameAuthenticationPage());
                 }
             }
 

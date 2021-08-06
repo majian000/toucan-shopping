@@ -92,7 +92,7 @@ ribbon:
 toucan:
   machine-id: 2201 #机器编码
   app-code: 10001001 #自定义应用编码
-  shopping-pc: #PC端页面静态化
+  shopping-pc: #PC端配置
     freemarker:
       release-mapping-url: /htmls/release/**
       preview-mapping-url: /htmls/preview/**
