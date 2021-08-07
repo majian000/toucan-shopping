@@ -68,9 +68,7 @@ function login()
                     showVCode();
                 }
             }else{
-                document.getElementById('setcookie').src="http://localhost:8101/api/sso/setCookie?domain=127.0.0.1&cookies="+document.cookie;
-                document.getElementById('setcookie').contentWindow.location.reload(true);
-                //window.location.href=basePath+"/index";
+                share_cookie();
             }
         },
         error: function (result) {
