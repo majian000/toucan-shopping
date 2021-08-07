@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,24 +58,6 @@ public class ShopPageController extends BaseController {
                 {
                     return "shop_regist";
                 }else{
-//                    Cookie[] cookies = httpServletRequest.getCookies();
-//                    String tss_uid="";
-//                    String tss_lt="";
-//                    if(cookies!=null)
-//                    {
-//                        for(Cookie cookie:cookies)
-//                        {
-//                            if(cookie.getName().equals("tss_uid"))
-//                            {
-//                                tss_uid = cookie.getValue();
-//                            }
-//                            if(cookie.getName().equals("tss_lt"))
-//                            {
-//                                tss_lt = cookie.getValue();
-//                            }
-//                        }
-//
-//                    }
                     httpServletResponse.sendRedirect(toucan.getShoppingPC().getRealNameAuthenticationPage());
                 }
             }

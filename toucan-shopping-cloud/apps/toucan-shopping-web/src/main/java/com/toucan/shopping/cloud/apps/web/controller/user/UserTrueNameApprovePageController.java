@@ -11,16 +11,13 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -94,10 +91,9 @@ public class UserTrueNameApprovePageController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/page")
-    public String page(HttpServletRequest request, HttpServletResponse response)
+    public String page(HttpServletRequest request)
     {
         try {
-
             //从请求头中拿到uid
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
