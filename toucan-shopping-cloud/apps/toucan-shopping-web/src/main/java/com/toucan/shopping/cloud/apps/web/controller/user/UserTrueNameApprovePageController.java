@@ -51,7 +51,7 @@ public class UserTrueNameApprovePageController extends BaseController {
     {
         try {
             //从请求头中拿到uid
-            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
             queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);
@@ -99,7 +99,7 @@ public class UserTrueNameApprovePageController extends BaseController {
         try {
 
             //从请求头中拿到uid
-            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserTrueNameApproveVO queryUserTrueNameApproveVO = new UserTrueNameApproveVO();
             queryUserTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserTrueNameApproveVO);

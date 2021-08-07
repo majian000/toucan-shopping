@@ -40,4 +40,10 @@ public class UserAuth {
      * 忽略拦截的后缀
      */
     private String excludePathPatterns;
+
+    /**
+     * 共享会话的所有域名多个用，分割
+     */
+    private String ssoSetCookieUrlList;
+
 }

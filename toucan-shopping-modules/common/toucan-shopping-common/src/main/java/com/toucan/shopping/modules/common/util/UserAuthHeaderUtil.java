@@ -6,13 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 public class UserAuthHeaderUtil {
 
 
-    public static String getUserMainId(String appCode,String authHeader) throws Exception {
+    public static String getUserMainId(String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
             throw new IllegalArgumentException("请求头参数无效");
         }
 
-        String adminId = StringUtils.substringAfter(authHeader,appCode+"_uid=");
+        String adminId = StringUtils.substringAfter(authHeader,"tss_uid=");
         if(adminId.indexOf(";")!=-1)
         {
             adminId=adminId.substring(0,adminId.indexOf(";"));
@@ -22,14 +22,14 @@ public class UserAuthHeaderUtil {
 
 
 
-    public static String getToken(String appCode,String authHeader) throws Exception {
+    public static String getToken(String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
             throw new IllegalArgumentException("请求头参数无效");
 
         }
 
-        String token = StringUtils.substringAfter(authHeader,appCode+"_lt=");
+        String token = StringUtils.substringAfter(authHeader,"tss_lt=");
         if(token.indexOf(";")!=-1)
         {
             token=token.substring(0,token.indexOf(";"));

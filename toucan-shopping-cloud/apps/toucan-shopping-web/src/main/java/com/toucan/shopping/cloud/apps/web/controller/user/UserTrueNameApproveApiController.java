@@ -112,7 +112,7 @@ public class UserTrueNameApproveApiController extends BaseController {
         try {
 
             //从请求头中拿到uid
-            userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userTrueNameApproveVO.setUserMainId(Long.parseLong(userMainId));
 
             if(userTrueNameApproveVO.getUserMainId()==null)
