@@ -94,8 +94,8 @@ toucan:
     path-patterns: /**
     #忽略拦截
     exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
-    #登录会话域名
-    login-token-domain: .8.140.187.184
+    #共享会话的所有域名
+    sso-set-cookie-url-list: "http://8.140.187.184:8083/api/sso/setCookie"
   modules:
     toucanRedis: #redis模块
       select: single # 可选值 single:单实例 cluster:集群
