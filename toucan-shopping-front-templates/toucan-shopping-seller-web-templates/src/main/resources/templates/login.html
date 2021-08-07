@@ -1,24 +1,15 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	
-	<meta name="Keywords" content="卖家登录">
+	<meta name="Keywords" content="关键词123">
     <meta name="Description" content="描述">
     <link rel="stylesheet" href="${basePath}/static/css/base.css">
     <link rel="stylesheet" type="text/css" href="${basePath}/static/css/login.css">
     <script src="${basePath}/static/js/jquery-3.1.1.min.js"></script>
-	<script type="text/javascript" src="${basePath}/static/js/seller/login.js"></script>
-	<script type="text/javascript" src="${basePath}/static/js/seller/sso.js"></script>
+	<script src="${basePath}/static/sellerWeb/js/login.js"></script>
 	<title>登录页面</title>
     <#include "/common_js.html"/>
 
-	<style>
-		.login_warn_icon{
-			width:16px;
-			height:17px;
-			overflow:hidden;
-			background:url(../../static/images/login-icons.png) -104px -24px no-repeat;
-		}
-	</style>
 
 </head>
 <body>
@@ -48,6 +39,12 @@
   			<!-- login-box开始（账户登录） -->
   			<div class="login-box" style="visibility: visible; display: block;">
   			  <div class="mt tab-h"></div>
+  			  <!-- 登录提示信息开始 -->
+  			  <div class="msg-wrap">
+  			  	  <div id="login_msg" class="msg-warn hide ">
+  				  </div>
+  			  </div>
+  			  <!-- 登录提示信息结束 -->
   			  <div class="mc">
   			  	<div class="form">
   			  		<form  id="formlogin" method="post" onsubmit="return false;">
@@ -90,15 +87,6 @@
                         		<a href="javascript:;" class="btn-img btn-entry" id="loginsubmit" tabindex="6" onclick="login()">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
                         	</div>
                         </div>
-
-						<div class="item item-fore5">
-							<div id="login_msg_c" style="display:none">
-								<b class="login_warn_icon">
-									&nbsp;&nbsp;&nbsp;&nbsp;
-								</b>
-								<a id="login_msg" style="color:#ff4e00;"></a>
-							</div>
-						</div>
   			  		</form>
   			  	</div>
   			  </div>
@@ -218,6 +206,7 @@
 	</div>
 </div>
 <!-- 底部页面结束 -->
+
 
 
 <script type="text/javascript">
