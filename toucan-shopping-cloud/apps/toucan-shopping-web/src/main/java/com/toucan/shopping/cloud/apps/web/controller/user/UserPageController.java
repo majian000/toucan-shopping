@@ -99,14 +99,14 @@ public class UserPageController extends BaseController {
             logger.warn(e.getMessage(),e);
         }finally{
             //UID
-            Cookie uidCookie = new Cookie(toucan.getAppCode() + "_uid","-1");
+            Cookie uidCookie = new Cookie("tss_uid","-1");
             uidCookie.setPath("/");
             //永不过期
             uidCookie.setMaxAge(Integer.MAX_VALUE);
             response.addCookie(uidCookie);
 
             //TOKEN
-            Cookie ltCookie = new Cookie(toucan.getAppCode() + "_lt", "-1");
+            Cookie ltCookie = new Cookie("tss_lt", "-1");
             ltCookie.setPath("/");
             //永不过期
             ltCookie.setMaxAge(Integer.MAX_VALUE);
