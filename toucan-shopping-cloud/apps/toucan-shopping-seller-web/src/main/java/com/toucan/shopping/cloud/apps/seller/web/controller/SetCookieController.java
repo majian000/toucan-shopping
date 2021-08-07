@@ -33,8 +33,8 @@ public class SetCookieController {
                 }
             }
         }
-        response.addHeader("Set-Cookie","tss_uid="+tss_uid+"; Max-Age=2147483647; Domain=localhost; Path=/");
-        response.addHeader("Set-Cookie","tss_lt="+tss_lt+"; Max-Age=2147483647;  Domain=localhost; Path=/");
+        response.addHeader("Set-Cookie","tss_uid="+tss_uid+"; Max-Age=2147483647; Domain=localhost; Path=/;Secure=True;SameSite=None;");
+        response.addHeader("Set-Cookie","tss_lt="+tss_lt+"; Max-Age=2147483647;  Domain=localhost; Path=/;Secure=True;SameSite=None;");
 
     }
 
