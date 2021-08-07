@@ -42,9 +42,6 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto navbar-custom">
-                        <li class="nav-item " id="user_info_container" style="display:none">
-                            <a class="nav-link" href="index.html" id="user_info_user_name">18701601892 </a>
-                        </li>
                         <li class="nav-item active">
                             <a class="nav-link" href="index.html">开店教程 </a>
                         </li>
@@ -158,25 +155,6 @@
     <script src="${basePath}/static/js/jquery.counterup.min.js"></script>
     <script src="${basePath}/static/js/jquery.magnific-popup.min.js"></script>
     <script src="${basePath}/static/js/main.js"></script>
+    </body>
 
-
-
-    <script>
-        $(function () {
-
-            //查询信息
-            $.post(basePath+"/api/user/login/info",{},function(result){
-                if(result.code>0&&result.data!=null)
-                {
-                    if(result.data.nickName!=null) {
-                        $("#user_info_user_name").text(result.data.nickName);
-                    }
-                    $("#user_info_container").show();
-                }
-            });
-        });
-    </script>
-
-   </body>
-
-</html>
+    </html>

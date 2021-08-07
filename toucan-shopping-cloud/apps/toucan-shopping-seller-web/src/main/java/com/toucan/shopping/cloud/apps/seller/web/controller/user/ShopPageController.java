@@ -49,8 +49,7 @@ public class ShopPageController extends BaseController {
 
         try {
             UserVO userVO = new UserVO();
-            String userMainId = UserAuthHeaderUtil.getUserMainId( httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            userVO.setUserMainId(Long.parseLong(userMainId));
+            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
             ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
