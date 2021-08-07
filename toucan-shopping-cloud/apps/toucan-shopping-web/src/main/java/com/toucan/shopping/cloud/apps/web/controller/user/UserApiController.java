@@ -280,7 +280,7 @@ public class UserApiController extends BaseController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             UserVO queryUserVO = new UserVO();
-            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
+            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId( httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
             resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -309,7 +309,7 @@ public class UserApiController extends BaseController {
     public ResultObjectVO info(HttpServletRequest httpServletRequest){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            String userMainId = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(), httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
@@ -336,7 +336,7 @@ public class UserApiController extends BaseController {
         //在这里调用用户中心 判断登录
         UserLoginVO queryUserLogin = new UserLoginVO();
         try {
-            String uid = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String uid = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             String lt =  UserAuthHeaderUtil.getToken(toucan.getAppCode(),httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             queryUserLogin.setUserMainId(Long.parseLong(uid));
             queryUserLogin.setLoginToken(lt);
@@ -456,14 +456,14 @@ public class UserApiController extends BaseController {
                     resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
                 }else {
                     //UID
-                    Cookie uidCookie = new Cookie(toucan.getAppCode() + "_uid", String.valueOf(userLoginVO.getUserMainId()));
+                    Cookie uidCookie = new Cookie("tss_uid", String.valueOf(userLoginVO.getUserMainId()));
                     uidCookie.setPath("/");
                     //永不过期
                     uidCookie.setMaxAge(Integer.MAX_VALUE);
                     response.addCookie(uidCookie);
 
                     //TOKEN
-                    Cookie ltCookie = new Cookie(toucan.getAppCode() + "_lt", userLoginVO.getLoginToken());
+                    Cookie ltCookie = new Cookie( "tss_lt", userLoginVO.getLoginToken());
                     ltCookie.setPath("/");
                     //永不过期
                     ltCookie.setMaxAge(Integer.MAX_VALUE);

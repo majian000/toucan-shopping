@@ -11,3 +11,7 @@
     
     3.toucan-shopping-sign-spring-boot-starter
     签名插件,校验请求签名
+    
+    4.toucan-shopping-user-sso-spring-boot-starter
+    用户中心插件,用于会话共享
+    

@@ -88,7 +88,7 @@ public class UserPageController extends BaseController {
     @RequestMapping(value="/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         try{
-            String uid = UserAuthHeaderUtil.getUserMainId(toucan.getAppCode(),request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+            String uid = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserLoginVO userLoginVO = new UserLoginVO();
             userLoginVO.setUserMainId(Long.parseLong(uid));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userLoginVO);
