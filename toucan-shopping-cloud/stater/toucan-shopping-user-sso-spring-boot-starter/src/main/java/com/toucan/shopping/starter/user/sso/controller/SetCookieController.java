@@ -1,6 +1,7 @@
 package com.toucan.shopping.starter.user.sso.controller;
 
 
+import com.toucan.shopping.modules.common.util.HttpCookieUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +15,7 @@ public class SetCookieController {
 
 
     @RequestMapping(value="/setCookie")
-    public void setCookie(String domain,String cookies, HttpServletResponse response)
+    public void setCookie(String cookies,HttpServletRequest request, HttpServletResponse response)
     {
         String tss_uid = "";
         String tss_lt="";
@@ -33,8 +34,16 @@ public class SetCookieController {
                 }
             }
         }
-        response.addHeader("Set-Cookie","tss_uid="+tss_uid+"; Max-Age=2147483647; Path=/;SameSite=None;Secure=True;");
-        response.addHeader("Set-Cookie","tss_lt="+tss_lt+"; Max-Age=2147483647;  Path=/;SameSite=None;Secure=True;");
+        String userAgent = request.getHeader("User-Agent");
+        String sameSite="";
+        if(HttpCookieUtil.disallowsSameSiteNone(userAgent))
+        {
+            sameSite="SameSite=None;";
+        }
+
+
+        response.addHeader("Set-Cookie","tss_uid="+tss_uid+"; Max-Age=2147483647; Path=/;Secure=True;"+sameSite);
+        response.addHeader("Set-Cookie","tss_lt="+tss_lt+"; Max-Age=2147483647;  Path=/;Secure=True;"+sameSite);
 
     }
 
