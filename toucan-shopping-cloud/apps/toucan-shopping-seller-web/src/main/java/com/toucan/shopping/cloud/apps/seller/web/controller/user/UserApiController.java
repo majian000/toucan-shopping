@@ -173,15 +173,15 @@ public class UserApiController extends BaseController {
                     //UID
                     Cookie uidCookie = new Cookie( "tss_uid", String.valueOf(userLoginVO.getUserMainId()));
                     uidCookie.setPath("/");
-                    //永不过期
-                    uidCookie.setMaxAge(Integer.MAX_VALUE);
+                    //1天过期
+                    uidCookie.setMaxAge(86400);
                     response.addCookie(uidCookie);
 
                     //TOKEN
                     Cookie ltCookie = new Cookie( "tss_lt", userLoginVO.getLoginToken());
                     ltCookie.setPath("/");
-                    //永不过期
-                    ltCookie.setMaxAge(Integer.MAX_VALUE);
+                    //1天过期
+                    ltCookie.setMaxAge(86400);
                     response.addCookie(ltCookie);
 
                     //删除登录失败计数

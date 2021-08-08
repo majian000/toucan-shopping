@@ -13,7 +13,7 @@ function share_cookie()
                 var pos =0;
                 set_cookie(pos,result.data)
             }else{
-                window.location.href=basePath+"/index";
+                //window.location.href=basePath+"/index";
             }
         }
     });
@@ -32,7 +32,7 @@ function set_cookie(pos,domainList)
             {
                 set_cookie(pos+1,domainList);
             }else{
-                window.location.href=basePath+"/index";
+                //window.location.href=basePath+"/index";
             }
         }
     });

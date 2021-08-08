@@ -86,7 +86,7 @@ public class UserPageController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value="/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
         try{
             String uid = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserLoginVO userLoginVO = new UserLoginVO();
@@ -101,21 +101,26 @@ public class UserPageController extends BaseController {
             //UID
             Cookie uidCookie = new Cookie("tss_uid","-1");
             uidCookie.setPath("/");
-            //永不过期
-            uidCookie.setMaxAge(Integer.MAX_VALUE);
+            //立刻清除
+            uidCookie.setMaxAge(0);
             response.addCookie(uidCookie);
 
             //TOKEN
             Cookie ltCookie = new Cookie("tss_lt", "-1");
             ltCookie.setPath("/");
-            //永不过期
-            ltCookie.setMaxAge(Integer.MAX_VALUE);
+            //立刻清除
+            ltCookie.setMaxAge(0);
             response.addCookie(ltCookie);
 
             request.setAttribute("isShowInputVcode", false);
 
         }
-        return "user/login";
+        try {
+            response.sendRedirect(toucan.getUserAuth().getLoginPage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
     }
 
 }
