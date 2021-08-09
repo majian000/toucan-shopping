@@ -24,41 +24,8 @@
 </head>
 
 <body>
-    <!--   HEADER PART START   -->
-    <header>
 
-        <!-- Navber -->
-        <nav class="navbar navbar-expand-lg navbar-light main-nav">
-            <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    <div class="logo">
-                        <img src="${basePath}/static/images/logo.png" class="w-100" alt="" />
-                    </div>
-                </a>
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto navbar-custom">
-                        <li class="nav-item " id="user_info_container" style="display:none">
-                            <a class="nav-link" href="index.html" id="user_info_user_name">用户昵称 </a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="index.html">开店教程 </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="about.html">常见问题</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Navber End -->
-    </header>
-    <!--   HEADER PART END   -->
+    <#include "/title.html"/>
 
    
     <!-- HERO BANNER PART START -->
@@ -158,22 +125,7 @@
     <script src="${basePath}/static/js/jquery.counterup.min.js"></script>
     <script src="${basePath}/static/js/jquery.magnific-popup.min.js"></script>
     <script src="${basePath}/static/js/main.js"></script>
-
-    <script>
-        $(function () {
-
-            //查询信息
-            $.post(basePath+"/api/user/login/info",{},function(result){
-                if(result.code>0&&result.data!=null)
-                {
-                    if(result.data.nickName!=null) {
-                        $("#user_info_user_name").text(result.data.nickName);
-                    }
-                    $("#user_info_container").show();
-                }
-            });
-        });
-    </script>
+    <script src="${basePath}/static/js/seller/info.js"></script>
     </body>
 
     </html>
