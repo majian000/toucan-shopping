@@ -27,6 +27,8 @@ spring:
     enabled: true
     content-type: text/html
     template-loader-path: classpath:/templates/
+    settings:
+      template_exception_handler: com.toucan.shopping.modules.freemarker.exception.PageErrorException
 
 
 

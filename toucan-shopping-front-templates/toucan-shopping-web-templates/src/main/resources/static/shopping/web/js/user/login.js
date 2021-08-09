@@ -68,7 +68,7 @@ function login()
                     showVCode();
                 }
             }else{
-                window.location.href=basePath+"/page/user/info";
+                share_cookie();
             }
         },
         error: function (result) {

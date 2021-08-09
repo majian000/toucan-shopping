@@ -29,6 +29,8 @@ spring:
     enabled: true
     content-type: text/html
     template-loader-path: classpath:/templates/
+    settings:
+      template_exception_handler: com.toucan.shopping.modules.freemarker.exception.PageErrorException
   servlet:
     multipart:
       max-file-size: 5MB  #单个文件最大5MB
@@ -114,6 +116,8 @@ toucan:
     path-patterns: /**
     #忽略拦截
     exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
+    #共享会话的所有域名
+    sso-set-cookie-url-list: "http://8.140.187.184:8101/api/sso/setCookie"
   modules:
     toucanRedis: #redis模块
       select: single # 可选值 single:单实例 cluster:集群

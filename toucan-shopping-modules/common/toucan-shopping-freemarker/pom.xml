@@ -32,6 +32,12 @@
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
 
+        <!--freemark -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+
     </dependencies>
 
 

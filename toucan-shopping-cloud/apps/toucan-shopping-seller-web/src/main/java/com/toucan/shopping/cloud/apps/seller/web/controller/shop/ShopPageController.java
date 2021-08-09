@@ -42,13 +42,14 @@ public class ShopPageController extends BaseController {
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/shop_regist/user")
+    @RequestMapping("/shop_regist")
     public String center(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {
 
         try {
             UserVO userVO = new UserVO();
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
             ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -61,7 +62,6 @@ public class ShopPageController extends BaseController {
                     httpServletResponse.sendRedirect("/page/user/true/name/approve/page");
                 }
             }
-
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
