@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.seller.web.controller.user;
+package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
@@ -58,7 +58,7 @@ public class ShopPageController extends BaseController {
                 {
                     return "shop_regist";
                 }else{
-                    httpServletResponse.sendRedirect(toucan.getShoppingPC().getRealNameAuthenticationPage());
+                    httpServletResponse.sendRedirect("/page/user/true/name/approve/page");
                 }
             }
 
