@@ -57,7 +57,7 @@
 @media only screen and (min-width: 992px) {
     .main-nav .nav-link {
         padding-top: 33px;
-        padding-bottom: 33px;
+        padding-bottom: 5px;
     }
     
 }

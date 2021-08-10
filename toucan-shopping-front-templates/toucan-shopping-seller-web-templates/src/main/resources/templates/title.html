@@ -1,9 +1,21 @@
+
+<style>
+    .user_info_out_container{
+        background-color:#eee ;
+        margin: 0 auto;
+        display:none;
+        text-align:right;
+        border:1px;
+    }
+    ul li:hover ul{display: block;}
+</style>
+
 <!--   HEADER PART START   -->
 <header>
 
     <!-- Navber -->
-    <nav class="navbar navbar-expand-lg navbar-light main-nav">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light main-nav" style="height:140px;">
+        <div class="container" >
             <a class="navbar-brand" href="index.html">
                 <div class="logo">
                     <img src="${basePath}/static/images/logo.png" class="w-100" alt="" />
@@ -14,11 +26,11 @@
                 <i class="fas fa-bars"></i>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto navbar-custom">
-                    <li class="nav-item " id="user_info_container" style="display:none">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" >
+                <ul class="navbar-nav ml-auto navbar-custom"  >
+                    <li class="nav-item " id="user_info_container" style="display:none;">
                         <a class="nav-link" href="index.html" id="user_info_user_name">用户昵称 </a>
-                        <ul>
+                        <ul class="user_info_out_container">
                             <li><a href="${basePath}/page/user/logout">退出登录</a></li>
                         </ul>
                     </li>
