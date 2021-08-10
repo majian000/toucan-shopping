@@ -81,7 +81,7 @@ toucan:
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
   datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端配置
-    real-name-authentication-page: http://8.140.187.184:8083/page/user/true/name/approve/page
+    regist-page: http://8.140.187.184:8083/page/user/regist
   user-auth:
     enabled: true
     name: toucan-shopping-user

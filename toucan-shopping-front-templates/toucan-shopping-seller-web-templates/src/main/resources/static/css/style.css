@@ -206,6 +206,19 @@ img {
     padding-right: 20px;
 }
 
+.navbar-custom > li > a:before {
+    position: absolute;
+    content: "";
+    width: 0%;
+    height: 4px;
+    left: 50%;
+    bottom: 0;
+    z-index: -1;
+    transition: 0.5s;
+    border-radius: 5px;
+    background: #000000;
+    transform: translate(-50%);
+}
 
 .navbar-custom > li > a {
     position: relative;

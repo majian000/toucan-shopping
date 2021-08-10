@@ -44,9 +44,14 @@ public class UserPageController extends BaseController {
 
 
     @RequestMapping("/regist")
-    public String regist()
+    public void regist(HttpServletResponse response)
     {
-        return "user/regist";
+        try {
+            response.sendRedirect(toucan.getShoppingPC().getRegistPage());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
     }
 
     @RequestMapping("/login")

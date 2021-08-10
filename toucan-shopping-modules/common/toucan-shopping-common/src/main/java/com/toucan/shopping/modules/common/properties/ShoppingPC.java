@@ -18,4 +18,9 @@ public class ShoppingPC {
      */
     private Freemarker freemarker;
 
+    /**
+     * 用户注册页
+     */
+    private String registPage;
+
 }
