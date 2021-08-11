@@ -66,11 +66,14 @@
   			  				<span class="capslock" style="display: none;">
   			  				</span>
   			  			</div>
-  			  			<!-- 图片验证码开始 fore3-->
-                        <div id="o-authcode" class="item item-vcode item-fore3 " id="vcodetr" style="display:none" >
-							<input type="text" id="vcode" name="vcode" style="vertical-align:middle;" class="l_ipt" placeholder="请输入验证码" maxlength="4" />
-							<img id="refreshCaptcha" style="width:100px;height:40px;vertical-align:middle;"  src="${basePath}/api/user/login/faild/vcode" >
-                        </div>
+						<div class="item" id="vcodetr" style="display:none">
+							<!-- 图片验证码开始 fore3-->
+							<div class="item item-fore1 item-error" style="text-align:left;" >
+								<label for="vcode" class="login-label pwd-label"></label>
+								<input type="text" name="vcode" id="vcode" class="itxt" style="width:150px;text-align:left;"  tabindex="3" autocomplete="off" maxlength="4"  placeholder="验证码">
+								<img id="refreshCaptcha" style="width:100px;height:40px;vertical-align:middle;"  src="${basePath}/api/user/login/faild/vcode" >
+							</div>
+						</div>
                         <!-- 自动登录开始fore4 -->
                         <div class="item item-fore4">
                         	<div class="safe">

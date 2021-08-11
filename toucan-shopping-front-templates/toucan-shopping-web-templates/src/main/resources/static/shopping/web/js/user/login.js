@@ -12,6 +12,9 @@ $(function () {
         showVCode();
     }
 
+    $("#refreshCaptcha").bind( 'click' ,function(){
+        $("#refreshCaptcha").attr("src",basePath+"/api/user/login/faild/vcode?"+new Date().getTime());
+    });
 });
 
 function showVCode()
@@ -77,7 +80,4 @@ function login()
         }
     });
 
-    $("#refreshCaptcha").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/user/login/faild/vcode?"+new Date().getTime());
-    });
 }

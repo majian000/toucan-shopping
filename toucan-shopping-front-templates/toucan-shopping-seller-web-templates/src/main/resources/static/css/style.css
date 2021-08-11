@@ -383,10 +383,10 @@ a.theme-btn {
 
 .page-title-content a,
 span {
-    color: #222;
-    font-size: 16px;
-    font-weight: 300;
-    transition: all .3s;
+    /*color: #222;*/
+    /*font-size: 16px;*/
+    /*font-weight: 300;*/
+    /*transition: all .3s;*/
 }
 
 .page-title-content a:hover {
