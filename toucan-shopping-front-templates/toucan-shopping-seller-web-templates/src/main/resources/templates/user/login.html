@@ -46,12 +46,12 @@
   				<a href="javascript:;">账号登录</a>
   			</div>
   			<!-- login-box开始（账户登录） -->
-  			<div class="login-box" style="visibility: visible; display: block;">
+  			<div class="login-box" style="visibility: visible; display: block;" id="ldiv">
   			  <div class="mt tab-h"></div>
   			  <div class="mc">
   			  	<div class="form">
   			  		<form  id="formlogin" method="post" onsubmit="return false;">
-  			  			<input type="hidden" name="" class="hide" id="" value="">
+						<input type="hidden" id="ivcode" value="${isShowInputVcode?string('1','0')}"/>
   			  			<!-- 用户名输入框fore1 -->
   			  			<div class="item item-fore1 item-error">
   			  				<label for="username" class="login-label name-label"></label>
@@ -67,18 +67,17 @@
   			  				</span>
   			  			</div>
   			  			<!-- 图片验证码开始 fore3-->
-                        <div id="o-authcode" class="item item-vcode item-fore3 hide ">
-                        	<input type="text" name="" id="authcode" class="itxt itxt02" tabindex="3">
-                        	<input type="button" id="code" class="verify-code" value="MHAR">
-                        	<a href="javascript:;" onclick="createCode();">换一张</a>
+                        <div id="o-authcode" class="item item-vcode item-fore3 " id="vcodetr" style="display:none" >
+							<input type="text" id="vcode" name="vcode" style="vertical-align:middle;" class="l_ipt" placeholder="请输入验证码" maxlength="4" />
+							<img id="refreshCaptcha" style="width:100px;height:40px;vertical-align:middle;"  src="${basePath}/api/user/login/faild/vcode" >
                         </div>
                         <!-- 自动登录开始fore4 -->
                         <div class="item item-fore4">
                         	<div class="safe">
-                        		<span>
+                        		<!--<span>
                         			<input type="checkbox" name="chkRememberMe" id="autologin" tabindex="3">
                         			<label for="">自动登录</label>
-                        		</span>
+                        		</span>-->
                         		<span class="forget-pw-safe">
                         			<a href="https://www.17sucai.com/preview/663563/2016-12-10/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/demo.html">忘记密码</a>
                         		</span>
