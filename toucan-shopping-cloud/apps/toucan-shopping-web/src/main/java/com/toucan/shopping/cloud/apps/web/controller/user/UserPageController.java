@@ -51,7 +51,7 @@ public class UserPageController extends BaseController {
     }
 
     @RequestMapping("/login")
-    public String login(HttpServletRequest request)
+    public String login(HttpServletRequest request, HttpServletResponse response)
     {
         try {
             //查询登录次数,失败3次要求输入验证码
@@ -86,7 +86,7 @@ public class UserPageController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value="/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         try{
             String uid = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
             UserLoginVO userLoginVO = new UserLoginVO();
@@ -115,12 +115,8 @@ public class UserPageController extends BaseController {
             request.setAttribute("isShowInputVcode", false);
 
         }
-        try {
-            response.sendRedirect(toucan.getUserAuth().getLoginPage());
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
+
+        return login(request,response);
     }
 
 }
