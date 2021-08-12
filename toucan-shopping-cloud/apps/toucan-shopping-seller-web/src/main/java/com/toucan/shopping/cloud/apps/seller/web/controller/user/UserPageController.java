@@ -97,7 +97,7 @@ public class UserPageController extends BaseController {
             userLoginVO.setUserMainId(Long.parseLong(uid));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userLoginVO);
             //删除缓存中的token 以及用户信息
-            ResultObjectVO resultObjectVO  = feignUserService.logout(requestJsonVO.sign(),requestJsonVO);
+            feignUserService.logout(requestJsonVO.sign(),requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
