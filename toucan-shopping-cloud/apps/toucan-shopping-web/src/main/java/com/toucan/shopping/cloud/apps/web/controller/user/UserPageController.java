@@ -84,7 +84,6 @@ public class UserPageController extends BaseController {
     }
 
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value="/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         try{

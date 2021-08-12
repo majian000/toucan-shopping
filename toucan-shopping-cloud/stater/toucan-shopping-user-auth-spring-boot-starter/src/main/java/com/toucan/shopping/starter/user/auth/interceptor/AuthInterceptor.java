@@ -24,6 +24,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,6 +49,23 @@ public class AuthInterceptor implements HandlerInterceptor {
     public void responseWrite(HttpServletResponse response, String content) throws IOException {
         response.setContentType("application/json");
         response.getWriter().write(content);
+    }
+
+    public void deleteCookis(HttpServletResponse response)
+    {
+        //UID
+        Cookie uidCookie = new Cookie("tss_uid","-1");
+        uidCookie.setPath("/");
+        //立刻清除
+        uidCookie.setMaxAge(0);
+        response.addCookie(uidCookie);
+
+        //TOKEN
+        Cookie ltCookie = new Cookie("tss_lt", "-1");
+        ltCookie.setPath("/");
+        //立刻清除
+        ltCookie.setMaxAge(0);
+        response.addCookie(ltCookie);
     }
 
     @Override
@@ -189,8 +207,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
                                 if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
-                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+                                    //删除cookies
+                                    deleteCookis(response);
+                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
                                     return false;
                                 }
 
@@ -206,8 +225,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 if(!lt.equals(loginToken))
                                 {
                                     logger.info("登录token校验失败 {} loginToken {}" + authHeader,loginToken);
-                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+
+                                    //删除cookies
+                                    deleteCookis(response);
+
+                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
                                     return false;
                                 }
 
@@ -216,8 +238,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 if (resultObjectVO.getCode() != ResultVO.SUCCESS
                                         || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
                                     logger.info("登录验证失败 " + authHeader);
-                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+
+                                    //删除cookies
+                                    deleteCookis(response);
+
+                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
                                     return false;
                                 }
 
