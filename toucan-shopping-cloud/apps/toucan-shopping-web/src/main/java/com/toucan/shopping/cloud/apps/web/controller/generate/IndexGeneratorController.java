@@ -78,7 +78,7 @@ public class IndexGeneratorController {
                 params.put("categorys", indexService.queryCategorys());
 
                 //设置basepath
-                params.put("basePath",httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath());
+                params.put("basePath","");
 
 
                 template.process(params, fileWriterWithEncoding);
