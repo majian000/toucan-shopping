@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
+package com.toucan.shopping.cloud.apps.seller.web.controller.enterprise;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,11 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * 店铺控制器
+ * 企业店铺
  */
 @Controller("pageShopController")
-@RequestMapping("/page/shop")
-public class ShopPageController extends BaseController {
+@RequestMapping("/page/enterprise/shop")
+public class EnterpriseShopPageController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,7 +37,7 @@ public class ShopPageController extends BaseController {
 
 
     /**
-     * 个人店铺申请
+     * 企业店铺申请
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
@@ -57,8 +56,9 @@ public class ShopPageController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if(result)
                 {
-                    return "shop_regist";
+                    return "shop/regist";
                 }else{
+                    //重定向到实名审核页面
                     httpServletResponse.sendRedirect("/page/user/true/name/approve/page");
                 }
             }
