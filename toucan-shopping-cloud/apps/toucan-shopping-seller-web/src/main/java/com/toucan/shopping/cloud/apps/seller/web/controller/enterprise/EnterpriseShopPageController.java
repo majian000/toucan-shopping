@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 企业店铺
  */
-@Controller("pageShopController")
+@Controller("enterpriseShopPageController")
 @RequestMapping("/page/enterprise/shop")
 public class EnterpriseShopPageController extends BaseController {
 
