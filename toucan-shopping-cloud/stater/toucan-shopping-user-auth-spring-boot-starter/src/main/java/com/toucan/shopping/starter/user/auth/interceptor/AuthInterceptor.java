@@ -19,10 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * 权限校验
@@ -51,7 +48,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         response.getWriter().write(content);
     }
 
-    public void deleteCookis(HttpServletResponse response)
+    public void deleteCookies(HttpServletResponse response)
     {
         //UID
         Cookie uidCookie = new Cookie("tss_uid","-1");
@@ -208,7 +205,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
                                     logger.info("请求头参数异常 " + authHeader);
                                     //删除cookies
-                                    deleteCookis(response);
+                                    deleteCookies(response);
                                     request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
                                     return false;
                                 }
@@ -227,7 +224,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info("登录token校验失败 {} loginToken {}" + authHeader,loginToken);
 
                                     //删除cookies
-                                    deleteCookis(response);
+                                    deleteCookies(response);
 
                                     request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
                                     return false;
@@ -240,7 +237,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info("登录验证失败 " + authHeader);
 
                                     //删除cookies
-                                    deleteCookis(response);
+                                    deleteCookies(response);
 
                                     request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
                                     return false;
