@@ -22,24 +22,30 @@
 
 <#include "/common_js.html"/>
 
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/cookie.js"></script>
 <script>
     $(function () {
+        var tss_uid=getCookie("tss_uid");
+        var tss_lt=getCookie("tss_lt");
+        if(tss_uid!=null&&tss_lt!=null) {
+            //查询信息
+            $.post(basePath + "/api/user/login/info", {}, function (result) {
+                if (result.code > 0 && result.data != null) {
+                    if (result.data.nickName != null) {
+                        $("#unickname").text(result.data.nickName);
+                    }
+                    if (result.data.httpHeadSculpture != null) {
+                        $("#headImg").attr("src", result.data.httpHeadSculpture);
+                    }
+                    $("#userInfo").show();
+                } else {
 
-        //查询信息
-        $.post(basePath+"/api/user/login/info",{},function(result){
-            if(result.code>0&&result.data!=null)
-            {
-                if(result.data.nickName!=null) {
-                    $("#unickname").text(result.data.nickName);
+                    $("#registOrLogin").show();
                 }
-                if(result.data.httpHeadSculpture!=null) {
-                    $("#headImg").attr("src", result.data.httpHeadSculpture);
-                }
-                $("#userInfo").show();
-            }else{
-
-                $("#registOrLogin").show();
-            }
-        });
+            });
+        }else{
+            $("#registOrLogin").show();
+        }
     });
 </script>
