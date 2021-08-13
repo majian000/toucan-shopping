@@ -56,7 +56,7 @@ html { overflow-y:scroll; filter:progid:DXImageTransform.Microsoft.BasicImage(gr
 	width:1200px; height:35px; line-height:35px;
 }
 .s_city_b{
-	width:180px; height:35px; float:left;
+	width:200px; height:35px; float:left;
 }
 .s_city{
 	height:35px; background:url(../images/t_arrow.gif) no-repeat right center; float:left; padding-right:15px; cursor:pointer; position:relative;
