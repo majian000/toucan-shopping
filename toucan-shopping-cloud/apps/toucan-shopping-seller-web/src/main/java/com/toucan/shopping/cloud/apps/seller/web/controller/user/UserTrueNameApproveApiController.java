@@ -15,6 +15,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
@@ -25,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,11 +50,7 @@ public class UserTrueNameApproveApiController extends BaseController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
-
-    @Autowired
-    private FeignUserService feignUserService;
+    private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
     private Toucan toucan;
@@ -67,7 +63,7 @@ public class UserTrueNameApproveApiController extends BaseController {
 
 
 
-    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request,UserTrueNameApproveVO userTrueNameApproveVO){
@@ -156,7 +152,7 @@ public class UserTrueNameApproveApiController extends BaseController {
                 return resultObjectVO;
             }
             String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),ClientVCodeId);
-            Object vCodeObject = stringRedisTemplate.opsForValue().get(vcodeRedisKey);
+            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
             if(vCodeObject==null)
             {
                 resultObjectVO.setMsg("请求失败,验证码过期请刷新");
@@ -171,7 +167,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             }
 
             //删除缓存中验证码
-            stringRedisTemplate.delete(vcodeRedisKey);
+            toucanStringRedisService.delete(vcodeRedisKey);
 
 
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);

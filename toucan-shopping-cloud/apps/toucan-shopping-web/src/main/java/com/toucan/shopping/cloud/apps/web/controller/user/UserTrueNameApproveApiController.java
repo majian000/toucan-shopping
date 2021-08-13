@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
@@ -47,11 +48,9 @@ public class UserTrueNameApproveApiController extends BaseController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private ToucanStringRedisService toucanStringRedisService;
 
 
-    @Autowired
-    private FeignUserService feignUserService;
 
     @Autowired
     private Toucan toucan;
@@ -153,7 +152,7 @@ public class UserTrueNameApproveApiController extends BaseController {
                 return resultObjectVO;
             }
             String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),ClientVCodeId);
-            Object vCodeObject = stringRedisTemplate.opsForValue().get(vcodeRedisKey);
+            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
             if(vCodeObject==null)
             {
                 resultObjectVO.setMsg("请求失败,验证码过期请刷新");
@@ -168,7 +167,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             }
 
             //删除缓存中验证码
-            stringRedisTemplate.delete(vcodeRedisKey);
+            toucanStringRedisService.delete(vcodeRedisKey);
 
 
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
