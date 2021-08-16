@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -123,6 +124,8 @@ public class SellerShopController {
 
             sellerShopVO.setId(idGenerator.id());
             sellerShopVO.setPublicShopId(String.valueOf(idGenerator.id()));
+            sellerShopVO.setCreateDate(new Date());
+            sellerShopVO.setDeleteStatus((short)0);
             int ret = sellerShopService.save(sellerShopVO);
             if(ret<=0)
             {

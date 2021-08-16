@@ -23,7 +23,7 @@ function registUserShop()
         type: "POST",
         url: basePath+'/api/user/shop/regist',
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify({"name":nameValue}),
+        data:  JSON.stringify({"name":nameValue,"vcode":vcodeValue}),
         dataType: "json",
         success: function (data) {
             if(data.code==401)
