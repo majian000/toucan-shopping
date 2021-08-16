@@ -1045,6 +1045,9 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 .l_user{
 	width:267px; height:38px; line-height:38px\9; overflow:hidden; background:url(../images/i_u.png) no-repeat 285px center; background-color:#FFF; color:#888888; font-size:14px; font-family:"Microsoft YaHei"; padding:0 40px 0 10px; border:1px solid #cccccc;
 }
+.l_ipt_long{
+	width:267px; height:38px; line-height:38px\9; overflow:hidden;  background-color:#FFF; color:#888888; font-size:14px; font-family:"Microsoft YaHei"; padding:0 40px 0 10px; border:1px solid #cccccc;
+}
 .l_select{
 	width:320px; height:38px; line-height:38px\9; overflow:hidden;  background-color:#FFF; color:#888888; font-size:14px; font-family:"Microsoft YaHei"; padding:0 40px 0 10px; border:1px solid #cccccc;
 }

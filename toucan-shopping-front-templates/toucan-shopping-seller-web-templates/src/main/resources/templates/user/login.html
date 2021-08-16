@@ -8,6 +8,7 @@
     <script src="${basePath}/static/js/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="${basePath}/static/js/seller/login.js"></script>
 	<script type="text/javascript" src="${basePath}/static/js/seller/sso.js"></script>
+	<link rel="stylesheet" href="${basePath}/static/css/style2.css" />
 	<title>登录页面</title>
     <#include "/common_js.html"/>
 
@@ -22,6 +23,11 @@
 
 </head>
 <body>
+
+<!--Begin Header Begin-->
+<div class="soubg">
+	<#include "/top_child.html"/>
+</div>
 
 <!-- **************头部页面开始****** -->
 <div class="w">
@@ -178,7 +184,7 @@
   					</li>
   					<li class="extra-r">
   					   <div class="regist-link">
-  						<a href="${basePath}/page/user/regist" onclick="return false;" class="">
+  						<a href="${basePath}/page/user/regist" >
   							<b></b>立即注册
   						</a>
   					   </div>

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,8 +51,9 @@ public class UserShopApiController extends BaseController {
      * 个人店铺申请
      * @return
      */
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/shop_regist")
+    @UserAuth
+    @RequestMapping(value="/regist",produces = "application/json;charset=UTF-8")
+    @ResponseBody
     public ResultObjectVO center(HttpServletRequest httpServletRequest,@RequestBody SellerShopVO sellerShopVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -73,6 +75,7 @@ public class UserShopApiController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if(result)
                 {
+                    sellerShopVO.setType(1);
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
                     resultObjectVO = feignSellerShopService.save(requestJsonVO.sign(),requestJsonVO);
                 }else{

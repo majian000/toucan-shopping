@@ -43,6 +43,9 @@ public class UserTrueNameApproveController {
     private UserTrueNameApproveRecordService userTrueNameApproveRecordService;
 
     @Autowired
+    private UserDetailService userDetailService;
+
+    @Autowired
     private Toucan toucan;
 
     @Autowired
@@ -369,6 +372,8 @@ public class UserTrueNameApproveController {
                         resultObjectVO.setMsg("请求失败,请稍后重试");
                         return resultObjectVO;
                     }
+
+
                     //保存审核记录
                     UserTrueNameApproveRecord userTrueNameApproveRecord = new UserTrueNameApproveRecord();
                     userTrueNameApproveRecord.setId(idGenerator.id());
@@ -379,6 +384,23 @@ public class UserTrueNameApproveController {
                     userTrueNameApproveRecord.setCreateDate(new Date());
                     userTrueNameApproveRecord.setDeleteStatus((short)0);
                     userTrueNameApproveRecordService.save(userTrueNameApproveRecord);
+
+                    //设置姓名和身份证号码
+                    List<UserDetail> userDetails = userDetailService.findByUserMainId(userTrueNameApprove.getUserMainId());
+                    if(CollectionUtils.isNotEmpty(userDetails))
+                    {
+                        UserDetail userDetail = userDetails.get(0);
+                        userDetail.setTrueName(userTrueNameApprove.getTrueName());
+                        userDetail.setIdCard(userTrueNameApprove.getIdCard());
+                        userDetail.setIdcardType(userTrueNameApprove.getIdcardType());
+                        ret = userDetailService.update(userDetail);
+                        if (ret <= 0) {
+                            logger.warn("修改姓名和身份证失败 {} ", JSONObject.toJSONString(userDetail));
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("请求失败,请稍后重试");
+                            return resultObjectVO;
+                        }
+                    }
 
                     resultObjectVO.setData(userTrueNameApproves);
                     return resultObjectVO;
