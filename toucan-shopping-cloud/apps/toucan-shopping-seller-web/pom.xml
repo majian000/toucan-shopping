@@ -121,6 +121,14 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-freemarker</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.seller</groupId>
+            <artifactId>toucan-shopping-seller-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.seller</groupId>
+            <artifactId>toucan-shopping-seller-api</artifactId>
+        </dependency>
     </dependencies>
 
 
