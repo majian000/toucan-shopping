@@ -34,34 +34,28 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop" >
-        insert into t_sller_shop(id,user_main_id,public_shop_id,name,approve_status,type,remark,create_date,delete_status)
+        insert into t_seller_shop(id,user_main_id,public_shop_id,name,approve_status,type,remark,create_date,delete_status)
         values(#{id},#{userMainId},#{publicShopId},#{name},#{approveStatus},#{type},#{remark},#{createDate},#{deleteStatus})
     </insert>
 
 
     <update id="deleteById" parameterType="java.lang.Long">
-        update t_sller_shop set delete_status=1 where id = #{id}
+        update t_seller_shop set delete_status=1 where id = #{id}
     </update>
 
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
-        update t_sller_shop set  name=#{name},approve_status=#{approveStatus},
+        update t_seller_shop set  name=#{name},approve_status=#{approveStatus},
         type=#{type},remark=#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId}
           where id = #{id} and user_main_id=#{userMainId}
     </update>
 
 
     <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
-        select * from t_sller_shop t
+        select * from t_seller_shop t
         <where>
             1=1
-            <if test="ids!=null ">
-                and t.id in
-                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
             <if test="id!=null">
                 and t.id = #{id}
             </if>
@@ -76,7 +70,7 @@
 
 
     <select id="queryListPage" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.page.SellerShopPageInfo">
-        select t.* from t_sller_shop t
+        select t.* from t_seller_shop t
         <where>
             1=1
 
@@ -89,7 +83,7 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.page.SellerShopPageInfo">
-        select count(*) from t_sller_shop t
+        select count(*) from t_seller_shop t
         <where>
             1=1
             <include refid="queryListPageWhere" />
