@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.seller.mapper;
 
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -23,4 +24,11 @@ public interface SellerShopMapper {
     int update(SellerShop entity);
 
     List<SellerShop> findListByEntity(SellerShop query);
+
+
+
+    List<SellerShop> queryListPage(SellerShopPageInfo queryPageInfo);
+
+    Long queryListPageCount(SellerShopPageInfo queryPageInfo);
+
 }

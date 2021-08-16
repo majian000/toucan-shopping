@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.seller.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.mapper.SellerShopMapper;
+import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.service.SellerShopService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,4 +48,16 @@ public class SellerShopServiceImpl implements SellerShopService {
     public List<SellerShop> findListByEntity(SellerShop query) {
         return sllerShopMapper.findListByEntity(query);
     }
+
+
+
+    @Override
+    public PageInfo<SellerShop> queryListPage(SellerShopPageInfo queryPageInfo) {
+        PageInfo<SellerShop> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(sllerShopMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(sllerShopMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
+    }
+
 }

@@ -15,4 +15,13 @@ public interface FeignSellerShopService {
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询列表页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo);
+
 }

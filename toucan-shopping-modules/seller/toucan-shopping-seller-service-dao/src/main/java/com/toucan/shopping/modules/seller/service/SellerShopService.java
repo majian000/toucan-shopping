@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.seller.service;
 
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 
 import java.util.List;
 
@@ -31,5 +33,13 @@ public interface SellerShopService {
 
 
     List<SellerShop> findListByEntity(SellerShop query);
+
+
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<SellerShop> queryListPage(SellerShopPageInfo queryPageInfo);
 
 }
