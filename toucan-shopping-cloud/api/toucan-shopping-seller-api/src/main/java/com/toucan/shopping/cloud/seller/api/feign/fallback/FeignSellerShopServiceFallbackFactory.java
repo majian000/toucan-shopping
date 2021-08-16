@@ -23,7 +23,20 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
         logger.warn(throwable.getMessage(),throwable);
         return new FeignSellerShopService(){
 
-
+            @Override
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerShopService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("注册店铺失败");
+                return resultObjectVO;
+            }
         };
     }
 }
