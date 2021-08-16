@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="trueName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+            </div>
+        </script>
+
+        <table class="layui-hide" id="userTrueNameApproveTable" lay-filter="userTrueNameApproveTableFilter"></table>
+
+        <script type="text/html" id="userTrueNameApproveTableBar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form', 'table','tree','dtree'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        var dtree = layui.dtree;
+        var roleTree;
+        var roleTreeDataArray = new Array();
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#userSearchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#userTrueNameApproveTable',
+            url: "[[@{/}]]seller/shop/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'id',  title: '主键'},
+                    {field: 'userMainId', width: 150, title: '用户ID'},
+                    {field: 'trueName',  title: '真实姓名'},
+                    {field: 'idCard',  width: 200, title: '证件号码'},
+                    {field: 'idcardImg1', width: 150, title: '证件正面',
+                        templet: function (row) {
+                            return "<a href='"+row.httpIdcardImg1+"' target='_blank'><img src='"+row.httpIdcardImg1+"' width='30' height='30'  /></a>";
+                        }},
+                    {field: 'idcardImg2', width: 150, title: '证件背面',
+                        templet: function (row) {
+                            return "<a href='"+row.httpIdcardImg2+"' target='_blank'><img src='"+row.httpIdcardImg2+"' width='30' height='30'  /></a>";
+                        }},
+                    {field: 'idcardType', width: 150, title: '证件类型',
+                        templet: function (row) {
+                            if(row.idcardType == "1"){
+                                return "身份证"
+                            }
+                            if(row.idcardType == "2"){
+                                return "护照"
+                            }
+                            if(row.idcardType == "3"){
+                                return "海外"
+                            }
+                            return row.idcardType;
+                        }},
+                    {field: 'approveStatus', width: 150, title: '审核状态',
+                        templet: function (row) {
+                            if(row.approveStatus == "1"){
+                                return "审核中"
+                            }
+                            if(row.approveStatus == "2"){
+                                return "审核通过"
+                            }
+                            if(row.approveStatus == "3"){
+                                return "审核驳回"
+                            }
+                            return row.approveStatus;
+                        }},
+                    {field: 'rejectText',width: 150,  title: '驳回原因'},
+                    {field: 'createDate', width: 150, title: '创建时间'},
+                    {title: '操作', minWidth: 300, toolbar: '#userTrueNameApproveTableBar', align: "center"}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('userTrueNameApproveTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+        $("#data-reset-btn").click(function(){
+            $("#categoryId").val("");
+            $("#userSearchForm")[0].reset();
+            layui.form.render();
+        });
+
+
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(userTrueNameApproveTableFilter)', function (obj) {
+            if (obj.event === 'deleteToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('userTrueNameApproveTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定删除属性名?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]/seller/shop/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('userTrueNameApproveTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+
+        //监听表格复选框选择
+        table.on('checkbox(userTrueNameApproveTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(userTrueNameApproveTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'pass') {
+                layer.confirm('确定审核通过?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]seller/shop/pass/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('userTrueNameApproveTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

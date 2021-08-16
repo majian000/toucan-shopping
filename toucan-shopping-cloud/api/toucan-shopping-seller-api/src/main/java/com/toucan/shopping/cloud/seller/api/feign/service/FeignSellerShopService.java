@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-seller-proxy/sellerShop",fallbackFactory = FeignSellerShopServiceFallbackFactory.class)
@@ -13,7 +14,7 @@ public interface FeignSellerShopService {
 
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
-    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -22,6 +23,6 @@ public interface FeignSellerShopService {
      * @return
      */
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO queryListPage(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 }

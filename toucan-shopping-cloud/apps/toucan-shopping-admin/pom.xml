@@ -159,6 +159,16 @@
             <artifactId>toucan-shopping-image-upload</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.seller</groupId>
+            <artifactId>toucan-shopping-seller-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.seller</groupId>
+            <artifactId>toucan-shopping-seller-entity-vo</artifactId>
+        </dependency>
+
     </dependencies>
 
 

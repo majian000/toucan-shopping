@@ -74,7 +74,7 @@ public class UserShopApiController extends BaseController {
                 if(result)
                 {
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-                    resultObjectVO = feignSellerShopService.save(requestJsonVO);
+                    resultObjectVO = feignSellerShopService.save(requestJsonVO.sign(),requestJsonVO);
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("请先实名认证");

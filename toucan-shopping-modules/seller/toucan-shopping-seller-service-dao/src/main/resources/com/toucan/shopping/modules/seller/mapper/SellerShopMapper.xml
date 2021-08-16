@@ -8,6 +8,7 @@
         <result column="public_shop_id" jdbcType="VARCHAR" property="publicShopId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />

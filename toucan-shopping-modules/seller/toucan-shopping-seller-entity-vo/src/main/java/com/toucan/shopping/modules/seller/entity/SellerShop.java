@@ -39,9 +39,14 @@ public class SellerShop {
 
 
     /**
-     * 审核状态 1审核中 2审核通过 3审核驳回
+     * 审核状态 1审核中 2审核通过 3审核驳回 (个人店铺直接通过)
      */
     private Integer approveStatus;
+
+    /**
+     * 启用状态 0:禁用 1启用
+     */
+    private Short enableStatus;
 
     /**
      * 店铺类型 1个人 2企业
