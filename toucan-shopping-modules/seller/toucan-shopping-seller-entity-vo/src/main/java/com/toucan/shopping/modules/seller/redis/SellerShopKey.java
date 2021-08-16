@@ -18,4 +18,14 @@ public class SellerShopKey {
     }
 
 
+    /**
+     * 编辑商户店铺锁
+     * @param userMainId
+     * @return
+     */
+    public static String getUpdateLockKey(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_WEB:SELLER:SHOP:UPDATE:"+userMainId+"_LOCK";
+    }
+
 }

@@ -2,8 +2,6 @@ package com.toucan.shopping.cloud.apps.seller.web.redis;
 
 public class ShopRegistRedisKey {
 
-    //默认值,在启动的时候会被替换成配置文件的blackBird.appCode
-    public static String appCode = "10001001";
 
 
     /**

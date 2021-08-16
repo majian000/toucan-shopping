@@ -111,13 +111,17 @@ public class SellerShopController {
                     return resultObjectVO;
                 }
 
+                sellerShopVO.setApproveStatus(2);  //个人店铺直接审核通过
 
             }else if(sellerShopVO.getType().intValue()==2) //企业申请
             {
                 //查询企业相关信息,判断是否已注册
+
+                sellerShopVO.setApproveStatus(1); //企业店铺需要审核资质等相关
             }
 
             sellerShopVO.setId(idGenerator.id());
+            sellerShopVO.setPublicShopId(String.valueOf(idGenerator.id()));
             int ret = sellerShopService.save(sellerShopVO);
             if(ret<=0)
             {
@@ -136,6 +140,10 @@ public class SellerShopController {
         }
         return resultObjectVO;
     }
+
+
+
+
 
 
 
