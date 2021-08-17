@@ -146,6 +146,49 @@ public class SellerShopController {
     }
 
 
+    /**
+     * 查询指定用户的店铺
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/by/user",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findByUser(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerShop querySellerShop = JSONObject.parseObject(requestVo.getEntityJson(), SellerShop.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            if(querySellerShop.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户ID");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(sellerShopService.findListByEntity(querySellerShop));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 
