@@ -25,4 +25,13 @@ public interface FeignSellerShopService {
     @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
+
+    /**
+     * 查询指定用户下店铺
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/by/user",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO findByUser(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 }
