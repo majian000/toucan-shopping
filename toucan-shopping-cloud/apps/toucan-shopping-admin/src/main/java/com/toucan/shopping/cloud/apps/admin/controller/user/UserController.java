@@ -170,6 +170,14 @@ public class UserController extends UIController {
                 if(userVO.getHeadSculpture()!=null) {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
+                if(userVO.getIdcardImg1()!=null)
+                {
+                    userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
+                }
+                if(userVO.getIdcardImg2()!=null)
+                {
+                    userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
+                }
                 request.setAttribute("model", userVO);
             }
         }catch(Exception e)

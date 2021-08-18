@@ -2351,6 +2351,8 @@ public class UserController {
                 userVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
                 userVO.setSex(userDetail.getSex()); //性别
                 userVO.setType(userDetail.getType()); //用户类型
+                userVO.setIdcardImg1(userDetail.getIdcardImg1()); //证件照正面
+                userVO.setIdcardImg2(userDetail.getIdcardImg2()); //证件照背面
             }
 
             resultObjectVO.setData(userVO);
