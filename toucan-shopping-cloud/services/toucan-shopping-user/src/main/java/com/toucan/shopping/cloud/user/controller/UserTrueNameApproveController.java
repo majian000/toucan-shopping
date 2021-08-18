@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.*;
+import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterTrueNameApproveKey;
 import com.toucan.shopping.modules.user.service.*;
@@ -37,6 +38,9 @@ public class UserTrueNameApproveController {
     private IdGenerator idGenerator;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private UserTrueNameApproveService userTrueNameApproveService;
 
     @Autowired
@@ -44,6 +48,18 @@ public class UserTrueNameApproveController {
 
     @Autowired
     private UserDetailService userDetailService;
+
+    @Autowired
+    private UserElasticSearchService userElasticSearchService;
+
+    @Autowired
+    private UserMobilePhoneService userMobilePhoneService;
+
+    @Autowired
+    private UserUserNameService userUserNameService;
+
+    @Autowired
+    private UserEmailService userEmailService;
 
     @Autowired
     private Toucan toucan;
@@ -331,6 +347,104 @@ public class UserTrueNameApproveController {
 
 
     /**
+     * 刷新用户信息到elasticsearch
+     * @param userMainId
+     * @return
+     * @throws Exception
+     */
+    private ResultObjectVO flushUserElasticSearch(Long userMainId) throws Exception {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        //从缓存中查询用户对象
+        List<UserElasticSearchVO> userElasticSearchVOS = userElasticSearchService.queryByUserMainId(userMainId);
+        UserElasticSearchVO userElasticSearchVO = null;
+        if(CollectionUtils.isNotEmpty(userElasticSearchVOS))
+        {
+            userElasticSearchVO = userElasticSearchVOS.get(0);
+        }else{ //如果缓存不存在将重新推到缓存中
+            userElasticSearchVO = new UserElasticSearchVO();
+            //设置默认用户ID
+            userElasticSearchVO.setUserMainId(-1L);
+
+            User queryUser = new User();
+            queryUser.setUserMainId(userMainId);
+            List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
+            if(CollectionUtils.isNotEmpty(users)) {
+                User user = users.get(0);
+                userElasticSearchVO.setId(user.getId());
+                userElasticSearchVO.setUserMainId(user.getUserMainId());
+            }
+
+            userElasticSearchService.save(userElasticSearchVO);
+        }
+
+        User queryUser = new User();
+        queryUser.setUserMainId(userMainId);
+        List<User> users = userService.findListByEntityNothingDeleteStatus(queryUser);
+        if(CollectionUtils.isNotEmpty(users)) {
+            User user = users.get(0);
+            userElasticSearchVO.setPassword(user.getPassword());
+            userElasticSearchVO.setEnableStatus(user.getEnableStatus());
+            userElasticSearchVO.setDeleteStatus(user.getDeleteStatus());
+            userElasticSearchVO.setCreateDate(user.getCreateDate());
+        }
+
+        if(userElasticSearchVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("刷新失败,没有找到缓存中该用户的用户ID");
+            return resultObjectVO;
+        }
+
+        //设置手机号
+        UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
+        queryUserMobilePhone.setUserMainId(userMainId);
+        List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByEntity(queryUserMobilePhone);
+        if(CollectionUtils.isNotEmpty(userMobilePhones)) {
+            userElasticSearchVO.setMobilePhone(userMobilePhones.get(0).getMobilePhone());
+        }
+
+        //设置邮箱
+        UserEmail queryUserEmail = new UserEmail();
+        queryUserEmail.setUserMainId(userMainId);
+        List<UserEmail> userEmails = userEmailService.findListByEntity(queryUserEmail);
+        if(CollectionUtils.isNotEmpty(userEmails)) {
+            userElasticSearchVO.setEmail(userEmails.get(0).getEmail());
+        }
+
+        //设置用户名
+        UserUserName userUserName = new UserUserName();
+        userUserName.setUserMainId(userMainId);
+        List<UserUserName> userUserNames = userUserNameService.findListByEntity(userUserName);
+        if(CollectionUtils.isNotEmpty(userUserNames)) {
+            userElasticSearchVO.setUsername(userUserNames.get(0).getUsername());
+        }
+
+        UserDetail queryUserDetail = new UserDetail();
+        queryUserDetail.setUserMainId(userMainId);
+        List<UserDetail> userDetails = userDetailService.findListByEntity(queryUserDetail);
+        if(CollectionUtils.isNotEmpty(userDetails)) {
+            UserDetail userDetail = userDetails.get(0);
+            userElasticSearchVO.setNickName(userDetail.getNickName()); //昵称
+            userElasticSearchVO.setTrueName(userDetail.getTrueName()); //姓名
+            userElasticSearchVO.setIdCard(userDetail.getIdCard()); //证件号码
+            userElasticSearchVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
+            userElasticSearchVO.setSex(userDetail.getSex()); //性别
+            userElasticSearchVO.setType(userDetail.getType()); //用户类型
+            userElasticSearchVO.setTrueNameStatus(userDetail.getTrueNameStatus()); //实名状态
+            userElasticSearchVO.setIdcardImg1(userDetail.getIdcardImg1()); //证件照正面
+            userElasticSearchVO.setIdcardImg2(userDetail.getIdcardImg2()); //证件照背面
+            userElasticSearchVO.setIdcardType(userDetail.getIdcardType()); //证件类型
+        }
+
+        userElasticSearchService.update(userElasticSearchVO);
+
+        return resultObjectVO;
+    }
+
+
+
+    /**
      * 通过指定
      * @param requestVo
      * @return
@@ -403,6 +517,8 @@ public class UserTrueNameApproveController {
                             resultObjectVO.setMsg("请求失败,请稍后重试");
                             return resultObjectVO;
                         }
+                        //刷新缓存
+                        flushUserElasticSearch(userTrueNameApprove.getUserMainId());
                     }
 
                     resultObjectVO.setData(userTrueNameApproves);
