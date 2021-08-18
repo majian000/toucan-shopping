@@ -118,6 +118,9 @@
                     {field: 'idCard', width: 240, title: '证件号码'},
                     {field: 'idCardType', width: 80, title: '证件类型',
                         templet: function (row) {
+                            if(row.idCardType == null){
+                                return "";
+                            }
                             if(row.idCardType == "1"){
                                 return "身份证";
                             }
