@@ -812,6 +812,16 @@ public class UserController {
         {
             userElasticSearchVO.setTrueNameStatus(userRegistVO.getTrueNameStatus());
         }
+        //证件照正面
+        if(StringUtils.isNotEmpty(userRegistVO.getIdcardImg1()))
+        {
+            userElasticSearchVO.setIdcardImg1(userRegistVO.getIdcardImg1());
+        }
+        //证件照背面
+        if(StringUtils.isNotEmpty(userRegistVO.getIdcardImg2()))
+        {
+            userElasticSearchVO.setIdcardImg2(userRegistVO.getIdcardImg2());
+        }
         //用户类型
         if(userRegistVO.getType()!=null)
         {
@@ -877,6 +887,8 @@ public class UserController {
                 userDetail.setSex(userRegistVO.getSex()); //性别
                 userDetail.setType(userRegistVO.getType()); //用户类型
                 userDetail.setIdcardType(userRegistVO.getIdcardType()); //证件类型
+                userDetail.setIdcardImg1(userRegistVO.getIdcardImg1()); //证件照正面
+                userDetail.setIdcardImg2(userRegistVO.getIdcardImg2()); //证件照背面
                 userDetail.setTrueNameStatus(userRegistVO.getTrueNameStatus()); //实名状态
                 row= userDetailService.update(userDetail);
             }else{
@@ -891,6 +903,8 @@ public class UserController {
                 userDetail.setType(userRegistVO.getType()); //用户类型
                 userDetail.setIdcardType(userRegistVO.getIdcardType());  //证件类型
                 userDetail.setTrueNameStatus(userRegistVO.getTrueNameStatus()); //实名状态
+                userDetail.setIdcardImg1(userRegistVO.getIdcardImg1()); //证件照正面
+                userDetail.setIdcardImg2(userRegistVO.getIdcardImg2()); //证件照背面
                 userDetail.setCreateDate(new Date());
                 userDetail.setDeleteStatus((short)0);
 
@@ -1011,6 +1025,8 @@ public class UserController {
             userElasticSearchVO.setSex(userDetail.getSex()); //性别
             userElasticSearchVO.setType(userDetail.getType()); //用户类型
             userElasticSearchVO.setTrueNameStatus(userDetail.getTrueNameStatus()); //实名状态
+            userElasticSearchVO.setIdcardImg1(userDetail.getIdcardImg1()); //证件照正面
+            userElasticSearchVO.setIdcardImg2(userDetail.getIdcardImg2()); //证件照背面
             userElasticSearchVO.setIdcardType(userDetail.getIdcardType()); //证件类型
         }
 
@@ -1654,6 +1670,10 @@ public class UserController {
                                 userVO.setIdCard(userDetail.getIdCard());
                                 userVO.setSex(userDetail.getSex());
                                 userVO.setType(userDetail.getType());
+                                userVO.setIdcardImg1(userDetail.getIdcardImg1());
+                                userVO.setIdcardImg2(userDetail.getIdcardImg2());
+                                userVO.setIdcardType(userDetail.getIdcardType());
+                                userVO.setTrueNameStatus(userDetail.getTrueNameStatus());
                                 continue;
                             }
                         }

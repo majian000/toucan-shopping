@@ -65,6 +65,30 @@
             <img th:src="${model.httpHeadSculpture}" th:width="240" th:height="220">
         </div>
     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照正面</label>
+        <div class="layui-input-block">
+            <input type="text" name="idcardImg1"  maxlength="100"  value="" class="layui-input" th:value="${model.idcardImg1}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照正面</label>
+        <div class="layui-input-block">
+            <img th:src="${model.httpIdcardImg1}" th:width="240" th:height="220">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照背面</label>
+        <div class="layui-input-block">
+            <input type="text" name="idcardImg2"  maxlength="100"  value="" class="layui-input" th:value="${model.idcardImg2}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照背面</label>
+        <div class="layui-input-block">
+            <img th:src="${model.httpIdcardImg2}" th:width="240" th:height="220">
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">证件号码</label>
@@ -75,6 +99,14 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">证件类型</label>
+        <div class="layui-input-block" th:if="${model.idcardType eq null}" >
+            <select  lay-search="">
+                <option value="" selected>请选择</option>
+                <option value="1" >身份证</option>
+                <option value="2">护照</option>
+                <option value="3">海外</option>
+            </select>
+        </div>
         <div class="layui-input-block" th:if="${model.idcardType eq 1}" >
             <select  lay-search="">
                 <option value="">请选择</option>

@@ -39,7 +39,7 @@
                 <i class="layui-icon">&#xe67c;</i>上传图片
             </button>
         </div>
-        <input type="hidden" id="headSculpture" name="headSculpture" >
+        <input type="hidden" id="headSculpture" name="headSculpture"  th:value="${model.headSculpture}">
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">头像预览</label>
@@ -52,6 +52,38 @@
         <label class="layui-form-label">证件号码</label>
         <div class="layui-input-block">
             <input type="text" name="idCard"  maxlength="30"  placeholder="请输入证件号码" value="" class="layui-input" th:value="${model.idCard}" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照正面</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="uploadIdcardImg1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <input type="hidden" id="idcardImg1" name="idcardImg1"  th:value="${model.idcardImg1}">
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照正面预览</label>
+        <div class="layui-input-block">
+            <img th:src="${model.httpIdcardImg1}" id="previewIdcardImg1" th:width="240" th:height="220">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照背面</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="uploadIdcardImg2">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <input type="hidden" id="idcardImg2" name="idcardImg2"  th:value="${model.idcardImg2}">
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件照正面预览</label>
+        <div class="layui-input-block">
+            <img th:src="${model.httpIdcardImg2}" id="previewIdcardImg2" th:width="240" th:height="220">
         </div>
     </div>
 
@@ -173,6 +205,45 @@
                 layer.msg("上传头像异常");
             }
         });
+
+
+        //执行实例
+        var uploadIdcardImg1 = upload.render({
+            elem: '#uploadIdcardImg1' //绑定元素
+            ,url: '/user/upload/idcardImg1' //上传接口
+            ,data:{userMainId:userMainId}
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewIdcardImg1").attr("src",res.data.httpIdcardImg1);
+                $("#idcardImg1").val(res.data.idcardImg1);
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
+
+
+        //执行实例
+        var uploadIdcardImg2 = upload.render({
+            elem: '#uploadIdcardImg2' //绑定元素
+            ,url: '/user/upload/idcardImg2' //上传接口
+            ,data:{userMainId:userMainId}
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewIdcardImg2").attr("src",res.data.httpIdcardImg2);
+                $("#idcardImg2").val(res.data.idcardImg2);
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
+
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {

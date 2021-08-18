@@ -201,6 +201,15 @@ public class UserController extends UIController {
                 if(userVO.getHeadSculpture()!=null) {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
+
+                if(userVO.getIdcardImg1()!=null)
+                {
+                    userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
+                }
+                if(userVO.getIdcardImg2()!=null)
+                {
+                    userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
+                }
                 request.setAttribute("model", userVO);
             }
         }catch(Exception e)
@@ -264,6 +273,14 @@ public class UserController extends UIController {
                     {
                         if(userVO.getHeadSculpture()!=null) {
                             userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
+                        }
+                        if(userVO.getIdcardImg1()!=null)
+                        {
+                            userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
+                        }
+                        if(userVO.getIdcardImg2()!=null)
+                        {
+                            userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
                         }
                     }
                     if(tableVO.getCount()>0) {
@@ -1094,32 +1111,13 @@ public class UserController extends UIController {
             if(userResultObjectVO.isSuccess())
             {
                 userVO =  userResultObjectVO.formatData(UserVO.class);
-                //如果不是默认头像就删除掉这个人的上一个头像
-                if(!toucan.getUser().getDefaultHeadSculpture().equals(userVO.getHeadSculpture())&&StringUtils.isNotEmpty(userVO.getHeadSculpture()))
-                {
-                    int ret = imageUploadService.deleteFile(userVO.getHeadSculpture());
-                    if(ret!=0)
-                    {
-                        logger.warn("删除旧头像失败 {} ",userVO.getHeadSculpture());
-                    }
-                }
                 userVO.setHeadSculpture(groupPath);
 
-                //商城应用编码
-                String shoppingAppCode = "10001001";
-                requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
-                userResultObjectVO = feignUserService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
-                if(!userResultObjectVO.isSuccess())
-                {
-                    resultObjectVO.setCode(1);
-                    resultObjectVO.setMsg(userResultObjectVO.getMsg());
-
-                    //设置预览头像
-                    if(userVO.getHeadSculpture()!=null) {
-                        userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
-                    }
-                    resultObjectVO.setData(userVO);
+                //设置预览头像
+                if(userVO.getHeadSculpture()!=null) {
+                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
+                resultObjectVO.setData(userVO);
             }
         }catch (Exception e)
         {
@@ -1133,6 +1131,98 @@ public class UserController extends UIController {
 
 
 
+    @RequestMapping("/upload/idcardImg1")
+    @ResponseBody
+    public ResultObjectVO  uploadIdcardImg1(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String fileName = file.getOriginalFilename();
+            String fileExt = ".jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+            }
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("证件照正面上传失败");
+            }
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(userMainId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+            ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(userResultObjectVO.isSuccess())
+            {
+                userVO =  userResultObjectVO.formatData(UserVO.class);
+                userVO.setIdcardImg1(groupPath);
+
+                //设置预览头像
+                if(userVO.getIdcardImg1()!=null) {
+                    userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
+                }
+                resultObjectVO.setData(userVO);
+            }
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(1);
+            resultObjectVO.setMsg("证件照正面上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+
+    @RequestMapping("/upload/idcardImg2")
+    @ResponseBody
+    public ResultObjectVO  uploadIdcardImg2(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String fileName = file.getOriginalFilename();
+            String fileExt = ".jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+            }
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("证件照背面上传失败");
+            }
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(userMainId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+            ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(userResultObjectVO.isSuccess())
+            {
+                userVO =  userResultObjectVO.formatData(UserVO.class);
+                userVO.setIdcardImg2(groupPath);
+
+                //设置预览头像
+                if(userVO.getIdcardImg2()!=null) {
+                    userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
+                }
+                resultObjectVO.setData(userVO);
+            }
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(1);
+            resultObjectVO.setMsg("证件照背面上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
 
 }
 

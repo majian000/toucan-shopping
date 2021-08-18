@@ -42,6 +42,16 @@ public class UserDetail {
     private Integer idcardType;
 
     /**
+     * 身份证照片正面
+     */
+    private String idcardImg1;
+
+    /**
+     * 身份证照片背面
+     */
+    private String idcardImg2;
+
+    /**
      * 实名状态 0未实名 1已实名
      */
     private Integer trueNameStatus = 0;

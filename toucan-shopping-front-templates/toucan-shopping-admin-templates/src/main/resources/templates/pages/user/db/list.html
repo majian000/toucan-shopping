@@ -109,30 +109,47 @@
                     {field: 'mobilePhone', width: 200, title: '手机号'},
                     {field: 'nickName', width: 240, title: '昵称'},
                     {field: 'email', width: 240, title: '邮箱'},
-                    {field: 'httpHeadSculpture', width: 80, title: '头像',
+                    {field: 'httpHeadSculpture', width: 150, title: '头像',
                         templet: function (row) {
-                            return "<a href='"+row.httpHeadSculpture+"' target='_blank'><img src='"+row.httpHeadSculpture+"' width='30' height='30'  /></a>";
+                            if(row.httpHeadSculpture!=null) {
+                                return "<a href='" + row.httpHeadSculpture + "' target='_blank'><img src='" + row.httpHeadSculpture + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'httpIdcardImg1', width: 150, title: '证件照正面',
+                        templet: function (row) {
+                            if(row.httpIdcardImg1!=null) {
+                                return "<a href='" + row.httpIdcardImg1 + "' target='_blank'><img src='" + row.httpIdcardImg1 + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'httpIdcardImg2', width: 150, title: '证件照背面',
+                        templet: function (row) {
+                            if(row.httpIdcardImg2!=null) {
+                                return "<a href='" + row.httpIdcardImg2 + "' target='_blank'><img src='" + row.httpIdcardImg2 + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
                         }},
                     {field: 'username', width: 240, title: '用户名'},
                     {field: 'trueName', width: 240, title: '真实姓名'},
                     {field: 'idCard', width: 240, title: '证件号码'},
-                    {field: 'idCardType', width: 80, title: '证件类型',
+                    {field: 'idcardType', width:150, title: '证件类型',
                         templet: function (row) {
-                            if(row.idCardType == null){
+                            if(row.idcardType == null){
                                 return "";
                             }
-                            if(row.idCardType == "1"){
+                            if(row.idcardType == "1"){
                                 return "身份证";
                             }
-                            if(row.idCardType == "2"){
+                            if(row.idcardType == "2"){
                                 return "护照";
                             }
-                            if(row.idCardType == "3"){
+                            if(row.idcardType == "3"){
                                 return "海外"
                             }
-                            return row.idCardType;
+                            return row.idcardType;
                         }},
-                    {field: 'trueNameStatus', width: 80, title: '实名状态',
+                    {field: 'trueNameStatus', width:150, title: '实名状态',
                         templet: function (row) {
                             if(row.trueNameStatus == "1"){
                                 return "已实名";

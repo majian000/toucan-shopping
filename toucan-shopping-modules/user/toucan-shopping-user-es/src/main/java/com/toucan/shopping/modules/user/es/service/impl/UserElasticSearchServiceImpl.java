@@ -78,6 +78,8 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
             updateBody.field("trueName",esUserVO.getTrueName());
             updateBody.field("headSculpture",esUserVO.getHeadSculpture());
             updateBody.field("idCard",esUserVO.getIdCard());
+            updateBody.field("idcardImg1",esUserVO.getIdcardImg1());
+            updateBody.field("idcardImg2",esUserVO.getIdcardImg2());
             updateBody.field("idcardType",esUserVO.getIdcardType());
             updateBody.field("trueNameStatus",esUserVO.getTrueNameStatus());
             updateBody.field("sex",esUserVO.getSex());

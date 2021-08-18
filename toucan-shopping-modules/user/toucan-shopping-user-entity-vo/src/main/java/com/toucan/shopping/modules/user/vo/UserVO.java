@@ -114,6 +114,25 @@ public class UserVO {
      */
     private String httpHeadSculpture;
 
+    /**
+     * 身份证照片正面
+     */
+    private String idcardImg1;
+    /**
+     * 身份证照片正面
+     */
+    private String httpIdcardImg1;
+
+
+    /**
+     * 身份证照片背面
+     */
+    private String idcardImg2;
+
+    /**
+     * 身份证照片背面
+     */
+    private String httpIdcardImg2;
 
     /**
      * 身份证

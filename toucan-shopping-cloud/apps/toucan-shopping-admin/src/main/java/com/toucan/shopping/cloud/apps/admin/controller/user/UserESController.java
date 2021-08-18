@@ -108,6 +108,15 @@ public class UserESController  extends UIController {
                         if(userElasticSearchVO.getHeadSculpture()!=null) {
                             userElasticSearchVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userElasticSearchVO.getHeadSculpture());
                         }
+
+                        if(userElasticSearchVO.getIdcardImg1()!=null)
+                        {
+                            userElasticSearchVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userElasticSearchVO.getIdcardImg1());
+                        }
+                        if(userElasticSearchVO.getIdcardImg2()!=null)
+                        {
+                            userElasticSearchVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userElasticSearchVO.getIdcardImg2());
+                        }
                     }
                     tableVO.setData((List) searchAfterPage.getUserElasticSearchVOS());
                     tableVO.setSortValues(searchAfterPage.getSortValues());

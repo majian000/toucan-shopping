@@ -393,6 +393,8 @@ public class UserTrueNameApproveController {
                         userDetail.setTrueName(userTrueNameApprove.getTrueName());
                         userDetail.setIdCard(userTrueNameApprove.getIdCard());
                         userDetail.setIdcardType(userTrueNameApprove.getIdcardType());
+                        userDetail.setIdcardImg1(userTrueNameApprove.getIdcardImg1());
+                        userDetail.setIdcardImg2(userTrueNameApprove.getIdcardImg2());
                         userDetail.setTrueNameStatus(1); //已实名
                         ret = userDetailService.update(userDetail);
                         if (ret <= 0) {
