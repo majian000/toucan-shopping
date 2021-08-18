@@ -22,31 +22,31 @@ public class SellerShopServiceImpl implements SellerShopService {
 
 
     @Autowired
-    private SellerShopMapper sllerShopMapper;
+    private SellerShopMapper sellerShopMapper;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Override
     public int save(SellerShop entity) {
-        return sllerShopMapper.insert(entity);
+        return sellerShopMapper.insert(entity);
     }
 
 
 
     @Override
     public int deleteById(Long id) {
-        return sllerShopMapper.deleteById(id);
+        return sellerShopMapper.deleteById(id);
     }
 
     @Override
     public int update(SellerShop entity) {
-        return sllerShopMapper.update(entity);
+        return sellerShopMapper.update(entity);
     }
 
     @Override
     public List<SellerShop> findListByEntity(SellerShop query) {
-        return sllerShopMapper.findListByEntity(query);
+        return sellerShopMapper.findListByEntity(query);
     }
 
 
@@ -55,8 +55,8 @@ public class SellerShopServiceImpl implements SellerShopService {
     public PageInfo<SellerShop> queryListPage(SellerShopPageInfo queryPageInfo) {
         PageInfo<SellerShop> pageInfo = new PageInfo();
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
-        pageInfo.setList(sllerShopMapper.queryListPage(queryPageInfo));
-        pageInfo.setTotal(sllerShopMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setList(sellerShopMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(sellerShopMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
 
