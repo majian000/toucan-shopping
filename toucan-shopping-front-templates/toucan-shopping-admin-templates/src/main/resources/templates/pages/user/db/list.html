@@ -115,38 +115,51 @@
                         }},
                     {field: 'username', width: 240, title: '用户名'},
                     {field: 'trueName', width: 240, title: '真实姓名'},
-                    {field: 'idCard', width: 240, title: '身份证'},
+                    {field: 'idCard', width: 240, title: '证件号码'},
+                    {field: 'idCardType', width: 80, title: '证件类型',
+                        templet: function (row) {
+                            if(row.idCardType == "1"){
+                                return "身份证";
+                            }
+                            if(row.idCardType == "2"){
+                                return "护照";
+                            }
+                            if(row.idCardType == "3"){
+                                return "海外"
+                            }
+                            return row.idCardType;
+                        }},
                     {field: 'trueNameStatus', width: 80, title: '实名状态',
                         templet: function (row) {
                             if(row.trueNameStatus == "1"){
-                                return "已实名"
+                                return "已实名";
                             }
-                            return "未实名"
+                            return "未实名";
                         }},
                     {field: 'enableStatus', width: 80, title: '状态',
                         templet: function (row) {
                             if(row.enableStatus == "1"){
-                                return "启用"
+                                return "启用";
                             }
-                            return "禁用"
+                            return "禁用";
                         }},
                     {field: 'sex', width: 80, title: '性别',
                         templet: function (row) {
                             if(row.sex == "1"){
-                                return "男"
+                                return "男";
                             }
-                            return "女"
+                            return "女";
                         }},
                     {field: 'type', width: 80, title: '用户类型',
                         templet: function (row) {
                             if(row.type == "0"){
-                                return "用户"
+                                return "用户";
                             }
                             if(row.type == "1"){
-                                return "商户"
+                                return "商户";
                             }
                             if(row.type == "2"){
-                                return "商户和用户"
+                                return "商户和用户";
                             }
                             return row.type;
                         }},

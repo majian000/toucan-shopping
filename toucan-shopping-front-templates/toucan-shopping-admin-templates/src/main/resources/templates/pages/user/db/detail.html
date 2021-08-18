@@ -67,9 +67,37 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">身份证</label>
+        <label class="layui-form-label">证件号码</label>
         <div class="layui-input-block">
-            <input type="text" name="idCard"  maxlength="30"  placeholder="请输入身份证" value="" class="layui-input" th:value="${model.idCard}" >
+            <input type="text" name="idCard"  maxlength="30"  placeholder="请输入证件号码" value="" class="layui-input" th:value="${model.idCard}" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件类型</label>
+        <div class="layui-input-block" th:if="${model.idCardType eq 1}" >
+            <select  lay-search="">
+                <option value="">请选择</option>
+                <option value="1" selected>身份证</option>
+                <option value="2">护照</option>
+                <option value="3">海外</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.idCardType eq 2}" >
+            <select  lay-search="">
+                <option value="">请选择</option>
+                <option value="1" >身份证</option>
+                <option value="2" selected>护照</option>
+                <option value="3">海外</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.idCardType eq 3}" >
+            <select  lay-search="">
+                <option value="">请选择</option>
+                <option value="1" >身份证</option>
+                <option value="2" >护照</option>
+                <option value="3" selected>海外</option>
+            </select>
         </div>
     </div>
 

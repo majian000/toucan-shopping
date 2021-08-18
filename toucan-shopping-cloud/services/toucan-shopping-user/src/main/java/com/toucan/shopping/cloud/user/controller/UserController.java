@@ -802,6 +802,16 @@ public class UserController {
         {
             userElasticSearchVO.setSex(userRegistVO.getSex());
         }
+        //证件类型
+        if(userRegistVO.getIdcardType()!=null)
+        {
+            userElasticSearchVO.setIdcardType(userRegistVO.getIdcardType());
+        }
+        //实名状态
+        if(userRegistVO.getTrueNameStatus()!=null)
+        {
+            userElasticSearchVO.setTrueNameStatus(userRegistVO.getTrueNameStatus());
+        }
         //用户类型
         if(userRegistVO.getType()!=null)
         {
@@ -866,6 +876,8 @@ public class UserController {
                 userDetail.setHeadSculpture(userRegistVO.getHeadSculpture()); //头像
                 userDetail.setSex(userRegistVO.getSex()); //性别
                 userDetail.setType(userRegistVO.getType()); //用户类型
+                userDetail.setIdcardType(userRegistVO.getIdcardType()); //证件类型
+                userDetail.setTrueNameStatus(userRegistVO.getTrueNameStatus()); //实名状态
                 row= userDetailService.update(userDetail);
             }else{
                 UserDetail userDetail = new UserDetail();
@@ -992,10 +1004,12 @@ public class UserController {
             UserDetail userDetail = userDetails.get(0);
             userElasticSearchVO.setNickName(userDetail.getNickName()); //昵称
             userElasticSearchVO.setTrueName(userDetail.getTrueName()); //姓名
-            userElasticSearchVO.setIdCard(userDetail.getIdCard()); //身份证
+            userElasticSearchVO.setIdCard(userDetail.getIdCard()); //证件号码
             userElasticSearchVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
             userElasticSearchVO.setSex(userDetail.getSex()); //性别
             userElasticSearchVO.setType(userDetail.getType()); //用户类型
+            userElasticSearchVO.setTrueNameStatus(userDetail.getTrueNameStatus()); //实名状态
+            userElasticSearchVO.setIdcardType(userDetail.getIdcardType()); //证件类型
         }
 
         userElasticSearchService.update(userElasticSearchVO);
@@ -2435,6 +2449,8 @@ public class UserController {
                     userVO.setNickName(userDetail.getNickName()); //昵称
                     userVO.setTrueName(userDetail.getTrueName()); //姓名
                     userVO.setIdCard(userDetail.getIdCard()); //身份证
+                    userVO.setTrueNameStatus(userDetail.getTrueNameStatus()); //实名状态
+                    userVO.setIdcardType(userDetail.getIdcardType()); //身份证类型
                     userVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
                     userVO.setSex(userDetail.getSex()); //性别
                     userVO.setType(userDetail.getType()); //用户类型
