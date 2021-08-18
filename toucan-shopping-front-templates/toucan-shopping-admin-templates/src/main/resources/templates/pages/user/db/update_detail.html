@@ -49,12 +49,51 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">身份证</label>
+        <label class="layui-form-label">证件号码</label>
         <div class="layui-input-block">
-            <input type="text" name="idCard"  maxlength="30"  placeholder="请输入身份证" value="" class="layui-input" th:value="${model.idCard}" >
+            <input type="text" name="idCard"  maxlength="30"  placeholder="请输入证件号码" value="" class="layui-input" th:value="${model.idCard}" >
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">证件类型</label>
+        <div class="layui-input-block" th:if="${model.idcardType eq 1}" >
+            <select name="idcardType"  lay-search="">
+                <option value="">请选择</option>
+                <option value="1" selected>身份证</option>
+                <option value="2">护照</option>
+                <option value="3">海外</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.idcardType eq 2}" >
+            <select name="idcardType"  lay-search="">
+                <option value="">请选择</option>
+                <option value="1" >身份证</option>
+                <option value="2" selected>护照</option>
+                <option value="3">海外</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.idcardType eq 3}" >
+            <select name="idcardType"  lay-search="">
+                <option value="">请选择</option>
+                <option value="1" >身份证</option>
+                <option value="2" >护照</option>
+                <option value="3" selected>海外</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">实名状态</label>
+        <div class="layui-input-block" th:if="${model.trueNameStatus eq 1}">
+            <input type="radio" name="trueNameStatus" value="1" title="已实名" checked="">
+            <input type="radio" name="trueNameStatus" value="0" title="未实名">
+        </div>
+        <div class="layui-input-block" th:if="${model.trueNameStatus eq 0}">
+            <input type="radio" name="trueNameStatus" value="1" title="已实名" >
+            <input type="radio" name="trueNameStatus" value="0" title="未实名" checked="">
+        </div>
+    </div>
     <div class="layui-form-item">
         <label class="layui-form-label">性别</label>
         <div class="layui-input-block" th:if="${model.sex eq 1}">
