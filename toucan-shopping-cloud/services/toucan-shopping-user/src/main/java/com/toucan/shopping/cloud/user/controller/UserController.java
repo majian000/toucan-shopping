@@ -889,8 +889,8 @@ public class UserController {
                 userDetail.setHeadSculpture(userRegistVO.getHeadSculpture()); //头像
                 userDetail.setSex(userRegistVO.getSex()); //性别
                 userDetail.setType(userRegistVO.getType()); //用户类型
-                userDetail.setTrueNameStatus(userRegistVO.getTrueNameStatus()); //实名状态
                 userDetail.setIdcardType(userRegistVO.getIdcardType());  //证件类型
+                userDetail.setTrueNameStatus(userRegistVO.getTrueNameStatus()); //实名状态
                 userDetail.setCreateDate(new Date());
                 userDetail.setDeleteStatus((short)0);
 
