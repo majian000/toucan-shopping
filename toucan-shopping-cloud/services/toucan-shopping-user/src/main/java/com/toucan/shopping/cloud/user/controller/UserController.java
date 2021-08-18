@@ -223,6 +223,7 @@ public class UserController {
                         userDetail.setNickName("用户"+userRegistVO.getMobilePhone());
                         userDetail.setHeadSculpture(toucan.getUser().getDefaultHeadSculpture());
                         userDetail.setSex((short)1);
+                        userDetail.setTrueNameStatus(0); //未实名
                         userDetail.setCreateDate(new Date());
                         userDetail.setDeleteStatus((short) 0);
 
@@ -1458,7 +1459,7 @@ public class UserController {
                         for(UserDetail userDetail:userDetails)
                         {
                             //如果输入了真实姓名和身份证账号
-                            if(StringUtils.isNotEmpty(userDetail.getTrueName())&&StringUtils.isNotEmpty(userDetail.getIdCard()))
+                            if(userDetail.getTrueNameStatus()!=null&&userDetail.getTrueNameStatus().intValue()==1)
                             {
                                 resultObjectVO.setData(true);
                                 break;
@@ -2308,6 +2309,8 @@ public class UserController {
                 UserDetail userDetail = userDetails.get(0);
                 userVO.setNickName(userDetail.getNickName()); //昵称
                 userVO.setTrueName(userDetail.getTrueName()); //姓名
+                userVO.setTrueNameStatus(userDetail.getTrueNameStatus()); //实名状态
+                userVO.setIdcardType(userDetail.getIdcardType()); //身份证类型
                 userVO.setIdCard(userDetail.getIdCard()); //身份证
                 userVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
                 userVO.setSex(userDetail.getSex()); //性别

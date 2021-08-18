@@ -121,6 +121,16 @@ public class UserVO {
     private String idCard;
 
     /**
+     * 实名状态 0未实名 1已实名
+     */
+    private Integer trueNameStatus = 0;
+
+    /**
+     * 证件类型 1身份证 2护照 3海外
+     */
+    private Integer idcardType;
+
+    /**
      * 性别 0:女 1:男
      */
     private Short sex;

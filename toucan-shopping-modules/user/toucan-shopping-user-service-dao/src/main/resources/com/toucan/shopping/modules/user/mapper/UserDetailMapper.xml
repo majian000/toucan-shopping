@@ -10,6 +10,7 @@
         <result column="head_sculpture" jdbcType="VARCHAR" property="headSculpture" />
         <result column="id_card" jdbcType="VARCHAR" property="idCard" />
         <result column="idcard_type" jdbcType="INTEGER" property="idcardType" />
+        <result column="true_name_status" jdbcType="INTEGER" property="trueNameStatus" />
         <result column="sex" jdbcType="INTEGER" property="sex" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -63,14 +64,14 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserDetail" keyProperty="id" >
-        insert into t_user_detail(id,user_main_id,nick_name,true_name,head_sculpture,id_card,sex,type,create_date,delete_status)
-        values(#{id},#{userMainId},#{nickName},#{trueName},#{headSculpture},#{idCard},#{sex},#{type},#{createDate},#{deleteStatus})
+        insert into t_user_detail(id,user_main_id,nick_name,true_name,true_name_status,head_sculpture,id_card,sex,type,create_date,delete_status)
+        values(#{id},#{userMainId},#{nickName},#{trueName},#{trueNameStatus},#{headSculpture},#{idCard},#{sex},#{type},#{createDate},#{deleteStatus})
     </insert>
 
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserDetail"  >
-        update t_user_detail set nick_name=#{nickName} , true_name=#{trueName},
+        update t_user_detail set nick_name=#{nickName} , true_name=#{trueName},true_name_status=#{trueNameStatus},
         head_sculpture=#{headSculpture} ,id_card=#{idCard},type=#{type},
          sex=#{sex} where user_main_id=#{userMainId} and delete_status = 0
     </update>

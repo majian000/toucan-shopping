@@ -42,6 +42,11 @@ public class UserDetail {
     private Integer idcardType;
 
     /**
+     * 实名状态 0未实名 1已实名
+     */
+    private Integer trueNameStatus = 0;
+
+    /**
      * 用户ID,用该字段分库分表
      */
     private Long userMainId;

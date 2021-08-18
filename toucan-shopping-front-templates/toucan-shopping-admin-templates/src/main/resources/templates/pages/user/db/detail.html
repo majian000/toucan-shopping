@@ -74,6 +74,17 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">实名状态</label>
+        <div class="layui-input-block" th:if="${model.trueNameStatus eq 1}">
+            <input type="radio" name="trueNameStatus" value="1" title="已实名" checked="">
+            <input type="radio" name="trueNameStatus" value="0" title="未实名">
+        </div>
+        <div class="layui-input-block" th:if="${model.trueNameStatus eq 0}">
+            <input type="radio" name="trueNameStatus" value="1" title="已实名" >
+            <input type="radio" name="trueNameStatus" value="0" title="未实名" checked="">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">性别</label>
         <div class="layui-input-block" th:if="${model.sex eq 1}">
             <input type="radio" name="sex" value="1" title="男" checked="">

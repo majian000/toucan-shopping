@@ -393,6 +393,7 @@ public class UserTrueNameApproveController {
                         userDetail.setTrueName(userTrueNameApprove.getTrueName());
                         userDetail.setIdCard(userTrueNameApprove.getIdCard());
                         userDetail.setIdcardType(userTrueNameApprove.getIdcardType());
+                        userDetail.setTrueNameStatus(1); //已实名
                         ret = userDetailService.update(userDetail);
                         if (ret <= 0) {
                             logger.warn("修改姓名和身份证失败 {} ", JSONObject.toJSONString(userDetail));
