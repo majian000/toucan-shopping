@@ -57,6 +57,14 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">证件类型</label>
+        <div class="layui-input-block" th:if="${model.idcardType eq null}" >
+            <select name="idcardType"  lay-search="">
+                <option value="" selected>请选择</option>
+                <option value="1" >身份证</option>
+                <option value="2">护照</option>
+                <option value="3">海外</option>
+            </select>
+        </div>
         <div class="layui-input-block" th:if="${model.idcardType eq 1}" >
             <select name="idcardType"  lay-search="">
                 <option value="">请选择</option>
