@@ -2,8 +2,8 @@ package com.toucan.shopping.cloud.apps.user.scheduler.thread;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.constant.UserCacheElasticSearchConstant;
 import com.toucan.shopping.modules.user.entity.User;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
