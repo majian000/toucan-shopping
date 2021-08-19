@@ -49,6 +49,21 @@ html { overflow-y:scroll; filter:progid:DXImageTransform.Microsoft.BasicImage(gr
 
 
 /*---------------header---------------*/
+.page_nav_top{
+	border-bottom:1px solid #ccc;
+	position: relative;
+}
+.page_nav_title{
+	font-size: 18px;
+	line-height: 34px;
+	border-left: 1px solid #ccc;
+	position: absolute;
+	left: 100px;
+	top:5px;
+	padding-left: 20px;
+	font-weight:bold;
+}
+
 .soubg{
 	width:100%; min-width:1200px; height:35px; background-color:#f6f6f6; font-family:"宋体";
 }
