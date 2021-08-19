@@ -51,6 +51,7 @@ html { overflow-y:scroll; filter:progid:DXImageTransform.Microsoft.BasicImage(gr
 /*---------------header---------------*/
 .page_nav_top{
     width:100%;
+    min-width:1200px;
     height:80px;
     position: relative;
     background-color:#ff5000;
@@ -60,12 +61,11 @@ html { overflow-y:scroll; filter:progid:DXImageTransform.Microsoft.BasicImage(gr
     overflow:hidden;
     float:left;
     display:inline;
-    margin-left:134px;
+    margin-left:5px;
     margin-top:10px;
     font-size: 18px;
     line-height: 34px;
     border-left: 1px solid #ccc;
-    position: absolute;
     left: 100px;
     top:5px;
     padding-left: 20px;
