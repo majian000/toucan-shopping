@@ -600,7 +600,49 @@ public class UserController extends UIController {
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
             logger.info(" 修改详情 {} ", user.getUserMainId());
+            UserVO userVO=null;
+            //保存旧的详情数据,用于删除旧的图片资源
+            resultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                userVO = resultObjectVO.formatData(UserVO.class);
+            }
             resultObjectVO = feignUserService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(userVO!=null)
+                {
+                    //删除头像
+                    if(StringUtils.isNotEmpty(userVO.getHeadSculpture()))
+                    {
+                        //如果不是默认头像,就删除旧的头像
+                        if(!toucan.getUser().getDefaultHeadSculpture().equals(userVO.getHeadSculpture())) {
+                            int ret = imageUploadService.deleteFile(userVO.getHeadSculpture());
+                            if(ret!=0)
+                            {
+                                logger.warn("删除旧头像失败 {} userVO {} ",userVO.getHeadSculpture(),JSONObject.toJSON(userVO));
+                            }
+                        }
+                    }
+                    //删除证件照片
+                    if(StringUtils.isNotEmpty(userVO.getIdcardImg1()))
+                    {
+                        int ret = imageUploadService.deleteFile(userVO.getIdcardImg1());
+                        if(ret!=0)
+                        {
+                            logger.warn("删除证件照片失败 {} userVO {} ",userVO.getIdcardImg1(),JSONObject.toJSON(userVO));
+                        }
+                    }
+                    if(StringUtils.isNotEmpty(userVO.getIdcardImg2()))
+                    {
+                        int ret = imageUploadService.deleteFile(userVO.getIdcardImg2());
+                        if(ret!=0)
+                        {
+                            logger.warn("删除证件照片失败 {} userVO {} ",userVO.getIdcardImg2(),JSONObject.toJSON(userVO));
+                        }
+                    }
+                }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
