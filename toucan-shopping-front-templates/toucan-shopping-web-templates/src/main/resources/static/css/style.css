@@ -49,6 +49,43 @@ html { overflow-y:scroll; filter:progid:DXImageTransform.Microsoft.BasicImage(gr
 
 
 /*---------------header---------------*/
+.page_nav_top{
+	width:100%;
+	min-width:1200px;
+	height:80px;
+	position: relative;
+	background-color:#ff5000;
+}
+.page_nav_title{
+	height:60px;
+	overflow:hidden;
+	float:left;
+	display:inline;
+	margin-left:5px;
+	margin-top:8px;
+	font-size: 18px;
+	line-height: 34px;
+	border-left: 1px solid #ccc;
+	left: 100px;
+	top:5px;
+	padding-left: 20px;
+	padding-top:12px;
+	font-weight:bold;
+}
+
+.page_nav_title a{
+	color:#ffffff;
+}
+
+.page_nav_title a:hover{
+	color:#ffffff;
+}
+
+.page_nav_logo{
+	width:207px; height:55px; overflow:hidden; float:left; display:inline; margin-top:10px;
+}
+
+
 .soubg{
 	width:100%; min-width:1200px; height:35px; background-color:#f6f6f6; font-family:"宋体";
 }
