@@ -1134,6 +1134,7 @@ public class UserController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping("/upload/head/sculpture")
     @ResponseBody
     public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
@@ -1155,16 +1156,25 @@ public class UserController extends UIController {
                 throw new RuntimeException("头像上传失败");
             }
             UserVO userVO = new UserVO();
-            userVO.setUserMainId(userMainId);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
-            if(userResultObjectVO.isSuccess())
-            {
-                userVO =  userResultObjectVO.formatData(UserVO.class);
+            if(userMainId!=null&&userMainId.longValue()!=-1) { //给修改功能和注册功能使用,注册功能没有用户ID
+                userVO.setUserMainId(userMainId);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+                ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                if (userResultObjectVO.isSuccess()) {
+                    userVO = userResultObjectVO.formatData(UserVO.class);
+                    userVO.setHeadSculpture(groupPath);
+
+                    //设置预览头像
+                    if (userVO.getHeadSculpture() != null) {
+                        userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
+                    }
+                    resultObjectVO.setData(userVO);
+                }
+            }else{
                 userVO.setHeadSculpture(groupPath);
 
                 //设置预览头像
-                if(userVO.getHeadSculpture()!=null) {
+                if (userVO.getHeadSculpture() != null) {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                 }
                 resultObjectVO.setData(userVO);
@@ -1181,6 +1191,7 @@ public class UserController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping("/upload/idcardImg1")
     @ResponseBody
     public ResultObjectVO  uploadIdcardImg1(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
@@ -1202,16 +1213,25 @@ public class UserController extends UIController {
                 throw new RuntimeException("证件照正面上传失败");
             }
             UserVO userVO = new UserVO();
-            userVO.setUserMainId(userMainId);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
-            if(userResultObjectVO.isSuccess())
-            {
-                userVO =  userResultObjectVO.formatData(UserVO.class);
+            if(userMainId!=null&&userMainId.longValue()!=-1) {
+                userVO.setUserMainId(userMainId);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+                ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                if (userResultObjectVO.isSuccess()) {
+                    userVO = userResultObjectVO.formatData(UserVO.class);
+                    userVO.setIdcardImg1(groupPath);
+
+                    //设置预览头像
+                    if (userVO.getIdcardImg1() != null) {
+                        userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
+                    }
+                    resultObjectVO.setData(userVO);
+                }
+            }else{
                 userVO.setIdcardImg1(groupPath);
 
                 //设置预览头像
-                if(userVO.getIdcardImg1()!=null) {
+                if (userVO.getIdcardImg1() != null) {
                     userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
                 }
                 resultObjectVO.setData(userVO);
@@ -1229,6 +1249,7 @@ public class UserController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping("/upload/idcardImg2")
     @ResponseBody
     public ResultObjectVO  uploadIdcardImg2(@RequestParam("file") MultipartFile file, @RequestParam("userMainId")Long userMainId)
@@ -1250,16 +1271,26 @@ public class UserController extends UIController {
                 throw new RuntimeException("证件照背面上传失败");
             }
             UserVO userVO = new UserVO();
-            userVO.setUserMainId(userMainId);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
-            ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(),requestJsonVO);
-            if(userResultObjectVO.isSuccess())
-            {
-                userVO =  userResultObjectVO.formatData(UserVO.class);
+            if(userMainId!=null&&userMainId.longValue()!=-1) {
+                userVO.setUserMainId(userMainId);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userVO);
+                ResultObjectVO userResultObjectVO = feignUserService.findByUserMainId(requestJsonVO.sign(), requestJsonVO);
+                if (userResultObjectVO.isSuccess()) {
+                    userVO = userResultObjectVO.formatData(UserVO.class);
+                    userVO.setIdcardImg2(groupPath);
+
+                    //设置预览头像
+                    if (userVO.getIdcardImg2() != null) {
+                        userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
+                    }
+                    resultObjectVO.setData(userVO);
+                }
+            }else{
+
                 userVO.setIdcardImg2(groupPath);
 
                 //设置预览头像
-                if(userVO.getIdcardImg2()!=null) {
+                if (userVO.getIdcardImg2() != null) {
                     userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
                 }
                 resultObjectVO.setData(userVO);

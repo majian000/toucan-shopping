@@ -32,6 +32,17 @@ public class FunctionTreeInfo extends PageInfo<Function> {
      */
     private String functionId;
 
+
+    /**
+     * 连接
+     */
+    private String url;
+
+    /**
+     * 权限标识
+     */
+    private String permission;
+
     /**
      * 连接
      */

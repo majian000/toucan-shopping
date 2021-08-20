@@ -59,17 +59,17 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">姓名</label>
+        <label class="layui-form-label ">姓名</label>
         <div class="layui-input-block">
-            <input type="text" name="trueName"  maxlength="10"  lay-verify="required" placeholder="请输入姓名" value="" class="layui-input">
+            <input type="text" name="trueName"  maxlength="10"   placeholder="请输入姓名" value="" class="layui-input">
         </div>
     </div>
 
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">证件号码</label>
+        <label class="layui-form-label ">证件号码</label>
         <div class="layui-input-block">
-            <input type="text" name="idCard"  maxlength="30" lay-verify="required"  placeholder="请输入证件号码" value="" class="layui-input">
+            <input type="text" name="idCard"  maxlength="30" placeholder="请输入证件号码" value="" class="layui-input">
         </div>
     </div>
 
@@ -123,7 +123,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">证件类型</label>
         <div class="layui-input-block"  >
-            <select  lay-search="">
+            <select name="idcardType" lay-search="">
                 <option value="" selected>请选择</option>
                 <option value="1" >身份证</option>
                 <option value="2">护照</option>
@@ -168,12 +168,13 @@
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
+        var upload = layui.upload;
 
         //执行实例
         var uploadInst = upload.render({
             elem: '#uploadHeadSculpture' //绑定元素
             ,url: '/user/upload/head/sculpture' //上传接口
-            ,data:{userMainId:userMainId}
+            ,data:{userMainId:-1}
             ,done: function(res){
                 if(res.code==1)
                 {
@@ -192,7 +193,7 @@
         var uploadIdcardImg1 = upload.render({
             elem: '#uploadIdcardImg1' //绑定元素
             ,url: '/user/upload/idcardImg1' //上传接口
-            ,data:{userMainId:userMainId}
+            ,data:{userMainId:-1}
             ,done: function(res){
                 if(res.code==1)
                 {
@@ -211,7 +212,7 @@
         var uploadIdcardImg2 = upload.render({
             elem: '#uploadIdcardImg2' //绑定元素
             ,url: '/user/upload/idcardImg2' //上传接口
-            ,data:{userMainId:userMainId}
+            ,data:{userMainId:-1}
             ,done: function(res){
                 if(res.code==1)
                 {
@@ -227,6 +228,7 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+
             if(data.field.password!=data.field.confirmPassword)
             {
                 layer.msg("密码与确认密码不一致");
@@ -265,15 +267,6 @@
             }
 
 
-            if(data.field.idCard!=null)
-            {
-                var reg = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
-                if(!reg.test(data.field.idCard))
-                {
-                    layer.msg("身份证格式错误");
-                    return false;
-                }
-            }
             $.ajax({
                 url:"[[@{/user/regist}]]",
                 contentType: "application/json; charset=utf-8",

@@ -40,6 +40,28 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">连接地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="url" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">权限标志</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="permission" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">启用状态</label>
+                            <div class="layui-input-inline">
+                                <select name="enableStatus" lay-search="">
+                                    <option value="" selected>请选择</option>
+                                    <option value="1" >启用</option>
+                                    <option value="0">禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
@@ -73,6 +95,7 @@
             form = layui.form,
             table = layui.table;
         var treetable = layui.treetable;
+        var loadding;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -100,6 +123,7 @@
 
         function loadTreeTable()
         {
+            loadding = layer.load();
             treetable.render({
                 treeColIndex: 1,
                 treeSpid: -1,
@@ -152,6 +176,7 @@
                 done: function () {
                     treetable.foldAll("#functionTreeTable");
                     layer.closeAll('loading');
+                    layer.close(loadding);
                 }
             });
 

@@ -36,6 +36,33 @@
         <if test="enableStatus!=null">
             and t.enable_status = #{enableStatus}
         </if>
+
+        <if test="url!=null and url!=''">
+            and t.url like concat('%',#{url},'%')
+        </if>
+
+        <if test="permission!=null and permission!=''">
+            and t.permission like concat('%',#{permission},'%')
+        </if>
+    </sql>
+
+
+    <sql id="queryTreePageWhere">
+
+        <if test="name!=null and name!=''">
+            and t.name like concat('%',#{name},'%')
+        </if>
+        <if test="enableStatus!=null">
+            and t.enable_status = #{enableStatus}
+        </if>
+
+        <if test="url!=null and url!=''">
+            and t.url like concat('%',#{url},'%')
+        </if>
+
+        <if test="permission!=null and permission!=''">
+            and t.permission like concat('%',#{permission},'%')
+        </if>
     </sql>
 
     <select id="findListByEntity" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function">
@@ -73,12 +100,7 @@
             left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id
         <where>
             1=1
-            <if test="name!=null and name!=''">
-                and t.name  like concat('%',#{name},'%')
-            </if>
-            <if test="appCode!=null and appCode!=''">
-                and t.app_code = #{appCode}
-            </if>
+            <include refid="queryTreePageWhere" />
             and t.delete_status = 0
         </where>
         order by t.function_sort desc
