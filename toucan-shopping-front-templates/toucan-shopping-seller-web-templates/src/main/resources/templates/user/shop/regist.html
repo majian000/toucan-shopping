@@ -12,20 +12,20 @@
     <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
     <!--[if IE 6]>
     <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
-        <script type="text/javascript">
-           EvPNG.fix('div, ul, img, li, input, a');
-        </script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
     <![endif]-->
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.11.1.min_044d0927.js"></script>
-	<script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
 
     <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
 
-	<script type="text/javascript" src="${basePath}/static/js/select.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/select.js"></script>
 
-	<script type="text/javascript" src="${basePath}/static/js/lrscroll.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/lrscroll.js"></script>
 
     <script type="text/javascript" src="${basePath}/static/js/iban.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/fban.js"></script>
@@ -35,7 +35,7 @@
     <script type="text/javascript" src="${basePath}/static/js/hban.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/tban.js"></script>
 
-	<script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/phone.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/shop_regist.js"></script>
 
@@ -58,54 +58,66 @@
         </div>
     </div>
 </div>
+
 <!--Begin Login Begin-->
-<div >
-	<div >
-		<div  style="width:100%;">
-            <br>
-        	<form id="utnform" method="post">
-            <table border="0" style="width:650px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
-              <tr height="50" valign="top">
-              	<td width="150">&nbsp;</td>
-                <td>
-                	<span class="fl" style="font-size:24px;"></span>
-                </td>
-              </tr>
-              <tr height="50">
-                <td align="right"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
-                <td>
-                    <input type="text" id="name" name="name"   class="l_ipt_long"  maxlength="15"/>
-                    &nbsp;&nbsp;
-                    <a id="name_msg" style="color:#ff4e00;"></a>
-                </td>
-              <tr height="50">
-                <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
-                <td>
-                    <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
-                    <span style="vertical-align: middle">
-                        &nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
-                    </span>
-                    <a id="utm_vcode_msg" style="color:#ff4e00;"></a>
-                </td>
-              </tr>
-              <tr height="60">
-              	<td>&nbsp;</td>
-                <td><input type="button" value="保存" class="log_btn" onclick="registUserShop();"/></td>
-              </tr>
-                <tr height="50">
-                    <td align="right"></td>
-                    <td>
-                        <a id="tn_msg" style="color:#ff4e00;"></a>
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div class="m_left">
+            <#include "/manager_left.html"/>
+        </div>
+        <div class="m_right">
+            <div >
+                <div >
+                    <div  style="width:100%;">
                         <br>
-                        <br>
-                    </td>
-                </tr>
-            </table>
-            </form>
+                        <form id="utnform" method="post">
+                            <table border="0" style="width:650px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
+                                <tr height="50" valign="top">
+                                    <td width="150">&nbsp;</td>
+                                    <td>
+                                        <span class="fl" style="font-size:24px;"></span>
+                                    </td>
+                                </tr>
+                                <tr height="50">
+                                    <td align="right"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
+                                    <td>
+                                        <input type="text" id="name" name="name"   class="l_ipt_long"  maxlength="15"/>
+                                        &nbsp;&nbsp;
+                                        <a id="name_msg" style="color:#ff4e00;"></a>
+                                    </td>
+                                <tr height="50">
+                                    <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
+                                    <td>
+                                        <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
+                                        <span style="vertical-align: middle">
+									&nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
+								</span>
+                                        <a id="utm_vcode_msg" style="color:#ff4e00;"></a>
+                                    </td>
+                                </tr>
+                                <tr height="60">
+                                    <td>&nbsp;</td>
+                                    <td><input type="button" value="保存" class="log_btn" onclick="registUserShop();"/></td>
+                                </tr>
+                                <tr height="50">
+                                    <td align="right"></td>
+                                    <td>
+                                        <a id="tn_msg" style="color:#ff4e00;"></a>
+                                        <br>
+                                        <br>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <!--End 用户中心 End-->
 </div>
-<!--End Login End-->
+
 <!--Begin Footer Begin-->
 <div class="btmbg">
     <div class="btm">

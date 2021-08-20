@@ -41,8 +41,8 @@
 
     <#include "/common_js.html"/>
 
-
     <title>实名认证</title>
+
 </head>
 <body>
 
@@ -59,30 +59,43 @@
     </div>
 </div>
 <!--Begin Login Begin-->
-<div >
-	<div >
-		<div  style="width:100%;">
-            <br>
-            <br>
-            <br>
-        	<div style="width:100%;text-align:center">
-                <img src="${basePath}/static/images/true_name_approve_success.png" />
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div class="m_left">
+            <#include "/manager_left.html"/>
+        </div>
+        <div class="m_right">
+            <div >
+                <div >
+                    <div  style="width:100%;">
+                        <br>
+                        <br>
+                        <br>
+                        <div style="width:100%;text-align:center">
+                            <img src="${basePath}/static/images/true_name_approve_success.png" />
+                        </div>
+                        <div  style="width:100%;text-align:center">
+                            <a style="font-size:25px;" target="_blank">恭喜你，个人实名认证成功</a>
+                            <br>
+                            <br>
+                            <a style="font-size:15px;" target="_blank">你提交的认证资料已通过审核</a>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+                </div>
             </div>
-            <div  style="width:100%;text-align:center">
-                <a style="font-size:25px;" target="_blank">恭喜你，个人实名认证成功</a>
-                <br>
-                <br>
-                <a style="font-size:15px;" target="_blank">你提交的认证资料已通过审核</a>
-            </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
         </div>
     </div>
 </div>
+<!--End 用户中心 End-->
+</div>
+
 <!--End Login End-->
 <!--Begin Footer Begin-->
 <div class="btmbg">
@@ -93,8 +106,12 @@
 </div>
 <!--End Footer End -->
 
+
+
+
 </body>
 
+<script src="${basePath}/static/js/seller/info.js"></script>
 <script>
     $(function () {
 
