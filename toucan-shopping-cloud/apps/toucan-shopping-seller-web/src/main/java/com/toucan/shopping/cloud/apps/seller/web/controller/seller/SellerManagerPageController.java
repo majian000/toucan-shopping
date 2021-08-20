@@ -47,7 +47,7 @@ public class SellerManagerPageController extends BaseController {
     @RequestMapping("/page")
     public String info(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {
-        return "seller/manager";
+        return "user/manager";
     }
 
 }
