@@ -63,9 +63,10 @@
     <!--Begin 用户中心 Begin -->
     <div class="m_content">
         <div class="m_left">
-            <#include "/manager_left.html"/>
+            <#include "/user/manager_left.html"/>
         </div>
         <div class="m_right">
+            <!--Begin Login Begin-->
             <div >
                 <div >
                     <div  style="width:100%;">
@@ -74,7 +75,7 @@
                                 <tr height="50">
                                     <td align="right"><font color="#ff4e00">*</font>&nbsp;姓名 &nbsp;</td>
                                     <td>
-                                        <input type="text" id="trueName" name="trueName"   class="l_user"  maxlength="11"/>
+                                        <input type="text" id="trueName" name="trueName" value="${userTrueNameApprove.trueName!''}"   class="l_user"  maxlength="11"/>
                                         &nbsp;&nbsp;
                                         <a id="trueName_msg" style="color:#ff4e00;"></a>
                                     </td>
@@ -82,6 +83,7 @@
                                 <tr height="50">
                                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件类型 &nbsp;</td>
                                     <td>
+                                        <input type="hidden" value="${userTrueNameApprove.idcardType!''}" id="idcardTypeValue"/>
                                         <select class="l_select" id="idcardType" name="idcardType">
                                             <option value="1">身份证</option>
                                             <option value="2">护照</option>
@@ -92,7 +94,7 @@
                                 <tr height="50">
                                     <td align="right"><font color="#ff4e00">*</font>&nbsp;证件号码 &nbsp;</td>
                                     <td>
-                                        <input type="text" id="idCard" name="idCard" value="" class="l_num"  maxlength="30"/>
+                                        <input type="text" id="idCard" name="idCard" value="${userTrueNameApprove.idCard!''}" class="l_num"  maxlength="30"/>
                                         &nbsp;&nbsp;
                                         <a id="idCard_msg" style="color:#ff4e00;"></a>
                                     </td>
@@ -128,8 +130,8 @@
                                     <td>
                                         <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
                                         <span style="vertical-align: middle">
-								&nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
-							</span>
+                        &nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" > 点击图片刷新
+                    </span>
                                         <a id="utm_vcode_msg" style="color:#ff4e00;"></a>
                                     </td>
                                 </tr>
