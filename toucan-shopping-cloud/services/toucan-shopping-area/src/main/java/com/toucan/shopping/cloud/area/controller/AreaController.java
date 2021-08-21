@@ -615,7 +615,121 @@ public class AreaController {
     }
 
 
+    /**
+     * 查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
 
+        try {
+            AreaTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaTreeInfo.class);
+
+            //查询当前节点下的所有子节点
+            Area queryArea = new Area();
+            queryArea.setPid(queryPageInfo.getPid());
+            List<Area> areas = areaService.queryList(queryArea);
+            List<AreaTreeVO>  areaVOs = new ArrayList<AreaTreeVO>();
+            for(int i=0;i<areas.size();i++)
+            {
+                Area area = areas.get(i);
+                AreaTreeVO areaTreeVO = new AreaTreeVO();
+                BeanUtils.copyProperties(areaTreeVO,area);
+                if(area.getType()==1)
+                {
+                    areaTreeVO.setName(area.getProvince());
+                }else if(area.getType()==2)
+                {
+                    areaTreeVO.setName(area.getCity());
+                }else if(area.getType()==3)
+                {
+                    areaTreeVO.setName(area.getArea());
+                }
+                queryArea = new Area();
+                queryArea.setPid(area.getId());
+                Long childCount = areaService.queryCount(queryArea);
+                if(childCount>0)
+                {
+                    areaTreeVO.setHaveChild(true);
+                }
+                areaVOs.add(areaTreeVO);
+            }
+
+            List<String> adminIds = new ArrayList<String>();
+            //拿到树节点中所有创建人和修改人
+            if(!CollectionUtils.isEmpty(areaVOs)) {
+                for (AreaVO areaVO : areaVOs) {
+                    if (areaVO.getCreateAdminId() != null&&!"-1".equals(areaVO.getCreateAdminId())&&!existsAdminId(adminIds,areaVO.getCreateAdminId())) {
+                        adminIds.add(areaVO.getCreateAdminId());
+                    }
+                    if (areaVO.getUpdateAdminId() != null&&!"-1".equals(areaVO.getUpdateAdminId())&&!existsAdminId(adminIds,areaVO.getUpdateAdminId())) {
+                        adminIds.add(areaVO.getUpdateAdminId());
+                    }
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(adminIds))
+            {
+                AdminVO query = new AdminVO();
+                String[] adminIdArray = new String[adminIds.size()];
+                for(int i=0;i<adminIds.size();i++)
+                {
+                    adminIdArray[i]=adminIds.get(i);
+                }
+                query.setAdminIds(adminIdArray);
+                RequestJsonVO adminRequestJsonVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+                resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<AdminVO> admins = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AdminVO.class);
+                    if(!CollectionUtils.isEmpty(admins))
+                    {
+                        if(!CollectionUtils.isEmpty(areaVOs)) {
+                            for (AreaVO areaVO : areaVOs) {
+                                for(AdminVO adminVO:admins)
+                                {
+                                    if (areaVO.getCreateAdminId() != null&&areaVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                                        areaVO.setCreateAdminUsername(adminVO.getUsername());
+                                    }
+                                    if (areaVO.getUpdateAdminId() != null&&areaVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                                        areaVO.setUpdateAdminUsername(adminVO.getUsername());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            //将查询的这个节点设置为顶级节点
+            if(StringUtils.isNotEmpty(queryPageInfo.getCode())) {
+                if(!CollectionUtils.isEmpty(areaVOs)) {
+                    for (Area area : areaVOs) {
+                        area.setPid(-1L);
+                    }
+                }
+            }
+
+            resultObjectVO.setData(areaVOs);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

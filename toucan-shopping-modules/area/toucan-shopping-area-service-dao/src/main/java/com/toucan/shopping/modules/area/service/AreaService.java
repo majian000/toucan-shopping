@@ -15,6 +15,8 @@ public interface AreaService {
 
     List<Area> queryList(Area area);
 
+    Long queryCount(Area area);
+
     /**
      * 保存实体
      * @param area

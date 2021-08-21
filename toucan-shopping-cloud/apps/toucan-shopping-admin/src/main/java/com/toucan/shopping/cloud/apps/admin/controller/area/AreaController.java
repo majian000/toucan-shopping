@@ -248,6 +248,32 @@ public class AreaController extends UIController {
 
 
     /**
+     * 查询列表
+     * @param queryPageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AreaTreeInfo queryPageInfo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            queryPageInfo.setAppCode("10001001");
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
+            resultObjectVO = feignAreaService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 删除功能项
      * @param request
      * @return

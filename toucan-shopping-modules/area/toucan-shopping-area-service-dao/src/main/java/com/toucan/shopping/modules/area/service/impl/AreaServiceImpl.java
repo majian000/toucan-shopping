@@ -29,6 +29,10 @@ public class AreaServiceImpl implements AreaService {
     }
 
 
+    @Override
+    public Long queryCount(Area area) {
+        return areaMapper.queryCount(area);
+    }
 
     @Transactional
     @Override

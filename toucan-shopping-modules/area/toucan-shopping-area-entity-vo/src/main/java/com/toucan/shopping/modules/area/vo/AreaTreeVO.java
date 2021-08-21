@@ -60,5 +60,9 @@ public class AreaTreeVO extends AreaVO {
     private State state = new State();
 
 
+    /**
+     * 是否有子节点
+     */
+    private Boolean haveChild = false;
 
 }

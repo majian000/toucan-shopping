@@ -30,6 +30,10 @@ public class AreaTreeInfo extends PageInfo<Area> {
      */
     private Short enableStatus;
 
+    /**
+     * 上级节点ID
+     */
+    private Long pid;
 
     /**
      * 管理员ID

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -149,7 +150,7 @@ public class AuthController {
                         queryFunction.setDeleteStatus((short)0);
                         queryFunction.setEnableStatus((short)1);
                         List<FunctionElasticSearchVO> functionElasticSearchVOS = null;
-                        List<Function> functionList = null;
+                        List<Function> functionList = new ArrayList<Function>();
                         try {
                             if(cacheIsRead) {
                                 //查询功能项

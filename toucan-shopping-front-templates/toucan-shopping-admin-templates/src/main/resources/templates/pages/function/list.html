@@ -116,7 +116,7 @@
         {
             var formParam = $("#functionSearchForm").serializeJson();
             if(row!=null) {
-                formParam.pid = row.id
+                formParam.pid = row.id;
                 formParam.appCode = row.appCode;
             }
             return formParam;

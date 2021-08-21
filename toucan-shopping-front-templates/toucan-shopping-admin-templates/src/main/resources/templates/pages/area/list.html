@@ -59,11 +59,15 @@
 
 <script>
 
-    layui.use(['form', 'table', 'treetable'], function () {
+    layui.config({
+        base: basePath+'/lib/layui_ext/treeTable/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        treeTable: 'treeTable' //定义该组件模块名
+    }).use(['form', 'table', 'treeTable'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
-        var treetable = layui.treetable;
+        var treetable = layui.treeTable;
         var loadding;
 
         $.fn.serializeJson=function(){
@@ -84,9 +88,14 @@
             return serializeObj;
         };
 
-        function getFormParam()
+        function getFormParam(row)
         {
             var formParam = $("#functionSearchForm").serializeJson();
+            if(row!=null) {
+                formParam.pid = row.id;
+            }else{
+                formParam.pid=-1;
+            }
             return formParam;
         }
 
@@ -94,18 +103,16 @@
         {
             loadding = layer.load();
             treetable.render({
-                treeColIndex: 1,
-                treeSpid: -1,
-                treeIdName: 'id',
-                treePidName: 'pid',
                 elem: '#areaTreeTable',
-                where:getFormParam(),
-                url: '[[@{/}]]area/tree/table',
+                tree: {
+                    iconIndex: 2
+                },
                 toolbar: '#toolbarDemo',
                 page: false,
                 cols: [
                     [
-                        {type: "checkbox", width: 50},
+                        {type: 'numbers'},
+                        {type: 'checkbox'},
                         {field: 'name', title: '名称'},
                         {field: 'code', width: 100,  title: '编码'},
                         {field: 'areaSort', title: '排序'},
@@ -123,10 +130,20 @@
                         {templet: '#areaTreeTableToolbar', width: 120, align: 'center', title: '操作'}
                     ]
                 ],
-                done: function () {
-                    treetable.foldAll("#areaTreeTable");
-                    layer.closeAll('loading');
-                    layer.close(loadding);
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]area/tree/table/by/pid",
+                        type:'GET',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
                 }
             });
 
@@ -145,7 +162,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(areaTreeTableFilter)', function (obj) {
+        treetable.on('toolbar(areaTreeTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加地区',
@@ -190,11 +207,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(areaTreeTableFilter)', function (obj) {
+        treetable.on('checkbox(areaTreeTable)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(areaTreeTableFilter)', function (obj) {
+        treetable.on('tool(areaTreeTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
                 if(data.type==null)

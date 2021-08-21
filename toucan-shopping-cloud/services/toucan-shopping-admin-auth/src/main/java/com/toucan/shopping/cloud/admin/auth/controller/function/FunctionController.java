@@ -409,8 +409,33 @@ public class FunctionController {
             queryAdminApp.setAdminId(queryPageInfo.getAdminId());
             queryAdminApp.setAppCode(queryPageInfo.getAppCode());
 
-            //页面初始化
-            if(queryPageInfo.getPid()==null) {
+
+            List<AppFunctionTreeVO> functionTreeVOS = new ArrayList<AppFunctionTreeVO>();
+            //条件查询
+            if(StringUtils.isNotEmpty(queryPageInfo.getName())||
+                    StringUtils.isNotEmpty(queryPageInfo.getUrl())||
+                    StringUtils.isNotEmpty(queryPageInfo.getPermission())||
+                    queryPageInfo.getEnableStatus()!=null)
+            {
+                Function queryFunction = new Function();
+                BeanUtils.copyProperties(queryFunction,queryPageInfo);
+                List<Function> functions = functionService.findListByEntity(queryFunction);
+                for(Function function:functions)
+                {
+                    AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                    BeanUtils.copyProperties(appFunctionTreeVO,function);
+                    queryFunction = new Function();
+                    queryFunction.setPid(function.getId());
+                    List<Function> functionChilds = functionService.findListByEntity(queryFunction);
+                    //查询该节点是否存在子节点
+                    if(!CollectionUtils.isEmpty(functionChilds))
+                    {
+                        appFunctionTreeVO.setHaveChild(true);
+                    }
+                    functionTreeVOS.add(appFunctionTreeVO);
+                }
+                resultObjectVO.setData(functionTreeVOS);
+            }else if(queryPageInfo.getPid()==null) { //页面初始化
                 //当前用户下关联所有应用
                 List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(queryAdminApp);
                 if (!CollectionUtils.isEmpty(adminApps)) {
@@ -443,7 +468,6 @@ public class FunctionController {
                     resultObjectVO.setData(appFunctionTreeVOS);
                 }
             }else{
-                List<AppFunctionTreeVO> functionTreeVOS = new ArrayList<AppFunctionTreeVO>();
                 //查询查询这个APP下的功能项列表
                 Function queryFunction = new Function();
                 queryFunction.setAppCode(queryPageInfo.getAppCode());
