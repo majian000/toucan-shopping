@@ -136,15 +136,20 @@
                 text: {},
                 elem: '#functionTreeTable',
                 toolbar: '#toolbarDemo',
+                tree: {
+                    iconIndex: 2
+                },
                 cols: [
+                    {type: 'numbers'},
+                    {type: 'checkbox'},
                     {field: 'name', width: 400,  title: '功能名称'},
-                    {field: 'url', width: 160,title: '链接'},
-                    {field: 'permission',width: 160, title: '权限'},
-                    {field: 'functionSort',width: 160, title: '排序'},
-                    {field: 'createAdminUsername',width: 160, title: '创建人'},
-                    {field: 'createDate', width: 160, title: '创建时间'},
-                    {field: 'updateAdminUsername',width: 160,  title: '修改人'},
-                    {field: 'updateDate', width: 160, title: '修改时间'},
+                    {field: 'url', title: '链接'},
+                    {field: 'permission',title: '权限'},
+                    {field: 'functionSort', title: '排序'},
+                    {field: 'createAdminUsername', title: '创建人'},
+                    {field: 'createDate', title: '创建时间'},
+                    {field: 'updateAdminUsername', title: '修改人'},
+                    {field: 'updateDate',  title: '修改时间'},
                     {field: 'enableStatus', width: 160, align: 'center', title: '状态', templet: function (d) {
                             if (d.enableStatus == 1) {
                                 return '启用';
@@ -170,7 +175,7 @@
                             return '<span class="layui-badge layui-bg-black">应用</span>';
                         }, title: '类型'
                     },
-                    {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
+                    {templet: '#functionTreeTableToolbar', width: 150, align: 'center', title: '操作'}
 
                 ],
                 reqData: function (selectRow, callback) {
@@ -205,7 +210,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(functionTreeTableFilter)', function (obj) {
+        treetable.on('toolbar(functionTreeTable)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加功能',
@@ -214,7 +219,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/function/addPage}]]",
+                    content: "[[@{/function/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -250,11 +255,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(functionTreeTableFilter)', function (obj) {
+        treetable.on('checkbox(functionTreeTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(functionTreeTableFilter)', function (obj) {
+        treetable.on('tool(functionTreeTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
                 if(data.type==null)
