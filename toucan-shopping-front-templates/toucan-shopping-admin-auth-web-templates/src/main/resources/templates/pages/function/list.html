@@ -138,14 +138,14 @@
                 toolbar: '#toolbarDemo',
                 cols: [
                     {field: 'name', width: 400,  title: '功能名称'},
-                    {field: 'url', title: '链接'},
-                    {field: 'permission', title: '权限'},
-                    {field: 'functionSort', title: '排序'},
-                    {field: 'createAdminUsername', title: '创建人'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminUsername',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
-                    {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
+                    {field: 'url', width: 160,title: '链接'},
+                    {field: 'permission',width: 160, title: '权限'},
+                    {field: 'functionSort',width: 160, title: '排序'},
+                    {field: 'createAdminUsername',width: 160, title: '创建人'},
+                    {field: 'createDate', width: 160, title: '创建时间'},
+                    {field: 'updateAdminUsername',width: 160,  title: '修改人'},
+                    {field: 'updateDate', width: 160, title: '修改时间'},
+                    {field: 'enableStatus', width: 160, align: 'center', title: '状态', templet: function (d) {
                             if (d.enableStatus == 1) {
                                 return '启用';
                             } else {

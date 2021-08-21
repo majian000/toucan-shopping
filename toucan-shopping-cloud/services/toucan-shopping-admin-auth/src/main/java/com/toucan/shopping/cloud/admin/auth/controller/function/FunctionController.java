@@ -444,15 +444,19 @@ public class FunctionController {
                 }
             }else{
                 //查询查询这个APP下的功能项列表
-                queryPageInfo.setAppCode(queryPageInfo.getAppCode());
+                Function queryFunction = new Function();
+                queryFunction.setAppCode(queryPageInfo.getAppCode());
                 //如果点击应用节点的话,就查询下面的一级节点,否则就查询对应节点下的子节点
                 if(queryPageInfo.getPid()<0)
                 {
                     //设置查询顶级节点
-                    queryPageInfo.setPid(-1L);
+                    queryFunction.setPid(-1L);
+                }else{
+                    queryFunction.setPid(queryPageInfo.getPid());
                 }
-                List<Function>  functions = functionService.findTreeTable(queryPageInfo);
+                List<Function>  functions = functionService.findListByEntity(queryFunction);
                 appFunctionTreeVOS.addAll(functions);
+                resultObjectVO.setData(appFunctionTreeVOS);
             }
 
         }catch(Exception e)
