@@ -23,6 +23,8 @@ import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -186,6 +188,7 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
             boolQueryBuilder.must(QueryBuilders.termQuery("appCode", query.getAppCode()));
         }
         searchSourceBuilder.query(boolQueryBuilder);
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
@@ -217,6 +220,12 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
         return false;
     }
 
+    @Override
+    public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
+        CountRequest countRequest=new CountRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
+        return response.getCount();
+    }
 
 
 }

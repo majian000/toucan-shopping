@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.es.service;
 
 
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.List;
 
@@ -74,4 +75,13 @@ public interface AdminRoleElasticSearchService {
      * @return
      */
     void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS) throws Exception;
+
+
+    /**
+     * 查询记录总数量
+     * @param searchSourceBuilder
+     * @return
+     * @throws Exception
+     */
+    Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception;
 }

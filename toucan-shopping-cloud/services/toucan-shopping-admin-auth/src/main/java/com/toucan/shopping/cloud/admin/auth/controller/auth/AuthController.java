@@ -184,6 +184,11 @@ public class AuthController {
                                     logger.warn(e.getMessage(), e);
                                     cacheIsRead = false;
                                 }
+                                if(function.getFunctionId()==null)
+                                {
+                                    resultObjectVO.setData(false);
+                                    return resultObjectVO;
+                                }
                                 //查询这个功能项是否包含在这个管理员的角色与功能项的关联里
                                 RoleFunctionVO queryRoleFunction = new RoleFunctionVO();
                                 queryRoleFunction.setFunctionId(function.getFunctionId());

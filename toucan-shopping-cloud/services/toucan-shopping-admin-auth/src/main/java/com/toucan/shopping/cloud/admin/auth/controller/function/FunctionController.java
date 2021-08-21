@@ -409,12 +409,12 @@ public class FunctionController {
             queryAdminApp.setAdminId(queryPageInfo.getAdminId());
             queryAdminApp.setAppCode(queryPageInfo.getAppCode());
 
-            List<Object> appFunctionTreeVOS = new ArrayList<Object>();
             //页面初始化
             if(queryPageInfo.getPid()==null) {
                 //当前用户下关联所有应用
                 List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(queryAdminApp);
                 if (!CollectionUtils.isEmpty(adminApps)) {
+                    List<Object> appFunctionTreeVOS = new ArrayList<Object>();
                     //虚拟一个应用节点的ID
                     long rootNodeId = -1L;
                     for (AdminAppVO adminAppVO : adminApps) {
@@ -443,6 +443,7 @@ public class FunctionController {
                     resultObjectVO.setData(appFunctionTreeVOS);
                 }
             }else{
+                List<AppFunctionTreeVO> functionTreeVOS = new ArrayList<AppFunctionTreeVO>();
                 //查询查询这个APP下的功能项列表
                 Function queryFunction = new Function();
                 queryFunction.setAppCode(queryPageInfo.getAppCode());
@@ -455,8 +456,21 @@ public class FunctionController {
                     queryFunction.setPid(queryPageInfo.getPid());
                 }
                 List<Function>  functions = functionService.findListByEntity(queryFunction);
-                appFunctionTreeVOS.addAll(functions);
-                resultObjectVO.setData(appFunctionTreeVOS);
+                for(Function function:functions)
+                {
+                    AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                    BeanUtils.copyProperties(appFunctionTreeVO,function);
+                    queryFunction = new Function();
+                    queryFunction.setPid(function.getId());
+                    List<Function> functionChilds = functionService.findListByEntity(queryFunction);
+                    //查询该节点是否存在子节点
+                    if(!CollectionUtils.isEmpty(functionChilds))
+                    {
+                        appFunctionTreeVO.setHaveChild(true);
+                    }
+                    functionTreeVOS.add(appFunctionTreeVO);
+                }
+                resultObjectVO.setData(functionTreeVOS);
             }
 
         }catch(Exception e)

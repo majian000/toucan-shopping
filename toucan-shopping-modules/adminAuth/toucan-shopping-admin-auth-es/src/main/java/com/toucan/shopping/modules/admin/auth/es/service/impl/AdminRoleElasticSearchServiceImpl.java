@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.es.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.constant.AdminRoleCacheElasticSearchConstant;
+import com.toucan.shopping.modules.admin.auth.constant.RoleFunctionCacheElasticSearchConstant;
 import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -168,6 +169,7 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
             boolQueryBuilder.must(QueryBuilders.termQuery("appCode", query.getAppCode()));
         }
         searchSourceBuilder.query(boolQueryBuilder);
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
@@ -220,6 +222,7 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
         //设置查询条件
         searchSourceBuilder.query(QueryBuilders.termQuery("adminId", adminId));
         searchSourceBuilder.query(QueryBuilders.termQuery("appCode", appCode));
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
@@ -258,5 +261,11 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
 
 
 
+    @Override
+    public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
+        CountRequest countRequest=new CountRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
+        return response.getCount();
+    }
 
 }

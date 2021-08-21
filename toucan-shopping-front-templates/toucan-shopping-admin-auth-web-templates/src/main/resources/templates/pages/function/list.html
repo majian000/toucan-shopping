@@ -100,6 +100,7 @@
             table = layui.table;
         var treetable = layui.treeTable;
         var loadding;
+        var treetableHandler;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -132,7 +133,7 @@
         function loadTreeTable()
         {
             loadding = layer.load();
-            treetable.render({
+            treetableHandler = treetable.render({
                 text: {},
                 elem: '#functionTreeTable',
                 toolbar: '#toolbarDemo',
@@ -225,8 +226,8 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('functionTreeTable')
-                    , data = checkStatus.data;
+                var data = treetableHandler.checkStatus();
+                console.log(data);
                 if(data==null||data.length<=0)
                 {
                     layer.msg("请选择要操作的记录");

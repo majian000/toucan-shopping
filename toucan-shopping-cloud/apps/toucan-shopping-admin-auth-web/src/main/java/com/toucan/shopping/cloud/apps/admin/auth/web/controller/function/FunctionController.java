@@ -233,7 +233,7 @@ public class FunctionController extends UIController {
      * @param queryPageInfo
      * @return
      */
-    //@AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO treeTableByPid(HttpServletRequest request, FunctionTreeInfo queryPageInfo)

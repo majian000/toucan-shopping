@@ -79,13 +79,20 @@
 <script th:src="@{/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
 <script th:src="@{/js/common/selectApp.js}" charset="utf-8"></script>
 
+
 <script>
 
-    layui.use(['form', 'table', 'treetable'], function () {
+    layui.config({
+        base: basePath+'/lib/layui_ext/treeTable/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        treeTable: 'treeTable' //定义该组件模块名
+    }).use(['form', 'table', 'treeTable'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
-        var treetable = layui.treetable;
+        var treetable = layui.treeTable;
+        var loadding;
+        var treetableHandler;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -105,66 +112,79 @@
             return serializeObj;
         };
 
-        function getFormParam()
+        function getFormParam(row)
         {
             var formParam = $("#functionSearchForm").serializeJson();
+            if(row!=null) {
+                formParam.pid = row.id
+                formParam.appCode = row.appCode;
+            }
             return formParam;
         }
 
         function loadTreeTable()
         {
-            treetable.render({
-                treeColIndex: 1,
-                treeSpid: -1,
-                treeIdName: 'id',
-                treePidName: 'pid',
+            loadding = layer.load();
+            treetableHandler = treetable.render({
+                text: {},
                 elem: '#functionTreeTable',
-                where:getFormParam(),
-                url: '[[@{/}]]function/tree/table',
                 toolbar: '#toolbarDemo',
-                page: false,
+                tree: {
+                    iconIndex: 2
+                },
                 cols: [
-                    [
-                        {type: "checkbox", width: 50},
-                        {field: 'name', width: 400,  title: '功能名称'},
-                        {field: 'url', title: '链接'},
-                        {field: 'permission', title: '权限'},
-                        {field: 'functionSort', title: '排序'},
-                        {field: 'createAdminUsername', title: '创建人'},
-                        {field: 'createDate',  title: '创建时间'},
-                        {field: 'updateAdminUsername',  title: '修改人'},
-                        {field: 'updateDate',  title: '修改时间'},
-                        {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
-                                if (d.enableStatus == 1) {
-                                    return '启用';
-                                } else {
-                                    return '禁用';
-                                }
-                            }},
-                        {
-                            field: 'type', width: 80, align: 'center', templet: function (d) {
-                                if (d.type == 0) {
-                                    return '<span class="layui-badge layui-bg-blue">目录</span>';
-                                }else if (d.type == 1) {
-                                    return '<span class="layui-badge-rim">菜单</span>';
-                                }else  if (d.type == 2) {
-                                    return '<span class="layui-badge layui-bg-gray">按钮</span>';
-                                }else  if (d.type == 3) {
-                                    return '<span class="layui-badge layui-bg-gray">工具条按钮</span>';
-                                }else  if (d.type == 4) {
-                                    return '<span class="layui-badge layui-bg-gray">API</span>';
-                                }else  if (d.type == 5) {
-                                    return '<span class="layui-badge layui-bg-gray">页面控件</span>';
-                                }
-                                return '<span class="layui-badge layui-bg-black">应用</span>';
-                            }, title: '类型'
-                        },
-                        {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
-                    ]
+                    {type: 'numbers'},
+                    {type: 'checkbox'},
+                    {field: 'name', width: 400,  title: '功能名称'},
+                    {field: 'url', title: '链接'},
+                    {field: 'permission',title: '权限'},
+                    {field: 'functionSort', title: '排序'},
+                    {field: 'createAdminUsername', title: '创建人'},
+                    {field: 'createDate', title: '创建时间'},
+                    {field: 'updateAdminUsername', title: '修改人'},
+                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'enableStatus', width: 160, align: 'center', title: '状态', templet: function (d) {
+                            if (d.enableStatus == 1) {
+                                return '启用';
+                            } else {
+                                return '禁用';
+                            }
+                        }},
+                    {
+                        field: 'type', width: 80, align: 'center', templet: function (d) {
+                            if (d.type == 0) {
+                                return '<span class="layui-badge layui-bg-blue">目录</span>';
+                            }else if (d.type == 1) {
+                                return '<span class="layui-badge-rim">菜单</span>';
+                            }else  if (d.type == 2) {
+                                return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                            }else  if (d.type == 3) {
+                                return '<span class="layui-badge layui-bg-gray">工具条按钮</span>';
+                            }else  if (d.type == 4) {
+                                return '<span class="layui-badge layui-bg-gray">API</span>';
+                            }else  if (d.type == 5) {
+                                return '<span class="layui-badge layui-bg-gray">页面控件</span>';
+                            }
+                            return '<span class="layui-badge layui-bg-black">应用</span>';
+                        }, title: '类型'
+                    },
+                    {templet: '#functionTreeTableToolbar', width: 150, align: 'center', title: '操作'}
+
                 ],
-                done: function () {
-                    treetable.foldAll("#functionTreeTable");
-                    layer.closeAll('loading');
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]function/tree/table/by/pid",
+                        type:'GET',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
                 }
             });
 
@@ -174,7 +194,7 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            
+
             loadTreeTable();
 
             return false;
@@ -183,7 +203,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(functionTreeTableFilter)', function (obj) {
+        treetable.on('toolbar(functionTreeTable)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加功能',
@@ -192,14 +212,13 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/function/addPage}]]",
+                    content: "[[@{/function/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('functionTreeTable')
-                    , data = checkStatus.data;
+                var data = treetableHandler.checkStatus();
                 if(data==null||data.length<=0)
                 {
                     layer.msg("请选择要操作的记录");
@@ -228,11 +247,11 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(functionTreeTableFilter)', function (obj) {
+        treetable.on('checkbox(functionTreeTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(functionTreeTableFilter)', function (obj) {
+        treetable.on('tool(functionTreeTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
                 if(data.type==null)

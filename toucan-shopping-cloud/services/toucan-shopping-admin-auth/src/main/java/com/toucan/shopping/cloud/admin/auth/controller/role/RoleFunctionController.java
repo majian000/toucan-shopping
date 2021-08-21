@@ -139,7 +139,7 @@ public class RoleFunctionController {
             try{
                 //刷新到es缓存
                 List<String> deleteFaildIdList = new ArrayList<String>();
-                roleFunctionElasticSearchService.deleteByRoleId(entity.getRoleId(),deleteFaildIdList);
+                roleFunctionElasticSearchService.deleteIndex();
                 if(roleFunctions!=null&&roleFunctions.length>0) {
                     RoleFunctionElasticSearchVO[]  roleFunctionElasticSearchVOS = new  RoleFunctionElasticSearchVO[roleFunctions.length];
                     for(int i=0;i<roleFunctions.length;i++)

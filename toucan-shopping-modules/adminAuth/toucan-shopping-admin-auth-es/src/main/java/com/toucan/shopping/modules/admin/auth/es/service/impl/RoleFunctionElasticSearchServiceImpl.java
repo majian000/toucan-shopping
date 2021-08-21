@@ -20,6 +20,8 @@ import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -167,11 +169,15 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
         if(query.getRoleId()!=null) {
             boolQueryBuilder.must(QueryBuilders.termQuery("roleId", query.getRoleId()));
         }
+        if(query.getRoleId()!=null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("deleteStatus", query.getDeleteStatus()));
+        }
         if(query.getAppCode()!=null)
         {
             boolQueryBuilder.must(QueryBuilders.termQuery("appCode", query.getAppCode()));
         }
         searchSourceBuilder.query(boolQueryBuilder);
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
@@ -211,14 +217,15 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
         searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        //设置查询条件
         searchSourceBuilder.query(QueryBuilders.termQuery("roleId", roleId));
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
         SearchHits searchHits = searchResponse.getHits();
         SearchHit[] searchHitsHits = searchHits.getHits();
         for(SearchHit searchHit:searchHitsHits) {
+            logger.info(" 删除角色资源关联对象 {}",searchHit.getSourceAsString());
             DeleteRequest deleteRequest = new DeleteRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
             deleteRequest.id(searchHit.getId());
             DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
@@ -256,6 +263,7 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         //设置查询条件
         searchSourceBuilder.query(QueryBuilders.termQuery("functionId", functionId));
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
@@ -280,6 +288,14 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
             return true;
         }
         return false;
+    }
+
+
+    @Override
+    public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
+        CountRequest countRequest=new CountRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
+        return response.getCount();
     }
 
 }
