@@ -222,7 +222,8 @@ public class FunctionElasticSearchServiceImpl implements FunctionElasticSearchSe
 
     @Override
     public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
-        CountRequest countRequest=new CountRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        CountRequest countRequest=new CountRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
+        countRequest.source(searchSourceBuilder);
         CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
         return response.getCount();
     }

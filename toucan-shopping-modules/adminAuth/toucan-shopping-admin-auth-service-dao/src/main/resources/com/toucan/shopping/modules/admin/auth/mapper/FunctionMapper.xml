@@ -75,7 +75,7 @@
             <if test="pid!=null">
                 and t.pid = #{pid}
             </if>
-            <if test="url!=null and url!='' ">
+            <if test="url!=null  ">
                 and t.url = #{url}
             </if>
             <if test="name!=null and name!=''">

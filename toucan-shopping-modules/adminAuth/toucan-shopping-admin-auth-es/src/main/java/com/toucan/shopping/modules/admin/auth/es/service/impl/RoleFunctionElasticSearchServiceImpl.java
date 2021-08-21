@@ -294,6 +294,7 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     @Override
     public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
         CountRequest countRequest=new CountRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        countRequest.source(searchSourceBuilder);
         CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
         return response.getCount();
     }

@@ -157,7 +157,19 @@ public class AuthController {
                                 BeanUtils.copyProperties(queryFunctionElasticSearchVO, queryFunction);
                                 functionElasticSearchVOS = functionElasticSearchService.queryByEntity(queryFunctionElasticSearchVO);
                                 if (CollectionUtils.isNotEmpty(functionElasticSearchVOS)) {
-                                    functionList = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS), Function.class);
+                                    List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionElasticSearchVOS), Function.class);
+                                    if(CollectionUtils.isNotEmpty(functionCacheList))
+                                    {
+                                        for(Function functioncache:functionCacheList)
+                                        {
+                                            //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
+                                            //例如/role/list这个接口也会把role/listPage查询出来
+                                            if(functioncache.getUrl().equals(query.getUrl()))
+                                            {
+                                                functionList.add(functioncache);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }catch(Exception e)

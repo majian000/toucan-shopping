@@ -415,7 +415,7 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
 
         //设置查询条件组
         searchSourceBuilder.query(boolQueryBuilder);
-
+        countRequest.source(searchSourceBuilder);
         CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
         return response.getCount();
     }

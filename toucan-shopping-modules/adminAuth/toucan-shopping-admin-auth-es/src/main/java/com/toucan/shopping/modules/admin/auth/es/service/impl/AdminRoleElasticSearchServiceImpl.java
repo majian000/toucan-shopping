@@ -263,7 +263,8 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
 
     @Override
     public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
-        CountRequest countRequest=new CountRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
+        CountRequest countRequest=new CountRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        countRequest.source(searchSourceBuilder);
         CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
         return response.getCount();
     }
