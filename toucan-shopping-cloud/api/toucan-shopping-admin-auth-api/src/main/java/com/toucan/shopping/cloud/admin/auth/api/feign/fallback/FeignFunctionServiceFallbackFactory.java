@@ -63,11 +63,27 @@ public class FeignFunctionServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("超时重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignFunctionService.update faild sign {} params {} ",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignFunctionService.queryAppFunctionTreeTable faild sign {} params {} ",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryAppFunctionTreeTableByPid(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("超时重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignFunctionService.queryAppFunctionTreeTableByPid faild sign {} params {} ",signHeader,JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
 
 
             @Override

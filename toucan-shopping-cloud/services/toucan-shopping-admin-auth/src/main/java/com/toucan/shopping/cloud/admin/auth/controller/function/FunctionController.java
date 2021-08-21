@@ -341,6 +341,7 @@ public class FunctionController {
             List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(queryAdminApp);
             if(!CollectionUtils.isEmpty(adminApps))
             {
+
                 List<Object> appFunctionTreeVOS = new ArrayList<Object>();
                 for(AdminAppVO adminAppVO : adminApps)
                 {
@@ -378,6 +379,92 @@ public class FunctionController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 根据PID查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/app/function/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAppFunctionTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            FunctionTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionTreeInfo.class);
+            if(StringUtils.isEmpty(queryPageInfo.getAdminId()))
+            {
+                throw new IllegalArgumentException("adminId为空");
+            }
+
+            //查询账号下关联应用
+            AdminApp queryAdminApp = new AdminApp();
+            queryAdminApp.setAdminId(queryPageInfo.getAdminId());
+            queryAdminApp.setAppCode(queryPageInfo.getAppCode());
+
+            List<Object> appFunctionTreeVOS = new ArrayList<Object>();
+            //页面初始化
+            if(queryPageInfo.getPid()==null) {
+                //当前用户下关联所有应用
+                List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(queryAdminApp);
+                if (!CollectionUtils.isEmpty(adminApps)) {
+                    //虚拟一个应用节点的ID
+                    long rootNodeId = -1L;
+                    for (AdminAppVO adminAppVO : adminApps) {
+                        AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                        appFunctionTreeVO.setId(rootNodeId);
+                        appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
+                        appFunctionTreeVO.setName(adminAppVO.getAppCode() + " " + adminAppVO.getName());
+                        appFunctionTreeVO.setPid(-1L);
+                        appFunctionTreeVO.setEnableStatus((short) 1);
+
+                        //设置是否有子节点
+                        Function queryFunction = new Function();
+                        queryFunction.setAppCode(adminAppVO.getAppCode());
+                        queryFunction.setPid(-1L);
+                        List<Function> functions = functionService.findListByEntity(queryFunction);
+                        if(!CollectionUtils.isEmpty(functions))
+                        {
+                            appFunctionTreeVO.setHaveChild(true);
+                        }
+
+                        appFunctionTreeVOS.add(appFunctionTreeVO);
+
+                        rootNodeId -= 1;
+
+                    }
+                    resultObjectVO.setData(appFunctionTreeVOS);
+                }
+            }else{
+                //查询查询这个APP下的功能项列表
+                queryPageInfo.setAppCode(queryPageInfo.getAppCode());
+                //如果点击应用节点的话,就查询下面的一级节点,否则就查询对应节点下的子节点
+                if(queryPageInfo.getPid()<0)
+                {
+                    //设置查询顶级节点
+                    queryPageInfo.setPid(-1L);
+                }
+                List<Function>  functions = functionService.findTreeTable(queryPageInfo);
+                appFunctionTreeVOS.addAll(functions);
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
     /**
      * 根据ID查询

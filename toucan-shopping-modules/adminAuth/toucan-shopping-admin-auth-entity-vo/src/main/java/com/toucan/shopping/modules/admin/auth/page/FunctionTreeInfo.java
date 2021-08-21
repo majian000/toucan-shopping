@@ -44,6 +44,11 @@ public class FunctionTreeInfo extends PageInfo<Function> {
     private String permission;
 
     /**
+     * 上级节点ID
+     */
+    private Long pid;
+
+    /**
      * 连接
      */
     private String link;

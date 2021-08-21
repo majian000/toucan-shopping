@@ -37,8 +37,18 @@ public interface FeignFunctionService {
      * @return
      */
     @RequestMapping(value="/query/app/function/tree/table",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO queryAppFunctionTreeTable(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
-    
+    ResultObjectVO queryAppFunctionTreeTable(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据PID查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/app/function/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    ResultObjectVO queryAppFunctionTreeTableByPid(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
     
     /**
      * 根据ID删除

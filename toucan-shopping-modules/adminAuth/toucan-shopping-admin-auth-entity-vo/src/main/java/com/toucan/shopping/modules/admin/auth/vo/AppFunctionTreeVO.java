@@ -44,5 +44,10 @@ public class AppFunctionTreeVO extends Function {
      */
     private List<FunctionTreeVO> children;
 
+    /**
+     * 是否有子节点
+     */
+    private Boolean haveChild = false;
+
 
 }

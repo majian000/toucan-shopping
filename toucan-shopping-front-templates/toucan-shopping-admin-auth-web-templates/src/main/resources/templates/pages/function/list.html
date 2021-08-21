@@ -90,11 +90,15 @@
 
 <script>
 
-    layui.use(['form', 'table', 'treetable'], function () {
+    layui.config({
+        base: basePath+'/lib/layui_ext/treeTable/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        treeTable: 'treeTable' //定义该组件模块名
+    }).use(['form', 'table', 'treeTable'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
-        var treetable = layui.treetable;
+        var treetable = layui.treeTable;
         var loadding;
 
         $.fn.serializeJson=function(){
@@ -115,9 +119,13 @@
             return serializeObj;
         };
 
-        function getFormParam()
+        function getFormParam(row)
         {
             var formParam = $("#functionSearchForm").serializeJson();
+            if(row!=null) {
+                formParam.pid = row.id
+                formParam.appCode = row.appCode;
+            }
             return formParam;
         }
 
@@ -125,58 +133,60 @@
         {
             loadding = layer.load();
             treetable.render({
-                treeColIndex: 1,
-                treeSpid: -1,
-                treeIdName: 'id',
-                treePidName: 'pid',
+                text: {},
                 elem: '#functionTreeTable',
-                where:getFormParam(),
-                url: '[[@{/}]]function/tree/table',
                 toolbar: '#toolbarDemo',
-                page: false,
                 cols: [
-                    [
-                        {type: "checkbox", width: 50},
-                        {field: 'name', width: 400,  title: '功能名称'},
-                        {field: 'url', title: '链接'},
-                        {field: 'permission', title: '权限'},
-                        {field: 'functionSort', title: '排序'},
-                        {field: 'createAdminUsername', title: '创建人'},
-                        {field: 'createDate',  title: '创建时间'},
-                        {field: 'updateAdminUsername',  title: '修改人'},
-                        {field: 'updateDate',  title: '修改时间'},
-                        {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
-                                if (d.enableStatus == 1) {
-                                    return '启用';
-                                } else {
-                                    return '禁用';
-                                }
-                            }},
-                        {
-                            field: 'type', width: 80, align: 'center', templet: function (d) {
-                                if (d.type == 0) {
-                                    return '<span class="layui-badge layui-bg-blue">目录</span>';
-                                }else if (d.type == 1) {
-                                    return '<span class="layui-badge-rim">菜单</span>';
-                                }else  if (d.type == 2) {
-                                    return '<span class="layui-badge layui-bg-gray">按钮</span>';
-                                }else  if (d.type == 3) {
-                                    return '<span class="layui-badge layui-bg-gray">工具条按钮</span>';
-                                }else  if (d.type == 4) {
-                                    return '<span class="layui-badge layui-bg-gray">API</span>';
-                                }else  if (d.type == 5) {
-                                    return '<span class="layui-badge layui-bg-gray">页面控件</span>';
-                                }
-                                return '<span class="layui-badge layui-bg-black">应用</span>';
-                            }, title: '类型'
-                        },
-                        {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
-                    ]
+                    {field: 'name', width: 400,  title: '功能名称'},
+                    {field: 'url', title: '链接'},
+                    {field: 'permission', title: '权限'},
+                    {field: 'functionSort', title: '排序'},
+                    {field: 'createAdminUsername', title: '创建人'},
+                    {field: 'createDate',  title: '创建时间'},
+                    {field: 'updateAdminUsername',  title: '修改人'},
+                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'enableStatus',  align: 'center', title: '状态', templet: function (d) {
+                            if (d.enableStatus == 1) {
+                                return '启用';
+                            } else {
+                                return '禁用';
+                            }
+                        }},
+                    {
+                        field: 'type', width: 80, align: 'center', templet: function (d) {
+                            if (d.type == 0) {
+                                return '<span class="layui-badge layui-bg-blue">目录</span>';
+                            }else if (d.type == 1) {
+                                return '<span class="layui-badge-rim">菜单</span>';
+                            }else  if (d.type == 2) {
+                                return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                            }else  if (d.type == 3) {
+                                return '<span class="layui-badge layui-bg-gray">工具条按钮</span>';
+                            }else  if (d.type == 4) {
+                                return '<span class="layui-badge layui-bg-gray">API</span>';
+                            }else  if (d.type == 5) {
+                                return '<span class="layui-badge layui-bg-gray">页面控件</span>';
+                            }
+                            return '<span class="layui-badge layui-bg-black">应用</span>';
+                        }, title: '类型'
+                    },
+                    {templet: '#functionTreeTableToolbar', width: 120, align: 'center', title: '操作'}
+
                 ],
-                done: function () {
-                    treetable.foldAll("#functionTreeTable");
-                    layer.closeAll('loading');
-                    layer.close(loadding);
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]function/tree/table/by/pid",
+                        type:'GET',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
                 }
             });
 
