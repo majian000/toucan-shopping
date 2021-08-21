@@ -19,6 +19,12 @@ public interface FunctionService {
     List<Function> findListByEntity(Function entity);
 
     /**
+     * 根据查询对象返回列表
+     * @param entity
+     * @return
+     */
+    List<Function> findListByEntityFieldLike(Function entity);
+    /**
      * 根据应用编码查询树
      * @param appCode
      * @return

@@ -33,6 +33,10 @@ public class FunctionServiceImpl implements FunctionService {
         return functionMapper.findListByEntity(entity);
     }
 
+    @Override
+    public List<Function> findListByEntityFieldLike(Function entity) {
+        return functionMapper.findListByEntityFieldLike(entity);
+    }
 
     public void setChildren(List<FunctionVO> functionVOS,FunctionTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
         for (FunctionVO functionVO : functionVOS) {

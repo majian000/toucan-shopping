@@ -419,19 +419,11 @@ public class FunctionController {
             {
                 Function queryFunction = new Function();
                 BeanUtils.copyProperties(queryFunction,queryPageInfo);
-                List<Function> functions = functionService.findListByEntity(queryFunction);
+                List<Function> functions = functionService.findListByEntityFieldLike(queryFunction);
                 for(Function function:functions)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                     BeanUtils.copyProperties(appFunctionTreeVO,function);
-                    queryFunction = new Function();
-                    queryFunction.setPid(function.getId());
-                    List<Function> functionChilds = functionService.findListByEntity(queryFunction);
-                    //查询该节点是否存在子节点
-                    if(!CollectionUtils.isEmpty(functionChilds))
-                    {
-                        appFunctionTreeVO.setHaveChild(true);
-                    }
                     functionTreeVOS.add(appFunctionTreeVO);
                 }
                 resultObjectVO.setData(functionTreeVOS);

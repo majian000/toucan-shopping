@@ -33,6 +33,12 @@ public interface FunctionMapper {
     List<Function> findListByEntity(Function function);
 
     /**
+     * 查询列表
+     * @param function
+     * @return
+     */
+    List<Function> findListByEntityFieldLike(Function function);
+    /**
      * 查询列表页
      * @param FunctionTreeInfo
      * @return

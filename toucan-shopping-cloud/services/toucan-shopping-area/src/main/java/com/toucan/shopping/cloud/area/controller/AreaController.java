@@ -634,34 +634,50 @@ public class AreaController {
         try {
             AreaTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AreaTreeInfo.class);
 
-            //查询当前节点下的所有子节点
-            Area queryArea = new Area();
-            queryArea.setPid(queryPageInfo.getPid());
-            List<Area> areas = areaService.queryList(queryArea);
-            List<AreaTreeVO>  areaVOs = new ArrayList<AreaTreeVO>();
-            for(int i=0;i<areas.size();i++)
+            List<AreaTreeVO> areaVOs = new ArrayList<AreaTreeVO>();
+            //按指定条件查询
+            if(StringUtils.isNotEmpty(queryPageInfo.getCode()))
             {
-                Area area = areas.get(i);
-                AreaTreeVO areaTreeVO = new AreaTreeVO();
-                BeanUtils.copyProperties(areaTreeVO,area);
-                if(area.getType()==1)
-                {
-                    areaTreeVO.setName(area.getProvince());
-                }else if(area.getType()==2)
-                {
-                    areaTreeVO.setName(area.getCity());
-                }else if(area.getType()==3)
-                {
-                    areaTreeVO.setName(area.getArea());
+                Area queryArea = new Area();
+                queryArea.setCode(queryPageInfo.getCode());
+                List<Area> areas = areaService.queryList(queryArea);
+                for (int i = 0; i < areas.size(); i++) {
+                    Area area = areas.get(i);
+                    AreaTreeVO areaTreeVO = new AreaTreeVO();
+                    BeanUtils.copyProperties(areaTreeVO, area);
+                    if (area.getType() == 1) {
+                        areaTreeVO.setName(area.getProvince());
+                    } else if (area.getType() == 2) {
+                        areaTreeVO.setName(area.getCity());
+                    } else if (area.getType() == 3) {
+                        areaTreeVO.setName(area.getArea());
+                    }
+                    areaVOs.add(areaTreeVO);
                 }
-                queryArea = new Area();
-                queryArea.setPid(area.getId());
-                Long childCount = areaService.queryCount(queryArea);
-                if(childCount>0)
-                {
-                    areaTreeVO.setHaveChild(true);
+            }else {
+                //查询当前节点下的所有子节点
+                Area queryArea = new Area();
+                queryArea.setPid(queryPageInfo.getPid());
+                List<Area> areas = areaService.queryList(queryArea);
+                for (int i = 0; i < areas.size(); i++) {
+                    Area area = areas.get(i);
+                    AreaTreeVO areaTreeVO = new AreaTreeVO();
+                    BeanUtils.copyProperties(areaTreeVO, area);
+                    if (area.getType() == 1) {
+                        areaTreeVO.setName(area.getProvince());
+                    } else if (area.getType() == 2) {
+                        areaTreeVO.setName(area.getCity());
+                    } else if (area.getType() == 3) {
+                        areaTreeVO.setName(area.getArea());
+                    }
+                    queryArea = new Area();
+                    queryArea.setPid(area.getId());
+                    Long childCount = areaService.queryCount(queryArea);
+                    if (childCount > 0) {
+                        areaTreeVO.setHaveChild(true);
+                    }
+                    areaVOs.add(areaTreeVO);
                 }
-                areaVOs.add(areaTreeVO);
             }
 
             List<String> adminIds = new ArrayList<String>();
