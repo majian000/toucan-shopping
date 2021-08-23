@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
@@ -169,6 +170,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.warn("权限请求头为空 " + toucan.getAdminAuth().getHttpToucanAuthHeader() + " : " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("访问失败,请检查请求权限参数");
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -178,6 +180,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info(ltKey+"不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg(ltKey+"不能为空");
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -185,6 +188,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info(aidKey+"不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg(aidKey+"不能为空");
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -203,6 +207,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info("请求头参数异常 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("请求头参数异常");
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -219,6 +224,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info("登录验证失败 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("登录超时,请重新登录");
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -230,6 +236,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info("权限校验失败 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("没有权限访问");
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -295,6 +302,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                     resultVO.setCode(ResultVO.FAILD);
                     resultVO.setMsg("请求失败");
                     response.setContentType("application/json");
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.getWriter().write(JSONObject.toJSONString(resultVO));
                 }
                 if (authAnnotation.requestType() == AdminAuth.REQUEST_FORM) {

@@ -5,4 +5,5 @@ public class ResultVO {
     public static Integer FAILD=0;
     public static Integer HTTPCODE_302=302;
     public static Integer HTTPCODE_401=401;
+    public static Integer HTTPCODE_403=403;
 }
