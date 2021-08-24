@@ -63,6 +63,9 @@
             <if test="userMainId!=null">
                 and t.user_main_id = #{userMainId}
             </if>
+            <if test="name!=null">
+                and t.name = #{name}
+            </if>
             and t.delete_status = 0
         </where>
 

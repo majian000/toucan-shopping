@@ -23,7 +23,7 @@
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerLoginHistory" >
         insert into t_seller_login_history(id,user_main_id,ip,login_src_type,create_date,delete_status)
-        values(#{id},#{userMainId},#{ip},#{login_src_type},#{createDate},#{deleteStatus})
+        values(#{id},#{userMainId},#{ip},#{loginSrcType},#{createDate},#{deleteStatus})
     </insert>
 
 

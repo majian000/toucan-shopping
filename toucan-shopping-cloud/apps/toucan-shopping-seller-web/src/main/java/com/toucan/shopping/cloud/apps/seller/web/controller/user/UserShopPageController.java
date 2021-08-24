@@ -57,7 +57,7 @@ public class UserShopPageController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if(result)
                 {
-                    return "user/shop/regist";
+                    return "shop/userShop/regist";
                 }else{
                     //重定向到实名审核页面
                     httpServletResponse.sendRedirect("/page/user/true/name/approve/page");

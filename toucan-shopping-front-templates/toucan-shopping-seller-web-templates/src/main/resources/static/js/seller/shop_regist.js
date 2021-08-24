@@ -35,10 +35,11 @@ function registUserShop()
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/user/true/name/approve/submit_success";
+                window.location.href=basePath+"/page/shop/submit_success";
             }
         },
         error: function (result) {
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
             $("#tn_msg").text("请求失败,请重试");
         }
     });

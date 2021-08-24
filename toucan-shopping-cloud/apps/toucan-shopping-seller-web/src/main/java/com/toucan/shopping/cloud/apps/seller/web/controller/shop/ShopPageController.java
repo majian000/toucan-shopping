@@ -69,15 +69,18 @@ public class ShopPageController extends BaseController {
                     {
                         //该账号存在店铺
                         SellerShop sellerShop = resultObjectVO.formatData(SellerShop.class);
-                        if(sellerShop!=null)
+                        if(sellerShop==null)
                         {
-                            //个人店铺
-                            if(sellerShop.getType().intValue()==1)
-                            {
-                                httpServletRequest.setAttribute("sellerShop",sellerShop);
-                                return "user/shop/info";
-                            }
+                            return "shop/select_regist_type";
                         }
+
+                        //个人店铺
+                        if(sellerShop.getType().intValue()==1)
+                        {
+                            httpServletRequest.setAttribute("sellerShop",sellerShop);
+                            return "shop/userShop/info";
+                        }
+
                     }
 
                 }else{
@@ -90,6 +93,15 @@ public class ShopPageController extends BaseController {
             logger.warn(e.getMessage(),e);
         }
         return "index";
+    }
+
+
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/submit_success")
+    public String submit_success(HttpServletRequest request){
+        return "shop/regist_success";
     }
 
 }
