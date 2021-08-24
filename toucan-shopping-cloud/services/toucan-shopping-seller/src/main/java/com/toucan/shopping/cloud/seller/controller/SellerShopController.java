@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 收货地址 增删改查
+ * 店铺管理 增删改查
  */
 @RestController
 @RequestMapping("/sellerShop")

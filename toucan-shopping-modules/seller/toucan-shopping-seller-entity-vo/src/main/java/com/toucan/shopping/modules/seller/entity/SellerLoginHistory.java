@@ -12,7 +12,7 @@ import java.util.Date;
  * 商户店铺登录历史
  */
 @Data
-public class SellerShopLoginHistory {
+public class SellerLoginHistory {
     /**
      * 主键 雪花算法生成
      */

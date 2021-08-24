@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.seller.web.queue.SellerLoginHistoryQueue;
 import com.toucan.shopping.cloud.apps.seller.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
@@ -14,6 +15,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
@@ -36,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -67,6 +70,8 @@ public class UserApiController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private SellerLoginHistoryQueue sellerLoginHistoryQueue;
 
 
 
@@ -189,6 +194,15 @@ public class UserApiController extends BaseController {
 
                     //删除登录验证码
                     toucanStringRedisService.delete(vcodeRedisKey);
+
+                    //保存登录信息
+                    SellerLoginHistoryVO sellerLoginHistoryVO = new SellerLoginHistoryVO();
+                    sellerLoginHistoryVO.setUserMainId(userLoginVO.getUserMainId());
+                    sellerLoginHistoryVO.setIp(IPUtil.getRemoteAddr(request));
+                    sellerLoginHistoryVO.setLoginSrcType(1);
+                    sellerLoginHistoryVO.setCreateDate(new Date());
+                    sellerLoginHistoryVO.setDeleteStatus((short)0);
+                    sellerLoginHistoryQueue.push(sellerLoginHistoryVO);
                 }
             }else{
                 if(loginFaildCountValueObject==null)
