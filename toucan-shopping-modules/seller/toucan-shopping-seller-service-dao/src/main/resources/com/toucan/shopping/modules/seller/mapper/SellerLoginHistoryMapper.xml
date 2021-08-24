@@ -12,6 +12,13 @@
 
     </resultMap>
 
+    <sql id="queryListPageWhere">
+        and t.delete_status = 0
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+    </sql>
+
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerLoginHistory" >
@@ -19,6 +26,29 @@
         values(#{id},#{userMainId},#{ip},#{login_src_type},#{createDate},#{deleteStatus})
     </insert>
 
+
+
+    <select id="queryListPage" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo">
+        select t.* from t_seller_login_history t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.user_main_id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo">
+        select count(*) from t_seller_login_history t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
 
 
 

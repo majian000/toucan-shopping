@@ -17,5 +17,14 @@ public interface FeignSellerLoginHistoryService {
     ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 查询列表页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
 
 }
