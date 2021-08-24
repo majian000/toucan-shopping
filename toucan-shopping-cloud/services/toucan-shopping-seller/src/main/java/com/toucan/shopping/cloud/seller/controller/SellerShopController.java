@@ -178,7 +178,11 @@ public class SellerShopController {
                 return resultObjectVO;
             }
 
-            resultObjectVO.setData(sellerShopService.findListByEntity(querySellerShop));
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            if(!CollectionUtils.isEmpty(sellerShops)) {
+                resultObjectVO.setData(sellerShops.get(0));
+            }
+
 
         }catch(Exception e)
         {

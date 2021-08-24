@@ -37,6 +37,10 @@ public class SellerShop {
      */
     private String name;
 
+    /**
+     * 店铺介绍
+     */
+    private String introduce;
 
     /**
      * 审核状态 1审核中 2审核通过 3审核驳回 (个人店铺直接通过)
