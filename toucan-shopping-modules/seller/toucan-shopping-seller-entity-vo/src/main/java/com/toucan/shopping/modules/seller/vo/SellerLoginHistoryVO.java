@@ -9,5 +9,9 @@ import lombok.Data;
 @Data
 public class SellerLoginHistoryVO extends SellerLoginHistory {
 
+    /**
+     * 查询的数量
+     */
+    private Integer size;
 
 }

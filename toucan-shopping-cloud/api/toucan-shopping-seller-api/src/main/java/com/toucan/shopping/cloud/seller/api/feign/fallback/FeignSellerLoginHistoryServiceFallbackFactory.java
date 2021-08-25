@@ -52,6 +52,21 @@ public class FeignSellerLoginHistoryServiceFallbackFactory implements FallbackFa
                 resultObjectVO.setMsg("保存登录历史失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryListByLatest10(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerLoginHistoryService.queryListByLatest10失败 sign{} params{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存登录历史失败");
+                return resultObjectVO;
+            }
         };
     }
 }

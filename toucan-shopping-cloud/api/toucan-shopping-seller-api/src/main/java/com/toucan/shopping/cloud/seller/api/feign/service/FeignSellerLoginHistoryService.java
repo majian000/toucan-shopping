@@ -26,5 +26,12 @@ public interface FeignSellerLoginHistoryService {
     ResultObjectVO queryListPage(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询10条最近登录的记录
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/query/list/latest/10",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByLatest10(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 }

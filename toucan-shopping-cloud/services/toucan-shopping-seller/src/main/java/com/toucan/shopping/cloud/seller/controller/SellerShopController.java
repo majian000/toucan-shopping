@@ -3,15 +3,20 @@ package com.toucan.shopping.cloud.seller.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.redis.SellerShopKey;
+import com.toucan.shopping.modules.seller.service.SellerLoginHistoryService;
 import com.toucan.shopping.modules.seller.service.SellerShopService;
+import com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +47,8 @@ public class SellerShopController {
     @Autowired
     private SellerShopService sellerShopService;
 
+    @Autowired
+    private SellerLoginHistoryService sellerLoginHistoryService;
 
 
 
@@ -180,7 +188,36 @@ public class SellerShopController {
 
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
             if(!CollectionUtils.isEmpty(sellerShops)) {
-                resultObjectVO.setData(sellerShops.get(0));
+                SellerShop sellerShop = sellerShops.get(0);
+                SellerShopVO sellerShopVO = new SellerShopVO();
+                BeanUtils.copyProperties(sellerShopVO,sellerShop);
+                //查询登录记录
+                SellerLoginHistoryVO querySellerLoginHistoryVO = new SellerLoginHistoryVO();
+                querySellerLoginHistoryVO.setUserMainId(querySellerShop.getUserMainId());
+                querySellerLoginHistoryVO.setSize(10);
+                List<SellerLoginHistory> sellerLoginHistories = sellerLoginHistoryService.queryListByCreateDateDesc(querySellerLoginHistoryVO);
+                if(!CollectionUtils.isEmpty(sellerLoginHistories))
+                {
+                    List<SellerLoginHistoryVO> sellerLoginHistoryVOS = new ArrayList<SellerLoginHistoryVO>();
+                    for(int i=0;i<sellerLoginHistories.size();i++)
+                    {
+                        SellerLoginHistory sellerLoginHistory = sellerLoginHistories.get(i);
+                        //查询第2条登录记录,第1条为本次登录
+                        if(sellerLoginHistories.size()>2)
+                        {
+                            if(i==1)
+                            {
+                                sellerShopVO.setLastLoginTime(DateUtils.format(sellerLoginHistory.getCreateDate(),DateUtils.FORMATTER_SS));
+                            }
+                        }
+                        SellerLoginHistoryVO sellerLoginHistoryVO = new SellerLoginHistoryVO();
+                        BeanUtils.copyProperties(sellerLoginHistoryVO,sellerLoginHistory);
+                        sellerLoginHistoryVOS.add(sellerLoginHistoryVO);
+                    }
+                    sellerShopVO.setLoginHistoryList(sellerLoginHistoryVOS);
+                }
+
+                resultObjectVO.setData(sellerShopVO);
             }
 
 

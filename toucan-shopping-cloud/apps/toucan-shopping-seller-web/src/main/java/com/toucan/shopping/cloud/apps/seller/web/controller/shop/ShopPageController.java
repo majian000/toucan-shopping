@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,16 +69,16 @@ public class ShopPageController extends BaseController {
                     if(resultObjectVO.isSuccess())
                     {
                         //该账号存在店铺
-                        SellerShop sellerShop = resultObjectVO.formatData(SellerShop.class);
-                        if(sellerShop==null)
+                        SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                        if(sellerShopVO==null)
                         {
                             return "shop/select_regist_type";
                         }
 
                         //个人店铺
-                        if(sellerShop.getType().intValue()==1)
+                        if(sellerShopVO.getType().intValue()==1)
                         {
-                            httpServletRequest.setAttribute("sellerShop",sellerShop);
+                            httpServletRequest.setAttribute("sellerShop",sellerShopVO);
                             return "shop/userShop/info";
                         }
 

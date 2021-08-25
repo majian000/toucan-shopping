@@ -5,10 +5,13 @@ import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.mapper.SellerLoginHistoryMapper;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import com.toucan.shopping.modules.seller.service.SellerLoginHistoryService;
+import com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 卖家店铺服务
@@ -38,4 +41,11 @@ public class SellerLoginHistoryServiceImpl implements SellerLoginHistoryService 
         pageInfo.setTotal(sellerLoginHistoryMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+
+    @Override
+    public List<SellerLoginHistory> queryListByCreateDateDesc(SellerLoginHistoryVO query) {
+        return sellerLoginHistoryMapper.queryListByCreateDateDesc(query);
+    }
+
 }

@@ -52,4 +52,25 @@
 
 
 
+
+    <select id="queryListByCreateDateDesc" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO">
+        select * from t_seller_shop t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="userMainId!=null">
+                and t.user_main_id = #{userMainId}
+            </if>
+            <if test="name!=null">
+                and t.name = #{name}
+            </if>
+            and t.delete_status = 0
+        </where>
+        order by create_date desc
+        limit #{size}
+
+    </select>
+
 </mapper>

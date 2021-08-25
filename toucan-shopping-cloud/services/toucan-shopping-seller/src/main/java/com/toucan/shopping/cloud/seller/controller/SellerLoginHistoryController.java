@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import com.toucan.shopping.modules.seller.redis.SellerShopKey;
 import com.toucan.shopping.modules.seller.service.SellerLoginHistoryService;
@@ -120,6 +121,56 @@ public class SellerLoginHistoryController {
 
             //查询列表页
             resultObjectVO.setData(sellerLoginHistoryService.queryListPage(queryPageInfo));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+
+    /**
+     * 查询10条最近登录的记录
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/query/list/latest/10",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListByLatest10(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerLoginHistoryVO querySellerLoginHistoryVO = JSONObject.parseObject(requestVo.getEntityJson(), SellerLoginHistoryVO.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            if(querySellerLoginHistoryVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户ID");
+                return resultObjectVO;
+            }
+            querySellerLoginHistoryVO.setSize(10);
+            resultObjectVO.setData(sellerLoginHistoryService.queryListByCreateDateDesc(querySellerLoginHistoryVO));
+
 
         }catch(Exception e)
         {

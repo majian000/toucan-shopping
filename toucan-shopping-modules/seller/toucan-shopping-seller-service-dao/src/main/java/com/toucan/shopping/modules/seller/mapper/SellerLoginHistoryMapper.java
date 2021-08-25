@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.seller.mapper;
 
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
+import com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,5 +17,6 @@ public interface SellerLoginHistoryMapper {
 
     Long queryListPageCount(SellerLoginHistoryPageInfo queryPageInfo);
 
+    List<SellerLoginHistory> queryListByCreateDateDesc(SellerLoginHistoryVO query);
 
 }
