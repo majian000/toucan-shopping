@@ -12,6 +12,11 @@ $(function () {
         showVCode();
     }
 
+    $(document).keyup(function(event){
+        if(event.keyCode ==13){
+            $("#loginsubmit").trigger("click");
+        }
+    });
 
     $("#refreshCaptcha").bind( 'click' ,function(){
         $("#refreshCaptcha").attr("src",basePath+"/api/user/login/faild/vcode?"+new Date().getTime());
