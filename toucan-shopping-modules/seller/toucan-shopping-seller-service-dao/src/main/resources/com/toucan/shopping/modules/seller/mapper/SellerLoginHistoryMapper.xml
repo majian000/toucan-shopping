@@ -54,7 +54,7 @@
 
 
     <select id="queryListByCreateDateDesc" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO">
-        select * from t_seller_shop t
+        select * from t_seller_login_history t
         <where>
             1=1
             <if test="id!=null">
@@ -62,9 +62,6 @@
             </if>
             <if test="userMainId!=null">
                 and t.user_main_id = #{userMainId}
-            </if>
-            <if test="name!=null">
-                and t.name = #{name}
             </if>
             and t.delete_status = 0
         </where>
