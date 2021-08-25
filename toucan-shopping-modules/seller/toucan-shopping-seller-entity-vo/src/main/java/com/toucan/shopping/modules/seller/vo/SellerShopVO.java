@@ -22,7 +22,7 @@ public class SellerShopVO extends SellerShop {
     private List<SellerLoginHistoryVO> loginHistoryList;
 
     /**
-     * 最后登录时间
+     * 上一次登录时间
      */
     private String lastLoginTime;
 
