@@ -209,7 +209,10 @@ public class SellerShopController {
                             {
                                 sellerShopVO.setLastLoginTime(DateUtils.format(sellerLoginHistory.getCreateDate(),DateUtils.FORMATTER_SS));
                             }
+                        }else{ //如果只有一条登录记录,就是本次登录时间
+                            sellerShopVO.setLastLoginTime(DateUtils.format(sellerLoginHistory.getCreateDate(),DateUtils.FORMATTER_SS));
                         }
+
                         SellerLoginHistoryVO sellerLoginHistoryVO = new SellerLoginHistoryVO();
                         BeanUtils.copyProperties(sellerLoginHistoryVO,sellerLoginHistory);
                         sellerLoginHistoryVOS.add(sellerLoginHistoryVO);
