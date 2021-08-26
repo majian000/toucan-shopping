@@ -72,6 +72,11 @@ public class Toucan {
     private User user;
 
     /**
+     * 卖家配置
+     */
+    private Seller seller;
+
+    /**
      * 第三方模块
      */
     private Modules modules;

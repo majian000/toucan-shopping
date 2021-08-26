@@ -17,6 +17,11 @@ public class SellerShopVO extends SellerShop {
     private String vcode;
 
     /**
+     * 外网访问的logo地址
+     */
+    private String httpLogo;
+
+    /**
      * 用户登录历史
      */
     private List<SellerLoginHistoryVO> loginHistoryList;

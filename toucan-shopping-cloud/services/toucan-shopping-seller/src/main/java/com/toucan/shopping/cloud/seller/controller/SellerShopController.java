@@ -3,10 +3,12 @@ package com.toucan.shopping.cloud.seller.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
@@ -50,6 +52,11 @@ public class SellerShopController {
     @Autowired
     private SellerLoginHistoryService sellerLoginHistoryService;
 
+    @Autowired
+    private Toucan toucan;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
 
@@ -132,6 +139,7 @@ public class SellerShopController {
 
             sellerShopVO.setId(idGenerator.id());
             sellerShopVO.setPublicShopId(String.valueOf(idGenerator.id()));
+            sellerShopVO.setLogo(toucan.getSeller().getDefaultShopLogo()); //默认店铺图标
             sellerShopVO.setCreateDate(new Date());
             sellerShopVO.setDeleteStatus((short)0);
             int ret = sellerShopService.save(sellerShopVO);
@@ -191,6 +199,10 @@ public class SellerShopController {
                 SellerShop sellerShop = sellerShops.get(0);
                 SellerShopVO sellerShopVO = new SellerShopVO();
                 BeanUtils.copyProperties(sellerShopVO,sellerShop);
+                if(sellerShopVO.getLogo()!=null) {
+                    sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
+                }
+
                 //查询登录记录
                 SellerLoginHistoryVO querySellerLoginHistoryVO = new SellerLoginHistoryVO();
                 querySellerLoginHistoryVO.setUserMainId(querySellerShop.getUserMainId());
