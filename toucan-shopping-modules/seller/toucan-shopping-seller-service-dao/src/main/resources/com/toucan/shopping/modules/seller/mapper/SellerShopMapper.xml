@@ -43,8 +43,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop" >
-        insert into t_seller_shop(id,user_main_id,public_shop_id,name,introduce,logo,approve_status,type,remark,create_date,delete_status)
-        values(#{id},#{userMainId},#{publicShopId},#{name},#{introduce},#{logo},#{approveStatus},#{type},#{remark},#{createDate},#{deleteStatus})
+        insert into t_seller_shop(id,user_main_id,public_shop_id,name,introduce,logo,change_name_count,approve_status,type,remark,create_date,delete_status)
+        values(#{id},#{userMainId},#{publicShopId},#{name},#{introduce},#{logo},#{changeNameCount},#{approveStatus},#{type},#{remark},#{createDate},#{deleteStatus})
     </insert>
 
 

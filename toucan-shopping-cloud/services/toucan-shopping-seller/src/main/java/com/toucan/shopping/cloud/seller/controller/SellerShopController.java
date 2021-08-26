@@ -137,6 +137,7 @@ public class SellerShopController {
             sellerShopVO.setId(idGenerator.id());
             sellerShopVO.setPublicShopId(String.valueOf(idGenerator.id()));
             sellerShopVO.setLogo(toucan.getSeller().getDefaultShopLogo()); //默认店铺图标
+            sellerShopVO.setChangeNameCount(0); //已改店名次数
             sellerShopVO.setCreateDate(new Date());
             sellerShopVO.setDeleteStatus((short)0);
             int ret = sellerShopService.save(sellerShopVO);

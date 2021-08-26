@@ -80,6 +80,11 @@ public class SellerShop {
     private String detailAddress;
 
     /**
+     * 已改名称次数
+     */
+    private Integer changeNameCount;
+
+    /**
      * 审核状态 1审核中 2审核通过 3审核驳回 (个人店铺直接通过)
      */
     private Integer approveStatus;
