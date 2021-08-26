@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 应用功能项
+ * 地区树
  */
 @Data
 public class AreaTreeVO extends AreaVO {
