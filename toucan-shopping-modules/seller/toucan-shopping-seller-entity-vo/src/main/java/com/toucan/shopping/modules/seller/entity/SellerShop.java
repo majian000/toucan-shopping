@@ -48,6 +48,38 @@ public class SellerShop {
     private String logo;
 
     /**
+     * 省
+     */
+    private String province;
+
+    /**
+     * 省编码
+     */
+    private String provinceCode;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 市编码
+     */
+    private String cityCode;
+
+    /**
+     * 区县
+     */
+    private String area;
+    /**
+     * 区县编码
+     */
+    private String areaCode;
+
+    /**
+     * 详细地址
+     */
+    private String detailAddress;
+
+    /**
      * 审核状态 1审核中 2审核通过 3审核驳回 (个人店铺直接通过)
      */
     private Integer approveStatus;

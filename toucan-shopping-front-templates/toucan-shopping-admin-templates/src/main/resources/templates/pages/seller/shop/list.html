@@ -122,7 +122,21 @@
                     {field: 'id',  title: '主键'},
                     {field: 'publicShopId', width: 150, title: '店铺ID'},
                     {field: 'name',  width: 150, title: '店铺名称'},
+                    {field: 'httpLogo', width: 150, title: '图标',
+                        templet: function (row) {
+                            if(row.httpLogo!=null) {
+                                return "<a href='" + row.httpLogo + "' target='_blank'><img src='" + row.httpLogo + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
                     {field: 'introduce',  width: 150, title: '店铺介绍'},
+                    {field: 'province',  width: 60, title: '省份'},
+                    {field: 'provinceCode',  width: 60, title: '省份编码'},
+                    {field: 'city',  width: 60, title: '市'},
+                    {field: 'cityCode',  width: 60, title: '市编码'},
+                    {field: 'area',  width: 60, title: '区县'},
+                    {field: 'areaCode',  width: 60, title: '区县编码'},
+                    {field: 'detailAddress',  width: 150, title: '详细地址'},
                     {field: 'userMainId',  width: 220,title: '所属掌柜用户ID'},
                     {field: 'enableStatus', width: 150, title: '启用状态',
                         templet: function (row) {

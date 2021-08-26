@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -40,6 +41,8 @@ public class ShopPageController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 店铺信息
@@ -75,6 +78,10 @@ public class ShopPageController extends BaseController {
                             return "shop/select_regist_type";
                         }
 
+                        //设置店铺logo
+                        if(sellerShopVO.getLogo()!=null) {
+                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
+                        }
                         //个人店铺
                         if(sellerShopVO.getType().intValue()==1)
                         {

@@ -8,7 +8,6 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
@@ -55,8 +54,6 @@ public class SellerShopController {
     @Autowired
     private Toucan toucan;
 
-    @Autowired
-    private ImageUploadService imageUploadService;
 
 
 
@@ -199,9 +196,6 @@ public class SellerShopController {
                 SellerShop sellerShop = sellerShops.get(0);
                 SellerShopVO sellerShopVO = new SellerShopVO();
                 BeanUtils.copyProperties(sellerShopVO,sellerShop);
-                if(sellerShopVO.getLogo()!=null) {
-                    sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
-                }
 
                 //查询登录记录
                 SellerLoginHistoryVO querySellerLoginHistoryVO = new SellerLoginHistoryVO();

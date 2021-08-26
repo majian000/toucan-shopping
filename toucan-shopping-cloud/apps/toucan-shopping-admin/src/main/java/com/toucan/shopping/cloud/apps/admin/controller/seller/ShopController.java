@@ -20,6 +20,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
 import org.apache.commons.lang3.StringUtils;
@@ -90,8 +91,14 @@ public class ShopController extends UIController {
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<SellerShop> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),SellerShop.class);
+                    List<SellerShopVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),SellerShopVO.class);
                     if(tableVO.getCount()>0) {
+                        for(SellerShopVO sellerShopVO:list)
+                        {
+                            if(sellerShopVO.getLogo()!=null) {
+                                sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
+                            }
+                        }
                         tableVO.setData((List)list);
                     }
                 }

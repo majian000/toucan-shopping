@@ -8,6 +8,14 @@
         <result column="public_shop_id" jdbcType="VARCHAR" property="publicShopId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="introduce" jdbcType="VARCHAR" property="introduce" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="area" jdbcType="VARCHAR" property="area" />
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="detail_address" jdbcType="VARCHAR" property="detailAddress" />
         <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="type" jdbcType="INTEGER" property="type" />
@@ -48,7 +56,8 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
         update t_seller_shop set  name=#{name},introduce=#{introduce},approve_status=#{approveStatus},logo=#{logo},
-        type=#{type},remark=#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId}
+        province=#{province},city=#{city},area=#{area},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},
+        detail_address=#{detailAddress},type=#{type},remark=#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId}
           where id = #{id} and user_main_id=#{userMainId}
     </update>
 
