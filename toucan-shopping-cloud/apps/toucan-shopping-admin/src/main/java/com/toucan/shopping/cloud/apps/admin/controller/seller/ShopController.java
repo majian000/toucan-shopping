@@ -116,6 +116,37 @@ public class ShopController extends UIController {
 
 
 
+    /**
+     * 商铺 启用/禁用
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/disabled/enabled/{publicShopId}",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO disabledEnabledByPublicShopId(HttpServletRequest request,  @PathVariable String publicShopId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(publicShopId))
+            {
+                resultObjectVO.setMsg("请求失败,请传入公开店铺ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            SellerShopVO sellerShopVO =new SellerShopVO();
+            sellerShopVO.setPublicShopId(publicShopId);
+
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,sellerShopVO);
+            resultObjectVO = feignSellerShopService.disabledEnabled(SignUtil.sign(requestVo),requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 

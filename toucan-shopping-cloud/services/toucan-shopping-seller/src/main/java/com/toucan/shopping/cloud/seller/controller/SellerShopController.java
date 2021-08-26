@@ -79,6 +79,8 @@ public class SellerShopController {
             resultObjectVO.setMsg("请求失败,店铺名称不能为空");
             return resultObjectVO;
         }
+        //去空格
+        sellerShopVO.setName(sellerShopVO.getName().replace(" ",""));
         if(sellerShopVO.getType()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -139,6 +141,7 @@ public class SellerShopController {
             sellerShopVO.setLogo(toucan.getSeller().getDefaultShopLogo()); //默认店铺图标
             sellerShopVO.setChangeNameCount(0); //已改店名次数
             sellerShopVO.setCreateDate(new Date());
+            sellerShopVO.setEnableStatus((short)1); //启用
             sellerShopVO.setDeleteStatus((short)0);
             int ret = sellerShopService.save(sellerShopVO);
             if(ret<=0)
@@ -285,6 +288,82 @@ public class SellerShopController {
     }
 
 
+
+
+    /**
+     * 禁用启用店铺
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/disabled/enabled",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO disabledEnabled(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerShopVO entity = JSONObject.parseObject(requestVo.getEntityJson(),SellerShopVO.class);
+            if(entity.getPublicShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            SellerShopVO querySellerShopVO = new SellerShopVO();
+            querySellerShopVO.setPublicShopId(entity.getPublicShopId());
+
+            List<SellerShop> sellerShopList = sellerShopService.findListByEntity(querySellerShopVO);
+            if(!CollectionUtils.isEmpty(sellerShopList)) {
+                SellerShop sellerShop = sellerShopList.get(0);
+                if(sellerShop.getEnableStatus().shortValue()==0)
+                {
+
+                    //查询该用户下所有店铺
+                    SellerShopVO queryUserSellerShopVO = new SellerShopVO();
+                    queryUserSellerShopVO.setUserMainId(querySellerShopVO.getUserMainId());
+                    queryUserSellerShopVO.setEnableStatus((short)1);
+                    sellerShopList = sellerShopService.findListByEntity(queryUserSellerShopVO);
+                    if(!CollectionUtils.isEmpty(sellerShopList)&&sellerShopList.size()>1)
+                    {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("启用失败,该用户下已经存在其他店铺");
+                        return resultObjectVO;
+                    }
+
+
+                    //启用
+                    sellerShop.setEnableStatus((short)1);
+
+                }else{
+                    //禁用
+                    sellerShop.setEnableStatus((short)0);
+                }
+                int ret = sellerShopService.update(sellerShop);
+                if(ret<=0)
+                {
+                    logger.warn("启用/禁用店铺失败 requestJson{} sellerShop {} ",requestVo.getEntityJson(),JSONObject.toJSONString(sellerShop));
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                }
+            }
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

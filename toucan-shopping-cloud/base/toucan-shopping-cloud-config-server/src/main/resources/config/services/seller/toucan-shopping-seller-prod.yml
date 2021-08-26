@@ -32,7 +32,7 @@ eureka:
 
 toucan:
   seller:
-    default-shop-logo: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
+    default-shop-logo: group1/M00/00/01/rB5PVWEniGuAEJw5AAA1H6b9sow877.png
   machine-id: 2201 #机器编码
   app-code: 10001002 #用户中心 应用编码
   #雪花算法ID相关

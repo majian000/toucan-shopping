@@ -122,7 +122,7 @@
                     {field: 'id',  title: '主键'},
                     {field: 'publicShopId', width: 150, title: '店铺ID'},
                     {field: 'name',  width: 150, title: '店铺名称'},
-                    {field: 'changeNameCount',  width: 60, title: '改名次数'},
+                    {field: 'changeNameCount',  width: 120, title: '改名次数'},
                     {field: 'httpLogo', width: 150, title: '图标',
                         templet: function (row) {
                             if(row.httpLogo!=null) {
@@ -251,10 +251,17 @@
 
         table.on('tool(shopTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'pass') {
-                layer.confirm('确定审核通过?', function (index) {
+            if (obj.event == 'disabledEnabledBtn') {
+                var title="";
+                if(data.enableStatus == "0"){
+                    title= "启用";
+                }
+                if(data.enableStatus == "1"){
+                    title = "禁用";
+                }
+                layer.confirm("确定"+title+"?", function (index) {
                     $.ajax({
-                        url:"[[@{/}]]seller/shop/pass/"+data.id,
+                        url:"[[@{/}]]seller/shop/disabled/enabled/"+data.publicShopId,
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         success:function(data){

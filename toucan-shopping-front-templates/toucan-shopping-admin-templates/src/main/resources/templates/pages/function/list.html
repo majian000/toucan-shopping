@@ -224,7 +224,7 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除功能?', function (index) {
+                layer.confirm("确定删除"+data.name+"?", function (index) {
                     $.ajax({
                         url:"[[@{/}]]function/delete/ids",
                         contentType: "application/json; charset=utf-8",
@@ -273,7 +273,7 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('确定删除该功能?', function (index) {
+                layer.confirm("确定删除"+data.name+"?", function (index) {
                     $.ajax({
                         url:"[[@{/}]]function/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",

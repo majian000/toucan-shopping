@@ -32,6 +32,16 @@ public interface FeignSellerShopService {
      * @return
      */
     @RequestMapping(value="/find/by/user",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO findByUser(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findByUser(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 启用禁用店铺
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/disabled/enabled",produces = "application/json;charset=UTF-8")
+    ResultObjectVO disabledEnabled(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 }

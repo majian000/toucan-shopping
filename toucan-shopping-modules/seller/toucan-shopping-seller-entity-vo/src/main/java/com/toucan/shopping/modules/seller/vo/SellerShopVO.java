@@ -21,6 +21,7 @@ public class SellerShopVO extends SellerShop {
      */
     private String httpLogo;
 
+
     /**
      * 用户登录历史
      */

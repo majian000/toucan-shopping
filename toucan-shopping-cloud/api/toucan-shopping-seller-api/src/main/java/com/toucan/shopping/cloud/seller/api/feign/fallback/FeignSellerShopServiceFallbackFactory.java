@@ -67,6 +67,21 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO disabledEnabled(String signHeader, RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerShopService.disabledEnabled 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
         };
     }
 }
