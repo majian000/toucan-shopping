@@ -76,7 +76,12 @@ public class ShopController extends UIController {
     }
 
 
-
+    /**
+     * 编辑店铺
+     * @param request
+     * @param id
+     * @return
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
@@ -110,6 +115,44 @@ public class ShopController extends UIController {
         return "pages/seller/shop/edit.html";
     }
 
+    /**
+     * 查看店铺
+     * @param request
+     * @param id
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            SellerShop entity = new SellerShop();
+            entity.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            ResultObjectVO resultObjectVO = feignSellerShopService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<SellerShop> entitys = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),SellerShop.class);
+                    if(!CollectionUtils.isEmpty(entitys))
+                    {
+                        SellerShopVO sellerShopVO = new SellerShopVO();
+                        BeanUtils.copyProperties(sellerShopVO,entitys.get(0));
+                        if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
+                        {
+                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+"/"+sellerShopVO.getLogo());
+                        }
+                        request.setAttribute("model",sellerShopVO);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/seller/shop/detail.html";
+    }
 
     /**
      * 查询列表
