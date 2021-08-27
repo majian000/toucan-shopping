@@ -145,15 +145,10 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.config({
-        base: basePath+'/lib/layui_ext/layarea/' //配置 layui 第三方扩展组件存放的基础目录
-    }).extend({
-        layarea: 'layarea' //定义该组件模块名
-    }).use(['form','layer','upload', 'layarea'], function () {
+    layui.use(['form','layer','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
-            $ = layui.$,
-            layarea = layui.layarea;
+            $ = layui.$;
         var index;
         var upload = layui.upload;
         var publicShopId = $("#publicShopId").val();
@@ -185,11 +180,7 @@
             return false;
         });
 
-        layarea.render({
-            elem: '#area-picker',
-            change: function (res) {
-            }
-        });
+
 
         //执行实例
         var uploadlogo = upload.render({
