@@ -32,4 +32,8 @@ public class SellerShopVO extends SellerShop {
      */
     private String lastLoginTime;
 
+
+    private String createAdminName; //创建人姓名
+    private String updateAdminName; //修改人姓名
+
 }

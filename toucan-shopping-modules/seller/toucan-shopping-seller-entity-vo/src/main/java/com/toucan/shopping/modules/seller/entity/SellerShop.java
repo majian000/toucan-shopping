@@ -100,6 +100,11 @@ public class SellerShop {
     private Integer type;
 
     /**
+     * 排序(多维度数据计算)
+     */
+    private Long rank;
+
+    /**
      * 店铺备注
      */
     private String remark;

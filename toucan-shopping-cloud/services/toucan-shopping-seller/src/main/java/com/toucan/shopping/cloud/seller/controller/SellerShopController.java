@@ -247,6 +247,126 @@ public class SellerShopController {
 
 
 
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerShopVO entity = JSONObject.parseObject(requestVo.getEntityJson(),SellerShopVO.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该功能项
+            SellerShop query=new SellerShop();
+            query.setId(entity.getId());
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(sellerShops))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,对象不存在!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(sellerShops);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 更新
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerShop sellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
+
+
+            if(StringUtils.isEmpty(sellerShop.getName()))
+            {
+                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(sellerShop));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("类别名称不能为空!");
+                return resultObjectVO;
+            }
+
+
+            if(sellerShop.getId()==null)
+            {
+                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(sellerShop));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("类别ID不能为空!");
+                return resultObjectVO;
+            }
+
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setName(sellerShop.getName());
+            querySellerShop.setDeleteStatus((short)0);
+
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            if(!CollectionUtils.isEmpty(sellerShops))
+            {
+                if(sellerShop.getId().longValue() != sellerShops.get(0).getId().longValue())
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("该店铺名称已被注册!");
+                    return resultObjectVO;
+                }
+            }
+
+            sellerShop.setUpdateDate(new Date());
+            int row = sellerShopService.update(sellerShop);
+            if (row != 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 
     /**
      * 根据ID删除

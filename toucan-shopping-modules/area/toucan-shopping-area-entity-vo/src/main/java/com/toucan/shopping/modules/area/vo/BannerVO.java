@@ -19,7 +19,7 @@ public class BannerVO extends Banner {
 
 
 
-    private String createAdminName; //创建人ID
-    private String updateAdminName; //修改人ID
+    private String createAdminName; //创建人姓名
+    private String updateAdminName; //修改人姓名
 
 }

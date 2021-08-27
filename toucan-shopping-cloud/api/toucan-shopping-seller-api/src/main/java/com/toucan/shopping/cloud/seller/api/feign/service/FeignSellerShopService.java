@@ -66,4 +66,25 @@ public interface FeignSellerShopService {
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+
+    /**
+     * 更新
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
 }
