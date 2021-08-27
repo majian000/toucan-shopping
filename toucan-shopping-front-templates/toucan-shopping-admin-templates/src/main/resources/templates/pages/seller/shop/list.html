@@ -67,16 +67,12 @@
         base: basePath+'/lib/layui_ext/layarea/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         layarea: 'layarea' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
+    }).use(['form', 'table','tree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
         var index;
-        var tree = layui.tree;
         var loadding;
-        var dtree = layui.dtree;
-        var roleTree;
-        var roleTreeDataArray = new Array();
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -132,12 +128,12 @@
                         }},
                     {field: 'introduce',  width: 150, title: '店铺介绍'},
                     {field: 'rank',  width: 150, title: '排名权重'},
-                    {field: 'province',  width: 60, title: '省份'},
-                    {field: 'provinceCode',  width: 60, title: '省份编码'},
-                    {field: 'city',  width: 60, title: '市'},
-                    {field: 'cityCode',  width: 60, title: '市编码'},
-                    {field: 'area',  width: 60, title: '区县'},
-                    {field: 'areaCode',  width: 60, title: '区县编码'},
+                    {field: 'province',  width: 120, title: '省份'},
+                    {field: 'provinceCode',  width: 120, title: '省份编码'},
+                    {field: 'city',  width: 120, title: '市'},
+                    {field: 'cityCode',  width: 120, title: '市编码'},
+                    {field: 'area',  width: 120, title: '区县'},
+                    {field: 'areaCode',  width: 120, title: '区县编码'},
                     {field: 'detailAddress',  width: 150, title: '详细地址'},
                     {field: 'userMainId',  width: 220,title: '所属掌柜用户ID'},
                     {field: 'enableStatus', width: 150, title: '启用状态',
@@ -174,7 +170,10 @@
                             return row.approveStatus;
                         }},
                     {field: 'remark',  width: 200, title: '店铺备注'},
-                    {field: 'createDate', width: 150, title: '创建时间'},
+                    {field: 'createAdminName',width: 200, title: '创建人'},
+                    {field: 'createDate', width: 200, title: '创建时间'},
+                    {field: 'updateAdminName', width: 200, title: '修改人'},
+                    {field: 'updateDate', width: 200, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#shopTableBar', align: "center"}
                 ]
             ],

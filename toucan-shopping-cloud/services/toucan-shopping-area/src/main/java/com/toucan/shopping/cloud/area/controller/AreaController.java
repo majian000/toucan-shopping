@@ -828,6 +828,7 @@ public class AreaController {
                 //设置当前节点到PID
                 queryArea.setPid(currentArea.getId());
             }else{
+                queryArea.setCode(null);
                 queryArea.setPid(-1L); //默认查询所有省
             }
             areas = areaService.queryList(queryArea);

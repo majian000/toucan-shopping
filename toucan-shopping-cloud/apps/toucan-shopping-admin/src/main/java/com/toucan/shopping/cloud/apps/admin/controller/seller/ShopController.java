@@ -193,17 +193,15 @@ public class ShopController extends UIController {
                             }
                         }
                         List<AdminVO> adminVOS = this.queryAdminListByAdminId(adminIdList);
-                        for(SellerShopVO sellerShopVO:list)
-                        {
-                            for(AdminVO adminVO:adminVOS)
-                            {
-                                if(sellerShopVO.getCreateAdminId()!=null&&sellerShopVO.getCreateAdminId().equals(adminVO.getAdminId()))
-                                {
-                                    sellerShopVO.setCreateAdminName(adminVO.getUsername());
-                                }
-                                if(sellerShopVO.getUpdateAdminId()!=null&&sellerShopVO.getUpdateAdminId().equals(adminVO.getAdminId()))
-                                {
-                                    sellerShopVO.setUpdateAdminName(adminVO.getUsername());
+                        if(CollectionUtils.isNotEmpty(adminVOS)) {
+                            for (SellerShopVO sellerShopVO : list) {
+                                for (AdminVO adminVO : adminVOS) {
+                                    if (sellerShopVO.getCreateAdminId() != null && sellerShopVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                                        sellerShopVO.setCreateAdminName(adminVO.getUsername());
+                                    }
+                                    if (sellerShopVO.getUpdateAdminId() != null && sellerShopVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                                        sellerShopVO.setUpdateAdminName(adminVO.getUsername());
+                                    }
                                 }
                             }
                         }

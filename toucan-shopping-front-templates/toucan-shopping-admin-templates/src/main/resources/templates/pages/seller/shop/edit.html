@@ -14,14 +14,17 @@
             background-color: #ffffff;
         }
     </style>
+
+    <span th:replace="common_page::common"></span>
+
 </head>
 <body>
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}" />
     <input type="hidden" name="publicShopId" th:value="${model.publicShopId}" />
-    <input type="hidden" name="provinceCode" th:value="${model.provinceCode}" />
-    <input type="hidden" name="cityCode" th:value="${model.cityCode}" />
-    <input type="hidden" name="areaCode" th:value="${model.areaCode}" />
+    <input type="hidden" name="provinceCode" id="provinceCode" th:value="${model.provinceCode}" />
+    <input type="hidden" name="cityCode" id="cityCode" th:value="${model.cityCode}" />
+    <input type="hidden" name="areaCode" id="areaCode" th:value="${model.areaCode}" />
     <input type="hidden" id="provinceName" th:value="${model.province}" />
     <input type="hidden" id="cityName" th:value="${model.city}" />
     <input type="hidden" id="areaName" th:value="${model.area}" />
@@ -116,20 +119,30 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">联系地址</label>
+        <label class="layui-form-label ">省份</label>
         <div class="layui-input-block" >
-            <select name="province" id="province" lay-verify="required" lay-search="">
-                <option value="-1" selected>请选择</option>
-            </select>
-            <select name="city" id="city" lay-verify="required" lay-search="">
-                <option value="-1" selected>请选择</option>
-            </select>
-            <select name="area" id="area" lay-verify="required" lay-search="">
-                <option value="-1" selected>请选择</option>
+            <select id="provinceSelect" name="province" lay-filter="provinceSelect"   >
             </select>
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label ">地市</label>
+        <div class="layui-input-block" >
+            <select  id="citySelect" name="city" lay-filter="citySelect"  >
+            </select>
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">区县</label>
+        <div class="layui-input-block" >
+
+            <select  id="areaSelect" name="area"  lay-filter="areaSelect"   >
+            </select>
+        </div>
+    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">详细地址</label>
         <div class="layui-input-block">
@@ -143,6 +156,7 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script th:src="@{/js/toucan-shopping/province-city-area.js}" charset="utf-8"></script>
 
 <script>
@@ -185,7 +199,8 @@
         var provinceCode=$("#provinceCode").val();
         var cityCode=$("#cityCode").val();
         var areaCode=$("#areaCode").val();
-        initProvinceCityAreaControl("province",provinceCode,"city",cityCode,"area",areaCode);
+        initProvinceCityAreaControl(form,"provinceSelect",provinceCode,"citySelect",cityCode,"areaSelect",areaCode);
+
 
 
         //执行实例
