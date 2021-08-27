@@ -248,7 +248,7 @@ public class AreaController extends UIController {
 
 
     /**
-     * 查询列表
+     * 查询树列表
      * @param queryPageInfo
      * @return
      */
@@ -273,6 +273,59 @@ public class AreaController extends UIController {
     }
 
 
+    /**
+     * 查询列表
+     * @param pid
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/list/by/pid/{pid}",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryListByPid(HttpServletRequest request, @PathVariable Long pid)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AreaVO areaVO = new AreaVO();
+            areaVO.setAppCode("10001001");
+            areaVO.setPid(pid);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
+            resultObjectVO = feignAreaService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+    /**
+     * 查询列表
+     * @param parentCode
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/list/by/parentCode/{parentCode}",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryListByParentCode(HttpServletRequest request, @PathVariable String parentCode)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AreaVO areaVO = new AreaVO();
+            areaVO.setAppCode("10001001");
+            areaVO.setCode(parentCode);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
+            resultObjectVO = feignAreaService.queryListByParentCode(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
     /**
      * 删除功能项
      * @param request

@@ -748,6 +748,116 @@ public class AreaController {
     }
 
 
+
+
+    /**
+     * 查询指定节点下所有子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryListByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
+            List<Area> areas = areaService.queryList(queryArea);
+            List<AreaVO> areaVOS = new ArrayList<AreaVO>();
+            for (int i = 0; i < areas.size(); i++) {
+                Area area = areas.get(i);
+                AreaVO areaVO = new AreaVO();
+                BeanUtils.copyProperties(areaVO, area);
+                if (area.getType() == 1) {
+                    areaVO.setName(area.getProvince());
+                } else if (area.getType() == 2) {
+                    areaVO.setName(area.getCity());
+                } else if (area.getType() == 3) {
+                    areaVO.setName(area.getArea());
+                }
+                areaVOS.add(areaVO);
+            }
+            resultObjectVO.setData(areaVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 查询指定节点下所有子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/parentCode",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryListByParentCode(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
+            List<Area> areas = null;
+            if (!"-1".equals(queryArea.getCode())) {
+                areas = areaService.queryList(queryArea);
+                if (CollectionUtils.isEmpty(areas)) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,没有找到该节点");
+                    return resultObjectVO;
+                }
+                Area currentArea = areas.get(0);
+                queryArea = new Area();
+                //设置当前节点到PID
+                queryArea.setPid(currentArea.getId());
+            }else{
+                queryArea.setPid(-1L); //默认查询所有省
+            }
+            areas = areaService.queryList(queryArea);
+            List<AreaVO> areaVOS = new ArrayList<AreaVO>();
+            for (int i = 0; i < areas.size(); i++) {
+                Area area = areas.get(i);
+                AreaVO areaVO = new AreaVO();
+                BeanUtils.copyProperties(areaVO, area);
+                if (area.getType() == 1) {
+                    areaVO.setName(area.getProvince());
+                } else if (area.getType() == 2) {
+                    areaVO.setName(area.getCity());
+                } else if (area.getType() == 3) {
+                    areaVO.setName(area.getArea());
+                }
+                areaVOS.add(areaVO);
+            }
+            resultObjectVO.setData(areaVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 查询地区树
      * @param requestJsonVO

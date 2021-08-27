@@ -22,6 +22,9 @@
     <input type="hidden" name="provinceCode" th:value="${model.provinceCode}" />
     <input type="hidden" name="cityCode" th:value="${model.cityCode}" />
     <input type="hidden" name="areaCode" th:value="${model.areaCode}" />
+    <input type="hidden" id="provinceName" th:value="${model.province}" />
+    <input type="hidden" id="cityName" th:value="${model.city}" />
+    <input type="hidden" id="areaName" th:value="${model.area}" />
 
 
     <div class="layui-form-item" >
@@ -112,21 +115,17 @@
         </div>
     </div>
 
-    <div class="layui-form-item" id="area-picker">
-        <div class="layui-form-label">网点地址</div>
-        <div class="layui-input-inline" style="width: 200px;">
-            <select name="province" class="province-selector" data-value="广东省" lay-filter="province-1">
-                <option value="">请选择省</option>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">联系地址</label>
+        <div class="layui-input-block" >
+            <select name="province" id="province" lay-verify="required" lay-search="">
+                <option value="-1" selected>请选择</option>
             </select>
-        </div>
-        <div class="layui-input-inline" style="width: 200px;">
-            <select name="city" class="city-selector" data-value="深圳市" lay-filter="city-1">
-                <option value="">请选择市</option>
+            <select name="city" id="city" lay-verify="required" lay-search="">
+                <option value="-1" selected>请选择</option>
             </select>
-        </div>
-        <div class="layui-input-inline" style="width: 200px;">
-            <select name="county" class="county-selector" data-value="龙岗区" lay-filter="county-1">
-                <option value="">请选择区</option>
+            <select name="area" id="area" lay-verify="required" lay-search="">
+                <option value="-1" selected>请选择</option>
             </select>
         </div>
     </div>
@@ -144,7 +143,10 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/toucan-shopping/province-city-area.js}" charset="utf-8"></script>
+
 <script>
+
     layui.use(['form','layer','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
@@ -180,6 +182,10 @@
             return false;
         });
 
+        var provinceCode=$("#provinceCode").val();
+        var cityCode=$("#cityCode").val();
+        var areaCode=$("#areaCode").val();
+        initProvinceCityAreaControl("province",provinceCode,"city",cityCode,"area",areaCode);
 
 
         //执行实例
