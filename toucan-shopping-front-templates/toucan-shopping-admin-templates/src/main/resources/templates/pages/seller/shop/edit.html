@@ -19,15 +19,30 @@
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}" />
     <input type="hidden" name="publicShopId" th:value="${model.publicShopId}" />
+    <input type="hidden" name="provinceCode" th:value="${model.provinceCode}" />
+    <input type="hidden" name="cityCode" th:value="${model.cityCode}" />
+    <input type="hidden" name="areaCode" th:value="${model.areaCode}" />
 
 
     <div class="layui-form-item" >
         <label class="layui-form-label required" >店铺名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" id="name"  th:value="${model.name}"  lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入店铺名称" value="" class="layui-input">
+            <input type="text" name="name" id="name"  th:value="${model.name}"  lay-verify="required" maxlength="15" lay-reqtext="名称不能为空" placeholder="请输入店铺名称" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >改名次数</label>
+        <div class="layui-input-block">
+            <input type="text" name="changeNameCount" id="changeNameCount"  th:value="${model.changeNameCount}"  lay-verify="required" maxlength="6" lay-reqtext="改名次数"  value="" class="layui-input">
         </div>
     </div>
 
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >排名权重</label>
+        <div class="layui-input-block">
+            <input type="text" name="rank" id="rank"  th:value="${model.rank}"  lay-verify="required" maxlength="6" lay-reqtext="排名权重"  value="" class="layui-input">
+        </div>
+    </div>
     <div class="layui-form-item">
         <label class="layui-form-label">图标</label>
         <div class="layui-input-block">
@@ -44,7 +59,84 @@
         </div>
     </div>
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">介绍</label>
+        <div class="layui-input-block">
+            <textarea name="introduce" class="layui-textarea" maxlength="500" th:text="${model.introduce}" placeholder="请填写介绍"></textarea>
+        </div>
+    </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label required">店铺状态</label>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 1}">
+            <select name="enableStatus" lay-verify="required" lay-search="">
+                <option value="1" selected>启用</option>
+                <option value="0">禁用</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 0}">
+            <select name="enableStatus" lay-verify="required" lay-search="">
+                <option value="1" >启用</option>
+                <option value="0" selected>禁用</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">店铺类型</label>
+        <div class="layui-input-block" th:if="${model.type eq 1}">
+            <select name="type" lay-verify="required" lay-search="">
+                <option value="1" selected>个人</option>
+                <option value="2">企业</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.type eq 2}">
+            <select name="type" lay-verify="required" lay-search="">
+                <option value="1" >个人</option>
+                <option value="0" selected>企业</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="500" th:text="${model.remark}" placeholder="请填写备注"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >所属掌柜</label>
+        <div class="layui-input-block">
+            <input type="text" name="userMainId" id="userMainId"  th:value="${model.userMainId}"  lay-verify="required" maxlength="20" lay-reqtext="掌柜ID不能为空"  value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" id="area-picker">
+        <div class="layui-form-label">网点地址</div>
+        <div class="layui-input-inline" style="width: 200px;">
+            <select name="province" class="province-selector" data-value="广东省" lay-filter="province-1">
+                <option value="">请选择省</option>
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width: 200px;">
+            <select name="city" class="city-selector" data-value="深圳市" lay-filter="city-1">
+                <option value="">请选择市</option>
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width: 200px;">
+            <select name="county" class="county-selector" data-value="龙岗区" lay-filter="county-1">
+                <option value="">请选择区</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详细地址</label>
+        <div class="layui-input-block">
+            <textarea name="detailAddress" class="layui-textarea" maxlength="200" th:text="${model.detailAddress}" placeholder="请填写详细地址"></textarea>
+        </div>
+    </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
@@ -53,10 +145,15 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form','layer','upload'], function () {
+    layui.config({
+        base: basePath+'/lib/layui_ext/layarea/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        layarea: 'layarea' //定义该组件模块名
+    }).use(['form','layer','upload', 'layarea'], function () {
         var form = layui.form,
             layer = layui.layer,
-            $ = layui.$;
+            $ = layui.$,
+            layarea = layui.layarea;
         var index;
         var upload = layui.upload;
         var publicShopId = $("#publicShopId").val();
@@ -88,7 +185,11 @@
             return false;
         });
 
-
+        layarea.render({
+            elem: '#area-picker',
+            change: function (res) {
+            }
+        });
 
         //执行实例
         var uploadlogo = upload.render({

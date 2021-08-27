@@ -64,9 +64,9 @@
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
     layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+        base: basePath+'/lib/layui_ext/layarea/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
-        dtree: 'dtree' //定义该组件模块名
+        layarea: 'layarea' //定义该组件模块名
     }).use(['form', 'table','tree','dtree'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -131,7 +131,7 @@
                             return "";
                         }},
                     {field: 'introduce',  width: 150, title: '店铺介绍'},
-                    {field: 'rank',  width: 150, title: '排名'},
+                    {field: 'rank',  width: 150, title: '排名权重'},
                     {field: 'province',  width: 60, title: '省份'},
                     {field: 'provinceCode',  width: 60, title: '省份编码'},
                     {field: 'city',  width: 60, title: '市'},
