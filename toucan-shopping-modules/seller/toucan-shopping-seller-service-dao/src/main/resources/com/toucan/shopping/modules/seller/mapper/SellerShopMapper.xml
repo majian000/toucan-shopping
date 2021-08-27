@@ -41,6 +41,25 @@
 
     </sql>
 
+    <sql id="queryWhere">
+        and t.delete_status = 0
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
+        </if>
+        <if test="publicShopId!=null">
+            and t.public_shop_id = #{publicShopId}
+        </if>
+        <if test="enableStatus!=null">
+            and t.enable_status = #{enableStatus}
+        </if>
+        <if test="name!=null">
+            and t.name = #{name}
+        </if>
+
+    </sql>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop" >
         insert into t_seller_shop(id,user_main_id,public_shop_id,name,introduce,logo,change_name_count,approve_status,enable_status,type,remark,create_date,delete_status)
@@ -66,16 +85,7 @@
         select * from t_seller_shop t
         <where>
             1=1
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
-            <if test="userMainId!=null">
-                and t.user_main_id = #{userMainId}
-            </if>
-            <if test="name!=null">
-                and t.name = #{name}
-            </if>
-            and t.delete_status = 0
+            <include refid="queryWhere" />
         </where>
 
     </select>

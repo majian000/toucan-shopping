@@ -202,13 +202,23 @@
             layui.form.render();
         });
 
+        function reloadTable()
+        {
+            //执行搜索重载
+            table.reload('shopTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+        }
 
 
         /**
          * toolbar监听事件
          */
         table.on('toolbar(shopTableFilter)', function (obj) {
-            if (obj.event === 'deleteToolbar') {  // 监听删除操作
+            if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('shopTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
@@ -216,9 +226,9 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除属性名?', function (index) {
+                layer.confirm('确定删除店铺?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]/seller/shop/delete/ids",
+                        url:"[[@{/}]]seller/shop/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -226,12 +236,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('shopTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
+                            reloadTable();
 
                         },
                         complete:function(data)
@@ -268,12 +273,40 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('shopTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
+                            reloadTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'edit') {
+                var index = layer.open({
+                    title: '编辑店铺',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]seller/shop/editPage/'+data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定删除该店铺?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]seller/shop/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            reloadTable();
 
                         },
                         complete:function(data)

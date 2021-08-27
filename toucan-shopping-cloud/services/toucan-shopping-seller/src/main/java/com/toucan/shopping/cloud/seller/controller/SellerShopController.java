@@ -249,6 +249,127 @@ public class SellerShopController {
 
 
     /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerShop sellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
+
+
+
+            if(sellerShop.getId()==null)
+            {
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(sellerShop));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+
+
+            SellerShop query = new SellerShop();
+            query.setId(sellerShop.getId());
+
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(sellerShops))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("不存在该店铺!");
+                return resultObjectVO;
+            }
+
+            sellerShop = sellerShops.get(0);
+            int row = sellerShopService.deleteById(sellerShop.getId());
+            if (row <=0) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 批量删除功能项
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<SellerShop> sellerShops = JSONObject.parseArray(requestVo.getEntityJson(),SellerShop.class);
+            if(CollectionUtils.isEmpty(sellerShops))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找ID");
+                return resultObjectVO;
+            }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(SellerShop sellerShop:sellerShops) {
+                if(sellerShop.getId()!=null) {
+                    //删除当前功能项
+                    int row = sellerShopService.deleteById(sellerShop.getId());
+                    if (row < 1) {
+                        logger.warn("删除店铺失败 {} ",JSONObject.toJSONString(sellerShop));
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,请重试!");
+                        continue;
+                    }
+                }
+            }
+            resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
      * 查询列表页
      * @param requestVo
      * @return

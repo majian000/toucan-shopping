@@ -4,15 +4,18 @@ import com.toucan.shopping.cloud.seller.api.feign.fallback.FeignSellerShopServic
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-seller-proxy/sellerShop",fallbackFactory = FeignSellerShopServiceFallbackFactory.class)
 public interface FeignSellerShopService {
 
 
-
+    /**
+     * 保存店铺
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
@@ -43,5 +46,24 @@ public interface FeignSellerShopService {
      */
     @RequestMapping(value="/disabled/enabled",produces = "application/json;charset=UTF-8")
     ResultObjectVO disabledEnabled(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 批量删除店铺
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 删除店铺
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 }

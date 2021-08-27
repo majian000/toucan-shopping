@@ -849,6 +849,7 @@ public class CategoryController {
                         //删除当前功能项
                         int row = categoryService.deleteById(c.getId());
                         if (row < 1) {
+                            logger.warn("删除类别失败 {} ",JSONObject.toJSONString(c));
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
                             continue;
