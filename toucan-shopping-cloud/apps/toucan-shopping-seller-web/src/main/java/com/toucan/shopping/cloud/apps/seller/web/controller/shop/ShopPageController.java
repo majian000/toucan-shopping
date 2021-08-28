@@ -92,8 +92,7 @@ public class ShopPageController extends BaseController {
                     }
 
                 }else{
-                    //重定向到实名审核页面
-                    httpServletResponse.sendRedirect("/page/user/true/name/approve/page");
+                    return "shop/please_true_name";
                 }
             }
         }catch(Exception e)
