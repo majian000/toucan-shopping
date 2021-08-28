@@ -1116,7 +1116,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:1200px; overflow:hidden;
 }
 .reg_c{
-	width:475px; height:625px; overflow:hidden; background-color:#FFF; float:right; display:inline; margin-top:0; margin-right:10px; margin-bottom:10px; -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px;
+	width:475px; height:470px; overflow:hidden; background-color:#FFF; float:right; display:inline; margin-top:45px; margin-right:10px; margin-bottom:10px; -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px;
 }
 
 
