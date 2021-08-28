@@ -46,9 +46,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="shopTable" lay-filter="shopTableFilter"></table>
+        <table class="layui-hide" id="loginHistoryTable" lay-filter="loginHistoryTableFilter"></table>
 
-        <script type="text/html" id="shopTableBar">
+        <script type="text/html" id="loginHistoryTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -97,8 +97,8 @@
         }
 
         table.render({
-            elem: '#shopTable',
-            url: "[[@{/}]]seller/shop/list",
+            elem: '#loginHistoryTable',
+            url: "[[@{/}]]seller/loginHistory/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -114,46 +114,17 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'publicShopId', width: 150, title: '店铺ID'},
-                    {field: 'name',  width: 150, title: '店铺名称'},
-                    {field: 'introduce',  width: 150, title: '店铺介绍'},
-                    {field: 'userMainId',  width: 220,title: '所属掌柜用户ID'},
-                    {field: 'enableStatus', width: 150, title: '启用状态',
+                    {field: 'ip', width: 150, title: '登录地址'},
+                    {field: 'userMainId',  width: 150, title: '掌柜ID'},
+                    {field: 'loginSrcType', width: 150, title: '登录源',
                         templet: function (row) {
-                            if(row.enableStatus == "0"){
-                                return "禁用"
+                            if(row.loginSrcType == "1"){
+                                return "PC端"
                             }
-                            if(row.enableStatus == "1"){
-                                return "启用"
-                            }
-                            return row.enableStatus;
-                        }},
-                    {field: 'type', width: 150, title: '类型',
-                        templet: function (row) {
-                            if(row.type == "1"){
-                                return "个人"
-                            }
-                            if(row.type == "2"){
-                                return "企业"
-                            }
-                            return row.type;
-                        }},
-                    {field: 'approveStatus', width: 150, title: '审核状态',
-                        templet: function (row) {
-                            if(row.approveStatus == "1"){
-                                return "审核中"
-                            }
-                            if(row.approveStatus == "2"){
-                                return "审核通过"
-                            }
-                            if(row.approveStatus == "3"){
-                                return "审核驳回"
-                            }
-                            return row.approveStatus;
-                        }},
-                    {field: 'remark',  width: 200, title: '店铺备注'},
+                            return row.loginSrcType;
+                    }},
                     {field: 'createDate', width: 150, title: '创建时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#shopTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#loginHistoryTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -165,7 +136,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('shopTable', {
+            table.reload('loginHistoryTable', {
                 page: {
                     curr: 1
                 }
@@ -184,7 +155,7 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(shopTableFilter)', function (obj) {
+        table.on('checkbox(loginHistoryTableFilter)', function (obj) {
             console.log(obj)
         });
 
