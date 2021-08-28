@@ -15,6 +15,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
@@ -85,7 +86,7 @@ public class LoginHistoryController extends UIController {
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<SellerShop> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),SellerShop.class);
+                    List<SellerLoginHistory> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),SellerLoginHistory.class);
                     if(tableVO.getCount()>0) {
                         tableVO.setData((List)list);
                     }
