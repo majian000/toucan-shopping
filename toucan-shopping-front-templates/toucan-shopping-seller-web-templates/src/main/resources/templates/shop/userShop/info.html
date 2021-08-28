@@ -74,27 +74,29 @@
                         <td width="115"><img src="${sellerShop.httpLogo!''}" width="90" height="90" /></td>
                         <td>
                             <div class="m_user">
-                                ${sellerShop.name!''}
+                                ${sellerShop.name!''} &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <img src="${basePath}/static/images/uslogo.png" style="width:15px;height:15px;vertical-align:middle;margin-bottom:3px;">
+                                <a href="#" style="color:#4c7ecc;">修改店铺</a>
                             </div>
                             <p>
                                 店铺状态:
                                 <#if sellerShop.enableStatus == 0>
-                                    <a style="color:red">禁用</a>
-                                </#if>
-                                <#if sellerShop.enableStatus == 1>
-                                    <a style="color:green">启用</a>
-                                 </#if>
-                                <br />
-                            </p>
-                            <p>
-                                上一次登录时间: ${sellerShop.lastLoginTime!''}<br />
-                            </p>
-                            <p>
-                                ${sellerShop.introduce!''} <br />
-                            </p>
-                            <div class="m_notice">
-                                用户中心公告！
-                            </div>
+                                <a style="color:red">禁用</a>
+                            </#if>
+                            <#if sellerShop.enableStatus == 1>
+                            <a style="color:green">启用</a>
+                        </#if>
+                        <br />
+                        </p>
+                        <p>
+                            上一次登录时间: ${sellerShop.lastLoginTime!''}<br />
+                        </p>
+                        <p>
+                            ${sellerShop.introduce!''} <br />
+                        </p>
+                        <div class="m_notice">
+                            用户中心公告！
+                        </div>
                         </td>
                     </tr>
                 </table>
