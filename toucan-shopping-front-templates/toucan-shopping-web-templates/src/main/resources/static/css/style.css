@@ -1071,7 +1071,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 
 /*---------------登录、注册---------------*/
 .log_bg{
-	width:100%; min-width:1200px; height:840px; overflow:hidden; background-color:#fff4ef;
+	width:100%; min-width:1200px; height:640px; overflow:hidden; background-color:#fff4ef;
 }
 .login{
 	width:1200px; overflow:hidden; margin-top:45px;
