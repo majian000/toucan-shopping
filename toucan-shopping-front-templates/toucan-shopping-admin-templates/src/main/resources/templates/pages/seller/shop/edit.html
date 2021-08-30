@@ -28,6 +28,13 @@
     <input type="hidden" id="provinceName" th:value="${model.province}" />
     <input type="hidden" id="cityName" th:value="${model.city}" />
     <input type="hidden" id="areaName" th:value="${model.area}" />
+    <input type="hidden" name="userMainId" id="userMainId"  th:value="${model.userMainId}" />
+    <input type="hidden" name="changeNameCount" id="changeNameCount"  th:value="${model.changeNameCount}"  />
+    <input type="hidden" name="rank" id="rank"  th:value="${model.shopRank}" />
+    <input type="hidden" name="approveStatus"   th:value="${model.approveStatus}" />
+
+
+
 
 
     <div class="layui-form-item" >
@@ -36,19 +43,7 @@
             <input type="text" name="name" id="name"  th:value="${model.name}"  lay-verify="required" maxlength="15" lay-reqtext="名称不能为空" placeholder="请输入店铺名称" value="" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item" >
-        <label class="layui-form-label required" >改名次数</label>
-        <div class="layui-input-block">
-            <input type="text" name="changeNameCount" id="changeNameCount"  th:value="${model.changeNameCount}"  lay-verify="required" maxlength="6" lay-reqtext="改名次数"  value="" class="layui-input">
-        </div>
-    </div>
 
-    <div class="layui-form-item" >
-        <label class="layui-form-label required" >排名权重</label>
-        <div class="layui-input-block">
-            <input type="text" name="rank" id="rank"  th:value="${model.rank}"  lay-verify="required" maxlength="6" lay-reqtext="排名权重"  value="" class="layui-input">
-        </div>
-    </div>
     <div class="layui-form-item">
         <label class="layui-form-label">图标</label>
         <div class="layui-input-block">
@@ -61,7 +56,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">图标正面预览</label>
         <div class="layui-input-block">
-            <img th:src="${model.httpLogo}" id="previewLogo" th:width="240" th:height="220">
+            <img th:src="${model.httpLogo}" id="previewLogo" width="240" height="220">
         </div>
     </div>
 
@@ -111,17 +106,11 @@
         </div>
     </div>
 
-    <div class="layui-form-item" >
-        <label class="layui-form-label required" >所属掌柜</label>
-        <div class="layui-input-block">
-            <input type="text" name="userMainId" id="userMainId"  th:value="${model.userMainId}"  lay-verify="required" maxlength="20" lay-reqtext="掌柜ID不能为空"  value="" class="layui-input">
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label ">省份</label>
         <div class="layui-input-block" >
-            <select id="provinceSelect" name="province" lay-filter="provinceSelect"   >
+            <select id="provinceSelect" name="provinceCode" lay-filter="provinceSelect"   >
             </select>
         </div>
     </div>
@@ -129,7 +118,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label ">地市</label>
         <div class="layui-input-block" >
-            <select  id="citySelect" name="city" lay-filter="citySelect"  >
+            <select  id="citySelect" name="cityCode" lay-filter="citySelect"  >
             </select>
         </div>
 
@@ -139,7 +128,7 @@
         <label class="layui-form-label ">区县</label>
         <div class="layui-input-block" >
 
-            <select  id="areaSelect" name="area"  lay-filter="areaSelect"   >
+            <select  id="areaSelect" name="areaCode"  lay-filter="areaSelect"   >
             </select>
         </div>
     </div>
@@ -153,13 +142,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">店铺状态</label>
         <div class="layui-input-block" th:if="${model.enableStatus eq 0}">
-            <select name="type" lay-verify="required" lay-search="">
+            <select name="enableStatus" lay-verify="required" lay-search="">
                 <option value="0" selected>禁用</option>
                 <option value="1">启用</option>
             </select>
         </div>
         <div class="layui-input-block" th:if="${model.enableStatus eq 1}">
-            <select name="type" lay-verify="required" lay-search="">
+            <select name="enableStatus" lay-verify="required" lay-search="">
                 <option value="0" >禁用</option>
                 <option value="1" selected >启用</option>
             </select>
@@ -188,6 +177,10 @@
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            data.field.province=$("#provinceSelect").find("option:selected").text();
+            data.field.city=$("#citySelect").find("option:selected").text();
+            data.field.area=$("#areaSelect").find("option:selected").text();
+
             $.ajax({
                 url:"[[@{/seller/shop/update}]]",
                 contentType: "application/json; charset=utf-8",
@@ -230,7 +223,7 @@
                 {
                     layer.msg(res.msg);
                 }
-                $("#previewlogo").attr("src",res.data.httpLogo);
+                $("#previewLogo").attr("src",res.data.httpLogo);
                 $("#logo").val(res.data.logo);
             }
             ,error: function(){

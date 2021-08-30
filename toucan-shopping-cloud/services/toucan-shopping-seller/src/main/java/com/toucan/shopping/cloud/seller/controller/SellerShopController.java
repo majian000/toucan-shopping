@@ -143,6 +143,7 @@ public class SellerShopController {
             sellerShopVO.setCreateDate(new Date());
             sellerShopVO.setEnableStatus((short)1); //启用
             sellerShopVO.setDeleteStatus((short)0);
+            sellerShopVO.setShopRank(0L); //排序
             int ret = sellerShopService.save(sellerShopVO);
             if(ret<=0)
             {
@@ -351,6 +352,8 @@ public class SellerShopController {
             }
 
             sellerShop.setUpdateDate(new Date());
+
+
             int row = sellerShopService.update(sellerShop);
             if (row != 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);

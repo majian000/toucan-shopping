@@ -102,7 +102,7 @@ public class SellerShop {
     /**
      * 排序(多维度数据计算)
      */
-    private Long rank;
+    private Long shopRank;
 
     /**
      * 店铺备注
