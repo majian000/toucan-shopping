@@ -11,7 +11,12 @@ function upimg() {
         contentType: false,
         processData: false,
         success: function(resp) {
-            if(resp.code==1) {
+            if(resp.code<1) {
+                $.message({
+                    message:resp.msg,
+                    type:'error'
+                });
+            }else{
                 $("#resimg").append("<img src='" + resp.data.httpLogo + "' id='pic' width='90' height='90'/>")
             }
         }

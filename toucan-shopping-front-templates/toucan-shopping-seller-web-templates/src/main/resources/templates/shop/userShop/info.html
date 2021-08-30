@@ -97,7 +97,7 @@
                         <td width="115">
                             <a class="shopLogoTipsOuter">
                                 <img src="${sellerShop.httpLogo!''}" id="pic" width="90" height="90" />
-                                <span class="shopLogoTips">点击图片上传</span>
+                                <span class="shopLogoTips" id="logoTips">点击图片上传</span>
                             </a>
                             <input id="upload" name="file" accept="image/*" type="file" style="display: none">
                         </td>
@@ -263,6 +263,7 @@
 <script>
     $(function () {
 
+
         $("#refreshCaptcha").bind( 'click' ,function(){
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
@@ -273,6 +274,15 @@
                 upimg();
             });
         });
+
+
+        $("#logoTips").click(function() {
+            $("#upload").click(); //隐藏了input:file样式后，点击头像就可以本地上传
+            $("#upload").on("change", function() {
+                upimg();
+            });
+        });
+
     });
 
 </script>

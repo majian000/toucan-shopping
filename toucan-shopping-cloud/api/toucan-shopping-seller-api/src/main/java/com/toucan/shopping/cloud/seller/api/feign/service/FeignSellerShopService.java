@@ -93,7 +93,7 @@ public interface FeignSellerShopService {
      * @return
      */
     @RequestMapping(value="/update/logo",produces = "application/json;charset=UTF-8")
-    ResultObjectVO updateLogo(String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO updateLogo(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
 
