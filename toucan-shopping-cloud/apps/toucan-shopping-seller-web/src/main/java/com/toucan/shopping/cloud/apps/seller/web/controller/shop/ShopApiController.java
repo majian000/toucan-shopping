@@ -66,18 +66,12 @@ public class ShopApiController extends BaseController {
                 fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
             }
             String fileExtUpper=  fileExt.toUpperCase();
-            if(!".JPG".equals(fileExtUpper)&&!".JPEG".equals(fileExtUpper)
-                    &&!".PNG".equals(fileExtUpper)&&!".BMP".equals(fileExtUpper))
+            if(!"JPG".equals(fileExtUpper)&&!"JPEG".equals(fileExtUpper)
+                    &&!"PNG".equals(fileExtUpper)&&!"BMP".equals(fileExtUpper))
             {
-                resultObjectVO.setCode(1);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("图标只能上传JPG、JPEG、PNG、BMP格式!");
                 return resultObjectVO;
-            }
-            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
-
-            if(StringUtils.isEmpty(groupPath))
-            {
-                throw new RuntimeException("店铺图标上传失败");
             }
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             String oldLogo = null;
@@ -92,11 +86,24 @@ public class ShopApiController extends BaseController {
                 {
                     SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                     oldLogo = sellerShopVO.getLogo();
+                    if(sellerShopVO.getEnableStatus().intValue()==0)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("店铺已被禁用!");
+                        return resultObjectVO;
+                    }
                 }
             }catch(Exception e)
             {
                 logger.warn("查询商铺失败 用户ID{}",userMainId);
                 logger.warn(e.getMessage(),e);
+            }
+
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("店铺图标上传失败");
             }
 
             //如果不是默认图标或者不为空的话,就去文件服务器删除这个文件
@@ -127,7 +134,7 @@ public class ShopApiController extends BaseController {
             }
         }catch (Exception e)
         {
-            resultObjectVO.setCode(1);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("店铺图标上传失败");
             logger.warn(e.getMessage(),e);
         }

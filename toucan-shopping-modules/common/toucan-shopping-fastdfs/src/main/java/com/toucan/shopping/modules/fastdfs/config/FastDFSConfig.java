@@ -70,8 +70,6 @@ public class FastDFSConfig {
             ClientGlobal.setG_tracker_group( new TrackerGroup(tracker_servers));
 
             fastDFSClient.trackerClient = new TrackerClient();
-            fastDFSClient.trackerServer = fastDFSClient.trackerClient.getConnection();
-            fastDFSClient.storageClient = new StorageClient1(fastDFSClient.trackerServer, fastDFSClient.storageServer);
 
         }catch(Exception e)
         {

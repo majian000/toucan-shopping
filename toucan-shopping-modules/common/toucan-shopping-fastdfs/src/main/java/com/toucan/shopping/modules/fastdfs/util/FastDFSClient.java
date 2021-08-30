@@ -17,9 +17,6 @@ public class FastDFSClient {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public TrackerClient trackerClient = null;
-    public TrackerServer trackerServer = null;
-    public StorageServer storageServer = null;
-    public StorageClient1 storageClient = null;
 
 
 
@@ -36,6 +33,10 @@ public class FastDFSClient {
     public String uploadFile(String fileName, String extName, NameValuePair[] metas) {
         String result=null;
         try {
+            //解决高并发下上传问题,每次都构建新的对象
+            TrackerServer trackerServer = trackerClient.getConnection();
+            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
             result = storageClient.upload_file1(fileName, extName, metas);
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
@@ -76,6 +77,10 @@ public class FastDFSClient {
     public String uploadFile(byte[] fileContent, String extName, NameValuePair[] metas) {
         String result=null;
         try {
+            //解决高并发下上传问题,每次都构建新的对象
+            TrackerServer trackerServer = trackerClient.getConnection();
+            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
             result = storageClient.upload_file1(fileContent, extName, metas);
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
@@ -113,6 +118,10 @@ public class FastDFSClient {
     public int download_file(String path, BufferedOutputStream output) {
         int result=-1;
         try {
+            //解决高并发下上传问题,每次都构建新的对象
+            TrackerServer trackerServer = trackerClient.getConnection();
+            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
             byte[] b = storageClient.download_file1(path);
             try{
                 if(b != null){
@@ -144,6 +153,10 @@ public class FastDFSClient {
     public byte[] download_bytes(String path) {
         byte[] b=null;
         try {
+            //解决高并发下上传问题,每次都构建新的对象
+            TrackerServer trackerServer = trackerClient.getConnection();
+            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
             b = storageClient.download_file1(path);
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
@@ -162,6 +175,10 @@ public class FastDFSClient {
     public Integer delete_file(String group ,String storagePath){
         int result=-1;
         try {
+            //解决高并发下上传问题,每次都构建新的对象
+            TrackerServer trackerServer = trackerClient.getConnection();
+            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
             result = storageClient.delete_file(group, storagePath);
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
@@ -180,6 +197,10 @@ public class FastDFSClient {
     public Integer delete_file(String storagePath){
         int result=-1;
         try {
+            //解决高并发下上传问题,每次都构建新的对象
+            TrackerServer trackerServer = trackerClient.getConnection();
+            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
             result = storageClient.delete_file1(storagePath);
         } catch (IOException e) {
             logger.warn(e.getMessage(),e);
@@ -197,6 +218,10 @@ public class FastDFSClient {
      */
     public FileInfo getFile(String groupName, String remoteFileName){
         try {
+            //解决高并发下上传问题,每次都构建新的对象
+            TrackerServer trackerServer = trackerClient.getConnection();
+            StorageServer storageServer = trackerClient.getStoreStorage(trackerServer);
+            StorageClient1 storageClient = new StorageClient1(trackerServer, storageServer);
             return storageClient.get_file_info(groupName, remoteFileName);
         } catch (Exception e) {
             logger.warn(e.getMessage(),e);
