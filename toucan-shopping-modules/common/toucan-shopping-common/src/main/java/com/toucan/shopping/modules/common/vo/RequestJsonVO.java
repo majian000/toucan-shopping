@@ -15,7 +15,9 @@ public class RequestJsonVO extends RequestVO{
     private String entityJson;
 
     public String sign() throws NoSuchAlgorithmException {
-        return SignUtil.sign(this);
+        //return SignUtil.sign(this);
+        //TODO:暂时关闭参数签名
+        return "";
     }
 
 }

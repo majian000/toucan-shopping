@@ -333,7 +333,7 @@ public class ShopController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping("/upload/logo")
     @ResponseBody
-    public ResultObjectVO  uploadIdcardImg1(@RequestParam("file") MultipartFile file, @RequestParam("publicShopId")String publicShopId)
+    public ResultObjectVO  uploadLogo(@RequestParam("file") MultipartFile file, @RequestParam("publicShopId")String publicShopId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(0);
@@ -355,8 +355,8 @@ public class ShopController extends UIController {
             sellerShopVO.setLogo(groupPath);
 
             //设置预览
-            if (sellerShopVO.getPublicShopId() != null) {
-                sellerShopVO.setPublicShopId(imageUploadService.getImageHttpPrefix() + sellerShopVO.getLogo());
+            if (sellerShopVO.getLogo() != null) {
+                sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + sellerShopVO.getLogo());
             }
             resultObjectVO.setData(sellerShopVO);
         }catch (Exception e)

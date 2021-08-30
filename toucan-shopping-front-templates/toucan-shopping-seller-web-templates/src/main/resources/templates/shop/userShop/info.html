@@ -43,6 +43,29 @@
 
     <title>个人店铺</title>
 
+    <style>
+        .shopLogoTipsOuter {
+            display: block;
+            margin: 0px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .shopLogoTips {
+            width: 90px;
+            height: 20px;
+            line-height: 20px;
+            padding-left: 0px;
+            text-align:center;
+            background-color: rgba(0, 0, 0, .50);
+            color: #FFFFFF;
+            font-size: 5px;
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+        }
+
+
+    </style>
 </head>
 <body>
 
@@ -71,7 +94,13 @@
             <div class="m_des">
                 <table border="0" style="width:870px; line-height:22px;" cellspacing="0" cellpadding="0">
                     <tr valign="top">
-                        <td width="115"><img src="${sellerShop.httpLogo!''}" width="90" height="90" /></td>
+                        <td width="115">
+                            <a class="shopLogoTipsOuter">
+                                <img src="${sellerShop.httpLogo!''}" id="pic" width="90" height="90" />
+                                <span class="shopLogoTips">点击图片上传</span>
+                            </a>
+                            <input id="upload" name="file" accept="image/*" type="file" style="display: none">
+                        </td>
                         <td>
                             <div class="m_user">
                                 ${sellerShop.name!''} &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -230,6 +259,7 @@
 </body>
 
 <script src="${basePath}/static/js/seller/info.js"></script>
+<script src="${basePath}/static/js/seller/upload_logo.js"></script>
 <script>
     $(function () {
 
@@ -237,6 +267,12 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
+        $("#pic").click(function() {
+            $("#upload").click(); //隐藏了input:file样式后，点击头像就可以本地上传
+            $("#upload").on("change", function() {
+                upimg();
+            });
+        });
     });
 
 </script>

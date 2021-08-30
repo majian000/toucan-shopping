@@ -23,6 +23,8 @@ public interface SellerShopMapper {
 
     int update(SellerShop entity);
 
+    int updateLogo(SellerShop entity);
+
     List<SellerShop> findListByEntity(SellerShop query);
 
 

@@ -87,4 +87,14 @@ public interface FeignSellerShopService {
 
 
 
+    /**
+     * 更新图标
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/logo",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateLogo(String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
 }

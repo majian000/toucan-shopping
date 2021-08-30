@@ -45,6 +45,10 @@ public class SellerShopServiceImpl implements SellerShopService {
     }
 
     @Override
+    public int updateLogo(SellerShop entity) {
+        return sellerShopMapper.updateLogo(entity);
+    }
+    @Override
     public List<SellerShop> findListByEntity(SellerShop query) {
         return sellerShopMapper.findListByEntity(query);
     }
