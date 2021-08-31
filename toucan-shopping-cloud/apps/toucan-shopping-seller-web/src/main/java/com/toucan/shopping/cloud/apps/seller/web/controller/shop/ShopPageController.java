@@ -103,7 +103,59 @@ public class ShopPageController extends BaseController {
     }
 
 
+    /**
+     * 修改店铺信息
+     * @return
+     */
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/update")
+    public String update(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+    {
 
+        try {
+            UserVO userVO = new UserVO();
+            String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
+            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
+                if(result)
+                {
+                    SellerShop querySellerShop = new SellerShop();
+                    querySellerShop.setUserMainId(userVO.getUserMainId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+                    //判断是个人店铺还是企业店铺
+                    resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        //该账号存在店铺
+                        SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                        if(sellerShopVO==null)
+                        {
+                            return "shop/select_regist_type";
+                        }
+
+                        //个人店铺
+                        if(sellerShopVO.getType().intValue()==1)
+                        {
+                            httpServletRequest.setAttribute("sellerShop",sellerShopVO);
+                            return "shop/userShop/update";
+                        }
+
+                    }
+
+                }else{
+                    return "shop/please_true_name";
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "index";
+    }
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/submit_success")
