@@ -14,90 +14,161 @@
             background-color: #ffffff;
         }
     </style>
+
+    <span th:replace="common_page::common"></span>
+
 </head>
 <body>
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}" />
+    <input type="hidden" name="publicShopId" th:value="${model.publicShopId}" />
+    <input type="hidden" name="provinceCode" id="provinceCode" th:value="${model.provinceCode}" />
+    <input type="hidden" name="cityCode" id="cityCode" th:value="${model.cityCode}" />
+    <input type="hidden" name="areaCode" id="areaCode" th:value="${model.areaCode}" />
+    <input type="hidden" id="provinceName" th:value="${model.province}" />
+    <input type="hidden" id="cityName" th:value="${model.city}" />
+    <input type="hidden" id="areaName" th:value="${model.area}" />
+    <input type="hidden" name="userMainId" id="userMainId"  th:value="${model.userMainId}" />
+    <input type="hidden" name="changeNameCount" id="changeNameCount"  th:value="${model.changeNameCount}"  />
+    <input type="hidden" name="rank" id="rank"  th:value="${model.shopRank}" />
+    <input type="hidden" name="approveStatus"   th:value="${model.approveStatus}" />
+
+
+
+
 
     <div class="layui-form-item" >
-        <label class="layui-form-label required" >名称</label>
+        <label class="layui-form-label required" >店铺名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" id="name"  th:value="${model.name}"  lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入类别名称" value="" class="layui-input">
+            <input type="text" name="name" id="name"  th:value="${model.name}"  lay-verify="required" maxlength="15" lay-reqtext="名称不能为空" placeholder="请输入店铺名称" value="" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item" >
-        <label class="layui-form-label " >图标</label>
-        <div class="layui-input-block">
-            <input type="text" name="icon" id="icon"  th:value="${model.icon}"  maxlength="200" lay-reqtext="图标不能为空" placeholder="请输入类别图标" value="" class="layui-input">
-        </div>
-    </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">上级节点</label>
+        <label class="layui-form-label">图标正面预览</label>
         <div class="layui-input-block">
-            <input type="hidden" name="parentId" id="parentId" th:value="${model.parentId}" >
-            <input type="text" readonly  id="selectPid"  lay-verify="required"  th:value="${model.parentName}"   placeholder="请选择上级节点" value="" class="layui-input" >
+            <img th:src="${model.httpLogo}" id="previewLogo" width="240" height="220">
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">类型</label>
-        <div class="layui-input-block" th:if="${model.type eq 1}" >
-            <input type="radio" name="type" value="1" title="pc端" checked="">
-            <input type="radio" name="type" value="2" title="移动端">
-        </div>
-        <div class="layui-input-block" th:if="${model.type eq 2}" >
-            <input type="radio" name="type" value="1" title="pc端" >
-            <input type="radio" name="type" value="2" title="移动端" checked="">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">排序</label>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">介绍</label>
         <div class="layui-input-block">
-            <input type="number" name="categorySort"  placeholder="请输入排序"  th:value="${model.categorySort}" value="" class="layui-input" lay-verify="number">
+            <textarea name="introduce" class="layui-textarea" maxlength="500" th:text="${model.introduce}" placeholder="请填写介绍"></textarea>
         </div>
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型</label>
-        <div class="layui-input-block" th:if="${model.showStatus eq 1}" >
-            <input type="radio" name="showStatus" value="1" title="显示" checked="">
-            <input type="radio" name="showStatus" value="0" title="隐藏" >
+        <label class="layui-form-label required">店铺状态</label>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 1}">
+            <select name="enableStatus" lay-verify="required" lay-search="">
+                <option value="1" selected>启用</option>
+                <option value="0">禁用</option>
+            </select>
         </div>
-        <div class="layui-input-block" th:if="${model.showStatus eq 0}">
-            <input type="radio" name="showStatus" value="1" title="显示" >
-            <input type="radio" name="showStatus" value="0" title="隐藏" checked="" >
+        <div class="layui-input-block" th:if="${model.enableStatus eq 0}">
+            <select name="enableStatus" lay-verify="required" lay-search="">
+                <option value="1" >启用</option>
+                <option value="0" selected>禁用</option>
+            </select>
         </div>
     </div>
-    <div class="layui-form-item" >
-        <label class="layui-form-label" >跳转路径</label>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">店铺类型</label>
+        <div class="layui-input-block" th:if="${model.type eq 1}">
+            <select name="type" lay-verify="required" lay-search="">
+                <option value="1" selected>个人</option>
+                <option value="2">企业</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.type eq 2}">
+            <select name="type" lay-verify="required" lay-search="">
+                <option value="1" >个人</option>
+                <option value="0" selected>企业</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注</label>
         <div class="layui-input-block">
-            <input type="text" name="href" id="href"  maxlength="200" th:value="${model.href}" placeholder="请输入类别图标" value="" class="layui-input">
+            <textarea name="remark" class="layui-textarea" maxlength="500" th:text="${model.remark}" placeholder="请填写备注"></textarea>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">省份</label>
+        <div class="layui-input-block" >
+            <select id="provinceSelect" name="provinceCode" lay-filter="provinceSelect"   >
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">地市</label>
+        <div class="layui-input-block" >
+            <select  id="citySelect" name="cityCode" lay-filter="citySelect"  >
+            </select>
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">区县</label>
+        <div class="layui-input-block" >
+
+            <select  id="areaSelect" name="areaCode"  lay-filter="areaSelect"   >
+            </select>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">备注信息</label>
+        <label class="layui-form-label">详细地址</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255"  th:text="${model.remark}" placeholder="请输入备注信息"></textarea>
+            <textarea name="detailAddress" class="layui-textarea" maxlength="200" th:text="${model.detailAddress}" placeholder="请填写详细地址"></textarea>
         </div>
     </div>
 
     <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        <label class="layui-form-label required">店铺状态</label>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 0}">
+            <select name="enableStatus" lay-verify="required" lay-search="">
+                <option value="0" selected>禁用</option>
+                <option value="1">启用</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.enableStatus eq 1}">
+            <select name="enableStatus" lay-verify="required" lay-search="">
+                <option value="0" >禁用</option>
+                <option value="1" selected >启用</option>
+            </select>
         </div>
     </div>
+
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:src="@{/js/toucan-shopping/province-city-area.js}" charset="utf-8"></script>
+
 <script>
-    layui.use(['form','layer','tree'], function () {
+
+    layui.use(['form','layer','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
         var index;
-        var tree = layui.tree;
+        var upload = layui.upload;
+        var publicShopId = $("#publicShopId").val();
         var loadding;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            data.field.province=$("#provinceSelect").find("option:selected").text();
+            data.field.city=$("#citySelect").find("option:selected").text();
+            data.field.area=$("#areaSelect").find("option:selected").text();
+
             $.ajax({
-                url:"[[@{/category/update}]]",
+                url:"[[@{/seller/shop/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -121,52 +192,31 @@
             return false;
         });
 
+        var provinceCode=$("#provinceCode").val();
+        var cityCode=$("#cityCode").val();
+        var areaCode=$("#areaCode").val();
+        initProvinceCityAreaControl(form,"provinceSelect",provinceCode,"citySelect",cityCode,"areaSelect",areaCode);
 
 
-        $("#selectPid").click(function(){
-            loadding = layer.load();
-            index = layer.open({
-                title: '选择上级节点',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-                shadeClose: true,
-                area: ['20%', '60%'],
-                content: "<div id='areaTree'></div>",
-                success:function(layero){
-                    $.ajax({
-                        url:"[[@{/}]]category/query/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#areaTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        $("#selectPid").val(obj.data.title);
-                                        $("#parentId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
 
+        //执行实例
+        var uploadlogo = upload.render({
+            elem: '#uploadlogo' //绑定元素
+            ,url: '/seller/shop/upload/logo' //上传接口
+            ,data:{publicShopId:publicShopId}
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
                 }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
+                $("#previewLogo").attr("src",res.data.httpLogo);
+                $("#logo").val(res.data.logo);
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
 
-        })
     });
 </script>
 </body>
