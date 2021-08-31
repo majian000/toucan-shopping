@@ -10,6 +10,7 @@
     <!-- Custom css File -->
     <link rel="stylesheet" href="${basePath}/static/css/style2.css" />
     <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/shopInfo.css" />
     <!--[if IE 6]>
     <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -44,25 +45,6 @@
     <title>个人店铺</title>
 
     <style>
-        .shopLogoTipsOuter {
-            display: block;
-            margin: 0px auto;
-            position: relative;
-            overflow: hidden;
-        }
-        .shopLogoTips {
-            width: 90px;
-            height: 20px;
-            line-height: 20px;
-            padding-left: 0px;
-            text-align:center;
-            background-color: rgba(0, 0, 0, .50);
-            color: #FFFFFF;
-            font-size: 5px;
-            position: absolute;
-            left: 0px;
-            bottom: 0px;
-        }
 
 
     </style>
@@ -130,11 +112,73 @@
                 </table>
             </div>
 
-            <div class="mem_t">我的订单</div>
+            <div class="mem_t">店铺订单</div>
             <table border="0" class="mon_tab" style="width:870px; margin-bottom:20px;" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td colspan="3">
-                        <font style="font-family:'宋体';">待付款(<span>0</span>) &nbsp; &nbsp; &nbsp; &nbsp; 待收货(<span>2</span>) &nbsp; &nbsp; &nbsp; &nbsp; 待评论(<span>1</span>)</font>
+                    <td >
+                        <div class="shopAlarm">
+                            <a href="#">
+                                <img src="${basePath}/static/images/pay.png" style="width:50px;height:45px;" />
+                            </a>
+                            <a>
+                                待付款
+                            </a>
+                            <div class="shopDivright">
+                                99
+                            </div>
+                        </div>
+                    </td>
+                    <td >
+                        <div class="shopAlarm">
+                            <a href="#">
+                                <img src="${basePath}/static/images/goods_train.png" style="width:50px;height:45px;" />
+                            </a>
+                            <a>
+                                待发货
+                            </a>
+                            <div class="shopDivright">
+                                99
+                            </div>
+                        </div>
+                    </td>
+                    <td >
+                        <div class="shopAlarm">
+                            <a href="#">
+                                <img src="${basePath}/static/images/aftermarket.png" style="width:50px;height:45px;" />
+                            </a>
+                            <a>
+                                待售后
+                            </a>
+                            <div class="shopDivright">
+                                99
+                            </div>
+                        </div>
+                    </td>
+                    <td >
+                        <div class="shopAlarm">
+                            <a href="#">
+                                <img src="${basePath}/static/images/appraise.png" style="width:50px;height:45px;" />
+                            </a>
+                            <a>
+                                待评价
+                            </a>
+                            <div class="shopDivright">
+                                99
+                            </div>
+                        </div>
+                    </td>
+                    <td >
+                        <div class="shopAlarm">
+                            <a href="#">
+                                <img src="${basePath}/static/images/pay.png" style="width:50px;height:45px;" />
+                            </a>
+                            <a>
+                                违规
+                            </a>
+                            <div class="shopDivright">
+                                99
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </table>

@@ -1,0 +1,45 @@
+.shopLogoTipsOuter {
+	display: block;
+	margin: 0px auto;
+	position: relative;
+	overflow: hidden;
+}
+.shopLogoTips {
+	width: 90px;
+	height: 20px;
+	line-height: 20px;
+	padding-left: 0px;
+	text-align:center;
+	background-color: rgba(0, 0, 0, .50);
+	color: #FFFFFF;
+	font-size: 5px;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+}
+
+.shopAlarm {
+	position: relative;
+	width: 50px;
+	height: 62px;
+	margin: 0px;
+	text-align: center;
+}
+.shopAlarm img {
+	width: 60px;
+	height: 60px;
+}
+.shopDivright {
+	position: absolute;
+	color: white;
+	font-size: 10px;
+	background-color: red;
+	width: 15px;
+	height: 15px;
+	line-height: 15px;
+	left: 70%;
+	top: -5px;
+	text-align: center;
+	-webkit-border-radius: 27px;
+	border-radius: 24px;
+}
