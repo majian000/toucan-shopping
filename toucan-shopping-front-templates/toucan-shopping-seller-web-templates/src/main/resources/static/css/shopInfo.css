@@ -32,14 +32,22 @@
 .shopDivright {
 	position: absolute;
 	color: white;
-	font-size: 10px;
+	font-size: 15px;
 	background-color: red;
-	width: 15px;
-	height: 15px;
-	line-height: 15px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
 	left: 70%;
 	top: -5px;
 	text-align: center;
 	-webkit-border-radius: 27px;
 	border-radius: 24px;
+}
+
+.shopDivright a {
+	color: white;
+}
+
+.shopDivright a horver{
+	color: white;
 }
