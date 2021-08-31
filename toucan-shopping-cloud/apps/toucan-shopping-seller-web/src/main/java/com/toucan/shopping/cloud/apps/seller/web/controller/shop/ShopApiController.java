@@ -92,6 +92,16 @@ public class ShopApiController extends BaseController {
                         resultObjectVO.setMsg("店铺已被禁用!");
                         return resultObjectVO;
                     }
+                    if(sellerShopVO.getApproveStatus().intValue()!=2)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        if(sellerShopVO.getApproveStatus().intValue()==1) {
+                            resultObjectVO.setMsg("店铺正在审核中!");
+                        }else{
+                            resultObjectVO.setMsg("店铺申请已被驳回!");
+                        }
+                        return resultObjectVO;
+                    }
                 }
             }catch(Exception e)
             {
