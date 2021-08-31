@@ -37,7 +37,7 @@
 
     <script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/phone.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/seller/shop_regist.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/seller/shop_update.js"></script>
 
     <#include "/common_js.html"/>
 
@@ -88,6 +88,14 @@
                                     </td>
                                 </tr>
                                 <tr height="50">
+                                    <td align="right"><font color="#ff4e00">*</font>&nbsp;店铺介绍 &nbsp;</td>
+                                    <td>
+                                        <input type="text" id="introduce" name="introduce"   class="l_ipt_long" value="${sellerShop.introduce!''}"  maxlength="15"/>
+                                        &nbsp;&nbsp;
+                                        <a id="introduce_msg" style="color:#ff4e00;"></a>
+                                    </td>
+                                </tr>
+                                <tr height="50">
                                     <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                                     <td>
                                         <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
@@ -99,7 +107,7 @@
                                 </tr>
                                 <tr height="60">
                                     <td>&nbsp;</td>
-                                    <td><input type="button" value="保存" class="log_btn" onclick="registUserShop();"/></td>
+                                    <td><input type="button" value="保存" class="log_btn" onclick="updateUserShop();"/></td>
                                 </tr>
                                 <tr height="50">
                                     <td align="right"></td>
