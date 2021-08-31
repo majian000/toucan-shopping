@@ -86,7 +86,7 @@ public class ShopPageController extends BaseController {
                         if(sellerShopVO.getType().intValue()==1)
                         {
                             httpServletRequest.setAttribute("sellerShop",sellerShopVO);
-                            return "shop/userShop/info";
+                            return "shop/info";
                         }
 
                     }
