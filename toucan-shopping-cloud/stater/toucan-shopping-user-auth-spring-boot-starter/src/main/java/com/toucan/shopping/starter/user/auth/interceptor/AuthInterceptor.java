@@ -157,7 +157,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     {
                                         logger.info(" 校验loginToken不一致 {} loginToken {}" ,authHeader,loginToken);
                                         resultVO.setCode(ResultVO.HTTPCODE_403);
-                                        resultVO.setMsg("请重新登录");
+                                        resultVO.setMsg("校验登录会话不一致");
                                         response.setStatus(HttpStatus.FORBIDDEN.value());
                                         responseWrite(response, JSONObject.toJSONString(resultVO));
                                         return false;
