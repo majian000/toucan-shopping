@@ -10,7 +10,6 @@ import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.XSSUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.xss.XSSConvert;
@@ -234,8 +233,9 @@ public class UserShopApiController extends BaseController {
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVORet!=null&&sellerShopVORet.getEnableStatus().intValue()==1)
                 {
+                    sellerShopVO.setUserMainId(Long.parseLong(userMainId));
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-                    resultObjectVO = feignSellerShopService.updateNameAndIntroduce(requestJsonVO.sign(),requestJsonVO);
+                    resultObjectVO = feignSellerShopService.updateNameAndIntroduce(requestJsonVO.sign(), requestJsonVO);
                 }
             }
 

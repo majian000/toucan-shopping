@@ -48,6 +48,7 @@ public interface SellerShopService {
 
     List<SellerShop> findListByEntity(SellerShop query);
 
+    List<SellerShop> findEnabledByUserMainId(Long userMainId);
 
     /**
      * 查询列表页

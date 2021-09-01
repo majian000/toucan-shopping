@@ -29,6 +29,7 @@ public interface SellerShopMapper {
 
     List<SellerShop> findListByEntity(SellerShop query);
 
+    List<SellerShop> findEnabledByUserMainId(Long userMainId);
 
 
     List<SellerShop> queryListPage(SellerShopPageInfo queryPageInfo);

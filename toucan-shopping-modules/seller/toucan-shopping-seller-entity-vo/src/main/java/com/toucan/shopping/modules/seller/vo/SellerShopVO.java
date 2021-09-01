@@ -21,6 +21,11 @@ public class SellerShopVO extends SellerShop {
      */
     private String httpLogo;
 
+    /**
+     * 剩余修改名称次数
+     */
+    private Integer surplusChangeNameCount;
+
 
     /**
      * 用户登录历史

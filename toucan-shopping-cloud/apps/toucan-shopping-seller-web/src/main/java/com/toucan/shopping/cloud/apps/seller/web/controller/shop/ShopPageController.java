@@ -144,6 +144,14 @@ public class ShopPageController extends BaseController {
                                 httpServletRequest.setAttribute("rejectText","店铺已被禁用");
                                 return "shop/faild";
                             }
+
+                            if(sellerShopVO.getChangeNameCount()!=null)
+                            {
+                                sellerShopVO.setSurplusChangeNameCount(3-sellerShopVO.getChangeNameCount().intValue());
+                            }else{
+                                sellerShopVO.setSurplusChangeNameCount(3);
+                            }
+
                             httpServletRequest.setAttribute("sellerShop",sellerShopVO);
                             return "shop/userShop/edit";
                         }

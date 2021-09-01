@@ -60,6 +60,11 @@ public class SellerShopServiceImpl implements SellerShopService {
         return sellerShopMapper.findListByEntity(query);
     }
 
+    @Override
+    public List<SellerShop> findEnabledByUserMainId(Long userMainId) {
+        return sellerShopMapper.findEnabledByUserMainId(userMainId);
+    }
+
 
 
     @Override

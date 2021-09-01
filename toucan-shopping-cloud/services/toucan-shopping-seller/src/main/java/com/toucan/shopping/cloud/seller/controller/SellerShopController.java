@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.seller.constant.ShopConstant;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
@@ -472,7 +473,51 @@ public class SellerShopController {
                 return resultObjectVO;
             }
 
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setName(sellerShop.getName());
+            querySellerShop.setEnableStatus((short)1);
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            if(!CollectionUtils.isEmpty(sellerShops))
+            {
+                for (SellerShop sellerShopEntity:sellerShops)
+                {
+                    if(sellerShopEntity.getUserMainId().longValue()!=sellerShop.getUserMainId().longValue())
+                    {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("该店铺名称已被注册!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+            sellerShops = sellerShopService.findEnabledByUserMainId(sellerShop.getUserMainId());
             SellerShop updateSellerShop = new SellerShop();
+
+            if(CollectionUtils.isEmpty(sellerShops))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺不存在或已被禁用!");
+                return resultObjectVO;
+            }else{
+                SellerShop sellerShopRet= sellerShops.get(0);
+                if(!sellerShopRet.getName().equals(sellerShop.getName()))
+                {
+                    if(sellerShopRet.getChangeNameCount()!=null) {
+                        updateSellerShop.setChangeNameCount(sellerShopRet.getChangeNameCount().intValue()+1);
+                    }else{
+                        updateSellerShop.setChangeNameCount(1);
+                    }
+                }else{
+                    updateSellerShop.setChangeNameCount(sellerShopRet.getChangeNameCount());
+                }
+            }
+
+
+            if(updateSellerShop.getChangeNameCount()> ShopConstant.CHANGE_NAME_COUNT) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改名称次数已达到限制!");
+                return resultObjectVO;
+            }
+
             updateSellerShop.setName(sellerShop.getName());
             updateSellerShop.setIntroduce(sellerShop.getIntroduce());
             updateSellerShop.setUserMainId(sellerShop.getUserMainId());

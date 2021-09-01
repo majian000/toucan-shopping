@@ -20,6 +20,7 @@
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="shop_rank" jdbcType="BIGINT" property="shopRank" />
         <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="change_name_count" jdbcType="INTEGER" property="changeNameCount" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
@@ -91,7 +92,7 @@
 
 
     <update id="updateNameAndIntroduce" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
-        update t_seller_shop set  name=#{name} , introduce=#{introduce}
+        update t_seller_shop set  name=#{name} , introduce=#{introduce} , change_name_count = #{changeNameCount}
           where  user_main_id=#{userMainId} and enable_status = 1 and delete_status = 0
     </update>
 
@@ -102,6 +103,12 @@
             1=1
             <include refid="queryWhere" />
         </where>
+
+    </select>
+
+    <select id="findEnabledByUserMainId" resultMap="entityMap" parameterType="java.lang.Long">
+        select * from t_seller_shop t
+        where 1=1  and t.delete_status = 0 and t.user_main_id = #{userMainId}  and t.enable_status = 1
 
     </select>
 
