@@ -4,6 +4,7 @@
 function updateUserShop()
 {
     var nameValue=$("#name").val();
+    var introduceValue=$("#introduce").val();
     var vcodeValue=$("#utm_vcode").val();
 
     $("#name_msg").text(" ");
@@ -23,7 +24,7 @@ function updateUserShop()
         type: "POST",
         url: basePath+'/api/user/shop/regist',
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify({"name":nameValue,"vcode":vcodeValue}),
+        data:  JSON.stringify({"name":nameValue,"vcode":vcodeValue,"introduce":introduceValue}),
         dataType: "json",
         success: function (data) {
             if(data.code==401)

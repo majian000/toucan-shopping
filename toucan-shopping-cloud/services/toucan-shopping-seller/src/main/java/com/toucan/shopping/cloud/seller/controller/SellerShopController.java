@@ -411,11 +411,11 @@ public class SellerShopController {
                 return resultObjectVO;
             }
 
-            SellerShop querySellerShop = new SellerShop();
-            querySellerShop.setLogo(sellerShop.getLogo());
-            querySellerShop.setUserMainId(sellerShop.getUserMainId());
+            SellerShop updateSellerShop = new SellerShop();
+            updateSellerShop.setLogo(sellerShop.getLogo());
+            updateSellerShop.setUserMainId(sellerShop.getUserMainId());
 
-            int row = sellerShopService.updateLogo(sellerShop);
+            int row = sellerShopService.updateLogo(updateSellerShop);
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
@@ -430,6 +430,67 @@ public class SellerShopController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 更新名称和介绍
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/name/introduce",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateNameAndIntroduce(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerShop sellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
+
+
+            if(StringUtils.isEmpty(sellerShop.getName()))
+            {
+                logger.info("店铺名称为空 param:"+ JSONObject.toJSONString(sellerShop));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺名称不能为空!");
+                return resultObjectVO;
+            }
+
+
+            if(sellerShop.getUserMainId()==null)
+            {
+                logger.info("用户ID为空 param:"+ JSONObject.toJSONString(sellerShop));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+
+            SellerShop updateSellerShop = new SellerShop();
+            updateSellerShop.setName(sellerShop.getName());
+            updateSellerShop.setIntroduce(sellerShop.getIntroduce());
+            updateSellerShop.setUserMainId(sellerShop.getUserMainId());
+
+            int row = sellerShopService.updateNameAndIntroduce(updateSellerShop);
+            if (row <=0) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
     
     /**
      * 根据ID删除

@@ -159,6 +159,21 @@ public class FeignSellerShopServiceFallbackFactory implements FallbackFactory<Fe
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO updateNameAndIntroduce(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerShopService.updateNameAndIntroduce 失败 sign {}  params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
         };
     }
 }

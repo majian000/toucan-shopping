@@ -25,6 +25,8 @@ public interface SellerShopMapper {
 
     int updateLogo(SellerShop entity);
 
+    int updateNameAndIntroduce(SellerShop entity);
+
     List<SellerShop> findListByEntity(SellerShop query);
 
 

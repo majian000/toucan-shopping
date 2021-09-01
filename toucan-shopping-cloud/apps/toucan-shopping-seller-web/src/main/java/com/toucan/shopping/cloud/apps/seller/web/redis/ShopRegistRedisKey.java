@@ -13,4 +13,16 @@ public class ShopRegistRedisKey {
     {
         return "TOUCAN_SHOPPING_SELLER_WEB:SHOP:LOCK:SHOP_REGIST_"+userMainId+"_LOCK";
     }
+
+
+    /**
+     * 编辑锁键
+     * @param userMainId
+     * @return
+     */
+    public static String getEditLockKey(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_SELLER_WEB:SHOP:LOCK:SHOP_EDIT_"+userMainId+"_LOCK";
+    }
+
 }

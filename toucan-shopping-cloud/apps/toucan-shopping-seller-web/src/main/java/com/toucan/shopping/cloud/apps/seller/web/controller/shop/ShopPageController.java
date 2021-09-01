@@ -108,7 +108,7 @@ public class ShopPageController extends BaseController {
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/update")
+    @RequestMapping("/edit")
     public String update(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {
 
@@ -138,10 +138,14 @@ public class ShopPageController extends BaseController {
                         }
 
                         //个人店铺
-                        if(sellerShopVO.getType().intValue()==1)
-                        {
+                        if(sellerShopVO.getType().intValue()==1) {
+                            if (sellerShopVO.getEnableStatus().intValue() != 1)
+                            {
+                                httpServletRequest.setAttribute("rejectText","店铺已被禁用");
+                                return "shop/faild";
+                            }
                             httpServletRequest.setAttribute("sellerShop",sellerShopVO);
-                            return "shop/userShop/update";
+                            return "shop/userShop/edit";
                         }
 
                     }

@@ -96,5 +96,13 @@ public interface FeignSellerShopService {
     ResultObjectVO updateLogo(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 更新名称和介绍
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/name/introduce",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateNameAndIntroduce(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
 
 }

@@ -39,6 +39,13 @@ public interface SellerShopService {
      */
     int updateLogo(SellerShop entity);
 
+    /**
+     * 修改名称和介绍
+     * @param entity
+     * @return
+     */
+    int updateNameAndIntroduce(SellerShop entity);
+
     List<SellerShop> findListByEntity(SellerShop query);
 
 

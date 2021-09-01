@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- StyleSheets -->
+    <link rel="stylesheet" href="${basePath}/static/css/slick.min.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/magnific-popup.min.css">
+    <link rel="stylesheet" href="${basePath}/static/css/font-awesome-5.15.1.min.css" />
+
+    <!-- Custom css File -->
+    <link rel="stylesheet" href="${basePath}/static/css/style2.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+    <script type="text/javascript" src="${basePath}/static/js/jquery-1.11.1.min_044d0927.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
+
+    <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
+
+    <script type="text/javascript" src="${basePath}/static/js/select.js"></script>
+
+    <script type="text/javascript" src="${basePath}/static/js/lrscroll.js"></script>
+
+    <script type="text/javascript" src="${basePath}/static/js/iban.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/fban.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/f_ban.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/mban.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/bban.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/hban.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/tban.js"></script>
+
+    <script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/seller/phone.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/seller/shop_update.js"></script>
+
+    <#include "/common_js.html"/>
+
+    <title>个人店铺申请</title>
+</head>
+<body>
+
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top_child.html"/>
+</div>
+
+<div class="page_nav_top">
+    <div class="sou">
+        <#include "/logo_child.html"/>
+        <div class="page_nav_title" >
+            <a style="font-size:30px;" >个人店铺修改</a>
+        </div>
+    </div>
+</div>
+
+<!--Begin Login Begin-->
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div class="m_left">
+            <#include "/user/manager_left.html"/>
+        </div>
+        <div class="m_right">
+            <div >
+                <div >
+                    <div  style="width:100%;">
+                        <br>
+                        <form id="utnform" method="post">
+                            <table border="0" style="width:650px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
+                                <tr height="50" valign="top">
+                                    <td width="150">&nbsp;</td>
+                                    <td>
+                                        <span class="fl" style="font-size:24px;"></span>
+                                    </td>
+                                </tr>
+                                <tr height="50">
+                                    <td align="right"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
+                                    <td>
+                                        <input type="text" id="name" name="name"   class="l_ipt_long" value="${sellerShop.name!''}"  maxlength="15"/>
+                                        &nbsp;&nbsp;
+                                        <a id="name_msg" style="color:#ff4e00;"></a>
+                                    </td>
+                                </tr>
+                                <tr height="50">
+                                    <td align="right">&nbsp;店铺介绍 &nbsp;</td>
+                                    <td>
+                                        <textarea id="introduce" name="introduce" class="l_textarea_long" maxlength="500" text="${sellerShop.introduce!''}"  placeholder="请填写介绍"></textarea>
+                                        &nbsp;&nbsp;
+                                        <a id="introduce_msg" style="color:#ff4e00;"></a>
+                                    </td>
+                                </tr>
+                                <tr height="50">
+                                    <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
+                                    <td>
+                                        <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
+                                        <span style="vertical-align: middle">
+									&nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
+								</span>
+                                        <a id="utm_vcode_msg" style="color:#ff4e00;"></a>
+                                    </td>
+                                </tr>
+                                <tr height="60">
+                                    <td>&nbsp;</td>
+                                    <td><input type="button" value="保存" class="log_btn" onclick="updateUserShop();"/></td>
+                                </tr>
+                                <tr height="50">
+                                    <td align="right"></td>
+                                    <td>
+                                        <a id="tn_msg" style="color:#ff4e00;"></a>
+                                        <br>
+                                        <br>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End 用户中心 End-->
+</div>
+
+<!--Begin Footer Begin-->
+<div class="btmbg">
+    <div class="btm">
+        备案/许可证编号：蜀ICP备12009302号-1-www.dingguagua.com   Copyright © 2015-2018 犀鸟商城网 All Rights Reserved. 复制必究 , Technical Support: Dgg Group <br />
+        <img src="${basePath}/static/images/b_1.gif" width="98" height="33" /><img src="${basePath}/static/images/b_2.gif" width="98" height="33" /><img src="${basePath}/static/images/b_3.gif" width="98" height="33" /><img src="${basePath}/static/images/b_4.gif" width="98" height="33" /><img src="${basePath}/static/images/b_5.gif" width="98" height="33" /><img src="${basePath}/static/images/b_6.gif" width="98" height="33" />
+    </div>
+</div>
+<!--End Footer End -->
+
+</body>
+
+<script src="${basePath}/static/js/seller/info.js"></script>
+<script>
+    $(function () {
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        });
+
+    });
+
+</script>
+
+
+</html>
