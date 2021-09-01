@@ -30,7 +30,7 @@ public class Category {
     private Long categorySort; //排序
     private Integer showStatus; //显示状态 0隐藏 1显示
     private String href; //点击类别跳转路径
-
+    private String noticeTips; //注意事项,卖家选择分类时,可以提示一些类别下面的注意事项
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
