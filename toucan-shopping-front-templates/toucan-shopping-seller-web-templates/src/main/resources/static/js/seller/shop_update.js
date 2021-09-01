@@ -22,7 +22,7 @@ function updateUserShop()
     }
     $.ajax({
         type: "POST",
-        url: basePath+'/api/user/shop/regist',
+        url: basePath+'/api/user/shop/edit',
         contentType: "application/json;charset=utf-8",
         data:  JSON.stringify({"name":nameValue,"vcode":vcodeValue,"introduce":introduceValue}),
         dataType: "json",
