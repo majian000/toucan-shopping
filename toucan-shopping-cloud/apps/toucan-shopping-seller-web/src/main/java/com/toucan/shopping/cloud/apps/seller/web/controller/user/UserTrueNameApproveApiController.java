@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -169,6 +170,8 @@ public class UserTrueNameApproveApiController extends BaseController {
             //删除缓存中验证码
             toucanStringRedisService.delete(vcodeRedisKey);
 
+            //替换跨站脚本代码
+            XSSConvert.replaceXSS(userTrueNameApproveVO);
 
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {

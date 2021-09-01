@@ -10,8 +10,10 @@ import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
+import com.toucan.shopping.modules.common.util.XSSUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -106,6 +107,8 @@ public class UserShopApiController extends BaseController {
             //删除缓存中验证码
             toucanStringRedisService.delete(vcodeRedisKey);
 
+            //替换跨站脚本代码
+            XSSConvert.replaceXSS(sellerShopVO);
 
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             boolean lockStatus = redisLock.lock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);
@@ -125,6 +128,7 @@ public class UserShopApiController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if(result)
                 {
+
                     sellerShopVO.setType(1);
                     sellerShopVO.setUserMainId(userVO.getUserMainId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
@@ -207,6 +211,9 @@ public class UserShopApiController extends BaseController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
+
+            //替换跨站脚本代码
+            XSSConvert.replaceXSS(sellerShopVO);
 
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             boolean lockStatus = redisLock.lock(ShopRegistRedisKey.getEditLockKey(userMainId), userMainId);

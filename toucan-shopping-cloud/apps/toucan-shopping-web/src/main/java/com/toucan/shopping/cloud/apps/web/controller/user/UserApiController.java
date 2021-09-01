@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.util.*;
+import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -250,6 +251,8 @@ public class UserApiController extends BaseController {
             }
 
 
+            //替换跨站脚本代码
+            XSSConvert.replaceXSS(user);
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),user);
 
