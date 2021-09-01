@@ -79,6 +79,7 @@
                             <br>
                             <br>
                             <a style="font-size:15px;" target="_blank">${rejectText!""}</a>&nbsp;&nbsp;</a>
+                            <a id="countdownTips"></a>
                             <br>
                         </div>
                         <br>
@@ -112,12 +113,10 @@
 </body>
 
 <script src="${basePath}/static/js/seller/info.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/few_seconds_jump.js"></script>
 <script>
     $(function () {
-
-        $("#refreshCaptcha").bind( 'click' ,function(){
-            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
-        });
+        initCountdownJumpPage(basePath+"/page/shop/info",5,"countdownTips","店铺中心");
 
     });
 
