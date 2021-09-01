@@ -51,3 +51,67 @@
 .shopDivright a horver{
 	color: white;
 }
+
+
+.shopPayImg{
+	width:50px;
+	height:50px;
+	background:url('/static/images/pay.png');
+}
+
+.shopPayImg:hover{
+	width:50px;
+	height:50px;
+	background:url('/static/images/paybor.png');
+}
+
+
+.shopGoodsTrainImg{
+	width:50px;
+	height:45px;
+	background:url('/static/images/goods_train.png');
+}
+
+.shopGoodsTrainImg:hover{
+	width:50px;
+	height:45px;
+	background:url('/static/images/goods_trainbor.png');
+}
+
+
+
+.shopAftermarketImg{
+	width:50px;
+	height:50px;
+	background:url('/static/images/aftermarket.png');
+}
+
+.shopAftermarketImg:hover{
+	width:50px;
+	height:50px;
+	background:url('/static/images/aftermarketbor.png');
+}
+
+.shopAppraiseImg{
+	width:50px;
+	height:50px;
+	background:url('/static/images/appraise.png');
+}
+
+.shopAppraiseImg:hover{
+	width:50px;
+	height:50px;
+	background:url('/static/images/appraisebor.png');
+}
+
+.shopWarnImg{
+	width:50px;
+	height:45px;
+	background:url('/static/images/violation.png');
+}
+
+.shopWarnImg:hover{
+	width:50px;
+	height:45px;
+	background:url('/static/images/violationbor.png');
+}

@@ -16,7 +16,7 @@ public class LoginTokenUtil {
     public static String generatorToken(Long userMainId) throws Exception
     {
         try {
-            return MD5Util.md5(String.valueOf(userMainId) + "|" + salt);
+            return MD5Util.md5(String.valueOf(userMainId) + "|" + salt+"|"+System.currentTimeMillis());
         }catch(Exception e)
         {
             throw e;

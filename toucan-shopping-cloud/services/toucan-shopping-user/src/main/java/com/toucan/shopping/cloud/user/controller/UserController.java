@@ -1435,6 +1435,58 @@ public class UserController {
 
 
     /**
+     * 判断userId和tokne是否一致
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/verify/login/token",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO verifyLoginToken(@RequestBody RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        try{
+            String entityJson = requestVo.getEntityJson();
+            UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
+            if(userLoginVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入用户ID");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(userLoginVO.getLoginToken()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请传入loginToken");
+                return resultObjectVO;
+            }
+            String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
+            String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
+
+            Object loginTokenObject = toucanStringRedisService.get(loginTokenGroupKey,loginTokenAppKey);
+            if (loginTokenObject != null) {
+                if(!StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
+                {
+                    //当前传过来的token和缓存中的token不一致
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                }
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
      * 判断是否实名
      * @param requestVo
      * @return
