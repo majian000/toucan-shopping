@@ -32,6 +32,9 @@ public interface CategoryService {
 
     List<Category> findByParentId(Long parentId);
 
+
+    Long queryCount(Category category);
+
     /**
      * 删除所有子节点
      * @param id

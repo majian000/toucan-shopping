@@ -28,6 +28,25 @@ eureka:
 
 
 
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 120000
+        readTimeout: 120000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 120000 #请求时间超过2分钟生熔断
+      circuitBreaker:
+        requestVolumeThreshold: 8  #10秒内8个以上请求失败,产生熔断
+
+
 
 toucan:
   machine-id: 2201 #机器编码

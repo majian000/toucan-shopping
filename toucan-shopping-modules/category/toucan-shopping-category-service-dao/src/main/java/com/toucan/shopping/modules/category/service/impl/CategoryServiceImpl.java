@@ -65,6 +65,10 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.queryByParentId(parentId);
     }
 
+    @Override
+    public Long queryCount(Category category) {
+        return categoryMapper.queryCount(category);
+    }
 
 
     public void setChildrenByParentId(CategoryVO categoryVO,List<Category> categoryList) throws InvocationTargetException, IllegalAccessException {

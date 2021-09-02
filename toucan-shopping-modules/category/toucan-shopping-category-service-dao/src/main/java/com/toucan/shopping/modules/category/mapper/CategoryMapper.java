@@ -25,6 +25,8 @@ public interface CategoryMapper {
 
     int update(Category category);
 
+    Long queryCount(Category category);
+
     /**
      * 查询表格树
      * @param queryTreeInfo

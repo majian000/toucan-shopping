@@ -41,4 +41,9 @@ public class CategoryTreeVO extends CategoryVO {
 
 
 
+    /**
+     * 是否有子节点
+     */
+    private Boolean haveChild = false;
+
 }

@@ -276,20 +276,17 @@ public class CategoryController extends UIController {
 
     /**
      * 查询列表
-     * @param pid
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/list/by/pid/{pid}",method = RequestMethod.GET)
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO queryListByPid(HttpServletRequest request, @PathVariable Long pid)
+    public ResultObjectVO queryListByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            CategoryVO categoryVO = new CategoryVO();
-            categoryVO.setParentId(pid);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryVO);
-            resultObjectVO = feignCategoryService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryTreeInfo);
+            resultObjectVO = feignCategoryService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;
         }catch(Exception e)
         {

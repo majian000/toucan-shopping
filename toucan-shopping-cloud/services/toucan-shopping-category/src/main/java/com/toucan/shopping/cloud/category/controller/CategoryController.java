@@ -766,6 +766,129 @@ public class CategoryController {
     }
 
 
+
+
+    /**
+     * 查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            CategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryTreeInfo.class);
+
+            List<CategoryTreeVO> categoryTreeVOS = new ArrayList<CategoryTreeVO>();
+            //按指定条件查询
+            if(StringUtils.isNotEmpty(queryPageInfo.getName()))
+            {
+                CategoryVO queryCategory = new CategoryVO();
+                queryCategory.setName(queryPageInfo.getName());
+                List<Category> categories = categoryService.queryList(queryCategory);
+                for (int i = 0; i < categories.size(); i++) {
+                    Category category = categories.get(i);
+                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                    BeanUtils.copyProperties(categoryTreeVO, category);
+                    categoryTreeVOS.add(categoryTreeVO);
+                }
+            }else {
+                //查询当前节点下的所有子节点
+                CategoryVO queryCategory = new CategoryVO();
+                queryCategory.setParentId(queryPageInfo.getParentId());
+                List<Category> categories = categoryService.queryList(queryCategory);
+                for (int i = 0; i < categories.size(); i++) {
+                    Category category = categories.get(i);
+                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                    BeanUtils.copyProperties(categoryTreeVO, category);
+
+                    queryCategory = new CategoryVO();
+                    queryCategory.setParentId(category.getId());
+                    Long childCount = categoryService.queryCount(queryCategory);
+                    if (childCount > 0) {
+                        categoryTreeVO.setHaveChild(true);
+                    }
+                    categoryTreeVOS.add(categoryTreeVO);
+                }
+            }
+
+            List<String> adminIds = new ArrayList<String>();
+            //拿到树节点中所有创建人和修改人
+            if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
+                for (CategoryVO categoryVO : categoryTreeVOS) {
+                    if (categoryVO.getCreateAdminId() != null&&!"-1".equals(categoryVO.getCreateAdminId())&&!existsAdminId(adminIds,categoryVO.getCreateAdminId())) {
+                        adminIds.add(categoryVO.getCreateAdminId());
+                    }
+                    if (categoryVO.getUpdateAdminId() != null&&!"-1".equals(categoryVO.getUpdateAdminId())&&!existsAdminId(adminIds,categoryVO.getUpdateAdminId())) {
+                        adminIds.add(categoryVO.getUpdateAdminId());
+                    }
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(adminIds))
+            {
+                AdminVO query = new AdminVO();
+                String[] adminIdArray = new String[adminIds.size()];
+                for(int i=0;i<adminIds.size();i++)
+                {
+                    adminIdArray[i]=adminIds.get(i);
+                }
+                query.setAdminIds(adminIdArray);
+                RequestJsonVO adminRequestJsonVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+                resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<AdminVO> admins = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AdminVO.class);
+                    if(!CollectionUtils.isEmpty(admins))
+                    {
+                        if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
+                            for (CategoryVO categoryVO : categoryTreeVOS) {
+                                for(AdminVO adminVO:admins)
+                                {
+                                    if (categoryVO.getCreateAdminId() != null&&categoryVO.getCreateAdminId().equals(adminVO.getAdminId())) {
+                                        categoryVO.setCreateAdminUsername(adminVO.getUsername());
+                                    }
+                                    if (categoryVO.getUpdateAdminId() != null&&categoryVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
+                                        categoryVO.setUpdateAdminUsername(adminVO.getUsername());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            //将查询的这个节点设置为顶级节点
+            if(StringUtils.isNotEmpty(queryPageInfo.getName())) {
+                if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
+                    for (Category category : categoryTreeVOS) {
+                        category.setParentId(-1L);
+                    }
+                }
+            }
+
+            resultObjectVO.setData(categoryTreeVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
     /**
      * 根据ID删除
      * @param requestJsonVO

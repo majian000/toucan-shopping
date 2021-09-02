@@ -24,6 +24,7 @@ public class CategoryTreeInfo extends PageInfo<CategoryVO> {
     private String name;
 
 
+    private Long parentId; //上级类别
 
     /**
      * 启用状态 0:禁用 1启用

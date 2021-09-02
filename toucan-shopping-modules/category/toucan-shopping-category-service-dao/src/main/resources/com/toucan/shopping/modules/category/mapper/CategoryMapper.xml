@@ -25,56 +25,72 @@
 
     </resultMap>
 
+    <sql id="queryListWhere">
+
+        and t.delete_status = 0
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="parentId!=null">
+            and t.parent_id = #{parentId}
+        </if>
+
+        <if test="type!=null">
+            and t.type = #{type}
+        </if>
+
+        <if test="showStatus!=null">
+            and t.show_status = #{showStatus}
+        </if>
+
+
+        <if test="idArray!=null ">
+            and t.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        <if test="name!=null and name!=''">
+            and t.name = #{name}
+        </if>
+    </sql>
 
     <select id="queryList" resultMap="categoryMap" parameterType="com.toucan.shopping.modules.category.vo.CategoryVO">
-        select bc.* from t_category bc
+        select t.* from t_category t
         <where>
             1=1
 
-            <if test="id!=null">
-                and bc.id = #{id}
-            </if>
+            <include refid="queryListWhere" />
 
-            <if test="parentId!=null">
-                 and bc.parent_id = #{parentId}
-            </if>
-
-            <if test="type!=null">
-                and bc.type = #{type}
-            </if>
-
-            <if test="showStatus!=null">
-                and bc.show_status = #{showStatus}
-            </if>
-
-
-            <if test="idArray!=null ">
-                and bc.id in
-                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-
-
-            <if test="name!=null and name!=''">
-                and bc.name = #{name}
-            </if>
-
-            and bc.delete_status = 0
 
         </where>
     </select>
 
 
-    <select id="queryPcIndexList" resultMap="categoryMap" parameterType="com.toucan.shopping.modules.category.vo.CategoryVO">
-        select bc.* from t_category bc
+    <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.category.entity.Category">
+        select count(*) from t_category t
         <where>
             1=1
-            and bc.show_status = 1
-            and bc.type = 1
-            and bc.delete_status = 0
+            <include refid="queryListWhere" />
+
         </where>
-        order by bc.category_sort desc
+    </select>
+
+
+
+    <select id="queryPcIndexList" resultMap="categoryMap" parameterType="com.toucan.shopping.modules.category.vo.CategoryVO">
+        select t.* from t_category t
+        <where>
+            1=1
+            and t.show_status = 1
+            and t.type = 1
+            and t.delete_status = 0
+        </where>
+        order by t.category_sort desc
     </select>
 
 
@@ -101,8 +117,8 @@
     </update>
 
     <select id="queryByParentId" resultMap="categoryMap" >
-        select bc.* from t_category bc
-         where 1=1 and bc.parent_id=#{parentId}   and bc.delete_status=0 order by bc.category_sort desc
+        select t.* from t_category t
+         where 1=1 and t.parent_id=#{parentId}   and t.delete_status=0 order by t.category_sort desc
 
     </select>
 

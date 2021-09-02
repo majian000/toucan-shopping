@@ -69,6 +69,7 @@
             table = layui.table;
         var treetable = layui.treeTable;
         var loadding;
+        var treetableHandler;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -102,7 +103,7 @@
         function loadTreeTable()
         {
             loadding = layer.load();
-            treetable.render({
+            treetableHandler = treetable.render({
                 elem: '#areaTreeTable',
                 tree: {
                     iconIndex: 2
@@ -162,7 +163,7 @@
         /**
          * toolbar监听事件
          */
-        treetable.on('toolbar(areaTreeTableFilter)', function (obj) {
+        treetable.on('toolbar(areaTreeTable)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加地区',
@@ -177,14 +178,13 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('areaTreeTable')
-                    , data = checkStatus.data;
+                var data = treetableHandler.checkStatus();
                 if(data==null||data.length<=0)
                 {
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除地区?', function (index) {
+                layer.confirm("确定删除该节点?", function (index) {
                     $.ajax({
                         url:"[[@{/}]]area/delete/ids",
                         contentType: "application/json; charset=utf-8",
