@@ -25,6 +25,7 @@ ribbon:
               toucan-shopping-admin-auth,\
               toucan-shopping-column,\
               toucan-shopping-user,\
+              toucan-shopping-seller,\
               toucan-shopping-area,\
               toucan-shopping-stock"
 
