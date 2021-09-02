@@ -6,7 +6,7 @@ function share_cookie()
         contentType: "application/json;charset=utf-8",
         data:  null,
         dataType: "json",
-        timeout: 5000,
+        timeout: 3000,
         success: function (result) {
             if(result.code==1)
             {
@@ -29,7 +29,7 @@ function set_cookie(pos,domainList)
         url: domainList[pos],
         data:{cookies:document.cookie},
         crossDomain:true,
-        timeout: 5000,
+        timeout: 3000,
         complete:function(data,status){
             if(pos+1<domainList.length)
             {
