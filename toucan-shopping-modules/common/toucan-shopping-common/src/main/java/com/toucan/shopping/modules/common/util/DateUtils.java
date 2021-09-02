@@ -54,6 +54,17 @@ public final class DateUtils {
     }
 
     /**
+     * 返回 毫秒值 = date1-date2
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static long subtract(Date date1,Date date2)
+    {
+        return date1.getTime()-date2.getTime();
+    }
+
+    /**
      * 拿到当前时间
      * @return
      */

@@ -7,7 +7,9 @@ public interface SkylarkRedisLock {
     /**
      * 默认key有效期毫秒
      */
-    static long DEFAULT_MILLISECOND=5000;
+    static long DEFAULT_MILLISECOND=30000;
+
+    static long DELAY_MILLISECOND=3000;
 
     /**
      * 拿锁重试次数

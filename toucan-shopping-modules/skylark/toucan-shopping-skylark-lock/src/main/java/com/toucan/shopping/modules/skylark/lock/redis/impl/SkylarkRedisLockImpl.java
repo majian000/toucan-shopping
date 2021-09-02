@@ -57,9 +57,9 @@ public class SkylarkRedisLockImpl implements SkylarkRedisLock {
                     threadHashMap.get(lockKey+"_thread").setLoop(false);
                 }
                 //维持心跳
-                SkylarkRedisLockThread expireThread = new SkylarkRedisLockThread();
-                expireThread.setLockKey(lockKey);
+                SkylarkRedisLockThread expireThread = new SkylarkRedisLockThread(lockKey,redisTemplate);
                 threadHashMap.put(lockKey+"_thread",expireThread);
+                expireThread.start();
 
                 //将key保存到锁表中
                 redisTemplate.opsForHash().put(SkylarkRedisLockManagerThread.globalLockTable,lockKey,String.valueOf(System.currentTimeMillis()));
