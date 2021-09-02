@@ -1135,7 +1135,6 @@ public class UserController {
                 return resultObjectVO;
             }
 
-            Thread.sleep(30000);
 
             //如果当前输入的是手机号判断手机号是否存在
             Long userId = 0L;
