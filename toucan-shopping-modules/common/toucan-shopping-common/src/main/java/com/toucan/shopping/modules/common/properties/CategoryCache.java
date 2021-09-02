@@ -12,5 +12,5 @@ public class CategoryCache {
     /**
      * redis 配置
      */
-    private Redis redis;
+    private CategoryCacheRedis redis;
 }

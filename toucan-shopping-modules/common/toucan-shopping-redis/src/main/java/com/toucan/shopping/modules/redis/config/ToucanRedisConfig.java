@@ -91,6 +91,8 @@ public class ToucanRedisConfig {
 
             //集群模式
             if ("cluster".equals(toucan.getModules().getToucanRedis().getSelect())) {
+                log.info(" 初始化犀鸟redis模块 加载配置 toucan.modules.toucanRedis.hosts:{}",toucan.getModules().getToucanRedis().getHosts());
+                log.info(" 初始化犀鸟redis模块 加载配置 toucan.modules.toucanRedis.maxRedirects:{}",toucan.getModules().getToucanRedis().getMaxRedirects());
                 source.put("spring.redis.cluster.nodes", toucan.getModules().getToucanRedis().getHosts());
                 source.put("spring.redis.cluster.max-redirects", toucan.getModules().getToucanRedis().getMaxRedirects());
                 redisClusterConfiguration = new RedisClusterConfiguration(new MapPropertySource("RedisClusterConfiguration", source));
@@ -102,6 +104,9 @@ public class ToucanRedisConfig {
                 lettuceConnectionFactory.afterPropertiesSet();
                 return lettuceConnectionFactory;
             } else {
+                log.info(" 初始化犀鸟redis模块 加载配置 toucan.modules.toucanRedis.host:{}",toucan.getModules().getToucanRedis().getHost());
+                log.info(" 初始化犀鸟redis模块 加载配置 toucan.modules.toucanRedis.port:{}",toucan.getModules().getToucanRedis().getPort());
+                log.info(" 初始化犀鸟redis模块 加载配置 toucan.modules.toucanRedis.database:{}",toucan.getModules().getToucanRedis().getDatabase());
                 //单机模式
                 redisStandaloneConfiguration = new RedisStandaloneConfiguration(toucan.getModules().getToucanRedis().getHost(),
                         toucan.getModules().getToucanRedis().getPort());

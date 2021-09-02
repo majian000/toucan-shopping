@@ -92,6 +92,9 @@ public class CategoryCacheRedisConfig {
 
             //集群模式
             if ("cluster".equals(toucan.getModules().getCategoryCache().getRedis().getSelect())) {
+                log.info(" 初始化类别模块 redis缓存功能 加载配置 toucan.modules.categoryCache.redis.hosts:{}",toucan.getModules().getCategoryCache().getRedis().getHosts());
+                log.info(" 初始化类别模块 redis缓存功能 加载配置 toucan.modules.categoryCache.redis.maxRedirects:{}",toucan.getModules().getCategoryCache().getRedis().getMaxRedirects());
+
                 source.put("spring.redis.cluster.nodes", toucan.getModules().getCategoryCache().getRedis().getHosts());
                 source.put("spring.redis.cluster.max-redirects", toucan.getModules().getCategoryCache().getRedis().getMaxRedirects());
                 redisClusterConfiguration = new RedisClusterConfiguration(new MapPropertySource("RedisClusterConfiguration", source));
@@ -103,6 +106,9 @@ public class CategoryCacheRedisConfig {
                 lettuceConnectionFactory.afterPropertiesSet();
                 return lettuceConnectionFactory;
             } else {
+                log.info(" 初始化类别模块 redis缓存功能 加载配置 toucan.modules.categoryCache.redis.host:{}",toucan.getModules().getCategoryCache().getRedis().getHost());
+                log.info(" 初始化类别模块 redis缓存功能 加载配置 toucan.modules.categoryCache.redis.port:{}",toucan.getModules().getCategoryCache().getRedis().getPort());
+                log.info(" 初始化类别模块 redis缓存功能 加载配置 toucan.modules.categoryCache.redis.database:{}",toucan.getModules().getCategoryCache().getRedis().getDatabase());
                 //单机模式
                 redisStandaloneConfiguration = new RedisStandaloneConfiguration(toucan.getModules().getCategoryCache().getRedis().getHost(),
                         toucan.getModules().getCategoryCache().getRedis().getPort());

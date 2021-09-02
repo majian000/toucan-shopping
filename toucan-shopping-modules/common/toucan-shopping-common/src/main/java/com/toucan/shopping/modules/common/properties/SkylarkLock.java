@@ -12,7 +12,7 @@ public class SkylarkLock {
     /**
      * redis 配置
      */
-    private Redis redis;
+    private SkylarkLockRedis redis;
 
     /**
      * 中间件类型

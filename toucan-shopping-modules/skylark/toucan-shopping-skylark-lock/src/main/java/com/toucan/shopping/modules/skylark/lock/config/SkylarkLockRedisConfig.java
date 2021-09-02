@@ -75,7 +75,7 @@ public class SkylarkLockRedisConfig {
      * @return
      */
     public RedisConnectionFactory skylarkLockRedisConnectionFactory() {
-        log.info(" 初始化云雀分布式锁模块 redis相关配置.............");
+        log.info(" 初始化云雀分布式锁redis模块 redis相关配置.............");
         try {
             Map<String, Object> source = new HashMap<String, Object>();
             RedisClusterConfiguration redisClusterConfiguration;
@@ -97,6 +97,8 @@ public class SkylarkLockRedisConfig {
 
             //集群模式
             if ("cluster".equals(toucan.getModules().getSkylarkLock().getRedis().getSelect())) {
+                log.info(" 初始化云雀分布式锁redis模块 加载配置 toucan.modules.skylarkLock.redis.hosts:{}",toucan.getModules().getSkylarkLock().getRedis().getHosts());
+                log.info(" 初始化云雀分布式锁redis模块 加载配置 toucan.modules.skylarkLock.redis.maxRedirects:{}",toucan.getModules().getSkylarkLock().getRedis().getMaxRedirects());
                 source.put("spring.redis.cluster.nodes", toucan.getModules().getSkylarkLock().getRedis().getHosts());
                 source.put("spring.redis.cluster.max-redirects", toucan.getModules().getSkylarkLock().getRedis().getMaxRedirects());
                 redisClusterConfiguration = new RedisClusterConfiguration(new MapPropertySource("RedisClusterConfiguration", source));
@@ -108,6 +110,9 @@ public class SkylarkLockRedisConfig {
                 lettuceConnectionFactory.afterPropertiesSet();
                 return lettuceConnectionFactory;
             } else {
+                log.info(" 初始化云雀分布式锁redis模块 加载配置 toucan.modules.skylarkLock.redis.host:{}",toucan.getModules().getSkylarkLock().getRedis().getHost());
+                log.info(" 初始化云雀分布式锁redis模块 加载配置 toucan.modules.skylarkLock.redis.port:{}",toucan.getModules().getSkylarkLock().getRedis().getPort());
+                log.info(" 初始化云雀分布式锁redis模块 加载配置 toucan.modules.skylarkLock.redis.database:{}",toucan.getModules().getSkylarkLock().getRedis().getDatabase());
                 //单机模式
                 redisStandaloneConfiguration = new RedisStandaloneConfiguration(toucan.getModules().getSkylarkLock().getRedis().getHost(),
                         toucan.getModules().getSkylarkLock().getRedis().getPort());

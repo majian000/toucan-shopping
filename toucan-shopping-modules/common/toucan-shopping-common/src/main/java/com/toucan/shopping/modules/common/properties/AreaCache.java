@@ -12,5 +12,5 @@ public class AreaCache {
     /**
      * redis 配置
      */
-    private Redis redis;
+    private AreaCacheRedis redis;
 }

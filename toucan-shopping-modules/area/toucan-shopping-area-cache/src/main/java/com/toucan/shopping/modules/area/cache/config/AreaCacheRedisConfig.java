@@ -91,6 +91,9 @@ public class AreaCacheRedisConfig {
 
             //集群模式
             if ("cluster".equals(toucan.getModules().getAreaCache().getRedis().getSelect())) {
+                log.info(" 初始化地区模块 redis缓存功能 加载配置 toucan.modules.areaCache.redis.hosts:{}",toucan.getModules().getAreaCache().getRedis().getHosts());
+                log.info(" 初始化地区模块 redis缓存功能 加载配置 toucan.modules.areaCache.redis.maxRedirects:{}",toucan.getModules().getAreaCache().getRedis().getMaxRedirects());
+
                 source.put("spring.redis.cluster.nodes", toucan.getModules().getAreaCache().getRedis().getHosts());
                 source.put("spring.redis.cluster.max-redirects", toucan.getModules().getAreaCache().getRedis().getMaxRedirects());
                 redisClusterConfiguration = new RedisClusterConfiguration(new MapPropertySource("RedisClusterConfiguration", source));
@@ -102,6 +105,9 @@ public class AreaCacheRedisConfig {
                 lettuceConnectionFactory.afterPropertiesSet();
                 return lettuceConnectionFactory;
             } else {
+                log.info(" 初始化地区模块 redis缓存功能 加载配置 toucan.modules.areaCache.redis.host:{}",toucan.getModules().getAreaCache().getRedis().getHost());
+                log.info(" 初始化地区模块 redis缓存功能 加载配置 toucan.modules.areaCache.redis.port:{}",toucan.getModules().getAreaCache().getRedis().getPort());
+                log.info(" 初始化地区模块 redis缓存功能 加载配置 toucan.modules.areaCache.redis.database:{}",toucan.getModules().getAreaCache().getRedis().getDatabase());
                 //单机模式
                 redisStandaloneConfiguration = new RedisStandaloneConfiguration(toucan.getModules().getAreaCache().getRedis().getHost(),
                         toucan.getModules().getAreaCache().getRedis().getPort());
