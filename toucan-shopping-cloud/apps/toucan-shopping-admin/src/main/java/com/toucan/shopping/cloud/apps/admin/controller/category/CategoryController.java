@@ -274,7 +274,31 @@ public class CategoryController extends UIController {
         return resultObjectVO;
     }
 
-
+    /**
+     * 查询列表
+     * @param pid
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/list/by/pid/{pid}",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryListByPid(HttpServletRequest request, @PathVariable Long pid)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            CategoryVO categoryVO = new CategoryVO();
+            categoryVO.setParentId(pid);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryVO);
+            resultObjectVO = feignCategoryService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 删除

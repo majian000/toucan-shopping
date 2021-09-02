@@ -59,11 +59,16 @@
 
 <script>
 
-    layui.use(['form', 'table', 'treetable'], function () {
+
+    layui.config({
+        base: basePath+'/lib/layui_ext/treeTable/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        treeTable: 'treeTable' //定义该组件模块名
+    }).use(['form', 'table', 'treeTable'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
-        var treetable = layui.treetable;
+        var treetable = layui.treeTable;
         var loadding;
 
         $.fn.serializeJson=function(){
@@ -94,13 +99,10 @@
         {
             loadding = layer.load();
             treetable.render({
-                treeColIndex: 1, //树形图标显示在第几列
-                treeSpid: -1, //最上级的父级id
-                treeIdName: 'id',
-                treePidName: 'parentId',
                 elem: '#categoryTreeTable',
-                where:getFormParam(),
-                url: '[[@{/}]]category/tree/table',
+                tree: {
+                    iconIndex: 2
+                },
                 toolbar: '#toolbarDemo',
                 page: false,
                 cols: [
@@ -127,10 +129,20 @@
                         {templet: '#categoryTreeTableToolbar', width: 120, align: 'center', title: '操作'}
                     ]
                 ],
-                done: function () {
-                    treetable.foldAll("#categoryTreeTable");
-                    layer.closeAll('loading');
-                    layer.close(loadding);
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]category/tree/table/by/pid",
+                        type:'GET',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
                 }
             });
 
@@ -190,9 +202,7 @@
                         }
                     });
                 });
-            }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
-                var checkStatus = table.checkStatus('categoryTable')
-                    , data = checkStatus.data;
+            }else if (obj.event === 'flushIndexCache') {
                 layer.confirm('确定刷新PC首页缓存?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]category/flush/index/cache",
@@ -217,9 +227,7 @@
                         }
                     });
                 });
-            }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('categoryTable')
-                    , data = checkStatus.data;
+            }else if (obj.event === 'clearCacheToolbar') {
                 layer.confirm('确定清空PC首页缓存?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]category/clear/index/cache",
