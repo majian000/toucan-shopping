@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.user.constant.UserCacheElasticSearchConstant;
 import com.toucan.shopping.modules.user.vo.UserElasticSearchVO;
 import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.es.vo.SearchAfterPage;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -202,6 +203,50 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         return false;
     }
 
+    @Override
+    public boolean deleteByUserMainId(Long userMainId,List<String> deleteFaildIdList) throws Exception {
+        //创建请求对象
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
+        //创建查询对象
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //设置查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery("userMainId", userMainId));
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
+        //设置查询条件到请求对象中
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
+        SearchHits searchHits = searchResponse.getHits();
+        SearchHit[] searchHitsHits = searchHits.getHits();
+        for(SearchHit searchHit:searchHitsHits) {
+            DeleteRequest deleteRequest = new DeleteRequest(UserCacheElasticSearchConstant.USER_INDEX);
+            deleteRequest.id(searchHit.getId());
+            DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
+            if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
+            {
+                //强制刷新
+                deleteResponse.forcedRefresh();
+            }else{
+                //保存删除失败ID
+                deleteFaildIdList.add(searchHit.getId());
+            }
+        }
+        //没有删除失败的ID
+        if(CollectionUtils.isEmpty(deleteFaildIdList))
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
+        CountRequest countRequest=new CountRequest(UserCacheElasticSearchConstant.USER_INDEX);
+        countRequest.source(searchSourceBuilder);
+        CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
+        return response.getCount();
+    }
 
     @Override
     public List<UserElasticSearchVO> queryByUserMainId(Long userMainId) throws Exception{

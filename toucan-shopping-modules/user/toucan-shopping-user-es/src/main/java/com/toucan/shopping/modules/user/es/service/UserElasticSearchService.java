@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.user.es.service;
 
 import com.toucan.shopping.modules.user.vo.UserElasticSearchVO;
 import com.toucan.shopping.modules.user.es.vo.SearchAfterPage;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.List;
 
@@ -53,6 +54,21 @@ public interface UserElasticSearchService {
      * @return
      */
     boolean deleteById(String id) throws Exception;
+
+    /**
+     * 根据ID删除
+     * @param userMainId
+     * @return
+     */
+    boolean deleteByUserMainId(Long userMainId,List<String> deleteFaildIdList) throws Exception;
+
+    /**
+     * 根据条件查询数量
+     * @param searchSourceBuilder
+     * @return
+     * @throws Exception
+     */
+    Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception;
 
     /**
      * 根据ID查询

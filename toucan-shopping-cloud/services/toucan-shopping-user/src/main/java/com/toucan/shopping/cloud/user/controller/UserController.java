@@ -1170,6 +1170,23 @@ public class UserController {
                 }
             }
 
+            //出现了两条用户数据就全部删除(缓存中只允许一条用户数据)
+            if(CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
+                if (userElasticSearchVOS.size() > 1) {
+                    boolean deleteRet = false;
+                    List<String> deleteFaildIdList = new ArrayList<String>();
+                    for(int i=0;i<userElasticSearchVOS.size();i++) {
+                        UserElasticSearchVO userElasticSearchVO = userElasticSearchVOS.get(i);
+                        deleteRet = userElasticSearchService.deleteByUserMainId(userElasticSearchVO.getUserMainId(),deleteFaildIdList);
+                        if(!deleteRet)
+                        {
+                            logger.warn("删除elasticsearch冗余数据失败 {}",JSONObject.toJSONString(userElasticSearchVO));
+                        }
+                    }
+                    userElasticSearchVOS= null;
+                }
+            }
+
             //先查询缓存
             User userEntity=null;
             if(CollectionUtils.isNotEmpty(userElasticSearchVOS)) {
