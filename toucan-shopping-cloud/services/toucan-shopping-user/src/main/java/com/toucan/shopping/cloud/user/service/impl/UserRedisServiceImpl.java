@@ -13,7 +13,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -106,5 +108,25 @@ public class UserRedisServiceImpl implements UserRedisService {
             }
         }
         return false;
+    }
+
+    @Override
+    public void clearLoginCache(String userMainId) throws Exception {
+        String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(userMainId);
+        //判断是否已有登录token,如果有将删除掉
+        Set<String> loginKeys = toucanStringRedisService.keys(loginGroupKey);
+        if(loginKeys!=null) {
+            Iterator<String> loginKeyIt = loginKeys.iterator();
+            while (loginKeyIt.hasNext()) {
+                long deleteRows = 0;
+                int tryCount = 0;
+                do {
+                    //只删除这个应用的会话
+                    deleteRows = toucanStringRedisService.delete(loginGroupKey, loginKeyIt.next());
+                    tryCount++;
+                } while (deleteRows <= 0 && tryCount < 5);
+
+            }
+        }
     }
 }

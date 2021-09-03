@@ -8,4 +8,12 @@ public interface UserRedisService {
      * @return
      */
     boolean flushLoginCache(String userMainId,String appCode) throws Exception;
+
+    /**
+     * 清空登录缓存(直接删除该用户会话)
+     * @param userMainId
+     * @return
+     * @throws Exception
+     */
+    void clearLoginCache(String userMainId) throws Exception;
 }

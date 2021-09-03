@@ -44,7 +44,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginInfoGroupKey(String userId)
     {
-        return "TOUCAN_SHOPPING_WEB:USER:LOGIN_INFOS:"+userId+"_LOGIN_TOKENS";
+        return "TOUCAN_SHOPPING_WEB:USER:LOGIN_INFOS:"+userId+"_LOGIN_GROUP";
     }
 
 

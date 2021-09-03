@@ -1599,15 +1599,17 @@ public class UserController {
                     enableStatus=0;
                 }
                 int ret = userService.updateEnableStatus(enableStatus, entity.getUserMainId());
-                try {
-                    //刷新用户信息到登录缓存
-                    userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
-                }catch(Exception e)
+                if(ret>0)
                 {
-                    logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
-                    logger.warn(e.getMessage(),e);
+                    try {
+                        //清空用户登录信息
+                        userRedisService.clearLoginCache(String.valueOf(entity.getUserMainId()));
+                    }catch(Exception e)
+                    {
+                        logger.warn("清空redis登录缓存失败 {}", requestVo.getEntityJson());
+                        logger.warn(e.getMessage(),e);
+                    }
                 }
-
             }
 
             resultObjectVO.setData(entity);
