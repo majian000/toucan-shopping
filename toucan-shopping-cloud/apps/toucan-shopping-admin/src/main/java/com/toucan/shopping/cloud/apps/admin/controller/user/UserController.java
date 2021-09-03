@@ -581,8 +581,6 @@ public class UserController extends UIController {
             return resultObjectVO;
         }
 
-        //商城应用编码
-        String shoppingAppCode = "10001001";
         String userMainId = String.valueOf(user.getUserMainId());
         String lockKey = toucan.getAppCode()+"_user_update_detail_"+userMainId;
         try {
@@ -594,8 +592,9 @@ public class UserController extends UIController {
                 return resultObjectVO;
             }
 
-
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(shoppingAppCode,user);
+            //商城应用编码
+            user.setAppCode("10001001");
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),user);
             logger.info(" 修改详情 {} ", user.getUserMainId());
             UserVO userVO=null;
             //保存旧的详情数据,用于删除旧的图片资源
@@ -604,6 +603,7 @@ public class UserController extends UIController {
             {
                 userVO = resultObjectVO.formatData(UserVO.class);
             }
+            //修改详情
             resultObjectVO = feignUserService.updateDetail(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
@@ -624,18 +624,20 @@ public class UserController extends UIController {
                     //删除证件照片
                     if(StringUtils.isNotEmpty(userVO.getIdcardImg1()))
                     {
-                        int ret = imageUploadService.deleteFile(userVO.getIdcardImg1());
-                        if(ret!=0)
-                        {
-                            logger.warn("删除证件照片失败 {} userVO {} ",userVO.getIdcardImg1(),JSONObject.toJSON(userVO));
+                        if(!user.getIdcardImg1().equals(userVO.getIdcardImg1())) {
+                            int ret = imageUploadService.deleteFile(userVO.getIdcardImg1());
+                            if (ret != 0) {
+                                logger.warn("删除证件照片失败 {} userVO {} ", userVO.getIdcardImg1(), JSONObject.toJSON(userVO));
+                            }
                         }
                     }
                     if(StringUtils.isNotEmpty(userVO.getIdcardImg2()))
                     {
-                        int ret = imageUploadService.deleteFile(userVO.getIdcardImg2());
-                        if(ret!=0)
-                        {
-                            logger.warn("删除证件照片失败 {} userVO {} ",userVO.getIdcardImg2(),JSONObject.toJSON(userVO));
+                        if(!user.getIdcardImg2().equals(userVO.getIdcardImg2())) {
+                            int ret = imageUploadService.deleteFile(userVO.getIdcardImg2());
+                            if (ret != 0) {
+                                logger.warn("删除证件照片失败 {} userVO {} ", userVO.getIdcardImg2(), JSONObject.toJSON(userVO));
+                            }
                         }
                     }
                 }
@@ -1015,9 +1017,9 @@ public class UserController extends UIController {
             UserVO userVO =new UserVO();
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setMobilePhone(mobilePhone);
+            userVO.setAppCode("10001001");
 
-            String shoppingAppCode = "10001001";
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
             resultObjectVO = feignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
@@ -1051,9 +1053,9 @@ public class UserController extends UIController {
             UserVO userVO =new UserVO();
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setEmail(email);
+            userVO.setAppCode("10001001");
 
-            String shoppingAppCode = "10001001";
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
             resultObjectVO = feignUserService.disabledEnabledEmailByUserMainIdAndEmail(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
@@ -1088,9 +1090,9 @@ public class UserController extends UIController {
             UserVO userVO =new UserVO();
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setUsername(username);
+            userVO.setAppCode("10001001");
 
-            String shoppingAppCode = "10001001";
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
             resultObjectVO = feignUserService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
@@ -1119,10 +1121,16 @@ public class UserController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
+            if(!CollectionUtils.isEmpty(userVOS))
+            {
+                for(UserVO userVO:userVOS)
+                {
+                    userVO.setAppCode("10001001");
+                }
+            }
             String entityJson = JSONObject.toJSONString(userVOS);
             RequestJsonVO requestVo = new RequestJsonVO();
-            String shoppingAppCode = "10001001";
-            requestVo.setAppCode(shoppingAppCode);
+            requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
             resultObjectVO = feignUserService.disabledByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)

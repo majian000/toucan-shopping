@@ -439,7 +439,7 @@ public class UserController {
                         }else{
                             try {
                                 //刷新用户信息到登录缓存
-                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), requestJsonVO.getAppCode());
+                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
                             }catch(Exception e)
                             {
                                 logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
@@ -619,7 +619,7 @@ public class UserController {
                         }else{
                             try {
                                 //刷新用户信息到登录缓存
-                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), requestJsonVO.getAppCode());
+                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
                             }catch(Exception e)
                             {
                                 logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
@@ -790,7 +790,7 @@ public class UserController {
             }else{
                 try {
                     //刷新用户信息到登录缓存
-                    userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), requestJsonVO.getAppCode());
+                    userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
                 }catch(Exception e)
                 {
                     logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
@@ -922,6 +922,7 @@ public class UserController {
                         long deleteRows = 0;
                         int tryCount = 0;
                         do {
+                            //只删除这个应用的会话
                             deleteRows = toucanStringRedisService.delete(loginGroupKey, loginTokenAppKey);
                             tryCount++;
                         } while (deleteRows <= 0 && tryCount < 5);
@@ -931,6 +932,7 @@ public class UserController {
                         long deleteRows = 0;
                         int tryCount = 0;
                         do {
+                            //只删除这个应用的登录信息缓存
                             deleteRows = toucanStringRedisService.delete(loginGroupKey, loginInfoAppKey);
                             tryCount++;
                         } while (deleteRows <= 0 && tryCount < 5);
@@ -1577,7 +1579,7 @@ public class UserController {
         }
 
         try {
-            User entity = JSONObject.parseObject(requestVo.getEntityJson(),User.class);
+            UserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),UserVO.class);
             if(entity.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -1599,7 +1601,7 @@ public class UserController {
                 int ret = userService.updateEnableStatus(enableStatus, entity.getUserMainId());
                 try {
                     //刷新用户信息到登录缓存
-                    userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                    userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
                 }catch(Exception e)
                 {
                     logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -1692,7 +1694,7 @@ public class UserController {
 
                     try {
                         //刷新用户信息到登录缓存
-                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -1784,7 +1786,7 @@ public class UserController {
 
                     try {
                         //刷新用户信息到登录缓存
-                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -1878,7 +1880,7 @@ public class UserController {
 
                     try {
                         //刷新用户信息到登录缓存
-                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), entity.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -1917,7 +1919,7 @@ public class UserController {
         }
 
         try {
-            List<User> users = JSONObject.parseArray(requestVo.getEntityJson(),User.class);
+            List<UserVO> users = JSONObject.parseArray(requestVo.getEntityJson(),UserVO.class);
             if(CollectionUtils.isEmpty(users))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -1925,14 +1927,14 @@ public class UserController {
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(User user:users) {
+            for(UserVO user:users) {
                 if(user.getUserMainId()!=null) {
                     //用户主表禁用
                     userService.updateEnableStatus((short)0,user.getUserMainId());
 
                     try {
                         //刷新用户信息到登录缓存
-                        userRedisService.flushLoginCache(String.valueOf(user.getUserMainId()), requestVo.getAppCode());
+                        userRedisService.flushLoginCache(String.valueOf(user.getUserMainId()), user.getAppCode());
                     }catch(Exception e)
                     {
                         logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
@@ -2311,7 +2313,7 @@ public class UserController {
         try {
 
             //刷新用户信息到登录缓存
-            userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()),requestJsonVO.getAppCode());
+            userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()),userRegistVO.getAppCode());
 
         }catch(Exception e)
         {
