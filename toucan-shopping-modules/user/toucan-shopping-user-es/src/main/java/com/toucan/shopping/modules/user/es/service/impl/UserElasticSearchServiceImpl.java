@@ -283,9 +283,10 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(10);
         //设置查询条件
         searchSourceBuilder.query(QueryBuilders.termQuery("mobilePhone", mobilePhone));
+        //设置查询数量
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
@@ -310,9 +311,10 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(10);
         //设置查询条件
         searchSourceBuilder.query(QueryBuilders.termQuery("email", email));
+        //设置查询数量
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
@@ -337,9 +339,10 @@ public class UserElasticSearchServiceImpl implements UserElasticSearchService {
         searchRequest.indices(UserCacheElasticSearchConstant.USER_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(10);
         //设置查询条件
         searchSourceBuilder.query(QueryBuilders.termQuery("username", username));
+        //设置查询数量
+        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
         //设置查询条件到请求对象中
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
