@@ -8,8 +8,8 @@ table{empty-cells:show;border-collapse:collapse;border-spacing:0;}
 h1{font-size:16px;}h2,h3,h4{font-size:14px;}h5,h6{font-size:12px;}
 abbr,acronym{border:0;font-variant:normal}
 address,caption,cite,code,dfn,em,th,var,optgroup{font-style:normal;font-weight:normal}
-input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit}
-input,button,textarea,select{*font-size:100%}
+input,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit}
+input,textarea,select{*font-size:100%}
 .clear{display:block;overflow:hidden;clear:both;height:0;line-height:0;font-size:0;}
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
 .clearfix{display:inline-table;}/* Hides from IE-mac \*/
@@ -33,7 +33,7 @@ body{font:12px/180% Arial,Lucida,Verdana,"宋体",Helvetica,sans-serif;color:#33
 
 
 
-.form label, .form input, .form select, .form textarea, .form button, .form .label{float:left;font-size:12px;}
+.form label, .form input, .form select, .form textarea,  .form .label{float:left;font-size:12px;}
 .fl{float:left;}.fr{float:right;}.fn{float:none;}
 .hide{display:none;}.invisible{visibility:hidden;}.overflow{overflow:hidden;}
 .clear{display:block;clear:both;height:0;overflow:hidden;}
