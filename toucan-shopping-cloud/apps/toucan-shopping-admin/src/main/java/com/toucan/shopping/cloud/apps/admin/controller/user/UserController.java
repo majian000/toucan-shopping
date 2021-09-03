@@ -979,9 +979,10 @@ public class UserController extends UIController {
             User user =new User();
             user.setUserMainId(Long.parseLong(id));
 
+            String shoppingAppCode = "10001001";
             String entityJson = JSONObject.toJSONString(user);
             RequestJsonVO requestVo = new RequestJsonVO();
-            requestVo.setAppCode(appCode);
+            requestVo.setAppCode(shoppingAppCode);
             requestVo.setEntityJson(entityJson);
             resultObjectVO = feignUserService.disabledEnabledById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
@@ -1015,7 +1016,8 @@ public class UserController extends UIController {
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setMobilePhone(mobilePhone);
 
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,userVO);
+            String shoppingAppCode = "10001001";
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
             resultObjectVO = feignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
@@ -1050,7 +1052,8 @@ public class UserController extends UIController {
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setEmail(email);
 
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,userVO);
+            String shoppingAppCode = "10001001";
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
             resultObjectVO = feignUserService.disabledEnabledEmailByUserMainIdAndEmail(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
@@ -1086,7 +1089,8 @@ public class UserController extends UIController {
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setUsername(username);
 
-            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,userVO);
+            String shoppingAppCode = "10001001";
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(shoppingAppCode,userVO);
             resultObjectVO = feignUserService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
@@ -1117,7 +1121,8 @@ public class UserController extends UIController {
             }
             String entityJson = JSONObject.toJSONString(userVOS);
             RequestJsonVO requestVo = new RequestJsonVO();
-            requestVo.setAppCode(appCode);
+            String shoppingAppCode = "10001001";
+            requestVo.setAppCode(shoppingAppCode);
             requestVo.setEntityJson(entityJson);
             resultObjectVO = feignUserService.disabledByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)

@@ -416,8 +416,20 @@ public class UserTrueNameApproveController {
                             logger.warn("修改姓名和身份证失败 {} ", JSONObject.toJSONString(userDetail));
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请稍后重试");
+
+                            //开始回滚数据
+                            userTrueNameApprove.setApproveStatus(1); //设置审核中
+                            ret = userTrueNameApproveService.update(userTrueNameApprove);
+                            if (ret <= 0) {
+                                logger.warn("回滚实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("请求失败,请稍后重试");
+                            }
+
                             return resultObjectVO;
                         }
+
+
                     }
 
                     resultObjectVO.setData(userTrueNameApproves);

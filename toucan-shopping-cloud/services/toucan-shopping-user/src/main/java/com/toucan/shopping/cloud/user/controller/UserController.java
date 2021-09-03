@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.user.queue.NewUserMessageQueue;
+import com.toucan.shopping.cloud.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -68,6 +69,9 @@ public class UserController {
 
     @Autowired
     private UserEmailService userEmailService;
+
+    @Autowired
+    private UserRedisService userRedisService;
 
 
     @Autowired
@@ -432,6 +436,15 @@ public class UserController {
                             logger.warn("关联用户名失败 {}", requestJsonVO.getEntityJson());
                             resultObjectVO.setCode(UserResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
+                        }else{
+                            try {
+                                //刷新用户信息到登录缓存
+                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), requestJsonVO.getAppCode());
+                            }catch(Exception e)
+                            {
+                                logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                                logger.warn(e.getMessage(),e);
+                            }
                         }
                     }
                 }
@@ -603,6 +616,15 @@ public class UserController {
                             logger.warn("关联邮箱失败 {}", requestJsonVO.getEntityJson());
                             resultObjectVO.setCode(UserResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
+                        }else{
+                            try {
+                                //刷新用户信息到登录缓存
+                                userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), requestJsonVO.getAppCode());
+                            }catch(Exception e)
+                            {
+                                logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                                logger.warn(e.getMessage(),e);
+                            }
                         }
                     }
                 }
@@ -765,6 +787,15 @@ public class UserController {
                 logger.warn("修改用户详情失败 {}", requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), requestJsonVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
+                }
             }
         }catch(Exception e)
         {
@@ -893,34 +924,28 @@ public class UserController {
                         do {
                             deleteRows = toucanStringRedisService.delete(loginGroupKey, loginTokenAppKey);
                             tryCount++;
-                        } while (deleteRows <= 0 && tryCount < 50);
+                        } while (deleteRows <= 0 && tryCount < 5);
+                    }
+                    //判断是否有登录信息,如果有就删除掉
+                    if (toucanStringRedisService.keys(loginGroupKey) != null) {
+                        long deleteRows = 0;
+                        int tryCount = 0;
+                        do {
+                            deleteRows = toucanStringRedisService.delete(loginGroupKey, loginInfoAppKey);
+                            tryCount++;
+                        } while (deleteRows <= 0 && tryCount < 5);
                     }
 
                     String token = LoginTokenUtil.generatorToken(userEntity.getUserMainId());
-                    toucanStringRedisService.put(loginGroupKey,
-                            loginTokenAppKey, token);
+                    toucanStringRedisService.put(loginGroupKey,loginTokenAppKey, token);
 
-                    userLogin.setUserMainId(userEntity.getUserMainId());
-                    userLogin.setLoginToken(token);
-                    userLogin.setPassword(null);
-
-                    List<UserDetail> userDetails = userDetailService.findByUserMainId(userLogin.getUserMainId());
-                    if (CollectionUtils.isNotEmpty(userDetails)) {
-                        UserDetail userDetail = userDetails.get(0);
-                        userLogin.setNickName(userDetail.getNickName());
-                        userLogin.setTrueName(userDetail.getTrueName()); //姓名
-                        userLogin.setIdCard(userDetail.getIdCard()); //身份证
-                        userLogin.setHeadSculpture(userDetail.getHeadSculpture()); //头像
-                        userLogin.setSex(userDetail.getSex()); //性别
-                        userLogin.setType(userDetail.getType()); //用户类型
-                    }
-
-
-                    toucanStringRedisService.put(loginGroupKey,
-                            loginInfoAppKey, JSONObject.toJSONString(userLogin));
                     //设置登录token5个小时超时
                     toucanStringRedisService.expire(loginGroupKey,
                             UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userEntity.getUserMainId()),requestJsonVO.getAppCode());
+
 
                     resultObjectVO.setData(userLogin);
 
@@ -1570,8 +1595,15 @@ public class UserController {
                     //用户主表禁用
                     enableStatus=0;
                 }
-                userService.updateEnableStatus(enableStatus, entity.getUserMainId());
-
+                int ret = userService.updateEnableStatus(enableStatus, entity.getUserMainId());
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
+                    logger.warn(e.getMessage(),e);
+                }
 
             }
 
@@ -1633,7 +1665,6 @@ public class UserController {
                 int row = 0;
                 if(userMobilePhones.get(0).getDeleteStatus().shortValue()==0)
                 {
-                    deleteStatus=1;
                     //禁用
                     userMobilePhoneService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getMobilePhone());
                 }else{
@@ -1657,7 +1688,15 @@ public class UserController {
                     userMobilePhoneService.deleteByUserMainId(entity.getUserMainId());
                     //启用
                     row = userMobilePhoneService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getMobilePhone());
-                    deleteStatus=0;
+
+                    try {
+                        //刷新用户信息到登录缓存
+                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                    }catch(Exception e)
+                    {
+                        logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
+                        logger.warn(e.getMessage(),e);
+                    }
                 }
 
             }
@@ -1715,11 +1754,9 @@ public class UserController {
 
             List<UserEmail> userEmails = userEmailService.findListByEntityNothingDeleteStatus(queryUserEmail);
             if(CollectionUtils.isNotEmpty(userEmails)) {
-                short deleteStatus = 0;
                 int row = 0;
                 if(userEmails.get(0).getDeleteStatus().shortValue()==0)
                 {
-                    deleteStatus=1;
                     //禁用
                     userEmailService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getEmail());
                 }else{
@@ -1743,10 +1780,19 @@ public class UserController {
                     userEmailService.deleteByUserMainId(entity.getUserMainId());
                     //启用
                     row = userEmailService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getEmail());
-                    deleteStatus=0;
+
+                    try {
+                        //刷新用户信息到登录缓存
+                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                    }catch(Exception e)
+                    {
+                        logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
+                        logger.warn(e.getMessage(),e);
+                    }
                 }
 
             }
+
 
             resultObjectVO.setData(entity);
 
@@ -1805,7 +1851,6 @@ public class UserController {
                 int row = 0;
                 if(userUserNames.get(0).getDeleteStatus().shortValue()==0)
                 {
-                    deleteStatus=1;
                     //禁用
                     userUserNameService.updateDeleteStatus((short) 1, entity.getUserMainId(),entity.getUsername());
                 }else{
@@ -1829,7 +1874,15 @@ public class UserController {
                     userUserNameService.deleteByUserMainId(entity.getUserMainId());
                     //启用
                     row = userUserNameService.updateDeleteStatus((short) 0, entity.getUserMainId(),entity.getUsername());
-                    deleteStatus=0;
+
+                    try {
+                        //刷新用户信息到登录缓存
+                        userRedisService.flushLoginCache(String.valueOf(entity.getUserMainId()), requestVo.getAppCode());
+                    }catch(Exception e)
+                    {
+                        logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
+                        logger.warn(e.getMessage(),e);
+                    }
                 }
 
             }
@@ -1873,10 +1926,17 @@ public class UserController {
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
             for(User user:users) {
                 if(user.getUserMainId()!=null) {
-
                     //用户主表禁用
                     userService.updateEnableStatus((short)0,user.getUserMainId());
 
+                    try {
+                        //刷新用户信息到登录缓存
+                        userRedisService.flushLoginCache(String.valueOf(user.getUserMainId()), requestVo.getAppCode());
+                    }catch(Exception e)
+                    {
+                        logger.warn("刷新redis登录缓存失败 {}", requestVo.getEntityJson());
+                        logger.warn(e.getMessage(),e);
+                    }
                 }
             }
             resultObjectVO.setData(resultObjectVOList);
@@ -2211,6 +2271,8 @@ public class UserController {
 
 
 
+
+
     /**
      * 刷新缓存
      * @param requestJsonVO
@@ -2247,6 +2309,8 @@ public class UserController {
         }
         try {
 
+            //刷新用户信息到登录缓存
+            userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()),requestJsonVO.getAppCode());
 
         }catch(Exception e)
         {
