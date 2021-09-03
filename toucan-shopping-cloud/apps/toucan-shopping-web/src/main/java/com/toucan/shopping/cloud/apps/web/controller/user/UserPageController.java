@@ -10,9 +10,12 @@ import com.toucan.shopping.modules.common.util.IPUtil;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,8 @@ public class UserPageController extends BaseController {
     @Autowired
     private FeignUserService feignUserService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
     @RequestMapping("/regist")
@@ -83,6 +88,35 @@ public class UserPageController extends BaseController {
         return "user/info";
     }
 
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/editInfo")
+    public String editInfo(HttpServletRequest httpServletRequest)
+    {
+        try {
+            UserVO queryUserVO = new UserVO();
+            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId( httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
+            ResultObjectVO resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                UserVO userVO = resultObjectVO.formatData(UserVO.class);
+                if(userVO!=null&& StringUtils.isNotEmpty(userVO.getHeadSculpture())) {
+                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userVO.getHeadSculpture());
+                }else{
+                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+toucan.getUser().getDefaultHeadSculpture());
+                }
+                httpServletRequest.setAttribute("userVO",userVO);
+            }else{
+                httpServletRequest.setAttribute("userVO",new UserVO());
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            httpServletRequest.setAttribute("userVO",new UserVO());
+        }
+        return "user/edit_info";
+    }
 
     @RequestMapping(value="/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
