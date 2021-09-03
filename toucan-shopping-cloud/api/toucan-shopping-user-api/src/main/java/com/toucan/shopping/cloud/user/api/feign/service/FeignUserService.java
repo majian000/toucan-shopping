@@ -295,4 +295,6 @@ public interface FeignUserService {
     public ResultObjectVO flushCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+
+
 }

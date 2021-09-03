@@ -98,8 +98,6 @@
         <!--权限中台定时任务调度 -->
         <module>apps/toucan-shopping-admin-auth-scheduler</module>
 
-        <!--用户中心任务调度 -->
-        <module>apps/toucan-shopping-user-scheduler</module>
         <!-- 卖家Web端 -->
         <module>apps/toucan-shopping-seller-web</module>
         <!-- ===============================================-->

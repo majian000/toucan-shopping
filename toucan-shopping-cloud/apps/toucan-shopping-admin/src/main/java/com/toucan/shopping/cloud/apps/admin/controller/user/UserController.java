@@ -18,7 +18,6 @@ import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.User;
-import com.toucan.shopping.modules.user.es.service.UserElasticSearchService;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.vo.UserRegistVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -58,8 +57,6 @@ public class UserController extends UIController {
     @Autowired
     private SkylarkLock skylarkLock;
 
-    @Autowired
-    private UserElasticSearchService userElasticSearchService;
 
     @Autowired
     private FeignFunctionService feignFunctionService;

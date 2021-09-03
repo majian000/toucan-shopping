@@ -449,6 +449,7 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 return resultObjectVO;
             }
 
+
             @Override
             public ResultObjectVO flushCache(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
@@ -463,7 +464,6 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 resultObjectVO.setMsg("超时请重试");
                 return resultObjectVO;
             }
-
         };
     }
 }

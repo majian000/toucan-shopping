@@ -52,8 +52,6 @@
         <!--freemarker封装 -->
         <module>common/toucan-shopping-freemarker</module>
 
-        <!--用户中心操作es -->
-        <module>user/toucan-shopping-user-es</module>
         <!--用户中心实体VO -->
         <module>user/toucan-shopping-user-entity-vo</module>
         <!--用户Service和DAO -->
@@ -181,12 +179,6 @@
                 <scope>compile</scope>
             </dependency>
 
-            <dependency>
-                <groupId>com.toucan.shopping.modules.user</groupId>
-                <artifactId>toucan-shopping-user-es</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>

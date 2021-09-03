@@ -9,8 +9,7 @@
     用户服务
     1.toucan-shopping-cloud/services/toucan-shopping-user
     2.toucan-shopping-modules/user/toucan-shopping-user-entity-vo
-    3.toucan-shopping-modules/user/toucan-shopping-user-es
-    4.toucan-shopping-modules/user/toucan-shopping-user-service-dao
+    3.toucan-shopping-modules/user/toucan-shopping-user-service-dao
     
     权限服务
     1.toucan-shopping-cloud/services/toucan-shopping-admin-auth
