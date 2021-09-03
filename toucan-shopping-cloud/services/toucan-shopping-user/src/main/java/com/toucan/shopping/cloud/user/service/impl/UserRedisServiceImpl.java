@@ -46,6 +46,7 @@ public class UserRedisServiceImpl implements UserRedisService {
             String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(userMainId, appCode);
             if (toucanStringRedisService.keys(loginGroupKey) != null) {
                 UserLoginCacheVO userLogin = new UserLoginCacheVO();
+                userLogin.setUserMainId(Long.parseLong(userMainId));
 
                 //查询用户主表
                 List<User> users = userService.findListByUserMainId(Long.parseLong(userMainId));

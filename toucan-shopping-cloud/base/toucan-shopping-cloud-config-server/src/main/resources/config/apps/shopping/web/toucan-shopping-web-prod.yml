@@ -102,6 +102,8 @@ toucan:
       release-location: /usr/toucan_shopping/htmls/release/
       preview-location: /usr/toucan_shopping/htmls/preview/
       ftl-location: templates/
+  user:
+    default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
   user-auth:
     enabled: true
     name: toucan-shopping-user

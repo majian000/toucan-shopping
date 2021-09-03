@@ -950,6 +950,9 @@ public class UserController {
 
 
                     userLogin.setPassword(null);
+                    userLogin.setLoginToken(token);
+                    userLogin.setUserMainId(userEntity.getUserMainId());
+
                     resultObjectVO.setData(userLogin);
 
                 } else {
