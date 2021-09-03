@@ -2,16 +2,12 @@ package com.toucan.shopping.cloud.user.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.user.service.UserRedisService;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
-import com.toucan.shopping.modules.user.entity.UserDetail;
-import com.toucan.shopping.modules.user.entity.UserEmail;
-import com.toucan.shopping.modules.user.entity.UserMobilePhone;
-import com.toucan.shopping.modules.user.entity.UserUserName;
+import com.toucan.shopping.modules.user.entity.*;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
-import com.toucan.shopping.modules.user.service.UserDetailService;
-import com.toucan.shopping.modules.user.service.UserEmailService;
-import com.toucan.shopping.modules.user.service.UserMobilePhoneService;
-import com.toucan.shopping.modules.user.service.UserUserNameService;
+import com.toucan.shopping.modules.user.service.*;
+import com.toucan.shopping.modules.user.vo.UserLoginCacheVO;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +34,24 @@ public class UserRedisServiceImpl implements UserRedisService {
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public boolean flushLoginCache(String userMainId,String appCode) throws Exception {
         if(userMainId!=null) {
             String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(userMainId);
             String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(userMainId, appCode);
             if (toucanStringRedisService.keys(loginGroupKey) != null) {
-                UserLoginVO userLogin = new UserLoginVO();
+                UserLoginCacheVO userLogin = new UserLoginCacheVO();
+
+                //查询用户主表
+                List<User> users = userService.findListByUserMainId(Long.parseLong(userMainId));
+                if(CollectionUtils.isNotEmpty(users))
+                {
+                    User user = users.get(0);
+                    userLogin.setEnableStatus(user.getEnableStatus());
+                }
 
                 //查询关联手机号
                 UserMobilePhone queryUserMobilePhone = new UserMobilePhone();
@@ -88,6 +95,7 @@ public class UserRedisServiceImpl implements UserRedisService {
                     userLogin.setTrueNameStatus(userDetail.getTrueNameStatus());
                 }
 
+                userLogin.setUpdateDate(DateUtils.currentDate().getTime());
 
                 toucanStringRedisService.put(loginGroupKey,
                         loginInfoAppKey, JSONObject.toJSONString(userLogin));

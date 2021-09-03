@@ -947,6 +947,7 @@ public class UserController {
                     userRedisService.flushLoginCache(String.valueOf(userEntity.getUserMainId()),requestJsonVO.getAppCode());
 
 
+                    userLogin.setPassword(null);
                     resultObjectVO.setData(userLogin);
 
                 } else {
