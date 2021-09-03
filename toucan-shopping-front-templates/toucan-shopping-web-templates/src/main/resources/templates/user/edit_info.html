@@ -52,7 +52,15 @@
                     <div class="form">
                         <h3>帐户信息</h3>
                         <div class="item">
-                            <span class="label"><span class="red">*</span>用户名：</span>
+                            <span class="label">登录名：</span>
+                            <div class="fl">
+                                a18701601893
+                            </div>
+                        </div>
+
+
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>昵称：</span>
                             <div class="fl">
                                 <input type="text" id="username" name="username" class="text" tabindex="1" />
                                 <label id="username_succeed" class="blank"></label>
@@ -61,49 +69,13 @@
                             </div>
                         </div><!--item end-->
 
-                        <div id="o-password">
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>设置密码：</span>
-                                <div class="fl">
-                                    <input type="password" id="pwd" name="pwd" class="text" tabindex="2"/>
-                                    <label id="pwd_succeed" class="blank"></label>
-                                    <input type="checkbox" class="checkbox" id="viewpwd"/>
-                                    <label class="ftx23" for="viewpwd">显示密码字符</label>
-                                    <span class="clear"></span>
-                                    <label class="hide" id="pwdstrength"><span class="fl">安全程度：</span><b></b></label>
-                                    <label id="pwd_error"></label>
-                                </div>
-                            </div><!--item end-->
-
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>确认密码：</span>
-                                <div class="fl">
-                                    <input type="password" id="pwd2" name="pwd2" class="text" tabindex="3"/>
-                                    <label id="pwd2_succeed" class="blank"></label>
-                                    <span class="clear"></span>
-                                    <label id="pwd2_error"></label>
-                                </div>
-                            </div><!--item end-->
-
-                        </div><!--o-password end-->
 
                         <div class="item">
-                            <span class="label"><span class="red">*</span>邮箱：</span>
+                            <span class="label">性别</span>
                             <div class="fl">
-                                <input type="text" id="mail" name="mail" class="text" tabindex="4"/>
-                                <label id="mail_succeed" class="blank"></label>
-                                <span class="clear"></span>
-                                <div id="mail_error"></div>
-                            </div>
-                        </div><!--item end-->
+                                <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
+                                <input type="radio" class="radio" name="sex" id="sex_0" value="0" /><label for="sex_1">女</label>
 
-                        <div class="item">
-                            <span class="label">推荐人用户名：</span>
-                            <div class="fl">
-                                <input type="text" id="referrer" name="referrer" class="text" value=可不填 tabindex="5" />
-                                <label id="referrer_succeed" class="blank invisible"></label>
-                                <span class="clear"></span>
-                                <label id="referrer_error"></label>
                             </div>
                         </div><!--item end-->
 
@@ -120,58 +92,11 @@
                             </div>
                         </div><!--item end-->
 
-                        <h3>联系人信息</h3>
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>联系人姓名：</span>
-                            <div class="fl">
-                                <input type="text" id="realname" name="realname" class="text" tabindex="7"/>
-                                <label id="realname_succeed" class="blank"></label>
-                                <span class="clear"></span>
-                                <label id="realname_error"></label>
-                            </div>
-                        </div><!--item end-->
 
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>所在部门：</span>
-                            <div class="fl">
-                                <select rel="select" id="department" name="department" tabindex="8">
-                                    <option value="-1"  >请选择</option>
-                                    <option value="1"  >办公室</option>
-                                    <option value="2"  >市场部</option>
-                                    <option value="3"  >采购部</option>
-                                    <option value="4"  >技术部</option>
-                                    <option value="5"  >人力资源</option>
-                                    <option value="6"  >其他</option>
-                                </select>
-                                <label id="department_succeed" class="blank"></label>
-                                <span class="clear"></span>
-                                <label id="department_error"></label>
-                            </div>
-                        </div><!--item end-->
-
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>固定电话：</span>
-                            <div class="fl">
-                                <input type="text" id="tel" name="tel" class="text" value="" tabindex="9" />
-                                <label id="tel_succeed" class="blank"></label>
-                                <span class="clear"></span>
-                                <label id="tel_error"></label>
-                            </div>
-                        </div><!--item end-->
-
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>手机：</span>
-                            <div class="fl">
-                                <input type="text" id="mobile" name="mobile" class="text" value="" tabindex="10" />
-                                <label id="mobile_succeed" class="blank"></label>
-                                <span class="clear"></span>
-                                <label id="mobile_error"></label>
-                            </div>
-                        </div><!--item end-->
 
                         <div class="item">
                             <span class="label">&nbsp;</span>
-                            <input type="button" class="yellow_button disabled" id="registsubmit" value="提交注册信息" tabindex="8" disabled="disabled" />
+                            <input type="button" value="保存" class="log_btn" onclick="editInfo();"/>
                         </div><!--item end-->
 
                     </div>

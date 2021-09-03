@@ -43,12 +43,13 @@ body{font:12px/180% Arial,Lucida,Verdana,"宋体",Helvetica,sans-serif;color:#33
 .red{color:#ff0000;font-family:"宋体";font-weight:normal;}
 /* formbox */
 #formbox{padding:20px;border:solid 1px #D1D1D1;margin:20px auto;width:880px;}
-#formbox h3{font-size:16px;height:32px;color:#3366cc;font-weight:800;border-bottom:solid 1px #D1D1D1;margin:0 0 20px 0;padding:0 10px;}
+#formbox h3{font-size:16px;height:32px;color:#ff6600;font-weight:800;border-bottom:solid 1px #D1D1D1;margin:0 0 20px 0;padding:0 10px;}
 #formbox .item{padding-top:5px;height:50px;overflow:hidden;line-height:26px;}
 #formbox .item a:link,#formbox .item a:visited{text-decoration:underline;}
 #formbox .label{width:300px;text-align:right;font-size:14px;}
 #formbox .span-150{width:150px;}
 #formbox .text{width:240px;height:16px;padding:4px 3px;border:1px solid #bbb;font-size:14px;font-family:arial,"宋体";}
+#formbox .radio{width:20px;height:16px;padding:4px 3px;border:1px solid #bbb;font-size:14px;font-family:arial,"宋体";}
 #formbox .text-1{width:100px;}
 #formbox .blank{width:16px;height:16px;margin:2px 5px 0;}
 #formbox .img img{height:26px;margin:0 5px;}
