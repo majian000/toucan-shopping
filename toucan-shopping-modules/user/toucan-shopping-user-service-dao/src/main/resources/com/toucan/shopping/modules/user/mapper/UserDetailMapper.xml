@@ -22,16 +22,19 @@
 
 
     <select id="findListByEntity" resultMap="userDetailMap" parameterType="com.toucan.shopping.modules.user.entity.UserDetail">
-        select * from t_user_detail bu
+        select * from t_user_detail t
         <where>
             1=1
             <if test="id!=null">
-                and bu.id = #{id}
+                and t.id = #{id}
             </if>
             <if test="userMainId!=null">
-                and bu.user_main_id = #{userMainId}
+                and t.user_main_id = #{userMainId}
             </if>
-            and bu.delete_status = 0
+            <if test="nickName!=null">
+                and t.nick_name = #{nickName}
+            </if>
+            and t.delete_status = 0
         </where>
 
     </select>

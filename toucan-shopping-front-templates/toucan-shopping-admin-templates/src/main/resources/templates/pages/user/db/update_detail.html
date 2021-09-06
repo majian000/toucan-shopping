@@ -21,7 +21,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">昵称</label>
         <div class="layui-input-block">
-            <input type="text" name="nickName"  maxlength="15"  placeholder="请输入昵称" value="" class="layui-input" th:value="${model.nickName}" >
+            <input type="text" name="nickName"  maxlength="15"  lay-verify="required" placeholder="请输入昵称" value="" class="layui-input" th:value="${model.nickName}" >
         </div>
     </div>
 
@@ -153,16 +153,16 @@
     <div class="layui-form-item">
         <label class="layui-form-label">是否有店铺</label>
         <div class="layui-input-block" th:if="${model.isShop eq 0}" >
-            <input type="radio" name="isShop" value="0" title="没有" checked="">
-            <input type="radio" name="isShop" value="1" title="有">
+            <input type="radio" name="isShop" value="0" title="否" checked="">
+            <input type="radio" name="isShop" value="1" title="是">
         </div>
         <div class="layui-input-block" th:if="${model.isShop eq 1}" >
-            <input type="radio" name="isShop" value="0" title="没有" >
-            <input type="radio" name="isShop" value="1" title="有" checked="" >
+            <input type="radio" name="isShop" value="0" title="否" >
+            <input type="radio" name="isShop" value="1" title="是" checked="" >
         </div>
         <div class="layui-input-block" th:if="${model.isShop eq null}" >
-            <input type="radio" name="isShop" value="0" title="没有" checked="">
-            <input type="radio" name="isShop" value="1" title="有">
+            <input type="radio" name="isShop" value="0" title="否" checked="">
+            <input type="radio" name="isShop" value="1" title="是">
         </div>
     </div>
     <div class="layui-form-item">

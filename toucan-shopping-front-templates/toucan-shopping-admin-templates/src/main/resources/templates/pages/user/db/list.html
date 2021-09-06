@@ -170,13 +170,13 @@
                             }
                             return "女";
                         }},
-                    {field: 'isShop', width: 80, title: '是否有店铺',
+                    {field: 'isShop', width: 150, title: '是否有店铺',
                         templet: function (row) {
                             if(row.isShop == "0"){
-                                return "没有";
+                                return "否";
                             }
                             if(row.isShop == "1"){
-                                return "有";
+                                return "是";
                             }
                             return row.isShop;
                         }},
