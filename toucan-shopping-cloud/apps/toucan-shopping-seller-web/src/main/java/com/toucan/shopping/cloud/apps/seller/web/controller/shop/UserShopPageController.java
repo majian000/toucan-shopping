@@ -9,7 +9,9 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,8 @@ public class UserShopPageController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 个人店铺申请
@@ -69,13 +73,18 @@ public class UserShopPageController extends BaseController {
                     if(resultObjectVO.isSuccess())
                     {
                         //该账号存在店铺
-                        SellerShop sellerShop = resultObjectVO.formatData(SellerShop.class);
-                        if(sellerShop!=null)
+                        SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                        if(sellerShopVO!=null)
                         {
                             //个人店铺
-                            if(sellerShop.getType().intValue()==1)
+                            if(sellerShopVO.getType().intValue()==1)
                             {
-                                httpServletRequest.setAttribute("sellerShop",sellerShop);
+                                //设置店铺logo
+                                if(sellerShopVO.getLogo()!=null) {
+                                    sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
+                                }
+
+                                httpServletRequest.setAttribute("sellerShop",sellerShopVO);
                                 return "shop/info";
                             }
                         }
