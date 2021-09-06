@@ -745,9 +745,42 @@ public class UserController {
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
+            //判断这个昵称是否被占用,如果出现这个昵称两个人使用的情况就判断这两个人如果有一个人是这个用户,还允许使用
             UserDetail query = new UserDetail();
-            query.setUserMainId(userVO.getUserMainId());
+            query.setNickName(userVO.getNickName());
             List<UserDetail> userDetails = userDetailService.findListByEntity(query);
+            if(CollectionUtils.isNotEmpty(userDetails))
+            {
+                if(userDetails.size()==1)
+                {
+                    if(userVO.getUserMainId().longValue()!=userDetails.get(0).getUserMainId().longValue())
+                    {
+                        skylarkLock.unLock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("该昵称已被占用");
+                        return resultObjectVO;
+                    }
+                }else {
+                    //判断如果出现了一个昵称两个人使用的话,当前用户如果使用了这个昵称,可以接着使用
+                    boolean currentUserIsUseNickName=false;
+                    for (UserDetail userDetail : userDetails) {
+                        if(userDetail.getUserMainId().longValue()==userVO.getUserMainId().longValue())
+                        {
+                            currentUserIsUseNickName=true;
+                        }
+                    }
+                    if(!currentUserIsUseNickName)
+                    {
+                        skylarkLock.unLock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("该昵称已被占用");
+                        return resultObjectVO;
+                    }
+                }
+            }
+            query = new UserDetail();
+            query.setUserMainId(userVO.getUserMainId());
+            userDetails = userDetailService.findListByEntity(query);
             int row = 0;
             if(CollectionUtils.isNotEmpty(userDetails))
             {
@@ -854,9 +887,43 @@ public class UserController {
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
+
+            //判断这个昵称是否被占用,如果出现这个昵称两个人使用的情况就判断这两个人如果有一个人是这个用户,还允许使用
             UserDetail query = new UserDetail();
-            query.setUserMainId(userVO.getUserMainId());
+            query.setNickName(userVO.getNickName());
             List<UserDetail> userDetails = userDetailService.findListByEntity(query);
+            if(CollectionUtils.isNotEmpty(userDetails))
+            {
+                if(userDetails.size()==1)
+                {
+                    if(userVO.getUserMainId().longValue()!=userDetails.get(0).getUserMainId().longValue())
+                    {
+                        skylarkLock.unLock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("该昵称已被占用");
+                        return resultObjectVO;
+                    }
+                }else {
+                    //判断如果出现了一个昵称两个人使用的话,当前用户如果使用了这个昵称,可以接着使用
+                    boolean currentUserIsUseNickName=false;
+                    for (UserDetail userDetail : userDetails) {
+                        if(userDetail.getUserMainId().longValue()==userVO.getUserMainId().longValue())
+                        {
+                            currentUserIsUseNickName=true;
+                        }
+                    }
+                    if(!currentUserIsUseNickName)
+                    {
+                        skylarkLock.unLock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("该昵称已被占用");
+                        return resultObjectVO;
+                    }
+                }
+            }
+            query = new UserDetail();
+            query.setUserMainId(userVO.getUserMainId());
+            userDetails = userDetailService.findListByEntity(query);
             int row = 0;
             if(CollectionUtils.isNotEmpty(userDetails))
             {
