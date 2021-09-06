@@ -76,17 +76,8 @@ public class UserShopPageController extends BaseController {
                         SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                         if(sellerShopVO!=null)
                         {
-                            //个人店铺
-                            if(sellerShopVO.getType().intValue()==1)
-                            {
-                                //设置店铺logo
-                                if(sellerShopVO.getLogo()!=null) {
-                                    sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
-                                }
-
-                                httpServletRequest.setAttribute("sellerShop",sellerShopVO);
-                                return "shop/info";
-                            }
+                            //重定向到店铺首页
+                            httpServletResponse.sendRedirect("/page/shop/info");
                         }
 
                     }
