@@ -971,6 +971,87 @@ public class UserController {
 
 
 
+
+
+    /**
+     * 修改用户是否存在店铺
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/is/shop",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateIsShop(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要操作的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
+        if(userVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要修改的用户");
+            return resultObjectVO;
+        }
+        if(userVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户ID");
+            return resultObjectVO;
+        }
+        try {
+            boolean lockStatus = skylarkLock.lock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            UserDetail query = new UserDetail();
+            query.setUserMainId(userVO.getUserMainId());
+            List<UserDetail> userDetails = userDetailService.findListByEntity(query);
+            int row = 0;
+            if(CollectionUtils.isNotEmpty(userDetails))
+            {
+                UserDetail userDetail = userDetails.get(0);
+                userDetail.setIsShop(userVO.getIsShop());
+                row= userDetailService.updateIsShop(userDetail);
+            }
+
+            if(row<=0)
+            {
+                logger.warn("修改用户是否有店铺失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userVO.getUserMainId()), userVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
     /**
      * 密码登录
      * @param requestJsonVO

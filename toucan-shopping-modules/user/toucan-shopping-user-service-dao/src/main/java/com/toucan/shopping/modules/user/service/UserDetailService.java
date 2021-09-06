@@ -15,6 +15,8 @@ public interface UserDetailService {
 
     int updateInfo(UserDetail entity);
 
+    int updateIsShop(UserDetail entity);
+
     int deleteById(Long id);
 
     List<UserDetail> findById(Long id);

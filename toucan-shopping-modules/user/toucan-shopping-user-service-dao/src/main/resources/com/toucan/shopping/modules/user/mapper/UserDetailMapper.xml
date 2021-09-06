@@ -84,6 +84,10 @@
         update t_user_detail set nick_name=#{nickName},sex=#{sex} where user_main_id=#{userMainId} and delete_status = 0
     </update>
 
+    <update id="updateIsShop" parameterType="com.toucan.shopping.modules.user.entity.UserDetail"  >
+        update t_user_detail set is_shop=#{isShop}  where user_main_id=#{userMainId} and delete_status = 0
+    </update>
+
     <update id="deleteById" parameterType="java.lang.Long">
         update t_user_detail set delete_status=1 where id =#{id}
     </update>

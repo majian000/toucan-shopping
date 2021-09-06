@@ -23,6 +23,8 @@ public interface UserDetailMapper {
 
     int updateInfo(UserDetail entity);
 
+    int updateIsShop(UserDetail entity);
+
     List<UserDetail> findByUserMainId(Long id);
 
 }

@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.seller.constant.ShopConstant;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
@@ -88,8 +89,12 @@ public class SellerShopController {
             resultObjectVO.setMsg("请求失败,类型不能为空");
             return resultObjectVO;
         }
+
         String userMainId = String.valueOf(sellerShopVO.getUserMainId());
         try {
+            //去除XSS代码
+            XSSConvert.replaceXSS(sellerShopVO);
+
             boolean lockStatus = skylarkLock.lock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);

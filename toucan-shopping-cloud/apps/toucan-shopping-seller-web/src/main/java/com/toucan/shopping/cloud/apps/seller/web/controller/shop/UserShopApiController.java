@@ -127,11 +127,17 @@ public class UserShopApiController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if(result)
                 {
-
                     sellerShopVO.setType(1);
                     sellerShopVO.setUserMainId(userVO.getUserMainId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
                     resultObjectVO = feignSellerShopService.save(requestJsonVO.sign(),requestJsonVO);
+                    //店铺注册成功修改用户状态为存在店铺
+                    if(resultObjectVO.isSuccess())
+                    {
+                        userVO.setIsShop((short)1); // 存在店铺
+                        requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
+                        feignUserService.updateIsShop(requestJsonVO.sign(),requestJsonVO);
+                    }
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("请先实名认证");

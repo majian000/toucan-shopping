@@ -40,6 +40,11 @@ public class UserDetailServiceImpl implements UserDetailService {
     public int updateInfo(UserDetail entity) {
         return userDetailMapper.updateInfo(entity);
     }
+
+    @Override
+    public int updateIsShop(UserDetail entity) {
+        return userDetailMapper.updateIsShop(entity);
+    }
     @Transactional
     @Override
     public int deleteById(Long id) {
