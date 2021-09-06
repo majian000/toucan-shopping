@@ -14,7 +14,7 @@
         <result column="idcard_img2" jdbcType="VARCHAR" property="idcardImg2" />
         <result column="true_name_status" jdbcType="INTEGER" property="trueNameStatus" />
         <result column="sex" jdbcType="INTEGER" property="sex" />
-        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="is_shop" jdbcType="INTEGER" property="isShop" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
 
@@ -66,15 +66,15 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserDetail" keyProperty="id" >
-        insert into t_user_detail(id,user_main_id,nick_name,true_name,true_name_status,head_sculpture,id_card,idcard_type,sex,type,idcard_img1,idcard_img2,create_date,delete_status)
-        values(#{id},#{userMainId},#{nickName},#{trueName},#{trueNameStatus},#{headSculpture},#{idCard},#{idcardType},#{sex},#{type},#{idcardImg1},#{idcardImg2},#{createDate},#{deleteStatus})
+        insert into t_user_detail(id,user_main_id,nick_name,true_name,true_name_status,head_sculpture,id_card,idcard_type,sex,is_shop,idcard_img1,idcard_img2,create_date,delete_status)
+        values(#{id},#{userMainId},#{nickName},#{trueName},#{trueNameStatus},#{headSculpture},#{idCard},#{idcardType},#{sex},#{isShop},#{idcardImg1},#{idcardImg2},#{createDate},#{deleteStatus})
     </insert>
 
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserDetail"  >
         update t_user_detail set nick_name=#{nickName} , true_name=#{trueName},true_name_status=#{trueNameStatus},
-        head_sculpture=#{headSculpture} ,id_card=#{idCard},type=#{type},idcard_type=#{idcardType},idcard_img1=#{idcardImg1},
+        head_sculpture=#{headSculpture} ,id_card=#{idCard},is_shop=#{isShop},idcard_type=#{idcardType},idcard_img1=#{idcardImg1},
         idcard_img2=#{idcardImg2},sex=#{sex} where user_main_id=#{userMainId} and delete_status = 0
     </update>
 

@@ -244,7 +244,7 @@ public class UserController {
                             userCreateMessage.setNickName(userDetail.getNickName());
                             userCreateMessage.setSex(userDetail.getSex());
                             userCreateMessage.setDeleteStatus(user.getDeleteStatus());
-                            userCreateMessage.setType((short)0); //默认为买家
+                            userCreateMessage.setIsShop((short)0); //默认没有店铺
 
                             //放入队列
                             newUserMessageQueue.push(userCreateMessage);
@@ -790,7 +790,7 @@ public class UserController {
                 userDetail.setIdCard(userVO.getIdCard()); //身份证
                 userDetail.setHeadSculpture(userVO.getHeadSculpture()); //头像
                 userDetail.setSex(userVO.getSex()); //性别
-                userDetail.setType(userVO.getType()); //用户类型
+                userDetail.setIsShop(userVO.getIsShop()); //是否有店铺
                 userDetail.setIdcardType(userVO.getIdcardType()); //证件类型
                 userDetail.setIdcardImg1(userVO.getIdcardImg1()); //证件照正面
                 userDetail.setIdcardImg2(userVO.getIdcardImg2()); //证件照背面
@@ -805,7 +805,7 @@ public class UserController {
                 userDetail.setIdCard(userVO.getIdCard()); //身份证
                 userDetail.setHeadSculpture(userVO.getHeadSculpture()); //头像
                 userDetail.setSex(userVO.getSex()); //性别
-                userDetail.setType(userVO.getType()); //用户类型
+                userDetail.setIsShop(userVO.getIsShop()); //是否有店铺
                 userDetail.setIdcardType(userVO.getIdcardType());  //证件类型
                 userDetail.setTrueNameStatus(userVO.getTrueNameStatus()); //实名状态
                 userDetail.setIdcardImg1(userVO.getIdcardImg1()); //证件照正面
@@ -1555,7 +1555,7 @@ public class UserController {
                                 userVO.setHeadSculpture(userDetail.getHeadSculpture());
                                 userVO.setIdCard(userDetail.getIdCard());
                                 userVO.setSex(userDetail.getSex());
-                                userVO.setType(userDetail.getType());
+                                userVO.setIsShop(userDetail.getIsShop());
                                 userVO.setIdcardImg1(userDetail.getIdcardImg1());
                                 userVO.setIdcardImg2(userDetail.getIdcardImg2());
                                 userVO.setIdcardType(userDetail.getIdcardType());
@@ -2194,7 +2194,7 @@ public class UserController {
                 userVO.setIdCard(userDetail.getIdCard()); //身份证
                 userVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
                 userVO.setSex(userDetail.getSex()); //性别
-                userVO.setType(userDetail.getType()); //用户类型
+                userVO.setIsShop(userDetail.getIsShop()); //是否有店铺
                 userVO.setIdcardImg1(userDetail.getIdcardImg1()); //证件照正面
                 userVO.setIdcardImg2(userDetail.getIdcardImg2()); //证件照背面
             }
@@ -2306,7 +2306,7 @@ public class UserController {
                     userVO.setIdcardType(userDetail.getIdcardType()); //身份证类型
                     userVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
                     userVO.setSex(userDetail.getSex()); //性别
-                    userVO.setType(userDetail.getType()); //用户类型
+                    userVO.setIsShop(userDetail.getIsShop()); //是否有店铺
                 }
 
             }

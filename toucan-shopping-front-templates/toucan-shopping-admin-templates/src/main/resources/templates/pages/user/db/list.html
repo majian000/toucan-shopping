@@ -170,18 +170,15 @@
                             }
                             return "女";
                         }},
-                    {field: 'type', width: 80, title: '用户类型',
+                    {field: 'isShop', width: 80, title: '是否有店铺',
                         templet: function (row) {
-                            if(row.type == "0"){
-                                return "用户";
+                            if(row.isShop == "0"){
+                                return "没有";
                             }
-                            if(row.type == "1"){
-                                return "商户";
+                            if(row.isShop == "1"){
+                                return "有";
                             }
-                            if(row.type == "2"){
-                                return "商户和用户";
-                            }
-                            return row.type;
+                            return row.isShop;
                         }},
                     {field: 'createDate', width: 240, title: '注册时间'},
                     {title: '操作', minWidth: 560, toolbar: '#userTableBar', align: "center"}

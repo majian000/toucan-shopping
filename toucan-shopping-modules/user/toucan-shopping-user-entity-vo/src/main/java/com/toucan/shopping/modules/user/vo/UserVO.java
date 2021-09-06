@@ -155,9 +155,9 @@ public class UserVO {
     private Short sex;
 
     /**
-     * 用户类型 0:买家 1:卖家 2:既是买家又是卖家
+     * 是否存在店铺 0不存在 1存在
      */
-    private Short type;
+    private Short isShop;
 
 
     /**
