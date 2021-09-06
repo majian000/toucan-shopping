@@ -227,6 +227,7 @@ public class UserController {
                         userDetail.setTrueNameStatus(0); //未实名
                         userDetail.setCreateDate(new Date());
                         userDetail.setDeleteStatus((short) 0);
+                        userDetail.setIsShop((short)0); //没有店铺
 
                         row = userDetailService.save(userDetail);
                         if (row < 1) {
