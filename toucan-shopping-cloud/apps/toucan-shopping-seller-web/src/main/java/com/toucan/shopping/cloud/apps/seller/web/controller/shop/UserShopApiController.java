@@ -70,21 +70,21 @@ public class UserShopApiController extends BaseController {
 
             if(StringUtils.isEmpty(sellerShopVO.getVcode()))
             {
-                resultObjectVO.setMsg("请求失败,请输入验证码");
+                resultObjectVO.setMsg("注册失败,请输入验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             String cookie = request.getHeader("Cookie");
             if(StringUtils.isEmpty(cookie))
             {
-                resultObjectVO.setMsg("请求失败,请重新刷新验证码");
+                resultObjectVO.setMsg("注册失败,请重新刷新验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
             if(StringUtils.isEmpty(ClientVCodeId))
             {
-                resultObjectVO.setMsg("请求失败,验证码异常");
+                resultObjectVO.setMsg("注册失败,验证码异常");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -92,13 +92,13 @@ public class UserShopApiController extends BaseController {
             Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
             if(vCodeObject==null)
             {
-                resultObjectVO.setMsg("请求失败,验证码过期请刷新");
+                resultObjectVO.setMsg("注册失败,验证码过期请刷新");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             if(!StringUtils.equals(sellerShopVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
             {
-                resultObjectVO.setMsg("请求失败,验证码输入有误");
+                resultObjectVO.setMsg("注册失败,验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -146,7 +146,7 @@ public class UserShopApiController extends BaseController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("注册失败,请稍后重试");
             logger.warn(e.getMessage(),e);
         }finally{
             redisLock.unLock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);
@@ -248,7 +248,7 @@ public class UserShopApiController extends BaseController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("修改失败,请稍后重试");
             logger.warn(e.getMessage(),e);
         }finally{
             redisLock.unLock(ShopRegistRedisKey.getEditLockKey(userMainId), userMainId);

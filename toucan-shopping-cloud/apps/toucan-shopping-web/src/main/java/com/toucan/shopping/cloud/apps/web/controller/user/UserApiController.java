@@ -227,7 +227,7 @@ public class UserApiController extends BaseController {
             boolean lockStatus = redisLock.lock(UserRegistRedisKey.getRegistLockKey(user.getMobilePhone()), user.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
+                resultObjectVO.setMsg("注册失败,请稍后重试");
                 return resultObjectVO;
             }
             //判断验证码

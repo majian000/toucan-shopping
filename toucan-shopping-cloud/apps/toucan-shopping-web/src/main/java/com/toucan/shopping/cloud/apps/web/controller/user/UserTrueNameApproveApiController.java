@@ -72,37 +72,37 @@ public class UserTrueNameApproveApiController extends BaseController {
         if(userTrueNameApproveVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到实名信息");
+            resultObjectVO.setMsg("提交失败,没有找到实名信息");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userTrueNameApproveVO.getTrueName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,真实姓名不能为空");
+            resultObjectVO.setMsg("提交失败,真实姓名不能为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userTrueNameApproveVO.getIdCard()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,证件号码不能为空");
+            resultObjectVO.setMsg("提交失败,证件号码不能为空");
             return resultObjectVO;
         }
         if(userTrueNameApproveVO.getIdcardType()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,证件类型不能为空");
+            resultObjectVO.setMsg("提交失败,证件类型不能为空");
             return resultObjectVO;
         }
         if(userTrueNameApproveVO.getIdcardImg1File()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD-2);
-            resultObjectVO.setMsg("请求失败,证件正面照片不能为空");
+            resultObjectVO.setMsg("提交失败,证件正面照片不能为空");
             return resultObjectVO;
         }
         if(userTrueNameApproveVO.getIdcardImg2File()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD-3);
-            resultObjectVO.setMsg("请求失败,证件背面照片不能为空");
+            resultObjectVO.setMsg("提交失败,证件背面照片不能为空");
             return resultObjectVO;
         }
 
@@ -118,7 +118,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             if(userTrueNameApproveVO.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,用户ID不能为空");
+                resultObjectVO.setMsg("提交失败,用户ID不能为空");
                 return resultObjectVO;
             }
 
@@ -127,13 +127,13 @@ public class UserTrueNameApproveApiController extends BaseController {
             if(!ImageUtils.isImage(idcard1ImgFileName)||!ImageUtils.isImage(idcard2ImgFileName))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD-4);
-                resultObjectVO.setMsg("请求失败,请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
+                resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
                 return resultObjectVO;
             }
 
             if(StringUtils.isEmpty(userTrueNameApproveVO.getVcode()))
             {
-                resultObjectVO.setMsg("请求失败,请输入验证码");
+                resultObjectVO.setMsg("提交失败,请输入验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -141,14 +141,14 @@ public class UserTrueNameApproveApiController extends BaseController {
             String cookie = request.getHeader("Cookie");
             if(StringUtils.isEmpty(cookie))
             {
-                resultObjectVO.setMsg("请求失败,请重新刷新验证码");
+                resultObjectVO.setMsg("提交失败,请重新刷新验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
             if(StringUtils.isEmpty(ClientVCodeId))
             {
-                resultObjectVO.setMsg("请求失败,验证码异常");
+                resultObjectVO.setMsg("提交失败,验证码异常");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -156,13 +156,13 @@ public class UserTrueNameApproveApiController extends BaseController {
             Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
             if(vCodeObject==null)
             {
-                resultObjectVO.setMsg("请求失败,验证码过期请刷新");
+                resultObjectVO.setMsg("提交失败,验证码过期请刷新");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             if(!StringUtils.equals(userTrueNameApproveVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
             {
-                resultObjectVO.setMsg("请求失败,验证码输入有误");
+                resultObjectVO.setMsg("提交失败,验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -231,7 +231,7 @@ public class UserTrueNameApproveApiController extends BaseController {
                     resultObjectVO = feignUserTrueNameApproveService.save(requestJsonVO.sign(), requestJsonVO);
                     if (!resultObjectVO.isSuccess()) {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请稍后重试!");
+                        resultObjectVO.setMsg("提交失败,请稍后重试!");
                         return resultObjectVO;
                     }
                 }
@@ -241,7 +241,7 @@ public class UserTrueNameApproveApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("提交失败,请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
         }
