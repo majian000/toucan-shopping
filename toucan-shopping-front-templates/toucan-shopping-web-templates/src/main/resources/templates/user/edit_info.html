@@ -82,13 +82,13 @@
                         <div class="item">
                             <span class="label"><span class="red">*</span>验证码：</span>
                             <div class="fl">
-                                <input type="text" id="authcode" name="authcode" class="text text-1" autocomplete="off" MaxLength="6" tabindex="6" />
-                                <label class="img"><img id="JD_Verification1" Ver_ColorOfNoisePoint="#888888" src="http://www.mailuke.com/Inc/Code/adminCode.php?sesstr=regCode" onClick="chanageCode('regCode')" alt="" style="cursor:pointer;width:100px;height:26px;"/>
+                                <input type="text" id="uei_vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
+                                <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
                                 </label>
                                 <label>&nbsp;看不清？点击验证码图片更换</label>
-                                <label id="authcode_succeed" class="blank invisible"></label>
+                                <label id="uei_vcode_succeed" class="blank invisible"></label>
                                 <span class="clear"></span>
-                                <label id="authcode_error"></label>
+                                <label id="uei_vcode_error"></label>
                             </div>
                         </div><!--item end-->
 
@@ -195,6 +195,16 @@
 
 </body>
 
+<script>
+    $(function () {
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        });
+
+    });
+
+</script>
 
 
 </html>
