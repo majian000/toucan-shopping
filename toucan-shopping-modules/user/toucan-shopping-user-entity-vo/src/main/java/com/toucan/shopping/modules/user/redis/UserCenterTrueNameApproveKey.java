@@ -19,7 +19,7 @@ public class UserCenterTrueNameApproveKey {
      */
     public static String getSaveApproveLockKey(String userMainId)
     {
-        return "TOUCAN_SHOPPING_WEB:INDEX:USER_TRUE_NAME:SAVE:"+userMainId+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:INDEX:USER_TRUE_NAME:SAVE:"+userMainId+"_LOCK";
     }
 
 
@@ -31,7 +31,7 @@ public class UserCenterTrueNameApproveKey {
      */
     public static String getSaveApproveLockKeyForService(String userMainId)
     {
-        return "TOUCAN_SHOPPING_WEB:SERVICE:INDEX:USER_TRUE_NAME:SAVE:"+userMainId+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:SERVICE:INDEX:USER_TRUE_NAME:SAVE:"+userMainId+"_LOCK";
     }
 
 
@@ -44,7 +44,7 @@ public class UserCenterTrueNameApproveKey {
      */
     public static String getUpdateApproveLockKeyForService(String userMainId)
     {
-        return "TOUCAN_SHOPPING_WEB:SERVICE:INDEX:USER_TRUE_NAME:UPDATE:"+userMainId+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:SERVICE:INDEX:USER_TRUE_NAME:UPDATE:"+userMainId+"_LOCK";
     }
 
 }

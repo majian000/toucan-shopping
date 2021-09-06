@@ -14,7 +14,7 @@ public class UserCenterSendRegistSmsRedisKey {
      */
     public static String getSendRegistVerifyCodeLockKey(String mobile)
     {
-        return "TOUCAN_SHOPPING_WEB:SEND_REGIST__VERIFYCODE_"+mobile+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:SEND_REGIST__VERIFYCODE_"+mobile+"_LOCK";
     }
 
 

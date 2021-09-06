@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.apps.web.redis.UserEditInfoRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
@@ -131,7 +132,7 @@ public class UserApiController extends BaseController {
             boolean lockStatus = redisLock.lock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -226,7 +227,7 @@ public class UserApiController extends BaseController {
             boolean lockStatus = redisLock.lock(UserRegistRedisKey.getRegistLockKey(user.getMobilePhone()), user.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             //判断验证码
@@ -276,6 +277,90 @@ public class UserApiController extends BaseController {
         }
         return resultObjectVO;
     }
+
+
+    @UserAuth
+    @RequestMapping(value="/edit/info")
+    @ResponseBody
+    public ResultObjectVO editInfo(@RequestBody UserVO user,HttpServletRequest request){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(user==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("修改失败,没有找到要修改的用户");
+            return resultObjectVO;
+        }
+
+
+        String userMainId ="-1";
+
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
+
+            String cookie = request.getHeader("Cookie");
+            if(StringUtils.isEmpty(cookie))
+            {
+                resultObjectVO.setMsg("修改失败,请重新刷新验证码");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
+            if(StringUtils.isEmpty(clientVCodeId))
+            {
+                resultObjectVO.setMsg("修改失败,验证码异常");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
+            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
+            if(vCodeObject==null)
+            {
+                resultObjectVO.setMsg("修改失败,验证码过期请刷新");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            if(!StringUtils.equals(user.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+            {
+                resultObjectVO.setMsg("修改失败,验证码输入有误");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            //删除缓存中验证码
+            toucanStringRedisService.delete(vcodeRedisKey);
+
+            boolean lockStatus = redisLock.lock(UserEditInfoRedisKey.getEditInfoLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请稍后重试");
+                return resultObjectVO;
+            }
+
+            //替换跨站脚本代码
+            XSSConvert.replaceXSS(user);
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),user);
+
+            logger.info(" 用户修改信息 {} ", requestJsonVO.getEntityJson());
+
+            resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+
+            if(!resultObjectVO.isSuccess())
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请稍后重试");
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改失败,请稍后重试");
+        }finally{
+            redisLock.unLock(UserEditInfoRedisKey.getEditInfoLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
+
 
     @RequestMapping(value="/login/info")
     @ResponseBody
@@ -725,7 +810,7 @@ public class UserApiController extends BaseController {
 //            boolean lockStatus = redisLock.lock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
 //            if (!lockStatus) {
 //                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("超时重试");
+//                resultObjectVO.setMsg("请求超时,请稍后重试");
 //                return resultObjectVO;
 //            }
 //

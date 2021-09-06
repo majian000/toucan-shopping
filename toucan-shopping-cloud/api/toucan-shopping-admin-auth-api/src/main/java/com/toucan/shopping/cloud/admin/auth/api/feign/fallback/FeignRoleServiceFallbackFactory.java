@@ -29,7 +29,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignRoleService.save faild params:"+ JSONObject.toJSONString(requestVo));
@@ -44,7 +44,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignRoleService.update faild params:"+ JSONObject.toJSONString(requestVo));
@@ -59,7 +59,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignRoleService.listPage faild params:"+ JSONObject.toJSONString(requestVo));
@@ -74,7 +74,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignRoleService.queryRoleTree faild  sign {} params {} ",signHeader, JSONObject.toJSONString(requestJsonVO));
@@ -89,7 +89,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignRoleService.deleteById faild params:"+ JSONObject.toJSONString(requestVo));
@@ -104,7 +104,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignRoleService.findById faild params:"+ JSONObject.toJSONString(requestVo));
@@ -119,7 +119,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignRoleService.deleteByIds faild params:"+ JSONObject.toJSONString(requestVo));

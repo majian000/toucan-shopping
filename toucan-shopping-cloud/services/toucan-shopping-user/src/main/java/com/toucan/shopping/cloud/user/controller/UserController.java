@@ -18,6 +18,7 @@ import com.toucan.shopping.modules.user.entity.*;
 import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
+import com.toucan.shopping.modules.user.redis.UserCenterRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.service.*;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
@@ -174,7 +175,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             //查询手机号是否已注册
@@ -317,7 +318,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getResetPasswordLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -394,7 +395,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getUsername()), userRegistVO.getUsername());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             //查询用户名是否已关联
@@ -574,7 +575,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getEmail()), userRegistVO.getEmail());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             //查询邮箱是否已关联
@@ -724,58 +725,58 @@ public class UserController {
             resultObjectVO.setMsg("请求失败,没有找到应用编码");
             return resultObjectVO;
         }
-        UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
-        if(userRegistVO==null)
+        UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
+        if(userVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
             resultObjectVO.setMsg("请求失败,没有找到要修改的用户");
             return resultObjectVO;
         }
-        if(userRegistVO.getUserMainId()==null)
+        if(userVO.getUserMainId()==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
             resultObjectVO.setMsg("请求失败,没有找到要用户ID");
             return resultObjectVO;
         }
         try {
-            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+            boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             UserDetail query = new UserDetail();
-            query.setUserMainId(userRegistVO.getUserMainId());
+            query.setUserMainId(userVO.getUserMainId());
             List<UserDetail> userDetails = userDetailService.findListByEntity(query);
             int row = 0;
             if(CollectionUtils.isNotEmpty(userDetails))
             {
                 UserDetail userDetail = userDetails.get(0);
-                userDetail.setNickName(userRegistVO.getNickName()); //昵称
-                userDetail.setTrueName(userRegistVO.getTrueName()); //姓名
-                userDetail.setIdCard(userRegistVO.getIdCard()); //身份证
-                userDetail.setHeadSculpture(userRegistVO.getHeadSculpture()); //头像
-                userDetail.setSex(userRegistVO.getSex()); //性别
-                userDetail.setType(userRegistVO.getType()); //用户类型
-                userDetail.setIdcardType(userRegistVO.getIdcardType()); //证件类型
-                userDetail.setIdcardImg1(userRegistVO.getIdcardImg1()); //证件照正面
-                userDetail.setIdcardImg2(userRegistVO.getIdcardImg2()); //证件照背面
-                userDetail.setTrueNameStatus(userRegistVO.getTrueNameStatus()); //实名状态
+                userDetail.setNickName(userVO.getNickName()); //昵称
+                userDetail.setTrueName(userVO.getTrueName()); //姓名
+                userDetail.setIdCard(userVO.getIdCard()); //身份证
+                userDetail.setHeadSculpture(userVO.getHeadSculpture()); //头像
+                userDetail.setSex(userVO.getSex()); //性别
+                userDetail.setType(userVO.getType()); //用户类型
+                userDetail.setIdcardType(userVO.getIdcardType()); //证件类型
+                userDetail.setIdcardImg1(userVO.getIdcardImg1()); //证件照正面
+                userDetail.setIdcardImg2(userVO.getIdcardImg2()); //证件照背面
+                userDetail.setTrueNameStatus(userVO.getTrueNameStatus()); //实名状态
                 row= userDetailService.update(userDetail);
             }else{
                 UserDetail userDetail = new UserDetail();
                 userDetail.setId(idGenerator.id());
-                userDetail.setUserMainId(userRegistVO.getUserMainId()); //用户ID
-                userDetail.setNickName(userRegistVO.getNickName()); //昵称
-                userDetail.setTrueName(userRegistVO.getTrueName()); //姓名
-                userDetail.setIdCard(userRegistVO.getIdCard()); //身份证
-                userDetail.setHeadSculpture(userRegistVO.getHeadSculpture()); //头像
-                userDetail.setSex(userRegistVO.getSex()); //性别
-                userDetail.setType(userRegistVO.getType()); //用户类型
-                userDetail.setIdcardType(userRegistVO.getIdcardType());  //证件类型
-                userDetail.setTrueNameStatus(userRegistVO.getTrueNameStatus()); //实名状态
-                userDetail.setIdcardImg1(userRegistVO.getIdcardImg1()); //证件照正面
-                userDetail.setIdcardImg2(userRegistVO.getIdcardImg2()); //证件照背面
+                userDetail.setUserMainId(userVO.getUserMainId()); //用户ID
+                userDetail.setNickName(userVO.getNickName()); //昵称
+                userDetail.setTrueName(userVO.getTrueName()); //姓名
+                userDetail.setIdCard(userVO.getIdCard()); //身份证
+                userDetail.setHeadSculpture(userVO.getHeadSculpture()); //头像
+                userDetail.setSex(userVO.getSex()); //性别
+                userDetail.setType(userVO.getType()); //用户类型
+                userDetail.setIdcardType(userVO.getIdcardType());  //证件类型
+                userDetail.setTrueNameStatus(userVO.getTrueNameStatus()); //实名状态
+                userDetail.setIdcardImg1(userVO.getIdcardImg1()); //证件照正面
+                userDetail.setIdcardImg2(userVO.getIdcardImg2()); //证件照背面
                 userDetail.setCreateDate(new Date());
                 userDetail.setDeleteStatus((short)0);
 
@@ -790,7 +791,7 @@ public class UserController {
             }else{
                 try {
                     //刷新用户信息到登录缓存
-                    userRedisService.flushLoginCache(String.valueOf(userRegistVO.getUserMainId()), userRegistVO.getAppCode());
+                    userRedisService.flushLoginCache(String.valueOf(userVO.getUserMainId()), userVO.getAppCode());
                 }catch(Exception e)
                 {
                     logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
@@ -803,7 +804,7 @@ public class UserController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            skylarkLock.unLock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userRegistVO.getUserMainId())), String.valueOf(userRegistVO.getUserMainId()));
+            skylarkLock.unLock(UserCenterRegistRedisKey.getUpdateDetailLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
         }
         return resultObjectVO;
     }
@@ -811,6 +812,95 @@ public class UserController {
 
 
 
+
+    /**
+     * 修改用户信息
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/edit/info",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO editInfo(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要操作的用户");
+            return resultObjectVO;
+        }
+
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
+        if(userVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要修改的用户");
+            return resultObjectVO;
+        }
+        if(userVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到要用户ID");
+            return resultObjectVO;
+        }
+        try {
+            boolean lockStatus = skylarkLock.lock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+            UserDetail query = new UserDetail();
+            query.setUserMainId(userVO.getUserMainId());
+            List<UserDetail> userDetails = userDetailService.findListByEntity(query);
+            int row = 0;
+            if(CollectionUtils.isNotEmpty(userDetails))
+            {
+                UserDetail userDetail = userDetails.get(0);
+                userDetail.setNickName(userVO.getNickName()); //昵称
+                userDetail.setSex(userVO.getSex()); //性别
+                row= userDetailService.updateInfo(userDetail);
+            }else{
+                UserDetail userDetail = new UserDetail();
+                userDetail.setId(idGenerator.id());
+                userDetail.setUserMainId(userVO.getUserMainId()); //用户ID
+                userDetail.setNickName(userVO.getNickName()); //昵称
+                userDetail.setSex(userVO.getSex()); //性别
+                userDetail.setCreateDate(new Date());
+                userDetail.setDeleteStatus((short)0);
+
+                row= userDetailService.save(userDetail);
+            }
+
+            if(row<=0)
+            {
+                logger.warn("修改用户详情失败 {}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试");
+            }else{
+                try {
+                    //刷新用户信息到登录缓存
+                    userRedisService.flushLoginCache(String.valueOf(userVO.getUserMainId()), userVO.getAppCode());
+                }catch(Exception e)
+                {
+                    logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }finally{
+            skylarkLock.unLock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
+        }
+        return resultObjectVO;
+    }
 
 
 
@@ -859,7 +949,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterLoginRedisKey.getLoginLockKey(userLogin.getLoginUserName()), userLogin.getLoginUserName());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -1199,7 +1289,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -2219,7 +2309,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             //查询手机号是否已经关联

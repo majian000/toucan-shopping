@@ -17,7 +17,7 @@ public class UserCenterConsigneeAddressKey {
      */
     public static String getSaveLockKey(String userMainId)
     {
-        return "TOUCAN_SHOPPING_WEB:INDEX:CONSIGNEE_ADDRESS:SAVE:"+userMainId+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:INDEX:CONSIGNEE_ADDRESS:SAVE:"+userMainId+"_LOCK";
     }
 
 

@@ -292,9 +292,16 @@ public interface FeignUserService {
      * @return
      */
     @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO flushCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO flushCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 编辑用户信息
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/edit/info",produces = "application/json;charset=UTF-8")
+    ResultObjectVO editInfo(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
 }

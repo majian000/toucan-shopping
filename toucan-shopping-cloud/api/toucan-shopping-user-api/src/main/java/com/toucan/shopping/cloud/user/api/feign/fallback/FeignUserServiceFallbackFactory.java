@@ -29,12 +29,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.registByMobile 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -44,12 +44,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.resetPassword 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -59,12 +59,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.connectUsername 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -74,12 +74,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.connectEmail 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -89,12 +89,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.connectMobilePhone 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -104,12 +104,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.updateDetail 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -119,12 +119,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.registByUsername 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -134,12 +134,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.loginByPassword失败 params: {} ",requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -149,12 +149,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.logout失败 params: {} ",requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -165,12 +165,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(user==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.loginByVCode失败 params:"+JSONObject.toJSONString(user));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -180,12 +180,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.isOnline失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 resultObjectVO.setData(false);
                 return resultObjectVO;
             }
@@ -196,12 +196,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.verifyLoginToken失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 resultObjectVO.setData(false);
                 return resultObjectVO;
             }
@@ -212,12 +212,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.queryLoginInfo失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 resultObjectVO.setData(false);
                 return resultObjectVO;
             }
@@ -228,12 +228,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.findByUserMainIdForCacheOrDB失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 resultObjectVO.setData(false);
                 return resultObjectVO;
             }
@@ -244,12 +244,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.verifyRealName失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 resultObjectVO.setData(false);
                 return resultObjectVO;
             }
@@ -260,12 +260,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.findByMobilePhone失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -275,12 +275,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.list失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -290,12 +290,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.mobilePhoneList失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -305,12 +305,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.emailList失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -320,12 +320,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.usernameList header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -335,12 +335,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.findUsernameListByUsername失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -350,12 +350,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.findEmailListByEmail失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -365,12 +365,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.disabledEnabledById失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -380,12 +380,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -395,12 +395,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.disabledEnabledEmailByUserMainIdAndEmail失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -410,12 +410,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.disabledEnabledUsernameByUserMainIdAndUsername失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -425,12 +425,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.disabledByIds失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -440,12 +440,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.findListByUserMainId失败 header{} params {}",signHeader,requestVo.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -456,12 +456,27 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时请重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.flushCache header{} params {}",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时请重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO editInfo(String signHeader, RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.editInfo失败 header{} params {}",signHeader,requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
         };

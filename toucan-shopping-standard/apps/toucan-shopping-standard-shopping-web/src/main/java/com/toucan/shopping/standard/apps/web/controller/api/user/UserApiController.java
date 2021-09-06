@@ -127,7 +127,7 @@ public class UserApiController extends BaseController {
             boolean lockStatus = redisLock.lock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -218,7 +218,7 @@ public class UserApiController extends BaseController {
             boolean lockStatus = redisLock.lock(UserRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
             //判断验证码
@@ -379,7 +379,7 @@ public class UserApiController extends BaseController {
             boolean lockStatus = redisLock.lock(UserCenterLoginRedisKey.getLoginLockKey(userLoginVO.getLoginUserName()), userLoginVO.getLoginUserName());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -493,7 +493,7 @@ public class UserApiController extends BaseController {
 //            boolean lockStatus = redisLock.lock(UserCenterRedisKey.getLoginLockKey(requestJsonVO.getAppCode(),user.getMobile()), user.getMobile());
 //            if (!lockStatus) {
 //                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("超时重试");
+//                resultObjectVO.setMsg("请求超时,请稍后重试");
 //                return resultObjectVO;
 //            }
 //

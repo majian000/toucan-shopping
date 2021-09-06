@@ -15,7 +15,7 @@ public class UserCenterUserCacheRedisKey {
      */
     public static String getUserCacheMobilePhoneKey(String mobilePhone)
     {
-        return "TOUCAN_SHOPPING_WEB:USER_CACHE_MOBILE_PHONE_"+mobilePhone;
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:USER_CACHE_MOBILE_PHONE_"+mobilePhone;
     }
 
 
@@ -27,7 +27,7 @@ public class UserCenterUserCacheRedisKey {
      */
     public static String getUserCacheEmailKey(String email)
     {
-        return "TOUCAN_SHOPPING_WEB:USER_CACHE_EMAIL_"+email;
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:USER_CACHE_EMAIL_"+email;
     }
 
 }

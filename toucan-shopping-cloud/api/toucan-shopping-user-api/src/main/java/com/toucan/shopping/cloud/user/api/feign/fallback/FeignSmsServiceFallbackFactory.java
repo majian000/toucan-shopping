@@ -28,12 +28,12 @@ public class FeignSmsServiceFallbackFactory implements FallbackFactory<FeignSmsS
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignSmsService.send失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
         };

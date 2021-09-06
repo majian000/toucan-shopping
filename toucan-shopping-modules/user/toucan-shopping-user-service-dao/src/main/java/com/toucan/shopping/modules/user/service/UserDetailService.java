@@ -13,6 +13,8 @@ public interface UserDetailService {
 
     int update(UserDetail entity);
 
+    int updateInfo(UserDetail entity);
+
     int deleteById(Long id);
 
     List<UserDetail> findById(Long id);

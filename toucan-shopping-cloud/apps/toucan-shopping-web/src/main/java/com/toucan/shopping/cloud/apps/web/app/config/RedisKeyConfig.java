@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.app.config;
 
 
 import com.toucan.shopping.cloud.apps.web.redis.AreaRedisKey;
+import com.toucan.shopping.cloud.apps.web.redis.UserEditInfoRedisKey;
 import com.toucan.shopping.modules.area.constant.BannerRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
@@ -28,6 +29,7 @@ public class RedisKeyConfig {
         UserLoginRedisKey.appCode = toucan.getAppCode();
         AreaRedisKey.appCode = toucan.getAppCode();
         BannerRedisKey.appCode = toucan.getAppCode();
+        UserEditInfoRedisKey.appCode = toucan.getAppCode();
     }
 
 }

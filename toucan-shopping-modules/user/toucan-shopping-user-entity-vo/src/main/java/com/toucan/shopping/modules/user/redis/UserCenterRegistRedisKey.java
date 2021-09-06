@@ -17,7 +17,7 @@ public class UserCenterRegistRedisKey {
      */
     public static String getRegistLockKey(String mobile)
     {
-        return "TOUCAN_SHOPPING_WEB:USER_REGIST_"+mobile+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_REGIST_"+mobile+"_LOCK";
     }
 
 
@@ -29,7 +29,7 @@ public class UserCenterRegistRedisKey {
      */
     public static String getUpdateDetailLockKey(String mobile)
     {
-        return "TOUCAN_SHOPPING_WEB:USER_UPDATE_DETAIL_"+mobile+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_UPDATE_DETAIL_"+mobile+"_LOCK";
     }
     /**
      * 重置密码锁
@@ -38,7 +38,7 @@ public class UserCenterRegistRedisKey {
      */
     public static String getResetPasswordLockKey(String userMainId)
     {
-        return "TOUCAN_SHOPPING_WEB:USER_RESET_PASSWORD_"+userMainId+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_RESET_PASSWORD_"+userMainId+"_LOCK";
     }
 
 

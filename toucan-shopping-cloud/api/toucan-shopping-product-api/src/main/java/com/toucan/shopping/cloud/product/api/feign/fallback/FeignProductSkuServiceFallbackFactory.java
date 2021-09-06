@@ -29,12 +29,12 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 if(requestJsonVO==null)
                 {
                     resultListVO.setCode(ResultObjectVO.FAILD);
-                    resultListVO.setMsg("超时重试");
+                    resultListVO.setMsg("请求超时,请稍后重试");
                     return resultListVO;
                 }
                 logger.warn("查询上架商品列表服务失败 headers:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultListVO.setCode(ResultObjectVO.FAILD);
-                resultListVO.setMsg("超时重试");
+                resultListVO.setMsg("请求超时,请稍后重试");
                 return resultListVO;
             }
 
@@ -45,7 +45,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("查询商品服务 params:"+JSONObject.toJSONString(requestJsonVO));
@@ -60,7 +60,7 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("查询商品服务 sign {} , params {}",signHeader,JSONObject.toJSONString(requestJsonVO));

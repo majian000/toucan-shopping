@@ -41,4 +41,9 @@ public class UserRegistRedisKey {
     {
         return "TOUCAN_SHOPPING_WEB:"+appCode +"_"+smsRegistType+"_"+mobile+"_lock";
     }
+
+
+
+
+
 }

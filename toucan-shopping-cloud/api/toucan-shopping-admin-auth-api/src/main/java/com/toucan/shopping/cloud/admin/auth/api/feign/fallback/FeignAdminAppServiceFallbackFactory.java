@@ -30,7 +30,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminAppService.save faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
@@ -45,7 +45,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminAppService.queryListByEntity faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
@@ -60,7 +60,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminAppService.deleteByAppCode faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
@@ -75,7 +75,7 @@ public class FeignAdminAppServiceFallbackFactory implements FallbackFactory<Feig
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminAppService.queryAppListByAdminId faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));

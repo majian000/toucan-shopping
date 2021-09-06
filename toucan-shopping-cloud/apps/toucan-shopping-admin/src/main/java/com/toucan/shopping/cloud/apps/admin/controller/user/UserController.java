@@ -475,7 +475,7 @@ public class UserController extends UIController {
             boolean lockStatus = skylarkLock.lock(lockKey, user.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -588,7 +588,7 @@ public class UserController extends UIController {
             boolean lockStatus = skylarkLock.lock(lockKey, userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -747,7 +747,7 @@ public class UserController extends UIController {
             boolean lockStatus = skylarkLock.lock(lockKey, userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -812,7 +812,7 @@ public class UserController extends UIController {
             boolean lockStatus = skylarkLock.lock(lockKey, user.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -874,7 +874,7 @@ public class UserController extends UIController {
             boolean lockStatus = skylarkLock.lock(lockKey, user.getEmail());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -936,7 +936,7 @@ public class UserController extends UIController {
             boolean lockStatus = skylarkLock.lock(lockKey, user.getUsername());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 

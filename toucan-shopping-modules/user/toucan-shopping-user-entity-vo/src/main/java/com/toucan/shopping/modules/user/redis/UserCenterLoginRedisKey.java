@@ -20,7 +20,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginLockKey(String mobile)
     {
-        return "TOUCAN_SHOPPING_WEB:USER:LOCK:USER_LOGIN_"+mobile+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_LOGIN_"+mobile+"_LOCK";
     }
 
 
@@ -31,7 +31,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getVerifyRealNameLockKey(String mobile)
     {
-        return "TOUCAN_SHOPPING_WEB:USER:LOCK:USER_VERIFY_REAL_NAME_"+mobile+"_LOCK";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOCK:USER_VERIFY_REAL_NAME_"+mobile+"_LOCK";
     }
 
 
@@ -44,7 +44,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginInfoGroupKey(String userId)
     {
-        return "TOUCAN_SHOPPING_WEB:USER:LOGIN_INFOS:"+userId+"_LOGIN_GROUP";
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOGIN_INFOS:"+userId+"_LOGIN_GROUP";
     }
 
 
@@ -54,7 +54,7 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginTokenAppKey(String userId, String appCode)
     {
-        return "TOUCAN_SHOPPING_WEB:USER:LOGIN:LOGIN_TOKEN_"+userId;
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOGIN:LOGIN_TOKEN_"+userId;
     }
 
 
@@ -64,6 +64,6 @@ public class UserCenterLoginRedisKey {
      */
     public static String getLoginInfoAppKey(String userId, String appCode)
     {
-        return "TOUCAN_SHOPPING_WEB:USER:LOGIN:LOGIN_INFO_"+userId;
+        return "TOUCAN_SHOPPING_WEB:USER_CENTER:LOGIN:LOGIN_INFO_"+userId;
     }
 }

@@ -28,7 +28,7 @@ public class FeignProductSkuStockServiceFallbackFactory implements FallbackFacto
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("扣库存服务 sign {} , params {}",signHeader,JSONObject.toJSONString(requestJsonVO));

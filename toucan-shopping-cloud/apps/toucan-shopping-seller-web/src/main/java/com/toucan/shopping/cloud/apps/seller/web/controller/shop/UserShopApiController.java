@@ -113,7 +113,7 @@ public class UserShopApiController extends BaseController {
             boolean lockStatus = redisLock.lock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -218,7 +218,7 @@ public class UserShopApiController extends BaseController {
             boolean lockStatus = redisLock.lock(ShopRegistRedisKey.getEditLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("超时重试");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 

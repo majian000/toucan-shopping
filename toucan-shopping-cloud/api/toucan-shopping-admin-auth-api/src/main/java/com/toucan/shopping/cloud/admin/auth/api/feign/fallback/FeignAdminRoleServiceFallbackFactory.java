@@ -30,7 +30,7 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminRoleService.saveRoles faild sign {} params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
@@ -45,7 +45,7 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminRoleService.queryListByEntity faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
@@ -60,7 +60,7 @@ public class FeignAdminRoleServiceFallbackFactory implements FallbackFactory<Fei
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("超时重试");
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignAdminRoleService.list faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
