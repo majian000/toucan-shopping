@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
@@ -58,12 +59,6 @@ public class UserTrueNameApproveController extends UIController {
 
     @Autowired
     private FeignUserTrueNameApproveService feignUserTrueNameApproveService;
-
-    @Autowired
-    private FeignCategoryService feignCategoryService;
-
-    @Autowired
-    private FeignAdminService feignAdminService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -164,6 +159,68 @@ public class UserTrueNameApproveController extends UIController {
     }
 
 
+    /**
+     * 跳转到驳回页面
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/reject/page/{id}",method = RequestMethod.GET)
+    public String updateDetailPage(HttpServletRequest request,@PathVariable String id)
+    {
+        UserTrueNameApproveVO userTrueNameApproveVO = new UserTrueNameApproveVO();
+        try {
+            userTrueNameApproveVO.setId(Long.parseLong(id));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userTrueNameApproveVO);
+            ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<UserTrueNameApproveVO> userTrueNameApproveVOS = resultObjectVO.formatDataArray(UserTrueNameApproveVO.class);
+                if(CollectionUtils.isNotEmpty(userTrueNameApproveVOS)) {
+                    request.setAttribute("model", userTrueNameApproveVOS.get(0));
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            request.setAttribute("model", userTrueNameApproveVO);
+        }
+        return "pages/trueNameApprove/reject.html";
+    }
+
+
+    /**
+     * 审核驳回
+     * @param userTrueNameApproveVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/reject",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO reject(HttpServletRequest request,@RequestBody UserTrueNameApproveVO userTrueNameApproveVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(userTrueNameApproveVO.getId()==null)
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            //过滤XSS脚本
+            XSSConvert.replaceXSS(userTrueNameApproveVO);
+            //设置审核人
+            userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
+            resultObjectVO = feignUserTrueNameApproveService.passById(requestJsonVO.sign(), requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 删除

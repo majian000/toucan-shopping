@@ -187,39 +187,7 @@
          * toolbar监听事件
          */
         table.on('toolbar(userTrueNameApproveTableFilter)', function (obj) {
-            if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('userTrueNameApproveTable')
-                    , data = checkStatus.data;
-                if(data==null||data.length<=0)
-                {
-                    layer.msg("请选择要操作的记录");
-                    return;
-                }
-                layer.confirm('确定删除属性名?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]/user/true/name/approve/delete/ids",
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
 
-                            //执行搜索重载
-                            table.reload('userTrueNameApproveTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }
         });
 
 
@@ -254,6 +222,21 @@
                         }
                     });
                 });
+            }else if (obj.event == 'reject') {
+
+                var index = layer.open({
+                    title: '实名驳回',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]user/true/name/approve/reject/page/"+data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
             }
         });
 

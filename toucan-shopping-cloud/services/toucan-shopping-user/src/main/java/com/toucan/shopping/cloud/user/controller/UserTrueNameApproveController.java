@@ -343,6 +343,36 @@ public class UserTrueNameApproveController {
 
 
 
+    @RequestMapping(value="/queryById",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("查询失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
+        if(userTrueNameApprove.getId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("查询失败,ID不能为空");
+            return resultObjectVO;
+        }
+        try {
+            UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
+            queryUserTrueNameApprove.setId(userTrueNameApprove.getId());
+            List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
+            resultObjectVO.setData(userTrueNameApproves);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**
@@ -357,7 +387,7 @@ public class UserTrueNameApproveController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("操作失败,没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -366,7 +396,7 @@ public class UserTrueNameApproveController {
             if(userTrueNameApproveVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("操作失败,没有找到ID");
                 return resultObjectVO;
             }
 
@@ -384,7 +414,7 @@ public class UserTrueNameApproveController {
                     if (ret <= 0) {
                         logger.warn("实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请稍后重试");
+                        resultObjectVO.setMsg("操作失败,请稍后重试");
                         return resultObjectVO;
                     }
 
@@ -415,7 +445,7 @@ public class UserTrueNameApproveController {
                         if (ret <= 0) {
                             logger.warn("修改姓名和身份证失败 {} ", JSONObject.toJSONString(userDetail));
                             resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("请求失败,请稍后重试");
+                            resultObjectVO.setMsg("操作失败,请稍后重试");
 
                             //开始回滚数据
                             userTrueNameApprove.setApproveStatus(1); //设置审核中
@@ -423,7 +453,7 @@ public class UserTrueNameApproveController {
                             if (ret <= 0) {
                                 logger.warn("回滚实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
                                 resultObjectVO.setCode(ResultVO.FAILD);
-                                resultObjectVO.setMsg("请求失败,请稍后重试");
+                                resultObjectVO.setMsg("操作失败,请稍后重试");
                             }
 
                             return resultObjectVO;
@@ -438,17 +468,129 @@ public class UserTrueNameApproveController {
             }
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("操作失败,请稍后重试");
             return resultObjectVO;
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("操作失败,请稍后重试");
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    /**
+     * 驳回指定
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/reject/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO rejectById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("操作失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserTrueNameApproveVO userTrueNameApproveVO = JSONObject.parseObject(requestVo.getEntityJson(),UserTrueNameApproveVO.class);
+            if(userTrueNameApproveVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("操作失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            UserTrueNameApprove queryUserTrueNameApprove= new UserTrueNameApprove();
+            queryUserTrueNameApprove.setId(userTrueNameApproveVO.getId());
+            List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
+
+            if(CollectionUtils.isNotEmpty(userTrueNameApproves))
+            {
+                UserTrueNameApprove userTrueNameApprove =  userTrueNameApproves.get(0);
+                userTrueNameApprove.setApproveStatus(3); //设置审核驳回
+                userTrueNameApprove.setRejectText(userTrueNameApproveVO.getRejectText()); //驳回原因
+                int ret = userTrueNameApproveService.update(userTrueNameApprove);
+                if(ret>0) {
+
+                    if (ret <= 0) {
+                        logger.warn("实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("操作失败,请稍后重试");
+                        return resultObjectVO;
+                    }
+
+
+                    //保存审核记录
+                    UserTrueNameApproveRecord userTrueNameApproveRecord = new UserTrueNameApproveRecord();
+                    userTrueNameApproveRecord.setId(idGenerator.id());
+                    userTrueNameApproveRecord.setApproveId(userTrueNameApprove.getId()); //审核主表ID
+                    userTrueNameApproveRecord.setUserMainId(userTrueNameApprove.getUserMainId());
+                    userTrueNameApproveRecord.setApproveStatus(2);
+                    userTrueNameApproveRecord.setRejectText(userTrueNameApproveVO.getRejectText()); //驳回原因
+                    userTrueNameApproveRecord.setCreateAdminId(userTrueNameApproveVO.getApproveAdminId()); //审核管理员
+                    userTrueNameApproveRecord.setCreateDate(new Date());
+                    userTrueNameApproveRecord.setDeleteStatus((short)0);
+                    userTrueNameApproveRecordService.save(userTrueNameApproveRecord);
+
+                    //设置姓名和身份证号码
+                    List<UserDetail> userDetails = userDetailService.findByUserMainId(userTrueNameApprove.getUserMainId());
+                    if(CollectionUtils.isNotEmpty(userDetails))
+                    {
+                        UserDetail userDetail = userDetails.get(0);
+                        userDetail.setTrueName(userTrueNameApprove.getTrueName());
+                        userDetail.setIdCard(userTrueNameApprove.getIdCard());
+                        userDetail.setIdcardType(userTrueNameApprove.getIdcardType());
+                        userDetail.setIdcardImg1(userTrueNameApprove.getIdcardImg1());
+                        userDetail.setIdcardImg2(userTrueNameApprove.getIdcardImg2());
+                        userDetail.setTrueNameStatus(1); //已实名
+                        ret = userDetailService.update(userDetail);
+                        if (ret <= 0) {
+                            logger.warn("修改姓名和身份证失败 {} ", JSONObject.toJSONString(userDetail));
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("操作失败,请稍后重试");
+
+                            //开始回滚数据
+                            userTrueNameApprove.setApproveStatus(1); //设置审核中
+                            ret = userTrueNameApproveService.update(userTrueNameApprove);
+                            if (ret <= 0) {
+                                logger.warn("回滚实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("操作失败,请稍后重试");
+                            }
+
+                            return resultObjectVO;
+                        }
+
+
+                    }
+
+                    resultObjectVO.setData(userTrueNameApproves);
+                    return resultObjectVO;
+                }
+            }
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后重试");
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("操作失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
     /**
@@ -463,7 +605,7 @@ public class UserTrueNameApproveController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("删除失败,没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -472,7 +614,7 @@ public class UserTrueNameApproveController {
             if(CollectionUtils.isEmpty(userTrueNameApproves))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("删除失败,没有找到ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -485,7 +627,7 @@ public class UserTrueNameApproveController {
                     if (row < 1) {
                         logger.warn("删除失败，id:{}",userTrueNameApprove.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("删除失败,请重试!");
                         continue;
                     }
 
@@ -498,7 +640,7 @@ public class UserTrueNameApproveController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("删除失败,请稍后重试");
         }
         return resultObjectVO;
     }
