@@ -95,7 +95,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                             userVO = resultObjectVO.formatData(UserVO.class);
                             if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
                             {
-                                return "user/true_name";
+                                return "user/trueName/true_name";
                             }
                         }else {
                             //审核通过
@@ -169,7 +169,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                             userVO = resultObjectVO.formatData(UserVO.class);
                             if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
                             {
-                                return "user/true_name";
+                                return "user/trueName/true_name";
                             }
                         }else {
                             //审核通过
