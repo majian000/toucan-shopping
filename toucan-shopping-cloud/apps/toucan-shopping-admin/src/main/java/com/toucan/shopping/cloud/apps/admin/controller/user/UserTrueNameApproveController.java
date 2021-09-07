@@ -176,7 +176,14 @@ public class UserTrueNameApproveController extends UIController {
             {
                 List<UserTrueNameApproveVO> userTrueNameApproveVOS = resultObjectVO.formatDataArray(UserTrueNameApproveVO.class);
                 if(CollectionUtils.isNotEmpty(userTrueNameApproveVOS)) {
-                    request.setAttribute("model", userTrueNameApproveVOS.get(0));
+                    userTrueNameApproveVO = userTrueNameApproveVOS.get(0);
+                    if(userTrueNameApproveVO.getIdcardImg1()!=null) {
+                        userTrueNameApproveVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userTrueNameApproveVO.getIdcardImg1());
+                    }
+                    if(userTrueNameApproveVO.getIdcardImg2()!=null) {
+                        userTrueNameApproveVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userTrueNameApproveVO.getIdcardImg2());
+                    }
+                    request.setAttribute("model",userTrueNameApproveVO);
                 }
             }
         }catch(Exception e)
