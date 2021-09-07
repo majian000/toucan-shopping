@@ -339,6 +339,7 @@ public class UserApiController extends BaseController {
             //替换跨站脚本代码
             XSSConvert.replaceXSS(user);
 
+            user.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),user);
 
             logger.info(" 用户修改信息 {} ", requestJsonVO.getEntityJson());

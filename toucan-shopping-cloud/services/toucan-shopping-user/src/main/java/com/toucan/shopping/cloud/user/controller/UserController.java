@@ -857,26 +857,32 @@ public class UserController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要操作的用户");
+            resultObjectVO.setMsg("修改失败,没有找到要操作的用户");
             return resultObjectVO;
         }
 
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            resultObjectVO.setMsg("修改失败,没有找到应用编码");
             return resultObjectVO;
         }
         UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
         if(userVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要修改的用户");
+            resultObjectVO.setMsg("修改失败,没有找到要修改的用户");
             return resultObjectVO;
         }
         if(userVO.getUserMainId()==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要用户ID");
+            resultObjectVO.setMsg("修改失败,没有找到要用户ID");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(userVO.getNickName()))
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("修改失败,昵称不能为空");
             return resultObjectVO;
         }
         try {
@@ -946,7 +952,7 @@ public class UserController {
             {
                 logger.warn("修改用户详情失败 {}", requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("修改失败,请稍后重试");
             }else{
                 try {
                     //刷新用户信息到登录缓存
@@ -961,7 +967,7 @@ public class UserController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("修改失败,请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterRedisKey.getEditInfoLockKey(String.valueOf(userVO.getUserMainId())), String.valueOf(userVO.getUserMainId()));
         }
