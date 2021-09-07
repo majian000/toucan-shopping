@@ -65,7 +65,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if (result) {
                     //审核通过
-                    return "user/trueName/true_name_success";
+                    return "user/true_name_success";
                 }
             }
 
@@ -87,8 +87,22 @@ public class UserTrueNameApprovePageController extends BaseController {
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==2)
                     {
-                        //审核通过
-                        return "user/true_name_success";
+
+                        //如果审核记录通过了,但是在用户列表里把这个人又设置成未实名了,那就继续让这个人去提交实名认证
+                        UserVO queryUserVO = new UserVO();
+                        queryUserVO.setUserMainId(Long.parseLong(userMainId));
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
+                        resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess()) {
+                            userVO = resultObjectVO.formatData(UserVO.class);
+                            if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
+                            {
+                                return "user/true_name";
+                            }
+                        }else {
+                            //审核通过
+                            return "user/true_name_success";
+                        }
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==3)
                     {
@@ -127,7 +141,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if (result) {
                     //审核通过
-                    return "user/trueName/true_name_success";
+                    return "user/true_name_success";
                 }
             }
 
@@ -149,8 +163,21 @@ public class UserTrueNameApprovePageController extends BaseController {
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==2)
                     {
-                        //审核通过
-                        return "user/true_name_success";
+                        //如果审核记录通过了,但是在用户列表里把这个人又设置成未实名了,那就继续让这个人去提交实名认证
+                        UserVO queryUserVO = new UserVO();
+                        queryUserVO.setUserMainId(Long.parseLong(userMainId));
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
+                        resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess()) {
+                            userVO = resultObjectVO.formatData(UserVO.class);
+                            if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
+                            {
+                                return "user/true_name";
+                            }
+                        }else {
+                            //审核通过
+                            return "user/true_name_success";
+                        }
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==3)
                     {

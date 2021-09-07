@@ -225,24 +225,6 @@ public class UserTrueNameApproveController {
                 resultObjectVO.setMsg("请求失败,请稍候重试");
                 return resultObjectVO;
             }
-            //查询是否存在审核中
-            UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
-            queryUserTrueNameApprove.setUserMainId(userTrueNameApprove.getUserMainId());
-            List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntity(queryUserTrueNameApprove);
-            if(CollectionUtils.isNotEmpty(userTrueNameApproves))
-            {
-                for(int i=0;i<userTrueNameApproves.size();i++) {
-                    if(userTrueNameApproves.get(i).getApproveStatus().intValue()==1) {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,实名认证正在审核中");
-                        return resultObjectVO;
-                    }else if(userTrueNameApproves.get(i).getApproveStatus().intValue()==2) {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,实名认证已完成");
-                        return resultObjectVO;
-                    }
-                }
-            }
 
             userTrueNameApprove.setDeleteStatus((short)0);
             int ret = userTrueNameApproveService.update(userTrueNameApprove);
@@ -575,37 +557,6 @@ public class UserTrueNameApproveController {
                     userTrueNameApproveRecord.setDeleteStatus((short)0);
                     userTrueNameApproveRecordService.save(userTrueNameApproveRecord);
 
-                    //设置姓名和身份证号码
-                    List<UserDetail> userDetails = userDetailService.findByUserMainId(userTrueNameApprove.getUserMainId());
-                    if(CollectionUtils.isNotEmpty(userDetails))
-                    {
-                        UserDetail userDetail = userDetails.get(0);
-                        userDetail.setTrueName(userTrueNameApprove.getTrueName());
-                        userDetail.setIdCard(userTrueNameApprove.getIdCard());
-                        userDetail.setIdcardType(userTrueNameApprove.getIdcardType());
-                        userDetail.setIdcardImg1(userTrueNameApprove.getIdcardImg1());
-                        userDetail.setIdcardImg2(userTrueNameApprove.getIdcardImg2());
-                        userDetail.setTrueNameStatus(1); //已实名
-                        ret = userDetailService.update(userDetail);
-                        if (ret <= 0) {
-                            logger.warn("修改姓名和身份证失败 {} ", JSONObject.toJSONString(userDetail));
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("操作失败,请稍后重试");
-
-                            //开始回滚数据
-                            userTrueNameApprove.setApproveStatus(1); //设置审核中
-                            ret = userTrueNameApproveService.update(userTrueNameApprove);
-                            if (ret <= 0) {
-                                logger.warn("回滚实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
-                                resultObjectVO.setCode(ResultVO.FAILD);
-                                resultObjectVO.setMsg("操作失败,请稍后重试");
-                            }
-
-                            return resultObjectVO;
-                        }
-
-
-                    }
 
                     resultObjectVO.setData(userTrueNameApproves);
                     return resultObjectVO;
