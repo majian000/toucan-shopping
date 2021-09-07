@@ -84,13 +84,13 @@
                         <div class="item">
                             <span class="label"><span class="red">*</span>验证码：</span>
                             <div class="fl">
-                                <input type="text" id="uei_vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
+                                <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
                                 <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
                                 </label>
                                 <label>&nbsp;看不清？点击验证码图片更换</label>
-                                <label id="uei_vcode_succeed" class="blank invisible"></label>
+                                <label id="vcode_succeed" class="blank invisible"></label>
                                 <span class="clear"></span>
-                                <label id="uei_vcode_error"></label>
+                                <label id="vcode_error"></label>
                             </div>
                         </div><!--item end-->
 
@@ -98,7 +98,7 @@
 
                         <div class="item">
                             <span class="label">&nbsp;</span>
-                            <input type="button" value="保存" class="log_btn" onclick="editInfo();" style="font-size:15px;" />
+                            <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
                         </div><!--item end-->
 
                     </div>
@@ -193,7 +193,7 @@
     </div>
 
     <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/Validate.form.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/editInfo.js"></script>
 
 </body>
 

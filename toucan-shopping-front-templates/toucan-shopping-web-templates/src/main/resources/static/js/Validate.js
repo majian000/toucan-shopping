@@ -256,6 +256,9 @@ var validateRules = {
     isRealName:function (str) {
         return new RegExp(validateRegExp.realname).test(str);
     },
+    isNickname:function (str) {
+        return new RegExp(validateRegExp.nickname).test(str);
+    },
     isDeptname:function (str) {
         return new RegExp(validateRegExp.deptname).test(str);
     },
