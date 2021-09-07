@@ -34,6 +34,15 @@ public interface UserTrueNameApproveService {
      */
     List<UserTrueNameApprove> findListByEntity(UserTrueNameApprove entity);
 
+
+
+    /**
+     * 查询列表根据创建时间倒序
+     * @param entity
+     * @return
+     */
+    List<UserTrueNameApprove> findListByEntityOrderByUpdateDateDesc(UserTrueNameApprove entity);
+
     /**
      * 查询列表页
      * @param queryPageInfo

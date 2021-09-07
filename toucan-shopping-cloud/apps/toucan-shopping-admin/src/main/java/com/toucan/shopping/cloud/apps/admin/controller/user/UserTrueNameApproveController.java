@@ -192,7 +192,7 @@ public class UserTrueNameApproveController extends UIController {
 
             request.setAttribute("model", userTrueNameApproveVO);
         }
-        return "pages/trueNameApprove/reject.html";
+        return "pages/user/trueNameApprove/reject.html";
     }
 
 
@@ -219,7 +219,7 @@ public class UserTrueNameApproveController extends UIController {
             //设置审核人
             userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
-            resultObjectVO = feignUserTrueNameApproveService.passById(requestJsonVO.sign(), requestJsonVO);
+            resultObjectVO = feignUserTrueNameApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");
@@ -229,36 +229,6 @@ public class UserTrueNameApproveController extends UIController {
         return resultObjectVO;
     }
 
-    /**
-     * 删除
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteByIds( @RequestBody List<UserTrueNameApproveVO> UserTrueNameApproveVOS)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            if(org.springframework.util.CollectionUtils.isEmpty(UserTrueNameApproveVOS))
-            {
-                resultObjectVO.setMsg("请求失败,请传入ID");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String entityJson = JSONObject.toJSONString(UserTrueNameApproveVOS);
-            RequestJsonVO requestVo = new RequestJsonVO();
-            requestVo.setAppCode(appCode);
-            requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignUserTrueNameApproveService.deleteByIds(SignUtil.sign(requestVo), requestVo);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请求失败,请重试");
-            resultObjectVO.setCode(TableVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
 
 
 

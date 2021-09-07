@@ -19,12 +19,12 @@
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}">
     <div class="layui-form-item">
-        <label class="layui-form-label required">姓名</label>
+        <label class="layui-form-label ">姓名</label>
         <div class="layui-input-block" th:text="${model.trueName}">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">证件类型</label>
+        <label class="layui-form-label ">证件类型</label>
         <div class="layui-input-block" th:if="${model.idcardType eq 1}" >
             身份证
         </div>
@@ -36,18 +36,18 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">证件号码</label>
+        <label class="layui-form-label ">证件号码</label>
         <div class="layui-input-block" th:text="${model.idCard}">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">证件正面</label>
+        <label class="layui-form-label ">证件正面</label>
         <div class="layui-input-block">
             <img th:src="${model.httpIdcardImg1}" th:width="240" th:height="220">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">证件背面</label>
+        <label class="layui-form-label ">证件背面</label>
         <div class="layui-input-block" >
             <img th:src="${model.httpIdcardImg2}" th:width="240" th:height="220">
         </div>

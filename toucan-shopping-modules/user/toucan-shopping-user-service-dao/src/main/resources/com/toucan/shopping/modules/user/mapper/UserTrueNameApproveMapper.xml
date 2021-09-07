@@ -35,35 +35,50 @@
 
     </sql>
 
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+        <if test="trueName!=null and trueName!=''">
+            and t.true_name = #{trueName}
+        </if>
+
+        <if test="idCard!=null and idCard!=''">
+            and t.id_card = #{idCard}
+        </if>
+
+        <if test="approveStatus!=null ">
+            and t.approve_status = #{approveStatus}
+        </if>
+    </sql>
 
     <select id="findListByEntity" resultMap="userTrueNameApproveMap" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApprove">
         select * from t_user_true_name_approve t
         <where>
             1=1
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
 
-            <if test="userMainId!=null">
-                and t.user_main_id = #{userMainId}
-            </if>
-
-            <if test="trueName!=null and trueName!=''">
-                and t.true_name = #{trueName}
-            </if>
-
-            <if test="idCard!=null and idCard!=''">
-                and t.id_card = #{idCard}
-            </if>
-
-            <if test="approveStatus!=null ">
-                and t.approve_status = #{approveStatus}
-            </if>
-            and t.delete_status = 0
+            <include refid="queryListWhere" />
         </where>
 
     </select>
 
+
+    <select id="findListByEntityOrderByUpdateDateDesc" resultMap="userTrueNameApproveMap" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApprove">
+        select * from t_user_true_name_approve t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+        </where>
+        order by t.update_date desc
+
+    </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserTrueNameApprove" useGeneratedKeys="false" keyProperty="id" >
         insert into t_user_true_name_approve(id,user_main_id,idcard_type,true_name,id_card,idcard_img1,idcard_img2,approve_status,create_date,delete_status)

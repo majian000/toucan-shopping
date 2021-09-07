@@ -341,6 +341,40 @@ public class UserTrueNameApproveController {
     }
 
 
+    @RequestMapping(value="/queryListByUserMainIdAndOrderByUpdateDateDesc",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        UserTrueNameApprove userTrueNameApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApprove.class);
+        if(userTrueNameApprove.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            return resultObjectVO;
+        }
+        try {
+            UserTrueNameApprove queryUserTrueNameApprove = new UserTrueNameApprove();
+            queryUserTrueNameApprove.setUserMainId(userTrueNameApprove.getUserMainId());
+            if(userTrueNameApprove.getApproveStatus()!=null) {
+                queryUserTrueNameApprove.setApproveStatus(userTrueNameApprove.getApproveStatus());
+            }
+            List<UserTrueNameApprove> userTrueNameApproves = userTrueNameApproveService.findListByEntityOrderByUpdateDateDesc(queryUserTrueNameApprove);
+            resultObjectVO.setData(userTrueNameApproves);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
     @RequestMapping(value="/queryById",produces = "application/json;charset=UTF-8")

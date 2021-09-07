@@ -37,6 +37,11 @@ public class UserTrueNameApproveServiceImpl implements UserTrueNameApproveServic
         return userTrueNameApproveMapper.findListByEntity(entity);
     }
 
+    @Override
+    public List<UserTrueNameApprove> findListByEntityOrderByUpdateDateDesc(UserTrueNameApprove entity) {
+        return userTrueNameApproveMapper.findListByEntityOrderByUpdateDateDesc(entity);
+    }
+
 
     @Override
     public PageInfo<UserTrueNameApprove> queryListPage(UserTrueNameApprovePageInfo queryPageInfo) {

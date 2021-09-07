@@ -19,6 +19,9 @@ public interface UserTrueNameApproveMapper {
 
     List<UserTrueNameApprove> findListByEntity(UserTrueNameApprove entity);
 
+    List<UserTrueNameApprove> findListByEntityOrderByUpdateDateDesc(UserTrueNameApprove entity);
+
+
     List<UserTrueNameApprove> queryListPage(UserTrueNameApprovePageInfo queryPageInfo);
 
     Long queryListPageCount(UserTrueNameApprovePageInfo queryPageInfo);

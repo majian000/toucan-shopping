@@ -46,6 +46,14 @@ public interface FeignUserTrueNameApproveService {
     @RequestMapping(value="/queryByUserMainId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByUserMainId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 根据用户主ID查询,并且根据创建时间倒序
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/queryListByUserMainIdAndOrderByUpdateDateDesc",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 查询列表页
@@ -82,4 +90,13 @@ public interface FeignUserTrueNameApproveService {
      */
     @RequestMapping(value="/queryById",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 驳回指定
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/reject/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public ResultObjectVO rejectById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 }
