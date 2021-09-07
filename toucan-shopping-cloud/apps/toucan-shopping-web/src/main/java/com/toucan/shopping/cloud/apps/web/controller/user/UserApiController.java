@@ -343,13 +343,8 @@ public class UserApiController extends BaseController {
 
             logger.info(" 用户修改信息 {} ", requestJsonVO.getEntityJson());
 
-            resultObjectVO = feignUserService.registByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignUserService.editInfo(SignUtil.sign(requestJsonVO),requestJsonVO);
 
-            if(!resultObjectVO.isSuccess())
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("修改失败,请稍后重试");
-            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

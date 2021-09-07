@@ -49,7 +49,7 @@
         <div class="m_right">
 
             <div id="formbox">
-                <form id="formpersonal" method="post" onsubmit="return false;">
+                <form id="userEditInfo" method="post" onsubmit="return false;">
                     <div class="form">
                         <h3>帐户信息</h3>
                         <#if userVO.username??>
@@ -94,14 +94,15 @@
                             </div>
                         </div><!--item end-->
 
-
-
                         <div class="item">
                             <span class="label">&nbsp;</span>
                             <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
                         </div><!--item end-->
 
-                    </div>
+                        <div class="item">
+                            <span class="label">&nbsp;</span>
+                            <a id="edit_info_msg" style="color:#ff4e00;"></a>
+                        </div>
                 </form>
 
 
