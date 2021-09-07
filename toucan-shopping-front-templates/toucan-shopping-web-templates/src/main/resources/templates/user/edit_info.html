@@ -52,13 +52,14 @@
                 <form id="formpersonal" method="post" onsubmit="return false;">
                     <div class="form">
                         <h3>帐户信息</h3>
-                        <div class="item">
-                            <span class="label">登录名：</span>
-                            <div class="fl">
-                                ${userVO.username!''}
+                        <#if userVO.username??>
+                            <div class="item">
+                                <span class="label">登录名：</span>
+                                <div class="fl">
+                                    ${userVO.username!''}
+                                </div>
                             </div>
-                        </div>
-
+                        </#if>
 
                         <div class="item">
                             <span class="label"><span class="red">*</span>昵称：</span>
