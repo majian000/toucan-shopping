@@ -64,7 +64,7 @@
                         <div class="item">
                             <span class="label"><span class="red">*</span>昵称：</span>
                             <div class="fl">
-                                <input type="text" id="nickname" name="nickName" class="text" tabindex="1" value="${userVO.nickname!''}" />
+                                <input type="text" id="nickname" name="nickName" class="text" tabindex="1" value="${userVO.nickName!''}" />
                                 <label id="nickname_succeed" class="blank"></label>
                                 <span class="clear"></span>
                                 <div id="nickname_error"></div>
@@ -75,9 +75,16 @@
                         <div class="item">
                             <span class="label">性别</span>
                             <div class="fl">
-                                <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
-                                <input type="radio" class="radio" name="sex" id="sex_0" value="0" /><label for="sex_1">女</label>
-
+                                <#if userVO.sex?? && userVO.sex==1 >
+                                    <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
+                                    <input type="radio" class="radio" name="sex" id="sex_0" value="0" /><label for="sex_1">女</label>
+                                <#elseif userVO.sex?? && userVO.sex==0 >
+                                    <input type="radio" class="radio" name="sex" id="sex_1" value="1" /> <label for="sex_1">男</label>
+                                    <input type="radio" class="radio" name="sex" id="sex_0" value="0" checked /><label for="sex_1">女</label>
+                                <#else>
+                                    <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
+                                    <input type="radio" class="radio" name="sex" id="sex_0" value="0"  /><label for="sex_1">女</label>
+                                 </#if>
                             </div>
                         </div><!--item end-->
 
