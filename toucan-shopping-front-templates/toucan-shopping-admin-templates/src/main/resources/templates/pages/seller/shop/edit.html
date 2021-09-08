@@ -181,6 +181,15 @@
             data.field.city=$("#citySelect").find("option:selected").text();
             data.field.area=$("#areaSelect").find("option:selected").text();
 
+            if(data.field.province=="请选择")
+            {
+                data.field.province="";
+            }
+            if(data.field.provinceCode=="-1")
+            {
+                data.field.provinceCode="";
+            }
+
             $.ajax({
                 url:"[[@{/seller/shop/update}]]",
                 contentType: "application/json; charset=utf-8",
