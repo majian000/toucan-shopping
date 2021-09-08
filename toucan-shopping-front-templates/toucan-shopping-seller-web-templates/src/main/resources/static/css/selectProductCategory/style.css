@@ -16,8 +16,8 @@ i, em { font-style: normal; }
 .wareSort { padding: 15px 8px 15px 7px; border: 1px solid #ddd; background-color: #f6f6f6; }
 .wareSort ul { float: left; width: 200px; padding: 10px; border: 1px solid #ddd; margin-right: 7px; margin-left: 8px; background-color: #fff; }
 .wareSort ul li a { display: block; padding-right: 25px; padding-left: 10px; border: 1px solid #fff; line-height: 28px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.wareSort ul li a:hover { color: #52bea6; }
-.wareSort ul li.active a { border-color: #52bea6; background: #cefff4 url(../../images/arrow.png) no-repeat right center; color: #52bea6; }
+.wareSort ul li a:hover { color: #ff5000; }
+.wareSort ul li.active a { border-color: #ff5000; background: #fff4f0 url(../../images/arrow.png) no-repeat right center; color: #ff5000; }
 .selectedSort { padding: 10px 15px; border: 1px solid #ed7f5a; margin-top: 10px; margin-bottom: 10px; background-color: #fff4f0; color: #ed7f5a; }
 .selectedSort b { font-weight: bold; }
 .selectedSort i font { font-family: simsun; }
