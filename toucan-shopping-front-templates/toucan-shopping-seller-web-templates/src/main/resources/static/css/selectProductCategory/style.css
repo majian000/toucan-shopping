@@ -1,0 +1,27 @@
+﻿@charset "utf-8";
+/**Style Reset**/
+ul, ol { list-style-type: none; }
+b, strong { font-weight: normal; }
+i, em { font-style: normal; }
+/*清除浮动*/
+.clearfix:after { clear: both; display: block; height: 0; content: ""; }
+/*主体部分*/
+.contains { width: 1000px; margin: 0 auto; }
+/*面包屑导航*/
+.crumbNav { padding: 18px 0; color: #323232; }
+.crumbNav a { color: #ed7f5a; }
+.crumbNav a:hover { color: #d95459; }
+.crumbNav font { padding: 0 2px; font-family: simsun; }
+/**选择商品分类**/
+.wareSort { padding: 15px 8px 15px 7px; border: 1px solid #ddd; background-color: #f6f6f6; }
+.wareSort ul { float: left; width: 200px; padding: 10px; border: 1px solid #ddd; margin-right: 7px; margin-left: 8px; background-color: #fff; }
+.wareSort ul li a { display: block; padding-right: 25px; padding-left: 10px; border: 1px solid #fff; line-height: 28px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.wareSort ul li a:hover { color: #52bea6; }
+.wareSort ul li.active a { border-color: #52bea6; background: #cefff4 url(../../images/arrow.png) no-repeat right center; color: #52bea6; }
+.selectedSort { padding: 10px 15px; border: 1px solid #ed7f5a; margin-top: 10px; margin-bottom: 10px; background-color: #fff4f0; color: #ed7f5a; }
+.selectedSort b { font-weight: bold; }
+.selectedSort i font { font-family: simsun; }
+.wareSortBtn { padding-bottom: 50px; text-align: center; }
+.wareSortBtn input { width: 200px; height: 36px; border: 1px solid #ed7f5a; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; background-color: #ed7f5a; color: #fff; }
+.wareSortBtn input:hover { border-color: #d95459; background-color: #d95459; }
+.wareSortBtn input:disabled { border-color: #ddd; background-color: #f6f6f6; color: #9a9a9a; cursor: default; }
