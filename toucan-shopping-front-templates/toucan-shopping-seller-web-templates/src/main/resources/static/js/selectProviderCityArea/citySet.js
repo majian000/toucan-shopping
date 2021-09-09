@@ -14,7 +14,7 @@ function SelCity(obj, e) {
     var b = province;
     for (var i = 0,
     len = b.length; i < len; i++) {
-        tb_province.push('<a data-id="' + b[i]['id'] + '" data-name="' + b[i]['name'] + '" title="' + b[i]['name'] + '">' + b[i]['name'] + '</a>')
+        tb_province.push('<a data-id="' + b[i]['id'] + '" data-type="' + b[i]['type'] + '" data-code="' + b[i]['code'] + '"  data-name="' + b[i]['name'] + '" title="' + b[i]['name'] + '">' + b[i]['name'] + '</a>')
     }
     $("#_citys0").append(tb_province.join(""));
     $("#_citys0 a").click(function() {
@@ -104,7 +104,7 @@ function getCity(obj) {
         }
     }
     for (var j = 0; j < f.length; j++) {
-        g += '<a data-id="' + f[j]['id'] + '" data-name="' + f[j]['name'] + '" title="' + f[j]['name'] + '">' + f[j]['name'] + '</a>'
+        g += '<a data-id="' + f[j]['id'] + '" data-type="' + f[j]['type'] + '" data-code="' + f[j]['code'] + '" data-name="' + f[j]['name'] + '" title="' + f[j]['name'] + '">' + f[j]['name'] + '</a>'
     }
     $("#_citysheng").html('请选择市区');
     return g
@@ -125,7 +125,7 @@ function getArea(obj) {
     }
     if (f.length) {
         for (var k = 0; k < f.length; k++) {
-            g += '<a data-id="' + f[k]['id'] + '" data-name="' + f[k]['name'] + '" title="' + f[k]['name'] + '">' + f[k]['name'] + '</a>'
+            g += '<a data-id="' + f[k]['id'] + '"  data-type="' + f[k]['type'] + '" data-code="' + f[k]['code'] + '"  data-name="' + f[k]['name'] + '" title="' + f[k]['name'] + '">' + f[k]['name'] + '</a>'
         }
     }
     $("#_citysheng").html('请选择区县');

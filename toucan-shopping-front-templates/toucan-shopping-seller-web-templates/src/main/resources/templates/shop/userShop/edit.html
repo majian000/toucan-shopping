@@ -106,7 +106,13 @@
                                 <tr height="50">
                                     <td align="right">所在城市 &nbsp;</td>
                                     <td>
-                                        <div class="s_pca_wrap"><input class="s_pca_input" name="" id="city" type="text" placeholder="请选择" autocomplete="off" readonly="true"><s></s></div>
+                                        <div class="s_pca_wrap"><input class="s_pca_input" name="" id="ms_city" type="text" placeholder="请选择" autocomplete="off" readonly="true"><s></s></div>
+                                        <input type="hidden" id="province" name="province" />
+                                        <input type="hidden" id="city" name="city" />
+                                        <input type="hidden" id="area" name="area" />
+                                        <input type="hidden" id="province_code" name="province_code" />
+                                        <input type="hidden" id="city_code" name="city_code" />
+                                        <input type="hidden" id="area_code" name="area_code" />
                                     </td>
                                 </tr>
                                 <tr height="50">
@@ -150,10 +156,16 @@
 </body>
 
 <script src="${basePath}/static/js/seller/info.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
 <script>
     var province=${areaList!''};
+    var provinceHiddenId="province";
+    var provinceCodeHiddenId="province_code";
+    var cityHiddenId="city";
+    var cityCodeHiddenId="city_code";
+    var areaHiddenId="area";
+    var areaCodeHiddenId="area_code";
 </script>
+<script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
 <script>
     $(function () {
@@ -162,11 +174,11 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
-        $("#city").click(function (e) {
+        $("#ms_city").click(function (e) {
             SelCity(this,e);
         });
         $(".s_pca_wrap s").click(function (e) {
-            SelCity(document.getElementById("city"),e);
+            SelCity(document.getElementById("ms_city"),e);
         });
     });
 
