@@ -267,6 +267,7 @@ public class UserApiController extends BaseController {
             }
 
             resultObjectVO.setData(null);
+            resultObjectVO.setMsg("注册成功");
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

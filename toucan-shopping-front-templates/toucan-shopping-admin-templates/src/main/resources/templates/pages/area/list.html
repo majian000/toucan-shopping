@@ -203,7 +203,7 @@
                         }
                     });
                 });
-            }else if (obj.event === 'flushAll') {  // 监听刷新全部操作
+            }else if (obj.event === 'flushAllCache') {  // 监听刷新全部操作
                 layer.confirm("确定刷新全部数据缓存?", function (index) {
                     $.ajax({
                         url:"[[@{/}]]area/flush/all/cache",
