@@ -117,6 +117,15 @@ public class AreaController {
                 resultObjectVO.setMsg("保存失败,请重试!");
                 return resultObjectVO;
             }
+            try{
+                //刷新到缓存
+                initAllAreaCache();
+            }catch (Exception e)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("刷新缓存失败!");
+                return resultObjectVO;
+            }
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -197,6 +206,15 @@ public class AreaController {
                 return resultObjectVO;
             }
 
+            try{
+                //刷新到缓存
+                initAllAreaCache();
+            }catch (Exception e)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("刷新缓存失败!");
+                return resultObjectVO;
+            }
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -295,8 +313,18 @@ public class AreaController {
 
                 }
             }
+
             resultObjectVO.setData(resultObjectVOList);
 
+            try{
+                //刷新到缓存
+                initAllAreaCache();
+            }catch (Exception e)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("刷新缓存失败!");
+                return resultObjectVO;
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -515,6 +543,16 @@ public class AreaController {
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+            try{
+                //刷新到缓存
+                initAllAreaCache();
+            }catch (Exception e)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("刷新缓存失败!");
                 return resultObjectVO;
             }
 
