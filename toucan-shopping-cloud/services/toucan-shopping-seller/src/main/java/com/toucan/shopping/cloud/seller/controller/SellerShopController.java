@@ -440,13 +440,13 @@ public class SellerShopController {
 
 
     /**
-     * 更新名称和介绍
+     * 更新介绍
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/name/introduce",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/update/info",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO updateNameAndIntroduce(@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO updateInfo(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -526,8 +526,15 @@ public class SellerShopController {
             updateSellerShop.setName(sellerShop.getName());
             updateSellerShop.setIntroduce(sellerShop.getIntroduce());
             updateSellerShop.setUserMainId(sellerShop.getUserMainId());
+            updateSellerShop.setProvince(sellerShop.getProvince());
+            updateSellerShop.setCity(sellerShop.getCity());
+            updateSellerShop.setArea(sellerShop.getArea());
+            updateSellerShop.setProvinceCode(sellerShop.getProvinceCode());
+            updateSellerShop.setCityCode(sellerShop.getCityCode());
+            updateSellerShop.setAreaCode(sellerShop.getAreaCode());
 
-            int row = sellerShopService.updateNameAndIntroduce(updateSellerShop);
+
+            int row = sellerShopService.updateInfo(updateSellerShop);
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");

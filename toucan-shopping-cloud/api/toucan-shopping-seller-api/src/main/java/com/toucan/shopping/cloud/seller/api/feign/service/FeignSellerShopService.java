@@ -97,12 +97,12 @@ public interface FeignSellerShopService {
 
 
     /**
-     * 更新名称和介绍
+     * 更新店铺信息
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/update/name/introduce",produces = "application/json;charset=UTF-8")
-    ResultObjectVO updateNameAndIntroduce(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    @RequestMapping(value="/update/info",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateInfo(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
 }

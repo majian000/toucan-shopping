@@ -91,8 +91,9 @@
 
 
 
-    <update id="updateNameAndIntroduce" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
-        update t_seller_shop set  name=#{name} , introduce=#{introduce} , change_name_count = #{changeNameCount}
+    <update id="updateInfo" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
+        update t_seller_shop set  name=#{name} , introduce=#{introduce} , change_name_count = #{changeNameCount} ,
+         province=#{province},city=#{city},area=#{area},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode}
           where  user_main_id=#{userMainId} and enable_status = 1 and delete_status = 0
     </update>
 

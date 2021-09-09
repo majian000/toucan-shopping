@@ -4,6 +4,7 @@ var g_countdownNum = 60;
 var g_goLoginSecond=5;
 function getvcode()
 {
+    alert("验证码为1234");
     $("#regist_msg_c").hide();
     $("#regist_msg").text("");
     var mobilePhoneValue=$("#regist_mobile_phone").val();

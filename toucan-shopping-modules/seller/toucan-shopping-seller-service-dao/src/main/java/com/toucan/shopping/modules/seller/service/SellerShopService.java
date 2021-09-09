@@ -44,7 +44,7 @@ public interface SellerShopService {
      * @param entity
      * @return
      */
-    int updateNameAndIntroduce(SellerShop entity);
+    int updateInfo(SellerShop entity);
 
     List<SellerShop> findListByEntity(SellerShop query);
 

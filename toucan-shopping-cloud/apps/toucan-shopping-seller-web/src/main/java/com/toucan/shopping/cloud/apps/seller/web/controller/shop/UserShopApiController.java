@@ -241,7 +241,7 @@ public class UserShopApiController extends BaseController {
                 {
                     sellerShopVO.setUserMainId(Long.parseLong(userMainId));
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), sellerShopVO);
-                    resultObjectVO = feignSellerShopService.updateNameAndIntroduce(requestJsonVO.sign(), requestJsonVO);
+                    resultObjectVO = feignSellerShopService.updateInfo(requestJsonVO.sign(), requestJsonVO);
                 }
             }
 

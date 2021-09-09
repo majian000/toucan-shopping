@@ -20,11 +20,18 @@ function updateUserShop()
         $("#utm_vcode_msg").text("请输入验证码");
         return ;
     }
+
+    var fields = $('#usform').serializeArray();
+    var params = {}; //声明一个对象
+    $.each(fields, function(index, field) {
+        params[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
+    });
+
     $.ajax({
         type: "POST",
         url: basePath+'/api/user/shop/edit',
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify({"name":nameValue,"vcode":vcodeValue,"introduce":introduceValue}),
+        data:  JSON.stringify(params),
         dataType: "json",
         success: function (data) {
             if(data.code==401)

@@ -68,7 +68,11 @@ function SelCity(obj, e) {
             $("#_citys2 a").click(function() {
                 $("#_citys2 a").removeClass("AreaS");
                 $(this).addClass("AreaS");
-				alert($(this).data("name"));
+				var areaName = $(this).data("name");
+				var areaCode = $(this).data("code");
+				$("#"+areaHiddenId).val(areaName);
+                $("#"+areaCodeHiddenId).val(areaCode);
+
                 var lev = $(this).data("name");
                 if (document.getElementById("harea") == null) {
                     var hcitys = $('<input>', {
@@ -92,7 +96,11 @@ function SelCity(obj, e) {
     })
 }
 function getCity(obj) {
-	alert(obj.data('name'));
+    var provinceName = obj.data('name');
+    var provinceCode = obj.data('code');
+    $("#"+provinceHiddenId).val(provinceName);
+    $("#"+provinceCodeHiddenId).val(provinceCode);
+
     var c = obj.data('id');
     var e = province;
     var f = [];
@@ -110,7 +118,17 @@ function getCity(obj) {
     return g
 }
 function getArea(obj) {
-	alert(obj.data('name'));
+    var cityName = obj.data('name');
+    var cityCode = obj.data('code');
+    var cityType = obj.data('type');
+    if(cityType=="2") { //地市节点
+        $("#" + cityHiddenId).val(cityName);
+        $("#" + cityCodeHiddenId).val(cityCode);
+    }else if(cityType=="3") //区县节点(如果上级是直辖市)
+    {
+        $("#" + areaHiddenId).val(cityName);
+        $("#" + areaCodeHiddenId).val(cityCode);
+    }
     var c = obj.data('id');
     var e = province;
     var f = [];

@@ -51,8 +51,8 @@ public class SellerShopServiceImpl implements SellerShopService {
 
 
     @Override
-    public int updateNameAndIntroduce(SellerShop entity) {
-        return sellerShopMapper.updateNameAndIntroduce(entity);
+    public int updateInfo(SellerShop entity) {
+        return sellerShopMapper.updateInfo(entity);
     }
 
     @Override
