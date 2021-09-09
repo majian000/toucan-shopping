@@ -38,5 +38,13 @@ public class AreaRedisKey {
         return getCachePrefixKey()+":AREA:PARENT_"+cityPrefix+"_AREA_LIST";
     }
 
+    /**
+     * 完全缓存
+     * @return
+     */
+    public static String getFullAreaCacheKey()
+    {
+        return getCachePrefixKey()+":FULL_CACHE:PARENT_AREA_LIST";
+    }
 
 }

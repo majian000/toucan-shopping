@@ -51,5 +51,19 @@ public interface AreaRedisService {
      * 清空缓存
      */
     void clearAreaCache();
+
+    /**
+     * 刷新完全缓存
+     */
+    void flushFullAreaCache(List<AreaVO> allAreas);
+
+
+    /**
+     * 查询全部缓存
+     * @return
+     */
+    List<AreaVO> queryFullCache();
+
+
 }
 

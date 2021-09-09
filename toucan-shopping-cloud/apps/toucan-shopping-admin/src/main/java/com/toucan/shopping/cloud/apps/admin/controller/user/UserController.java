@@ -617,7 +617,7 @@ public class UserController extends UIController {
                             int ret = imageUploadService.deleteFile(userVO.getHeadSculpture());
                             if(ret!=0)
                             {
-                                logger.warn("删除旧头像失败 {} userVO {} ",userVO.getHeadSculpture(),JSONObject.toJSON(userVO));
+                                logger.warn("删除旧头像失败 {} userVO {} ",userVO.getHeadSculpture(),JSONObject.toJSONString(userVO));
                             }
                         }
                     }
@@ -627,7 +627,7 @@ public class UserController extends UIController {
                         if(!user.getIdcardImg1().equals(userVO.getIdcardImg1())) {
                             int ret = imageUploadService.deleteFile(userVO.getIdcardImg1());
                             if (ret != 0) {
-                                logger.warn("删除证件照片失败 {} userVO {} ", userVO.getIdcardImg1(), JSONObject.toJSON(userVO));
+                                logger.warn("删除证件照片失败 {} userVO {} ", userVO.getIdcardImg1(), JSONObject.toJSONString(userVO));
                             }
                         }
                     }
@@ -636,7 +636,7 @@ public class UserController extends UIController {
                         if(!user.getIdcardImg2().equals(userVO.getIdcardImg2())) {
                             int ret = imageUploadService.deleteFile(userVO.getIdcardImg2());
                             if (ret != 0) {
-                                logger.warn("删除证件照片失败 {} userVO {} ", userVO.getIdcardImg2(), JSONObject.toJSON(userVO));
+                                logger.warn("删除证件照片失败 {} userVO {} ", userVO.getIdcardImg2(), JSONObject.toJSONString(userVO));
                             }
                         }
                     }

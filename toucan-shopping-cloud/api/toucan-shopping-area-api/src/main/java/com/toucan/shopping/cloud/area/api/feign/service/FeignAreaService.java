@@ -116,4 +116,14 @@ public interface FeignAreaService {
     @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO flushAllCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 查询全量缓存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/full/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryFullCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
 }

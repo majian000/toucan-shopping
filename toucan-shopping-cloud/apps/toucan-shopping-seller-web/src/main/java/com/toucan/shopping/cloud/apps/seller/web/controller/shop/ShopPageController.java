@@ -1,8 +1,11 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
 
+import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -42,7 +45,11 @@ public class ShopPageController extends BaseController {
     private Toucan toucan;
 
     @Autowired
+    private FeignAreaService feignAreaService;
+
+    @Autowired
     private ImageUploadService imageUploadService;
+
 
     /**
      * 店铺信息
@@ -153,6 +160,21 @@ public class ShopPageController extends BaseController {
                             }
 
                             httpServletRequest.setAttribute("sellerShop",sellerShopVO);
+                            try {
+                                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), new AreaVO());
+                                resultObjectVO = feignAreaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
+                                if(resultObjectVO.isSuccess())
+                                {
+                                    httpServletRequest.setAttribute("areaList", JSONArray.toJSONString(resultObjectVO.getData()));
+                                }else{
+                                    httpServletRequest.setAttribute("areaList","[]");
+                                }
+                            }catch(Exception e)
+                            {
+                                httpServletRequest.setAttribute("areaList","[]");
+                                logger.warn("查询地区缓存失败 {} ",e.getMessage());
+                                logger.warn(e.getMessage(),e);
+                            }
                             return "shop/userShop/edit";
                         }
 

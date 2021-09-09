@@ -129,6 +129,10 @@
             <groupId>com.toucan.shopping.cloud.seller</groupId>
             <artifactId>toucan-shopping-seller-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-area-api</artifactId>
+        </dependency>
     </dependencies>
 
 

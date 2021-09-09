@@ -104,7 +104,7 @@
                                     </td>
                                 </tr>
                                 <tr height="50">
-                                    <td align="right"><font color="#ff4e00">*</font>&nbsp;所在城市 &nbsp;</td>
+                                    <td align="right">所在城市 &nbsp;</td>
                                     <td>
                                         <div class="s_pca_wrap"><input class="s_pca_input" name="" id="city" type="text" placeholder="请选择" autocomplete="off" readonly="true"><s></s></div>
                                     </td>
@@ -150,8 +150,10 @@
 </body>
 
 <script src="${basePath}/static/js/seller/info.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/city.json.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
+<script>
+    var province=${areaList!''};
+</script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
 <script>
     $(function () {

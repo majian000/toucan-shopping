@@ -66,4 +66,17 @@ public class AreaRedisServiceImpl implements AreaRedisService {
         redisTemplate.delete(redisTemplate.keys(AreaRedisKey.getCachePrefixKey()+":*"));
     }
 
+    @Override
+    public void flushFullAreaCache(List<AreaVO> allAreas) {
+        redisTemplate.opsForValue().set(AreaRedisKey.getFullAreaCacheKey(), JSONArray.toJSONString(allAreas));
+    }
+
+    @Override
+    public List<AreaVO> queryFullCache() {
+        Object areasRedisObject = redisTemplate.opsForValue().get(AreaRedisKey.getFullAreaCacheKey());
+        if(areasRedisObject!=null) {
+            return JSONArray.parseArray(String.valueOf(areasRedisObject), AreaVO.class);
+        }
+        return null;
+    }
 }
