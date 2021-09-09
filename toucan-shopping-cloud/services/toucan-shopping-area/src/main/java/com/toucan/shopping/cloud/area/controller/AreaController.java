@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.area.cache.service.AreaRedisService;
+import com.toucan.shopping.modules.area.constant.AreaRedisKey;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.service.AreaService;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +44,9 @@ public class AreaController {
 
     @Autowired
     private FeignAdminService feignAdminService;
+
+    @Autowired
+    private AreaRedisService areaRedisService;
 
     @Autowired
     private Toucan toucan;
@@ -857,6 +863,116 @@ public class AreaController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 刷新全部缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushAllCache(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AreaVO areaVOS = requestVo.formatEntity(AreaVO.class);
+            //刷新到缓存
+            initAllAreaCache();
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    private void initAllAreaCache() throws InvocationTargetException, IllegalAccessException {
+        //清空缓存
+        areaRedisService.clearAreaCache();
+
+        //查询所有省、直辖市
+        Area query = new Area();
+        List<Area> areas = areaService.queryList(query);
+        List<AreaVO> areaVOS = JSONArray.parseArray(JSONObject.toJSONString(areas),AreaVO.class);
+
+        //初始化省、直辖市
+        List<AreaVO> provinces = new ArrayList<AreaVO>();
+        for(AreaVO areaVO:areaVOS)
+        {
+            if(areaVO.getPid()==null||areaVO.getPid().longValue()==-1L)
+            {
+                provinces.add(areaVO);
+            }
+        }
+        if(!CollectionUtils.isEmpty(provinces)) {
+            areaRedisService.flushProvinceCache(provinces);
+        }
+
+        //初始化地市
+        for(AreaVO areaVO:areaVOS)
+        {
+            if(areaVO.getPid()==null||areaVO.getPid().longValue()==-1L)
+            {
+                List<AreaVO> citys = new ArrayList<AreaVO>();
+                for(AreaVO cityVO:areaVOS)
+                {
+                    if(areaVO.getId()!=null&&cityVO.getPid()!=null&&areaVO.getId().longValue()==cityVO.getPid().longValue())
+                    {
+                        citys.add(cityVO);
+                    }
+                }
+                if(!CollectionUtils.isEmpty(citys))
+                {
+                    //根据省ID作为Key的一部分
+                    areaRedisService.flushCityCache(AreaRedisKey.getCityCacheKey("ID_"+String.valueOf(areaVO.getId())),citys);
+                    //根据省编码作为Key的一部分
+                    areaRedisService.flushCityCache(AreaRedisKey.getCityCacheKey("CODE_"+areaVO.getCode()),citys);
+                }
+            }
+        }
+
+
+        //初始化区县
+        for(AreaVO provinceVO:areaVOS)
+        {
+            if(provinceVO.getPid()==null||provinceVO.getPid().longValue()==-1L)
+            {
+                for(AreaVO cityVO:areaVOS)
+                {
+                    //找到地市
+                    if(provinceVO.getId()!=null&&cityVO.getPid()!=null&&provinceVO.getId().longValue()==cityVO.getPid().longValue())
+                    {
+                        List<AreaVO> areaVOList = new ArrayList<AreaVO>();
+                        for(AreaVO areaVO:areaVOS)
+                        {
+                            if(cityVO.getId()!=null&&areaVO.getPid()!=null&&cityVO.getId().longValue()==areaVO.getPid().longValue())
+                            {
+                                areaVOList.add(areaVO);
+                            }
+                        }
+
+                        if(!CollectionUtils.isEmpty(areaVOList))
+                        {
+                            //根据省ID作为Key的一部分
+                            areaRedisService.flushCityCache(AreaRedisKey.getAreaCacheKey("ID_"+String.valueOf(provinceVO.getId()),"ID_"+String.valueOf(cityVO.getId())),areaVOList);
+                            //根据省编码作为Key的一部分
+                            areaRedisService.flushCityCache(AreaRedisKey.getAreaCacheKey("CODE_"+String.valueOf(provinceVO.getId()),"CODE_"+String.valueOf(cityVO.getId())),areaVOList);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 
     /**
