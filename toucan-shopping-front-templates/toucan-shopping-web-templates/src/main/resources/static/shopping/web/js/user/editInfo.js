@@ -80,7 +80,7 @@ $("#ueibtn").click(function() {
                     $("#edit_info_msg").text(result.msg);
                     $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
                 }else{
-                    window.location.href=basePath+"/page/user/editInfo";
+                    window.location.href=basePath+"/page/user/info";
                 }
             },
             error: function (result) {
