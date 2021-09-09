@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.area.cache.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.area.cache.service.AreaRedisService;
 import com.toucan.shopping.modules.area.constant.AreaRedisKey;
@@ -21,6 +22,33 @@ public class AreaRedisServiceImpl implements AreaRedisService {
     @Override
     public void flushProvinceCache(List<AreaVO> areaVOS) {
         redisTemplate.opsForValue().set(AreaRedisKey.getProvinceCacheKey(), JSONObject.toJSONString(areaVOS));
+    }
+
+    @Override
+    public List<AreaVO> queryProvinceList() {
+        Object areasRedisObject = redisTemplate.opsForValue().get(AreaRedisKey.getProvinceCacheKey());
+        if(areasRedisObject!=null) {
+            return JSONArray.parseArray(String.valueOf(areasRedisObject), AreaVO.class);
+        }
+        return null;
+    }
+
+    @Override
+    public List<AreaVO> queryCityListByProvinceCode(String provinceCode){
+        Object areasRedisObject = redisTemplate.opsForValue().get(AreaRedisKey.getCityCacheKey("CODE_"+provinceCode));
+        if(areasRedisObject!=null) {
+            return JSONArray.parseArray(String.valueOf(areasRedisObject), AreaVO.class);
+        }
+        return null;
+    }
+
+    @Override
+    public List<AreaVO> queryAreaListByCityAndProvinceCode(String provinceCode,String cityCode){
+        Object areasRedisObject = redisTemplate.opsForValue().get(AreaRedisKey.getAreaCacheKey("CODE_"+provinceCode,"CODE_"+cityCode));
+        if(areasRedisObject!=null) {
+            return JSONArray.parseArray(String.valueOf(areasRedisObject), AreaVO.class);
+        }
+        return null;
     }
 
     @Override

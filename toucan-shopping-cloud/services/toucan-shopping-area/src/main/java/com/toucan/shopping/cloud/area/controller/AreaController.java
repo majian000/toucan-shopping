@@ -933,6 +933,11 @@ public class AreaController {
         return resultObjectVO;
     }
 
+    /**
+     * 初始化地区缓存
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     private void initAllAreaCache() throws InvocationTargetException, IllegalAccessException {
         //清空缓存
         areaRedisService.clearAreaCache();
@@ -1001,9 +1006,9 @@ public class AreaController {
                         if(!CollectionUtils.isEmpty(areaVOList))
                         {
                             //根据省ID作为Key的一部分
-                            areaRedisService.flushCityCache(AreaRedisKey.getAreaCacheKey("ID_"+String.valueOf(provinceVO.getId()),"ID_"+String.valueOf(cityVO.getId())),areaVOList);
+                            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("ID_"+String.valueOf(provinceVO.getId()),"ID_"+String.valueOf(cityVO.getId())),areaVOList);
                             //根据省编码作为Key的一部分
-                            areaRedisService.flushCityCache(AreaRedisKey.getAreaCacheKey("CODE_"+String.valueOf(provinceVO.getId()),"CODE_"+String.valueOf(cityVO.getId())),areaVOList);
+                            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("CODE_"+provinceVO.getCode(),"CODE_"+cityVO.getCode()),areaVOList);
                         }
                     }
                 }
