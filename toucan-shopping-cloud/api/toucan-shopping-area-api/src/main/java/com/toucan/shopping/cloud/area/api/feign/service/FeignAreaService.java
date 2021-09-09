@@ -108,4 +108,12 @@ public interface FeignAreaService {
     ResultObjectVO queryListByParentCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 刷新全部缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO flushAllCache(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 }

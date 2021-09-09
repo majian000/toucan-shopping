@@ -402,6 +402,28 @@ public class AreaController extends UIController {
     }
 
 
+    /**
+     * 刷新全部缓存
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/flush/all/cache",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO flushAllCache(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),new AreaVO());
+            resultObjectVO = feignAreaService.flushAllCache(requestJsonVO.sign(), requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }
 

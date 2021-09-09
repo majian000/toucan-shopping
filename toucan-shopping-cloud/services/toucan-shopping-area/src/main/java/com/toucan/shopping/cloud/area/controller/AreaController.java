@@ -859,37 +859,63 @@ public class AreaController {
 
         try {
             Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
-            List<Area> areas = null;
-            if (!"-1".equals(queryArea.getCode())) {
-                areas = areaService.queryList(queryArea);
-                if (CollectionUtils.isEmpty(areas)) {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,没有找到该节点");
-                    return resultObjectVO;
-                }
-                Area currentArea = areas.get(0);
-                queryArea = new Area();
-                //设置当前节点到PID
-                queryArea.setPid(currentArea.getId());
+            List<AreaVO> areaVOS =null;
+            if("-1".equals(queryArea.getCode()))
+            {
+                areaVOS = areaRedisService.queryProvinceList();
             }else{
-                queryArea.setCode(null);
-                queryArea.setPid(-1L); //默认查询所有省
-            }
-            areas = areaService.queryList(queryArea);
-            List<AreaVO> areaVOS = new ArrayList<AreaVO>();
-            for (int i = 0; i < areas.size(); i++) {
-                Area area = areas.get(i);
-                AreaVO areaVO = new AreaVO();
-                BeanUtils.copyProperties(areaVO, area);
-                if (area.getType() == 1) {
-                    areaVO.setName(area.getProvince());
-                } else if (area.getType() == 2) {
-                    areaVO.setName(area.getCity());
-                } else if (area.getType() == 3) {
-                    areaVO.setName(area.getArea());
+                //先查询地市,之后在查询区县,因为不确定这个节点是指定省还是指定地市
+                areaVOS = areaRedisService.queryCityListByProvinceCode(queryArea.getCode());
+                if(CollectionUtils.isEmpty(areaVOS))
+                {
+                    areaVOS = areaRedisService.queryAreaListByCityCode(queryArea.getCode());
                 }
-                areaVOS.add(areaVO);
+
             }
+            //如果缓存不存在,查询数据库然后同步到缓存
+            if(CollectionUtils.isEmpty(areaVOS)) {
+                List<Area> areas = null;
+                if (!"-1".equals(queryArea.getCode())) {
+                    areas = areaService.queryList(queryArea);
+                    if (CollectionUtils.isEmpty(areas)) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请求失败,没有找到该节点");
+                        return resultObjectVO;
+                    }
+                    Area currentArea = areas.get(0);
+                    queryArea = new Area();
+                    //设置当前节点到PID
+                    queryArea.setPid(currentArea.getId());
+                }else{
+                    queryArea.setCode(null);
+                    queryArea.setPid(-1L); //默认查询所有省
+                }
+                areaVOS = new ArrayList<AreaVO>();
+                areas = areaService.queryList(queryArea);
+                for (int i = 0; i < areas.size(); i++) {
+                    Area area = areas.get(i);
+                    AreaVO areaVO = new AreaVO();
+                    BeanUtils.copyProperties(areaVO, area);
+                    if (area.getType() == 1) {
+                        areaVO.setName(area.getProvince());
+                    } else if (area.getType() == 2) {
+                        areaVO.setName(area.getCity());
+                    } else if (area.getType() == 3) {
+                        areaVO.setName(area.getArea());
+                    }
+                    areaVOS.add(areaVO);
+                }
+
+                try{
+                    //刷新到缓存
+                    initAllAreaCache();
+                }catch (Exception e)
+                {
+                    logger.warn("同步地区缓存失败 {}",e.getMessage());
+                    logger.warn(e.getMessage(),e);
+                }
+            }
+
             resultObjectVO.setData(areaVOS);
 
         }catch(Exception e)
@@ -953,6 +979,13 @@ public class AreaController {
         {
             if(areaVO.getPid()==null||areaVO.getPid().longValue()==-1L)
             {
+                if (areaVO.getType() == 1) {
+                    areaVO.setName(areaVO.getProvince());
+                } else if (areaVO.getType() == 2) {
+                    areaVO.setName(areaVO.getCity());
+                } else if (areaVO.getType() == 3) {
+                    areaVO.setName(areaVO.getArea());
+                }
                 provinces.add(areaVO);
             }
         }
@@ -970,7 +1003,17 @@ public class AreaController {
                 {
                     if(areaVO.getId()!=null&&cityVO.getPid()!=null&&areaVO.getId().longValue()==cityVO.getPid().longValue())
                     {
-                        citys.add(cityVO);
+                        //如果不是直辖市,就初始化这个省下的地市,否则是直辖市就初始化下面的区县
+                        if(areaVO.getIsMunicipality().intValue()==0) {
+                            if (cityVO.getType() == 1) {
+                                cityVO.setName(cityVO.getProvince());
+                            } else if (cityVO.getType() == 2) {
+                                cityVO.setName(cityVO.getCity());
+                            } else if (cityVO.getType() == 3) {
+                                cityVO.setName(cityVO.getArea());
+                            }
+                            citys.add(cityVO);
+                        }
                     }
                 }
                 if(!CollectionUtils.isEmpty(citys))
@@ -987,29 +1030,55 @@ public class AreaController {
         //初始化区县
         for(AreaVO provinceVO:areaVOS)
         {
-            if(provinceVO.getPid()==null||provinceVO.getPid().longValue()==-1L)
-            {
-                for(AreaVO cityVO:areaVOS)
-                {
-                    //找到地市
-                    if(provinceVO.getId()!=null&&cityVO.getPid()!=null&&provinceVO.getId().longValue()==cityVO.getPid().longValue())
-                    {
-                        List<AreaVO> areaVOList = new ArrayList<AreaVO>();
-                        for(AreaVO areaVO:areaVOS)
-                        {
-                            if(cityVO.getId()!=null&&areaVO.getPid()!=null&&cityVO.getId().longValue()==areaVO.getPid().longValue())
-                            {
-                                areaVOList.add(areaVO);
+            if (provinceVO.getPid() == null || provinceVO.getPid().longValue() == -1L) {
+                //如果是省,不是直辖市的话,就找到下面所有地市再查询区县,如果是直辖市,就直接查询区县
+                if (provinceVO.getIsMunicipality().intValue() == 0) {
+                    for (AreaVO cityVO : areaVOS) {
+                        //找到地市
+                        if (provinceVO.getId() != null && cityVO.getPid() != null && provinceVO.getId().longValue() == cityVO.getPid().longValue()) {
+                            List<AreaVO> areaVOList = new ArrayList<AreaVO>();
+                            for (AreaVO areaVO : areaVOS) {
+                                if (cityVO.getId() != null && areaVO.getPid() != null && cityVO.getId().longValue() == areaVO.getPid().longValue()) {
+                                    if (areaVO.getType() == 1) {
+                                        areaVO.setName(areaVO.getProvince());
+                                    } else if (areaVO.getType() == 2) {
+                                        areaVO.setName(areaVO.getCity());
+                                    } else if (areaVO.getType() == 3) {
+                                        areaVO.setName(areaVO.getArea());
+                                    }
+                                    areaVOList.add(areaVO);
+                                }
+                            }
+
+                            if (!CollectionUtils.isEmpty(areaVOList)) {
+                                //根据省ID作为Key的一部分
+                                areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("ID_" + String.valueOf(cityVO.getId())), areaVOList);
+                                //根据省编码作为Key的一部分
+                                areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("CODE_" + cityVO.getCode()), areaVOList);
                             }
                         }
-
-                        if(!CollectionUtils.isEmpty(areaVOList))
-                        {
-                            //根据省ID作为Key的一部分
-                            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("ID_"+String.valueOf(provinceVO.getId()),"ID_"+String.valueOf(cityVO.getId())),areaVOList);
-                            //根据省编码作为Key的一部分
-                            areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("CODE_"+provinceVO.getCode(),"CODE_"+cityVO.getCode()),areaVOList);
+                    }
+                }else{
+                    //找到区县
+                    List<AreaVO> areaVOList = new ArrayList<AreaVO>();
+                    for (AreaVO areaVO : areaVOS) {
+                        if (provinceVO.getId() != null && areaVO.getPid() != null && provinceVO.getId().longValue() == areaVO.getPid().longValue()) {
+                            if (areaVO.getType() == 1) {
+                                areaVO.setName(areaVO.getProvince());
+                            } else if (areaVO.getType() == 2) {
+                                areaVO.setName(areaVO.getCity());
+                            } else if (areaVO.getType() == 3) {
+                                areaVO.setName(areaVO.getArea());
+                            }
+                            areaVOList.add(areaVO);
                         }
+                    }
+
+                    if (!CollectionUtils.isEmpty(areaVOList)) {
+                        //根据省ID作为Key的一部分
+                        areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("ID_" + String.valueOf(provinceVO.getId())), areaVOList);
+                        //根据省编码作为Key的一部分
+                        areaRedisService.flushAreaCache(AreaRedisKey.getAreaCacheKey("CODE_" + provinceVO.getCode()), areaVOList);
                     }
                 }
             }

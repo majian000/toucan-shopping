@@ -43,10 +43,10 @@ public interface AreaRedisService {
 
 
     /**
-     * 查询指定省、地市的所有区县
+     * 查询指定地市的所有区县
      * @return
      */
-    List<AreaVO> queryAreaListByCityAndProvinceCode(String provinceCode,String cityCode);
+    List<AreaVO> queryAreaListByCityCode(String cityCode);
     /**
      * 清空缓存
      */

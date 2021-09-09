@@ -43,8 +43,8 @@ public class AreaRedisServiceImpl implements AreaRedisService {
     }
 
     @Override
-    public List<AreaVO> queryAreaListByCityAndProvinceCode(String provinceCode,String cityCode){
-        Object areasRedisObject = redisTemplate.opsForValue().get(AreaRedisKey.getAreaCacheKey("CODE_"+provinceCode,"CODE_"+cityCode));
+    public List<AreaVO> queryAreaListByCityCode(String cityCode){
+        Object areasRedisObject = redisTemplate.opsForValue().get(AreaRedisKey.getAreaCacheKey("CODE_"+cityCode));
         if(areasRedisObject!=null) {
             return JSONArray.parseArray(String.valueOf(areasRedisObject), AreaVO.class);
         }

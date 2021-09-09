@@ -26,16 +26,16 @@ public class AreaRedisKey {
      */
     public static String getCityCacheKey(String prefix)
     {
-        return getCachePrefixKey()+":CITY:PROVINCE_"+prefix+"_CITY_LIST";
+        return getCachePrefixKey()+":CITY:PARENT_"+prefix+"_CITY_LIST";
     }
 
     /**
      * 区县键
      * @return
      */
-    public static String getAreaCacheKey(String provincePrefix,String cityPrefix)
+    public static String getAreaCacheKey(String cityPrefix)
     {
-        return getCachePrefixKey()+":AREA:PROVINCE_"+provincePrefix+"_CITY_"+cityPrefix+"_AREA_LIST";
+        return getCachePrefixKey()+":AREA:PARENT_"+cityPrefix+"_AREA_LIST";
     }
 
 
