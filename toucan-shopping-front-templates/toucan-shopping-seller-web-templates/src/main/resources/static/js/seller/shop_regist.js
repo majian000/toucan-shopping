@@ -35,7 +35,7 @@ function registUserShop()
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/shop/submit_success";
+                window.location.href=basePath+"/page/shop/regist_success";
             }
         },
         error: function (result) {

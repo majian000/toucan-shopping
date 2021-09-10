@@ -4,7 +4,6 @@
 function updateUserShop()
 {
     var nameValue=$("#name").val();
-    var introduceValue=$("#introduce").val();
     var vcodeValue=$("#utm_vcode").val();
 
     $("#name_msg").text(" ");
@@ -43,7 +42,7 @@ function updateUserShop()
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/shop/submit_success";
+                window.location.href=basePath+"/page/shop/update_success";
             }
         },
         error: function (result) {

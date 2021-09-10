@@ -532,6 +532,7 @@ public class SellerShopController {
             updateSellerShop.setProvinceCode(sellerShop.getProvinceCode());
             updateSellerShop.setCityCode(sellerShop.getCityCode());
             updateSellerShop.setAreaCode(sellerShop.getAreaCode());
+            updateSellerShop.setDetailAddress(sellerShop.getDetailAddress());
 
 
             int row = sellerShopService.updateInfo(updateSellerShop);

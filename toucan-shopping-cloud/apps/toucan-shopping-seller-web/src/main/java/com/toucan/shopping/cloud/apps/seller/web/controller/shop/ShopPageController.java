@@ -208,9 +208,16 @@ public class ShopPageController extends BaseController {
     }
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/submit_success")
-    public String submit_success(HttpServletRequest request){
+    @RequestMapping("/regist_success")
+    public String submitSuccess(HttpServletRequest request){
         return "shop/regist_success";
     }
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/update_success")
+    public String updateSuccess(HttpServletRequest request){
+        return "shop/update_success";
+    }
+
 
 }

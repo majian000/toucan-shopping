@@ -118,6 +118,15 @@
                                         <input type="hidden" id="area_code" name="areaCode" value="${sellerShop.areaCode!''}"  />
                                     </td>
                                 </tr>
+
+                                <tr height="50">
+                                    <td align="right">&nbsp;详细地址 &nbsp;</td>
+                                    <td>
+                                        <textarea id="detail_address" name="detailAddress" class="l_textarea_long" maxlength="200"  placeholder="请填写详细地址">${sellerShop.detailAddress!''}</textarea>
+                                        &nbsp;&nbsp;
+                                        <a id="detail_address_msg" style="color:#ff4e00;"></a>
+                                    </td>
+                                </tr>
                                 <tr height="50">
                                     <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                                     <td>
