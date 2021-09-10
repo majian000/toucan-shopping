@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/jqueryFormValidate/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/selectProductCategory/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/uploadProductImage/style.css" />
 
     <!--[if IE 6]>
     <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
@@ -75,12 +76,64 @@
                     <div class="form">
                         <h3>商品信息</h3>
                         <div class="item">
-                            <span class="label"><span class="red">*</span>昵称：</span>
+                            <span class="label"><span class="red">*</span>标题：</span>
                             <div class="fl">
-                                <input type="text" id="nickname" name="nickName" class="text" tabindex="1"  />
-                                <label id="nickname_succeed" class="blank"></label>
+                                <input type="text" id="title" name="title" class="text" tabindex="1"  />
+                                <label id="title_succeed" class="blank"></label>
                                 <span class="clear"></span>
-                                <div id="nickname_error"></div>
+                                <div id="title_error"></div>
+                            </div>
+                        </div><!--item end-->
+                        <div class="item" style="height:240px;">
+                            <span class="label"><span class="red">*</span>上传商品图片：</span>
+                            <div class="fl" style="width:450px;display:inline">
+                                <div class="file_up_group">
+                                    <a class="productImageTipsOuter">
+                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview1" width="110" height="110" />
+                                        <span class="productImageTips" id="productImgTips1"><span class="red">*</span>商品主图</span>
+                                    </a>
+                                    <div id="file_ipt1_group">
+                                        <input id="upload1" name="file" accept="image/*" type="file" style="display: none" />
+                                    </div>
+                                </div>
+
+                                <div class="file_up_group">
+                                    <a class="productImageTipsOuter">
+                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview2" width="110" height="110" />
+                                    </a>
+                                    <div id="file_ipt2_group">
+                                        <input id="upload2" name="file" accept="image/*" type="file" style="display: none" />
+                                    </div>
+                                </div>
+
+                                <div class="file_up_group">
+                                    <a class="productImageTipsOuter">
+                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview3" width="110" height="110" />
+                                    </a>
+                                    <div id="file_ipt3_group">
+                                        <input id="upload3" name="file" accept="image/*" type="file" style="display: none" />
+                                    </div>
+                                </div>
+
+                                <div class="file_up_group">
+                                    <a class="productImageTipsOuter">
+                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview4" width="110" height="110" />
+                                    </a>
+                                    <div id="file_ipt4_group">
+                                        <input id="upload4" name="file" accept="image/*" type="file" style="display: none" />
+                                    </div>
+                                </div>
+
+                                <div class="file_up_group">
+                                    <a class="productImageTipsOuter">
+                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview5" width="110" height="110" />
+                                        <span class="productImageTips" id="productImgTips5">商品正面图</span>
+                                    </a>
+                                    <div id="file_ipt5_group">
+                                        <input id="upload5" name="file" accept="image/*" type="file" style="display: none" />
+                                    </div>
+                                </div>
+
                             </div>
                         </div><!--item end-->
 
@@ -132,6 +185,7 @@
 
 </body>
 
+<script src="${basePath}/static/js/uploadProductImage/upload_product_img.js"></script>
 <script src="${basePath}/static/js/selectProductCategory/selectCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/release_product.js"></script>
@@ -141,6 +195,13 @@
         $("#refreshCaptcha").bind( 'click' ,function(){
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
+
+
+        bind_upload_event("upload1","productImgTips1","productImgPreview1","file_ipt1_group");
+        bind_upload_event("upload2",null,"productImgPreview2","file_ipt1_group");
+        bind_upload_event("upload3",null,"productImgPreview3","file_ipt1_group");
+        bind_upload_event("upload4",null,"productImgPreview4","file_ipt1_group");
+        bind_upload_event("upload5","productImgTips5","productImgPreview5","file_ipt1_group");
 
     });
 

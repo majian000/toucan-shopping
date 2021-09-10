@@ -1,5 +1,5 @@
 $.extend(validatePrompt, {
-    nickname:{
+    title:{
         onFocus:"2-15位字符，可由中文或英文组成",
         succeed:"",
         isNull:"请输入昵称",
@@ -16,9 +16,9 @@ $.extend(validatePrompt, {
 
 
 $.extend(validateFunction, {
-    nickname:function(option) {
+    title:function(option) {
         var length = validateRules.betweenLength(option.value.replace(/[^\x00-\xff]/g, "**"), 2, 15);
-        var format = validateRules.isNickname(option.value);
+        var format = validateRules.istitle(option.value);
         if (!length) {
             validateSettings.error.run(option, option.prompts.error.badLength);
             return;
@@ -39,19 +39,19 @@ $.extend(validateFunction, {
         validateSettings.succeed.run(option);
     },
     form_validate:function() {
-        $("#nickname").jdValidate(validatePrompt.nickname, validateFunction.nickname, true);
+        $("#title").jdValidate(validatePrompt.title, validateFunction.title, true);
         $("#vcode").jdValidate(validatePrompt.vcode, validateFunction.vcode, true);
-        return validateFunction.FORM_submit(["#nickname","#vcode"]);
+        return validateFunction.FORM_submit(["#title","#vcode"]);
     }
 });
 
 
 //默认离开获得焦点
 setTimeout(function() {
-    $("#nickname").get(0).focus();
+    $("#title").get(0).focus();
 }, 0);
 //用户名验证
-$("#nickname").jdValidate(validatePrompt.nickname, validateFunction.nickname);
+$("#title").jdValidate(validatePrompt.title, validateFunction.title);
 
 setTimeout(function() {
     $("#vcode").get(0).focus();

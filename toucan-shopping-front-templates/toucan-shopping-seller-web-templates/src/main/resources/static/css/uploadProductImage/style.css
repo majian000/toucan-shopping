@@ -1,0 +1,26 @@
+
+.productImageTipsOuter {
+    margin: 0px auto;
+    position: relative;
+    overflow: hidden;
+}
+.productImageTips {
+    width: 110px;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 0px;
+    text-align:center;
+    background-color: rgba(0, 0, 0, .50);
+    color: #FFFFFF;
+    font-size: 5px;
+    position: absolute;
+    left: 0px;
+}
+
+.file_up_group{
+    float:left;
+    display:inline;
+    width:110px;
+    margin-left:5px;
+    margin-top:5px;
+}
