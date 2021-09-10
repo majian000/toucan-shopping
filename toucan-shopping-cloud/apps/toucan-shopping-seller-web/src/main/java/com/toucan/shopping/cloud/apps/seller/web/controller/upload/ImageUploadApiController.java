@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
+package com.toucan.shopping.cloud.apps.seller.web.controller.upload;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
@@ -29,11 +29,11 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * 店铺信息
+ * 图片上传
  */
-@Controller("shopApiController")
-@RequestMapping("/page/api")
-public class ShopApiController extends BaseController {
+@Controller("imageUploadApiController")
+@RequestMapping("/page/api/upload")
+public class ImageUploadApiController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -52,7 +52,7 @@ public class ShopApiController extends BaseController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping("/upload/logo")
+    @RequestMapping("/logo")
     @ResponseBody
     public ResultObjectVO  uploadLogo(@RequestParam("file") MultipartFile file,HttpServletRequest request)
     {
@@ -153,5 +153,49 @@ public class ShopApiController extends BaseController {
     }
 
 
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping("/product/images")
+    @ResponseBody
+    public ResultObjectVO  uploadProductImages(@RequestParam("file") MultipartFile file,HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String fileName = file.getOriginalFilename();
+            String fileExt = ".jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+            }
+            String fileExtUpper=  fileExt.toUpperCase();
+            if(!"JPG".equals(fileExtUpper)&&!"JPEG".equals(fileExtUpper)
+                    &&!"PNG".equals(fileExtUpper)&&!"BMP".equals(fileExtUpper))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("商品图片只能上传JPG、JPEG、PNG、BMP格式!");
+                return resultObjectVO;
+            }
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("商品图片上传失败");
+            }
+
+            resultObjectVO.setData(imageUploadService.getImageHttpPrefix() + groupPath);
+            resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("商品图片上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
 
 }

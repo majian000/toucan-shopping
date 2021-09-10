@@ -29,12 +29,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    resultObjectVO.setMsg("注册超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.registByMobile 失败 header {} params {} ",signHeader,requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
+                resultObjectVO.setMsg("注册超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -134,12 +134,12 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    resultObjectVO.setMsg("登录超时,请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("调用FeignUserService.loginByPassword失败 params: {} ",requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
+                resultObjectVO.setMsg("登录超时,请稍后重试");
                 return resultObjectVO;
             }
 
