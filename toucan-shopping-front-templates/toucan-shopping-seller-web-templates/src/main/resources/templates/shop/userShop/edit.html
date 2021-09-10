@@ -107,15 +107,15 @@
                                     <td align="right">所在城市 &nbsp;</td>
                                     <td>
                                         <div class="s_pca_wrap">
-                                            <input class="s_pca_input" name="" id="ms_city" type="text" placeholder="请选择" autocomplete="off" readonly="true">
+                                            <input class="s_pca_input" name="" id="ms_city" type="text" placeholder="请选择" autocomplete="off" value="${selectProvinceCityAreaName!''}" readonly="true">
                                             <s></s>
                                         </div>
-                                        <input type="hidden" id="province" name="province" />
-                                        <input type="hidden" id="city" name="city" />
-                                        <input type="hidden" id="area" name="area" />
-                                        <input type="hidden" id="province_code" name="provinceCode" />
-                                        <input type="hidden" id="city_code" name="cityCode" />
-                                        <input type="hidden" id="area_code" name="areaCode" />
+                                        <input type="hidden" id="province" name="province" value="${sellerShop.province!''}" />
+                                        <input type="hidden" id="city" name="city" value="${sellerShop.city!''}" />
+                                        <input type="hidden" id="area" name="area" value="${sellerShop.area!''}"  />
+                                        <input type="hidden" id="province_code" name="provinceCode" value="${sellerShop.provinceCode!''}"  />
+                                        <input type="hidden" id="city_code" name="cityCode" value="${sellerShop.cityCode!''}"  />
+                                        <input type="hidden" id="area_code" name="areaCode" value="${sellerShop.areaCode!''}"  />
                                     </td>
                                 </tr>
                                 <tr height="50">

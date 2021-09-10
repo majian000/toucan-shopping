@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,6 +160,21 @@ public class ShopPageController extends BaseController {
                                 sellerShopVO.setSurplusChangeNameCount(3);
                             }
 
+                            String selectProvinceCityAreaName="";
+                            if(StringUtils.isNotEmpty(sellerShopVO.getProvince()))
+                            {
+                                selectProvinceCityAreaName = sellerShopVO.getProvince();
+                            }
+                            if(StringUtils.isNotEmpty(sellerShopVO.getCity()))
+                            {
+                                selectProvinceCityAreaName +="/"+ sellerShopVO.getCity();
+                            }
+                            if(StringUtils.isNotEmpty(sellerShopVO.getArea()))
+                            {
+                                selectProvinceCityAreaName +="/"+ sellerShopVO.getArea();
+                            }
+
+                            httpServletRequest.setAttribute("selectProvinceCityAreaName",selectProvinceCityAreaName);
                             httpServletRequest.setAttribute("sellerShop",sellerShopVO);
                             try {
                                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), new AreaVO());

@@ -100,6 +100,11 @@ function getCity(obj) {
     var provinceCode = obj.data('code');
     $("#"+provinceHiddenId).val(provinceName);
     $("#"+provinceCodeHiddenId).val(provinceCode);
+    //清空地市和区县
+    $("#"+cityHiddenId).val("");
+    $("#"+cityCodeHiddenId).val("");
+    $("#"+areaHiddenId).val("");
+    $("#"+areaCodeHiddenId).val("");
 
     var c = obj.data('id');
     var e = province;
