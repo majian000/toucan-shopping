@@ -1,7 +1,7 @@
-.s_pca_wrap{width:464px;height:34px;margin:20px auto;border:0;position:relative;}
-.s_pca_input{position:absolute;top:0;left:0;width:457px;margin:0;padding-left:5px;height:30px;line-height:30px;font-size:12px;border:1px solid #c9cacb;}
-.s_pca_wrap s{position:absolute;top:1px;right:0;width:32px;height:32px;background:url("../../images/arrows.png") no-repeat;}
-._citys { width: 450px; display: inline-block; border: 2px solid #eee; padding: 5px; position: relative; }
+.s_pca_wrap{height:34px;border:0;position:relative;}
+.s_pca_input{position:absolute;top:0;left:0;width:300px;margin:0;padding-left:5px;height:30px;line-height:30px;font-size:12px;border:1px solid #c9cacb;}
+.s_pca_wrap s{position:absolute;top:1px;margin-left:276px;width:32px;height:32px;background:url("../../images/arrows.png") no-repeat;}
+._citys { width: 300px; display: inline-block; border: 2px solid #eee; padding: 5px; position: relative; }
 ._citys span { color: #ff4e00; height: 15px; width: 15px; line-height: 15px; text-align: center; border-radius: 3px; position: absolute; right: 10px; top: 10px; border: 1px solid #ff4e00; cursor: pointer; }
 ._citys0 { background-color:white;width: 95%; height: 34px; line-height: 34px; display: inline-block; border-bottom: 2px solid #ff4e00; padding: 0px 5px; font-size:14px; font-weight:bold; margin-left:6px; }
 ._citys0 li { display: inline-block; line-height: 34px; font-size: 15px; color: #888; width: 80px; text-align: center; cursor: pointer; }
