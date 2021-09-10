@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/jqueryFormValidate/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/selectProductCategory/style.css" />
-    <link rel="stylesheet" href="${basePath}/static/css/uploadProductImage/style.css" />
 
     <!--[if IE 6]>
     <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
@@ -84,60 +83,6 @@
                                 <div id="title_error"></div>
                             </div>
                         </div><!--item end-->
-                        <div class="item" style="height:240px;">
-                            <span class="label"><span class="red">*</span>上传商品图片：</span>
-                            <div class="fl" style="width:450px;display:inline">
-                                <div class="file_up_group">
-                                    <div class="productImageTipsOuter">
-                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview1" width="110" height="110" />
-                                        <div class="productImageTips" id="productImgTips1"><span class="red">*</span>商品主图</div>
-                                        <div class="productImageToolbarHide" id="productImageToolbar1"><a href="#" onclick="deleteProductImage('productImages1','productImgTips1','productImageToolbar1','productImgPreview1','file_ipt1_group');">删除</a></div>
-                                    </div>
-                                    <div id="file_ipt1_group">
-                                        <input type="hidden" id="productImage1" name="productImage1" />
-                                        <input id="productImages1" name="productImages1" accept="image/*" type="file" style="display: none" />
-                                    </div>
-                                </div>
-
-                                <div class="file_up_group">
-                                    <div class="productImageTipsOuter">
-                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview2" width="110" height="110" />
-                                    </div>
-                                    <div id="file_ipt2_group">
-                                        <input id="productImages2" name="productImages2"accept="image/*" type="file" style="display: none" />
-                                    </div>
-                                </div>
-
-                                <div class="file_up_group">
-                                    <div class="productImageTipsOuter">
-                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview3" width="110" height="110" />
-                                    </div>
-                                    <div id="file_ipt3_group">
-                                        <input id="productImages3" name="productImages3"accept="image/*" type="file" style="display: none" />
-                                    </div>
-                                </div>
-
-                                <div class="file_up_group">
-                                    <div class="productImageTipsOuter">
-                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview4" width="110" height="110" />
-                                    </div>
-                                    <div id="file_ipt4_group">
-                                        <input id="productImages4" name="productImages4" accept="image/*" type="file" style="display: none" />
-                                    </div>
-                                </div>
-
-                                <div class="file_up_group">
-                                    <div class="productImageTipsOuter">
-                                        <img src="${basePath}/static/images/defaultImgUp.png" id="productImgPreview5" width="110" height="110" />
-                                        <span class="productImageTips" id="productImgTips5">商品正面图</span>
-                                    </div>
-                                    <div id="file_ipt5_group">
-                                        <input id="productImages5" name="productImages5" accept="image/*" type="file" style="display: none" />
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div><!--item end-->
 
                         <h3>商品分类</h3>
 
@@ -187,7 +132,6 @@
 
 </body>
 
-<script src="${basePath}/static/js/uploadProductImage/upload_product_img.js"></script>
 <script src="${basePath}/static/js/selectProductCategory/selectCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/release_product.js"></script>
@@ -198,11 +142,6 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
-        bind_upload_event("productImages1","productImgTips1","productImageToolbar1","productImgPreview1","file_ipt1_group");
-        bind_upload_event("productImages2",null,"productImageToolbar2","productImgPreview2","file_ipt1_group");
-        bind_upload_event("productImages3",null,"productImageToolbar3","productImgPreview3","file_ipt1_group");
-        bind_upload_event("productImages4",null,"productImageToolbar4","productImgPreview4","file_ipt1_group");
-        bind_upload_event("productImages5","productImgTips5","productImageToolbar5","productImgPreview5","file_ipt1_group");
 
     });
 
