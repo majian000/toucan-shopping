@@ -1,27 +1,48 @@
 
+<style>
+    .mnavbar{
+        width:70%; min-width:600px; text-align:right;float:left;height:140px;
+    }
+    .mnavbar a{
+        font-size:25px;
+    }
+    .mnavbar ul{
+        margin-top:75px;
+        float:right;
+    }
+    .mnavbar li{
+        width:150px;
+        float:left;
+        padding:2em;
+    }
+    .mnavbarlogo{
+        width:25%; min-width:150px; text-align:left;float:left;
+    }
+    .navbarcontainer{
+        width:100%; min-width:1200px;text-align:left;
+    }
+</style>
+
 <!--   HEADER PART START   -->
 <header>
 
     <!-- Navber -->
-    <nav class="navbar navbar-expand-lg navbar-light main-nav" style="height:140px;">
-        <div class="container" >
-            <a class="navbar-brand" href="index.html">
-                <div class="logo">
-                    <img src="${basePath}/static/images/logo.png" class="w-100" alt="" />
-                </div>
-            </a>
-
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent" >
-                <ul class="navbar-nav ml-auto navbar-custom"  >
-                    <li class="nav-item active">
-                        <a class="nav-link" href="index.html">开店教程 </a>
+    <nav class="" style="height:140px;">
+        <div class="navbarcontainer" >
+            <div class="mnavbarlogo">
+                <a class="navbar-brand" href="index.html">
+                    <div class="logo">
+                        <img src="${basePath}/static/images/logo.png" class="w-100" alt="" />
+                    </div>
+                </a>
+            </div>
+            <div class="mnavbar">
+                <ul>
+                    <li >
+                        <a  href="index.html">开店教程 </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">常见问题</a>
+                    <li>
+                        <a href="about.html">常见问题</a>
                     </li>
                 </ul>
             </div>
