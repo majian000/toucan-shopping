@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
@@ -842,7 +843,18 @@ public class UserController {
     }
 
 
-
+    /**
+     * 字段值过滤
+     * @param userVO
+     * @throws Exception
+     */
+    void executeFieldValueFilter(UserVO userVO) throws Exception
+    {
+        //过滤空格
+        BlankSpaceUtils.replaceBlankSpace(userVO);
+        //过滤XSS代码
+        XSSConvert.replaceXSS(userVO);
+    }
 
 
     /**
@@ -856,33 +868,39 @@ public class UserController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
         {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("修改失败,没有找到要操作的用户");
             return resultObjectVO;
         }
 
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("修改失败,没有找到应用编码");
             return resultObjectVO;
         }
         UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
         if(userVO==null)
         {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("修改失败,没有找到要修改的用户");
             return resultObjectVO;
         }
         if(userVO.getUserMainId()==null)
         {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("修改失败,没有找到要用户ID");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userVO.getNickName()))
         {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("修改失败,昵称不能为空");
+            return resultObjectVO;
+        }
+        if(!NicknameUtils.isNickname(userVO.getNickName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("修改失败,昵称不合法,不能以数字开头,可以是汉字、字母下划线组合");
             return resultObjectVO;
         }
         try {
@@ -892,6 +910,8 @@ public class UserController {
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
+            //过滤字段非法值
+            this.executeFieldValueFilter(userVO);
 
             //判断这个昵称是否被占用,如果出现这个昵称两个人使用的情况就判断这两个人如果有一个人是这个用户,还允许使用
             UserDetail query = new UserDetail();

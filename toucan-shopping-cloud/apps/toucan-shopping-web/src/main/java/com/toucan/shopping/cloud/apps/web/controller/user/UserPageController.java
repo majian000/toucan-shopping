@@ -80,22 +80,11 @@ public class UserPageController extends BaseController {
         return "user/login";
     }
 
-
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/info")
-    public String info(HttpServletRequest request)
-    {
-        return "user/info";
-    }
-
-
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/editInfo")
-    public String editInfo(HttpServletRequest httpServletRequest)
+    void setAttributeUser(HttpServletRequest request)
     {
         try {
             UserVO queryUserVO = new UserVO();
-            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId( httpServletRequest.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
+            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
             ResultObjectVO resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -106,15 +95,31 @@ public class UserPageController extends BaseController {
                 }else{
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+toucan.getUser().getDefaultHeadSculpture());
                 }
-                httpServletRequest.setAttribute("userVO",userVO);
+                request.setAttribute("userVO",userVO);
             }else{
-                httpServletRequest.setAttribute("userVO",new UserVO());
+                request.setAttribute("userVO",new UserVO());
             }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            httpServletRequest.setAttribute("userVO",new UserVO());
+            request.setAttribute("userVO",new UserVO());
         }
+    }
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/info")
+    public String info(HttpServletRequest httpServletRequest)
+    {
+        this.setAttributeUser(httpServletRequest);
+        return "user/info";
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/editInfo")
+    public String editInfo(HttpServletRequest httpServletRequest)
+    {
+        this.setAttributeUser(httpServletRequest);
         return "user/edit_info";
     }
 

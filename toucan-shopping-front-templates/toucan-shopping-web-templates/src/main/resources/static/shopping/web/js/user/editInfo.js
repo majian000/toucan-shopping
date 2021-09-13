@@ -5,7 +5,7 @@ $.extend(validatePrompt, {
         isNull:"请输入昵称",
         error:{
             badLength:"昵称长度只能在2-15位字符之间",
-            badFormat:"昵称人只能由中文或英文组成"
+            badFormat:"昵称只能由中文或英文组成"
         }
     },
     vcode:{
@@ -17,8 +17,9 @@ $.extend(validatePrompt, {
 
 $.extend(validateFunction, {
     nickname:function(option) {
-        var length = validateRules.betweenLength(option.value.replace(/[^\x00-\xff]/g, "**"), 2, 15);
-        var format = validateRules.isNickname(option.value);
+        var nickname = option.value.replace(" ","");
+        var length = validateRules.betweenLength(nickname, 2, 15);
+        var format = validateRules.isNickname(nickname);
         if (!length) {
             validateSettings.error.run(option, option.prompts.error.badLength);
             return;
@@ -45,19 +46,23 @@ $.extend(validateFunction, {
     }
 });
 
+function init_events(){
 
-//默认离开获得焦点
-setTimeout(function() {
-    $("#nickname").get(0).focus();
-}, 0);
-//用户名验证
-$("#nickname").jdValidate(validatePrompt.nickname, validateFunction.nickname);
+    //默认离开获得焦点
+    setTimeout(function() {
+        $("#nickname").get(0).focus();
+    }, 0);
+    //用户名验证
+    $("#nickname").jdValidate(validatePrompt.nickname, validateFunction.nickname);
 
-setTimeout(function() {
-    $("#vcode").get(0).focus();
-}, 0);
-//验证码验证
-$("#vcode").jdValidate(validatePrompt.vcode, validateFunction.vcode);
+    setTimeout(function() {
+        $("#vcode").get(0).focus();
+    }, 0);
+    //验证码验证
+    $("#vcode").jdValidate(validatePrompt.vcode, validateFunction.vcode);
+
+}
+
 
 $("#ueibtn").click(function() {
     var flag = validateFunction.form_validate();
