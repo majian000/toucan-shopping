@@ -25,7 +25,7 @@ public class RequestWrapperFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
         String contentType=httpServletRequest.getHeader("Content-Type");
-        if(StringUtils.isNotEmpty(contentType)&&contentType.indexOf("application/json")!=-1)
+        if(StringUtils.isNotEmpty(contentType)&&contentType.toLowerCase().indexOf("application/json")!=-1)
         {
             ServletRequest requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
             filterChain.doFilter(requestWrapper, servletResponse);

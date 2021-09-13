@@ -120,6 +120,8 @@
         <module>stater/toucan-shopping-sign-spring-boot-starter</module>
         <!--单点登录 -->
         <module>stater/toucan-shopping-user-sso-spring-boot-starter</module>
+        <!--XSS代码替换 -->
+        <module>stater/toucan-shopping-xss-spring-boot-starter</module>
         <!-- ===============================================-->
 
 
@@ -262,6 +264,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.starter</groupId>
                 <artifactId>toucan-shopping-user-sso-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.starter</groupId>
+                <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

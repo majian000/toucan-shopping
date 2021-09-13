@@ -81,5 +81,10 @@ public class Toucan {
      */
     private Modules modules;
 
+    /**
+     * 插件列表
+     */
+    private Plugins plugins;
+
 
 }

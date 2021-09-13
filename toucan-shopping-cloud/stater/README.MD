@@ -15,3 +15,5 @@
     4.toucan-shopping-user-sso-spring-boot-starter
     用户中心插件,用于单点登录
     
+    5.toucan-shopping-xss-spring-boot-starter
+    XSS代码替换

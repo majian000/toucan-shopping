@@ -1,4 +1,4 @@
-package com.toucan.shopping.starter.user.auth.filter;
+package com.toucan.shopping.starter.sign.filter;
 
 import com.toucan.shopping.modules.common.wrapper.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ public class RequestWrapperFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
         String contentType=httpServletRequest.getHeader("Content-Type");
-        if(StringUtils.isNotEmpty(contentType)&&contentType.indexOf("application/json")!=-1)
+        if(StringUtils.isNotEmpty(contentType)&&contentType.toLowerCase().indexOf("application/json")!=-1)
         {
             ServletRequest requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
             filterChain.doFilter(requestWrapper, servletResponse);

@@ -34,6 +34,17 @@ public class XSSConvert {
         }
     }
 
+
+    /**
+     * 替换该字符串的XSS代码
+     * @param string
+     * @return
+     */
+    public static String replaceStringXSS(String string) throws Exception
+    {
+        return XSSUtil.replaceXss(string);
+    }
+
     static class XSSEntity{
         private String content;
         private Integer id;

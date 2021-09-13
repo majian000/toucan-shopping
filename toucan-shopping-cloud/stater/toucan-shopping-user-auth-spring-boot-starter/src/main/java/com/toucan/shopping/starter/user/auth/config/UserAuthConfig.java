@@ -25,14 +25,14 @@ public class UserAuthConfig {
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(bbsUserCenterStarterRequestWrapperFilter());
+        registration.setFilter(userCenterStarterRequestWrapperFilter());
         registration.addUrlPatterns("/*");
         registration.setName("userAuthStarterRequestWrapperFilterRegistrationBean");
         return registration;
     }
 
     @Bean(name = "userAuthStarterRequestWrapperFilter")
-    public Filter bbsUserCenterStarterRequestWrapperFilter() {
+    public Filter userCenterStarterRequestWrapperFilter() {
         return new RequestWrapperFilter();
     }
 
