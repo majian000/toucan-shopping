@@ -43,6 +43,7 @@ public class OrderPageController extends BaseController {
 
 
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/list")
     public String regist()
     {
