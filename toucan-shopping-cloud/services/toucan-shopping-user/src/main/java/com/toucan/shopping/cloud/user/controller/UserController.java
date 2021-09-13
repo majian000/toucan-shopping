@@ -1076,13 +1076,6 @@ public class UserController {
     }
 
 
-    @RequestMapping(value="/login/password/form")
-    @ResponseBody
-    public void loginByPasswordform(String loginUserName){
-        logger.info(loginUserName);
-    }
-
-
     /**
      * 密码登录
      * @param requestJsonVO
