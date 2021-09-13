@@ -71,3 +71,7 @@ toucan:
         maxWaitMillis: 15 #最大等待数
         maxIdle: 50 #最大核心线程数
         minIdle: 0 #最小核心线程数
+  plugins:
+    xss-filter:
+      enabled: true
+      exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)

@@ -120,6 +120,10 @@ toucan:
     #共享会话的所有域名
     sso-set-cookie-url-list: "http://127.0.0.1:8101/api/sso/setCookie,\
                               http://localhost:8101/api/sso/setCookie"
+  plugins:
+    xss-filter:
+      enabled: true
+      exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
   modules:
     toucanRedis: #redis模块
       select: single # 可选值 single:单实例 cluster:集群

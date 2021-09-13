@@ -165,6 +165,11 @@
             <artifactId>toucan-shopping-seller-entity-vo</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 
