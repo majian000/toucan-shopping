@@ -252,8 +252,6 @@ public class UserApiController extends BaseController {
             }
 
 
-            //替换跨站脚本代码
-            XSSConvert.replaceXSS(user);
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),user);
 
@@ -337,8 +335,6 @@ public class UserApiController extends BaseController {
                 return resultObjectVO;
             }
 
-            //替换跨站脚本代码
-            XSSConvert.replaceXSS(user);
 
             user.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),user);

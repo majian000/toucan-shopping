@@ -106,8 +106,6 @@ public class UserShopApiController extends BaseController {
             //删除缓存中验证码
             toucanStringRedisService.delete(vcodeRedisKey);
 
-            //替换跨站脚本代码
-            XSSConvert.replaceXSS(sellerShopVO);
 
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             boolean lockStatus = redisLock.lock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);
@@ -217,8 +215,6 @@ public class UserShopApiController extends BaseController {
                 return resultObjectVO;
             }
 
-            //替换跨站脚本代码
-            XSSConvert.replaceXSS(sellerShopVO);
 
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             boolean lockStatus = redisLock.lock(ShopRegistRedisKey.getEditLockKey(userMainId), userMainId);

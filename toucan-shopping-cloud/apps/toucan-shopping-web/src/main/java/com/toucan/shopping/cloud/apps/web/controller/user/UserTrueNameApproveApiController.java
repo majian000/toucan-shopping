@@ -170,8 +170,6 @@ public class UserTrueNameApproveApiController extends BaseController {
             //删除缓存中验证码
             toucanStringRedisService.delete(vcodeRedisKey);
 
-            //替换跨站脚本代码
-            XSSConvert.replaceXSS(userTrueNameApproveVO);
 
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {

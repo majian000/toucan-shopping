@@ -10,7 +10,6 @@ import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
@@ -852,8 +851,6 @@ public class UserController {
     {
         //过滤空格
         BlankSpaceUtils.replaceBlankSpace(userVO);
-        //过滤XSS代码
-        XSSConvert.replaceXSS(userVO);
     }
 
 

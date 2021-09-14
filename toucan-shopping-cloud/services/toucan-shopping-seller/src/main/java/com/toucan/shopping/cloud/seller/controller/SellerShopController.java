@@ -92,8 +92,6 @@ public class SellerShopController {
 
         String userMainId = String.valueOf(sellerShopVO.getUserMainId());
         try {
-            //去除XSS代码
-            XSSConvert.replaceXSS(sellerShopVO);
 
             boolean lockStatus = skylarkLock.lock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
