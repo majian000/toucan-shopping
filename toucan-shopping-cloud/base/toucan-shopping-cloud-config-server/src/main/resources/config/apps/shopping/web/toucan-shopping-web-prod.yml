@@ -103,6 +103,7 @@ toucan:
       preview-location: /usr/toucan_shopping/htmls/preview/
       ftl-location: templates/
   user:
+    head-sculpture-max-size: 2048 #头像最大长度2MB(单位KB)
     default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
   user-auth:
     enabled: true

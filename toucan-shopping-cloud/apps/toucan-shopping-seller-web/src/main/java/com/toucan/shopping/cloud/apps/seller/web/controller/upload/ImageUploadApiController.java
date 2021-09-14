@@ -73,6 +73,14 @@ public class ImageUploadApiController extends BaseController {
                 resultObjectVO.setMsg("图标只能上传JPG、JPEG、PNG、BMP格式!");
                 return resultObjectVO;
             }
+
+            long fileSize = file.getSize()/1024; //文件大小MB单位
+            if(fileSize>0&&fileSize>toucan.getSeller().getShopLogoMaxSize().longValue()) //大于5MB
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("文件大小超过限制,不能大于5MB!");
+                return resultObjectVO;
+            }
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             String oldLogo = null;
             try{

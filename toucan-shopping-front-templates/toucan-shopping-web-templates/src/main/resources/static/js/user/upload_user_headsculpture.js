@@ -18,8 +18,15 @@ function upimg() {
                     type: 'error'
                 });
             } else {
-                $("#pic").attr("src", resp.data.httpLogo);
+                $("#pic").attr("src", resp.data.httpHeadSculpture);
             }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown)
+        {
+            $.message({
+                message: XMLHttpRequest.responseText.msg,
+                type: 'error'
+            });
         },
         complete:function(){
         }

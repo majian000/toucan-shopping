@@ -9,6 +9,11 @@ import lombok.Data;
 public class Seller {
 
     /**
+     * 店铺图标最大限制
+     */
+    private Long shopLogoMaxSize;
+
+    /**
      * 店铺默认图标
      */
     private String defaultShopLogo = "";

@@ -66,6 +66,13 @@ public class ImageUploadApiController extends BaseController {
                 resultObjectVO.setMsg("图标只能上传JPG、JPEG、PNG、BMP格式!");
                 return resultObjectVO;
             }
+            long fileSize = file.getSize()/1024; //文件大小 KB单位
+            if(fileSize>0&&fileSize>toucan.getUser().getHeadSculptureMaxSize().longValue()) //大于2MB
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("文件大小超过限制,不能大于2MB!");
+                return resultObjectVO;
+            }
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             String oldHeadSculpture = null;
             try{
@@ -101,7 +108,7 @@ public class ImageUploadApiController extends BaseController {
                         userVO = resultObjectVO.formatData(UserVO.class);
                         //设置预览
                         if (userVO.getHeadSculpture() != null) {
-                            userVO.setHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
+                            userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
                         }
                         resultObjectVO.setData(userVO);
 
