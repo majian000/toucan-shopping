@@ -18,7 +18,7 @@ function upimg() {
                     type: 'error'
                 });
             } else {
-                $("#pic").attr("src", resp.data.httpHeadSculpture);
+                window.location.href=basePath+"/page/user/info";
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown)

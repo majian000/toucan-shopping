@@ -2455,3 +2455,110 @@ ul.pay li.checked .ch_img{
 
 
 
+.dd-spacer{
+	width: 150px;
+	position: absolute;
+	top: -7px;
+	height: 10px;
+	background: #fff;
+	overflow: hidden;
+}
+
+.userinfo{
+	padding: 10px 0 10px 15px;
+	overflow: hidden;
+}
+.u-pic{
+	float: left;
+	margin-right: 10px;
+}
+
+.u-plus{
+	padding: 10px 0 0;
+	overflow: hidden;
+}
+
+.link-logout{
+	float: right;
+	margin-right: 10px;
+	line-height: 1.2;
+}
+
+.u-bc-user {
+	float: right;
+	line-height: 1.2;
+	cursor: pointer;
+	margin-right: 5px;
+	padding-right: 5px;
+	border-right: 1px solid #ccc;
+}
+
+.icon-plus-dropdown{
+	display: block;
+	width: 80px;
+	height: 16px;
+	background: url(../images/user-plus-status.png) no-repeat 0 -34px;
+}
+
+.u-msg {
+	font-family: simsun,Hiragino Sans GB;
+	padding-top: 4px;
+}
+
+.badge-list{
+	height: 88px;
+	overflow: hidden;
+	padding-top: 10px;
+	border-top: 1px solid #e3e4e5;
+}
+
+.badge-list-prev{
+	margin-left: 10px;
+	float: left;
+	font-family: simsun,Hiragino Sans GB;
+	font-size: 30px;
+	margin-top: 16px;
+	color: #999;
+}
+
+.u-badges{
+	float: left;
+	position: relative;
+	width: 222px;
+	height: 82px;
+	overflow: hidden;
+	margin: 0 3px;
+}
+
+
+
+.badge-list-next{
+	float: left;
+	font-family: simsun,Hiragino Sans GB;
+	font-size: 30px;
+	margin-top: 16px;
+	color: #999;
+}
+
+
+.badge-panel{
+	width: 74px;
+	text-align: center;
+}
+
+.u-name{
+	display: inline;
+	line-height: 1.5;
+	margin-top: 6px;
+	padding: 2px 1px;
+}
+
+.has-yfdm{
+	display: block;
+	width: 56px;
+	height: 56px;
+	margin: 0 auto;
+	background-position: -112px -168px;
+	background-image: url(../images/sprite.shortcutUserinfo.png);
+	background-repeat: no-repeat;
+}
