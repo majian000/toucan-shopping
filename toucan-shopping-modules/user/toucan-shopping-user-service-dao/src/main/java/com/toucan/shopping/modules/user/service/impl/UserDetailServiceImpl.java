@@ -66,4 +66,9 @@ public class UserDetailServiceImpl implements UserDetailService {
         return userDetailMapper.queryListByUserId(userIdArray);
     }
 
+    @Override
+    public int updateHeadSculpture(UserDetail entity) {
+        return userDetailMapper.updateHeadSculpture(entity);
+    }
+
 }

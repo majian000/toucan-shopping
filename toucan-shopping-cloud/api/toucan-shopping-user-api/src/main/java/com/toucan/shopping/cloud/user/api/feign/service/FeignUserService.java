@@ -313,4 +313,13 @@ public interface FeignUserService {
     @RequestMapping(value="/update/is/shop",produces = "application/json;charset=UTF-8")
     ResultObjectVO updateIsShop(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 更新头像
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/headsculpture",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateHeadsculpture(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
 }

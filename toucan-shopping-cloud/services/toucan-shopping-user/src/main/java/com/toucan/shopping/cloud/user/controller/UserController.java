@@ -265,7 +265,74 @@ public class UserController {
     }
 
 
+    /**
+     * 更新头像
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update/headsculpture",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateHeadsculpture(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
 
+        try {
+            UserVO userVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserVO.class);
+
+
+            if(StringUtils.isEmpty(userVO.getHeadSculpture()))
+            {
+                logger.info("头像为空 param:"+ JSONObject.toJSONString(userVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("头像不能为空!");
+                return resultObjectVO;
+            }
+
+
+            if(userVO.getUserMainId()==null)
+            {
+                logger.info("用户ID为空 param:"+ JSONObject.toJSONString(userVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+
+            UserDetail userDetail = new UserDetail();
+            userDetail.setHeadSculpture(userVO.getHeadSculpture());
+            userDetail.setUserMainId(userVO.getUserMainId());
+
+            int row = userDetailService.updateHeadSculpture(userDetail);
+            if (row <=0) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(userDetail);
+            try {
+                //刷新用户信息到登录缓存
+                userRedisService.flushLoginCache(String.valueOf(userVO.getUserMainId()), userVO.getAppCode());
+            }catch(Exception e)
+            {
+                logger.warn("刷新redis登录缓存失败 {}", requestJsonVO.getEntityJson());
+                logger.warn(e.getMessage(),e);
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
     @RequestMapping(value="/reset/password",produces = "application/json;charset=UTF-8")

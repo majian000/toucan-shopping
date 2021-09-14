@@ -24,4 +24,13 @@ public interface UserDetailService {
     List<UserDetail> findByUserMainId(Long id);
 
     List<UserDetail> queryListByUserId(Long[] userIdArray);
+
+
+    /**
+     * 修改头像
+     * @param entity
+     * @return
+     */
+    int updateHeadSculpture(UserDetail entity);
+
 }

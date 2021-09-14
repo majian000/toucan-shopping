@@ -81,6 +81,9 @@
         idcard_img2=#{idcardImg2},sex=#{sex} where user_main_id=#{userMainId} and delete_status = 0
     </update>
 
+    <update id="updateHeadSculpture" parameterType="com.toucan.shopping.modules.user.entity.UserDetail"  >
+        update t_user_detail set head_sculpture=#{headSculpture} where user_main_id=#{userMainId} and delete_status = 0
+    </update>
 
 
     <update id="updateInfo" parameterType="com.toucan.shopping.modules.user.entity.UserDetail"  >

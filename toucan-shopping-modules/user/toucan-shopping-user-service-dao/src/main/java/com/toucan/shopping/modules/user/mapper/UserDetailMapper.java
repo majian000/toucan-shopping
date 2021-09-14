@@ -27,4 +27,6 @@ public interface UserDetailMapper {
 
     List<UserDetail> findByUserMainId(Long id);
 
+    int updateHeadSculpture(UserDetail entity);
+
 }

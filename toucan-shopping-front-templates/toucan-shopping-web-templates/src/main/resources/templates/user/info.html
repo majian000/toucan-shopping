@@ -117,6 +117,20 @@
 
 </body>
 
+<script src="${basePath}/static/js/user/upload_user_headsculpture.js"></script>
+<script>
+    $(function () {
+
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        });
+
+        bind_upload_event();
+
+    });
+
+</script>
 
 
 </html>
