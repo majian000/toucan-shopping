@@ -27,7 +27,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">登录用户ID</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="userMianId" autocomplete="off" class="layui-input">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -113,9 +113,9 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  width: 150, title: '主键'},
+                    {field: 'id',  width: 200, title: '主键'},
                     {field: 'ip', width: 150, title: '登录地址'},
-                    {field: 'userMainId',  width: 150, title: '掌柜ID'},
+                    {field: 'userMainId',  width: 200, title: '掌柜ID'},
                     {field: 'loginSrcType', width: 150, title: '登录源',
                         templet: function (row) {
                             if(row.loginSrcType == "1"){
@@ -123,7 +123,7 @@
                             }
                             return row.loginSrcType;
                     }},
-                    {field: 'createDate', width: 150, title: '创建时间'},
+                    {field: 'createDate', width: 200, title: '创建时间'},
                 ]
             ],
             limits: [15,30,100,200],
