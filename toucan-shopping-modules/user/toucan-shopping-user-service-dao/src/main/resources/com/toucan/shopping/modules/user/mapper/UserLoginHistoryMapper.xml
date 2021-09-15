@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.user.mapper.UserLoginHistoryMapper">
+
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.user.entity.UserLoginHistory" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="ip" jdbcType="VARCHAR" property="ip" />
+        <result column="login_src_type" jdbcType="INTEGER" property="loginSrcType" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+        and t.delete_status = 0
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+    </sql>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserLoginHistory" >
+        insert into t_user_login_history(id,user_main_id,ip,login_src_type,create_date,delete_status)
+        values(#{id},#{userMainId},#{ip},#{loginSrcType},#{createDate},#{deleteStatus})
+    </insert>
+
+
+
+    <select id="queryListPage" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.page.UserLoginHistoryPageInfo">
+        select t.* from t_user_login_history t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.user_main_id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.UserLoginHistoryPageInfo">
+        select count(*) from t_user_login_history t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+
+
+    <select id="queryListByCreateDateDesc" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.UserLoginHistoryVO">
+        select * from t_user_login_history t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="userMainId!=null">
+                and t.user_main_id = #{userMainId}
+            </if>
+            and t.delete_status = 0
+        </where>
+        order by create_date desc
+        limit #{size}
+
+    </select>
+
+</mapper>
