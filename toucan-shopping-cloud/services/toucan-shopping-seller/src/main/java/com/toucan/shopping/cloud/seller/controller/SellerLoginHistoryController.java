@@ -8,7 +8,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.page.SellerLoginHistoryPageInfo;
-import com.toucan.shopping.modules.seller.redis.SellerShopKey;
+import com.toucan.shopping.modules.seller.redis.SellerLoginHistoryKey;
 import com.toucan.shopping.modules.seller.service.SellerLoginHistoryService;
 import com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -64,7 +64,7 @@ public class SellerLoginHistoryController {
         SellerLoginHistoryVO sellerShopLoginHistoryVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerLoginHistoryVO.class);
         String userMainId = String.valueOf(sellerShopLoginHistoryVO.getUserMainId());
         try {
-            boolean lockStatus = skylarkLock.lock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+            boolean lockStatus = skylarkLock.lock(SellerLoginHistoryKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍候重试");
@@ -87,7 +87,7 @@ public class SellerLoginHistoryController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请稍后重试");
         }finally{
-            skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+            skylarkLock.unLock(SellerLoginHistoryKey.getSaveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
