@@ -58,7 +58,7 @@ public class LoginHistoryController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/seller/loginHistory/listPage",feignFunctionService);
-        return "pages/seller/loginHistory/list.html";
+        return "pages/user/loginHistory/list.html";
     }
 
 
