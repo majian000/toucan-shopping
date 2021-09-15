@@ -30,5 +30,14 @@ public class UserLoginVO extends UserVO {
      */
     private String appCode;
 
+    /**
+     * 登录用户的IP地址
+     */
+    private String loginIp;
+
+    /**
+     * 登录源头 1:PC
+     */
+    private Integer srcType;
 
 }

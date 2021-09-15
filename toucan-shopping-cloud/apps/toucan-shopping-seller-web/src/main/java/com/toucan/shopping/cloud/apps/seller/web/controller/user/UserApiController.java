@@ -195,14 +195,19 @@ public class UserApiController extends BaseController {
                     //删除登录验证码
                     toucanStringRedisService.delete(vcodeRedisKey);
 
-                    //保存登录信息
-                    SellerLoginHistoryVO sellerLoginHistoryVO = new SellerLoginHistoryVO();
-                    sellerLoginHistoryVO.setUserMainId(userLoginVO.getUserMainId());
-                    sellerLoginHistoryVO.setIp(IPUtil.getRemoteAddr(request));
-                    sellerLoginHistoryVO.setLoginSrcType(1);
-                    sellerLoginHistoryVO.setCreateDate(new Date());
-                    sellerLoginHistoryVO.setDeleteStatus((short)0);
-                    sellerLoginHistoryQueue.push(sellerLoginHistoryVO);
+                    try {
+                        //保存登录信息
+                        SellerLoginHistoryVO sellerLoginHistoryVO = new SellerLoginHistoryVO();
+                        sellerLoginHistoryVO.setUserMainId(userLoginVO.getUserMainId());
+                        sellerLoginHistoryVO.setIp(IPUtil.getRemoteAddr(request));
+                        sellerLoginHistoryVO.setLoginSrcType(1);
+                        sellerLoginHistoryVO.setCreateDate(new Date());
+                        sellerLoginHistoryVO.setDeleteStatus((short) 0);
+                        sellerLoginHistoryQueue.push(sellerLoginHistoryVO);
+                    }catch(Exception e)
+                    {
+                        logger.warn(e.getMessage(),e);
+                    }
                 }
             }else{
                 if(loginFaildCountValueObject==null)

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 卖家店铺服务
+ * 卖家登录历史服务
  * @author majian
  * @date 2021-8-4 17:44:57
  */

@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.user.queue.NewUserMessageQueue;
+import com.toucan.shopping.cloud.user.queue.UserLoginHistoryQueue;
 import com.toucan.shopping.cloud.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -81,6 +82,9 @@ public class UserController {
 
     @Autowired
     private NewUserMessageQueue newUserMessageQueue;
+
+    @Autowired
+    private UserLoginHistoryQueue userLoginHistoryQueue;
 
     @RequestMapping(value="/find/mobile/phone",produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -1280,6 +1284,22 @@ public class UserController {
                     userLogin.setUserMainId(userEntity.getUserMainId());
 
                     resultObjectVO.setData(userLogin);
+
+                    try{
+
+                        //保存登录信息
+                        UserLoginHistoryVO userLoginHistoryVO = new UserLoginHistoryVO();
+                        userLoginHistoryVO.setId(idGenerator.id());
+                        userLoginHistoryVO.setUserMainId(userEntity.getUserMainId());
+                        userLoginHistoryVO.setIp(userLogin.getLoginIp());
+                        userLoginHistoryVO.setLoginSrcType(1);
+                        userLoginHistoryVO.setCreateDate(new Date());
+                        userLoginHistoryVO.setDeleteStatus((short)0);
+                        userLoginHistoryQueue.push(userLoginHistoryVO);
+                    }catch(Exception e)
+                    {
+                        logger.warn(e.getMessage(),e);
+                    }
 
                 } else {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
