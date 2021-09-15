@@ -1292,7 +1292,7 @@ public class UserController {
                         userLoginHistoryVO.setId(idGenerator.id());
                         userLoginHistoryVO.setUserMainId(userEntity.getUserMainId());
                         userLoginHistoryVO.setIp(userLogin.getLoginIp());
-                        userLoginHistoryVO.setLoginSrcType(1);
+                        userLoginHistoryVO.setLoginSrcType(userLogin.getSrcType());
                         userLoginHistoryVO.setCreateDate(new Date());
                         userLoginHistoryVO.setDeleteStatus((short)0);
                         userLoginHistoryQueue.push(userLoginHistoryVO);
