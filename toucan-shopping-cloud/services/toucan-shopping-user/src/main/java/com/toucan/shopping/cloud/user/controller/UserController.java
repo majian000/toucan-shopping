@@ -1753,16 +1753,7 @@ public class UserController {
                         {
                             if(userDetail.getUserMainId().longValue()==userVO.getUserMainId().longValue())
                             {
-                                userVO.setNickName(userDetail.getNickName());
-                                userVO.setTrueName(userDetail.getTrueName());
-                                userVO.setHeadSculpture(userDetail.getHeadSculpture());
-                                userVO.setIdCard(userDetail.getIdCard());
-                                userVO.setSex(userDetail.getSex());
-                                userVO.setIsShop(userDetail.getIsShop());
-                                userVO.setIdcardImg1(userDetail.getIdcardImg1());
-                                userVO.setIdcardImg2(userDetail.getIdcardImg2());
-                                userVO.setIdcardType(userDetail.getIdcardType());
-                                userVO.setTrueNameStatus(userDetail.getTrueNameStatus());
+                                BeanUtils.copyProperties(userVO,userDetail);
                                 continue;
                             }
                         }
