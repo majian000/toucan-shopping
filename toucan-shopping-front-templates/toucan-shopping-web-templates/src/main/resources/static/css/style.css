@@ -1985,7 +1985,7 @@ ul.p_sell li .times{
 	width:930px; height:50px; line-height:50px; overflow:hidden; color:#333333; font-size:16px;
 }
 table.mon_tab{
-	background-color:#f6f6f6;
+	/*background-color:#f6f6f6;*/
 }
 table.mon_tab tr td{
 	border-collapse:collapse; border-bottom:1px solid #FFF; padding:5px 25px;
@@ -2503,9 +2503,16 @@ ul.pay li.checked .ch_img{
 
 .icon-plus-dropdown{
 	display: block;
-	width: 80px;
+	width: 60px;
 	height: 16px;
 	background: url(../images/user-plus-status.png) no-repeat 0 -34px;
+}
+
+.icon-plus-icon{
+	display: block;
+	width: 60px;
+	height: 16px;
+	background: url(../images/user-plus-status.png) no-repeat 0 -16px;
 }
 
 .u-msg {
