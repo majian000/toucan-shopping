@@ -157,6 +157,12 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">个性签名</label>
+        <div class="layui-input-block">
+            <img th:src="${model.personalizedSignature}" th:width="240" th:height="220">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">是否有店铺</label>
         <div class="layui-input-block" th:if="${model.isShop eq 0}" >
             <input type="radio" name="isShop" value="0" title="否" checked="">

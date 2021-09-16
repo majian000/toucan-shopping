@@ -149,6 +149,12 @@
             <input type="radio" name="sex" value="0" title="女" >
         </div>
     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">个性签名</label>
+        <div class="layui-input-block">
+            <input type="text" name="personalizedSignature"  maxlength="50"  placeholder="请输入个性签名" value="" class="layui-input" th:value="${model.personalizedSignature}"  >
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">是否有店铺</label>

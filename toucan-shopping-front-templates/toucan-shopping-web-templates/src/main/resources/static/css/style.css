@@ -2484,6 +2484,11 @@ ul.pay li.checked .ch_img{
 	line-height: 1.2;
 }
 
+.link-nickname{
+	display: block;
+	margin-right: 10px;
+	line-height: 1.2;
+}
 .u-bc-user {
 	float: right;
 	line-height: 1.2;

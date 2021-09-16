@@ -92,6 +92,7 @@ public class UserRedisServiceImpl implements UserRedisService {
                     userLogin.setHeadSculpture(userDetail.getHeadSculpture()); //头像
                     userLogin.setSex(userDetail.getSex()); //性别
                     userLogin.setIsShop(userDetail.getIsShop()); //是否有店铺
+                    userLogin.setPersonalizedSignature(userDetail.getPersonalizedSignature()); //个性签名
                     userLogin.setIdcardType(userDetail.getIdcardType());
                     userLogin.setIdcardImg1(userDetail.getIdcardImg1());
                     userLogin.setIdcardImg2(userDetail.getIdcardImg2());

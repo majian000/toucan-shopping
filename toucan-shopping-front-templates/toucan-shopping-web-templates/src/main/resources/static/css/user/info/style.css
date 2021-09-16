@@ -17,3 +17,126 @@
     left: 0px;
     bottom: 0px;
 }
+
+
+
+
+.userAlarm {
+    position: relative;
+    width: 50px;
+    height: 62px;
+    margin: 0px;
+    text-align: center;
+}
+.userAlarm img {
+    width: 60px;
+    height: 60px;
+}
+.userDivright {
+    position: absolute;
+    color: white;
+    font-size: 15px;
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    left: 70%;
+    top: -5px;
+    text-align: center;
+    -webkit-border-radius: 27px;
+    border-radius: 24px;
+}
+
+.userDivright a {
+    color: white;
+}
+
+.userDivright a horver{
+    color: white;
+}
+
+.userInfoPersonalizedSignature {
+    width: 100%;
+    height: auto;
+    word-wrap:break-word;
+    word-break:break-all;
+    overflow: hidden;
+}
+
+.userPayImg{
+    width:50px;
+    height:50px;
+    background:url('/static/images/pay.png');
+}
+
+.userPayImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/paybor.png');
+}
+
+
+.userGoodsTrainImg{
+    width:50px;
+    height:45px;
+    background:url('/static/images/goods_train.png');
+}
+
+.userGoodsTrainImg:hover{
+    width:50px;
+    height:45px;
+    background:url('/static/images/goods_trainbor.png');
+}
+
+.userReceiveGoodsTrainImg{
+    width:50px;
+    height:45px;
+    background:url('/static/images/receive_goods_train.png');
+}
+
+.userReceiveGoodsTrainImg:hover{
+    width:50px;
+    height:45px;
+    background:url('/static/images/receive_goods_train.png');
+}
+
+
+.userAftermarketImg{
+    width:50px;
+    height:50px;
+    background:url('/static/images/aftermarket.png');
+}
+
+.userAftermarketImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/aftermarketbor.png');
+}
+
+.userAppraiseImg{
+    width:50px;
+    height:50px;
+    background:url('/static/images/appraise.png');
+}
+
+.userAppraiseImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/appraisebor.png');
+}
+
+.userRefundImg{
+    width:50px;
+    height:50px;
+    background:url('/static/images/refund.png');
+}
+
+.userRefundImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/refund.png');
+}
+
+
+
+

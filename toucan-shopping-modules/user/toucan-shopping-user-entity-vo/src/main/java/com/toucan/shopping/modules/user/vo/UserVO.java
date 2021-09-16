@@ -159,6 +159,11 @@ public class UserVO {
      */
     private Short isShop;
 
+    /**
+     * 个性签名
+     */
+    private String personalizedSignature;
+
 
     /**
      * 启用状态 0:禁用 1启用

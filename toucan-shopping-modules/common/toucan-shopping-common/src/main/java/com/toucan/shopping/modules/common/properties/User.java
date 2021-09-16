@@ -18,4 +18,9 @@ public class User {
      */
     private String defaultHeadSculpture = "";
 
+    /**
+     * 用户默认个性签名
+     */
+    private String defaultPersonalizedSignature="";
+
 }

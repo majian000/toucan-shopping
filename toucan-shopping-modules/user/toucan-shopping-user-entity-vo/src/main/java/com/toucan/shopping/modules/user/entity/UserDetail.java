@@ -72,6 +72,11 @@ public class UserDetail {
     private Short isShop;
 
     /**
+     * 个性签名
+     */
+    private String personalizedSignature;
+
+    /**
      * 创建时间
      */
     private Date createDate;

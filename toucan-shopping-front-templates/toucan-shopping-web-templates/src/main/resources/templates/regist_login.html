@@ -12,7 +12,7 @@
                    </div>
                    <div class="u-plus">
                     <a href="${basePath}/page/user/logout" class="link-logout">退出</a>
-                    <a href="#" target="_blank" class="icon-plus-dropdown"></a>
+                    <a href="${basePath}/page/user/info"  class="link-nickname" id="unicknamec" >用户昵称</a>
                    </div>
                    <div class="u-msg">
                     <a href="#" target="_blank">开通PLUS 平均省1012元/年&gt;</a>
@@ -74,6 +74,7 @@
                 if (result.code > 0 && result.data != null) {
                     if (result.data.nickName != null) {
                         $("#unickname").text(result.data.nickName);
+                        $("#unicknamec").text(result.data.nickName);
                     }
                     if (result.data.httpHeadSculpture != null) {
                         $("#headImg").attr("src", result.data.httpHeadSculpture);
