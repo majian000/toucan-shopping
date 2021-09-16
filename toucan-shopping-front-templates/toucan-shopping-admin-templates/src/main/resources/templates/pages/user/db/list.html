@@ -171,7 +171,7 @@
                             return "女";
                         }},
                     {field: 'personalizedSignature', width: 240, title: '个性签名'},
-                    {field: 'isShop', width: 150, title: '是否有店铺',
+                    {field: 'isShop', width: 150, title: '店铺状态',
                         templet: function (row) {
                             if(row.isShop == "0"){
                                 return "否";
@@ -180,6 +180,16 @@
                                 return "是";
                             }
                             return row.isShop;
+                        }},
+                    {field: 'isVip', width: 150, title: '会员状态',
+                        templet: function (row) {
+                            if(row.isVip == "0"){
+                                return "否";
+                            }
+                            if(row.isVip == "1"){
+                                return "是";
+                            }
+                            return row.isVip;
                         }},
                     {field: 'createDate', width: 240, title: '注册时间'},
                     {title: '操作', minWidth: 560, toolbar: '#userTableBar', align: "center"}

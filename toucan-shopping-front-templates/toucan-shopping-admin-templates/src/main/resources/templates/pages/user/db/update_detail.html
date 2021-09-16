@@ -157,7 +157,7 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">是否有店铺</label>
+        <label class="layui-form-label">店铺状态</label>
         <div class="layui-input-block" th:if="${model.isShop eq 0}" >
             <input type="radio" name="isShop" value="0" title="否" checked="">
             <input type="radio" name="isShop" value="1" title="是">
@@ -169,6 +169,22 @@
         <div class="layui-input-block" th:if="${model.isShop eq null}" >
             <input type="radio" name="isShop" value="0" title="否" checked="">
             <input type="radio" name="isShop" value="1" title="是">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">会员状态</label>
+        <div class="layui-input-block" th:if="${model.isVip eq 0}" >
+            <input type="radio" name="isVip" value="0" title="否" checked="">
+            <input type="radio" name="isVip" value="1" title="是">
+        </div>
+        <div class="layui-input-block" th:if="${model.isVip eq 1}" >
+            <input type="radio" name="isVip" value="0" title="否" >
+            <input type="radio" name="isVip" value="1" title="是" checked="" >
+        </div>
+        <div class="layui-input-block" th:if="${model.isVip eq null}" >
+            <input type="radio" name="isVip" value="0" title="否" checked="">
+            <input type="radio" name="isVip" value="1" title="是">
         </div>
     </div>
     <div class="layui-form-item">

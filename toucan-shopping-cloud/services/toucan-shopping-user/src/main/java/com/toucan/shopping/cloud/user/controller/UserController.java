@@ -232,6 +232,7 @@ public class UserController {
                         userDetail.setCreateDate(new Date());
                         userDetail.setDeleteStatus((short) 0);
                         userDetail.setIsShop((short)0); //没有店铺
+                        userDetail.setIsVip((short)0); //不是会员
                         if(StringUtils.isNotEmpty(userRegistVO.getPersonalizedSignature()))
                         {
                             userDetail.setPersonalizedSignature(userRegistVO.getPersonalizedSignature());
@@ -256,6 +257,7 @@ public class UserController {
                             userCreateMessage.setSex(userDetail.getSex());
                             userCreateMessage.setDeleteStatus(user.getDeleteStatus());
                             userCreateMessage.setIsShop((short)0); //默认没有店铺
+                            userCreateMessage.setIsVip((short)0); //不是会员
                             userCreateMessage.setPersonalizedSignature(userDetail.getPersonalizedSignature()); //个性签名
 
                             //放入队列
@@ -1041,6 +1043,9 @@ public class UserController {
                 userDetail.setPersonalizedSignature(toucan.getUser().getDefaultPersonalizedSignature());
                 userDetail.setCreateDate(new Date());
                 userDetail.setDeleteStatus((short)0);
+                userDetail.setIsShop((short)0);
+                userDetail.setIsVip((short)0);
+
 
                 row= userDetailService.save(userDetail);
             }

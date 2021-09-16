@@ -55,11 +55,14 @@
                             <div class="m_user">
                                 ${userVO.nickName!''}
                             </div>
-                            <!--<div style="margin-top:8px;">
-                                <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
-                            </div>-->
                             <div style="margin-top:8px;">
-                                <a href="#" target="_blank" class="icon-plus-icon" style="margin-top: 2px;float:left"></a><a>犀鸟plus会员</a>
+                                <#if userVO.isVip?? && userVO.isVip==1 >
+                                    <a href="#" target="_blank" class="icon-plus-icon" style="margin-top: 2px;float:left"></a><a>犀鸟plus会员</a>
+                                <#elseif userVO.isVip?? && userVO.isVip==0 >
+                                    <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
+                                <#else>
+                                    <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
+                                </#if>
                             </div>
                             <p class="userInfoPersonalizedSignature">
                                 个性签名:${userVO.personalizedSignature!''}

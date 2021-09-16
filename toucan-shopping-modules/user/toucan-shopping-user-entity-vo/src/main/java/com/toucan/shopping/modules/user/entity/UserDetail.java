@@ -77,6 +77,10 @@ public class UserDetail {
     private String personalizedSignature;
 
     /**
+     * 是否会员 0否 1是
+     */
+    private Short isVip;
+    /**
      * 创建时间
      */
     private Date createDate;

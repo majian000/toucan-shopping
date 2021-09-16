@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.service.*;
 import com.toucan.shopping.modules.user.vo.UserLoginCacheVO;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,17 +87,7 @@ public class UserRedisServiceImpl implements UserRedisService {
                 List<UserDetail> userDetails = userDetailService.findByUserMainId(Long.parseLong(userMainId));
                 if (CollectionUtils.isNotEmpty(userDetails)) {
                     UserDetail userDetail = userDetails.get(0);
-                    userLogin.setNickName(userDetail.getNickName());
-                    userLogin.setTrueName(userDetail.getTrueName()); //姓名
-                    userLogin.setIdCard(userDetail.getIdCard()); //身份证
-                    userLogin.setHeadSculpture(userDetail.getHeadSculpture()); //头像
-                    userLogin.setSex(userDetail.getSex()); //性别
-                    userLogin.setIsShop(userDetail.getIsShop()); //是否有店铺
-                    userLogin.setPersonalizedSignature(userDetail.getPersonalizedSignature()); //个性签名
-                    userLogin.setIdcardType(userDetail.getIdcardType());
-                    userLogin.setIdcardImg1(userDetail.getIdcardImg1());
-                    userLogin.setIdcardImg2(userDetail.getIdcardImg2());
-                    userLogin.setTrueNameStatus(userDetail.getTrueNameStatus());
+                    BeanUtils.copyProperties(userLogin,userDetail);
                 }
 
                 userLogin.setUpdateDate(DateUtils.currentDate().getTime());

@@ -166,6 +166,12 @@ public class UserVO {
 
 
     /**
+     * 是否会员 0否 1是
+     */
+    private Short isVip;
+
+
+    /**
      * 启用状态 0:禁用 1启用
      */
     private Short enableStatus;

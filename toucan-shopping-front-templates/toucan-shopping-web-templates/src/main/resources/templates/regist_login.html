@@ -15,8 +15,8 @@
                     <a href="${basePath}/page/user/info"  class="link-nickname" id="unicknamec" >用户昵称</a>
                    </div>
                    <div class="u-msg">
-                        <!--<a href="#" target="_blank">开通PLUS 平均省1012元/年&gt;</a>-->
-                       <a href="#" target="_blank" class="icon-plus-icon" style="margin-top: 6px;float:left"></a><a>犀鸟plus会员</a>
+                        <a href="#" target="_blank" id="vip_0" style="display:none">开通犀鸟PLUS 平均省1012元/年&gt;</a>
+                       <a href="#" target="_blank" id="vip_1" class="icon-plus-icon" style="margin-top: 6px;float:left;display:none"></a><a id="vip_text_1" style="display:none">犀鸟plus会员</a>
                    </div>
                   </div>
                   <div class="badge-list">
@@ -76,6 +76,17 @@
                     if (result.data.nickName != null) {
                         $("#unickname").text(result.data.nickName);
                         $("#unicknamec").text(result.data.nickName);
+                    }
+                    if(result.data.isVip!=null)
+                    {
+                        if(result.data.isVip=="0")
+                        {
+                            $("#vip_0").show();
+                        }else if(result.data.isVip=="1")
+                        {
+                            $("#vip_1").show();
+                            $("#vip_text_1").show();
+                        }
                     }
                     if (result.data.httpHeadSculpture != null) {
                         $("#headImg").attr("src", result.data.httpHeadSculpture);
