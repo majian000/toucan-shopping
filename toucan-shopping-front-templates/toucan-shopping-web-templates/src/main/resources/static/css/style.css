@@ -169,11 +169,14 @@ table.c_tab tr th{
 .logo{
 	width:207px; height:55px; overflow:hidden; float:left; display:inline; margin-top:40px;
 }
+.logo_page{
+	height:55px; overflow:hidden; float:left; display:inline; margin-top:40px;
+}
 .search{
 	width:520px; height:65px; overflow:hidden; float:left; display:inline; margin-left:134px; margin-top:50px;
 }
 .page_title{
-	width:520px; height:65px; overflow:hidden; float:left; display:inline; margin-left:134px; margin-top:50px;
+	height:65px; overflow:hidden; float:left; display:inline; margin-left:40px; margin-top:40px;font-size:25px;
 }
 .s_ipt{
 	width:408px; height:36px; line-height:36px\9; overflow:hidden; color:#555555; font-size:14px; font-family:"Microsoft YaHei"; float:left; padding:0 10px; border:2px solid #ff4e00; border-right:0;
