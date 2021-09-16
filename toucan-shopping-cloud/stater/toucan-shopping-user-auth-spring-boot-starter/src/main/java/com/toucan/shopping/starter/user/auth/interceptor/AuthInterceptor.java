@@ -104,20 +104,20 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
                                 logger.info(" auth header " + authHeader);
 
-                                if (authHeader.indexOf("lt") == -1) {
-                                    logger.info("lt不能为空 " + jsonBody);
+                                if (authHeader.indexOf("tss_lt") == -1) {
+                                    logger.info("tss_lt不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
-                                    resultVO.setMsg("lt不能为空");
+                                    resultVO.setMsg("tss_lt不能为空");
                                     //默认登录页面
                                     resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                if (authHeader.indexOf("uid") == -1) {
-                                    logger.info("uid不能为空 " + jsonBody);
+                                if (authHeader.indexOf("tss_uid") == -1) {
+                                    logger.info("tss_uid不能为空 " + jsonBody);
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
-                                    resultVO.setMsg("uid不能为空");
+                                    resultVO.setMsg("tss_uid不能为空");
                                     //默认登录页面
                                     resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
@@ -128,10 +128,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String uid = "-1";
                                 String lt = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("uid=") != -1) {
+                                    if (authHeaderArray[i].indexOf("tss_uid=") != -1) {
                                         uid = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("lt=") != -1) {
+                                    if (authHeaderArray[i].indexOf("tss_lt=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
                                 }
@@ -204,10 +204,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String uid = "-1";
                                 String lt = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
-                                    if (authHeaderArray[i].indexOf("uid=") != -1) {
+                                    if (authHeaderArray[i].indexOf("tss_uid=") != -1) {
                                         uid = authHeaderArray[i].split("=")[1];
                                     }
-                                    if (authHeaderArray[i].indexOf("lt=") != -1) {
+                                    if (authHeaderArray[i].indexOf("tss_lt=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
                                     }
                                 }
