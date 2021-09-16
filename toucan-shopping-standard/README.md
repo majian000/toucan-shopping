@@ -23,13 +23,6 @@
 
 ###### 配置ElasticSearch
 
-    1.设置用户返回最大记录数
-    PUT http://localhost:9200/user_index/_settings
-    {
-      "index": {
-        "max_result_window": 10000
-      }
-    }
 
 ###### 配置redis
     
