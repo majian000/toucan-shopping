@@ -65,6 +65,7 @@ $.extend(validateFunction, {
     },
     form_validate:function() {
         $("#nickname").jdValidate(validatePrompt.nickname, validateFunction.nickname, true);
+        $("#personalizedSignature").jdValidate(validatePrompt.personalizedSignature, validateFunction.personalizedSignature, true);
         $("#vcode").jdValidate(validatePrompt.vcode, validateFunction.vcode, true);
         return validateFunction.FORM_submit(["#nickname","#vcode"]);
     }
@@ -75,15 +76,12 @@ function init_events(){
     //默认离开获得焦点
     setTimeout(function() {
         $("#nickname").get(0).focus();
+        $("#personalizedSignature").get(0).focus();
     }, 0);
     //用户名验证
     $("#nickname").jdValidate(validatePrompt.nickname, validateFunction.nickname);
 
-    //默认离开获得焦点
-    setTimeout(function() {
-        $("#personalizedSignature").get(0).focus();
-    }, 0);
-    //用户名验证
+    //个性签名验证
     $("#personalizedSignature").jdValidate(validatePrompt.personalizedSignature, validateFunction.personalizedSignature);
 
     setTimeout(function() {
