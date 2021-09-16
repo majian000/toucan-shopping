@@ -864,31 +864,12 @@ public class UserController {
             if(CollectionUtils.isNotEmpty(userDetails))
             {
                 UserDetail userDetail = userDetails.get(0);
-                userDetail.setNickName(userVO.getNickName()); //昵称
-                userDetail.setTrueName(userVO.getTrueName()); //姓名
-                userDetail.setIdCard(userVO.getIdCard()); //身份证
-                userDetail.setHeadSculpture(userVO.getHeadSculpture()); //头像
-                userDetail.setSex(userVO.getSex()); //性别
-                userDetail.setIsShop(userVO.getIsShop()); //是否有店铺
-                userDetail.setIdcardType(userVO.getIdcardType()); //证件类型
-                userDetail.setIdcardImg1(userVO.getIdcardImg1()); //证件照正面
-                userDetail.setIdcardImg2(userVO.getIdcardImg2()); //证件照背面
-                userDetail.setTrueNameStatus(userVO.getTrueNameStatus()); //实名状态
+                BeanUtils.copyProperties(userDetail,userVO);
                 row= userDetailService.update(userDetail);
             }else{
                 UserDetail userDetail = new UserDetail();
+                BeanUtils.copyProperties(userDetail,userVO);
                 userDetail.setId(idGenerator.id());
-                userDetail.setUserMainId(userVO.getUserMainId()); //用户ID
-                userDetail.setNickName(userVO.getNickName()); //昵称
-                userDetail.setTrueName(userVO.getTrueName()); //姓名
-                userDetail.setIdCard(userVO.getIdCard()); //身份证
-                userDetail.setHeadSculpture(userVO.getHeadSculpture()); //头像
-                userDetail.setSex(userVO.getSex()); //性别
-                userDetail.setIsShop(userVO.getIsShop()); //是否有店铺
-                userDetail.setIdcardType(userVO.getIdcardType());  //证件类型
-                userDetail.setTrueNameStatus(userVO.getTrueNameStatus()); //实名状态
-                userDetail.setIdcardImg1(userVO.getIdcardImg1()); //证件照正面
-                userDetail.setIdcardImg2(userVO.getIdcardImg2()); //证件照背面
                 userDetail.setCreateDate(new Date());
                 userDetail.setDeleteStatus((short)0);
 
@@ -2381,16 +2362,7 @@ public class UserController {
             if(CollectionUtils.isNotEmpty(userDetails))
             {
                 UserDetail userDetail = userDetails.get(0);
-                userVO.setNickName(userDetail.getNickName()); //昵称
-                userVO.setTrueName(userDetail.getTrueName()); //姓名
-                userVO.setTrueNameStatus(userDetail.getTrueNameStatus()); //实名状态
-                userVO.setIdcardType(userDetail.getIdcardType()); //身份证类型
-                userVO.setIdCard(userDetail.getIdCard()); //身份证
-                userVO.setHeadSculpture(userDetail.getHeadSculpture()); //头像
-                userVO.setSex(userDetail.getSex()); //性别
-                userVO.setIsShop(userDetail.getIsShop()); //是否有店铺
-                userVO.setIdcardImg1(userDetail.getIdcardImg1()); //证件照正面
-                userVO.setIdcardImg2(userDetail.getIdcardImg2()); //证件照背面
+                BeanUtils.copyProperties(userVO,userDetail);
             }
 
             resultObjectVO.setData(userVO);

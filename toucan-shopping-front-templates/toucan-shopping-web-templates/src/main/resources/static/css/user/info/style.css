@@ -97,7 +97,7 @@
 .userReceiveGoodsTrainImg:hover{
     width:50px;
     height:45px;
-    background:url('/static/images/receive_goods_train.png');
+    background:url('/static/images/receive_goods_train_bor.png');
 }
 
 
@@ -134,7 +134,7 @@
 .userRefundImg:hover{
     width:50px;
     height:50px;
-    background:url('/static/images/refund.png');
+    background:url('/static/images/refundbor.png');
 }
 
 
