@@ -8,6 +8,15 @@ $.extend(validatePrompt, {
             badFormat:"昵称只能由中文或英文组成"
         }
     },
+    personalizedSignature:{
+        onFocus:"2-50位字符，可由中文或英文组成",
+        succeed:"",
+        isNull:"请输入个性签名",
+        error:{
+            badLength:"个性签名长度只能在2-50位字符之间",
+            badFormat:"个性签名只能由中文或英文组成"
+        }
+    },
     vcode:{
         isNull:"请输入验证码"
     }
@@ -20,6 +29,21 @@ $.extend(validateFunction, {
         var nickname = option.value.replace(" ","");
         var length = validateRules.betweenLength(nickname, 2, 15);
         var format = validateRules.isNickname(nickname);
+        if (!length) {
+            validateSettings.error.run(option, option.prompts.error.badLength);
+            return;
+        } else {
+            if (!format) {
+                validateSettings.error.run(option, option.prompts.error.badFormat);
+                return;
+            }
+        }
+        validateSettings.succeed.run(option);
+    },
+    personalizedSignature:function(option) {
+        var personalizedSignature = option.value.replace(" ","");
+        var length = validateRules.betweenLength(personalizedSignature, 2, 50);
+        var format = validateRules.isPersonalizedSignature(personalizedSignature);
         if (!length) {
             validateSettings.error.run(option, option.prompts.error.badLength);
             return;
@@ -54,6 +78,13 @@ function init_events(){
     }, 0);
     //用户名验证
     $("#nickname").jdValidate(validatePrompt.nickname, validateFunction.nickname);
+
+    //默认离开获得焦点
+    setTimeout(function() {
+        $("#personalizedSignature").get(0).focus();
+    }, 0);
+    //用户名验证
+    $("#personalizedSignature").jdValidate(validatePrompt.personalizedSignature, validateFunction.personalizedSignature);
 
     setTimeout(function() {
         $("#vcode").get(0).focus();

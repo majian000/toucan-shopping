@@ -259,6 +259,9 @@ var validateRules = {
     isNickname:function (str) {
         return new RegExp(validateRegExp.nickname).test(str);
     },
+    isPersonalizedSignature:function (str) {
+        return new RegExp(validateRegExp.personalizedSignature).test(str);
+    },
     isDeptname:function (str) {
         return new RegExp(validateRegExp.deptname).test(str);
     },

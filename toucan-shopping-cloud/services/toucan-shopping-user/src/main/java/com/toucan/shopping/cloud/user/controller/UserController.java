@@ -1030,6 +1030,7 @@ public class UserController {
                 UserDetail userDetail = userDetails.get(0);
                 userDetail.setNickName(userVO.getNickName()); //昵称
                 userDetail.setSex(userVO.getSex()); //性别
+                userDetail.setPersonalizedSignature(userVO.getPersonalizedSignature()); //个性签名
                 row= userDetailService.updateInfo(userDetail);
             }else{
                 UserDetail userDetail = new UserDetail();
@@ -1037,6 +1038,7 @@ public class UserController {
                 userDetail.setUserMainId(userVO.getUserMainId()); //用户ID
                 userDetail.setNickName(userVO.getNickName()); //昵称
                 userDetail.setSex(userVO.getSex()); //性别
+                userDetail.setPersonalizedSignature(toucan.getUser().getDefaultPersonalizedSignature());
                 userDetail.setCreateDate(new Date());
                 userDetail.setDeleteStatus((short)0);
 
