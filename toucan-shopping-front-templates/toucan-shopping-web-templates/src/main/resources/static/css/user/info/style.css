@@ -69,11 +69,6 @@
     background:url('/static/images/pay.png');
 }
 
-.userPayImg:hover{
-    width:50px;
-    height:50px;
-    background:url('/static/images/paybor.png');
-}
 
 
 .userGoodsTrainImg{
@@ -82,23 +77,12 @@
     background:url('/static/images/goods_train.png');
 }
 
-.userGoodsTrainImg:hover{
-    width:50px;
-    height:50px;
-    background:url('/static/images/goods_trainbor.png');
-}
-
 .userReceiveGoodsTrainImg{
     width:50px;
     height:50px;
     background:url('/static/images/receive_goods_train.png');
 }
 
-.userReceiveGoodsTrainImg:hover{
-    width:50px;
-    height:50px;
-    background:url('/static/images/receive_goods_train_bor.png');
-}
 
 
 .userAftermarketImg{
@@ -107,11 +91,6 @@
     background:url('/static/images/aftermarket.png');
 }
 
-.userAftermarketImg:hover{
-    width:50px;
-    height:50px;
-    background:url('/static/images/aftermarketbor.png');
-}
 
 .userAppraiseImg{
     width:50px;
@@ -119,22 +98,11 @@
     background:url('/static/images/appraise.png');
 }
 
-.userAppraiseImg:hover{
-    width:50px;
-    height:50px;
-    background:url('/static/images/appraisebor.png');
-}
 
 .userRefundImg{
     width:50px;
     height:50px;
     background:url('/static/images/refund.png');
-}
-
-.userRefundImg:hover{
-    width:50px;
-    height:50px;
-    background:url('/static/images/refundbor.png');
 }
 
 
@@ -201,3 +169,70 @@
 .clear{
     clear: both;
 }
+
+.m-plus{
+    position: relative;
+    margin-bottom: 20px;
+    background-color: #f5ca3a;
+}
+
+.m-plus .mt{
+    padding: 20px 20px 5px;
+    height: 27px;
+    line-height: 27px;
+    border: 0;
+}
+
+.m-plus .mt .button {
+    float: right;
+    padding: 0 10px;
+    background-color: #2c2e40;
+    border-radius: 14px;
+    text-align: center;
+    color: #f5ca3a;
+    font-weight: 700;
+}
+
+.m-plus .mt .button span{
+    padding-left: 5px;
+    font-family: SimSun;
+}
+
+
+
+.m-plus .mc{
+    margin: 10px;
+    background-color: #fff;
+}
+
+.m-plus .mc, .m-plus .mt {
+    position: relative;
+}
+
+.m-plus .mt h3{
+    float: left;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+
+}
+
+.m-plus .mc {
+    margin: 10px;
+    background-color: #fff;
+}
+
+.root61 .m-plus:before {
+    background: url(/static/images/x-01.png) no-repeat 0 0;
+}
+
+.m-plus:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: url(/static/images/z-01.png) no-repeat 0 0;
+}
+
