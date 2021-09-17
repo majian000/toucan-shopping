@@ -69,7 +69,36 @@
     background:url('/static/images/pay.png');
 }
 
+.userPayImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/paybor.png');
+}
 
+
+.userProductImg{
+    width:50px;
+    height:50px;
+    background:url('/static/images/product.png');
+}
+
+.userProductImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/productbor.png');
+}
+
+.userShopImg{
+    width:50px;
+    height:50px;
+    background:url('/static/images/shop.png');
+}
+
+.userShopImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/shopbor.png');
+}
 
 .userGoodsTrainImg{
     width:50px;
@@ -83,6 +112,12 @@
     background:url('/static/images/receive_goods_train.png');
 }
 
+
+.userReceiveGoodsTrainImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/receive_goods_train_bor.png');
+}
 
 
 .userAftermarketImg{
@@ -98,6 +133,11 @@
     background:url('/static/images/appraise.png');
 }
 
+.userAppraiseImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/appraisebor.png');
+}
 
 .userRefundImg{
     width:50px;
@@ -106,6 +146,24 @@
 }
 
 
+.userRefundImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/refundbor.png');
+}
+
+.userOrderListImg{
+    width:50px;
+    height:50px;
+    background:url('/static/images/order_list.png');
+}
+
+
+.userOrderListImg:hover{
+    width:50px;
+    height:50px;
+    background:url('/static/images/order_list_bor.png');
+}
 
 
 .s-content{
