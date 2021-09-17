@@ -56,73 +56,125 @@
                             </div>
                             <div style="margin-top:8px;">
                                 <#if userVO.isVip?? && userVO.isVip==1 >
-                                    <a href="#" target="_blank" class="icon-plus-icon" style="margin-top: 2px;float:left"></a><a>犀鸟plus会员</a>
+                                <a href="#" target="_blank" class="icon-plus-icon" style="margin-top: 2px;float:left"></a><a>犀鸟plus会员</a>
                                 <#elseif userVO.isVip?? && userVO.isVip==0 >
-                                    <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
+                                <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
                                 <#else>
-                                    <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
-                                </#if>
-                            </div>
-                            <p class="userInfoPersonalizedSignature">
-                                个性签名:${userVO.personalizedSignature!''}
-                            </p>
-                        </td>
-                    </tr>
-                </table>
+                                <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
+                            </#if>
             </div>
-
-            <div class="mem_t">我的订单</div>
-            <table border="0" class="mon_tab" style="width:870px; margin-bottom:20px;" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td >
-                        <div class="userAlarm">
-                            <a href="#">
-                                <div class="userPayImg"></div>
-                            </a>
-
-                            待付款 <a href="#" style="color:red">99</a>
-
-                        </div>
-                    </td>
-                    <td >
-                        <div class="userAlarm">
-                            <a href="#">
-                                <div class="userGoodsTrainImg"></div>
-                            </a>
-                            待发货 <a href="#" style="color:red">99</a>
-                        </div>
-                    </td>
-                    <td >
-                        <div class="userAlarm">
-                            <a href="#">
-                                <div class="userReceiveGoodsTrainImg"></div>
-                            </a>
-                            待收货 <a href="#" style="color:red">99</a>
-                        </div>
-                    </td>
-                    <td >
-                        <div class="userAlarm">
-                            <a href="#">
-                                <div class="userAppraiseImg"></div>
-                            </a>
-                            待评价 <a href="#" style="color:red">99</a>
-                        </div>
-                    </td>
-                    <td >
-                        <div class="userAlarm">
-                            <a href="#">
-                                <div class="userRefundImg"></div>
-                            </a>
-                            退款 <a href="#" style="color:red">99</a>
-                        </div>
-                    </td>
-                </tr>
+            <p class="userInfoPersonalizedSignature">
+                个性签名:${userVO.personalizedSignature!''}
+            </p>
+            </td>
+            </tr>
             </table>
+        </div>
 
+        <div class="mem_t">我的订单</div>
+        <table border="0" class="mon_tab" style="width:870px; margin-bottom:20px;" cellspacing="0" cellpadding="0">
+            <tr>
+                <td >
+                    <div class="userAlarm">
+                        <a href="#">
+                            <div class="userPayImg"></div>
+                        </a>
+
+                        待付款 <a href="#" style="color:red">99</a>
+
+                    </div>
+                </td>
+                <td >
+                    <div class="userAlarm">
+                        <a href="#">
+                            <div class="userGoodsTrainImg"></div>
+                        </a>
+                        待发货 <a href="#" style="color:red">99</a>
+                    </div>
+                </td>
+                <td >
+                    <div class="userAlarm">
+                        <a href="#">
+                            <div class="userReceiveGoodsTrainImg"></div>
+                        </a>
+                        待收货 <a href="#" style="color:red">99</a>
+                    </div>
+                </td>
+                <td >
+                    <div class="userAlarm">
+                        <a href="#">
+                            <div class="userAppraiseImg"></div>
+                        </a>
+                        待评价 <a href="#" style="color:red">99</a>
+                    </div>
+                </td>
+                <td >
+                    <div class="userAlarm">
+                        <a href="#">
+                            <div class="userRefundImg"></div>
+                        </a>
+                        退款 <a href="#" style="color:red">99</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <div class="mem_t">我的物流</div>
+        <div class="s-content">
+            <ul class="lg-list">
+
+                <li class="lg-item">
+                    <div class="item-info">
+                        <a href="#">
+                            <img src="${basePath}/static/images/65.jpg_120x120xz.jpg" alt="抗严寒冬天保暖隔凉羊毛毡底鞋垫超薄0.35厘米厚吸汗排湿气舒适">
+                        </a>
+
+                    </div>
+                    <div class="lg-info">
+
+                        <p>快件已从 义乌 发出</p>
+                        <time>2015-12-20 17:58:05</time>
+
+                        <div class="lg-detail-wrap">
+                            <a class="lg-detail i-tip-trigger" href="logistics.html">查看物流明细</a>
+
+                        </div>
+
+                    </div>
+                    <div class="lg-confirm">
+                        <a class="i-btn-typical" href="#">确认收货</a>
+                    </div>
+                </li>
+                <div class="clear"></div>
+
+                <li class="lg-item">
+                    <div class="item-info">
+                        <a href="#">
+                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
+                        </a>
+
+                    </div>
+                    <div class="lg-info">
+
+                        <p>已签收,签收人是青年城签收</p>
+                        <time>2015-12-19 15:35:42</time>
+
+
+                    </div>
+                    <div class="lg-confirm">
+                        <a class="i-btn-typical" href="#">确认收货</a>
+                    </div>
+                </li>
+
+            </ul>
 
         </div>
+
+
+        <div class="mem_t">我的收藏</div>
     </div>
-    <!--End 用户中心 End-->
+</div>
+<!--End 用户中心 End-->
 </div>
 
 <#include "/footer.html"/>
