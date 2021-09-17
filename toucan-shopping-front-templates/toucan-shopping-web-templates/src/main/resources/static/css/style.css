@@ -1969,6 +1969,23 @@ ul.p_sell li .times{
 .m_right{
 	width:970px; height:auto !important; min-height:737px; height:737px; background-color:#FFF; float:right; display:inline; margin:5px; padding-bottom:50px; -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0;
 }
+
+.m_right_user_info{
+	width:970px; height:auto !important; min-height:200px; height:200px; background-color:#FFF; float:right; display:inline; margin:5px;  -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0;
+}
+
+.m_right_user_order{
+	width:970px; height:auto !important; min-height:150px; height:150px; background-color:#FFF; float:right; display:inline; margin:5px; padding-bottom:50px; -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0;
+}
+
+.m_right_logistics {
+	width:970px; height:auto !important;  background-color:#FFF; float:right; display:inline; margin:5px; padding-bottom:50px; -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0;
+}
+
+.m_right_follow {
+	width:400px; height:auto !important; min-height:150px; height:150px; background-color:#FFF; float:right; display:inline; margin:5px; padding-bottom:50px; -webkit-box-shadow:0 0 5px #e0e0e0; -moz-box-shadow:0 0 5px #e0e0e0; box-shadow:0 0 5px #e0e0e0;
+}
+
 .m_des{
 	overflow:hidden; margin-top:45px; padding-bottom:30px; margin-bottom:20px; border-bottom:1px dotted #b6b6b6;
 }
@@ -1981,6 +1998,17 @@ ul.p_sell li .times{
 .mem_t{
 	width:870px; height:50px; line-height:50px; overflow:hidden; color:#333333; font-size:16px;
 }
+.mem_user_order_t{
+	width:560px; height:50px; line-height:50px; overflow:hidden; color:#333333; font-size:16px;
+}
+.mem_logistics_t{
+	width:560px; height:50px; line-height:50px; overflow:hidden; color:#333333; font-size:16px;
+}
+
+.mem_follow_t{
+	width:400px; height:50px; line-height:50px; overflow:hidden; color:#333333; font-size:16px;
+}
+
 .mem_tit{
 	width:930px; height:50px; line-height:50px; overflow:hidden; color:#333333; font-size:16px;
 }
