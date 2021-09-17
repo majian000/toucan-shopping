@@ -23,7 +23,7 @@
 
 .userAlarm {
     position: relative;
-    width: 50px;
+    width: 80px;
     height: 62px;
     margin: 0px;
     text-align: center;
@@ -78,25 +78,25 @@
 
 .userGoodsTrainImg{
     width:50px;
-    height:45px;
+    height:50px;
     background:url('/static/images/goods_train.png');
 }
 
 .userGoodsTrainImg:hover{
     width:50px;
-    height:45px;
+    height:50px;
     background:url('/static/images/goods_trainbor.png');
 }
 
 .userReceiveGoodsTrainImg{
     width:50px;
-    height:45px;
+    height:50px;
     background:url('/static/images/receive_goods_train.png');
 }
 
 .userReceiveGoodsTrainImg:hover{
     width:50px;
-    height:45px;
+    height:50px;
     background:url('/static/images/receive_goods_train_bor.png');
 }
 
