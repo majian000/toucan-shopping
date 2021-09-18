@@ -166,10 +166,10 @@ i,em{
     display: block;
 }
 .soldOut {
-    background: url("static/images/big_bg_img_v3.png") -216px -500px;
+    background: url("/static/images/big_bg_img_v3.png") -216px -500px;
 }
 .finishIcon {
-    background: url("static/images/big_bg_img_v3.png") -5px -101px;
+    background: url("/static/images/big_bg_img_v3.png") -5px -101px;
 }
 .xsqIcon {
     width: 76px;
@@ -262,7 +262,7 @@ i,em{
 .trigger {
     width: 17px;
     height: 43px;
-    background-image: url("static/images/big_bg_img_v3.png");
+    background-image: url("/static/images/big_bg_img_v3.png");
     position: absolute;
     top: 74px;
     z-index: 3;
