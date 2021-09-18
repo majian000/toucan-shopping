@@ -1,0 +1,287 @@
+@charset "utf-8";
+*{
+    margin:0px;
+    padding:0px;
+}
+i,em{
+    font-style: normal;
+}
+.clear::after,.area::after{
+    content: ".";
+    display: block;
+    visibility: hidden;
+    height: 0;
+    clear: both;
+}
+#sidebar .shoping-go:hover .shoping-shumu{
+    color: #c7000b;
+}
+.top-header #top-header{
+    width:980px;
+    margin:0 auto;
+}
+
+
+/*限量抢购-开始*/
+
+.brand_infor{
+    text-align: left;
+    position: relative;
+    border-bottom: 1px solid #ff6767;
+    font-family: "microsoft yahei";
+}
+.brand_infor_tit{
+    font-size: 18px;
+    font-family: "微软雅黑";
+    color: #2f2f2f;
+    line-height: 33px;
+    padding-right:10px;
+}
+
+.brand_infor_cat{
+    float: right;
+    margin-top: 9px;
+    line-height: 24px;
+}
+
+
+
+
+.flashSale_wrap {
+    /*display: none;*/
+    width: 660px;
+    height: 287px;
+    margin:0 auto;
+}
+.flashSale{
+    position: relative;
+    height: 299px;
+    overflow: hidden;
+    margin-top: 33px !important;
+}
+.xlqg{
+    font-size:0;
+}
+.xlqg a{
+    display: inline-block;
+    padding: 0 8px;
+    height: 24px;
+    color: #ff6767;
+    font: 12px/24px "microsoft yahei";
+}
+.xlqg em{
+    margin:0;
+}
+.xlqg a.active{
+    background: #ff6767;
+    color: #fff;
+    text-decoration: none;
+}
+.xlqg a:hover{
+    background: #ff6767;
+    color: #fff;
+    text-decoration: none;
+}
+.tab-content{
+    margin-top:12px;
+}
+.flashSale .tab-content .tab-pane {
+    display: none;
+}
+.flashSale .tab-content .active {
+    display: block;
+}
+.flashSaleDeals {
+    width: 600px;
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+}
+.flashSaleDeals ul li{
+    width:600px;
+    float:left;
+    height:250px;
+}
+.xsq_deal_wrapper,.saleDeal{
+    position: relative;
+    display: block;
+    float: left;
+    width: 192px;
+    height: 250px;
+    background: #fff;
+    margin-left: 4px;
+}
+.dealCon{
+    position: relative;
+    width: 192px;
+    height: 192px;
+    overflow: hidden;
+}
+.dealImg{
+    width: 192px;
+    height: 192px;
+}
+.overlay{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    font: 12px/20px '微软雅黑';
+    display: none;
+    z-index: 2;
+}
+.overlay .xsqMask{
+    opacity: .4;
+    filter: alpha(opacity=40);
+}
+.overlay .xsqMask{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #000;
+}
+.overlay p{
+    position: absolute;
+    left: 0;
+    text-align: center;
+    width: 100%;
+}
+.word1{
+    top: 48px;
+    font-size: 16px;
+}
+.word2{
+    top: 78px;
+    font-size: 16px;
+}
+.word3{
+    top: 145px;
+    font-size: 14px;
+}
+.flashSaleDeals .saleDeal:hover .finish{
+    display: block;
+}
+.soldOut {
+    background: url("static/images/big_bg_img_v3.png") -216px -500px;
+}
+.finishIcon {
+    background: url("static/images/big_bg_img_v3.png") -5px -101px;
+}
+.xsqIcon {
+    width: 76px;
+    height: 75px;
+    position: absolute;
+    right: 15px;
+    bottom: 12px;
+    z-index: 1;
+}
+.stock{
+    width: 100%;
+    height: 20px;
+    overflow: hidden;
+    font: 13px/20px '微软雅黑';
+    color: #fff;
+    text-align: center;
+    position: absolute;
+    border-bottom: 24px;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    bottom: -24px;
+    left: 0;
+    z-index: 1;
+}
+.saleDeal:hover .dealCon .stock{
+    bottom: 0;
+}
+.xsqMask {
+    opacity: .4;
+    filter: alpha(opacity=40);
+    /*z-index: 1;*/
+}
+.xsqMask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #000;
+}
+.stockWord {
+    position: relative;
+    z-index: 2;
+    font-size: 12px;
+}
+.title_new {
+    padding: 6px 10px 0;
+    font: 12px/20px "microsoft yahei";
+    color: #060606;
+}
+.title_new p {
+    width: 172px;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #666;
+}
+.baoyouText {
+    color: #888;
+    margin-right: 5px;
+}
+.dealInfo {
+    height: 35px;
+    padding: 0 12px 0 10px;
+    text-align: right;
+    margin-top: -1px;
+}
+.price {
+    color: #ec1611;
+    font: 13px/33px '微软雅黑';
+    float: left;
+}
+.price em{
+    font: 700 16px/33px Arial;
+    margin-left: 4px;
+}
+.shop_preferential{
+    float: right;
+    font: 12px/12px "Arial";
+    color: #b5b5b5;
+    margin-top: 10px;
+}
+
+.flashSaleDeals .saleDeal:hover .finishIcon, .flashSaleDeals .saleDeal.zt2:hover .finish {
+    display: none;
+}
+
+.trigger {
+    width: 17px;
+    height: 43px;
+    background-image: url("static/images/big_bg_img_v3.png");
+    position: absolute;
+    top: 74px;
+    z-index: 3;
+}
+.zuo{
+    background-position: -277px -440px;
+    left: 5px;
+}
+.zuo:hover{
+    background-position: -217px -440px;
+}
+.you{
+    background-position: -307px -440px;
+    right: 0;
+}
+.you:hover{
+    background-position: -247px -440px;
+}
+/*限量抢购-结束*/
+
+
+
