@@ -302,15 +302,15 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:989px; height:411px; overflow:hidden; background-color:#FFF; position:absolute; left:210px; top:0; display:none; 
 }
 .leftNav .zj .zj_l{
-	width:685px; height:385px; overflow:hidden; float:left; display:inline; margin-left:20px; margin-top:15px;
+	width:685px; height:55px; overflow:hidden; float:left; display:inline; margin-left:20px; margin-top:15px;
 }
 .leftNav .zj .zj_l_c{
-	width:280px; height:108px; line-height:25px; overflow:hidden; color:#dbdbdb; float:left; display:inline; margin-right:50px; margin-bottom:25px;
+	width:100%; height:108px; line-height:25px; overflow:hidden; color:#dbdbdb; float:left; display:inline; margin-right:50px; margin-bottom:25px;
 }
 .leftNav .zj .zj_l_c h2{
 	height:25px; line-height:25px; color:#3e3e3e; font-size:14px; font-weight:bold; margin-bottom:5px; margin-left:10px;
 }
-.leftNav .zj .zj_l_c a{
+.leftNav .zj .zj_l_c .ac{
 	line-height:22px; font-size:12px; font-family:"宋体"; padding:0 10px; margin:0;
 }
 .leftNav .zj .zj_r{

@@ -77,9 +77,9 @@
                                     <#list category.children as cc>
                                         <div class="zj_l">
                                             <div class="zj_l_c">
-                                                <h2>${cc.name!}</h2>
+                                                <h2><a href="${cc.href!'#'}">${cc.name!}</a></h2>
                                                 <#list cc.children as ccc>
-                                                    <a href="#"  >${ccc.name!}</a>|
+                                                    <a href="${ccc.href!'#'}" class="ac" >${ccc.name!}</a>|
                                                  </#list>
                                             </div>
                                         </div>

@@ -65,7 +65,7 @@ public class CategoryController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            File file = new File("d:/mj/2021-9-18/家用电器1级分类.txt");
+            File file = new File("d:/mj/2021-9-18/家用电器1级分类空调子类列表.txt");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String line = null;
             long sort=1000;
@@ -80,7 +80,7 @@ public class CategoryController {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("已存在该类别!");
                 }else {
-                    queryCategory.setParentId(888829476111122472L);
+                    queryCategory.setParentId(888830073702973458L);
                     queryCategory.setId(idGenerator.id());
                     queryCategory.setCategorySort(sort);
                     queryCategory.setCreateDate(new Date());
