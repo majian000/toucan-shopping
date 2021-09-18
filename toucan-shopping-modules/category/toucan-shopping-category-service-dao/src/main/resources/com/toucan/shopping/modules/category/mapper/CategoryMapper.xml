@@ -95,8 +95,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.category.entity.Category" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_category(id,parent_id,icon,name,type,notice_tips,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{id},#{parentId},#{icon},#{name},#{type},#{noticeTips},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_category(id,parent_id,icon,name,href,category_sort,type,notice_tips,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{parentId},#{icon},#{name},#{href},#{categorySort},#{type},#{noticeTips},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 

@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +54,63 @@ public class CategoryController {
     @Autowired
     private CategoryRedisService categoryRedisService;
 
+
+    /**
+     * 保存类别
+     * @return
+     */
+    @RequestMapping(value="/saveByDisk",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO saveByDisk()
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            File file = new File("d:/mj/2021-9-18/家用电器1级分类.txt");
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line = null;
+            long sort=1000;
+            while((line = bufferedReader.readLine())!=null)
+            {
+                CategoryVO queryCategory = new CategoryVO();
+                queryCategory.setName(line.replace(" ",""));
+                queryCategory.setDeleteStatus((short)0);
+
+                if(!CollectionUtils.isEmpty(categoryService.queryList(queryCategory)))
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("已存在该类别!");
+                }else {
+                    queryCategory.setParentId(888829476111122472L);
+                    queryCategory.setId(idGenerator.id());
+                    queryCategory.setCategorySort(sort);
+                    queryCategory.setCreateDate(new Date());
+                    queryCategory.setIcon("/static/images/nav9.png");
+                    queryCategory.setType(1);
+                    queryCategory.setShowStatus(1);
+                    if (queryCategory.getName().indexOf("/") != -1) {
+                        String[] names = queryCategory.getName().split("/");
+                        String hrefs = "";
+                        for (int i = 0; i < names.length; i++) {
+                            if (i != 0 && i + 1 != hrefs.length()) {
+                                hrefs += "&toucan_spliter_2021&";
+                            }
+                            hrefs += "www.jd.com";
+                        }
+                        queryCategory.setHref(hrefs);
+                    } else {
+                        queryCategory.setHref("www.jd.com");
+                    }
+                    sort--;
+                    int row = categoryService.save(queryCategory);
+                }
+
+            }
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 保存类别
@@ -357,10 +415,10 @@ public class CategoryController {
                         if(StringUtils.isNotEmpty(treeVO.getName()))
                         {
                             StringBuilder linkhtml = new StringBuilder();
-                            if(treeVO.getName().indexOf("/")!=-1&&treeVO.getHref().indexOf("&toucan_spliter&")!=-1)
+                            if(treeVO.getName().indexOf("/")!=-1&&treeVO.getHref().indexOf("&toucan_spliter_2021&")!=-1)
                             {
                                 String[] names = treeVO.getName().split("/");
-                                String[] hrefs = treeVO.getHref().split("&toucan_spliter&");
+                                String[] hrefs = treeVO.getHref().split("&toucan_spliter_2021&");
                                 if(names.length==hrefs.length) {
                                     for (int i = 0; i < names.length; i++) {
                                         linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\">");

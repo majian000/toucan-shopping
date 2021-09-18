@@ -271,7 +271,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:211px; height:43px; line-height:43px; overflow:hidden; color:#FFF; font-size:16px; text-indent:35px;
 }	
 .leftNav{
-	width:211px; height:412px; background-color:#ff4e00; position:absolute; left:0; top:44px;
+	width:211px; height:732px; background-color:#ff4e00; position:absolute; left:0; top:44px;
 }
 .none{
 	display:none;
@@ -615,6 +615,9 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 /*----------首页（限时特卖）-----------*/
 .i_t{
 	width:1190px; height:39px; line-height:39px; overflow:hidden; color:#ff4e00; font-size:18px; padding:0 5px; border-bottom:2px solid #ff4e00;
+}
+.i_t_c{
+	width:1190px; height:39px; line-height:39px; overflow:hidden; color:#ff4e00; font-size:18px; padding:0 5px; border-bottom:2px solid #ff4e00;margin-top: 80px;
 }
 .i_mores{
 	font-size:12px; color:#555555;
