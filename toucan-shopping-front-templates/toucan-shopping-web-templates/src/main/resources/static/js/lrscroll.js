@@ -133,32 +133,52 @@ var jq = jQuery.noConflict();
 
 
 
-
-
-jQuery(function() {
+function initlrscroll()
+{
 	jq("#botton-scroll").jCarouselLite({
 		btnNext: ".h_next",
 		btnPrev: ".h_prev"
 	});
-});
-
-jQuery(function () {
 	jq('#top-menu li').hover(
-		function () {jq('ul', this).slideDown(200);}, 
+		function () {jq('ul', this).slideDown(200);},
 		function () {jq('ul', this).slideUp(200);
-	});
-});
-
-jQuery(function () {
+		});
 	jq(".click").click(function(){
 		jq("#panel").slideToggle("slow");
-			jq(this).toggleClass("active"); return false;
-	}); 
-});
+		jq(this).toggleClass("active"); return false;
+	});
 
-jQuery(function () {
 	jq('.fade').hover(
 		function() {jq(this).fadeTo("slow", 0.5);},
 		function() {jq(this).fadeTo("slow", 5);
-	});
-});
+		});
+}
+
+
+// jQuery(function() {
+// 	jq("#botton-scroll").jCarouselLite({
+// 		btnNext: ".h_next",
+// 		btnPrev: ".h_prev"
+// 	});
+// });
+//
+// jQuery(function () {
+// 	jq('#top-menu li').hover(
+// 		function () {jq('ul', this).slideDown(200);},
+// 		function () {jq('ul', this).slideUp(200);
+// 	});
+// });
+//
+// jQuery(function () {
+// 	jq(".click").click(function(){
+// 		jq("#panel").slideToggle("slow");
+// 			jq(this).toggleClass("active"); return false;
+// 	});
+// });
+//
+// jQuery(function () {
+// 	jq('.fade').hover(
+// 		function() {jq(this).fadeTo("slow", 0.5);},
+// 		function() {jq(this).fadeTo("slow", 5);
+// 	});
+// });

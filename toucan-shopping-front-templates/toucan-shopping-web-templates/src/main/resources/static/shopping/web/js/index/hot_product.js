@@ -28,6 +28,8 @@ $(function () {
                     ulHtml+=template;
                 }
                 $("#hot_product_ul").html(ulHtml);
+                //初始化滚动事件
+                initlrscroll();
             }
         }
     });
