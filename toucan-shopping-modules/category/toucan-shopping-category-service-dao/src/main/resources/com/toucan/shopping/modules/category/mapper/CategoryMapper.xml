@@ -100,6 +100,19 @@
     </insert>
 
 
+
+    <insert id="inserts"  useGeneratedKeys="true" keyProperty="id" >
+        insert into t_category(id,parent_id,icon,name,href,category_sort,type,notice_tips,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.parentId},#{entity.icon},#{entity.name},#{entity.href},#{entity.categorySort},#{entity.type},
+            #{entity.noticeTips},#{entity.remark},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId})
+        </foreach>
+
+    </insert>
+
+
+
     <select id="queryById" resultMap="categoryMap" parameterType="java.lang.Long">
         select * from t_category where id=#{categoryId} and delete_status=0
     </select>

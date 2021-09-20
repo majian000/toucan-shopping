@@ -23,6 +23,13 @@ public interface CategoryService {
      */
     int save(Category category);
 
+    /**
+     * 保存实体
+     * @param categorys
+     * @return
+     */
+    int saves(Category[] categorys);
+
 
     int update(Category category);
 

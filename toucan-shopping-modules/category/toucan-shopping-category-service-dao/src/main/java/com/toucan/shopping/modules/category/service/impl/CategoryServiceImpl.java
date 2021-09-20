@@ -38,10 +38,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-    @Transactional
     @Override
     public int save(Category category) {
         return categoryMapper.insert(category);
+    }
+
+
+    @Override
+    public int saves(Category[] categorys) {
+        return categoryMapper.inserts(categorys);
     }
 
     @Override

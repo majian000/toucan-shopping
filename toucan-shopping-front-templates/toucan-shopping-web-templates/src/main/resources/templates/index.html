@@ -74,16 +74,18 @@
 
                                 </div>
                                 <div class="zj">
+                                    <div class="zj_l">
                                     <#list category.children as cc>
-                                        <div class="zj_l">
                                             <div class="zj_l_c">
                                                 <h2><a href="${cc.href!'#'}">${cc.name!}</a></h2>
+                                                <div style="padding-left: 10px;">
                                                 <#list cc.children as ccc>
                                                     <a href="${ccc.href!'#'}" class="ac" >${ccc.name!}</a>|
                                                  </#list>
+                                                </div>
                                             </div>
-                                        </div>
                                     </#list>
+                                    </div>
                                     <div class="zj_r">
                                         <a href="#"><img src="${basePath}/static/images/n_img1.jpg" width="236" height="200" /></a>
                                         <a href="#"><img src="${basePath}/static/images/n_img2.jpg" width="236" height="200" /></a>

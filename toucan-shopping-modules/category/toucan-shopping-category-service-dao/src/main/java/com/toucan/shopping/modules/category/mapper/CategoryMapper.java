@@ -17,6 +17,8 @@ public interface CategoryMapper {
 
     int insert(Category category);
 
+    int inserts(Category[] entitys);
+
     Category queryById(Long id);
 
     List<Category> queryByParentId(Long parentId);
