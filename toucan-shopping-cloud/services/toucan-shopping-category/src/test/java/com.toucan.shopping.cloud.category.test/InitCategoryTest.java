@@ -36,15 +36,15 @@ public class InitCategoryTest {
 //
 //    @Autowired
 //    private IdGenerator idGenerator;
-
+//
 //    @Test
 //    public void initCategory()
 //    {
 //        List<String> lines = this.readFile("D:/JavaWorkspace/toucan-shopping/resources/京东类别树/根类别.txt");
 //        List<Category> categories = new ArrayList<Category>();
+//        long sort=10000;
 //        for(String line:lines)
 //        {
-//            long sort=1000;
 //            CategoryVO rootCategory = new CategoryVO();
 //            rootCategory.setName(line.replace(" ",""));
 //            rootCategory.setName(rootCategory.getName().trim());
@@ -87,11 +87,11 @@ public class InitCategoryTest {
 //            List<String> line2s = this.readFile("D:/JavaWorkspace/toucan-shopping/resources/京东类别树/"+level2CategoryFileName+".txt");
 //
 //            long level2CategoryId = -1L;
+//            long sort2 = 10000;
 //            for(String line2:line2s)
 //            {
 //                if(!"".equals(line2.replace(" ",""))) {
 //                    if (!line2.startsWith(" ")) {  //2级分类
-//                        long sort2 = 1000;
 //                        CategoryVO childCategory = new CategoryVO();
 //                        childCategory.setName(line2.replace(" ", ""));
 //                        childCategory.setName(childCategory.getName().trim());
@@ -101,18 +101,16 @@ public class InitCategoryTest {
 //
 //                        childCategory.setParentId(rootCategory.getId());
 //                        childCategory.setId(idGenerator.id());
-//                        childCategory.setCategorySort(sort);
+//                        childCategory.setCategorySort(sort2);
 //                        childCategory.setCreateDate(new Date());
 //                        childCategory.setIcon("/static/images/nav9.png");
 //                        childCategory.setType(1);
 //                        childCategory.setShowStatus(1);
 //                        childCategory.setHref("www.jd.com");
-//                        sort2--;
 //                        categories.add(childCategory);
 //                        level2CategoryId = childCategory.getId();
 //                    } else { //三级分类
 //
-//                        long sort3 = 1000;
 //                        CategoryVO childCategory = new CategoryVO();
 //                        childCategory.setName(line2.replace(" ", ""));
 //                        childCategory.setName(childCategory.getName().trim());
@@ -122,16 +120,16 @@ public class InitCategoryTest {
 //
 //                        childCategory.setParentId(level2CategoryId);
 //                        childCategory.setId(idGenerator.id());
-//                        childCategory.setCategorySort(sort);
+//                        childCategory.setCategorySort(sort2);
 //                        childCategory.setCreateDate(new Date());
 //                        childCategory.setIcon("/static/images/nav9.png");
 //                        childCategory.setType(1);
 //                        childCategory.setShowStatus(1);
 //                        childCategory.setHref("www.jd.com");
-//                        sort3--;
 //                        categories.add(childCategory);
 //                    }
 //                }
+//                sort2--;
 //            }
 //        }
 //
