@@ -1,6 +1,8 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 
+import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -35,10 +37,21 @@ public class ShopProductPageController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private CategoryService categoryService;
+
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/release")
     public String submit_success(HttpServletRequest request){
+
+        try {
+            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryCategorys()));
+        }catch(Exception e)
+        {
+            request.setAttribute("categoryList", "[]");
+            logger.warn(e.getMessage(),e);
+        }
         return "product/release_product";
     }
 
