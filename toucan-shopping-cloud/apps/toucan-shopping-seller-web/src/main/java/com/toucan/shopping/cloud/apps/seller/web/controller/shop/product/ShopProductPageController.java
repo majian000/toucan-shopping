@@ -42,13 +42,13 @@ public class ShopProductPageController extends BaseController {
     @Autowired
     private CategoryService categoryService;
 
+    private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/release")
     public String submit_success(HttpServletRequest request){
 
         try {
-            SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
             request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryCategorys(),simplePropertyPreFilter));
         }catch(Exception e)
         {
