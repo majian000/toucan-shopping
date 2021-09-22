@@ -37,13 +37,15 @@ public class RequestXssWrapperFilter implements Filter {
                 if(httpServletRequest.getRequestURI().lastIndexOf(path)!=-1)
                 {
                     filterChain.doFilter(httpServletRequest, servletResponse);
+                    return;
                 }
 
             }
-        }else {
-            ServletRequest requestWrapper = new RequestXssWrapper(httpServletRequest);
-            filterChain.doFilter(requestWrapper, servletResponse);
         }
+
+        ServletRequest requestWrapper = new RequestXssWrapper(httpServletRequest);
+        filterChain.doFilter(requestWrapper, servletResponse);
+
     }
 
     @Override

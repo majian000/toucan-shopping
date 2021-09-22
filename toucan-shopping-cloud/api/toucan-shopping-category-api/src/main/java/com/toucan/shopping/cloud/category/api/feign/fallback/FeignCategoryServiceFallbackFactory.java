@@ -188,6 +188,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                 return resultObjectVO;
             }
 
+
             @Override
             public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();

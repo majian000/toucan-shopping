@@ -67,31 +67,37 @@
                 <ul>
                     <#if categorys??>
                         <#list categorys as category>
-                             <li>
-                                <div class="fj">
-                                    <span class="n_img"><span></span><img src="${category.icon!}" /></span>
-                                    <span class="fl">${category.rootLinks!}</span>
+                            <#if category.showStatus?? && category.showStatus==1>
+                                 <li>
+                                    <div class="fj">
+                                        <span class="n_img"><span></span><img src="${category.icon!}" /></span>
+                                        <span class="fl">${category.rootLinks!}</span>
 
-                                </div>
-                                <div class="zj">
-                                    <div class="zj_l">
-                                    <#list category.children as cc>
-                                            <div class="zj_l_c">
-                                                <h2><a href="${cc.href!'#'}">${cc.name!}</a></h2>
-                                                <div style="padding-left: 10px;">
-                                                <#list cc.children as ccc>
-                                                    <a href="${ccc.href!'#'}" class="ac" >${ccc.name!}</a>|
-                                                 </#list>
+                                    </div>
+                                    <div class="zj">
+                                        <div class="zj_l">
+                                        <#list category.children as cc>
+                                            <#if cc.showStatus?? && cc.showStatus==1>
+                                                <div class="zj_l_c">
+                                                    <h2><a href="${cc.href!'#'}">${cc.name!}</a></h2>
+                                                    <div style="padding-left: 10px;">
+                                                    <#list cc.children as ccc>
+                                                        <#if ccc.showStatus?? && ccc.showStatus==1>
+                                                             <a href="${ccc.href!'#'}" class="ac" >${ccc.name!}</a>|
+                                                         </#if>
+                                                     </#list>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                    </#list>
+                                              </#if>
+                                        </#list>
+                                        </div>
+                                        <div class="zj_r">
+                                            <a href="#"><img src="${basePath}/static/images/n_img1.jpg" width="236" height="200" /></a>
+                                            <a href="#"><img src="${basePath}/static/images/n_img2.jpg" width="236" height="200" /></a>
+                                        </div>
                                     </div>
-                                    <div class="zj_r">
-                                        <a href="#"><img src="${basePath}/static/images/n_img1.jpg" width="236" height="200" /></a>
-                                        <a href="#"><img src="${basePath}/static/images/n_img2.jpg" width="236" height="200" /></a>
-                                    </div>
-                                </div>
-                             </li>
+                                 </li>
+                            </#if>
                         </#list>
                     </#if>
                 </ul>

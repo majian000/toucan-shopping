@@ -16,7 +16,7 @@ public interface CategoryService {
      * @return
      */
 
-    List<CategoryVO> queryCategorys();
+    List<CategoryVO> queryMiniCategorys();
 
 
 }

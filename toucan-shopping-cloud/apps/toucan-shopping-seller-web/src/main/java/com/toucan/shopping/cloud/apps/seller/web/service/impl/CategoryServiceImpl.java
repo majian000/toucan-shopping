@@ -51,11 +51,11 @@ public class CategoryServiceImpl implements CategoryService {
     /**
      * 查询类别列表
      */
-    public List<CategoryVO> queryCategorys()
+    public List<CategoryVO> queryMiniCategorys()
     {
         try {
             ResultObjectVO resultObjectVO = new ResultObjectVO();
-            List<CategoryVO>  categoryVOS = categoryRedisService.queryWebIndexCache();
+            List<CategoryVO>  categoryVOS = categoryRedisService.queryMiniTree();
             if(!CollectionUtils.isEmpty(categoryVOS))
             {
                 return categoryVOS;
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
                 resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
-                    return categoryRedisService.queryWebIndexCache();
+                    return categoryRedisService.queryMiniTree();
                 }else{
                     return new ArrayList<CategoryVO>();
                 }

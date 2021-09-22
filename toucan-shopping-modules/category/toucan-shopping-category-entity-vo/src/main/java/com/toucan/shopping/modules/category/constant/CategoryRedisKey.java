@@ -15,4 +15,15 @@ public class CategoryRedisKey {
         return "TOUCAN_SHOPPING_WEB:INDEX:CATEGORY";
     }
 
+
+    /**
+     * 简洁版类别树
+     * @return
+     */
+    public static String getMiniTreeKey()
+    {
+        return "TOUCAN_SHOPPING_WEB:INDEX:CATEGORY:MINI";
+    }
+
+
 }

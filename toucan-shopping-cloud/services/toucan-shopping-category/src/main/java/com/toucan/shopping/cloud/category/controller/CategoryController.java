@@ -452,6 +452,7 @@ public class CategoryController {
                     }
                 }
                 categoryRedisService.flushWebIndexCaches(categoryTreeVOS);
+                categoryRedisService.flushWMiniTree(categoryTreeVOS);
             }
         }catch(Exception e)
         {

@@ -49,7 +49,7 @@ public class ShopProductPageController extends BaseController {
     public String submit_success(HttpServletRequest request){
 
         try {
-            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryCategorys(),simplePropertyPreFilter));
+            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryMiniCategorys(),simplePropertyPreFilter));
         }catch(Exception e)
         {
             request.setAttribute("categoryList", "[]");

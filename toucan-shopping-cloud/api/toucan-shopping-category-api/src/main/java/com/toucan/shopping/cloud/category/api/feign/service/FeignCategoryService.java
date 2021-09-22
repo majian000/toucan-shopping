@@ -92,13 +92,14 @@ public interface FeignCategoryService {
 
 
     /**
-     * 清空首页缓存
+     * 刷新首页缓存
      * @param signHeader
      * @param requestVo
      * @return
      */
     @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO flushWebIndexCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestVo);
+
 
 
 

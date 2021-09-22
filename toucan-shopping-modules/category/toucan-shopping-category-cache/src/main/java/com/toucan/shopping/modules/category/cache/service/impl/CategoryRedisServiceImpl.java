@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.category.cache.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
 import com.toucan.shopping.modules.category.constant.CategoryRedisKey;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -23,6 +24,8 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
     private RedisTemplate redisTemplate;
 
 
+    private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
+
     @Override
     public void flushWebIndexCaches(List<CategoryVO> categoryVOS) {
         Object bannersRedisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getWebIndexKey());
@@ -32,6 +35,19 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
         }
         //保存到redis
         redisTemplate.opsForValue().set(CategoryRedisKey.getWebIndexKey(), JSONObject.toJSONString(categoryVOS));
+    }
+
+
+
+    @Override
+    public void flushWMiniTree(List<CategoryVO> categoryVOS) {
+        Object bannersRedisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getMiniTreeKey());
+        if(bannersRedisObject!=null) {
+            //先删除已有缓存
+            redisTemplate.delete(CategoryRedisKey.getMiniTreeKey());
+        }
+        //保存到redis
+        redisTemplate.opsForValue().set(CategoryRedisKey.getMiniTreeKey(), JSONObject.toJSONString(categoryVOS,simplePropertyPreFilter));
     }
 
     @Override
@@ -45,6 +61,19 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
         }
         return categoryVOList;
     }
+
+    @Override
+    public List<CategoryVO> queryMiniTree() {
+        Object bannersRedisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getMiniTreeKey());
+        List<CategoryVO> categoryVOList=null;
+        if(bannersRedisObject!=null) {
+            categoryVOList=JSONArray.parseArray(String.valueOf(bannersRedisObject), CategoryVO.class);
+        }else{
+            categoryVOList=new ArrayList<CategoryVO>();
+        }
+        return categoryVOList;
+    }
+
 
     @Override
     public boolean clearWebIndexCache() {
