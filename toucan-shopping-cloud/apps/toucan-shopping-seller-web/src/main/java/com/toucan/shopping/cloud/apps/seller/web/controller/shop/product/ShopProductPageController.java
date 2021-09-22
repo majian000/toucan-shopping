@@ -1,11 +1,13 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
@@ -46,7 +48,8 @@ public class ShopProductPageController extends BaseController {
     public String submit_success(HttpServletRequest request){
 
         try {
-            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryCategorys()));
+            SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
+            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryCategorys(),simplePropertyPreFilter));
         }catch(Exception e)
         {
             request.setAttribute("categoryList", "[]");
