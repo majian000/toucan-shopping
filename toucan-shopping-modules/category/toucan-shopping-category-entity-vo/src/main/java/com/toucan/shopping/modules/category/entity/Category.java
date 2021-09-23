@@ -22,8 +22,8 @@ public class Category {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-
     private Long parentId; //上级类别
+
     private String name; //类别名称
     private Integer type; //类型 1:pc端 2:移动端
     private String icon; //图标

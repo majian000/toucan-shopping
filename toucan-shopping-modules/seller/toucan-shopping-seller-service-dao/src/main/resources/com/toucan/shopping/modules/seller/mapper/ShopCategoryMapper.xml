@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.seller.mapper.ShopCategoryMapper">
+
+    <resultMap id="shopCategoryMap" type="com.toucan.shopping.modules.seller.entity.ShopCategory" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="category_sort" jdbcType="INTEGER" property="categorySort" />
+        <result column="href" jdbcType="VARCHAR" property="href" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+
+    <resultMap id="shopCategoryVOMap" type="com.toucan.shopping.modules.seller.vo.ShopCategoryVO" extends="shopCategoryMap">
+
+    </resultMap>
+
+    <sql id="queryListWhere">
+
+        and t.delete_status = 0
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="parentId!=null">
+            and t.parent_id = #{parentId}
+        </if>
+
+        <if test="type!=null">
+            and t.type = #{type}
+        </if>
+
+        <if test="showStatus!=null">
+            and t.show_status = #{showStatus}
+        </if>
+
+
+        <if test="idArray!=null ">
+            and t.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        <if test="name!=null and name!=''">
+            and t.name = #{name}
+        </if>
+    </sql>
+
+    <select id="queryList" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">
+        select t.* from t_seller_shop_category t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+
+
+        </where>
+    </select>
+
+
+    <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
+        select count(*) from t_seller_shop_category t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+
+        </where>
+    </select>
+
+
+
+    <select id="queryPcIndexList" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">
+        select t.* from t_seller_shop_category t
+        <where>
+            1=1
+            and t.delete_status = 0
+            and t.shop_id = #{shopId}
+        </where>
+        order by t.category_sort desc
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_seller_shop_category(id,parent_id,name,href,category_sort,type,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{parentId},#{name},#{href},#{categorySort},#{type},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+    </insert>
+
+
+
+    <insert id="inserts"  useGeneratedKeys="true" keyProperty="id" >
+        insert into t_seller_shop_category(id,parent_id,name,href,category_sort,type,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.parentId},#{entity.name},#{entity.href},#{entity.categorySort},#{entity.type},#{entity.remark},
+            #{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId})
+        </foreach>
+
+    </insert>
+
+
+
+    <select id="queryById" resultMap="shopCategoryMap" parameterType="java.lang.Long">
+        select * from t_seller_shop_category where id=#{categoryId} and delete_status=0
+    </select>
+
+
+    <update id="deleteById">
+        update t_seller_shop_category  set delete_status=1 where id=#{id}   and delete_status=0
+    </update>
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
+        update t_seller_shop_category set name=#{name},href=#{href},remark=#{remark},parent_id=#{parentId},update_admin_id=#{updateAdminId},update_date=#{updateDate}
+          where id=#{id}
+    </update>
+
+    <select id="queryByParentId" resultMap="shopCategoryMap" >
+        select t.* from t_seller_shop_category t
+         where 1=1 and t.parent_id=#{parentId}   and t.delete_status=0 order by t.category_sort desc
+
+    </select>
+
+
+    <select id="findTreeTableByPageInfo" resultMap="shopCategoryVOMap" parameterType="com.toucan.shopping.modules.seller.page.ShopCategoryTreeInfo">
+
+        select * from t_seller_shop_category t
+        <where>
+            1=1
+            <if test="name!=null and name!=''">
+                and t.name like concat('%',#{name},'%')
+
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+</mapper>

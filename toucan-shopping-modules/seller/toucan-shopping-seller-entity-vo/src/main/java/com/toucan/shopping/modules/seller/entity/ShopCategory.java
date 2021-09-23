@@ -9,16 +9,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 商户所属分类
+ * 店铺分类
+ *
+ * @author majian
  */
 @Data
-public class SellerShopCategory {
-    /**
-     * 主键 雪花算法生成
-     */
+public class ShopCategory {
+
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long id;
+    private Long id; //主键
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long parentId; //上级类别
 
     /**
      * 所属用户ID,用该字段分库分表
@@ -27,7 +31,6 @@ public class SellerShopCategory {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
-
     /**
      * 关联店铺
      */
@@ -35,25 +38,24 @@ public class SellerShopCategory {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
 
-    /**
-     * 所属类别
-     */
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long categoryId;
+    private String name; //类别名称
+    private Long categorySort; //排序
+    private String href; //点击类别跳转路径
 
-
-    /**
-     * 创建时间
-     */
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createDate;
+    private Date createDate; //创建时间
 
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate; //创建时间
+    private String createAdminId; //创建人ID
+    private String updateAdminId; //修改人ID
+    private String remark; //备注
 
     /**
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
-
 }
