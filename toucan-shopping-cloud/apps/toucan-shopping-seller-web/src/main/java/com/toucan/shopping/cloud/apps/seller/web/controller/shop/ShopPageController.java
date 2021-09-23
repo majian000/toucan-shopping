@@ -219,5 +219,10 @@ public class ShopPageController extends BaseController {
         return "shop/update_success";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/select_remodel_type")
+    public String selectRemodelType(HttpServletRequest request){
+        return "shop/select_remodel_type";
+    }
 
 }
