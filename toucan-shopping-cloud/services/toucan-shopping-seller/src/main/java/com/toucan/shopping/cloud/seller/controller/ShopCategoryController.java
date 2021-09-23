@@ -1,21 +1,20 @@
-package com.toucan.shopping.cloud.category.controller;
+package com.toucan.shopping.cloud.seller.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
-import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
-import com.toucan.shopping.modules.category.entity.Category;
-import com.toucan.shopping.modules.category.page.CategoryTreeInfo;
-import com.toucan.shopping.modules.category.service.CategoryService;
-import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
-import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.seller.entity.ShopCategory;
+import com.toucan.shopping.modules.seller.page.ShopCategoryTreeInfo;
+import com.toucan.shopping.modules.seller.redis.ShopCategoryKey;
+import com.toucan.shopping.modules.seller.service.ShopCategoryService;
+import com.toucan.shopping.modules.seller.vo.ShopCategoryTreeVO;
+import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,26 +23,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 /**
- * 类别控制器
+ * 店铺类别控制器
  */
 @RestController
-@RequestMapping("/category")
-public class CategoryController {
+@RequestMapping("/shop/category")
+public class ShopCategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private CategoryService categoryService;
+    private ShopCategoryService shopCategoryService;
 
-    @Autowired
-    private FeignAdminService feignAdminService;
 
     @Autowired
     private Toucan toucan;
@@ -52,7 +48,7 @@ public class CategoryController {
     private IdGenerator idGenerator;
 
     @Autowired
-    private CategoryRedisService categoryRedisService;
+    private ToucanStringRedisService toucanStringRedisService;
 
 
 
@@ -75,32 +71,32 @@ public class CategoryController {
         }
 
         try {
-            Category category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
+            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
 
 
-            if(StringUtils.isEmpty(category.getName()))
+            if(StringUtils.isEmpty(ShopCategory.getName()))
             {
-                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(category));
+                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(ShopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别名称不能为空!");
                 return resultObjectVO;
             }
 
-            CategoryVO queryCategory = new CategoryVO();
-            queryCategory.setName(category.getName());
-            queryCategory.setDeleteStatus((short)0);
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setName(ShopCategory.getName());
+            queryShopCategory.setDeleteStatus((short)0);
 
-            if(!CollectionUtils.isEmpty(categoryService.queryList(queryCategory)))
+            if(!CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("已存在该类别!");
                 return resultObjectVO;
             }
 
-            category.setId(idGenerator.id());
-            category.setCreateDate(new Date());
-            int row = categoryService.save(category);
+            ShopCategory.setId(idGenerator.id());
+            ShopCategory.setCreateDate(new Date());
+            int row = shopCategoryService.save(ShopCategory);
             if (row != 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("保存失败,请重试!");
@@ -136,42 +132,42 @@ public class CategoryController {
         }
 
         try {
-            Category category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
+            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
 
-            if(category.getId().longValue()==category.getParentId().longValue())
+            if(ShopCategory.getId().longValue()==ShopCategory.getParentId().longValue())
             {
-                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(category));
+                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(ShopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("上级节点不能为自己!");
                 return resultObjectVO;
             }
 
-            if(StringUtils.isEmpty(category.getName()))
+            if(StringUtils.isEmpty(ShopCategory.getName()))
             {
-                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(category));
+                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(ShopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别名称不能为空!");
                 return resultObjectVO;
             }
 
 
-            if(category.getId()==null)
+            if(ShopCategory.getId()==null)
             {
-                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(category));
+                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别ID不能为空!");
                 return resultObjectVO;
             }
 
-            CategoryVO queryCategory = new CategoryVO();
-            queryCategory.setName(category.getName());
-            queryCategory.setDeleteStatus((short)0);
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setName(ShopCategory.getName());
+            queryShopCategory.setDeleteStatus((short)0);
 
-            List<Category> categoryList = categoryService.queryList(queryCategory);
-            if(!CollectionUtils.isEmpty(categoryList))
+            List<ShopCategory> shopCategoryList = shopCategoryService.queryList(queryShopCategory);
+            if(!CollectionUtils.isEmpty(shopCategoryList))
             {
-                if(category.getId().longValue() != categoryList.get(0).getId().longValue())
+                if(ShopCategory.getId().longValue() != shopCategoryList.get(0).getId().longValue())
                 {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("该类别名称已存在!");
@@ -179,8 +175,8 @@ public class CategoryController {
                 }
             }
 
-            category.setUpdateDate(new Date());
-            int row = categoryService.update(category);
+            ShopCategory.setUpdateDate(new Date());
+            int row = shopCategoryService.update(ShopCategory);
             if (row != 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
@@ -217,31 +213,31 @@ public class CategoryController {
         }
 
         try {
-            Category category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
+            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
 
 
-            if(category.getId()==null)
+            if(ShopCategory.getId()==null)
             {
-                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(category));
+                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别ID不能为空!");
                 return resultObjectVO;
             }
 
-            CategoryVO queryCategory = new CategoryVO();
-            queryCategory.setId(category.getId());
-            queryCategory.setDeleteStatus((short)0);
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setId(ShopCategory.getId());
+            queryShopCategory.setDeleteStatus((short)0);
 
-            if(CollectionUtils.isEmpty(categoryService.queryList(queryCategory)))
+            if(CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("不存在该类别!");
                 return resultObjectVO;
             }
 
-            categoryService.deleteChildrenByParentId(category.getId());
-            int row = categoryService.deleteById(category.getId());
+            shopCategoryService.deleteChildrenByParentId(ShopCategory.getId());
+            int row = shopCategoryService.deleteById(ShopCategory.getId());
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
@@ -275,8 +271,8 @@ public class CategoryController {
             return resultObjectVO;
         }
         try {
-            Category Category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
-            resultObjectVO.setData(categoryService.queryById(Category.getId()));
+            ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+            resultObjectVO.setData(shopCategoryService.queryById(shopCategory.getId()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -306,16 +302,16 @@ public class CategoryController {
             return resultObjectVO;
         }
         try {
-            List<Category> Categorys = JSONArray.parseArray(requestJsonVO.getEntityJson(),Category.class);
-            if(!CollectionUtils.isEmpty(Categorys)) {
-                List<Category> categoryList = new ArrayList<Category>();
-                for(Category category:Categorys) {
-                    Category categoryEntity = categoryService.queryById(category.getId());
-                    if(categoryEntity!=null) {
-                        categoryList.add(categoryEntity);
+            List<ShopCategory> shopCategorys = JSONArray.parseArray(requestJsonVO.getEntityJson(),ShopCategory.class);
+            if(!CollectionUtils.isEmpty(shopCategorys)) {
+                List<ShopCategory> ShopCategoryList = new ArrayList<ShopCategory>();
+                for(ShopCategory ShopCategory:shopCategorys) {
+                    ShopCategory ShopCategoryEntity = shopCategoryService.queryById(ShopCategory.getId());
+                    if(ShopCategoryEntity!=null) {
+                        ShopCategoryList.add(ShopCategoryEntity);
                     }
                 }
-                resultObjectVO.setData(categoryList);
+                resultObjectVO.setData(ShopCategoryList);
             }
         }catch(Exception e)
         {
@@ -334,9 +330,9 @@ public class CategoryController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/flush/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO flushWebIndexCache(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -345,17 +341,24 @@ public class CategoryController {
             return resultObjectVO;
         }
         try {
-            CategoryVO query = new CategoryVO();
-            List<Category> categoryList = categoryService.queryPcIndexList(query);
-            if(!CollectionUtils.isEmpty(categoryList)) {
-                List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
-                for(Category category : categoryList)
+            ShopCategoryVO shopCategoryVO = requestVo.formatEntity(ShopCategoryVO.class);
+            if(shopCategoryVO.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("刷新失败,店铺ID不能为空");
+                return resultObjectVO;
+            }
+            ShopCategoryVO query = new ShopCategoryVO();
+            List<ShopCategory> shopCategoryList = shopCategoryService.queryPcIndexList(query);
+            if(!CollectionUtils.isEmpty(shopCategoryList)) {
+                List<ShopCategoryVO> shopCategoryTreeVOS = new ArrayList<ShopCategoryVO>();
+                for(ShopCategory ShopCategory : shopCategoryList)
                 {
-                    if(category.getParentId().longValue()==-1) {
-                        CategoryTreeVO treeVO = new CategoryTreeVO();
-                        BeanUtils.copyProperties(treeVO, category);
-                        treeVO.setTitle(category.getName());
-                        treeVO.setText(category.getName());
+                    if(ShopCategory.getParentId().longValue()==-1) {
+                        ShopCategoryTreeVO treeVO = new ShopCategoryTreeVO();
+                        BeanUtils.copyProperties(treeVO, ShopCategory);
+                        treeVO.setTitle(ShopCategory.getName());
+                        treeVO.setText(ShopCategory.getName());
                         if(StringUtils.isNotEmpty(treeVO.getName()))
                         {
                             StringBuilder linkhtml = new StringBuilder();
@@ -365,38 +368,37 @@ public class CategoryController {
                                 String[] hrefs = treeVO.getHref().split("&toucan_spliter_2021&");
                                 if(names.length==hrefs.length) {
                                     for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\">");
+                                        linkhtml.append("<a class=\"ShopCategory_a\" href=\""+hrefs[i]+"\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
                                         if(i+1<names.length)
                                         {
-                                            linkhtml.append("<a class=\"category_a\" >/</a>");
+                                            linkhtml.append("<a class=\"ShopCategory_a\" >/</a>");
                                         }
                                     }
                                 }else{
                                     for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\"#\">");
+                                        linkhtml.append("<a class=\"ShopCategory_a\" href=\"#\">");
                                         linkhtml.append(names[i]);
                                         linkhtml.append("</a>");
                                         if(i+1<names.length)
                                         {
-                                            linkhtml.append("<a class=\"category_a\" >/</a>");
+                                            linkhtml.append("<a class=\"ShopCategory_a\" >/</a>");
                                         }
                                     }
                                 }
                             }else{
-                                linkhtml.append("<a class=\"category_a\" href=\""+treeVO.getHref()+"\">"+treeVO.getName()+"</a>");
+                                linkhtml.append("<a class=\"ShopCategory_a\" href=\""+treeVO.getHref()+"\">"+treeVO.getName()+"</a>");
                             }
                             treeVO.setRootLinks(linkhtml.toString());
                         }
-                        categoryTreeVOS.add(treeVO);
+                        shopCategoryTreeVOS.add(treeVO);
 
-                        treeVO.setChildren(new ArrayList<CategoryVO>());
-                        categoryService.setChildren(categoryList,treeVO);
+                        treeVO.setChildren(new ArrayList<ShopCategoryVO>());
+                        shopCategoryService.setChildren(shopCategoryList,treeVO);
                     }
                 }
-                categoryRedisService.flushWebIndexCaches(categoryTreeVOS);
-                categoryRedisService.flushWMiniTree(categoryTreeVOS);
+                toucanStringRedisService.set(ShopCategoryKey.getCacheKey(shopCategoryVO.getShopId()),JSONArray.toJSONString(shopCategoryTreeVOS));
             }
         }catch(Exception e)
         {
@@ -410,16 +412,23 @@ public class CategoryController {
 
 
     /**
-     * 清空首页缓存
+     * 清空缓存
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/clear/index/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/clear/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO clearWebIndexCache(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO clearCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            resultObjectVO.setData(categoryRedisService.clearWebIndexCache());
+            ShopCategoryVO shopCategoryVO = requestVo.formatEntity(ShopCategoryVO.class);
+            if(shopCategoryVO.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("清空失败,店铺ID不能为空");
+                return resultObjectVO;
+            }
+            toucanStringRedisService.delete(ShopCategoryKey.getCacheKey(shopCategoryVO.getShopId()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -449,7 +458,7 @@ public class CategoryController {
         }
 
         try {
-            CategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),CategoryVO.class);
+            ShopCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ShopCategoryVO.class);
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -458,16 +467,16 @@ public class CategoryController {
             }
 
             //查询是否存在该功能项
-            CategoryVO query=new CategoryVO();
+            ShopCategoryVO query=new ShopCategoryVO();
             query.setId(entity.getId());
-            List<Category> categorys = categoryService.queryList(query);
-            if(CollectionUtils.isEmpty(categorys))
+            List<ShopCategory> ShopCategorys = shopCategoryService.queryList(query);
+            if(CollectionUtils.isEmpty(ShopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,对象不存在!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(categorys);
+            resultObjectVO.setData(ShopCategorys);
 
         }catch(Exception e)
         {
@@ -497,7 +506,7 @@ public class CategoryController {
         }
 
         try {
-            CategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),CategoryVO.class);
+            ShopCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ShopCategoryVO.class);
             if(entity.getIdArray()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -506,16 +515,16 @@ public class CategoryController {
             }
 
             //查询是否存在该功能项
-            CategoryVO query=new CategoryVO();
+            ShopCategoryVO query=new ShopCategoryVO();
             query.setIdArray(entity.getIdArray());
-            List<Category> categorys = categoryService.queryList(query);
-            if(CollectionUtils.isEmpty(categorys))
+            List<ShopCategory> ShopCategorys = shopCategoryService.queryList(query);
+            if(CollectionUtils.isEmpty(ShopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,不存在!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(categorys);
+            resultObjectVO.setData(ShopCategorys);
 
         }catch(Exception e)
         {
@@ -539,37 +548,37 @@ public class CategoryController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            CategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
+            ShopCategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
 
-            List<Category> categoryList = categoryService.queryList(query);
-            if(!CollectionUtils.isEmpty(categoryList))
+            List<ShopCategory> ShopCategoryList = shopCategoryService.queryList(query);
+            if(!CollectionUtils.isEmpty(ShopCategoryList))
             {
-                List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
-                for(Category category : categoryList)
+                List<ShopCategoryVO> ShopCategoryTreeVOS = new ArrayList<ShopCategoryVO>();
+                for(ShopCategory ShopCategory : ShopCategoryList)
                 {
-                    if(category.getParentId().longValue()==-1) {
-                        CategoryTreeVO treeVO = new CategoryTreeVO();
-                        BeanUtils.copyProperties(treeVO, category);
+                    if(ShopCategory.getParentId().longValue()==-1) {
+                        ShopCategoryTreeVO treeVO = new ShopCategoryTreeVO();
+                        BeanUtils.copyProperties(treeVO, ShopCategory);
 
-                        treeVO.setTitle(category.getName());
-                        treeVO.setText(category.getName());
+                        treeVO.setTitle(ShopCategory.getName());
+                        treeVO.setText(ShopCategory.getName());
 
-                        categoryTreeVOS.add(treeVO);
+                        ShopCategoryTreeVOS.add(treeVO);
 
-                        treeVO.setChildren(new ArrayList<CategoryVO>());
-                        categoryService.setChildren(categoryList,treeVO);
+                        treeVO.setChildren(new ArrayList<ShopCategoryVO>());
+                        shopCategoryService.setChildren(ShopCategoryList,treeVO);
                     }
                 }
 
-                CategoryTreeVO rootTreeVO = new CategoryTreeVO();
+                ShopCategoryTreeVO rootTreeVO = new ShopCategoryTreeVO();
                 rootTreeVO.setTitle("根节点");
                 rootTreeVO.setParentId(-1L);
                 rootTreeVO.setId(-1L);
                 rootTreeVO.setText("根节点");
-                rootTreeVO.setChildren(categoryTreeVOS);
-                List<CategoryVO> rootCategoryTreeVOS = new ArrayList<CategoryVO>();
-                rootCategoryTreeVOS.add(rootTreeVO);
-                resultObjectVO.setData(rootCategoryTreeVOS);
+                rootTreeVO.setChildren(ShopCategoryTreeVOS);
+                List<ShopCategoryVO> rootShopCategoryTreeVOS = new ArrayList<ShopCategoryVO>();
+                rootShopCategoryTreeVOS.add(rootTreeVO);
+                resultObjectVO.setData(rootShopCategoryTreeVOS);
 
             }
 
@@ -595,24 +604,24 @@ public class CategoryController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            CategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
-            List<Category> categoryList = categoryService.queryPcIndexList(query);
-            if(!CollectionUtils.isEmpty(categoryList)) {
-                List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
-                for(Category category : categoryList)
+            ShopCategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
+            List<ShopCategory> ShopCategoryList = shopCategoryService.queryPcIndexList(query);
+            if(!CollectionUtils.isEmpty(ShopCategoryList)) {
+                List<ShopCategoryVO> ShopCategoryTreeVOS = new ArrayList<ShopCategoryVO>();
+                for(ShopCategory ShopCategory : ShopCategoryList)
                 {
-                    if(category.getParentId().longValue()==-1) {
-                        CategoryTreeVO treeVO = new CategoryTreeVO();
-                        BeanUtils.copyProperties(treeVO, category);
-                        treeVO.setTitle(category.getName());
-                        treeVO.setText(category.getName());
-                        categoryTreeVOS.add(treeVO);
+                    if(ShopCategory.getParentId().longValue()==-1) {
+                        ShopCategoryTreeVO treeVO = new ShopCategoryTreeVO();
+                        BeanUtils.copyProperties(treeVO, ShopCategory);
+                        treeVO.setTitle(ShopCategory.getName());
+                        treeVO.setText(ShopCategory.getName());
+                        ShopCategoryTreeVOS.add(treeVO);
 
-                        treeVO.setChildren(new ArrayList<CategoryVO>());
-                        categoryService.setChildren(categoryList,treeVO);
+                        treeVO.setChildren(new ArrayList<ShopCategoryVO>());
+                        shopCategoryService.setChildren(ShopCategoryList,treeVO);
                     }
                 }
-                resultObjectVO.setData(categoryTreeVOS);
+                resultObjectVO.setData(ShopCategoryTreeVOS);
             }
 
         }catch(Exception e)
@@ -654,64 +663,17 @@ public class CategoryController {
         }
 
         try {
-            CategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryTreeInfo.class);
+            ShopCategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryTreeInfo.class);
 
             //查询所有结构树
-            List<CategoryVO>  categoryVOS = categoryService.findTreeTable(queryPageInfo);
-            List<String> adminIds = new ArrayList<String>();
-            //拿到树节点中所有创建人和修改人
-            if(!CollectionUtils.isEmpty(categoryVOS)) {
-                for (CategoryVO areaVO : categoryVOS) {
-                    if (areaVO.getCreateAdminId() != null&&!"-1".equals(areaVO.getCreateAdminId())&&!existsAdminId(adminIds,areaVO.getCreateAdminId())) {
-                        adminIds.add(areaVO.getCreateAdminId());
-                    }
-                    if (areaVO.getUpdateAdminId() != null&&!"-1".equals(areaVO.getUpdateAdminId())&&!existsAdminId(adminIds,areaVO.getUpdateAdminId())) {
-                        adminIds.add(areaVO.getUpdateAdminId());
-                    }
-                }
-            }
-
-
-            if(!CollectionUtils.isEmpty(adminIds))
-            {
-                AdminVO query = new AdminVO();
-                String[] adminIdArray = new String[adminIds.size()];
-                for(int i=0;i<adminIds.size();i++)
-                {
-                    adminIdArray[i]=adminIds.get(i);
-                }
-                query.setAdminIds(adminIdArray);
-                RequestJsonVO adminRequestJsonVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-                resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<AdminVO> admins = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AdminVO.class);
-                    if(!CollectionUtils.isEmpty(admins))
-                    {
-                        if(!CollectionUtils.isEmpty(categoryVOS)) {
-                            for (CategoryVO categoryVO : categoryVOS) {
-                                for(AdminVO adminVO:admins)
-                                {
-                                    if (categoryVO.getCreateAdminId() != null&&categoryVO.getCreateAdminId().equals(adminVO.getAdminId())) {
-                                        categoryVO.setCreateAdminUsername(adminVO.getUsername());
-                                    }
-                                    if (categoryVO.getUpdateAdminId() != null&&categoryVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
-                                        categoryVO.setUpdateAdminUsername(adminVO.getUsername());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
+            List<ShopCategoryVO>  ShopCategoryVOS = shopCategoryService.findTreeTable(queryPageInfo);
 
             //判断每个节点,如果集合中不存在父节点,那么就将这个节点设置为顶级节点
             boolean isFind =false;
-            for(CategoryVO c:categoryVOS)
+            for(ShopCategoryVO c:ShopCategoryVOS)
             {
                 isFind=false;
-                for(CategoryVO cv:categoryVOS)
+                for(ShopCategoryVO cv:ShopCategoryVOS)
                 {
                     if(c.getParentId().longValue()==cv.getId().longValue())
                     {
@@ -725,7 +687,7 @@ public class CategoryController {
                 }
             }
 
-            resultObjectVO.setData(categoryVOS);
+            resultObjectVO.setData(ShopCategoryVOS);
 
         }catch(Exception e)
         {
@@ -755,8 +717,8 @@ public class CategoryController {
             return resultObjectVO;
         }
         try {
-            CategoryVO queryCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
-            resultObjectVO.setData(categoryService.queryList(queryCategory));
+            ShopCategoryVO queryShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
+            resultObjectVO.setData(shopCategoryService.queryList(queryShopCategory));
 
         }catch(Exception e)
         {
@@ -788,97 +750,52 @@ public class CategoryController {
         }
 
         try {
-            CategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryTreeInfo.class);
+            ShopCategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryTreeInfo.class);
 
-            List<CategoryTreeVO> categoryTreeVOS = new ArrayList<CategoryTreeVO>();
+            List<ShopCategoryTreeVO> ShopCategoryTreeVOS = new ArrayList<ShopCategoryTreeVO>();
             //按指定条件查询
             if(StringUtils.isNotEmpty(queryPageInfo.getName()))
             {
-                CategoryVO queryCategory = new CategoryVO();
-                queryCategory.setName(queryPageInfo.getName());
-                List<Category> categories = categoryService.queryList(queryCategory);
+                ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+                queryShopCategory.setName(queryPageInfo.getName());
+                List<ShopCategory> categories = shopCategoryService.queryList(queryShopCategory);
                 for (int i = 0; i < categories.size(); i++) {
-                    Category category = categories.get(i);
-                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
-                    BeanUtils.copyProperties(categoryTreeVO, category);
-                    categoryTreeVOS.add(categoryTreeVO);
+                    ShopCategory ShopCategory = categories.get(i);
+                    ShopCategoryTreeVO ShopCategoryTreeVO = new ShopCategoryTreeVO();
+                    BeanUtils.copyProperties(ShopCategoryTreeVO, ShopCategory);
+                    ShopCategoryTreeVOS.add(ShopCategoryTreeVO);
                 }
             }else {
                 //查询当前节点下的所有子节点
-                CategoryVO queryCategory = new CategoryVO();
-                queryCategory.setParentId(queryPageInfo.getParentId());
-                List<Category> categories = categoryService.queryList(queryCategory);
+                ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+                queryShopCategory.setParentId(queryPageInfo.getParentId());
+                List<ShopCategory> categories = shopCategoryService.queryList(queryShopCategory);
                 for (int i = 0; i < categories.size(); i++) {
-                    Category category = categories.get(i);
-                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
-                    BeanUtils.copyProperties(categoryTreeVO, category);
+                    ShopCategory ShopCategory = categories.get(i);
+                    ShopCategoryTreeVO ShopCategoryTreeVO = new ShopCategoryTreeVO();
+                    BeanUtils.copyProperties(ShopCategoryTreeVO, ShopCategory);
 
-                    queryCategory = new CategoryVO();
-                    queryCategory.setParentId(category.getId());
-                    Long childCount = categoryService.queryCount(queryCategory);
+                    queryShopCategory = new ShopCategoryVO();
+                    queryShopCategory.setParentId(ShopCategory.getId());
+                    Long childCount = shopCategoryService.queryCount(queryShopCategory);
                     if (childCount > 0) {
-                        categoryTreeVO.setHaveChild(true);
+                        ShopCategoryTreeVO.setHaveChild(true);
                     }
-                    categoryTreeVOS.add(categoryTreeVO);
+                    ShopCategoryTreeVOS.add(ShopCategoryTreeVO);
                 }
             }
 
-            List<String> adminIds = new ArrayList<String>();
-            //拿到树节点中所有创建人和修改人
-            if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
-                for (CategoryVO categoryVO : categoryTreeVOS) {
-                    if (categoryVO.getCreateAdminId() != null&&!"-1".equals(categoryVO.getCreateAdminId())&&!existsAdminId(adminIds,categoryVO.getCreateAdminId())) {
-                        adminIds.add(categoryVO.getCreateAdminId());
-                    }
-                    if (categoryVO.getUpdateAdminId() != null&&!"-1".equals(categoryVO.getUpdateAdminId())&&!existsAdminId(adminIds,categoryVO.getUpdateAdminId())) {
-                        adminIds.add(categoryVO.getUpdateAdminId());
-                    }
-                }
-            }
-
-            if(!CollectionUtils.isEmpty(adminIds))
-            {
-                AdminVO query = new AdminVO();
-                String[] adminIdArray = new String[adminIds.size()];
-                for(int i=0;i<adminIds.size();i++)
-                {
-                    adminIdArray[i]=adminIds.get(i);
-                }
-                query.setAdminIds(adminIdArray);
-                RequestJsonVO adminRequestJsonVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-                resultObjectVO = feignAdminService.queryListByEntity(adminRequestJsonVo.sign(),adminRequestJsonVo);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<AdminVO> admins = JSONObject.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),AdminVO.class);
-                    if(!CollectionUtils.isEmpty(admins))
-                    {
-                        if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
-                            for (CategoryVO categoryVO : categoryTreeVOS) {
-                                for(AdminVO adminVO:admins)
-                                {
-                                    if (categoryVO.getCreateAdminId() != null&&categoryVO.getCreateAdminId().equals(adminVO.getAdminId())) {
-                                        categoryVO.setCreateAdminUsername(adminVO.getUsername());
-                                    }
-                                    if (categoryVO.getUpdateAdminId() != null&&categoryVO.getUpdateAdminId().equals(adminVO.getAdminId())) {
-                                        categoryVO.setUpdateAdminUsername(adminVO.getUsername());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
 
             //将查询的这个节点设置为顶级节点
             if(StringUtils.isNotEmpty(queryPageInfo.getName())) {
-                if(!CollectionUtils.isEmpty(categoryTreeVOS)) {
-                    for (Category category : categoryTreeVOS) {
-                        category.setParentId(-1L);
+                if(!CollectionUtils.isEmpty(ShopCategoryTreeVOS)) {
+                    for (ShopCategory ShopCategory : ShopCategoryTreeVOS) {
+                        ShopCategory.setParentId(-1L);
                     }
                 }
             }
 
-            resultObjectVO.setData(categoryTreeVOS);
+            resultObjectVO.setData(ShopCategoryTreeVOS);
 
         }catch(Exception e)
         {
@@ -918,33 +835,33 @@ public class CategoryController {
         }
 
         try {
-            Category category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
+            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
 
 
-            if(category.getId()==null)
+            if(ShopCategory.getId()==null)
             {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(category));
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("ID不能为空!");
                 return resultObjectVO;
             }
 
 
-            CategoryVO queryCategory = new CategoryVO();
-            queryCategory.setId(category.getId());
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setId(ShopCategory.getId());
 
-            List<Category> categoryList = categoryService.queryList(queryCategory);
-            if(CollectionUtils.isEmpty(categoryList))
+            List<ShopCategory> ShopCategoryList = shopCategoryService.queryList(queryShopCategory);
+            if(CollectionUtils.isEmpty(ShopCategoryList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("不存在该类别!");
                 return resultObjectVO;
             }
 
-            category = categoryList.get(0);
-            categoryService.deleteChildrenByParentId(category.getId());
-            int row = categoryService.deleteById(category.getId());
+            ShopCategory = ShopCategoryList.get(0);
+            shopCategoryService.deleteChildrenByParentId(ShopCategory.getId());
+            int row = shopCategoryService.deleteById(ShopCategory.getId());
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
@@ -980,29 +897,29 @@ public class CategoryController {
         }
 
         try {
-            List<Category> categorys = JSONObject.parseArray(requestVo.getEntityJson(),Category.class);
-            if(CollectionUtils.isEmpty(categorys))
+            List<ShopCategory> ShopCategorys = JSONObject.parseArray(requestVo.getEntityJson(),ShopCategory.class);
+            if(CollectionUtils.isEmpty(ShopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,没有找ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(Category category:categorys) {
-                if(category.getId()!=null) {
+            for(ShopCategory ShopCategory:ShopCategorys) {
+                if(ShopCategory.getId()!=null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(category);
+                    appResultObjectVO.setData(ShopCategory);
 
 
-                    List<Category> chidlren = new ArrayList<Category>();
-                    categoryService.queryChildren(chidlren,category);
+                    List<ShopCategory> chidlren = new ArrayList<ShopCategory>();
+                    shopCategoryService.queryChildren(chidlren,ShopCategory);
 
                     //把当前节点添加进去,循环这个集合
-                    chidlren.add(category);
+                    chidlren.add(ShopCategory);
 
-                    for(Category c:chidlren) {
+                    for(ShopCategory c:chidlren) {
                         //删除当前功能项
-                        int row = categoryService.deleteById(c.getId());
+                        int row = shopCategoryService.deleteById(c.getId());
                         if (row < 1) {
                             logger.warn("删除类别失败 {} ",JSONObject.toJSONString(c));
                             resultObjectVO.setCode(ResultVO.FAILD);

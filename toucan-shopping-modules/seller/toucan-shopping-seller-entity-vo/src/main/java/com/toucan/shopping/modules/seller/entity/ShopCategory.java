@@ -50,8 +50,6 @@ public class ShopCategory {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateDate; //创建时间
-    private String createAdminId; //创建人ID
-    private String updateAdminId; //修改人ID
     private String remark; //备注
 
     /**
