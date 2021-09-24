@@ -12,7 +12,10 @@ $(function () {
 
 function getvcode()
 {
-    //alert("验证码为1234");
+    $.message({
+        message: "验证码为1234",
+        type: 'error'
+    });
     $("#regist_msg_c").hide();
     $("#regist_msg").text("");
     var mobilePhoneValue=$("#regist_mobile_phone").val();
