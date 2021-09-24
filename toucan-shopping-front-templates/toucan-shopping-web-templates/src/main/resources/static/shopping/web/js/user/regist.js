@@ -5,9 +5,8 @@ var g_goLoginSecond=5;
 
 
 $(function () {
-    $("#get_vcode").click(function(){
-        getvcode();
-    });
+    $("#get_vcode").attr("onclick","getvcode();");
+
 });
 
 function getvcode()
