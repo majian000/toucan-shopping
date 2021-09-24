@@ -2,6 +2,14 @@
 
 var g_countdownNum = 60;
 var g_goLoginSecond=5;
+
+
+$(function () {
+    $("#get_vcode").click(function(){
+        getvcode();
+    });
+});
+
 function getvcode()
 {
     alert("验证码为1234");

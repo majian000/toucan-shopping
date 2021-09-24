@@ -78,7 +78,7 @@
 	<div class="regist">
     	<div class="log_img"><img src="${basePath}/static/images/l_img.png" width="611" height="425" /></div>
 		<div class="reg_c">
-        	<form>
+        	<form action="" method="post" onsubmit="return false;">
             <table border="0" style="width:450px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
               <tr height="50" valign="top">
               	<td width="95">&nbsp;</td>
@@ -103,7 +103,7 @@
                 <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                 <td>
                     <input type="text" value="" id="regist_vcode" class="l_ipt" />
-                    &nbsp;&nbsp;<a href="#" id="get_vcode" style="font-size:14px; font-family:'宋体';" onclick="getvcode();">获取验证码</a>
+                    &nbsp;&nbsp;<a href="javascript:void(0);" id="get_vcode" style="font-size:14px; font-family:'宋体';" >获取验证码</a>
                 </td>
               </tr>
               <tr>
