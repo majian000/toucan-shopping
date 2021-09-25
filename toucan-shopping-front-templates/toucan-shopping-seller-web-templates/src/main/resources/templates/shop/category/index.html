@@ -23,6 +23,23 @@
     <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
 
+    <link href="${basePath}/static/lib/jquery-treegrid/bootstrap-2.3.2/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="${basePath}/static/lib/jquery-treegrid/css/jquery.treegrid.css">
+    <link rel="stylesheet" href="${basePath}/static/lib/jquery-treegrid/css/default.min.css">
+    <script src="${basePath}/static/lib/jquery-treegrid/js/highlightjs/7.3/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="${basePath}/static/lib/jquery-treegrid/js/jquery.treegrid.js"></script>
+    <script type="text/javascript" src="${basePath}/static/lib/jquery-treegrid/js/jquery.treegrid.bootstrap2.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.tree').treegrid();
+            $('.tree2').treegrid({
+                expanderExpandedClass: 'icon-minus-sign',
+                expanderCollapsedClass: 'icon-plus-sign'
+            });
+        });
+    </script>
+
 
     <#include "/common_js.html"/>
 
@@ -54,7 +71,339 @@
             <#include "/user/manager_left.html"/>
         </div>
         <div class="m_right">
+            <div class="container">
+                <table class="table tree">
+                    <tr>
+                        <th>ID</th>
+                        <th>部门名称</th>
+                        <th>部门编号</th>
+                        <th>部门人数</th>
+                        <th>所属机构</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr class="treegrid-1">
+                        <td>14</td>
+                        <td>研发部</td>
+                        <td>34</td>
+                        <td>22</td>
+                        <td>xxxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-3 treegrid-parent-1">
+                        <td>13</td>
+                        <td>APP开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>15</td>
+                        <td>IOS开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-4 treegrid-parent-3">
+                        <td>16</td>
+                        <td>ANDROID开发</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-5">
+                        <td>23</td>
+                        <td>保定会计部门</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-6 treegrid-parent-5">
+                        <td>24</td>
+                        <td>保定会计二部</td>
+                        <td>23</td>
+                        <td>33</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                    <tr class="treegrid-9">
+                        <td>11</td>
+                        <td>人事行政部</td>
+                        <td>466</td>
+                        <td>89</td>
+                        <td>xxx公司</td>
+                        <td>修改 | 删除</td>
+                    </tr>
+                </table>
 
+            </div>
 
         </div>
     </div>
