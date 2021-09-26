@@ -614,10 +614,12 @@ public class UserController extends UIController {
                     {
                         //如果不是默认头像,就删除旧的头像
                         if(!toucan.getUser().getDefaultHeadSculpture().equals(userVO.getHeadSculpture())) {
-                            int ret = imageUploadService.deleteFile(userVO.getHeadSculpture());
-                            if(ret!=0)
-                            {
-                                logger.warn("删除旧头像失败 {} userVO {} ",userVO.getHeadSculpture(),JSONObject.toJSONString(userVO));
+                            //本次修改了头像,删除了旧头像
+                            if(!userVO.getHeadSculpture().equals(user.getHeadSculpture())) {
+                                int ret = imageUploadService.deleteFile(userVO.getHeadSculpture());
+                                if (ret != 0) {
+                                    logger.warn("删除旧头像失败 {} userVO {} ", userVO.getHeadSculpture(), JSONObject.toJSONString(userVO));
+                                }
                             }
                         }
                     }
