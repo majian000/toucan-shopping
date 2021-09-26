@@ -371,7 +371,7 @@ public class UserApiController extends BaseController {
                     userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userVO.getHeadSculpture());
                 }else{
                     if(userVO!=null) {
-                        userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + "/" + toucan.getUser().getDefaultHeadSculpture());
+                        userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + toucan.getUser().getDefaultHeadSculpture());
                     }
                 }
                 resultObjectVO.setData(userVO);
