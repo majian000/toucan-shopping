@@ -274,22 +274,21 @@ public class UserController extends UIController {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total"))));
                     List<UserVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),UserVO.class);
-                    for(UserVO userVO:list)
-                    {
-                        if(userVO.getHeadSculpture()!=null) {
-                            userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
+                    if(list!=null) {
+                        for (UserVO userVO : list) {
+                            if (userVO.getHeadSculpture() != null) {
+                                userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix() + userVO.getHeadSculpture());
+                            }
+                            if (userVO.getIdcardImg1() != null) {
+                                userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
+                            }
+                            if (userVO.getIdcardImg2() != null) {
+                                userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
+                            }
                         }
-                        if(userVO.getIdcardImg1()!=null)
-                        {
-                            userVO.setHttpIdcardImg1(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg1());
+                        if (tableVO.getCount() > 0) {
+                            tableVO.setData((List) list);
                         }
-                        if(userVO.getIdcardImg2()!=null)
-                        {
-                            userVO.setHttpIdcardImg2(imageUploadService.getImageHttpPrefix() + userVO.getIdcardImg2());
-                        }
-                    }
-                    if(tableVO.getCount()>0) {
-                        tableVO.setData((List)list);
                     }
                 }
             }

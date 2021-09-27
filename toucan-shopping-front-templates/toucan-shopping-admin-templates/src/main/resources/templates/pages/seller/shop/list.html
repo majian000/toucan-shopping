@@ -33,7 +33,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">掌柜用户ID</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="userMianId" autocomplete="off" class="layui-input">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -203,7 +203,7 @@
             layui.form.render();
         });
 
-        function reloadTable()
+        function reloadTable(data)
         {
             //执行搜索重载
             table.reload('shopTable', {
@@ -237,7 +237,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            reloadTable();
+                            reloadTable(data);
 
                         },
                         complete:function(data)
@@ -274,7 +274,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            reloadTable();
+                            reloadTable(data);
 
                         },
                         complete:function(data)
@@ -322,7 +322,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            reloadTable();
+                            reloadTable(data);
 
                         },
                         complete:function(data)
