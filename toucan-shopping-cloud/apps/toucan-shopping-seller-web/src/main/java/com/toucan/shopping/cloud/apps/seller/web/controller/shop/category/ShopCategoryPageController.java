@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller("categoryPageController")
 @RequestMapping("/page/shop/category")
-public class CategoryPageController  extends BaseController {
+public class ShopCategoryPageController extends BaseController {
 
 
 
@@ -28,5 +28,13 @@ public class CategoryPageController  extends BaseController {
     public String list(HttpServletRequest request)
     {
         return "shop/category/list";
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/add")
+    public String add(HttpServletRequest request)
+    {
+        return "shop/category/add";
     }
 }

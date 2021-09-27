@@ -8,7 +8,7 @@ $(function () {
             shadeClose: true,
             maxmin: true,
             area: ['700px', '670px'],
-            content: 'chongzhits.html'
+            content: basePath+"/page/shop/category/add"
         });
 
     });
