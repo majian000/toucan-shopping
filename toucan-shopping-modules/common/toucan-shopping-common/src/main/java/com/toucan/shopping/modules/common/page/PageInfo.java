@@ -20,13 +20,13 @@ public class PageInfo<E> {
     /**
      * 页码
      */
-    private int page;
+    private int page = 1;
 
 
     /**
      * 每页显示数量
      */
-    private int size;
+    private int size = 10;
 
 
     /**
@@ -43,7 +43,7 @@ public class PageInfo<E> {
     /**
      * 每页显示数量
      */
-    private int limit;
+    private int limit = 10;
 
 
 

@@ -1619,19 +1619,43 @@ public class UserController {
 
             //手机号查询,先查询手机号子表
             if(StringUtils.isNotEmpty(userPageInfo.getMobilePhone())) {
-                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(userPageInfo.getMobilePhone());
-                if (CollectionUtils.isNotEmpty(userMobilePhones)) {
-                    for (int i = 0; i < userMobilePhones.size(); i++) {
-                        userMainIdLinkedList.add(userMobilePhones.get(i).getUserMainId());
+                List<UserMobilePhone> entitys = userMobilePhoneService.findListByMobilePhone(userPageInfo.getMobilePhone());
+                if (CollectionUtils.isNotEmpty(entitys)) {
+                    for (int i = 0; i < entitys.size(); i++) {
+                        userMainIdLinkedList.add(entitys.get(i).getUserMainId());
                     }
-                }else if(userPageInfo.getUserMainId()!=null)
-                {
-                    userMainIdLinkedList.add(userPageInfo.getUserMainId());
                 }else{ //如果没有匹配到数据,设置一个不存在的ID
                     userMainIdLinkedList.add(1L);
                 }
             }
 
+
+            //用户名查询,先查询用户名子表
+            if(StringUtils.isNotEmpty(userPageInfo.getUsername())) {
+                List<UserUserName> entitys = userUserNameService.findListByUserName(userPageInfo.getUsername());
+                if (CollectionUtils.isNotEmpty(entitys)) {
+                    for (int i = 0; i < entitys.size(); i++) {
+                        userMainIdLinkedList.add(entitys.get(i).getUserMainId());
+                    }
+                }else{ //如果没有匹配到数据,设置一个不存在的ID
+                    userMainIdLinkedList.add(1L);
+                }
+            }
+
+
+            //邮箱查询,先查询邮箱子表
+            if(StringUtils.isNotEmpty(userPageInfo.getEmail())) {
+                List<UserEmail> entitys = userEmailService.findListByEmail(userPageInfo.getEmail());
+                if (CollectionUtils.isNotEmpty(entitys)) {
+                    for (int i = 0; i < entitys.size(); i++) {
+                        userMainIdLinkedList.add(entitys.get(i).getUserMainId());
+                    }
+                }else{ //如果没有匹配到数据,设置一个不存在的ID
+                    userMainIdLinkedList.add(1L);
+                }
+            }
+
+            //根据用户ID查询
             if(userPageInfo.getUserMainId()!=null)
             {
                 userMainIdLinkedList.add(userPageInfo.getUserMainId());
