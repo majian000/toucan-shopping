@@ -1,15 +1,8 @@
+
 $(function () {
 
-    $('#addsc').on('click', function(){
-        layer.open({
-            type: 2,
-            title: '添加类别',
-            fix: false,
-            shadeClose: true,
-            maxmin: true,
-            area: ['700px', '670px'],
-            content: basePath+"/page/shop/category/add"
-        });
-
+    $('#scafbtn').on('click', function(){
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);
     });
 });

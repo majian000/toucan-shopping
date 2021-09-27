@@ -5,9 +5,12 @@
 <link rel="stylesheet" href="${basePath}/static/css/magnific-popup.min.css">
 <link rel="stylesheet" href="${basePath}/static/css/font-awesome-5.15.1.min.css" />
 
-<!-- Custom css File -->
-<link rel="stylesheet" href="${basePath}/static/css/style2.css" />
-<link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
+    <!-- Custom css File -->
+    <link rel="stylesheet" href="${basePath}/static/css/style2.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/jqueryFormValidate/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/selectProductCategory/style.css" />
+
 <!--[if IE 6]>
 <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -35,40 +38,38 @@
 
 <script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/phone.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/shop_regist.js"></script>
 
 </head>
     <body>
-        <form id="utnform" method="post">
-            <table border="0" style="width:650px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
-                <tr height="50" valign="top">
-                    <td width="150">&nbsp;</td>
-                    <td>
-                        <span class="fl" style="font-size:24px;"></span>
-                    </td>
-                </tr>
-                <tr height="50">
-                    <td align="right"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
-                    <td>
-                        <input type="text" id="name" name="name"   class="l_ipt_long"  maxlength="15"/>
-                        &nbsp;&nbsp;
-                        <a id="name_msg" style="color:#ff4e00;"></a>
-                    </td>
-                </tr>
-                <tr height="60">
-                    <td>&nbsp;</td>
-                    <td><input type="button" value="保存" class="log_btn" onclick="registUserShop();"/></td>
-                </tr>
-                <tr height="50">
-                    <td align="right"></td>
-                    <td>
-                        <a id="tn_msg" style="color:#ff4e00;"></a>
-                        <br>
-                        <br>
-                    </td>
-                </tr>
-            </table>
-        </form>
+
+        <div id="formbox">
+            <form id="scaf" method="post" onsubmit="return false;">
+                <div class="form">
+                    <div class="item">
+                        <span class="label"><span class="red">*</span>分类名称：</span>
+                        <div class="fl">
+                            <input type="text" id="title" name="title" class="text" tabindex="1"  />
+                            <label id="title_succeed" class="blank"></label>
+                            <span class="clear"></span>
+                            <div id="title_error"></div>
+                        </div>
+                    </div><!--item end-->
+
+                    <div class="item">
+                        <span class="label">&nbsp;</span>
+                        <input type="button" value="保存" class="log_btn" id="scafbtn" style="font-size:15px;" />
+                    </div><!--item end-->
+
+                    <div class="item">
+                        <span class="label">&nbsp;</span>
+                        <a id="edit_info_msg" style="color:#ff4e00;"></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
+        <script type="text/javascript" src="${basePath}/static/js/seller/shop/category/add.js"></script>
 
     </body>
 </html>
