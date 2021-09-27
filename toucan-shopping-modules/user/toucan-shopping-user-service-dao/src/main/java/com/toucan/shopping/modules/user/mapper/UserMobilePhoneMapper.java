@@ -19,6 +19,8 @@ public interface UserMobilePhoneMapper {
 
     List<UserMobilePhone> findListByMobilePhone(String mobilePhone);
 
+    List<UserMobilePhone> findListByMobilePhoneAndUserMainIdList(String mobilePhone,List<Long> userMianIdList);
+
     List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone);
 
     List<UserMobilePhone> queryListByUserMainId(Long[] userMainIdArray);

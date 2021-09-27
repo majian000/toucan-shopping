@@ -121,6 +121,20 @@
         select * from t_user_mobile_phone bu where  1=1  and bu.mobile_phone = #{mobilePhone}  and bu.delete_status = 0
     </select>
 
+    <select id="findListByMobilePhoneAndUserMainIdList" resultMap="userMobilePhoneMap" >
+        select * from t_user_mobile_phone bu
+        where  1=1
+         and bu.delete_status = 0
+         and bu.mobile_phone = #{mobilePhone}
+
+        <if test="userMianIdList!=null and userMianIdList.size > 0 ">
+            and bu.user_main_id in
+            <foreach item="item" index="index" collection="userMianIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 
     <select id="findListByMobilePhoneLike" resultMap="userMobilePhoneMap" parameterType="java.lang.String">
         select * from t_user_mobile_phone bu where  1=1  and bu.mobile_phone like concat('%',#{mobilePhone},'%')  and bu.delete_status = 0

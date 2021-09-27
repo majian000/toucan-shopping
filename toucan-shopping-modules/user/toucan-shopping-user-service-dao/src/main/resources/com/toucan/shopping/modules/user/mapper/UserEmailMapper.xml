@@ -122,6 +122,17 @@
     </select>
 
 
+    <select id="findListByEmailAndUserMianIdList" resultMap="userEmailMap" >
+        select * from t_user_email bu
+          where  1=1  and bu.email = #{email}  and bu.delete_status = 0
+            <if test="userMianIdList!=null and userMianIdList.size > 0 ">
+                and bu.user_main_id in
+                <foreach item="item" index="index" collection="userMianIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+    </select>
+
 
     <update id="deleteByUserMainId" >
         update t_user_email set delete_status=1  where user_main_id =#{userMainId}

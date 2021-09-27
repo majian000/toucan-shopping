@@ -52,6 +52,11 @@ public class UserEmailServiceImpl implements UserEmailService {
     }
 
     @Override
+    public List<UserEmail> findListByEmail(String email,List<Long> userMianIdList) {
+        return userEmailMapper.findListByEmailAndUserMianIdList(email,userMianIdList);
+    }
+
+    @Override
     public List<UserEmail> findListByUserMainId(Long userMainId) {
         return userEmailMapper.findListByUserMainId(userMainId);
     }

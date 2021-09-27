@@ -51,6 +51,11 @@ public class UserUserNameServiceImpl implements UserUserNameService {
     }
 
     @Override
+    public List<UserUserName> findListByUserName(String username,List<Long> userMianIdList) {
+        return userUserNameMapper.findListByUserNameAndUserMainIdList(username,userMianIdList);
+    }
+
+    @Override
     public PageInfo<UserUserName> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo) {
         PageInfo<UserUserName> pageInfo = new PageInfo();
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());

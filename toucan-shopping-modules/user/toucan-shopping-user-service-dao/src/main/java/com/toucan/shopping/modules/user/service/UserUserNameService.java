@@ -34,6 +34,12 @@ public interface UserUserNameService {
      * @return
      */
     List<UserUserName> findListByUserName(String username);
+    /**
+     * 根据用户名查询关联
+     * @param username
+     * @return
+     */
+    List<UserUserName> findListByUserName(String username,List<Long> userMianIdList);
 
 
     PageInfo<UserUserName> queryListPageNothingDeleteStatus(UserPageInfo queryPageInfo);

@@ -37,6 +37,12 @@ public interface UserMobilePhoneService {
      * @param mobilePhone
      * @return
      */
+    List<UserMobilePhone> findListByMobilePhone(String mobilePhone,List<Long> userMianIdList);
+    /**
+     * 根据手机号查询列表
+     * @param mobilePhone
+     * @return
+     */
     List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone);
 
     int save(UserMobilePhone entity);

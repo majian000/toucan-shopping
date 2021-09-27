@@ -18,6 +18,8 @@ public interface UserEmailMapper {
 
     List<UserEmail> findListByEmail(String email);
 
+    List<UserEmail> findListByEmailAndUserMianIdList(String email,List<Long> userMianIdList);
+
     List<UserEmail> findListByUserMainId(Long userMainId);
 
 

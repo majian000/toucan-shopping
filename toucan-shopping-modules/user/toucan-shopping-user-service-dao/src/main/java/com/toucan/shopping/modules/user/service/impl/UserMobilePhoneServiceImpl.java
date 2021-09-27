@@ -35,6 +35,10 @@ public class UserMobilePhoneServiceImpl implements UserMobilePhoneService {
     }
 
     @Override
+    public List<UserMobilePhone> findListByMobilePhone(String mobilePhone,List<Long> userMianIdList) {
+        return userMobilePhoneMapper.findListByMobilePhoneAndUserMainIdList(mobilePhone,userMianIdList);
+    }
+    @Override
     public List<UserMobilePhone> findListByMobilePhoneLike(String mobilePhone) {
         return userMobilePhoneMapper.findListByMobilePhoneLike(mobilePhone);
     }

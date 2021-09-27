@@ -1617,9 +1617,15 @@ public class UserController {
 
             List<Long> userMainIdLinkedList = new LinkedList();
 
+            //根据用户ID查询
+            if(userPageInfo.getUserMainId()!=null)
+            {
+                userMainIdLinkedList.add(userPageInfo.getUserMainId());
+            }
+
             //手机号查询,先查询手机号子表
             if(StringUtils.isNotEmpty(userPageInfo.getMobilePhone())) {
-                List<UserMobilePhone> entitys = userMobilePhoneService.findListByMobilePhone(userPageInfo.getMobilePhone());
+                List<UserMobilePhone> entitys = userMobilePhoneService.findListByMobilePhone(userPageInfo.getMobilePhone(),userMainIdLinkedList);
                 if (CollectionUtils.isNotEmpty(entitys)) {
                     for (int i = 0; i < entitys.size(); i++) {
                         userMainIdLinkedList.add(entitys.get(i).getUserMainId());
@@ -1632,7 +1638,7 @@ public class UserController {
 
             //用户名查询,先查询用户名子表
             if(StringUtils.isNotEmpty(userPageInfo.getUsername())) {
-                List<UserUserName> entitys = userUserNameService.findListByUserName(userPageInfo.getUsername());
+                List<UserUserName> entitys = userUserNameService.findListByUserName(userPageInfo.getUsername(),userMainIdLinkedList);
                 if (CollectionUtils.isNotEmpty(entitys)) {
                     for (int i = 0; i < entitys.size(); i++) {
                         userMainIdLinkedList.add(entitys.get(i).getUserMainId());
@@ -1645,7 +1651,7 @@ public class UserController {
 
             //邮箱查询,先查询邮箱子表
             if(StringUtils.isNotEmpty(userPageInfo.getEmail())) {
-                List<UserEmail> entitys = userEmailService.findListByEmail(userPageInfo.getEmail());
+                List<UserEmail> entitys = userEmailService.findListByEmail(userPageInfo.getEmail(),userMainIdLinkedList);
                 if (CollectionUtils.isNotEmpty(entitys)) {
                     for (int i = 0; i < entitys.size(); i++) {
                         userMainIdLinkedList.add(entitys.get(i).getUserMainId());
@@ -1655,11 +1661,6 @@ public class UserController {
                 }
             }
 
-            //根据用户ID查询
-            if(userPageInfo.getUserMainId()!=null)
-            {
-                userMainIdLinkedList.add(userPageInfo.getUserMainId());
-            }
 
 
             //设置查询条件

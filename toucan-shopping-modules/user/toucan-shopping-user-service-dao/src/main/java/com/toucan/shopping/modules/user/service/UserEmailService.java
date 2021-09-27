@@ -33,6 +33,12 @@ public interface UserEmailService {
      */
     List<UserEmail> findListByEmail(String email);
 
+    /**
+     * 根据邮箱查询关联
+     * @param email
+     * @return
+     */
+    List<UserEmail> findListByEmail(String email,List<Long> userMianIdList);
 
     List<UserEmail> findListByUserMainId(Long userMainId);
 

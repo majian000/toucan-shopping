@@ -117,6 +117,18 @@
     </select>
 
 
+    <select id="findListByUserNameAndUserMainIdList" resultMap="userUserNameMap" >
+        select * from t_user_username bu
+        where
+          1=1  and bu.username = #{username}  and bu.delete_status = 0
+        <if test="userMianIdList!=null and userMianIdList.size > 0 ">
+            and bu.user_main_id in
+            <foreach item="item" index="index" collection="userMianIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
     <select id="findListByUserMainId" resultMap="userUserNameMap" parameterType="java.lang.Long">
         select * from t_user_username bu where 1=1 and bu.user_main_id = #{userMainId} and bu.delete_status = 0
     </select>

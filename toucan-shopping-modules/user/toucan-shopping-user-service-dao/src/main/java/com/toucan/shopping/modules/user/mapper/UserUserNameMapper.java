@@ -18,6 +18,8 @@ public interface UserUserNameMapper {
 
     List<UserUserName> findListByUserName(String username);
 
+    List<UserUserName> findListByUserNameAndUserMainIdList(String username,List<Long> userMianIdList);
+
     List<UserUserName> findListByUserMainId(Long userMainId);
 
 
