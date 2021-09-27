@@ -15,7 +15,7 @@ public class PageInfo<E> {
     /**
      * 数据总数
      */
-    private Long total;
+    private Long total = 0L;
 
     /**
      * 页码

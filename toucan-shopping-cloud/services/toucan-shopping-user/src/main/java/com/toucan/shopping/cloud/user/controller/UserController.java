@@ -1616,6 +1616,7 @@ public class UserController {
             }
 
             List<Long> userMainIdLinkedList = new LinkedList();
+            boolean findEntity = true;
 
             //根据用户ID查询
             if(userPageInfo.getUserMainId()!=null)
@@ -1624,151 +1625,140 @@ public class UserController {
             }
 
             //手机号查询,先查询手机号子表
-            if(StringUtils.isNotEmpty(userPageInfo.getMobilePhone())) {
+            if(StringUtils.isNotEmpty(userPageInfo.getMobilePhone())&&findEntity) {
                 List<UserMobilePhone> entitys = userMobilePhoneService.findListByMobilePhone(userPageInfo.getMobilePhone(),userMainIdLinkedList);
                 if (CollectionUtils.isNotEmpty(entitys)) {
                     for (int i = 0; i < entitys.size(); i++) {
                         userMainIdLinkedList.add(entitys.get(i).getUserMainId());
                     }
                 }else{ //如果没有匹配到数据,设置一个不存在的ID
+                    userMainIdLinkedList.clear();
                     userMainIdLinkedList.add(1L);
+                    findEntity=false;
                 }
             }
 
 
             //用户名查询,先查询用户名子表
-            if(StringUtils.isNotEmpty(userPageInfo.getUsername())) {
+            if(StringUtils.isNotEmpty(userPageInfo.getUsername())&&findEntity) {
                 List<UserUserName> entitys = userUserNameService.findListByUserName(userPageInfo.getUsername(),userMainIdLinkedList);
                 if (CollectionUtils.isNotEmpty(entitys)) {
                     for (int i = 0; i < entitys.size(); i++) {
                         userMainIdLinkedList.add(entitys.get(i).getUserMainId());
                     }
                 }else{ //如果没有匹配到数据,设置一个不存在的ID
+                    userMainIdLinkedList.clear();
                     userMainIdLinkedList.add(1L);
+                    findEntity=false;
                 }
             }
 
 
             //邮箱查询,先查询邮箱子表
-            if(StringUtils.isNotEmpty(userPageInfo.getEmail())) {
+            if(StringUtils.isNotEmpty(userPageInfo.getEmail())&&findEntity) {
                 List<UserEmail> entitys = userEmailService.findListByEmail(userPageInfo.getEmail(),userMainIdLinkedList);
                 if (CollectionUtils.isNotEmpty(entitys)) {
                     for (int i = 0; i < entitys.size(); i++) {
                         userMainIdLinkedList.add(entitys.get(i).getUserMainId());
                     }
                 }else{ //如果没有匹配到数据,设置一个不存在的ID
+                    userMainIdLinkedList.clear();
                     userMainIdLinkedList.add(1L);
+                    findEntity=false;
                 }
             }
 
 
+            PageInfo<UserVO> pageInfo = null;
+            if(findEntity) {
+                //设置查询条件
+                if (CollectionUtils.isNotEmpty(userMainIdLinkedList)) {
+                    Long[] userMainIdArray = new Long[userMainIdLinkedList.size()];
+                    userMainIdLinkedList.toArray(userMainIdArray);
 
-            //设置查询条件
-            if(CollectionUtils.isNotEmpty(userMainIdLinkedList))
-            {
-                Long[] userMainIdArray = new Long[userMainIdLinkedList.size()];
-                userMainIdLinkedList.toArray(userMainIdArray);
+                    userPageInfo.setUserMainIdArray(userMainIdArray);
+                }
 
-                userPageInfo.setUserMainIdArray(userMainIdArray);
+
+                //查询用户主表
+                pageInfo = userService.queryListPage(userPageInfo);
+                if (CollectionUtils.isNotEmpty(pageInfo.getList())) {
+                    Long[] userIdArray = new Long[pageInfo.getList().size()];
+
+                    for (int i = 0; i < pageInfo.getList().size(); i++) {
+                        UserVO userVo = pageInfo.getList().get(i);
+                        if (userVo.getUserMainId() != null) {
+                            userVo.setUserMainIdString(String.valueOf(userVo.getUserMainId()));
+                        }
+                        if (userVo.getId() != null) {
+                            userVo.setUserId(String.valueOf(userVo.getId()));
+                        }
+
+                        userIdArray[i] = pageInfo.getList().get(i).getUserMainId();
+                    }
+
+                    //查询用户手机号关联表
+                    List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserMainId(userIdArray);
+                    if (CollectionUtils.isNotEmpty(userMobilePhones)) {
+                        //设置用户对象中的手机号
+                        for (UserMobilePhone userMobilePhone : userMobilePhones) {
+                            for (UserVO userVO : pageInfo.getList()) {
+                                if (userMobilePhone.getUserMainId().longValue() == userVO.getUserMainId().longValue()) {
+                                    userVO.setMobilePhone(userMobilePhone.getMobilePhone());
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                    //查询用户用户名关联表
+                    List<UserUserName> userUserNames = userUserNameService.queryListByUserId(userIdArray);
+                    if (CollectionUtils.isNotEmpty(userUserNames)) {
+                        //设置用户用户名
+                        for (UserUserName userUserName : userUserNames) {
+                            for (UserVO userVO : pageInfo.getList()) {
+                                if (userUserName.getUserMainId().longValue() == userVO.getUserMainId().longValue()) {
+                                    userVO.setUsername(userUserName.getUsername());
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+
+                    //查询用户邮箱关联表
+                    List<UserEmail> userEmails = userEmailService.queryListByUserId(userIdArray);
+                    if (CollectionUtils.isNotEmpty(userEmails)) {
+                        //设置邮箱
+                        for (UserEmail userEmail : userEmails) {
+                            for (UserVO userVO : pageInfo.getList()) {
+                                if (userEmail.getUserMainId().longValue() == userVO.getUserMainId().longValue()) {
+                                    userVO.setEmail(userEmail.getEmail());
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                    //查询用户与用户详情关联
+                    List<UserDetail> userDetails = userDetailService.queryListByUserId(userIdArray);
+                    if (CollectionUtils.isNotEmpty(userDetails)) {
+                        //设置用户详情
+                        for (UserDetail userDetail : userDetails) {
+                            for (UserVO userVO : pageInfo.getList()) {
+                                if (userDetail.getUserMainId().longValue() == userVO.getUserMainId().longValue()) {
+                                    BeanUtils.copyProperties(userVO, userDetail);
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }else{
+                pageInfo = new PageInfo<UserVO>();
             }
 
-
-            //查询用户主表
-            PageInfo<UserVO> pageInfo =  userService.queryListPage(userPageInfo);
-            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
-            {
-                Long[] userIdArray = new Long[pageInfo.getList().size()];
-
-                for(int i=0;i<pageInfo.getList().size();i++)
-                {
-                    UserVO userVo = pageInfo.getList().get(i);
-                    if(userVo.getUserMainId()!=null)
-                    {
-                        userVo.setUserMainIdString(String.valueOf(userVo.getUserMainId()));
-                    }
-                    if(userVo.getId()!=null)
-                    {
-                        userVo.setUserId(String.valueOf(userVo.getId()));
-                    }
-
-                    userIdArray[i] = pageInfo.getList().get(i).getUserMainId();
-                }
-
-                //查询用户手机号关联表
-                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.queryListByUserMainId(userIdArray);
-                if(CollectionUtils.isNotEmpty(userMobilePhones))
-                {
-                    //设置用户对象中的手机号
-                    for(UserMobilePhone userMobilePhone:userMobilePhones)
-                    {
-                        for(UserVO userVO:pageInfo.getList())
-                        {
-                            if(userMobilePhone.getUserMainId().longValue()==userVO.getUserMainId().longValue())
-                            {
-                                userVO.setMobilePhone(userMobilePhone.getMobilePhone());
-                                continue;
-                            }
-                        }
-                    }
-                }
-                //查询用户用户名关联表
-                List<UserUserName> userUserNames = userUserNameService.queryListByUserId(userIdArray);
-                if(CollectionUtils.isNotEmpty(userUserNames))
-                {
-                    //设置用户用户名
-                    for(UserUserName userUserName:userUserNames)
-                    {
-                        for(UserVO userVO:pageInfo.getList())
-                        {
-                            if(userUserName.getUserMainId().longValue()==userVO.getUserMainId().longValue())
-                            {
-                                userVO.setUsername(userUserName.getUsername());
-                                continue;
-                            }
-                        }
-                    }
-                }
-
-
-                //查询用户邮箱关联表
-                List<UserEmail> userEmails = userEmailService.queryListByUserId(userIdArray);
-                if(CollectionUtils.isNotEmpty(userEmails))
-                {
-                    //设置邮箱
-                    for(UserEmail userEmail:userEmails)
-                    {
-                        for(UserVO userVO:pageInfo.getList())
-                        {
-                            if(userEmail.getUserMainId().longValue()==userVO.getUserMainId().longValue())
-                            {
-                                userVO.setEmail(userEmail.getEmail());
-                                continue;
-                            }
-                        }
-                    }
-                }
-
-                //查询用户与用户详情关联
-                List<UserDetail> userDetails = userDetailService.queryListByUserId(userIdArray);
-                if(CollectionUtils.isNotEmpty(userDetails))
-                {
-                    //设置用户详情
-                    for(UserDetail userDetail:userDetails)
-                    {
-                        for(UserVO userVO:pageInfo.getList())
-                        {
-                            if(userDetail.getUserMainId().longValue()==userVO.getUserMainId().longValue())
-                            {
-                                BeanUtils.copyProperties(userVO,userDetail);
-                                continue;
-                            }
-                        }
-                    }
-                }
-
-            }
             resultObjectVO.setData(pageInfo);
-
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
