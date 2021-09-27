@@ -22,11 +22,12 @@
 
     <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
 
     <link href="${basePath}/static/lib/jquery-treegrid/bootstrap-2.3.2/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="${basePath}/static/lib/jquery-treegrid/css/jquery.treegrid.css">
     <link rel="stylesheet" href="${basePath}/static/lib/jquery-treegrid/css/default.min.css">
-    <script src="${basePath}/static/lib/jquery-treegrid/js/highlightjs/7.3/highlight.min.js"></script>
+    <script src="${basePath}/static/lib/jquery-treegrid/js/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="${basePath}/static/lib/jquery-treegrid/js/jquery.treegrid.js"></script>
     <script type="text/javascript" src="${basePath}/static/lib/jquery-treegrid/js/jquery.treegrid.bootstrap2.js"></script>
@@ -72,7 +73,8 @@
         </div>
         <div class="m_right">
             <div class="container">
-                <input type="button" value="添加分类"/>
+                <br>
+                <input type="button" id="addsc" value="添加分类"/> <br> <br>
                 <table class="table tree">
                     <tr>
                         <th>分类名称</th>
@@ -117,6 +119,7 @@
 </body>
 
 <script src="${basePath}/static/js/seller/info.js"></script>
+<script src="${basePath}/static/js/seller/shop/category/add.js"></script>
 
 
 
