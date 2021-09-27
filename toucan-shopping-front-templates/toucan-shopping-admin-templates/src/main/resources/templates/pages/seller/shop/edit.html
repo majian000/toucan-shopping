@@ -30,7 +30,7 @@
     <input type="hidden" id="areaName" th:value="${model.area}" />
     <input type="hidden" name="userMainId" id="userMainId"  th:value="${model.userMainId}" />
     <input type="hidden" name="changeNameCount" id="changeNameCount"  th:value="${model.changeNameCount}"  />
-    <input type="hidden" name="rank" id="rank"  th:value="${model.shopRank}" />
+    <input type="hidden" name="shopRank" id="shopRank"  th:value="${model.shopRank}" />
     <input type="hidden" name="approveStatus"   th:value="${model.approveStatus}" />
 
 
@@ -96,6 +96,14 @@
                 <option value="1" >个人</option>
                 <option value="0" selected>企业</option>
             </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >最大分类数量</label>
+        <div class="layui-input-block">
+            <input type="text" name="categoryMaxCount" id="categoryMaxCount"  th:value="${model.categoryMaxCount}"  lay-verify="required" maxlength="5" lay-reqtext="最大分类数量不能为空" placeholder="请输入最大分类数量" value="" class="layui-input">
         </div>
     </div>
 

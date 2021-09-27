@@ -19,6 +19,7 @@
         <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
         <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="shop_rank" jdbcType="BIGINT" property="shopRank" />
+        <result column="category_max_count" jdbcType="BIGINT" property="categoryMaxCount" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="change_name_count" jdbcType="INTEGER" property="changeNameCount" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -64,8 +65,8 @@
     </sql>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop" >
-        insert into t_seller_shop(id,user_main_id,public_shop_id,name,introduce,logo,change_name_count,approve_status,enable_status,type,shop_rank,remark,create_date,delete_status)
-        values(#{id},#{userMainId},#{publicShopId},#{name},#{introduce},#{logo},#{changeNameCount},#{approveStatus},#{enableStatus},#{type},#{shopRank},#{remark},#{createDate},#{deleteStatus})
+        insert into t_seller_shop(id,user_main_id,public_shop_id,name,introduce,logo,change_name_count,approve_status,enable_status,type,shop_rank,category_max_count,remark,create_date,delete_status)
+        values(#{id},#{userMainId},#{publicShopId},#{name},#{introduce},#{logo},#{changeNameCount},#{approveStatus},#{enableStatus},#{type},#{shopRank},#{categoryMaxCount},#{remark},#{createDate},#{deleteStatus})
     </insert>
 
 
@@ -76,7 +77,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
-        update t_seller_shop set name=#{name},introduce=#{introduce},approve_status=#{approveStatus},logo=#{logo},shop_rank=#{shopRank},
+        update t_seller_shop set name=#{name},introduce=#{introduce},approve_status=#{approveStatus},logo=#{logo},shop_rank=#{shopRank},category_max_count=#{categoryMaxCount},
         province=#{province},city=#{city},area=#{area},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},
         enable_status=#{enableStatus},detail_address=#{detailAddress},type=#{type},remark=#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId}
           where id = #{id} and user_main_id=#{userMainId}

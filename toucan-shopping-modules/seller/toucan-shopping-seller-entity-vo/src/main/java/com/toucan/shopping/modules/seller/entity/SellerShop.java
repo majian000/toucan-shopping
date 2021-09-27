@@ -105,6 +105,11 @@ public class SellerShop {
     private Long shopRank;
 
     /**
+     * 最大分类数量
+     */
+    private Integer categoryMaxCount;
+
+    /**
      * 店铺备注
      */
     private String remark;

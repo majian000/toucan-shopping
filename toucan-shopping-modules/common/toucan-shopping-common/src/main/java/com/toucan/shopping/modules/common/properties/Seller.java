@@ -14,6 +14,11 @@ public class Seller {
     private Long shopLogoMaxSize;
 
     /**
+     * 店铺默认最大分类数量
+     */
+    private Integer categoryMaxCount;
+
+    /**
      * 店铺默认图标
      */
     private String defaultShopLogo = "";
