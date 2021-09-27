@@ -7,7 +7,7 @@ $(function () {
             fix: false,
             shadeClose: true,
             maxmin: true,
-            area: ['380px', '260px'],
+            area: ['500px', '260px'],
             content: basePath+"/page/shop/category/add"
         });
 

@@ -250,26 +250,8 @@ var validateRules = {
     checkType:function (element) {
         return (element.attr("type") == "checkbox" || element.attr("type") == "radio" || element.attr("rel") == "select");
     },
-    isChinese:function (str) {
-        return new RegExp(validateRegExp.chinese).test(str);
-    },
-    isRealName:function (str) {
-        return new RegExp(validateRegExp.realname).test(str);
-    },
-    isNickname:function (str) {
-        return new RegExp(validateRegExp.nickname).test(str);
-    },
-    isDeptname:function (str) {
-        return new RegExp(validateRegExp.deptname).test(str);
-    },
-    isCompanyname:function (str) {
-        return new RegExp(validateRegExp.companyname).test(str);
-    },
-    isCompanyaddr:function (str) {
-        return new RegExp(validateRegExp.companyaddr).test(str);
-    },
-    isCompanysite:function (str) {
-        return new RegExp(validateRegExp.companysite).test(str);
+    isShopCategoryName:function (str) {
+        return new RegExp(validateRegExp.shopCategoryName).test(str);
     }
 };
 //验证文本

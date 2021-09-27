@@ -5,7 +5,7 @@ $.extend(validatePrompt, {
         isNull:"请输入昵称",
         error:{
             badLength:"昵称长度只能在2-15位字符之间",
-            badFormat:"昵称人只能由中文或英文组成"
+            badFormat:"昵称只能由中文或英文组成"
         }
     },
     vcode:{

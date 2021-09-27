@@ -22,51 +22,36 @@
 
 <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
-
-<script type="text/javascript" src="${basePath}/static/js/select.js"></script>
-
-<script type="text/javascript" src="${basePath}/static/js/lrscroll.js"></script>
-
-<script type="text/javascript" src="${basePath}/static/js/iban.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/fban.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/f_ban.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/mban.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/bban.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/hban.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/tban.js"></script>
-
-<script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/phone.js"></script>
 
 </head>
     <body>
-
             <form id="scaf" method="post" onsubmit="return false;">
-                <div class="form">
-                    <div class="item">
-                        <span class="label"><span class="red">*</span>分类名称：</span>
-                        <div class="fl">
-                            <input type="text" id="title" name="title" class="text" tabindex="1"  />
-                            <label id="title_succeed" class="blank"></label>
+                <table border="0" style="width:400px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
+
+                    <tr height="50">
+                        <td align="right"><font color="#ff4e00">*</font>&nbsp;分类名称 &nbsp;</td>
+                        <td>
+                            <input type="text" id="shopCategoryName" name="name" class="l_ipt_long" tabindex="1"  />
+                            &nbsp;&nbsp;
+                            <label id="shopCategoryName_succeed" class="blank"></label>
                             <span class="clear"></span>
-                            <div id="title_error"></div>
-                        </div>
-                    </div><!--item end-->
-
-                    <div class="item">
-                        <span class="label">&nbsp;</span>
-                        <input type="button" value="保存" class="log_btn" id="scafbtn" style="font-size:15px;" />
-                    </div><!--item end-->
-
-                    <div class="item">
-                        <span class="label">&nbsp;</span>
-                        <a id="edit_info_msg" style="color:#ff4e00;"></a>
-                    </div>
-                </div>
+                            <div id="shopCategoryName_error"></div>
+                        </td>
+                    </tr>
+                    <tr height="60">
+                        <td>&nbsp;</td>
+                        <td><input type="button" id="scafbtn" value="保存" class="log_btn" /></td>
+                    </tr>
+                    <tr height="50">
+                        <td align="right"></td>
+                        <td>
+                            <span class="label">&nbsp;</span>
+                            <a id="scaf_msg" ></a>
+                        </td>
+                    </tr>
+                </table>
             </form>
 
-        <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
         <script type="text/javascript" src="${basePath}/static/js/seller/shop/category/add.js"></script>
 
     </body>
