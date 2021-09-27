@@ -16,7 +16,7 @@ public class Seller {
     /**
      * 店铺默认最大分类数量
      */
-    private Integer categoryMaxCount;
+    private Integer shopCategoryMaxCount;
 
     /**
      * 店铺默认图标

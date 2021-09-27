@@ -148,7 +148,7 @@ public class SellerShopController {
             sellerShopVO.setEnableStatus((short)1); //启用
             sellerShopVO.setDeleteStatus((short)0);
             sellerShopVO.setShopRank(0L); //排序
-            sellerShopVO.setCategoryMaxCount(toucan.getSeller().getCategoryMaxCount());
+            sellerShopVO.setCategoryMaxCount(toucan.getSeller().getShopCategoryMaxCount());
             int ret = sellerShopService.save(sellerShopVO);
             if(ret<=0)
             {
