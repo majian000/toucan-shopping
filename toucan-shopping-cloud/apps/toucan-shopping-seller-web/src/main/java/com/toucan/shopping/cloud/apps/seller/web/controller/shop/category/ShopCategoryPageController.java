@@ -2,6 +2,8 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop.category;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/page/shop/category")
 public class ShopCategoryPageController extends BaseController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)

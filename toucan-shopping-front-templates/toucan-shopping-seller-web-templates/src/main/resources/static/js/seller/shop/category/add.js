@@ -20,8 +20,30 @@ function scafbtn_clicn()
         return;
     }
 
-    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-    parent.layer.close(index);
+
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/shop/category/save',
+        contentType: "application/json;charset=utf-8",
+        data:  getAjaxFormData("#scaf"),
+        dataType: "json",
+        success: function (data) {
+            if(data.code==1)
+            {
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                parent.layer.close(index);
+            }else{
+                $("#scaf_msg").show();
+                $("#scaf_msg").text(data.msg);
+            }
+        },
+        error: function (result) {
+            $("#scaf_msg").show();
+            $("#scaf_msg").text("保存失败,请稍后重试");
+        }
+    });
+
+
 
 }
 

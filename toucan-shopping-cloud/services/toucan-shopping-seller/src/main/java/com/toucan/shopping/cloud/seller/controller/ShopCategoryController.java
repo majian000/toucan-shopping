@@ -33,7 +33,7 @@ import java.util.List;
 
 
 /**
- * 店铺类别控制器
+ * 店铺分类控制器
  */
 @RestController
 @RequestMapping("/shop/category")
@@ -61,7 +61,7 @@ public class ShopCategoryController {
 
 
     /**
-     * 保存类别
+     * 保存分类
      * @param requestJsonVO
      * @return
      */
@@ -95,9 +95,9 @@ public class ShopCategoryController {
                 //释放锁
                 skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
 
-                logger.warn("类别名称为空 param:"+ JSONObject.toJSONString(shopCategory));
+                logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("类别名称不能为空!");
+                resultObjectVO.setMsg("分类名称不能为空!");
 
 
                 return resultObjectVO;
@@ -123,6 +123,18 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
+            if(shopCategory.getParentId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                logger.warn("上级ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级ID不能为空!");
+                return resultObjectVO;
+
+            }
+
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setName(shopCategory.getName());
@@ -130,13 +142,14 @@ public class ShopCategoryController {
             queryShopCategory.setShopId(shopCategory.getShopId());
             queryShopCategory.setDeleteStatus((short)0);
 
+            //查询是否存在分类
             if(!CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
             {
                 //释放锁
                 skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
 
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("已存在该类别!");
+                resultObjectVO.setMsg("已存在该分类!");
                 return resultObjectVO;
             }
 
@@ -160,8 +173,28 @@ public class ShopCategoryController {
                     resultObjectVO.setMsg("分类数量已达到上限");
                     return resultObjectVO;
                 }
+            }
+
+            //判断上级节点是否存在
+            if(shopCategory.getParentId()!=null&&shopCategory.getParentId()!=-1)
+            {
+                ShopCategoryVO queryParentShopCategory = new ShopCategoryVO();
+                queryParentShopCategory.setId(shopCategory.getParentId());
+                queryParentShopCategory.setUserMainId(shopCategory.getUserMainId());
+                queryParentShopCategory.setShopId(shopCategory.getShopId());
+                List<ShopCategory> shopCategories = shopCategoryService.queryList(queryParentShopCategory);
+                if(CollectionUtils.isEmpty(shopCategories))
+                {
+                    //释放锁
+                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("保存失败,上级分类不存在");
+                    return resultObjectVO;
+                }
 
             }
+
 
             shopCategory.setId(idGenerator.id());
             shopCategory.setCreateDate(new Date());
@@ -184,7 +217,7 @@ public class ShopCategoryController {
 
 
     /**
-     * 更新类别
+     * 更新分类
      * @param requestJsonVO
      * @return
      */
@@ -218,9 +251,9 @@ public class ShopCategoryController {
                 //释放锁
                 skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
 
-                logger.warn("类别名称为空 param:"+ JSONObject.toJSONString(shopCategory));
+                logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("类别名称不能为空!");
+                resultObjectVO.setMsg("分类名称不能为空!");
                 return resultObjectVO;
             }
 
@@ -230,9 +263,9 @@ public class ShopCategoryController {
                 //释放锁
                 skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
 
-                logger.warn("类别ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("类别ID不能为空!");
+                resultObjectVO.setMsg("分类ID不能为空!");
                 return resultObjectVO;
             }
 
@@ -250,13 +283,13 @@ public class ShopCategoryController {
                     //释放锁
                     skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("该类别名称已存在!");
+                    resultObjectVO.setMsg("该分类名称已存在!");
                     return resultObjectVO;
                 }
             }
 
             shopCategory.setUpdateDate(new Date());
-            int row = shopCategoryService.update(shopCategory);
+            int row = shopCategoryService.updateName(shopCategory);
             if (row < 1) {
                 //释放锁
                 skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
@@ -280,7 +313,7 @@ public class ShopCategoryController {
 
 
     /**
-     * 根据ID删除类别
+     * 根据ID删除分类
      * @param requestJsonVO
      * @return
      */
@@ -304,9 +337,9 @@ public class ShopCategoryController {
 
             if(ShopCategory.getId()==null)
             {
-                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
+                logger.info("分类ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("类别ID不能为空!");
+                resultObjectVO.setMsg("分类ID不能为空!");
                 return resultObjectVO;
             }
 
@@ -317,7 +350,7 @@ public class ShopCategoryController {
             if(CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该类别!");
+                resultObjectVO.setMsg("不存在该分类!");
                 return resultObjectVO;
             }
 
@@ -679,7 +712,7 @@ public class ShopCategoryController {
 
 
     /**
-     * 查询PC端首页类别树
+     * 查询PC端首页分类树
      * @param requestJsonVO
      * @return
      */
@@ -940,7 +973,7 @@ public class ShopCategoryController {
             if(CollectionUtils.isEmpty(ShopCategoryList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该类别!");
+                resultObjectVO.setMsg("不存在该分类!");
                 return resultObjectVO;
             }
 
@@ -1006,7 +1039,7 @@ public class ShopCategoryController {
                         //删除当前功能项
                         int row = shopCategoryService.deleteById(c.getId());
                         if (row < 1) {
-                            logger.warn("删除类别失败 {} ",JSONObject.toJSONString(c));
+                            logger.warn("删除分类失败 {} ",JSONObject.toJSONString(c));
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
                             continue;

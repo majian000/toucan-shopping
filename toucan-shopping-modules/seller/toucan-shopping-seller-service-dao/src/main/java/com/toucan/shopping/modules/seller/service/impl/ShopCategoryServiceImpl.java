@@ -51,6 +51,11 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
     }
 
     @Override
+    public int updateName(ShopCategory ShopCategory) {
+        return shopCategoryMapper.updateName(ShopCategory);
+    }
+
+    @Override
     public ShopCategory queryById(Long id) {
         return shopCategoryMapper.queryById(id);
     }

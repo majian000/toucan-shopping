@@ -34,6 +34,8 @@ public interface ShopCategoryService {
 
     int update(ShopCategory shopCategory);
 
+    int updateName(ShopCategory shopCategory);
+
     ShopCategory queryById(Long id);
 
     int deleteById(Long id);

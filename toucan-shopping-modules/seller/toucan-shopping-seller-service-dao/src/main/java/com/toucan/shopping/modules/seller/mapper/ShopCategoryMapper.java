@@ -27,6 +27,8 @@ public interface ShopCategoryMapper {
 
     int update(ShopCategory shopCategory);
 
+    int updateName(ShopCategory shopCategory);
+
     Long queryCount(ShopCategory shopCategory);
 
     /**
