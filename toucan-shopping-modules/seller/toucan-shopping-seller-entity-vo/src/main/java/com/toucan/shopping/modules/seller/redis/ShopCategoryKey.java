@@ -1,14 +1,14 @@
 package com.toucan.shopping.modules.seller.redis;
 
 /**
- * 商户店铺类别
+ * 商户店铺分类
  */
 public class ShopCategoryKey {
 
 
 
     /**
-     * 保存商户店铺类别锁
+     * 保存商户店铺分类锁
      * @param userMainId
      * @return
      */
@@ -19,7 +19,7 @@ public class ShopCategoryKey {
 
 
     /**
-     * 编辑商户店铺类别锁
+     * 编辑商户店铺分类锁
      * @param userMainId
      * @return
      */
@@ -30,7 +30,7 @@ public class ShopCategoryKey {
 
 
     /**
-     * 保存商户店铺类别缓存键
+     * 保存商户店铺分类缓存键
      * @param shopId
      * @return
      */

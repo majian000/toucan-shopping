@@ -121,7 +121,7 @@ public class UserTrueNameApproveController {
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍候重试");
+                resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
             }
             //查询是否存在审核中
@@ -222,7 +222,7 @@ public class UserTrueNameApproveController {
             boolean lockStatus = skylarkLock.lock(UserCenterTrueNameApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍候重试");
+                resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
             }
 

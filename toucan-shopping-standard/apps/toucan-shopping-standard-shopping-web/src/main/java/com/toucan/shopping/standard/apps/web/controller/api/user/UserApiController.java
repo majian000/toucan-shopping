@@ -148,7 +148,7 @@ public class UserApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("发送失败,请稍候重试");
+            resultObjectVO.setMsg("发送失败,请稍后重试");
         }finally{
             redisLock.unLock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
         }

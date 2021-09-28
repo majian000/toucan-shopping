@@ -5,6 +5,7 @@
     <resultMap id="shopCategoryMap" type="com.toucan.shopping.modules.seller.entity.ShopCategory" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -31,6 +32,15 @@
         <if test="parentId!=null">
             and t.parent_id = #{parentId}
         </if>
+
+        <if test="shopId!=null">
+            and t.shop_id = #{shopId}
+        </if>
+
+        <if test="shopId!=null">
+            and t.shop_id = #{shopId}
+        </if>
+
 
         <if test="type!=null">
             and t.type = #{type}

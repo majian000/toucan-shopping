@@ -96,7 +96,7 @@ public class SellerShopController {
             boolean lockStatus = skylarkLock.lock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍候重试");
+                resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
             }
             //查询关联店铺

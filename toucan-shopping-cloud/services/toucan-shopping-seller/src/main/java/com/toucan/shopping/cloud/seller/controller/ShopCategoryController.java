@@ -9,12 +9,16 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.entity.ShopCategory;
 import com.toucan.shopping.modules.seller.page.ShopCategoryTreeInfo;
+import com.toucan.shopping.modules.seller.redis.SellerShopKey;
 import com.toucan.shopping.modules.seller.redis.ShopCategoryKey;
+import com.toucan.shopping.modules.seller.service.SellerShopService;
 import com.toucan.shopping.modules.seller.service.ShopCategoryService;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryTreeVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +44,8 @@ public class ShopCategoryController {
     @Autowired
     private ShopCategoryService shopCategoryService;
 
+    @Autowired
+    private SellerShopService sellerShopService;
 
     @Autowired
     private Toucan toucan;
@@ -50,6 +56,8 @@ public class ShopCategoryController {
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
 
+    @Autowired
+    private SkylarkLock skylarkLock;
 
 
     /**
@@ -70,43 +78,105 @@ public class ShopCategoryController {
             return resultObjectVO;
         }
 
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        String userMainId = String.valueOf(shopCategory.getUserMainId());
         try {
-            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
-
-
-            if(StringUtils.isEmpty(ShopCategory.getName()))
-            {
-                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(ShopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("类别名称不能为空!");
+            boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请稍后重试");
                 return resultObjectVO;
             }
 
+
+            if(StringUtils.isEmpty(shopCategory.getName()))
+            {
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                logger.warn("类别名称为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("类别名称不能为空!");
+
+
+                return resultObjectVO;
+            }
+            if(shopCategory.getUserMainId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+            if(shopCategory.getShopId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-            queryShopCategory.setName(ShopCategory.getName());
+            queryShopCategory.setName(shopCategory.getName());
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
+            queryShopCategory.setShopId(shopCategory.getShopId());
             queryShopCategory.setDeleteStatus((short)0);
 
             if(!CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
             {
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("已存在该类别!");
                 return resultObjectVO;
             }
 
-            ShopCategory.setId(idGenerator.id());
-            ShopCategory.setCreateDate(new Date());
-            int row = shopCategoryService.save(ShopCategory);
-            if (row != 1) {
+            queryShopCategory.setName(null);
+            //查询出当前店铺下分类数量
+            long count = shopCategoryService.queryCount(queryShopCategory);
+
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(shopCategory.getUserMainId());
+            querySellerShop.setId(shopCategory.getShopId());
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            for(SellerShop sellerShop:sellerShops)
+            {
+                int categoryMaxCount = sellerShop.getCategoryMaxCount()!=null?sellerShop.getCategoryMaxCount():toucan.getSeller().getShopCategoryMaxCount();
+                if(count+1>categoryMaxCount)
+                {
+                    //释放锁
+                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("分类数量已达到上限");
+                    return resultObjectVO;
+                }
+
+            }
+
+            shopCategory.setId(idGenerator.id());
+            shopCategory.setCreateDate(new Date());
+            int row = shopCategoryService.save(shopCategory);
+            if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("保存失败,请重试!");
-                return resultObjectVO;
             }
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请重试!");
+            resultObjectVO.setMsg("保存失败,请稍后重试!");
             logger.warn(e.getMessage(),e);
+        }finally{
+            skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
@@ -131,53 +201,65 @@ public class ShopCategoryController {
             return resultObjectVO;
         }
 
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        String userMainId = String.valueOf(shopCategory.getUserMainId());
         try {
-            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
-
-            if(ShopCategory.getId().longValue()==ShopCategory.getParentId().longValue())
-            {
-                logger.info("上级节点不能为自己 param:"+ JSONObject.toJSONString(ShopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("上级节点不能为自己!");
+            boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请稍后重试");
                 return resultObjectVO;
             }
 
-            if(StringUtils.isEmpty(ShopCategory.getName()))
+
+            if(StringUtils.isEmpty(shopCategory.getName()))
             {
-                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(ShopCategory));
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                logger.warn("类别名称为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别名称不能为空!");
                 return resultObjectVO;
             }
 
 
-            if(ShopCategory.getId()==null)
+            if(shopCategory.getId()==null)
             {
-                logger.info("类别ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+
+                logger.warn("类别ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("类别ID不能为空!");
                 return resultObjectVO;
             }
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-            queryShopCategory.setName(ShopCategory.getName());
+            queryShopCategory.setName(shopCategory.getName());
+            queryShopCategory.setShopId(shopCategory.getShopId());
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
             queryShopCategory.setDeleteStatus((short)0);
 
             List<ShopCategory> shopCategoryList = shopCategoryService.queryList(queryShopCategory);
             if(!CollectionUtils.isEmpty(shopCategoryList))
             {
-                if(ShopCategory.getId().longValue() != shopCategoryList.get(0).getId().longValue())
+                if(shopCategory.getId().longValue() != shopCategoryList.get(0).getId().longValue())
                 {
+                    //释放锁
+                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("该类别名称已存在!");
                     return resultObjectVO;
                 }
             }
 
-            ShopCategory.setUpdateDate(new Date());
-            int row = shopCategoryService.update(ShopCategory);
-            if (row != 1) {
+            shopCategory.setUpdateDate(new Date());
+            int row = shopCategoryService.update(shopCategory);
+            if (row < 1) {
+                //释放锁
+                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
@@ -185,9 +267,12 @@ public class ShopCategoryController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("修改失败,请稍后重试!");
             logger.warn(e.getMessage(),e);
+        }finally{
+            skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
         }
+
         return resultObjectVO;
     }
 

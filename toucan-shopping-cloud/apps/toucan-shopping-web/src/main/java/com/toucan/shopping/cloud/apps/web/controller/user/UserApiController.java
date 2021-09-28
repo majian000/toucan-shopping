@@ -104,7 +104,7 @@ public class UserApiController extends BaseController {
             if(resultObjectVO.SUCCESS.intValue()==ResultObjectVO.FAILD.intValue())
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("发送失败,请稍候重试");
+                resultObjectVO.setMsg("发送失败,请稍后重试");
                 return resultObjectVO;
             }
             if(resultObjectVO.getData()!=null)
@@ -154,7 +154,7 @@ public class UserApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("发送失败,请稍候重试");
+            resultObjectVO.setMsg("发送失败,请稍后重试");
         }finally{
             redisLock.unLock(UserRegistRedisKey.getVerifyCodeLockKey(mobilePhone), mobilePhone);
         }
@@ -380,7 +380,7 @@ public class UserApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍候重试");
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }
         return resultObjectVO;
     }
@@ -407,7 +407,7 @@ public class UserApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍候重试");
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }
         return resultObjectVO;
     }
@@ -432,7 +432,7 @@ public class UserApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍候重试");
+            resultObjectVO.setMsg("请求失败,请稍后重试");
         }
         resultObjectVO.setData(false);
         return resultObjectVO;
@@ -480,7 +480,7 @@ public class UserApiController extends BaseController {
             boolean lockStatus = skylarkLock.lock(UserLoginRedisKey.getLoginKey(userLoginVO.getLoginUserName()), userLoginVO.getLoginUserName());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("登录超时,请稍候重试");
+                resultObjectVO.setMsg("登录超时,请稍后重试");
                 return resultObjectVO;
             }
 
