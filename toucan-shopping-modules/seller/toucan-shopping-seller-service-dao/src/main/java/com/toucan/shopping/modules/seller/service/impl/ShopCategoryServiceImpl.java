@@ -76,6 +76,10 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
         return shopCategoryMapper.queryCount(ShopCategory);
     }
 
+    @Override
+    public Long queryMaxSort(Long userMainId,Long shopId) {
+        return shopCategoryMapper.queryMaxSort(userMainId,shopId);
+    }
 
     public void setChildrenByParentId(ShopCategoryVO ShopCategoryVO,List<ShopCategory> ShopCategoryList) throws InvocationTargetException, IllegalAccessException {
         if(CollectionUtils.isNotEmpty(ShopCategoryList))

@@ -202,7 +202,14 @@ public class ShopCategoryController {
 
             }
 
+            //查询最大排序值,进行排序递增
+            Long categorySort = shopCategoryService.queryMaxSort(shopCategory.getUserMainId(),shopCategory.getShopId());
+            if(categorySort==null)
+            {
+                categorySort=0L;
+            }
 
+            shopCategory.setCategorySort(categorySort+1);
             shopCategory.setId(idGenerator.id());
             shopCategory.setCreateDate(new Date());
             int row = shopCategoryService.save(shopCategory);

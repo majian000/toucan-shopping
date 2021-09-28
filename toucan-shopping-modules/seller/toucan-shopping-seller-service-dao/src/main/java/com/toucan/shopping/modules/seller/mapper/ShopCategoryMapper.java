@@ -25,6 +25,8 @@ public interface ShopCategoryMapper {
 
     int deleteById(Long id);
 
+    Long queryMaxSort(Long userMainId,Long shopId);
+
     int update(ShopCategory shopCategory);
 
     int updateName(ShopCategory shopCategory);

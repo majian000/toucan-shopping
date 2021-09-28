@@ -51,6 +51,13 @@ public interface ShopCategoryService {
      */
     void deleteChildrenByParentId(Long id);
 
+    /**
+     * 查询最大排序值
+     * @param userMainId
+     * @param shopId
+     * @return
+     */
+    Long queryMaxSort(Long userMainId,Long shopId);
 
 
     /**

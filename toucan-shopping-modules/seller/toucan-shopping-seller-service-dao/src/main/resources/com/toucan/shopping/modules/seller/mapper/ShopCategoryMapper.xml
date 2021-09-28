@@ -9,7 +9,7 @@
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
-        <result column="category_sort" jdbcType="INTEGER" property="categorySort" />
+        <result column="category_sort" jdbcType="BIGINT" property="categorySort" />
         <result column="href" jdbcType="VARCHAR" property="href" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -65,7 +65,7 @@
     </sql>
 
     <select id="queryList" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">
-        select t.* from t_seller_shop_category t
+        select t.* from t_shop_category t
         <where>
             1=1
 
@@ -77,7 +77,7 @@
 
 
     <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
-        select count(*) from t_seller_shop_category t
+        select count(*) from t_shop_category t
         <where>
             1=1
             <include refid="queryListWhere" />
@@ -86,9 +86,16 @@
     </select>
 
 
+    <select id="queryMaxSort" resultType="java.lang.Long" >
+        select category_sort from t_shop_category t
+        where  1=1  and t.shop_id = #{shopId} and t.user_main_id=#{userMainId}
+    </select>
+
+
+
 
     <select id="queryPcIndexList" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">
-        select t.* from t_seller_shop_category t
+        select t.* from t_shop_category t
         <where>
             1=1
             and t.delete_status = 0
@@ -99,17 +106,17 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_seller_shop_category(id,parent_id,name,href,category_sort,type,remark,create_date,update_date)
-        values(#{id},#{parentId},#{name},#{href},#{categorySort},#{type},#{remark},#{createDate},#{updateDate})
+        insert into t_shop_category(id,parent_id,shop_id,user_main_id,name,href,category_sort,type,remark,create_date,update_date)
+        values(#{id},#{parentId},#{shopId},#{userMainId},#{name},#{href},#{categorySort},#{type},#{remark},#{createDate},#{updateDate})
     </insert>
 
 
 
     <insert id="inserts"  useGeneratedKeys="true" keyProperty="id" >
-        insert into t_seller_shop_category(id,parent_id,name,href,category_sort,type,remark,create_date,update_date)
+        insert into t_shop_category(id,parent_id,shop_id,user_main_id,name,href,category_sort,type,remark,create_date,update_date)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.parentId},#{entity.name},#{entity.href},#{entity.categorySort},#{entity.type},#{entity.remark},
+            (#{entity.id},#{entity.parentId},#{entity.shopId},#{entity.userMainId},#{entity.name},#{entity.href},#{entity.categorySort},#{entity.type},#{entity.remark},
             #{entity.createDate},#{entity.updateDate})
         </foreach>
 
@@ -118,28 +125,28 @@
 
 
     <select id="queryById" resultMap="shopCategoryMap" parameterType="java.lang.Long">
-        select * from t_seller_shop_category where id=#{categoryId} and delete_status=0
+        select * from t_shop_category where id=#{categoryId} and delete_status=0
     </select>
 
 
     <update id="deleteById">
-        update t_seller_shop_category  set delete_status=1 where id=#{id}   and delete_status=0
+        update t_shop_category  set delete_status=1 where id=#{id}   and delete_status=0
     </update>
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
-        update t_seller_shop_category set name=#{name},href=#{href},remark=#{remark},parent_id=#{parentId},update_date=#{updateDate}
+        update t_shop_category set name=#{name},href=#{href},remark=#{remark},parent_id=#{parentId},update_date=#{updateDate}
           where id=#{id} and user_main_id=#{userMainId}
     </update>
 
 
     <update id="updateName" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
-          update t_seller_shop_category set name=#{name},update_date=#{updateDate}
+          update t_shop_category set name=#{name},update_date=#{updateDate}
           where id=#{id} and user_main_id=#{userMainId}
     </update>
 
     <select id="queryByParentId" resultMap="shopCategoryMap" >
-        select t.* from t_seller_shop_category t
+        select t.* from t_shop_category t
          where 1=1 and t.parent_id=#{parentId}   and t.delete_status=0 order by t.category_sort desc
 
     </select>
@@ -147,7 +154,7 @@
 
     <select id="findTreeTableByPageInfo" resultMap="shopCategoryVOMap" parameterType="com.toucan.shopping.modules.seller.page.ShopCategoryTreeInfo">
 
-        select * from t_seller_shop_category t
+        select * from t_shop_category t
         <where>
             1=1
             <if test="name!=null and name!=''">
