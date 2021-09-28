@@ -28,6 +28,15 @@ public interface FeignShopCategoryService {
     @RequestMapping(value="/delete/id",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO deleteById(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询全部类别
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/all/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 根据ID查询
      * @param requestJsonVO

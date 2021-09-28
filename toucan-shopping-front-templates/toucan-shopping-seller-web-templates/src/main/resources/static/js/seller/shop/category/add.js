@@ -32,6 +32,7 @@ function scafbtn_clicn()
             {
                 var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
                 parent.layer.close(index);
+                parent.drawTable();
             }else{
                 $("#scaf_msg").show();
                 $("#scaf_msg").text(data.msg);

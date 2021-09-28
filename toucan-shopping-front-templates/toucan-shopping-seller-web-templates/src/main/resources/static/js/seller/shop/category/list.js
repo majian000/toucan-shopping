@@ -1,5 +1,5 @@
 $(function () {
-
+    drawTable();
     $('#addsc').on('click', function(){
         layer.open({
             type: 2,
@@ -13,3 +13,9 @@ $(function () {
 
     });
 });
+
+
+function drawTable()
+{
+    $('.tree').treegrid();
+}

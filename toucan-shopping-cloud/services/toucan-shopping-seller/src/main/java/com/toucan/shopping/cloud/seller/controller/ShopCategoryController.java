@@ -759,17 +759,6 @@ public class ShopCategoryController {
     }
 
 
-    public boolean existsAdminId(List<String> adminIds,String adminId)
-    {
-        for (String aid : adminIds) {
-            if (aid != null && aid.equals(adminId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
 
     /**
      * 查询树表格
@@ -856,6 +845,55 @@ public class ShopCategoryController {
     }
 
 
+    /**
+     * 查询全部类别
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/all/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAllList(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+        try {
+            ShopCategoryVO queryShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
+
+            if(queryShopCategory.getUserMainId()==null)
+            {
+                logger.warn("用户ID为空 param:{}", requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(queryShopCategory.getUserMainId());
+            if(!CollectionUtils.isEmpty(sellerShops))
+            {
+                queryShopCategory.setShopId(sellerShops.get(0).getId());
+            }
+
+            if(queryShopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:{}",JSONObject.toJSONString(queryShopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(shopCategoryService.queryList(queryShopCategory));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

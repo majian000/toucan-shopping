@@ -48,7 +48,7 @@ public class ShopCategoryApiController extends BaseController {
     @UserAuth
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO regist(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -75,5 +75,37 @@ public class ShopCategoryApiController extends BaseController {
         }
         return resultObjectVO;
     }
+
+
+
+
+    /**
+     * 查询店铺分类
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO list(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+            shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
+            resultObjectVO = feignShopCategoryService.queryAllList(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("查询失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 
 }

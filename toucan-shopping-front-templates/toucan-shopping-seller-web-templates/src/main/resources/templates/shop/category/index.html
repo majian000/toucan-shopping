@@ -31,15 +31,6 @@
     <script>hljs.initHighlightingOnLoad();</script>
     <script type="text/javascript" src="${basePath}/static/lib/jquery-treegrid/js/jquery.treegrid.js"></script>
     <script type="text/javascript" src="${basePath}/static/lib/jquery-treegrid/js/jquery.treegrid.bootstrap2.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.tree').treegrid();
-            $('.tree2').treegrid({
-                expanderExpandedClass: 'icon-minus-sign',
-                expanderCollapsedClass: 'icon-plus-sign'
-            });
-        });
-    </script>
 
 
     <#include "/common_js.html"/>
@@ -75,8 +66,8 @@
             <div class="container">
                 <br>
                 <input type="button" id="addsc" value="添加分类"/> <br> <br>
-                <table class="table tree">
-                    <tr>
+                <table id="sclist" class="table tree">
+                    <!--<tr>
                         <th>分类名称</th>
                         <th>分类图片</th>
                         <th>移动</th>
@@ -105,7 +96,7 @@
                         <td>23</td>
                         <td><a href="#">置顶</a> | <a href="#">向上</a> | <a href="#">向下</a> | <a href="#">置底</a></td>
                         <td>修改 | 删除</td>
-                    </tr>
+                    </tr>-->
                 </table>
 
             </div>
