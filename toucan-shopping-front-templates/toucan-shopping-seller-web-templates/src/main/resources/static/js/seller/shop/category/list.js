@@ -57,7 +57,8 @@ function drawTable()
                     }
                 }
 
-                $("#").html(tableData);
+
+                $("#sclist").html(tableData);
 
 
                 $('.tree').treegrid();

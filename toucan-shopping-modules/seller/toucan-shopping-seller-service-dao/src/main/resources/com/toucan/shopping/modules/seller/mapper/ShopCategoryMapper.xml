@@ -42,15 +42,6 @@
         </if>
 
 
-        <if test="type!=null">
-            and t.type = #{type}
-        </if>
-
-        <if test="showStatus!=null">
-            and t.show_status = #{showStatus}
-        </if>
-
-
         <if test="idArray!=null ">
             and t.id in
             <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
@@ -87,7 +78,7 @@
 
 
     <select id="queryMaxSort" resultType="java.lang.Long" >
-        select category_sort from t_shop_category t
+        select max(category_sort) from t_shop_category t
         where  1=1  and t.shop_id = #{shopId} and t.user_main_id=#{userMainId}
     </select>
 
@@ -106,17 +97,17 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_shop_category(id,parent_id,shop_id,user_main_id,name,href,category_sort,type,remark,create_date,update_date)
-        values(#{id},#{parentId},#{shopId},#{userMainId},#{name},#{href},#{categorySort},#{type},#{remark},#{createDate},#{updateDate})
+        insert into t_shop_category(id,parent_id,shop_id,user_main_id,name,href,category_sort,remark,create_date,update_date)
+        values(#{id},#{parentId},#{shopId},#{userMainId},#{name},#{href},#{categorySort},#{remark},#{createDate},#{updateDate})
     </insert>
 
 
 
     <insert id="inserts"  useGeneratedKeys="true" keyProperty="id" >
-        insert into t_shop_category(id,parent_id,shop_id,user_main_id,name,href,category_sort,type,remark,create_date,update_date)
+        insert into t_shop_category(id,parent_id,shop_id,user_main_id,name,href,category_sort,remark,create_date,update_date)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.parentId},#{entity.shopId},#{entity.userMainId},#{entity.name},#{entity.href},#{entity.categorySort},#{entity.type},#{entity.remark},
+            (#{entity.id},#{entity.parentId},#{entity.shopId},#{entity.userMainId},#{entity.name},#{entity.href},#{entity.categorySort},#{entity.remark},
             #{entity.createDate},#{entity.updateDate})
         </foreach>
 
