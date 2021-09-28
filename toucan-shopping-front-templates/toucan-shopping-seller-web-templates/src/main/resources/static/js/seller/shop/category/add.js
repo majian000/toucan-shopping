@@ -35,6 +35,7 @@ function scafbtn_clicn()
                 parent.drawTable();
             }else{
                 $("#scaf_msg").show();
+                $("#scaf_msg").css("color","red");
                 $("#scaf_msg").text(data.msg);
             }
         },

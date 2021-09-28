@@ -93,7 +93,7 @@ public class ShopCategoryController {
             if(StringUtils.isEmpty(shopCategory.getName()))
             {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                 logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -105,7 +105,7 @@ public class ShopCategoryController {
             if(shopCategory.getUserMainId()==null)
             {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                 logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -122,7 +122,7 @@ public class ShopCategoryController {
             if(shopCategory.getShopId()==null)
             {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                 logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -133,7 +133,7 @@ public class ShopCategoryController {
             if(shopCategory.getParentId()==null)
             {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                 logger.warn("上级ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -153,7 +153,7 @@ public class ShopCategoryController {
             if(!CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
             {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("已存在该分类!");
@@ -174,7 +174,7 @@ public class ShopCategoryController {
                 if(count+1>categoryMaxCount)
                 {
                     //释放锁
-                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("分类数量已达到上限");
@@ -193,7 +193,7 @@ public class ShopCategoryController {
                 if(CollectionUtils.isEmpty(shopCategories))
                 {
                     //释放锁
-                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("保存失败,上级分类不存在");
@@ -223,7 +223,7 @@ public class ShopCategoryController {
             resultObjectVO.setMsg("保存失败,请稍后重试!");
             logger.warn(e.getMessage(),e);
         }finally{
-            skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+            skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
@@ -252,7 +252,7 @@ public class ShopCategoryController {
         String userMainId = String.valueOf(shopCategory.getUserMainId());
         try {
 
-            boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
+            boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("修改失败,请稍后重试");
@@ -263,7 +263,7 @@ public class ShopCategoryController {
             if(StringUtils.isEmpty(shopCategory.getName()))
             {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
 
                 logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -275,7 +275,7 @@ public class ShopCategoryController {
             if(shopCategory.getId()==null)
             {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
 
                 logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -295,7 +295,7 @@ public class ShopCategoryController {
                 if(shopCategory.getId().longValue() != shopCategoryList.get(0).getId().longValue())
                 {
                     //释放锁
-                    skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                    skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("该分类名称已存在!");
                     return resultObjectVO;
@@ -306,7 +306,7 @@ public class ShopCategoryController {
             int row = shopCategoryService.updateName(shopCategory);
             if (row < 1) {
                 //释放锁
-                skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
@@ -317,7 +317,7 @@ public class ShopCategoryController {
             resultObjectVO.setMsg("修改失败,请稍后重试!");
             logger.warn(e.getMessage(),e);
         }finally{
-            skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
+            skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
         }
 
         return resultObjectVO;

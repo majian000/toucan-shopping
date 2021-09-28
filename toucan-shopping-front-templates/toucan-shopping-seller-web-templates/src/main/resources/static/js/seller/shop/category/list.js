@@ -27,7 +27,12 @@ function drawTable()
         success: function (data) {
             if(data.code==1)
             {
-                var tableData = "";
+                var tableData = "<tr>";
+                tableData+="<th>分类名称</th>";
+                tableData+="<th>分类图片</th>";
+                tableData+="<th>移动</th>";
+                tableData+="<th>操作</th>";
+                tableData+="</tr>";
                 if(data.data!=null&&data.data.length>0)
                 {
                     for(var i=0;i<data.data.length;i++) {
