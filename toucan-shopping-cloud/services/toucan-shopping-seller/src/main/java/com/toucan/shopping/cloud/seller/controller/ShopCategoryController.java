@@ -112,6 +112,13 @@ public class ShopCategoryController {
                 resultObjectVO.setMsg("用户ID不能为空!");
                 return resultObjectVO;
             }
+
+            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
+            if(!CollectionUtils.isEmpty(sellerShops))
+            {
+                shopCategory.setShopId(sellerShops.get(0).getId());
+            }
+
             if(shopCategory.getShopId()==null)
             {
                 //释放锁
@@ -160,7 +167,7 @@ public class ShopCategoryController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(shopCategory.getUserMainId());
             querySellerShop.setId(shopCategory.getShopId());
-            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            sellerShops = sellerShopService.findListByEntity(querySellerShop);
             for(SellerShop sellerShop:sellerShops)
             {
                 int categoryMaxCount = sellerShop.getCategoryMaxCount()!=null?sellerShop.getCategoryMaxCount():toucan.getSeller().getShopCategoryMaxCount();

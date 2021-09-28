@@ -61,6 +61,7 @@ public class ShopCategoryApiController extends BaseController {
                 return resultObjectVO;
             }
 
+            shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
             resultObjectVO = feignShopCategoryService.save(requestJsonVO.sign(),requestJsonVO);
 
