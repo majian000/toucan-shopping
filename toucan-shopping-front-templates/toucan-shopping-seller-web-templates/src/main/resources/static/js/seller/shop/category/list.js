@@ -17,5 +17,46 @@ $(function () {
 
 function drawTable()
 {
-    $('.tree').treegrid();
+
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/shop/category/list',
+        contentType: "application/json;charset=utf-8",
+        data:  null,
+        dataType: "json",
+        success: function (data) {
+            if(data.code==1)
+            {
+                var tableData = "";
+                if(data.data!=null&&data.data.length>0)
+                {
+                    for(var i=0;i<data.data.length;i++) {
+                        var row = data.data[i];
+                        var rowData = "<tr class='treegrid-"+row.id+" ";
+                        if(row.parentId!="-1") {
+                            rowData+=" treegrid-parent-"+row.parentId+" ";
+                        }
+                        rowData += " '>";
+                        rowData += "<td>"+row.name+"</td>";
+                        rowData += "<td>22</td>";
+                        rowData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
+                        rowData += "<td>";
+                        if(row.parentId=="-1") {
+                            rowData += "<a href='#'>添加子分类</a> |  ";
+                        }
+                        rowData += " <a href='#'>修改</a> | <a href='#'>删除</a> ";
+                        rowData += "</td>";
+                        rowData += "</tr>";
+
+                        tableData+=rowData;
+                    }
+                }
+
+                $("#").html(tableData);
+
+
+                $('.tree').treegrid();
+            }
+        }
+    });
 }
