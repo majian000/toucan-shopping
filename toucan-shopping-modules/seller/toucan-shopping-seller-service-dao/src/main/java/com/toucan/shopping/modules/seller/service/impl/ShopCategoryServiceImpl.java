@@ -103,11 +103,11 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
         List<ShopCategory> ShopCategoryList = this.findByParentId(id);
         if(CollectionUtils.isNotEmpty(ShopCategoryList))
         {
-            for(ShopCategory ShopCategory:ShopCategoryList)
+            for(ShopCategory shopCategory:ShopCategoryList)
             {
-                if(ShopCategory!=null&&ShopCategory.getId()!=null) {
-                    deleteChildrenByParentId(ShopCategory.getId());
-                    this.deleteById(ShopCategory.getId());
+                if(shopCategory!=null&&shopCategory.getId()!=null) {
+                    deleteChildrenByParentId(shopCategory.getId());
+                    this.deleteById(shopCategory.getId());
                 }
             }
         }

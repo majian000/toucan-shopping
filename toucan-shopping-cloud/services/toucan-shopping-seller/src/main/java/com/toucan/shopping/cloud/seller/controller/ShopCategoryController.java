@@ -144,23 +144,10 @@ public class ShopCategoryController {
 
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-            queryShopCategory.setName(shopCategory.getName());
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
             queryShopCategory.setShopId(shopCategory.getShopId());
             queryShopCategory.setDeleteStatus((short)0);
 
-            //查询是否存在分类
-            if(!CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
-            {
-                //释放锁
-                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
-
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("已存在该分类!");
-                return resultObjectVO;
-            }
-
-            queryShopCategory.setName(null);
             //查询出当前店铺下分类数量
             long count = shopCategoryService.queryCount(queryShopCategory);
 
@@ -200,6 +187,17 @@ public class ShopCategoryController {
                     return resultObjectVO;
                 }
 
+                ShopCategory parentShopCategory = shopCategories.get(0);
+                if(parentShopCategory.getParentId()!=-1)
+                {
+                    //释放锁
+                    skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
+
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("保存失败,只能添加二级分类");
+                    return resultObjectVO;
+
+                }
             }
 
             //查询最大排序值,进行排序递增
@@ -1005,33 +1003,41 @@ public class ShopCategoryController {
         }
 
         try {
-            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+            ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
 
 
-            if(ShopCategory.getId()==null)
+            if(shopCategory.getId()==null)
             {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
+                logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("ID不能为空!");
                 return resultObjectVO;
             }
 
 
-            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-            queryShopCategory.setId(ShopCategory.getId());
-
-            List<ShopCategory> ShopCategoryList = shopCategoryService.queryList(queryShopCategory);
-            if(CollectionUtils.isEmpty(ShopCategoryList))
+            if(shopCategory.getUserMainId()==null)
             {
+                logger.warn("用户ID为空 param:"+ requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该分类!");
+                resultObjectVO.setMsg("用户ID不能为空!");
                 return resultObjectVO;
             }
 
-            ShopCategory = ShopCategoryList.get(0);
-            shopCategoryService.deleteChildrenByParentId(ShopCategory.getId());
-            int row = shopCategoryService.deleteById(ShopCategory.getId());
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setParentId(shopCategory.getId());
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
+
+            List<ShopCategory> shopCategoryList = shopCategoryService.queryList(queryShopCategory);
+            if(!CollectionUtils.isEmpty(shopCategoryList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请先删除所有子分类!");
+                return resultObjectVO;
+            }
+
+            shopCategory = shopCategoryList.get(0);
+            int row = shopCategoryService.deleteById(shopCategory.getId());
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
