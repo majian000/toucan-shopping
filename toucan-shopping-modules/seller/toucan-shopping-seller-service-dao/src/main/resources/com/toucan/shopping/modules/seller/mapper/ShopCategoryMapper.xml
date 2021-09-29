@@ -37,8 +37,8 @@
             and t.shop_id = #{shopId}
         </if>
 
-        <if test="shopId!=null">
-            and t.shop_id = #{shopId}
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
         </if>
 
 

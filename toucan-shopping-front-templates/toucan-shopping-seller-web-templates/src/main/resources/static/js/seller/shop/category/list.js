@@ -51,22 +51,37 @@ function drawTable()
                     for(var i=0;i<data.data.length;i++) {
                         var row = data.data[i];
                         var rowData = "<tr class='treegrid-"+row.id+" ";
-                        if(row.parentId!="-1") {
-                            rowData+=" treegrid-parent-"+row.parentId+" ";
-                        }
                         rowData += " '>";
                         rowData += "<td>"+row.name+"</td>";
                         /*rowData += "<td>22</td>";*/
                         rowData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                         rowData += "<td>";
-                        if(row.parentId=="-1") {
-                            rowData += "<a href='#' onclick='addChildCategory("+row.id+");'>添加子分类</a> |  ";
-                        }
+                        rowData += "<a href=\"#\" onclick=\"addChildCategory('"+row.id+"');\">添加子分类</a> |  ";
                         rowData += " <a href='#'>修改</a> | <a href='#'>删除</a> ";
                         rowData += "</td>";
                         rowData += "</tr>";
 
                         tableData+=rowData;
+
+                        if(row.children!=null&&row.children.length>0)
+                        {
+                            for(var j=0;j<row.children.length;j++) {
+                                var child = row.children[j];
+                                var childData = "<tr class='treegrid-" + child.id + " ";
+                                childData+=" treegrid-parent-"+row.id+" ";
+                                childData += " '>";
+                                childData += "<td>" + child.name + "</td>";
+                                /*childData += "<td>22</td>";*/
+                                childData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
+                                childData += "<td>";
+                                childData += " <a href='#'>修改</a> | <a href='#'>删除</a> ";
+                                childData += "</td>";
+                                childData += "</tr>";
+                                tableData+=childData;
+                            }
+                        }
+
+
                     }
                 }
 

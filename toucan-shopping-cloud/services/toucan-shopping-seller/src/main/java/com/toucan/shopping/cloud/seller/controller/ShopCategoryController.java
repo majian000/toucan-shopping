@@ -888,7 +888,30 @@ public class ShopCategoryController {
                 resultObjectVO.setMsg("店铺ID不能为空!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(shopCategoryService.queryList(queryShopCategory));
+            List<ShopCategory> shopCategorys = shopCategoryService.queryList(queryShopCategory);
+            List<ShopCategoryVO> shopCategoryVOS = new ArrayList<ShopCategoryVO>();
+            for(ShopCategory shopCategory:shopCategorys)
+            {
+                ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+                BeanUtils.copyProperties(shopCategoryVO,shopCategory);
+
+                if(shopCategoryVO.getParentId().longValue()==-1L)
+                {
+                    shopCategoryVO.setChildren(new ArrayList<ShopCategoryVO>());
+                    for(ShopCategory childShopCategory:shopCategorys)
+                    {
+                        if(childShopCategory.getParentId().longValue()==shopCategoryVO.getId().longValue())
+                        {
+                            ShopCategoryVO childShopCategoryVO = new ShopCategoryVO();
+                            BeanUtils.copyProperties(childShopCategoryVO,childShopCategory);
+                            shopCategoryVO.getChildren().add(childShopCategoryVO);
+                        }
+                    }
+                    shopCategoryVOS.add(shopCategoryVO);
+                }
+
+            }
+            resultObjectVO.setData(shopCategoryVOS);
 
         }catch(Exception e)
         {

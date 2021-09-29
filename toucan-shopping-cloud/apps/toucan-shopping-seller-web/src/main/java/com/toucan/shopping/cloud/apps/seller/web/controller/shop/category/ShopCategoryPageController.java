@@ -37,7 +37,7 @@ public class ShopCategoryPageController extends BaseController {
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/{parentId}/add")
-    public String add(HttpServletRequest request, @PathVariable Long parentId)
+    public String add(HttpServletRequest request, @PathVariable String parentId)
     {
         request.setAttribute("parentId",parentId);
         return "shop/category/add";
