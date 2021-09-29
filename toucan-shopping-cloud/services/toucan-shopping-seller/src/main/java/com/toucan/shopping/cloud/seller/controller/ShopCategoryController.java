@@ -1057,7 +1057,7 @@ public class ShopCategoryController {
 
 
     /**
-     * 批量删除功能项
+     * 批量删除
      * @param requestVo
      * @return
      */
