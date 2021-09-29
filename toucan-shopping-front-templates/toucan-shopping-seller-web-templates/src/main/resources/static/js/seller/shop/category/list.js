@@ -8,12 +8,25 @@ $(function () {
             shadeClose: true,
             maxmin: true,
             area: ['500px', '260px'],
-            content: basePath+"/page/shop/category/add"
+            content: basePath+"/page/shop/category/-1/add"
         });
 
     });
 });
 
+
+function addChildCategory(id)
+{
+    layer.open({
+        type: 2,
+        title: '添加类别',
+        fix: false,
+        shadeClose: true,
+        maxmin: true,
+        area: ['500px', '260px'],
+        content: basePath+"/page/shop/category/"+id+"/add"
+    });
+}
 
 function drawTable()
 {
@@ -29,7 +42,7 @@ function drawTable()
             {
                 var tableData = "<tr>";
                 tableData+="<th>分类名称</th>";
-                tableData+="<th>分类图片</th>";
+                /*tableData+="<th>分类图片</th>";*/
                 tableData+="<th>移动</th>";
                 tableData+="<th>操作</th>";
                 tableData+="</tr>";
@@ -43,11 +56,11 @@ function drawTable()
                         }
                         rowData += " '>";
                         rowData += "<td>"+row.name+"</td>";
-                        rowData += "<td>22</td>";
+                        /*rowData += "<td>22</td>";*/
                         rowData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                         rowData += "<td>";
                         if(row.parentId=="-1") {
-                            rowData += "<a href='#'>添加子分类</a> |  ";
+                            rowData += "<a href='#' onclick='addChildCategory("+row.id+");'>添加子分类</a> |  ";
                         }
                         rowData += " <a href='#'>修改</a> | <a href='#'>删除</a> ";
                         rowData += "</td>";

@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.auth.user.UserAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +36,10 @@ public class ShopCategoryPageController extends BaseController {
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/add")
-    public String add(HttpServletRequest request)
+    @RequestMapping("/{parentId}/add")
+    public String add(HttpServletRequest request, @PathVariable Long parentId)
     {
+        request.setAttribute("parentId",parentId);
         return "shop/category/add";
     }
 }

@@ -50,6 +50,7 @@ function scafbtn_clicn()
 }
 
 
+
 $(function () {
 
     $('#scafbtn').on('click', function () {
