@@ -331,7 +331,7 @@ public class ShopCategoryController {
      */
     @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
