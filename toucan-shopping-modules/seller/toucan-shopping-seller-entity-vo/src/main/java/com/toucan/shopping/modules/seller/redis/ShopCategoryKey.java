@@ -30,6 +30,16 @@ public class ShopCategoryKey {
 
 
     /**
+     * 删除商户店铺分类锁
+     * @param userMainId
+     * @return
+     */
+    public static String getDeleteLockKey(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_WEB:SELLER:SHOP:CATEGORY:DELETE:"+userMainId+"_LOCK";
+    }
+
+    /**
      * 保存商户店铺分类缓存键
      * @param shopId
      * @return

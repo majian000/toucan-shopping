@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -76,6 +77,45 @@ public class ShopCategoryApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 根据ID删除
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/delete/{id}",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,@PathVariable Long id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            boolean lockStatus = skylarkLock.lock(ShopCategoryRedisKey.getSaveLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请稍后重试");
+                return resultObjectVO;
+            }
+
+            ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+            shopCategoryVO.setId(id);
+            shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
+            resultObjectVO = feignShopCategoryService.deleteById(requestJsonVO.sign(),requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("保存失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }finally{
+            skylarkLock.unLock(ShopCategoryRedisKey.getSaveLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
 
 
 

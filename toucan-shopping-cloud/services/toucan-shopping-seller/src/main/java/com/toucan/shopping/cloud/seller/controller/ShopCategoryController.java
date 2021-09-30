@@ -325,65 +325,6 @@ public class ShopCategoryController {
 
 
     /**
-     * 根据ID删除分类
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/delete/id",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO deleteById(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-
-        try {
-            ShopCategory ShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
-
-
-
-            if(ShopCategory.getId()==null)
-            {
-                logger.info("分类ID为空 param:"+ JSONObject.toJSONString(ShopCategory));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("分类ID不能为空!");
-                return resultObjectVO;
-            }
-
-            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-            queryShopCategory.setId(ShopCategory.getId());
-            queryShopCategory.setDeleteStatus((short)0);
-
-            if(CollectionUtils.isEmpty(shopCategoryService.queryList(queryShopCategory)))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该分类!");
-                return resultObjectVO;
-            }
-
-            shopCategoryService.deleteChildrenByParentId(ShopCategory.getId());
-            int row = shopCategoryService.deleteById(ShopCategory.getId());
-            if (row <=0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
-                return resultObjectVO;
-            }
-
-        }catch(Exception e)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-    /**
      * 根据ID查询
      * @param requestJsonVO
      * @return
@@ -1025,27 +966,53 @@ public class ShopCategoryController {
             return resultObjectVO;
         }
 
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+
+        if(shopCategory.getId()==null)
+        {
+            logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空!");
+            return resultObjectVO;
+        }
+
+
+        if(shopCategory.getUserMainId()==null)
+        {
+            logger.warn("用户ID为空 param:"+ requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("用户ID不能为空!");
+            return resultObjectVO;
+        }
+
+        String userMainId = String.valueOf(shopCategory.getUserMainId());
         try {
-            ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
 
-
-
-            if(shopCategory.getId()==null)
-            {
-                logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
+            boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("删除失败,请稍后重试");
                 return resultObjectVO;
             }
 
 
-            if(shopCategory.getUserMainId()==null)
+            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
+            if(!CollectionUtils.isEmpty(sellerShops))
             {
-                logger.warn("用户ID为空 param:"+ requestJsonVO.getEntityJson());
+                shopCategory.setShopId(sellerShops.get(0).getId());
+            }
+
+            if(shopCategory.getShopId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
+
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("用户ID不能为空!");
+                resultObjectVO.setMsg("没有查询到关联店铺!");
                 return resultObjectVO;
             }
+
 
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setParentId(shopCategory.getId());
@@ -1054,14 +1021,19 @@ public class ShopCategoryController {
             List<ShopCategory> shopCategoryList = shopCategoryService.queryList(queryShopCategory);
             if(!CollectionUtils.isEmpty(shopCategoryList))
             {
+                //释放锁
+                skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
+
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请先删除所有子分类!");
                 return resultObjectVO;
             }
 
-            shopCategory = shopCategoryList.get(0);
             int row = shopCategoryService.deleteById(shopCategory.getId());
             if (row <=0) {
+                //释放锁
+                skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
+
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
@@ -1072,6 +1044,9 @@ public class ShopCategoryController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败,请重试!");
             logger.warn(e.getMessage(),e);
+        }finally{
+            //释放锁
+            skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }

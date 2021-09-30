@@ -28,6 +28,28 @@ function addChildCategory(id)
     });
 }
 
+function deleteRow(id)
+{
+
+    alert("弹出确认框");
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/shop/category/delete/'+id,
+        contentType: "application/json;charset=utf-8",
+        data:  null,
+        dataType: "json",
+        success: function (data) {
+            if(data.code==1)
+            {
+                drawTable();
+            }
+        },
+        error: function (result) {
+            drawTable();
+        }
+    });
+}
+
 function drawTable()
 {
 
@@ -57,7 +79,7 @@ function drawTable()
                         rowData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                         rowData += "<td>";
                         rowData += "<a href=\"#\" onclick=\"addChildCategory('"+row.id+"');\">添加子分类</a> |  ";
-                        rowData += " <a href='#'>修改</a> | <a href='#'>删除</a> ";
+                        rowData += " <a href=\"#\">修改</a> | <a href=\"#\" onclick=\"deleteRow('\"+row.id+\"');\">删除</a> ";
                         rowData += "</td>";
                         rowData += "</tr>";
 
@@ -74,7 +96,7 @@ function drawTable()
                                 /*childData += "<td>22</td>";*/
                                 childData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                                 childData += "<td>";
-                                childData += " <a href='#'>修改</a> | <a href='#'>删除</a> ";
+                                rowData += " <a href=\"#\">修改</a> | <a href=\"#\" onclick=\"deleteRow('\"+child.id+\"');\">删除</a> ";
                                 childData += "</td>";
                                 childData += "</tr>";
                                 tableData+=childData;
