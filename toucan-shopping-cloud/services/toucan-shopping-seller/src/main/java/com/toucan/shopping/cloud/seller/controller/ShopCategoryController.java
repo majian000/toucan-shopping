@@ -343,7 +343,37 @@ public class ShopCategoryController {
         }
         try {
             ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
-            resultObjectVO.setData(shopCategoryService.queryById(shopCategory.getId()));
+
+            if(shopCategory.getId()==null)
+            {
+                logger.warn("ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+
+            if(shopCategory.getUserMainId()==null)
+            {
+                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+
+            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
+            if(!CollectionUtils.isEmpty(sellerShops))
+            {
+                shopCategory.setShopId(sellerShops.get(0).getId());
+            }
+
+            if(shopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有查询到关联店铺!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(shopCategoryService.queryByIdAndUserMainIdAndShopId(shopCategory.getId(),shopCategory.getUserMainId(),shopCategory.getShopId()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -60,6 +60,11 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
         return shopCategoryMapper.queryById(id);
     }
 
+    @Override
+    public ShopCategory queryByIdAndUserMainIdAndShopId(Long id, Long userMainId, Long shopId) {
+        return shopCategoryMapper.queryByIdAndUserMainIdAndShopId(id,userMainId,shopId);
+    }
+
     @Transactional
     @Override
     public int deleteById(Long id) {

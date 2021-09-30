@@ -119,6 +119,9 @@
         select * from t_shop_category where id=#{categoryId} and delete_status=0
     </select>
 
+    <select id="queryByIdAndUserMainIdAndShopId" resultMap="shopCategoryMap" >
+        select * from t_shop_category where id=#{categoryId} and user_main_id = #{userMainId} and shop_id =#{shopId} and delete_status=0
+    </select>
 
     <update id="deleteById">
         update t_shop_category  set delete_status=1 where id=#{id}   and delete_status=0

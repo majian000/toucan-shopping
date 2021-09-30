@@ -5,7 +5,7 @@ public class ShopCategoryRedisKey {
 
 
     /**
-     * 注册锁键
+     * 保存锁键
      * @param userMainId
      * @return
      */

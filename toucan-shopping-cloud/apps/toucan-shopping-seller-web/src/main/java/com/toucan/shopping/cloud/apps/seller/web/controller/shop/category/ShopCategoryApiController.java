@@ -79,6 +79,41 @@ public class ShopCategoryApiController extends BaseController {
 
 
 
+    /**
+     * 修改店铺分类
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            boolean lockStatus = skylarkLock.lock(ShopCategoryRedisKey.getUpdateLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请稍后重试");
+                return resultObjectVO;
+            }
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
+            resultObjectVO = feignShopCategoryService.update(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("保存失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }finally{
+            skylarkLock.unLock(ShopCategoryRedisKey.getUpdateLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
+
 
     /**
      * 根据ID删除
@@ -93,12 +128,6 @@ public class ShopCategoryApiController extends BaseController {
         String userMainId="-1";
         try {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            boolean lockStatus = skylarkLock.lock(ShopCategoryRedisKey.getSaveLockKey(userMainId), userMainId);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试");
-                return resultObjectVO;
-            }
 
             ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
             shopCategoryVO.setId(id);
@@ -111,8 +140,6 @@ public class ShopCategoryApiController extends BaseController {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("保存失败,请稍后重试");
             logger.warn(e.getMessage(),e);
-        }finally{
-            skylarkLock.unLock(ShopCategoryRedisKey.getSaveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }

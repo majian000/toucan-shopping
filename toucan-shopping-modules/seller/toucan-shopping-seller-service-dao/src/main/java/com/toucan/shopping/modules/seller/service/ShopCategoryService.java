@@ -38,6 +38,8 @@ public interface ShopCategoryService {
 
     ShopCategory queryById(Long id);
 
+    ShopCategory queryByIdAndUserMainIdAndShopId(Long id,Long userMainId,Long shopId);
+
     int deleteById(Long id);
 
     List<ShopCategory> findByParentId(Long parentId);

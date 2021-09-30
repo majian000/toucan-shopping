@@ -21,6 +21,8 @@ public interface ShopCategoryMapper {
 
     ShopCategory queryById(Long id);
 
+    ShopCategory queryByIdAndUserMainIdAndShopId(Long id,Long userMainId,Long shopId);
+
     List<ShopCategory> queryByParentId(Long parentId);
 
     int deleteById(Long id);
