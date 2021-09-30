@@ -42,25 +42,31 @@ function editCategory(id)
     });
 }
 
-function deleteRow(id)
+function deleteRow(id,name)
 {
 
-    alert("弹出确认框");
-    $.ajax({
-        type: "POST",
-        url: basePath+'/api/shop/category/delete/'+id,
-        contentType: "application/json;charset=utf-8",
-        data:  null,
-        dataType: "json",
-        success: function (data) {
-            if(data.code==1)
-            {
+
+    layer.confirm('确定删除'+name+'?', {
+        btn: ['确定','关闭'] //按钮
+    }, function(){
+        $.ajax({
+            type: "POST",
+            url: basePath+'/api/shop/category/delete/'+id,
+            contentType: "application/json;charset=utf-8",
+            data:  null,
+            dataType: "json",
+            success: function (data) {
+                if(data.code==1)
+                {
+                    drawTable();
+                }
+            },
+            error: function (result) {
                 drawTable();
             }
-        },
-        error: function (result) {
-            drawTable();
-        }
+        });
+    }, function(){
+
     });
 }
 
@@ -93,7 +99,7 @@ function drawTable()
                         rowData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                         rowData += "<td>";
                         rowData += "<a href=\"#\" onclick=\"addChildCategory('"+row.id+"');\">添加子分类</a> |  ";
-                        rowData += " <a href=\"#\" onclick=\"editCategory('"+row.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+row.id+"');\">删除</a> ";
+                        rowData += " <a href=\"#\" onclick=\"editCategory('"+row.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+row.id+"','"+row.name+"');\">删除</a> ";
                         rowData += "</td>";
                         rowData += "</tr>";
 
@@ -110,7 +116,7 @@ function drawTable()
                                 /*childData += "<td>22</td>";*/
                                 childData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                                 childData += "<td>";
-                                rowData += " <a href=\"#\" onclick=\"editCategory('"+child.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+child.id+"');\">删除</a> ";
+                                rowData += " <a href=\"#\" onclick=\"editCategory('"+child.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+child.id+"','"+child.name+"');\">删除</a> ";
                                 childData += "</td>";
                                 childData += "</tr>";
                                 tableData+=childData;
