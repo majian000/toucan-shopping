@@ -28,6 +28,20 @@ function addChildCategory(id)
     });
 }
 
+
+function editCategory(id)
+{
+    layer.open({
+        type: 2,
+        title: '修改类别',
+        fix: false,
+        shadeClose: true,
+        maxmin: true,
+        area: ['500px', '260px'],
+        content: basePath+"/page/shop/category/edit"+id
+    });
+}
+
 function deleteRow(id)
 {
 
@@ -79,7 +93,7 @@ function drawTable()
                         rowData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                         rowData += "<td>";
                         rowData += "<a href=\"#\" onclick=\"addChildCategory('"+row.id+"');\">添加子分类</a> |  ";
-                        rowData += " <a href=\"#\">修改</a> | <a href=\"#\" onclick=\"deleteRow('\"+row.id+\"');\">删除</a> ";
+                        rowData += " <a href=\"#\" onclick=\"editCategory('"+row.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+row.id+"');\">删除</a> ";
                         rowData += "</td>";
                         rowData += "</tr>";
 
@@ -96,7 +110,7 @@ function drawTable()
                                 /*childData += "<td>22</td>";*/
                                 childData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                                 childData += "<td>";
-                                rowData += " <a href=\"#\">修改</a> | <a href=\"#\" onclick=\"deleteRow('\"+child.id+\"');\">删除</a> ";
+                                rowData += " <a href=\"#\" onclick=\"editCategory('"+child.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+child.id+"');\">删除</a> ";
                                 childData += "</td>";
                                 childData += "</tr>";
                                 tableData+=childData;
