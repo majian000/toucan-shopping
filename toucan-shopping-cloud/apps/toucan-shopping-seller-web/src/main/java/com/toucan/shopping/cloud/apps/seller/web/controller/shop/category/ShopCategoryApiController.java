@@ -133,7 +133,7 @@ public class ShopCategoryApiController extends BaseController {
             shopCategoryVO.setId(id);
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
-            resultObjectVO = feignShopCategoryService.deleteById(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignShopCategoryService.deleteById(requestJsonVO);
 
         }catch(Exception e)
         {

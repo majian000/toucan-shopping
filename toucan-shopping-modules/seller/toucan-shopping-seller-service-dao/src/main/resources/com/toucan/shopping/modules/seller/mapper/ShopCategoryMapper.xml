@@ -120,7 +120,7 @@
     </select>
 
     <select id="queryByIdAndUserMainIdAndShopId" resultMap="shopCategoryMap" >
-        select * from t_shop_category where id=#{categoryId} and user_main_id = #{userMainId} and shop_id =#{shopId} and delete_status=0
+        select * from t_shop_category where id=#{id} and user_main_id = #{userMainId} and shop_id =#{shopId} and delete_status=0
     </select>
 
     <update id="deleteById">

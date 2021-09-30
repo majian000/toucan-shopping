@@ -53,20 +53,6 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
                 return resultObjectVO;
             }
 
-            @Override
-            public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("删除店铺分类失败");
-                    return resultObjectVO;
-                }
-                logger.warn("FeignShopCategoryService.deleteById失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("删除店铺分类失败");
-                return resultObjectVO;
-            }
 
             @Override
             public ResultObjectVO queryAllList(RequestJsonVO requestJsonVO) {
