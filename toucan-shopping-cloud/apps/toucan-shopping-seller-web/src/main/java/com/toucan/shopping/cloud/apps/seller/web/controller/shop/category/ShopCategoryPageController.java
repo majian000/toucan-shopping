@@ -69,7 +69,7 @@ public class ShopCategoryPageController extends BaseController {
             shopCategoryVO.setId(id);
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopCategoryVO);
-            ResultObjectVO resultObjectVO = feignShopCategoryService.queryById(requestJsonVO.sign(),requestJsonVO);
+            ResultObjectVO resultObjectVO = feignShopCategoryService.queryById(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 request.setAttribute("model",resultObjectVO.formatData(ShopCategoryVO.class));

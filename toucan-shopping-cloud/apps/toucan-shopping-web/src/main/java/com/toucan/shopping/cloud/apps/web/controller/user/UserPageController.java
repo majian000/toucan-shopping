@@ -106,7 +106,7 @@ public class UserPageController extends BaseController {
         }
     }
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+//    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/info")
     public String info(HttpServletRequest httpServletRequest)
     {

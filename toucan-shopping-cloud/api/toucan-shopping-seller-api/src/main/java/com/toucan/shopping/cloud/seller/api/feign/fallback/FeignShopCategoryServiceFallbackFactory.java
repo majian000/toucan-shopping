@@ -84,7 +84,7 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
             }
 
             @Override
-            public ResultObjectVO queryById(String signHeader, RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {

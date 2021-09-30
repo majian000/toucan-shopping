@@ -43,7 +43,7 @@ public interface FeignShopCategoryService {
      * @return
      */
     @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**

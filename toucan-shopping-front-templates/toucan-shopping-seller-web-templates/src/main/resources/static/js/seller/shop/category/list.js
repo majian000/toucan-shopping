@@ -38,7 +38,7 @@ function editCategory(id)
         shadeClose: true,
         maxmin: true,
         area: ['500px', '260px'],
-        content: basePath+"/page/shop/category/edit"+id
+        content: basePath+"/page/shop/category/edit/"+id
     });
 }
 
@@ -117,7 +117,7 @@ function drawTable()
                                 /*childData += "<td>22</td>";*/
                                 childData += "<td><a href='#'>置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
                                 childData += "<td>";
-                                rowData += " <a href=\"#\" onclick=\"editCategory('"+child.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+child.id+"','"+child.name+"');\">删除</a> ";
+                                childData += " <a href=\"#\" onclick=\"editCategory('"+child.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+child.id+"','"+child.name+"');\">删除</a> ";
                                 childData += "</td>";
                                 childData += "</tr>";
                                 tableData+=childData;
