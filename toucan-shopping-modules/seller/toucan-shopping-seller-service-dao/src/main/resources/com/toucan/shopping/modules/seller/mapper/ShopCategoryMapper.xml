@@ -21,7 +21,7 @@
 
     </resultMap>
 
-    <sql id="queryListWhere">
+    <sql id="commonWhere">
 
         and t.delete_status = 0
 
@@ -60,7 +60,7 @@
         <where>
             1=1
 
-            <include refid="queryListWhere" />
+            <include refid="commonWhere" />
 
 
         </where>
@@ -71,7 +71,7 @@
         select t.* from t_shop_category t
         <where>
             1=1
-            <include refid="queryListWhere" />
+            <include refid="commonWhere" />
         </where>
         order by category_sort asc
     </select>
@@ -81,9 +81,20 @@
         select t.* from t_shop_category t
         <where>
             1=1
-            <include refid="queryListWhere" />
+            <include refid="commonWhere" />
         </where>
         order by category_sort asc
+        limit 1
+    </select>
+
+
+    <select id="queryBottom1" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">
+        select t.* from t_shop_category t
+        <where>
+            1=1
+            <include refid="commonWhere" />
+        </where>
+        order by category_sort desc
         limit 1
     </select>
 
@@ -91,7 +102,7 @@
         select count(*) from t_shop_category t
         <where>
             1=1
-            <include refid="queryListWhere" />
+            <include refid="commonWhere" />
 
         </where>
     </select>

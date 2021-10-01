@@ -84,6 +84,33 @@ public interface FeignShopCategoryService {
     @RequestMapping(value="/move/top",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO moveTop(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 置底
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO moveBottom(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 向上
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/move/up",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO moveUp(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 向下
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO moveDown(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 根据ID数组查询
      * @param requestVo

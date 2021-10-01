@@ -40,6 +40,10 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
     }
 
     @Override
+    public List<ShopCategory> queryBottom1(ShopCategoryVO shopCategory) {
+        return shopCategoryMapper.queryBottom1(shopCategory);
+    }
+    @Override
     public List<ShopCategory> queryPcIndexList(ShopCategoryVO shopCategory) {
         return shopCategoryMapper.queryPcIndexList(shopCategory);
     }

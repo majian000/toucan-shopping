@@ -155,7 +155,52 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
                 }
                 logger.warn("FeignShopCategoryService.moveTop失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询店铺分类失败");
+                resultObjectVO.setMsg("移动店铺分类失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO moveBottom(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("移动店铺分类失败");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopCategoryService.moveBottom失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("移动店铺分类失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO moveUp(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("移动店铺分类失败");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopCategoryService.moveUp失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("移动店铺分类失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO moveDown(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("移动店铺分类失败");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopCategoryService.moveDown失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("移动店铺分类失败");
                 return resultObjectVO;
             }
 

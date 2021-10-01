@@ -90,6 +90,67 @@ function moveTop(id,parentId)
     });
 }
 
+function moveBottom(id,parentId)
+{
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/shop/category/move/bottom',
+        contentType: "application/json;charset=utf-8",
+        data:  JSON.stringify({"id":id,"parentId":parentId}),
+        dataType: "json",
+        success: function (data) {
+            if(data.code==1)
+            {
+                drawTable();
+            }
+        },
+        error: function (result) {
+            drawTable();
+        }
+    });
+}
+
+
+function moveUp(id,parentId)
+{
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/shop/category/move/up',
+        contentType: "application/json;charset=utf-8",
+        data:  JSON.stringify({"id":id,"parentId":parentId}),
+        dataType: "json",
+        success: function (data) {
+            if(data.code==1)
+            {
+                drawTable();
+            }
+        },
+        error: function (result) {
+            drawTable();
+        }
+    });
+}
+
+
+function moveDown(id,parentId)
+{
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/shop/category/move/down',
+        contentType: "application/json;charset=utf-8",
+        data:  JSON.stringify({"id":id,"parentId":parentId}),
+        dataType: "json",
+        success: function (data) {
+            if(data.code==1)
+            {
+                drawTable();
+            }
+        },
+        error: function (result) {
+            drawTable();
+        }
+    });
+}
 function drawTable()
 {
 
@@ -116,7 +177,7 @@ function drawTable()
                         rowData += " '>";
                         rowData += "<td>"+row.name+"</td>";
                         /*rowData += "<td>22</td>";*/
-                        rowData += "<td><a href=\"#\" onclick=\"moveTop('"+row.id+"','"+row.parentId+"');\" >置顶</a> | <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
+                        rowData += "<td><a href=\"#\" onclick=\"moveTop('"+row.id+"','"+row.parentId+"');\" >置顶</a> | <a href=\"#\" onclick=\"moveUp('"+row.id+"','"+row.parentId+"');\">向上</a> | <a href=\"#\" onclick=\"moveDown('"+row.id+"','"+row.parentId+"');\"  >向下</a> | <a href=\"#\" onclick=\"moveBottom('"+row.id+"','"+row.parentId+"');\" >置底</a></td>";
                         rowData += "<td>";
                         rowData += "<a href=\"#\" onclick=\"addChildCategory('"+row.id+"');\">添加子分类</a> |  ";
                         rowData += " <a href=\"#\" onclick=\"editCategory('"+row.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+row.id+"','"+row.name+"');\">删除</a> ";
@@ -134,7 +195,7 @@ function drawTable()
                                 childData += " '>";
                                 childData += "<td>" + child.name + "</td>";
                                 /*childData += "<td>22</td>";*/
-                                childData += "<td><a href=\"#\" onclick=\"moveTop('"+child.id+"','"+child.parentId+"');\" >置顶</a>| <a href='#'>向上</a> | <a href='#'>向下</a> | <a href='#'>置底</a></td>";
+                                childData += "<td><a href=\"#\" onclick=\"moveTop('"+child.id+"','"+child.parentId+"');\" >置顶</a>| <a  href=\"#\" onclick=\"moveUp('"+child.id+"','"+child.parentId+"');\" >向上</a> | <a href=\"#\" onclick=\"moveDown('"+child.id+"','"+child.parentId+"');\"   >向下</a> | <a href=\"#\" onclick=\"moveBottom('"+child.id+"','"+child.parentId+"');\">置底</a></td>";
                                 childData += "<td>";
                                 childData += " <a href=\"#\" onclick=\"editCategory('"+child.id+"')\">修改</a> | <a href=\"#\" onclick=\"deleteRow('"+child.id+"','"+child.name+"');\">删除</a> ";
                                 childData += "</td>";

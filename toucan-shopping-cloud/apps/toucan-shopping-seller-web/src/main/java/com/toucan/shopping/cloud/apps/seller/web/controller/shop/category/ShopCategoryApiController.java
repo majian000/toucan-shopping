@@ -139,6 +139,87 @@ public class ShopCategoryApiController extends BaseController {
     }
 
 
+
+    /**
+     * 置底
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveBottom(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
+            resultObjectVO = feignShopCategoryService.moveBottom(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 向上
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/move/up",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveUp(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
+            resultObjectVO = feignShopCategoryService.moveUp(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 向上
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveDown(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
+            resultObjectVO = feignShopCategoryService.moveDown(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
     /**
      * 根据ID删除
      * @return

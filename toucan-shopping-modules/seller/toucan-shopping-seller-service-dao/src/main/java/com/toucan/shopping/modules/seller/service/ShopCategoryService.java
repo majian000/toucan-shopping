@@ -20,6 +20,8 @@ public interface ShopCategoryService {
 
     List<ShopCategory> queryTop1(ShopCategoryVO shopCategory);
 
+    List<ShopCategory> queryBottom1(ShopCategoryVO shopCategory);
+
     List<ShopCategory> queryPcIndexList(ShopCategoryVO shopCategory);
 
     /**

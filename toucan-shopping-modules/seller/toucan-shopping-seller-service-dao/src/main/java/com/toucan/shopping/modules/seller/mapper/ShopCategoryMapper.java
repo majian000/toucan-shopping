@@ -17,6 +17,8 @@ public interface ShopCategoryMapper {
 
     List<ShopCategory> queryTop1(ShopCategoryVO shopCategory);
 
+    List<ShopCategory> queryBottom1(ShopCategoryVO shopCategory);
+
     List<ShopCategory> queryPcIndexList(ShopCategoryVO shopCategory);
 
     int insert(ShopCategory shopCategory);
