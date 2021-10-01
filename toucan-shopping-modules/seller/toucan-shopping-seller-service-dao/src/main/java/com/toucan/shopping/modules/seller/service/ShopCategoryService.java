@@ -15,6 +15,11 @@ public interface ShopCategoryService {
 
     List<ShopCategory> queryList(ShopCategoryVO shopCategory);
 
+    List<ShopCategory> queryListOrderByCategorySortAsc(ShopCategoryVO shopCategory);
+
+
+    List<ShopCategory> queryTop1(ShopCategoryVO shopCategory);
+
     List<ShopCategory> queryPcIndexList(ShopCategoryVO shopCategory);
 
     /**
@@ -33,6 +38,9 @@ public interface ShopCategoryService {
 
 
     int update(ShopCategory shopCategory);
+
+
+    int updateCategorySort(ShopCategory shopCategory);
 
     int updateName(ShopCategory shopCategory);
 

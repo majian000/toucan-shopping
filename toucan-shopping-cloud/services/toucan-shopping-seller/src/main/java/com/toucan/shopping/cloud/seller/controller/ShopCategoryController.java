@@ -324,6 +324,89 @@ public class ShopCategoryController {
 
 
 
+
+    /**
+     * 置顶
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/move/top",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveTop(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            return resultObjectVO;
+        }
+
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        try {
+
+            if(shopCategory.getId()==null)
+            {
+                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空!");
+                return resultObjectVO;
+            }
+
+            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
+            if(!CollectionUtils.isEmpty(sellerShops))
+            {
+                shopCategory.setShopId(sellerShops.get(0).getId());
+            }
+
+            if(shopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
+            queryShopCategory.setShopId(shopCategory.getShopId());
+            queryShopCategory.setParentId(shopCategory.getParentId());
+            List<ShopCategory> shopCategories = shopCategoryService.queryTop1(queryShopCategory);
+            if(CollectionUtils.isEmpty(shopCategories))
+            {
+                logger.warn("类别列表为空 param:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategory currentShopCategory = shopCategoryService.queryByIdAndUserMainIdAndShopId(shopCategory.getId(),shopCategory.getUserMainId(),shopCategory.getShopId());
+
+            if(currentShopCategory!=null) {
+                //置顶分类
+                ShopCategory shopCategoryTop = shopCategories.get(0);
+                long topSort =shopCategoryTop.getCategorySort();
+                shopCategoryTop.setCategorySort(currentShopCategory.getCategorySort());
+                currentShopCategory.setCategorySort(topSort);
+
+                //更新排序字段
+                shopCategoryService.updateCategorySort(currentShopCategory);
+                shopCategoryService.updateCategorySort(shopCategoryTop);
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
+
+
     /**
      * 根据ID查询
      * @param requestJsonVO
@@ -859,7 +942,7 @@ public class ShopCategoryController {
                 resultObjectVO.setMsg("店铺ID不能为空!");
                 return resultObjectVO;
             }
-            List<ShopCategory> shopCategorys = shopCategoryService.queryList(queryShopCategory);
+            List<ShopCategory> shopCategorys = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
             List<ShopCategoryVO> shopCategoryVOS = new ArrayList<ShopCategoryVO>();
             for(ShopCategory shopCategory:shopCategorys)
             {

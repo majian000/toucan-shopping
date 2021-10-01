@@ -13,6 +13,10 @@ public interface ShopCategoryMapper {
 
     List<ShopCategory> queryList(ShopCategoryVO shopCategory);
 
+    List<ShopCategory> queryListOrderByCategorySortAsc(ShopCategoryVO shopCategory);
+
+    List<ShopCategory> queryTop1(ShopCategoryVO shopCategory);
+
     List<ShopCategory> queryPcIndexList(ShopCategoryVO shopCategory);
 
     int insert(ShopCategory shopCategory);
@@ -30,6 +34,8 @@ public interface ShopCategoryMapper {
     Long queryMaxSort(Long userMainId,Long shopId);
 
     int update(ShopCategory shopCategory);
+
+    int updateCategorySort(ShopCategory shopCategory);
 
     int updateName(ShopCategory shopCategory);
 

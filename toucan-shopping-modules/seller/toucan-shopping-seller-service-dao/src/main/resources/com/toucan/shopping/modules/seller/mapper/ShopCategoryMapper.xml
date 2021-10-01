@@ -67,6 +67,26 @@
     </select>
 
 
+    <select id="queryListOrderByCategorySortAsc" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">
+        select t.* from t_shop_category t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+        </where>
+        order by category_sort asc
+    </select>
+
+
+    <select id="queryTop1" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">
+        select t.* from t_shop_category t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+        </where>
+        order by category_sort asc
+        limit 1
+    </select>
+
     <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
         select count(*) from t_shop_category t
         <where>
@@ -129,8 +149,13 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
-        update t_shop_category set name=#{name},href=#{href},remark=#{remark},parent_id=#{parentId},update_date=#{updateDate}
-          where id=#{id} and user_main_id=#{userMainId}
+        update t_shop_category set name=#{name},href=#{href},remark=#{remark},parent_id=#{parentId},update_date=#{updateDate},category_sort=#{categorySort}
+          where id=#{id}
+    </update>
+
+    <update id="updateCategorySort" parameterType="com.toucan.shopping.modules.seller.entity.ShopCategory">
+        update t_shop_category set category_sort=#{categorySort},update_date=#{updateDate}
+          where id=#{id} and user_main_id=#{userMainId} and shop_id=#{shopId}
     </update>
 
 

@@ -145,6 +145,21 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
             }
 
             @Override
+            public ResultObjectVO moveTop(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("移动店铺分类失败");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopCategoryService.moveTop失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询店铺分类失败");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO findByIdArray(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)

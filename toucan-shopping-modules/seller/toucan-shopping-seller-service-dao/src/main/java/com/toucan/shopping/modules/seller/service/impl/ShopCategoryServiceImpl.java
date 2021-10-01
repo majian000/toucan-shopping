@@ -24,35 +24,50 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
 
 
     @Override
-    public List<ShopCategory> queryList(ShopCategoryVO ShopCategory) {
-        return shopCategoryMapper.queryList(ShopCategory);
-    }
-
-    @Override
-    public List<ShopCategory> queryPcIndexList(ShopCategoryVO ShopCategory) {
-        return shopCategoryMapper.queryPcIndexList(ShopCategory);
+    public List<ShopCategory> queryList(ShopCategoryVO shopCategory) {
+        return shopCategoryMapper.queryList(shopCategory);
     }
 
 
     @Override
-    public int save(ShopCategory ShopCategory) {
-        return shopCategoryMapper.insert(ShopCategory);
+    public List<ShopCategory> queryListOrderByCategorySortAsc(ShopCategoryVO shopCategory) {
+        return shopCategoryMapper.queryListOrderByCategorySortAsc(shopCategory);
+    }
+
+    @Override
+    public List<ShopCategory> queryTop1(ShopCategoryVO shopCategory) {
+        return shopCategoryMapper.queryTop1(shopCategory);
+    }
+
+    @Override
+    public List<ShopCategory> queryPcIndexList(ShopCategoryVO shopCategory) {
+        return shopCategoryMapper.queryPcIndexList(shopCategory);
     }
 
 
     @Override
-    public int saves(ShopCategory[] ShopCategorys) {
-        return shopCategoryMapper.inserts(ShopCategorys);
+    public int save(ShopCategory shopCategory) {
+        return shopCategoryMapper.insert(shopCategory);
+    }
+
+
+    @Override
+    public int saves(ShopCategory[] shopCategorys) {
+        return shopCategoryMapper.inserts(shopCategorys);
     }
 
     @Override
-    public int update(ShopCategory ShopCategory) {
-        return shopCategoryMapper.update(ShopCategory);
+    public int update(ShopCategory shopCategory) {
+        return shopCategoryMapper.update(shopCategory);
     }
 
     @Override
-    public int updateName(ShopCategory ShopCategory) {
-        return shopCategoryMapper.updateName(ShopCategory);
+    public int updateCategorySort(ShopCategory shopCategory) {
+        return shopCategoryMapper.updateCategorySort(shopCategory);
+    }
+    @Override
+    public int updateName(ShopCategory shopCategory) {
+        return shopCategoryMapper.updateName(shopCategory);
     }
 
     @Override
@@ -77,8 +92,8 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
     }
 
     @Override
-    public Long queryCount(ShopCategory ShopCategory) {
-        return shopCategoryMapper.queryCount(ShopCategory);
+    public Long queryCount(ShopCategory shopCategory) {
+        return shopCategoryMapper.queryCount(shopCategory);
     }
 
     @Override
@@ -86,20 +101,20 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
         return shopCategoryMapper.queryMaxSort(userMainId,shopId);
     }
 
-    public void setChildrenByParentId(ShopCategoryVO ShopCategoryVO,List<ShopCategory> ShopCategoryList) throws InvocationTargetException, IllegalAccessException {
-        if(CollectionUtils.isNotEmpty(ShopCategoryList))
+    public void setChildrenByParentId(ShopCategoryVO shopCategoryVO,List<ShopCategory> shopCategoryList) throws InvocationTargetException, IllegalAccessException {
+        if(CollectionUtils.isNotEmpty(shopCategoryList))
         {
             List<ShopCategoryVO> childrenShopCategoryVoList = new ArrayList<ShopCategoryVO>();
-            for(ShopCategory ShopCategory:ShopCategoryList)
+            for(ShopCategory ShopCategory:shopCategoryList)
             {
                 ShopCategoryVO childShopCategoryVo = new ShopCategoryVO();
                 BeanUtils.copyProperties(childShopCategoryVo,ShopCategory);
-                if(ShopCategory!=null&&ShopCategoryVO.getId().longValue() == ShopCategory.getParentId().longValue()) {
+                if(ShopCategory!=null&&shopCategoryVO.getId().longValue() == ShopCategory.getParentId().longValue()) {
                     childrenShopCategoryVoList.add(childShopCategoryVo);
-                    setChildrenByParentId(childShopCategoryVo,ShopCategoryList);
+                    setChildrenByParentId(childShopCategoryVo,shopCategoryList);
                 }
             }
-            ShopCategoryVO.setChildren(childrenShopCategoryVoList);
+            shopCategoryVO.setChildren(childrenShopCategoryVoList);
         }
     }
 
@@ -122,8 +137,8 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
 
 
 
-    public void setChildren(List<ShopCategory> ShopCategorys, ShopCategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
-        for (ShopCategory ShopCategory : ShopCategorys) {
+    public void setChildren(List<ShopCategory> shopCategorys, ShopCategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {
+        for (ShopCategory ShopCategory : shopCategorys) {
             //为当前参数的子节点
             if(ShopCategory.getParentId().longValue()==currentNode.getId().longValue())
             {
@@ -136,7 +151,7 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
                 currentNode.getChildren().add(ShopCategoryTreeVO);
 
                 //查找当前节点的子节点
-                setChildren(ShopCategorys,ShopCategoryTreeVO);
+                setChildren(shopCategorys,ShopCategoryTreeVO);
             }
         }
     }
