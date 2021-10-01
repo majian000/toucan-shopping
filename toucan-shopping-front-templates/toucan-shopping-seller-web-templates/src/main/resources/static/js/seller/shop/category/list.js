@@ -47,7 +47,7 @@ function deleteRow(id,name)
     layer.confirm('确定删除'+name+'?', {
         btn: ['确定','关闭'], //按钮
         title:'提示信息'
-    }, function(){
+    }, function(index){
         $.ajax({
             type: "POST",
             url: basePath+'/api/shop/category/delete/'+id,
@@ -57,7 +57,7 @@ function deleteRow(id,name)
             success: function (data) {
                 if(data.code==1)
                 {
-
+                    layer.close(index);
                     drawTable();
                 }
             },
