@@ -49,16 +49,8 @@ public class ShopCategoryApiController extends BaseController {
     public ResultObjectVO save(HttpServletRequest request, @RequestBody ShopCategoryVO shopCategoryVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        String userMainId="-1";
         try {
-            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            boolean lockStatus = skylarkLock.lock(ShopCategoryRedisKey.getSaveLockKey(userMainId), userMainId);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试");
-                return resultObjectVO;
-            }
-
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopCategoryVO);
             resultObjectVO = feignShopCategoryService.save(requestJsonVO.sign(),requestJsonVO);
@@ -68,8 +60,6 @@ public class ShopCategoryApiController extends BaseController {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("保存失败,请稍后重试");
             logger.warn(e.getMessage(),e);
-        }finally{
-            skylarkLock.unLock(ShopCategoryRedisKey.getSaveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
@@ -88,12 +78,6 @@ public class ShopCategoryApiController extends BaseController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
         try {
-            boolean lockStatus = skylarkLock.lock(ShopCategoryRedisKey.getUpdateLockKey(userMainId), userMainId);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试");
-                return resultObjectVO;
-            }
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
 
             shopCategoryVO.setUserMainId(Long.parseLong(userMainId));
@@ -103,10 +87,8 @@ public class ShopCategoryApiController extends BaseController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请稍后重试");
+            resultObjectVO.setMsg("修改失败,请稍后重试");
             logger.warn(e.getMessage(),e);
-        }finally{
-            skylarkLock.unLock(ShopCategoryRedisKey.getUpdateLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }

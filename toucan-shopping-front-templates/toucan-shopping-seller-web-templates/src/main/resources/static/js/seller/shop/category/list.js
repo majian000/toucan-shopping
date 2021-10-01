@@ -57,9 +57,14 @@ function deleteRow(id,name)
             success: function (data) {
                 if(data.code==1)
                 {
-                    layer.close(index);
                     drawTable();
+                }else{
+                    $.message({
+                        message: data.msg,
+                        type: 'error'
+                    });
                 }
+                layer.close(index);
             },
             error: function (result) {
                 drawTable();
@@ -79,10 +84,7 @@ function moveTop(id,parentId)
         data:  JSON.stringify({"id":id,"parentId":parentId}),
         dataType: "json",
         success: function (data) {
-            if(data.code==1)
-            {
-                drawTable();
-            }
+            drawTable();
         },
         error: function (result) {
             drawTable();
@@ -99,10 +101,7 @@ function moveBottom(id,parentId)
         data:  JSON.stringify({"id":id,"parentId":parentId}),
         dataType: "json",
         success: function (data) {
-            if(data.code==1)
-            {
-                drawTable();
-            }
+            drawTable();
         },
         error: function (result) {
             drawTable();
@@ -120,10 +119,7 @@ function moveUp(id,parentId)
         data:  JSON.stringify({"id":id,"parentId":parentId}),
         dataType: "json",
         success: function (data) {
-            if(data.code==1)
-            {
-                drawTable();
-            }
+            drawTable();
         },
         error: function (result) {
             drawTable();
@@ -141,10 +137,7 @@ function moveDown(id,parentId)
         data:  JSON.stringify({"id":id,"parentId":parentId}),
         dataType: "json",
         success: function (data) {
-            if(data.code==1)
-            {
-                drawTable();
-            }
+            drawTable();
         },
         error: function (result) {
             drawTable();

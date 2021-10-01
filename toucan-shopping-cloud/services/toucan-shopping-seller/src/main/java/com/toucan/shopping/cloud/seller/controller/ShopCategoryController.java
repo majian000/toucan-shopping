@@ -281,25 +281,6 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-            queryShopCategory.setName(shopCategory.getName());
-            queryShopCategory.setShopId(shopCategory.getShopId());
-            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
-            queryShopCategory.setDeleteStatus((short)0);
-
-            List<ShopCategory> shopCategoryList = shopCategoryService.queryList(queryShopCategory);
-            if(!CollectionUtils.isEmpty(shopCategoryList))
-            {
-                if(shopCategory.getId().longValue() != shopCategoryList.get(0).getId().longValue())
-                {
-                    //释放锁
-                    skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("该分类名称已存在!");
-                    return resultObjectVO;
-                }
-            }
-
             shopCategory.setUpdateDate(new Date());
             int row = shopCategoryService.updateName(shopCategory);
             if (row < 1) {
