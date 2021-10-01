@@ -38,4 +38,4 @@ toucan:
   plugins:
     xss-filter:
       enabled: true
-      exclude-paths: /function/update  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+      exclude-paths: /function/update,/function/save  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
