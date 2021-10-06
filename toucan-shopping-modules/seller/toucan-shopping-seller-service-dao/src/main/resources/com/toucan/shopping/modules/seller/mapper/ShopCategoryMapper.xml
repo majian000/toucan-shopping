@@ -53,6 +53,10 @@
         <if test="name!=null and name!=''">
             and t.name = #{name}
         </if>
+
+        <if test="nameLike!=null and nameLike!=''">
+            and t.name  like concat(#{nameLike},'%')
+        </if>
     </sql>
 
     <select id="queryList" resultMap="shopCategoryMap" parameterType="com.toucan.shopping.modules.seller.vo.ShopCategoryVO">

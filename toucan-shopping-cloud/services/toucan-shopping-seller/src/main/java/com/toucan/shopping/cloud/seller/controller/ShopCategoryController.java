@@ -1157,7 +1157,7 @@ public class ShopCategoryController {
         }
         try {
             ShopCategoryVO queryShopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryVO.class);
-            resultObjectVO.setData(shopCategoryService.queryList(queryShopCategory));
+            resultObjectVO.setData(shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory));
 
         }catch(Exception e)
         {
@@ -1265,11 +1265,11 @@ public class ShopCategoryController {
 
             List<ShopCategoryTreeVO> ShopCategoryTreeVOS = new ArrayList<ShopCategoryTreeVO>();
             //按指定条件查询
-            if(StringUtils.isNotEmpty(queryPageInfo.getName()))
+            if(StringUtils.isNotEmpty(queryPageInfo.getNameLike()))
             {
                 ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-                queryShopCategory.setName(queryPageInfo.getName());
-                List<ShopCategory> categories = shopCategoryService.queryList(queryShopCategory);
+                queryShopCategory.setNameLike(queryPageInfo.getNameLike());
+                List<ShopCategory> categories = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
                 for (int i = 0; i < categories.size(); i++) {
                     ShopCategory ShopCategory = categories.get(i);
                     ShopCategoryTreeVO ShopCategoryTreeVO = new ShopCategoryTreeVO();
@@ -1280,7 +1280,7 @@ public class ShopCategoryController {
                 //查询当前节点下的所有子节点
                 ShopCategoryVO queryShopCategory = new ShopCategoryVO();
                 queryShopCategory.setParentId(queryPageInfo.getParentId());
-                List<ShopCategory> categories = shopCategoryService.queryList(queryShopCategory);
+                List<ShopCategory> categories = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
                 for (int i = 0; i < categories.size(); i++) {
                     ShopCategory ShopCategory = categories.get(i);
                     ShopCategoryTreeVO ShopCategoryTreeVO = new ShopCategoryTreeVO();

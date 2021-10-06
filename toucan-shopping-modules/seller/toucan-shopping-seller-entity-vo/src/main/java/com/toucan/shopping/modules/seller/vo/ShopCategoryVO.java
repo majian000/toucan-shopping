@@ -42,4 +42,9 @@ public class ShopCategoryVO extends ShopCategory {
      * 所有根节点链接
      */
     private String rootLinks;
+
+    /**
+     * 模糊查询名称
+     */
+    private String nameLike;
 }

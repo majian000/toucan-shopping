@@ -27,7 +27,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                                <input type="text" name="nameLike" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
@@ -127,20 +127,8 @@
                                 }
                                 return d.type;
                             }},
-                        {field: 'showStatus', title: '显示状态', templet: function (d) {
-                                if (d.showStatus == 1) {
-                                    return '显示';
-                                } else if (d.showStatus == 0) {
-                                    return '隐藏';
-                                }
-                                return d.showStatus;
-                            }},
-                        {field: 'href', title: '跳转路径'},
-                        {field: 'noticeTips', width: 260,  title: '注意事项'},
                         {field: 'remark', width: 260,  title: '备注'},
-                        {field: 'createAdminUsername', title: '创建人'},
                         {field: 'createDate',  title: '创建时间'},
-                        {field: 'updateAdminUsername',  title: '修改人'},
                         {field: 'updateDate',  title: '修改时间'},
                         {templet: '#shopCategoryTreeTableToolbar', width: 200, align: 'center', title: '操作'}
                     ]

@@ -23,6 +23,7 @@ public class ShopCategoryTreeInfo extends PageInfo<ShopCategoryVO> {
 
     private String name;
 
+    private String nameLike;
 
     private Long parentId; //上级类别
 
