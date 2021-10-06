@@ -37,6 +37,11 @@ public class ShopCategoryTreeInfo extends PageInfo<ShopCategoryVO> {
      */
     private String adminId;
 
+    /**
+     * 店铺ID
+     */
+    private Long shopId;
+
     //==============================================
 
 

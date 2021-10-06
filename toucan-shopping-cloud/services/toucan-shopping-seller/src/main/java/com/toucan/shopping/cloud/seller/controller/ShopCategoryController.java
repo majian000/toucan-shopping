@@ -1098,6 +1098,12 @@ public class ShopCategoryController {
         try {
             ShopCategoryTreeInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategoryTreeInfo.class);
 
+            if(queryPageInfo.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到店铺ID");
+                return resultObjectVO;
+            }
             //查询所有结构树
             List<ShopCategoryVO>  ShopCategoryVOS = shopCategoryService.findTreeTable(queryPageInfo);
 

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <input type="hidden" name="id" th:value="${model.id}" />
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required" >名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" id="name"  th:value="${model.name}"  lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入类别名称" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <label class="layui-form-label " >图标</label>
+        <div class="layui-input-block">
+            <input type="text" name="icon" id="icon"  th:value="${model.icon}"  maxlength="200" lay-reqtext="图标不能为空" placeholder="请输入类别图标" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">上级节点</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="parentId" id="parentId" th:value="${model.parentId}" >
+            <input type="text" readonly  id="selectPid"  lay-verify="required"  th:value="${model.parentName}"   placeholder="请选择上级节点" value="" class="layui-input" >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">类型</label>
+        <div class="layui-input-block" th:if="${model.type eq 1}" >
+            <input type="radio" name="type" value="1" title="pc端" checked="">
+            <input type="radio" name="type" value="2" title="移动端">
+        </div>
+        <div class="layui-input-block" th:if="${model.type eq 2}" >
+            <input type="radio" name="type" value="1" title="pc端" >
+            <input type="radio" name="type" value="2" title="移动端" checked="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="categorySort"  placeholder="请输入排序"  th:value="${model.categorySort}" value="" class="layui-input" lay-verify="number">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">显示状态</label>
+        <div class="layui-input-block" th:if="${model.showStatus eq 1}" >
+            <input type="radio" name="showStatus" value="1" title="显示" checked="">
+            <input type="radio" name="showStatus" value="0" title="隐藏" >
+        </div>
+        <div class="layui-input-block" th:if="${model.showStatus eq 0}">
+            <input type="radio" name="showStatus" value="1" title="显示" >
+            <input type="radio" name="showStatus" value="0" title="隐藏" checked="" >
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <label class="layui-form-label" >跳转路径</label>
+        <div class="layui-input-block">
+            <input type="text" name="href" id="href"  maxlength="200" th:value="${model.href}" placeholder="请输入类别图标" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">注意事项</label>
+        <div class="layui-input-block">
+            <textarea name="noticeTips" class="layui-textarea" maxlength="500" th:text="${model.noticeTips}"  placeholder="请输入注意事项"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="255"  th:text="${model.remark}" placeholder="请输入备注信息"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form','layer','tree'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            $.ajax({
+                url:"[[@{/category/update}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                }
+            });
+            return false;
+        });
+
+
+
+        $("#selectPid").click(function(){
+            loadding = layer.load();
+            index = layer.open({
+                title: '选择上级节点',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+                shadeClose: true,
+                area: ['20%', '60%'],
+                content: "<div id='areaTree'></div>",
+                success:function(layero){
+                    $.ajax({
+                        url:"[[@{/}]]category/query/tree",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:null,
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#areaTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        $("#selectPid").val(obj.data.title);
+                                        $("#parentId").val(obj.data.id);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        })
+    });
+</script>
+</body>
+</html>

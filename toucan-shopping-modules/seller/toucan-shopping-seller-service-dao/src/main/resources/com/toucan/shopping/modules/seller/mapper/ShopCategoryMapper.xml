@@ -191,6 +191,7 @@
                 and t.name like concat('%',#{name},'%')
 
             </if>
+            and t.shop_id=#{shopId}
             and t.delete_status = 0
         </where>
 

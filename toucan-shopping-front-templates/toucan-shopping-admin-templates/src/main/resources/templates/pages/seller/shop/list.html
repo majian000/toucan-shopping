@@ -312,6 +312,21 @@
                     layer.full(index);
                 });
                 return false;
+            }else if (obj.event === 'categoryList') {
+
+                var index = layer.open({
+                    title: '查看分类',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]seller/shop/category/listPage/"+data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除该店铺?', function (index) {
                     $.ajax({
