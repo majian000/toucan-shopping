@@ -39,6 +39,21 @@ public class FeignShopCategoryServiceFallbackFactory implements FallbackFactory<
             }
 
             @Override
+            public ResultObjectVO saveForAdmin(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("保存店铺分类失败");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopCategoryService.saveForAdmin失败 sign{} params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存店铺分类失败");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO update(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)

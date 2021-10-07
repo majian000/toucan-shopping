@@ -17,11 +17,12 @@
 </head>
 <body>
 <div class="layui-form layuimini-form">
-
+    <input type="hidden" id="parentId" name="parentId" th:value="${parentId}"/>
+    <input type="hidden" id="shopId" name="shopId" th:value="${shopId}"/>
     <div class="layui-form-item" >
         <label class="layui-form-label required" >名称</label>
         <div class="layui-input-block">
-            <input type="text" name="name" id="name"  lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入类别名称" value="" class="layui-input">
+            <input type="text" name="name" id="name"  lay-verify="required" maxlength="25" lay-reqtext="名称不能为空" placeholder="请输入类别名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">

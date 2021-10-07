@@ -73,10 +73,11 @@ public class ShopCategoryController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/addPage/{shopId}",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request,@PathVariable Long shopId)
+    @RequestMapping(value = "/addPage/{shopId}/{parentId}",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request,@PathVariable Long shopId,@PathVariable Long parentId)
     {
         request.setAttribute("shopId",shopId);
+        request.setAttribute("parentId",parentId);
         return "pages/seller/shopCategory/add.html";
     }
 
@@ -146,7 +147,7 @@ public class ShopCategoryController extends UIController {
         try {
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignShopCategoryService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignShopCategoryService.saveForAdmin(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

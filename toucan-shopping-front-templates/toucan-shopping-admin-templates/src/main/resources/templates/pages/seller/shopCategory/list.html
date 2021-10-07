@@ -168,36 +168,10 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/seller/shop/category/addPage/}]]"+shopId
+                    content: "[[@{/}]]seller/shop/category/addPage/"+shopId+"/-1"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var data = treetableHandler.checkStatus();
-                if(data==null||data.length<=0)
-                {
-                    layer.msg("请选择要操作的记录");
-                    return;
-                }
-                layer.confirm('确定删除类别?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]seller/shop/category/delete/ids",
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            loadTreeTable();
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
                 });
             }
         });

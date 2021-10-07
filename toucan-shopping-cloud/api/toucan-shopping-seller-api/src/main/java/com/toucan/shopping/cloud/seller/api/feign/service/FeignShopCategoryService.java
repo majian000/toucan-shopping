@@ -16,6 +16,15 @@ public interface FeignShopCategoryService {
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 保存分类(后台管理端)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/save",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO saveForAdmin(@RequestBody RequestJsonVO requestJsonVO);
+
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
