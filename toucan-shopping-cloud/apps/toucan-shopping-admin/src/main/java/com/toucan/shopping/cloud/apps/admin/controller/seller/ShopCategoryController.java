@@ -247,14 +247,13 @@ public class ShopCategoryController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody CategoryVO entity)
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody ShopCategoryVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignShopCategoryService.update(requestJsonVO);
+            resultObjectVO = feignShopCategoryService.updateForAdmin(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

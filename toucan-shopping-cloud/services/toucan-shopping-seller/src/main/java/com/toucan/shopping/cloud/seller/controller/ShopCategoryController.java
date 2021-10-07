@@ -470,6 +470,100 @@ public class ShopCategoryController {
 
 
 
+    /**
+     * 更新分类(后台管理端)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateForAdmin(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        String shopCategoryId = String.valueOf(shopCategory.getId());
+        try {
+
+            boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请稍后重试");
+                return resultObjectVO;
+            }
+
+
+            if(StringUtils.isEmpty(shopCategory.getName()))
+            {
+                //释放锁
+                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
+
+                logger.warn("分类名称为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类名称不能为空!");
+                return resultObjectVO;
+            }
+
+
+            if(shopCategory.getId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
+
+                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空!");
+                return resultObjectVO;
+            }
+
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setId(shopCategory.getShopId());
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            if(!CollectionUtils.isEmpty(sellerShops))
+            {
+                shopCategory.setUserMainId(sellerShops.get(0).getUserMainId());
+            }
+
+            if(shopCategory.getUserMainId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopCategoryId), shopCategoryId);
+
+                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+
+            shopCategory.setUpdateDate(new Date());
+            int row = shopCategoryService.updateName(shopCategory);
+            if (row < 1) {
+                //释放锁
+                skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改失败,请稍后重试!");
+            logger.warn(e.getMessage(),e);
+        }finally{
+            skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
+        }
+
+        return resultObjectVO;
+    }
+
+
 
 
     /**

@@ -28,6 +28,13 @@ public interface FeignShopCategoryService {
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 更新分类(后台管理端)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateForAdmin(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
