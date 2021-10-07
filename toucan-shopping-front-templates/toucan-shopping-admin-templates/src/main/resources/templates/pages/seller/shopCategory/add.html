@@ -24,58 +24,6 @@
             <input type="text" name="name" id="name"  lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入类别名称" value="" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item" >
-        <label class="layui-form-label " >图标</label>
-        <div class="layui-input-block">
-            <input type="text" name="icon" id="icon"  maxlength="200" lay-reqtext="图标不能为空" placeholder="请输入类别图标" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">上级节点</label>
-        <div class="layui-input-block">
-            <input type="hidden" name="parentId" id="parentId">
-            <input type="text" readonly  id="selectPid" lay-verify="required"  placeholder="请选择上级节点" value="" class="layui-input" >
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">类型</label>
-        <div class="layui-input-block">
-            <input type="radio" name="type" value="1" title="pc端" checked="">
-            <input type="radio" name="type" value="2" title="移动端">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">排序</label>
-        <div class="layui-input-block">
-            <input type="number" name="categorySort"  placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">显示状态</label>
-        <div class="layui-input-block">
-            <input type="radio" name="showStatus" value="1" title="显示" checked="">
-            <input type="radio" name="showStatus" value="0" title="隐藏" >
-        </div>
-    </div>
-    <div class="layui-form-item" >
-        <label class="layui-form-label" >跳转路径</label>
-        <div class="layui-input-block">
-            <input type="text" name="href" id="href"  maxlength="200" placeholder="请输入类别图标" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">注意事项</label>
-        <div class="layui-input-block">
-            <textarea name="noticeTips" class="layui-textarea" maxlength="500" placeholder="请输入注意事项"></textarea>
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">备注信息</label>
-        <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
-        </div>
-    </div>
-
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
@@ -94,7 +42,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/category/save}]]",
+                url:"[[@{/seller/shop/category/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

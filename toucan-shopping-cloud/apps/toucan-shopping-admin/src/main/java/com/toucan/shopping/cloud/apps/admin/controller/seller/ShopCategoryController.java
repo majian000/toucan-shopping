@@ -73,9 +73,10 @@ public class ShopCategoryController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
+    @RequestMapping(value = "/addPage/{shopId}",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request,@PathVariable Long shopId)
     {
+        request.setAttribute("shopId",shopId);
         return "pages/seller/shopCategory/add.html";
     }
 

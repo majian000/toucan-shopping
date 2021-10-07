@@ -25,65 +25,6 @@
             <input type="text" name="name" id="name"  th:value="${model.name}"  lay-verify="required" maxlength="100" lay-reqtext="名称不能为空" placeholder="请输入类别名称" value="" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item" >
-        <label class="layui-form-label " >图标</label>
-        <div class="layui-input-block">
-            <input type="text" name="icon" id="icon"  th:value="${model.icon}"  maxlength="200" lay-reqtext="图标不能为空" placeholder="请输入类别图标" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">上级节点</label>
-        <div class="layui-input-block">
-            <input type="hidden" name="parentId" id="parentId" th:value="${model.parentId}" >
-            <input type="text" readonly  id="selectPid"  lay-verify="required"  th:value="${model.parentName}"   placeholder="请选择上级节点" value="" class="layui-input" >
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">类型</label>
-        <div class="layui-input-block" th:if="${model.type eq 1}" >
-            <input type="radio" name="type" value="1" title="pc端" checked="">
-            <input type="radio" name="type" value="2" title="移动端">
-        </div>
-        <div class="layui-input-block" th:if="${model.type eq 2}" >
-            <input type="radio" name="type" value="1" title="pc端" >
-            <input type="radio" name="type" value="2" title="移动端" checked="">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">排序</label>
-        <div class="layui-input-block">
-            <input type="number" name="categorySort"  placeholder="请输入排序"  th:value="${model.categorySort}" value="" class="layui-input" lay-verify="number">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">显示状态</label>
-        <div class="layui-input-block" th:if="${model.showStatus eq 1}" >
-            <input type="radio" name="showStatus" value="1" title="显示" checked="">
-            <input type="radio" name="showStatus" value="0" title="隐藏" >
-        </div>
-        <div class="layui-input-block" th:if="${model.showStatus eq 0}">
-            <input type="radio" name="showStatus" value="1" title="显示" >
-            <input type="radio" name="showStatus" value="0" title="隐藏" checked="" >
-        </div>
-    </div>
-    <div class="layui-form-item" >
-        <label class="layui-form-label" >跳转路径</label>
-        <div class="layui-input-block">
-            <input type="text" name="href" id="href"  maxlength="200" th:value="${model.href}" placeholder="请输入类别图标" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">注意事项</label>
-        <div class="layui-input-block">
-            <textarea name="noticeTips" class="layui-textarea" maxlength="500" th:text="${model.noticeTips}"  placeholder="请输入注意事项"></textarea>
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">备注信息</label>
-        <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255"  th:text="${model.remark}" placeholder="请输入备注信息"></textarea>
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
@@ -103,7 +44,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/category/update}]]",
+                url:"[[@{/seller/shop/category/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -127,52 +68,6 @@
             return false;
         });
 
-
-
-        $("#selectPid").click(function(){
-            loadding = layer.load();
-            index = layer.open({
-                title: '选择上级节点',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-                shadeClose: true,
-                area: ['20%', '60%'],
-                content: "<div id='areaTree'></div>",
-                success:function(layero){
-                    $.ajax({
-                        url:"[[@{/}]]category/query/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#areaTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        $("#selectPid").val(obj.data.title);
-                                        $("#parentId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
-
-                }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-
-        })
     });
 </script>
 </body>

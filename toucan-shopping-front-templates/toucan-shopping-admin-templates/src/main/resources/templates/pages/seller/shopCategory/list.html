@@ -168,6 +168,7 @@
         treetable.on('toolbar(shopCategoryTreeTable)', function (obj) {
 
             if (obj.event === 'add') {  // 监听添加操作
+                var shopId = $("#shopId").val();
                 var index = layer.open({
                     title: '添加类别',
                     type: 2,
@@ -175,7 +176,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: "[[@{/seller/shop/category/addPage}]]",
+                    content: "[[@{/seller/shop/category/addPage/}]]"+shopId
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -254,7 +255,7 @@
                     url:"[[@{/}]]seller/shop/category/move/up",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
-                    data:JSON.stringify({shopId:data.shopId,categoryId:data.id}),
+                    data:JSON.stringify({shopId:data.shopId,id:data.id}),
                     success:function(data){
                         layer.msg(data.msg);
 
@@ -277,7 +278,7 @@
                     url:"[[@{/}]]seller/shop/category/move/up",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
-                    data:JSON.stringify({shopId:data.shopId,categoryId:data.id}),
+                    data:JSON.stringify({shopId:data.shopId,id:data.id}),
                     success:function(data){
                         layer.msg(data.msg);
 
