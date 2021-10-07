@@ -182,6 +182,7 @@
         });
 
         treetable.on('tool(shopCategoryTreeTable)', function (obj) {
+            var shopId = $("#shopId").val();
             var data = obj.data;
             if (obj.event === 'edit') {
                 var index = layer.open({
@@ -192,6 +193,20 @@
                     shadeClose: true,
                     area: ['100%', '100%'],
                     content: '[[@{/}]]seller/shop/category/editPage/'+data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }else if (obj.event === 'addChildCategory') {
+                var index = layer.open({
+                    title: '添加子分类',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: "[[@{/}]]seller/shop/category/addPage/"+shopId+"/"+data.id,
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

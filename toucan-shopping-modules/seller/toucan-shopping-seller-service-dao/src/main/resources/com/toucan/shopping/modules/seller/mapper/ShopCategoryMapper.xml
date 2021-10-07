@@ -114,7 +114,7 @@
 
     <select id="queryMaxSort" resultType="java.lang.Long" >
         select max(category_sort) from t_shop_category t
-        where  1=1  and t.shop_id = #{shopId} and t.user_main_id=#{userMainId}
+        where  1=1  and t.shop_id = #{shopId} and t.user_main_id=#{userMainId} and t.delete_status=0
     </select>
 
 

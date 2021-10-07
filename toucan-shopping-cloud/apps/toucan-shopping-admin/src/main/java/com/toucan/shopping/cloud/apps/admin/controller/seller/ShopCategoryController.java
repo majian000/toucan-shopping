@@ -141,11 +141,10 @@ public class ShopCategoryController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody CategoryVO entity)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody ShopCategoryVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignShopCategoryService.saveForAdmin(requestJsonVO);
         }catch(Exception e)
