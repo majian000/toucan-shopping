@@ -389,6 +389,83 @@ public class ShopCategoryController {
     }
 
 
+
+    /**
+     * 置顶
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/top",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveTopForAdmin(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            return resultObjectVO;
+        }
+
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        try {
+
+            if(shopCategory.getId()==null)
+            {
+                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空!");
+                return resultObjectVO;
+            }
+
+            if(shopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
+            queryShopCategory.setShopId(shopCategory.getShopId());
+            queryShopCategory.setParentId(shopCategory.getParentId());
+            List<ShopCategory> shopCategories = shopCategoryService.queryTop1(queryShopCategory);
+            if(CollectionUtils.isEmpty(shopCategories))
+            {
+                logger.warn("类别列表为空 param:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategory currentShopCategory = shopCategoryService.queryByIdAndUserMainIdAndShopId(shopCategory.getId(),shopCategory.getUserMainId(),shopCategory.getShopId());
+
+            if(currentShopCategory!=null) {
+                //置顶分类
+                ShopCategory shopCategoryTop = shopCategories.get(0);
+                if(currentShopCategory.getId().longValue()!=shopCategoryTop.getId().longValue()) {
+                    long topSort = shopCategoryTop.getCategorySort();
+                    shopCategoryTop.setCategorySort(currentShopCategory.getCategorySort());
+                    currentShopCategory.setCategorySort(topSort);
+
+                    //更新排序字段
+                    shopCategoryService.updateCategorySort(currentShopCategory);
+                    shopCategoryService.updateCategorySort(shopCategoryTop);
+                }
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
     /**
      * 置底
      * @param requestJsonVO
@@ -422,6 +499,84 @@ public class ShopCategoryController {
             if(!CollectionUtils.isEmpty(sellerShops))
             {
                 shopCategory.setShopId(sellerShops.get(0).getId());
+            }
+
+            if(shopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
+            queryShopCategory.setShopId(shopCategory.getShopId());
+            queryShopCategory.setParentId(shopCategory.getParentId());
+            List<ShopCategory> shopCategories = shopCategoryService.queryBottom1(queryShopCategory);
+            if(CollectionUtils.isEmpty(shopCategories))
+            {
+                logger.warn("类别列表为空 param:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategory currentShopCategory = shopCategoryService.queryByIdAndUserMainIdAndShopId(shopCategory.getId(),shopCategory.getUserMainId(),shopCategory.getShopId());
+
+            if(currentShopCategory!=null) {
+                //置底分类
+                ShopCategory shopCategoryBottom = shopCategories.get(0);
+                if(currentShopCategory.getId().longValue()!=shopCategoryBottom.getId().longValue()) {
+                    long topSort = shopCategoryBottom.getCategorySort();
+                    shopCategoryBottom.setCategorySort(currentShopCategory.getCategorySort());
+                    currentShopCategory.setCategorySort(topSort);
+
+                    //更新排序字段
+                    shopCategoryService.updateCategorySort(currentShopCategory);
+                    shopCategoryService.updateCategorySort(shopCategoryBottom);
+                }
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 置底
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveBottomForAdmin(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            return resultObjectVO;
+        }
+
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        try {
+
+            if(shopCategory.getId()==null)
+            {
+                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空!");
+                return resultObjectVO;
             }
 
             if(shopCategory.getShopId()==null)
@@ -570,6 +725,100 @@ public class ShopCategoryController {
     }
 
 
+
+
+    /**
+     * 向上(后台管理端)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/up",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveUpForAdmin(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            return resultObjectVO;
+        }
+
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        try {
+
+            if(shopCategory.getId()==null)
+            {
+                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空!");
+                return resultObjectVO;
+            }
+
+            if(shopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
+            queryShopCategory.setShopId(shopCategory.getShopId());
+            queryShopCategory.setParentId(shopCategory.getParentId());
+            List<ShopCategory> shopCategories = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
+            if(CollectionUtils.isEmpty(shopCategories))
+            {
+                logger.warn("类别列表为空 param:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategory currentShopCategory = null;
+            ShopCategory shopCategoryUp = null; //上一个分类
+
+            //查询出当前分类
+            for(int i=0;i<shopCategories.size();i++)
+            {
+                if(shopCategories.get(i).getId().longValue()==shopCategory.getId().longValue())
+                {
+                    currentShopCategory = shopCategories.get(i);
+                    if(i==0) //如果当前排序已经置顶
+                    {
+                        shopCategoryUp = currentShopCategory;
+                    }else{
+                        shopCategoryUp = shopCategories.get(i-1);
+                    }
+                }
+            }
+
+
+            if(currentShopCategory!=null) {
+                if(currentShopCategory.getId().longValue()!=shopCategoryUp.getId().longValue()) {
+                    long topSort = shopCategoryUp.getCategorySort();
+                    shopCategoryUp.setCategorySort(currentShopCategory.getCategorySort());
+                    currentShopCategory.setCategorySort(topSort);
+
+                    //更新排序字段
+                    shopCategoryService.updateCategorySort(currentShopCategory);
+                    shopCategoryService.updateCategorySort(shopCategoryUp);
+                }
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
+
     /**
      * 向下
      * @param requestJsonVO
@@ -603,6 +852,100 @@ public class ShopCategoryController {
             if(!CollectionUtils.isEmpty(sellerShops))
             {
                 shopCategory.setShopId(sellerShops.get(0).getId());
+            }
+
+            if(shopCategory.getShopId()==null)
+            {
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setUserMainId(shopCategory.getUserMainId());
+            queryShopCategory.setShopId(shopCategory.getShopId());
+            queryShopCategory.setParentId(shopCategory.getParentId());
+            List<ShopCategory> shopCategories = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
+            if(CollectionUtils.isEmpty(shopCategories))
+            {
+                logger.warn("类别列表为空 param:{}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopCategory currentShopCategory = null;
+            ShopCategory shopCategoryDown = null; //上一个分类
+
+            //查询出当前分类
+            for(int i=0;i<shopCategories.size();i++)
+            {
+                if(shopCategories.get(i).getId().longValue()==shopCategory.getId().longValue())
+                {
+                    currentShopCategory = shopCategories.get(i);
+                    if((i+1)==shopCategories.size()) //如果当前排序已经置底
+                    {
+                        shopCategoryDown = currentShopCategory;
+                    }else{
+                        shopCategoryDown = shopCategories.get(i+1);
+                    }
+                }
+            }
+
+
+            if(currentShopCategory!=null) {
+                if(currentShopCategory.getId().longValue()!=shopCategoryDown.getId().longValue()) {
+                    long topSort = shopCategoryDown.getCategorySort();
+                    shopCategoryDown.setCategorySort(currentShopCategory.getCategorySort());
+                    currentShopCategory.setCategorySort(topSort);
+
+                    //更新排序字段
+                    shopCategoryService.updateCategorySort(currentShopCategory);
+                    shopCategoryService.updateCategorySort(shopCategoryDown);
+                }
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 向下(后台管理端)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO moveDownForAdmin(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("移动失败,请稍后重试!");
+            return resultObjectVO;
+        }
+
+        ShopCategory shopCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopCategory.class);
+        try {
+
+            if(shopCategory.getId()==null)
+            {
+                logger.warn("分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空!");
+                return resultObjectVO;
             }
 
             if(shopCategory.getShopId()==null)
@@ -1268,6 +1611,7 @@ public class ShopCategoryController {
             if(StringUtils.isNotEmpty(queryPageInfo.getNameLike()))
             {
                 ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+                queryShopCategory.setShopId(queryPageInfo.getShopId());
                 queryShopCategory.setNameLike(queryPageInfo.getNameLike());
                 List<ShopCategory> categories = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
                 for (int i = 0; i < categories.size(); i++) {
@@ -1279,6 +1623,7 @@ public class ShopCategoryController {
             }else {
                 //查询当前节点下的所有子节点
                 ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+                queryShopCategory.setShopId(queryPageInfo.getShopId());
                 queryShopCategory.setParentId(queryPageInfo.getParentId());
                 List<ShopCategory> categories = shopCategoryService.queryListOrderByCategorySortAsc(queryShopCategory);
                 for (int i = 0; i < categories.size(); i++) {

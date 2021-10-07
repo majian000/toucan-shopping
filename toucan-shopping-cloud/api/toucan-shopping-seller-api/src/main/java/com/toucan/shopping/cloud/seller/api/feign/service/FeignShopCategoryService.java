@@ -86,6 +86,14 @@ public interface FeignShopCategoryService {
 
 
     /**
+     * 置顶
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/top",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO moveTopForAdmin(@RequestBody RequestJsonVO requestJsonVO);
+
+    /**
      * 置底
      * @param requestJsonVO
      * @return
@@ -93,6 +101,14 @@ public interface FeignShopCategoryService {
     @RequestMapping(value="/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO moveBottom(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 置底
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/bottom",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO moveBottomForAdmin(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 向上
@@ -103,6 +119,15 @@ public interface FeignShopCategoryService {
     ResultObjectVO moveUp(@RequestBody RequestJsonVO requestJsonVO);
 
 
+
+    /**
+     * 向上(后台管理端)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/up",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public ResultObjectVO moveUpForAdmin(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 向下
      * @param requestJsonVO
@@ -110,6 +135,16 @@ public interface FeignShopCategoryService {
      */
     @RequestMapping(value="/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO moveDown(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 向下(后台管理端)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/move/down",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO moveDownForAdmin(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID数组查询

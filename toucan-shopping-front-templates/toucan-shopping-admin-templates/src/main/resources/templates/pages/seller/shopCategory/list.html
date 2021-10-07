@@ -206,56 +206,6 @@
                         }
                     });
                 });
-            }else if (obj.event === 'flushIndexCache') {
-                layer.confirm('确定刷新缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]seller/shop/category/flush/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:null,
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('categoryTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event === 'clearCacheToolbar') {
-                layer.confirm('确定清空缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]seller/shop/category/clear/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:null,
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('categoryTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
             }
         });
 
@@ -298,6 +248,75 @@
                             layer.close(index);
                         }
                     });
+                });
+            }else if (obj.event === 'moveUp') {
+                $.ajax({
+                    url:"[[@{/}]]seller/shop/category/move/up",
+                    contentType: "application/json; charset=utf-8",
+                    type:'POST',
+                    data:JSON.stringify({shopId:data.shopId,categoryId:data.id}),
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        table.reload('categoryTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: data.field
+                        }, 'data');
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            }else if (obj.event === 'moveDown') {
+                $.ajax({
+                    url:"[[@{/}]]seller/shop/category/move/up",
+                    contentType: "application/json; charset=utf-8",
+                    type:'POST',
+                    data:JSON.stringify({shopId:data.shopId,categoryId:data.id}),
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        table.reload('categoryTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: data.field
+                        }, 'data');
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            }else if (obj.event === 'moveDown') {
+                $.ajax({
+                    url:"[[@{/}]]seller/shop/category/move/up",
+                    contentType: "application/json; charset=utf-8",
+                    type:'POST',
+                    data:JSON.stringify({shopId:data.shopId,categoryId:data.id}),
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        table.reload('categoryTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: data.field
+                        }, 'data');
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
                 });
             }
         });

@@ -72,7 +72,7 @@ ribbon:
 toucan:
   user:
     default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
-  app-name: 商城后台
+  app-name: 犀鸟商城
   app-code: 10001002 #自定义应用编码
   #雪花算法ID相关
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
