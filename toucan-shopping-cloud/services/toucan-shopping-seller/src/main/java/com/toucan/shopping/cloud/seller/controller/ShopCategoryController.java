@@ -427,6 +427,15 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
+
+            if(shopCategory.getParentId()==null)
+            {
+                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级分类ID不能为空!");
+                return resultObjectVO;
+            }
+
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
             queryShopCategory.setShopId(shopCategory.getShopId());
@@ -440,7 +449,7 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            ShopCategory currentShopCategory = shopCategoryService.queryByIdAndUserMainIdAndShopId(shopCategory.getId(),shopCategory.getUserMainId(),shopCategory.getShopId());
+            ShopCategory currentShopCategory = shopCategoryService.queryByIdAndShopId(shopCategory.getId(),shopCategory.getShopId());
 
             if(currentShopCategory!=null) {
                 //置顶分类
@@ -587,6 +596,14 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
+            if(shopCategory.getParentId()==null)
+            {
+                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级分类ID不能为空!");
+                return resultObjectVO;
+            }
+
             ShopCategoryVO queryShopCategory = new ShopCategoryVO();
             queryShopCategory.setUserMainId(shopCategory.getUserMainId());
             queryShopCategory.setShopId(shopCategory.getShopId());
@@ -600,7 +617,7 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            ShopCategory currentShopCategory = shopCategoryService.queryByIdAndUserMainIdAndShopId(shopCategory.getId(),shopCategory.getUserMainId(),shopCategory.getShopId());
+            ShopCategory currentShopCategory = shopCategoryService.queryByIdAndShopId(shopCategory.getId(),shopCategory.getShopId());
 
             if(currentShopCategory!=null) {
                 //置底分类
@@ -761,6 +778,13 @@ public class ShopCategoryController {
                 logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            if(shopCategory.getParentId()==null)
+            {
+                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级分类ID不能为空!");
                 return resultObjectVO;
             }
 
@@ -953,6 +977,14 @@ public class ShopCategoryController {
                 logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(shopCategory));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+            if(shopCategory.getParentId()==null)
+            {
+                logger.warn("上级分类ID为空 param:"+ JSONObject.toJSONString(shopCategory));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("上级分类ID不能为空!");
                 return resultObjectVO;
             }
 

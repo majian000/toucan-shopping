@@ -84,6 +84,10 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
         return shopCategoryMapper.queryByIdAndUserMainIdAndShopId(id,userMainId,shopId);
     }
 
+    @Override
+    public ShopCategory queryByIdAndShopId(Long id, Long shopId) {
+        return shopCategoryMapper.queryByIdAndShopId(id,shopId);
+    }
     @Transactional
     @Override
     public int deleteById(Long id) {

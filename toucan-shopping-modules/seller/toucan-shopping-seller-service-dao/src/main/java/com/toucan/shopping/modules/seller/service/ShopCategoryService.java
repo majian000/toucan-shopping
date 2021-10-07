@@ -50,6 +50,9 @@ public interface ShopCategoryService {
 
     ShopCategory queryByIdAndUserMainIdAndShopId(Long id,Long userMainId,Long shopId);
 
+
+    ShopCategory queryByIdAndShopId(Long id,Long shopId);
+
     int deleteById(Long id);
 
     List<ShopCategory> findByParentId(Long parentId);

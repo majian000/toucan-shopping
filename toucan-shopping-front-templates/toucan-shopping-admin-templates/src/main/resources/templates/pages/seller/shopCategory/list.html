@@ -119,18 +119,10 @@
                         {field: 'name', width: 200, title: '名称'},
                         {field: 'icon', width: 100,  title: '图标'},
                         {field: 'categorySort', title: '排序'},
-                        {field: 'type', title: '类型', templet: function (d) {
-                                if (d.type == 1) {
-                                    return 'PC端';
-                                } else if (d.type == 2) {
-                                    return '移动端';
-                                }
-                                return d.type;
-                            }},
                         {field: 'remark', width: 260,  title: '备注'},
                         {field: 'createDate',  title: '创建时间'},
                         {field: 'updateDate',  title: '修改时间'},
-                        {templet: '#shopCategoryTreeTableToolbar', width: 200, align: 'center', title: '操作'}
+                        {templet: '#shopCategoryTreeTableToolbar', width: 350, align: 'center', title: '操作'}
                     ]
                 ],
                 reqData: function (selectRow, callback) {
@@ -255,17 +247,12 @@
                     url:"[[@{/}]]seller/shop/category/move/up",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
-                    data:JSON.stringify({shopId:data.shopId,id:data.id}),
+                    data:JSON.stringify({shopId:data.shopId,id:data.id,parentId:data.parentId}),
                     success:function(data){
                         layer.msg(data.msg);
 
                         //执行搜索重载
-                        table.reload('categoryTable', {
-                            page: {
-                                curr: 1
-                            }
-                            , where: data.field
-                        }, 'data');
+                        loadTreeTable();
 
                     },
                     complete:function(data)
@@ -275,20 +262,15 @@
                 });
             }else if (obj.event === 'moveDown') {
                 $.ajax({
-                    url:"[[@{/}]]seller/shop/category/move/up",
+                    url:"[[@{/}]]seller/shop/category/move/down",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
-                    data:JSON.stringify({shopId:data.shopId,id:data.id}),
+                    data:JSON.stringify({shopId:data.shopId,id:data.id,parentId:data.parentId}),
                     success:function(data){
                         layer.msg(data.msg);
 
                         //执行搜索重载
-                        table.reload('categoryTable', {
-                            page: {
-                                curr: 1
-                            }
-                            , where: data.field
-                        }, 'data');
+                        loadTreeTable();
 
                     },
                     complete:function(data)
@@ -296,22 +278,35 @@
                         layer.close(index);
                     }
                 });
-            }else if (obj.event === 'moveDown') {
+            }else if (obj.event === 'moveTop') {
                 $.ajax({
-                    url:"[[@{/}]]seller/shop/category/move/up",
+                    url:"[[@{/}]]seller/shop/category/move/top",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
-                    data:JSON.stringify({shopId:data.shopId,categoryId:data.id}),
+                    data:JSON.stringify({shopId:data.shopId,id:data.id,parentId:data.parentId}),
                     success:function(data){
                         layer.msg(data.msg);
 
                         //执行搜索重载
-                        table.reload('categoryTable', {
-                            page: {
-                                curr: 1
-                            }
-                            , where: data.field
-                        }, 'data');
+                        loadTreeTable();
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            }else if (obj.event === 'moveBottom') {
+                $.ajax({
+                    url:"[[@{/}]]seller/shop/category/move/bottom",
+                    contentType: "application/json; charset=utf-8",
+                    type:'POST',
+                    data:JSON.stringify({shopId:data.shopId,id:data.id,parentId:data.parentId}),
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        loadTreeTable();
 
                     },
                     complete:function(data)
