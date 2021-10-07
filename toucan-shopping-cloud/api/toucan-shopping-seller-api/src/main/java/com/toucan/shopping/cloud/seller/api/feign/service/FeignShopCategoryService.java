@@ -23,7 +23,7 @@ public interface FeignShopCategoryService {
      * @return
      */
     @RequestMapping(value="/admin/save",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO saveForAdmin(@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO saveForAdmin(@RequestBody RequestJsonVO requestJsonVO);
 
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
@@ -211,6 +211,15 @@ public interface FeignShopCategoryService {
      */
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 根据ID删除(后台管理)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/admin/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    public ResultObjectVO deleteByIdForAdmin(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 批量删除功能项

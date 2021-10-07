@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.seller.entity.ShopCategory;
 import com.toucan.shopping.modules.seller.page.ShopCategoryTreeInfo;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.beanutils.BeanUtils;
@@ -96,28 +97,12 @@ public class ShopCategoryController extends UIController {
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
-                    List<Category> entitys = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Category.class);
+                    List<ShopCategory> entitys = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ShopCategory.class);
                     if(!CollectionUtils.isEmpty(entitys))
                     {
-                        CategoryVO categoryVO = new CategoryVO();
-                        BeanUtils.copyProperties(categoryVO,entitys.get(0));
-                        //如果是顶级节点,上级节点就是根节点
-                        if(categoryVO.getParentId().longValue()==-1)
-                        {
-                            categoryVO.setParentName("根节点");
-                        }else {
-                            Category queryParent = new Category();
-                            queryParent.setId(categoryVO.getParentId());
-                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryParent);
-                            resultObjectVO = feignShopCategoryService.findById( requestJsonVO);
-                            if (resultObjectVO.isSuccess()) {
-                                List<Category> parentAreaList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), Category.class);
-                                if (!CollectionUtils.isEmpty(parentAreaList)) {
-                                    categoryVO.setParentName(parentAreaList.get(0).getName());
-                                }
-                            }
-                        }
-                        request.setAttribute("model",categoryVO);
+                        ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+                        BeanUtils.copyProperties(shopCategoryVO,entitys.get(0));
+                        request.setAttribute("model",shopCategoryVO);
                     }
                 }
 
@@ -338,30 +323,30 @@ public class ShopCategoryController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{id}/{shopId}",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id,@PathVariable Long shopId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("删除失败,请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            Category entity =new Category();
+            ShopCategoryVO entity =new ShopCategoryVO();
             entity.setId(Long.parseLong(id));
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            entity.setShopId(shopId);
 
             String entityJson = JSONObject.toJSONString(entity);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(toucan.getAppCode());
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignShopCategoryService.deleteById(requestVo);
+            resultObjectVO = feignShopCategoryService.deleteByIdForAdmin(requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("删除失败,请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

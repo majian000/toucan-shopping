@@ -122,7 +122,7 @@
                         {field: 'remark', width: 260,  title: '备注'},
                         {field: 'createDate',  title: '创建时间'},
                         {field: 'updateDate',  title: '修改时间'},
-                        {templet: '#shopCategoryTreeTableToolbar', width: 350, align: 'center', title: '操作'}
+                        {templet: '#shopCategoryTreeTableToolbar', width: 450, align: 'center', title: '操作'}
                     ]
                 ],
                 reqData: function (selectRow, callback) {
@@ -186,7 +186,7 @@
             var data = obj.data;
             if (obj.event === 'edit') {
                 var index = layer.open({
-                    title: '编辑类别',
+                    title: '编辑分类',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -213,9 +213,9 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('确定删除该类别?', function (index) {
+                layer.confirm('确定删除该分类?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]seller/shop/category/delete/"+data.id,
+                        url:"[[@{/}]]seller/shop/category/delete/"+data.id+"/"+shopId,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
