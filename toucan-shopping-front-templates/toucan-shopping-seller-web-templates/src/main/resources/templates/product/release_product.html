@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/jqueryFormValidate/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/selectProductCategory/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/lib/hsCheckData/css/hsCheckData.css" />
+
+
 
     <!--[if IE 6]>
     <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
@@ -95,6 +98,14 @@
                         <div class="selectedSort"><b>您当前选择的商品类别是：</b><i id="selectedSort"></i></div>
 
                         <div class="item">
+                            <span class="label">店铺分类：</span>
+                            <div class="fl">
+                                <div id="shopCategory" style="width:300px;" data-id="11-12-1301">
+                                </div>
+                            </div>
+                        </div><!--item end-->
+
+                        <div class="item">
                             <span class="label"><span class="red">*</span>验证码：</span>
                             <div class="fl">
                                 <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
@@ -140,6 +151,10 @@
 <script src="${basePath}/static/js/selectProductCategory/selectCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/release_product.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/hsCheckData/js/cityData.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/hsCheckData/js/jquery.min.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/hsCheckData/js/hsCheckData.js"></script>
+
 <script>
     $(function () {
 
@@ -147,6 +162,10 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
+        $('#shopCategory').hsCheckData({
+            isShowCheckBox: true,
+            data: shop_category_list
+        });
 
     });
 

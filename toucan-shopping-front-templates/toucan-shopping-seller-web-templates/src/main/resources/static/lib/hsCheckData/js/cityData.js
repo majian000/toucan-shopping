@@ -1,4 +1,4 @@
-var cityData=[
+var shop_category_list=[
 	{"11":"北京"},
 	{"12":"天津"},
 	{
