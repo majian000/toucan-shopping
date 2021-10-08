@@ -58,6 +58,7 @@ function selectD(p,c,d) {
 $("#releaseBtn").click(function() {
 	var releaseS = $(this).prop("disabled");
 	if (releaseS == false) {//未被禁用
-		//location.href = "商品发布-详细信息.html";//跳转到下一页
+		$("#step1").hide();
+		$("#step2").show();
 	}
 });

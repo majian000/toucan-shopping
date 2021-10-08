@@ -77,64 +77,87 @@
                 <form id="userEditInfo" method="post" onsubmit="return false;">
                     <div class="form">
 
-                        <h3>商品分类</h3>
+                        <div id="step1">
+                            <h3>商品分类</h3>
 
-                        <!--商品分类-->
-                        <div class="wareSort clearfix">
-                            <ul id="sort1"></ul>
-                            <ul id="sort2" style="display: none;"></ul>
-                            <ul id="sort3" style="display: none;"></ul>
+                            <!--商品分类-->
+                            <div class="wareSort clearfix">
+                                <ul id="sort1"></ul>
+                                <ul id="sort2" style="display: none;"></ul>
+                                <ul id="sort3" style="display: none;"></ul>
+                            </div>
+                            <div class="selectedSort"><b>您当前选择的商品类别是：</b><i id="selectedSort"></i></div>
+
+
+                            <div class="item">
+                                <span class="label">&nbsp;</span>
+                                <div class="wareSortBtn">
+                                    <input id="releaseBtn" type="button" value="下一步" disabled="disabled" />
+                                </div>
+                            </div><!--item end-->
                         </div>
-                        <div class="selectedSort"><b>您当前选择的商品类别是：</b><i id="selectedSort"></i></div>
-
-                        <h3>商品信息</h3>
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>名称：</span>
-                            <div class="fl">
-                                <input type="text" id="name" name="name" class="text" tabindex="1"  />
-                                <label id="namesucceed" class="blank"></label>
-                                <span class="clear"></span>
-                                <div id="name_error"></div>
-                            </div>
-                        </div><!--item end-->
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>价格：</span>
-                            <div class="fl">
-                                <input type="text" id="price" name="price" class="text" tabindex="1"  />
-                                <label id="price_succeed" class="blank"></label>
-                                <span class="clear"></span>
-                                <div id="price_error"></div>
-                            </div>
-                        </div><!--item end-->
 
 
+                        <div id="step2" style="display:none">
+                            <h3>商品信息</h3>
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>名称：</span>
+                                <div class="fl">
+                                    <input type="text" id="name" name="name" class="text" tabindex="1"  />
+                                    <label id="namesucceed" class="blank"></label>
+                                    <span class="clear"></span>
+                                    <div id="name_error"></div>
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>价格：</span>
+                                <div class="fl">
+                                    <input type="text" id="price" name="price" class="text" tabindex="1"  />
+                                    <label id="price_succeed" class="blank"></label>
+                                    <span class="clear"></span>
+                                    <div id="price_error"></div>
+                                </div>
+                            </div><!--item end-->
 
-                        <h3>店铺分类</h3>
-
-                        <!--商品分类-->
-                        <div class="wareSort clearfix">
-                            <ul id="shop_category_sort1"></ul>
-                            <ul id="shop_category_sort2" style="display: none;"></ul>
+                            <div class="item">
+                                <span class="wareSortBtn">
+                                         <input id="step2Back" type="button" value=" 上一步"  />&nbsp;&nbsp;
+                                </span>
+                                <span class="wareSortBtn">
+                                        <input id="step2Next" type="button" value="下一步" disabled="disabled" />
+                                </span>
+                            </div><!--item end-->
                         </div>
-                        <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
 
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>验证码：</span>
-                            <div class="fl">
-                                <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
-                                <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
-                                </label>
-                                <label>&nbsp;看不清？点击验证码图片更换</label>
-                                <label id="vcode_succeed" class="blank invisible"></label>
-                                <span class="clear"></span>
-                                <label id="vcode_error"></label>
+
+                        <div id="step3" style="display:none" >
+                            <h3>店铺分类</h3>
+
+                            <!--商品分类-->
+                            <div class="wareSort clearfix">
+                                <ul id="shop_category_sort1"></ul>
+                                <ul id="shop_category_sort2" style="display: none;"></ul>
                             </div>
-                        </div><!--item end-->
+                            <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
 
-                        <div class="item">
-                            <span class="label">&nbsp;</span>
-                            <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
-                        </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>验证码：</span>
+                                <div class="fl">
+                                    <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
+                                    <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
+                                    </label>
+                                    <label>&nbsp;看不清？点击验证码图片更换</label>
+                                    <label id="vcode_succeed" class="blank invisible"></label>
+                                    <span class="clear"></span>
+                                    <label id="vcode_error"></label>
+                                </div>
+                            </div><!--item end-->
+
+                            <div class="item">
+                                <span class="label">&nbsp;</span>
+                                <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
+                            </div><!--item end-->
+                        </div>
 
                         <div class="item">
                             <span class="label">&nbsp;</span>
