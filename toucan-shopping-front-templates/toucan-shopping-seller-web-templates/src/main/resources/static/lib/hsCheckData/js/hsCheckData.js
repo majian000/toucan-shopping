@@ -200,7 +200,7 @@
                         
                         return json[i][key];
                     } else if (jsonId.indexOf(key) > -1) {
-                        return getName(json[i]["childCity"], jsonId);
+                        return getName(json[i]["childList"], jsonId);
                     }
                 }
             }
@@ -210,7 +210,7 @@
             var html = "<ul>"
             var childIsNUll = true;
             for (var i = 0; i < opts.data.length; i++) {
-                if ("childCity" in opts.data[i]) {
+                if ("childList" in opts.data[i]) {
                     childIsNUll = false;
                 }
                 for (var key in opts.data[i]) {
