@@ -76,25 +76,6 @@
             <div id="formbox">
                 <form id="userEditInfo" method="post" onsubmit="return false;">
                     <div class="form">
-                        <h3>商品信息</h3>
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>标题：</span>
-                            <div class="fl">
-                                <input type="text" id="title" name="title" class="text" tabindex="1"  />
-                                <label id="title_succeed" class="blank"></label>
-                                <span class="clear"></span>
-                                <div id="title_error"></div>
-                            </div>
-                        </div><!--item end-->
-
-                        <div class="item">
-                            <span class="label">店铺分类：</span>
-                            <div class="fl">
-                                <div id="shopCategory" style="width:300px;" >
-                                </div>
-                            </div>
-                        </div><!--item end-->
-
 
                         <h3>商品分类</h3>
 
@@ -105,6 +86,37 @@
                             <ul id="sort3" style="display: none;"></ul>
                         </div>
                         <div class="selectedSort"><b>您当前选择的商品类别是：</b><i id="selectedSort"></i></div>
+
+                        <h3>商品信息</h3>
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>名称：</span>
+                            <div class="fl">
+                                <input type="text" id="name" name="name" class="text" tabindex="1"  />
+                                <label id="namesucceed" class="blank"></label>
+                                <span class="clear"></span>
+                                <div id="name_error"></div>
+                            </div>
+                        </div><!--item end-->
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>价格：</span>
+                            <div class="fl">
+                                <input type="text" id="price" name="price" class="text" tabindex="1"  />
+                                <label id="price_succeed" class="blank"></label>
+                                <span class="clear"></span>
+                                <div id="price_error"></div>
+                            </div>
+                        </div><!--item end-->
+
+
+
+                        <h3>店铺分类</h3>
+
+                        <!--商品分类-->
+                        <div class="wareSort clearfix">
+                            <ul id="shop_category_sort1"></ul>
+                            <ul id="shop_category_sort2" style="display: none;"></ul>
+                        </div>
+                        <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
 
                         <div class="item">
                             <span class="label"><span class="red">*</span>验证码：</span>
@@ -151,6 +163,7 @@
 </script>
 
 <script src="${basePath}/static/js/selectProductCategory/selectCategory.js"></script>
+<script src="${basePath}/static/js/selectShopCategory/selectShopCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/release_product.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/hsCheckData/js/jquery.min.js"></script>

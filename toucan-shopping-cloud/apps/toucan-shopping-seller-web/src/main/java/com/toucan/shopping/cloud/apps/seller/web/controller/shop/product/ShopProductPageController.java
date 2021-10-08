@@ -74,29 +74,7 @@ public class ShopProductPageController extends BaseController {
             if(resultObjectVO.isSuccess())
             {
                 List<ShopCategoryVO> shopCategoryVOList = resultObjectVO.formatDataArray(ShopCategoryVO.class);
-                if(CollectionUtils.isNotEmpty(shopCategoryVOList)) {
-                    List<Map<String, Object>> shopCategoryTree = new ArrayList<Map<String, Object>>();
-                    for(ShopCategoryVO shopCategoryVO:shopCategoryVOList) {
-                        Map<String,Object> shopCategory = new HashMap<String,Object>();
-                        shopCategory.put(String.valueOf(shopCategoryVO.getId()),shopCategoryVO.getName());
-                        //遍历子节点
-                        if(CollectionUtils.isNotEmpty(shopCategoryVO.getChildren()))
-                        {
-                            List<Map<String, String>> shopCategoryChildTree = new ArrayList<Map<String, String>>();
-                            for(ShopCategoryVO shopCategoryChildVO:shopCategoryVO.getChildren()) {
-                                Map<String, String> shopCategoryChild = new HashMap<String, String>();
-                                shopCategoryChild.put(String.valueOf(shopCategoryChildVO.getId()), shopCategoryChildVO.getName());
-                                shopCategoryChildTree.add(shopCategoryChild);
-                            }
-                            shopCategory.put("childList",shopCategoryChildTree);
-                        }
-
-                        shopCategoryTree.add(shopCategory);
-                    }
-                    request.setAttribute("shopCategoryList", JSONArray.toJSONString(shopCategoryTree));
-                }else{
-                    request.setAttribute("shopCategoryList", "[]");
-                }
+                request.setAttribute("shopCategoryList", JSONArray.toJSONString(shopCategoryVOList));
             }else{
                 request.setAttribute("shopCategoryList", "[]");
             }
