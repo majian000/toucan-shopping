@@ -54,7 +54,7 @@
         </div>
         <div class="m_right">
             <div id="formbox">
-                <form id="userEditInfo" method="post" onsubmit="return false;">
+                <form id="productReleaseForm" method="post" onsubmit="return false;">
                     <div class="form">
 
                         <div id="step1">
@@ -196,10 +196,15 @@
                                 </div>
                             </div><!--item end-->
 
-                            <div class="item">
-                                <span class="label">&nbsp;</span>
-                                <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
+                            <div class="item" style="display: flex;">
+                                <div class="wareSortBtn">
+                                    <input id="step5Back" type="button" value="上一步，调整物流信息"  />&nbsp;&nbsp;
+                                </div>
+                                <div class="wareSortBtn">
+                                    <input id="ppfbtn" type="button" value="发布"/>
+                                </div>
                             </div><!--item end-->
+
                         </div>
 
                         <div class="item">
@@ -283,8 +288,8 @@
         $("#step4Back").bind( 'click' ,function(){
             $("#step5").hide();
             $("#step4").hide();
-            $("#step3").hide();
-            $("#step2").show();
+            $("#step3").show();
+            $("#step2").hide();
             $("#step1").hide();
         });
 
@@ -297,6 +302,15 @@
                 $("#step2").hide();
                 $("#step1").hide();
             }
+        });
+
+
+        $("#step5Back").bind( 'click' ,function(){
+            $("#step5").hide();
+            $("#step4").show();
+            $("#step3").hide();
+            $("#step2").hide();
+            $("#step1").hide();
         });
     });
 
