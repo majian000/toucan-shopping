@@ -110,7 +110,7 @@
 
                             <div class="item" style="display: flex;">
                                 <div class="wareSortBtn">
-                                         <input id="step2Back" type="button" value="上一步"  />&nbsp;&nbsp;
+                                         <input id="step2Back" type="button" value="上一步，调整商品分类"  />&nbsp;&nbsp;
                                 </div>
                                 <div class="wareSortBtn">
                                         <input id="step2Next" type="button" value="下一步，完善支付信息"  />
@@ -145,15 +145,35 @@
 
                             <div class="item" style="display: flex;">
                                 <div class="wareSortBtn">
-                                    <input id="step3Back" type="button" value="上一步"  />&nbsp;&nbsp;
+                                    <input id="step3Back" type="button" value="上一步，调整商品信息"  />&nbsp;&nbsp;
                                 </div>
                                 <div class="wareSortBtn">
-                                    <input id="step3Next" type="button" value="下一步"/>
+                                    <input id="step3Next" type="button" value="下一步，完善物流信息"/>
                                 </div>
                             </div><!--item end-->
                         </div>
 
-                        <div id="step4" style="display:none" >
+                        <div id="step4" style="display:none">
+                            <h3>物流信息</h3>
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>提取方式：</span>
+                                <div class="fl">
+                                    <input type="checkbox" class="checkbox" name="logistics" id="logistics_1" value="1" /> <label for="logistics_1">使用物流配送</label>
+                                </div>
+                            </div><!--item end-->
+
+
+                            <div class="item" style="display: flex;">
+                                <div class="wareSortBtn">
+                                    <input id="step4Back" type="button" value="上一步，调整支付信息"  />&nbsp;&nbsp;
+                                </div>
+                                <div class="wareSortBtn">
+                                    <input id="step4Next" type="button" value="下一步，完善店铺分类"/>
+                                </div>
+                            </div><!--item end-->
+                        </div>
+
+                        <div id="step5" style="display:none" >
                             <h3>店铺分类</h3>
 
                             <!--商品分类-->
@@ -222,6 +242,7 @@
 
 
         $("#step2Back").bind( 'click' ,function(){
+            $("#step5").hide();
             $("#step4").hide();
             $("#step3").hide();
             $("#step2").hide();
@@ -231,6 +252,7 @@
         $("#step2Next").bind( 'click' ,function(){
             var flag = validateFunction.step2_form_validate();
             if (flag) {
+                $("#step5").hide();
                 $("#step4").hide();
                 $("#step3").show();
                 $("#step2").hide();
@@ -240,12 +262,42 @@
 
 
         $("#step3Back").bind( 'click' ,function(){
+            $("#step5").hide();
             $("#step4").hide();
             $("#step3").hide();
             $("#step2").show();
             $("#step1").hide();
         });
 
+        $("#step3Next").bind( 'click' ,function(){
+            var flag = validateFunction.step3_form_validate();
+            if (flag) {
+                $("#step5").hide();
+                $("#step4").show();
+                $("#step3").hide();
+                $("#step2").hide();
+                $("#step1").hide();
+            }
+        });
+
+        $("#step4Back").bind( 'click' ,function(){
+            $("#step5").hide();
+            $("#step4").hide();
+            $("#step3").hide();
+            $("#step2").show();
+            $("#step1").hide();
+        });
+
+        $("#step4Next").bind( 'click' ,function(){
+            var flag = validateFunction.step4_form_validate();
+            if (flag) {
+                $("#step5").show();
+                $("#step4").hide();
+                $("#step3").hide();
+                $("#step2").hide();
+                $("#step1").hide();
+            }
+        });
     });
 
 </script>

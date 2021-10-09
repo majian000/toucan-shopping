@@ -41,6 +41,12 @@ $.extend(validateFunction, {
     step2_form_validate:function() {
         $("#productName").jdValidate(validatePrompt.productName, validateFunction.productName, true);
         return validateFunction.FORM_submit(["#productName"]);
+    },
+    step3_form_validate:function() {
+        return true;
+    },
+    step4_form_validate:function() {
+        return true;
     }
 });
 
