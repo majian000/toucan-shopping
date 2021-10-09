@@ -30,12 +30,12 @@ function selectShopCategoryLevel1(p) {
 	if($("#shop_category_sort1 li").eq(p).hasClass("active"))
 	{
 		$("#shop_category_sort1 li").eq(p).removeClass("active");
-		expressShopCategoryP="";
+		$("#selectedShopCategorySort").html("");
 	}else{
 		$("#shop_category_sort1 li").eq(p).addClass("active").siblings("li").removeClass("active");
 		expressShopCategoryP = shop_category_list[p].name;
+		$("#selectedShopCategorySort").html(expressShopCategoryP);
 	}
-	$("#selectedShopCategorySort").html(expressShopCategoryP);
 }
 
 /*选择二级目录*/
