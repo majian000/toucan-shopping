@@ -299,13 +299,13 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 .leftNav ul li .fj.nuw{	width:211px; text-decoration:none; height:40px; line-height:40px; background-color:#FFF; color:#ff4e00; z-index:800px; }
 
 .leftNav .zj{ 
-	width:989px; height:1791px; overflow:hidden; background-color:#FFF; position:absolute; left:210px; top:0; display:none;
+	width:989px;  overflow:hidden; background-color:#FFF; position:absolute; left:210px; top:0; display:none;
 }
 .leftNav .zj .zj_l{
-	width:685px; height:80px;  float:left; display:inline; margin-left:20px; margin-top:15px;
+	width:685px; float:left; display:inline; margin-left:20px; margin-top:15px;
 }
 .leftNav .zj .zj_l_c{
-	width:100%; height:108px; line-height:25px; overflow:hidden; color:#dbdbdb; float:left; display:inline; margin-right:50px; margin-bottom:25px;
+	width:100%; line-height:25px; overflow:hidden; color:#dbdbdb; float:left; display:inline; margin-right:50px; margin-bottom:25px;
 }
 .leftNav .zj .zj_l_c h2{
 	height:25px; line-height:25px; color:#3e3e3e; font-size:14px; font-weight:bold; margin-bottom:5px; margin-left:10px;
