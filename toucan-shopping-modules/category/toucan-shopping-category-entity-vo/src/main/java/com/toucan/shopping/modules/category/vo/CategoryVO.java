@@ -44,4 +44,10 @@ public class CategoryVO extends Category {
      * 所有根节点链接
      */
     private String rootLinks;
+
+    /**
+     * PC端首页扩展样式
+     */
+    private String pcIndexStyle;
+
 }
