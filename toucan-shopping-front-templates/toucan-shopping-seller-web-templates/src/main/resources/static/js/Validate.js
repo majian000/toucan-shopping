@@ -252,6 +252,9 @@ var validateRules = {
     },
     isShopCategoryName:function (str) {
         return new RegExp(validateRegExp.shopCategoryName).test(str);
+    },
+    isProductName:function (str) {
+        return new RegExp(validateRegExp.isProductName).test(str);
     }
 };
 //验证文本

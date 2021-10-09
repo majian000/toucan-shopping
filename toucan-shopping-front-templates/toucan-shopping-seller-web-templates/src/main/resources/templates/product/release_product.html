@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/jqueryFormValidate/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/selectProductCategory/style.css" />
-    <link rel="stylesheet" href="${basePath}/static/lib/hsCheckData/css/hsCheckData.css" />
 
 
 
@@ -22,28 +21,9 @@
         EvPNG.fix('div, ul, img, li, input, a');
     </script>
     <![endif]-->
-    <script type="text/javascript" src="${basePath}/static/js/jquery-1.11.1.min_044d0927.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
 
-    <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/select.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/lrscroll.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/iban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/fban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/f_ban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/mban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/bban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/hban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/tban.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/seller/phone.js"></script>
-
+    <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
 
     <#include "/common_js.html"/>
 
@@ -92,7 +72,7 @@
                             <div class="item">
                                 <span class="label">&nbsp;</span>
                                 <div class="wareSortBtn">
-                                    <input id="releaseBtn" type="button" value="下一步" disabled="disabled" />
+                                    <input id="releaseBtn" type="button" value="下一步，完善商品信息" disabled="disabled" />
                                 </div>
                             </div><!--item end-->
                         </div>
@@ -103,14 +83,14 @@
                             <div class="item">
                                 <span class="label"><span class="red">*</span>名称：</span>
                                 <div class="fl">
-                                    <input type="text" id="name" name="name" class="text" tabindex="1"  />
-                                    <label id="namesucceed" class="blank"></label>
+                                    <input type="text" id="productName" name="name" class="text" tabindex="1"  />
+                                    <label id="productName_succeed" class="blank"></label>
                                     <span class="clear"></span>
-                                    <div id="name_error"></div>
+                                    <div id="productName_error"></div>
                                 </div>
                             </div><!--item end-->
                             <div class="item">
-                                <span class="label"><span class="red">*</span>价格：</span>
+                                <span class="label"><span class="red">*</span>一口价：</span>
                                 <div class="fl">
                                     <input type="text" id="price" name="price" class="text" tabindex="1"  />
                                     <label id="price_succeed" class="blank"></label>
@@ -118,19 +98,62 @@
                                     <div id="price_error"></div>
                                 </div>
                             </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>总数量：</span>
+                                <div class="fl">
+                                    <input type="text" id="count" name="count" class="text" tabindex="1"  />
+                                    <label id="count_succeed" class="blank"></label>
+                                    <span class="clear"></span>
+                                    <div id="count_error"></div>
+                                </div>
+                            </div><!--item end-->
 
                             <div class="item" style="display: flex;">
                                 <div class="wareSortBtn">
-                                         <input id="step2Back" type="button" value=" 上一步"  />&nbsp;&nbsp;
+                                         <input id="step2Back" type="button" value="上一步"  />&nbsp;&nbsp;
                                 </div>
                                 <div class="wareSortBtn">
-                                        <input id="step2Next" type="button" value="下一步" disabled="disabled" />
+                                        <input id="step2Next" type="button" value="下一步，完善支付信息"  />
                                 </div>
                             </div><!--item end-->
                         </div>
 
+                        <div id="step3" style="display:none">
+                            <h3>支付信息</h3>
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>付款方式：</span>
+                                <div class="fl">
+                                    <input type="radio" class="radio" name="pay_method" id="pay_method_1" value="1" checked/> <label for="pay_method_1">一口价(普通交易模式)</label>
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>库存计数：</span>
+                                <div class="fl">
+                                    <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_1" value="1" checked/> <label for="buckle_inventory_method_1">买家拍下减库存</label>
+                                    <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_2" value="2" checked/> <label for="buckle_inventory_method_2">买家付款减库存</label>
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>售后服务：</span>
+                                <div class="fl">
+                                    <input type="checkbox" class="checkbox" name="invoice" id="invoice_1" value="1" /> <label for="invoice_1">提供发票</label>
+                                    <input type="checkbox" class="checkbox" name="changingOrRefunding" id="changingOrRefunding_1" value="1" /> <label for="changingOrRefunding_1">退换货承诺</label>
 
-                        <div id="step3" style="display:none" >
+                                </div>
+                            </div><!--item end-->
+
+
+                            <div class="item" style="display: flex;">
+                                <div class="wareSortBtn">
+                                    <input id="step3Back" type="button" value="上一步"  />&nbsp;&nbsp;
+                                </div>
+                                <div class="wareSortBtn">
+                                    <input id="step3Next" type="button" value="下一步"/>
+                                </div>
+                            </div><!--item end-->
+                        </div>
+
+                        <div id="step4" style="display:none" >
                             <h3>店铺分类</h3>
 
                             <!--商品分类-->
@@ -189,8 +212,6 @@
 <script src="${basePath}/static/js/selectShopCategory/selectShopCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/release_product.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/hsCheckData/js/jquery.min.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/hsCheckData/js/hsCheckData.js"></script>
 
 <script>
     $(function () {
@@ -199,16 +220,30 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
-        $('#shopCategory').hsCheckData({
-            isShowCheckBox: true,
-            data: shop_category_list
-        });
-
 
         $("#step2Back").bind( 'click' ,function(){
+            $("#step4").hide();
             $("#step3").hide();
             $("#step2").hide();
             $("#step1").show();
+        });
+
+        $("#step2Next").bind( 'click' ,function(){
+            var flag = validateFunction.step2_form_validate();
+            if (flag) {
+                $("#step4").hide();
+                $("#step3").show();
+                $("#step2").hide();
+                $("#step1").hide();
+            }
+        });
+
+
+        $("#step3Back").bind( 'click' ,function(){
+            $("#step4").hide();
+            $("#step3").hide();
+            $("#step2").show();
+            $("#step1").hide();
         });
 
     });
