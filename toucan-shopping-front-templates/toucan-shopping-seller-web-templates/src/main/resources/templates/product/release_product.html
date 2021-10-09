@@ -119,13 +119,13 @@
                                 </div>
                             </div><!--item end-->
 
-                            <div class="item">
-                                <span class="wareSortBtn">
+                            <div class="item" style="display: flex;">
+                                <div class="wareSortBtn">
                                          <input id="step2Back" type="button" value=" 上一步"  />&nbsp;&nbsp;
-                                </span>
-                                <span class="wareSortBtn">
+                                </div>
+                                <div class="wareSortBtn">
                                         <input id="step2Next" type="button" value="下一步" disabled="disabled" />
-                                </span>
+                                </div>
                             </div><!--item end-->
                         </div>
 
@@ -202,6 +202,13 @@
         $('#shopCategory').hsCheckData({
             isShowCheckBox: true,
             data: shop_category_list
+        });
+
+
+        $("#step2Back").bind( 'click' ,function(){
+            $("#step3").hide();
+            $("#step2").hide();
+            $("#step1").show();
         });
 
     });

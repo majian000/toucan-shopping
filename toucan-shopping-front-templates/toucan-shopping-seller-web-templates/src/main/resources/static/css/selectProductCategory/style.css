@@ -21,7 +21,7 @@ i, em { font-style: normal; }
 .selectedSort { padding: 10px 15px; border: 1px solid #ed7f5a; margin-top: 10px; margin-bottom: 10px; background-color: #fff4f0; color: #ed7f5a; }
 .selectedSort b { font-weight: bold; }
 .selectedSort i font { font-family: simsun; }
-.wareSortBtn { padding-bottom: 50px; text-align: center; }
+.wareSortBtn { padding-bottom: 50px; text-align: center; width:200px;}
 .wareSortBtn input { width: 200px; height: 36px; border: 1px solid #ed7f5a; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; background-color: #ed7f5a; color: #fff; }
 .wareSortBtn input:hover { border-color: #d95459; background-color: #d95459; }
 .wareSortBtn input:disabled { border-color: #ddd; background-color: #f6f6f6; color: #9a9a9a; cursor: default; }
