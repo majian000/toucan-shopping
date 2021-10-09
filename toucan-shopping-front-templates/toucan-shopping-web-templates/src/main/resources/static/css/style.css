@@ -299,7 +299,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 .leftNav ul li .fj.nuw{	width:211px; text-decoration:none; height:40px; line-height:40px; background-color:#FFF; color:#ff4e00; z-index:800px; }
 
 .leftNav .zj{ 
-	width:989px;  overflow:hidden; background-color:#FFF; position:absolute; left:210px; top:0; display:none;
+	width:989px; min-height:791px; overflow:hidden; background-color:#FFF; position:absolute; left:210px; top:0; display:none;
 }
 .leftNav .zj .zj_l{
 	width:685px; float:left; display:inline; margin-left:20px; margin-top:15px;
