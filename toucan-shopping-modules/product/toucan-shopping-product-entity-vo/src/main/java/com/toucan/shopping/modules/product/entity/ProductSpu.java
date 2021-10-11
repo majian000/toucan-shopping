@@ -14,7 +14,7 @@ import java.util.Map;
  * @author majian
  */
 @Data
-public class Product {
+public class ProductSpu {
     private Long id; //主键
     private Integer categoryId; //所属类别
     private String uuid; //SPU UUID

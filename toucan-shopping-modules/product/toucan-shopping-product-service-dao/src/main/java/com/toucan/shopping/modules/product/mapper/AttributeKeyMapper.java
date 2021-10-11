@@ -1,7 +1,6 @@
 package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.AttributeKey;
-import com.toucan.shopping.modules.product.entity.Product;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import org.apache.ibatis.annotations.Mapper;

@@ -17,9 +17,13 @@ $.extend(validatePrompt, {
 
 $.extend(validateFunction, {
     productName:function(option) {
-        var length = validateRules.betweenLength(option.value.replace(/[^\x00-\xff]/g, "**"), 2, 15);
+        var lengthStatus = true;
+        if(option.value.length<2||option.value.length>15)
+        {
+            lengthStatus = false;
+        }
         var format = validateRules.isProductName(option.value);
-        if (!length) {
+        if (!lengthStatus) {
             validateSettings.error.run(option, option.prompts.error.badLength);
             return;
         } else {
