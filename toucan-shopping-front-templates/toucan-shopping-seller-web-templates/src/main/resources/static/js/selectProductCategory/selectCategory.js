@@ -31,7 +31,13 @@ function selectCategoryLevel1(p) {
 	$("#sort1 li").eq(p).addClass("active").siblings("li").removeClass("active");
 	expressP = category_list[p].name;
 	$("#selectedSort").html(expressP);
-	$("#releaseBtn").removeAttr("disabled");
+	//如果没有下一级,按钮可以点击
+	if(category_list[p].children==null||category_list[p].children.length<=0)
+	{
+		$("#releaseBtn").removeAttr("disabled");
+	}else{
+		$("#releaseBtn").attr("disabled","disabled");
+	}
 }
 
 /*选择二级目录*/
@@ -45,6 +51,14 @@ function selectCategoryLevel2(p,c) {
 	$("#sort2 li").eq(c).addClass("active").siblings("li").removeClass("active");
 	expressC = expressP + arrow + category_list[p].children[c].name;
 	$("#selectedSort").html(expressC);
+
+	//如果没有下一级,按钮可以点击
+	if(category_list[p].children[c].children==null||category_list[p].children[c].children.length<=0)
+	{
+		$("#releaseBtn").removeAttr("disabled");
+	}else{
+		$("#releaseBtn").attr("disabled","disabled");
+	}
 }
 
 /*选择三级目录*/
@@ -52,6 +66,8 @@ function selectD(p,c,d) {
 	$("#sort3 li").eq(d).addClass("active").siblings("li").removeClass("active");
 	expressD = expressC + arrow + category_list[p].children[c].children[d].name;
 	$("#selectedSort").html(expressD);
+
+	$("#releaseBtn").removeAttr("disabled");
 }
 
 /*点击下一步*/

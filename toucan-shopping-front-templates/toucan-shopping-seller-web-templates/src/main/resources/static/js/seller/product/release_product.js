@@ -1,10 +1,10 @@
 $.extend(validatePrompt, {
     productName:{
-        onFocus:"2-15位字符，可由中文或英文组成",
+        onFocus:"2-100个汉字，可由中文或英文组成",
         succeed:"",
         isNull:"请输入商品名称",
         error:{
-            badLength:"商品名称长度只能在2-15位字符之间",
+            badLength:"商品名称长度只能在2-100个汉字之间",
             badFormat:"商品名称只能由中文或英文组成"
         }
     },
@@ -18,7 +18,7 @@ $.extend(validatePrompt, {
 $.extend(validateFunction, {
     productName:function(option) {
         var lengthStatus = true;
-        if(option.value.length<2||option.value.length>15)
+        if(option.value.length<2||option.value.length>100)
         {
             lengthStatus = false;
         }
