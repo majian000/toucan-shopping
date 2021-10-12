@@ -38,7 +38,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku"  >
         insert into t_product_sku(product_id,attributes,price,product_uuid,uuid,remark,status,create_date,app_code,create_user_id)
         values(#{productId},#{attributes},#{price},#{productUuid},#{uuid},#{remark},#{status},#{createDate},#{appCode},#{createUserId})
     </insert>

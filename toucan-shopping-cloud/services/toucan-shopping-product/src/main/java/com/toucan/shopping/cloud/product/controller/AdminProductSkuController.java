@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.product.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -25,6 +26,10 @@ public class AdminProductSkuController {
 
     @Autowired
     private ProductSkuService productSkuService;
+
+    @Autowired
+    private IdGenerator idGenerator;
+
 
 
 
@@ -55,6 +60,7 @@ public class AdminProductSkuController {
 
         ProductSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(),ProductSku.class);
         productSku.setCreateDate(new Date());
+        productSku.setId(idGenerator.id());
 
         int row = productSkuService.save(productSku);
         if(row!=1)
