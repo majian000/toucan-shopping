@@ -4,7 +4,7 @@
 
     <resultMap id="brandFileMap" type="com.toucan.shopping.modules.product.entity.BrandFile" >
         <id column="id" jdbcType="BIGINT"  property="id" />
-        <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+        <result column="brand_id" jdbcType="BIGINT" property="brandId" />
         <result column="file_path" jdbcType="VARCHAR" property="filePath" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
 
