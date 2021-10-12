@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.BrandMapper">
+
+    <resultMap id="brandMap" type="com.toucan.shopping.modules.product.entity.Brand" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="trademark_area_type" jdbcType="INTEGER" property="trademarkAreaType" />
+        <result column="chinese_name" jdbcType="VARCHAR" property="chineseName" />
+        <result column="english_name" jdbcType="VARCHAR" property="englishName" />
+        <result column="regist_number_1" jdbcType="VARCHAR" property="registNumber1" />
+        <result column="regist_number_2" jdbcType="VARCHAR" property="registNumber2" />
+        <result column="seminary" jdbcType="VARCHAR" property="seminary" />
+        <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
+        <result column="create_admin_id" jdbcType="BIGINT" property="createAdminId" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="enabled_status" jdbcType="INTEGER" property="enabledStatus" />
+        
+    </resultMap>
+
+    <select id="queryAllList" resultMap="brandMap" parameterType="com.toucan.shopping.modules.product.entity.Brand">
+        select * from t_brand
+    </select>
+
+</mapper>
