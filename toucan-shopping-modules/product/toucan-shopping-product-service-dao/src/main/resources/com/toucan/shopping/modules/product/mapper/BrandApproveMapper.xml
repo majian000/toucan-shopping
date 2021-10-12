@@ -15,6 +15,8 @@
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+
         
     </resultMap>
 

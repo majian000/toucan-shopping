@@ -13,6 +13,7 @@ public class BrandFile {
     private Long id; //主键
     private Long brandId; //品牌ID
     private String filePath; //文件路径
+    private Integer deleteStatus; //删除状态 0未删除 1已删除
 
 
 }

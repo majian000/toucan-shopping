@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.BrandFileMapper">
+
+    <resultMap id="brandFileMap" type="com.toucan.shopping.modules.product.entity.BrandFile" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+        <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
+    <select id="queryAllList" resultMap="brandFileMap" parameterType="com.toucan.shopping.modules.product.entity.BrandFile">
+        select * from t_brand_file
+    </select>
+
+</mapper>
