@@ -9,6 +9,6 @@ import java.util.List;
 @Mapper
 public interface BrandMapper {
 
-    public List<Brand> queryAllList(Brand queryModel);
+    List<Brand> queryAllList(Brand queryModel);
 
 }

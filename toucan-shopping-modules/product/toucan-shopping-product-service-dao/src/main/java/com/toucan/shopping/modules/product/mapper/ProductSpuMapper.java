@@ -9,6 +9,6 @@ import java.util.List;
 @Mapper
 public interface ProductSpuMapper {
 
-    public List<ProductSpu> queryAllList(ProductSpu queryModel);
+    List<ProductSpu> queryAllList(ProductSpu queryModel);
 
 }
