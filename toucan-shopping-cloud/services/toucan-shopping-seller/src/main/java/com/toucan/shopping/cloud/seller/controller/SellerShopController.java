@@ -748,7 +748,7 @@ public class SellerShopController {
 
                     //查询该用户下所有店铺
                     SellerShopVO queryUserSellerShopVO = new SellerShopVO();
-                    queryUserSellerShopVO.setUserMainId(querySellerShopVO.getUserMainId());
+                    queryUserSellerShopVO.setUserMainId(sellerShop.getUserMainId());
                     queryUserSellerShopVO.setEnableStatus((short)1);
                     sellerShopList = sellerShopService.findListByEntity(queryUserSellerShopVO);
                     if(!CollectionUtils.isEmpty(sellerShopList)&&sellerShopList.size()>1)
