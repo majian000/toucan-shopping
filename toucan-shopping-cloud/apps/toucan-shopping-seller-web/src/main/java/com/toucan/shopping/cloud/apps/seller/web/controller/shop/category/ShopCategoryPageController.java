@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop.category;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
+import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -9,6 +10,7 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class ShopCategoryPageController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private FeignUserService feignUserService;
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/index")
@@ -45,7 +49,27 @@ public class ShopCategoryPageController extends BaseController {
     @RequestMapping("/list")
     public String list(HttpServletRequest request)
     {
-        return "shop/category/list";
+        try {
+            UserVO userVO = new UserVO();
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
+            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
+                if(result)
+                {
+                    return "shop/category/list";
+                }else{
+                    return "shop/please_true_name";
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "index";
     }
 
 
