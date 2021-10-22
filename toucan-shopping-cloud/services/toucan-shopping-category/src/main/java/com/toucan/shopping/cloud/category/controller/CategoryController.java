@@ -1028,4 +1028,29 @@ public class CategoryController {
 
 
 
+
+    /**
+     * 查询类别树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryCategoryTree(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            resultObjectVO.setData(categoryRedisService.queryMiniTree());
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
 }

@@ -9,6 +9,8 @@ import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CategoryMapper categoryMapper;
@@ -150,5 +154,32 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+
+
+    @Override
+    public List<CategoryTreeVO> queryTree() {
+        List<CategoryTreeVO> categoryTreeVOS = new ArrayList<CategoryTreeVO>();
+        try {
+            CategoryVO query = new CategoryVO();
+            List<Category> categoryVOS = categoryMapper.queryList(query);
+            for (Category category : categoryVOS) {
+                if (category.getParentId().longValue() == -1L) {
+                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                    categoryTreeVO.setTitle(category.getName());
+                    categoryTreeVO.setText(category.getName());
+                    BeanUtils.copyProperties(categoryTreeVO, category);
+                    categoryTreeVO.setChildren(new ArrayList<CategoryVO>());
+                    categoryTreeVOS.add(categoryTreeVO);
+
+                    //递归查找子节点
+                    setChildren(categoryVOS,categoryTreeVO);
+                }
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return categoryTreeVOS;
+    }
 
 }

@@ -75,4 +75,12 @@ public interface CategoryService {
     void queryChildren(List<Category> children,Category query);
 
 
+
+    /**
+     * 查询类别树
+     * @return
+     */
+    List<CategoryTreeVO> queryTree();
+
+
 }
