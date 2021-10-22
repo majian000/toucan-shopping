@@ -7,6 +7,9 @@ import java.util.List;
 
 public interface BrandService {
 
-    public List<Brand> queryAllList(Brand queryModel);
+    List<Brand> queryAllList(Brand queryModel);
+
+
+    int save(Brand entity);
 
 }

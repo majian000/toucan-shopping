@@ -19,4 +19,14 @@ public class BrandServiceImpl implements BrandService {
     public List<Brand> queryAllList(Brand queryModel) {
         return brandMapper.queryAllList(queryModel);
     }
+
+
+
+    @Override
+    public int save(Brand entity) {
+        return brandMapper.insert(entity);
+    }
+
+
+
 }

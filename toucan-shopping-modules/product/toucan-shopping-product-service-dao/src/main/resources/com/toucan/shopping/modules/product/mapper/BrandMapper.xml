@@ -22,4 +22,13 @@
         select * from t_brand
     </select>
 
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.Brand" >
+        insert into t_brand(id,trademark_area_type,chinese_name,english_name,regist_number_1,regist_number_2,seminary,owner_name,create_admin_id,create_date,delete_status,enabled_status)
+        values(#{id},#{trademarkAreaType},#{chineseName},#{englishName},#{registNumber1},#{registNumber2},#{seminary},#{ownerName},#{createAdminId},#{createDate},#{deleteStatus},#{enabledStatus})
+    </insert>
+
+
 </mapper>

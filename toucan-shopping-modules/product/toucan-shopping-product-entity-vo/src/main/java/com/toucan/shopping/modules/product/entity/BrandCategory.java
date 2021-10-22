@@ -15,5 +15,6 @@ public class BrandCategory {
     private Long categoryId; //分类ID
     private Date createDate; //创建时间
     private Integer deleteStatus; //删除状态 0未删除 1已删除
+    private Integer brandSort; //排序
 
 }

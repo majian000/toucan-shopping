@@ -12,4 +12,8 @@ public interface BrandCategoryMapper {
 
     List<BrandCategory> queryAllList(BrandCategory queryModel);
 
+
+    int insert(BrandCategory entity);
+
+
 }

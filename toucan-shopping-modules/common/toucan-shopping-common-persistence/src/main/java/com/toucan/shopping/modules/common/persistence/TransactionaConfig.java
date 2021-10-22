@@ -66,6 +66,7 @@ public class TransactionaConfig {
 
         source.addTransactionalMethod("find*", readOnlyTransaction);
         source.addTransactionalMethod("query*", readOnlyTransaction);
+        source.addTransactionalMethod("get*", readOnlyTransaction);
 
         return new TransactionInterceptor(transactionManager, source);
     }

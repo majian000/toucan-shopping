@@ -8,11 +8,20 @@
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="brand_sort" jdbcType="INTEGER" property="brandSort" />
 
     </resultMap>
 
     <select id="queryAllList" resultMap="brandCategoryMap" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory">
         select * from t_brand_category
     </select>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory" >
+        insert into t_brand_category(id,brand_id,category_id,create_date,delete_status,brand_sort)
+        values(#{id},#{brandId},#{categoryId},#{createDate},#{deleteStatus},#{brandSort})
+    </insert>
+
 
 </mapper>
