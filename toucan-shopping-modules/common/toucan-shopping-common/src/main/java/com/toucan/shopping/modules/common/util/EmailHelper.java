@@ -42,10 +42,11 @@ public class EmailHelper {
             int a= 1/0;
         }catch(Exception e)
         {
+            e.printStackTrace();
             email.setContent(ExceptionHelper.convertExceptionStack2String(e));
         }
 
-        EmailHelper.send(email);
+       EmailHelper.send(email);
 
     }
 
