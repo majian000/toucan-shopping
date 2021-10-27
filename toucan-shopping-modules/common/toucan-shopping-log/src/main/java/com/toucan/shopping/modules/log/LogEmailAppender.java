@@ -40,6 +40,10 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
 
         email.setSubject(DateUtils.format(DateUtils.currentDate(),DateUtils.FORMATTER_SS)+"——异常邮件");
         IThrowableProxy throwableProxy = loggingEvent.getThrowableProxy();
+        if(throwableProxy!=null)
+        {
+            System.out.println(throwableProxy);
+        }
         //email.setContent(ExceptionHelper.convertExceptionStack2StringByThrowable(loggingEvent.getThrowable()))
 
 
