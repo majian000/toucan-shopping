@@ -111,9 +111,7 @@
 
     <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.LogEmailAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>warn</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
+            <level>info</level>
         </filter>
     </appender>
 
