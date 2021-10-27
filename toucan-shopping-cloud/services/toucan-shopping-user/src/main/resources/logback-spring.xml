@@ -109,19 +109,21 @@
         </filter>
     </appender>
 
-    <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.LogEmailAppender">
+  <!--  <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.LogEmailAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>info</level>
+            <level>warn</level>
         </filter>
-    </appender>
+    </appender>-->
 
-
+<!--
+    <root level="INFO">
+        <appender-ref ref="WARN_EMAIL" />
+    </root>-->
 
     <springProfile name="dev">
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="debug">
             <appender-ref ref="CONSOLE" />
-            <appender-ref ref="WARN_EMAIL" />
         </root>
     </springProfile>
 

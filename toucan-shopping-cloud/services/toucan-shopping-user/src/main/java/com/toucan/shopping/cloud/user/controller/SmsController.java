@@ -98,7 +98,7 @@ public class SmsController {
 
             //调用第三方短信接口
             logger.info("{} send messsage {}",userSmsVO.getMobilePhone(),userSmsVO.getMsg());
-//            int a=1/0;
+            int a=1/0;
 
         }catch(Exception e)
         {

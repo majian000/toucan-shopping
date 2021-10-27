@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.log;
 
+import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.AppenderBase;
 import com.toucan.shopping.modules.common.util.EmailHelper;
 import com.toucan.shopping.modules.common.util.ExceptionHelper;
@@ -7,7 +10,6 @@ import com.toucan.shopping.modules.common.vo.email.Email;
 import com.toucan.shopping.modules.common.vo.email.EmailConfig;
 import com.toucan.shopping.modules.common.vo.email.Receiver;
 import lombok.SneakyThrows;
-import org.slf4j.event.LoggingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +37,11 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
 
         email.setEmailConfig(emailConfig);
         email.setSubject("异常邮件");
+        IThrowableProxy throwableProxy = loggingEvent.getThrowableProxy();
+        //email.setContent(ExceptionHelper.convertExceptionStack2StringByThrowable(loggingEvent.getThrowable()))
 
-        email.setContent(ExceptionHelper.convertExceptionStack2StringByThrowable(loggingEvent.getThrowable()));
 
-
-        EmailHelper.send(email);
+//        EmailHelper.send(email);
 
     }
 }
