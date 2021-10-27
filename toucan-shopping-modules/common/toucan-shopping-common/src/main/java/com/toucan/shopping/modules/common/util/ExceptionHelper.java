@@ -20,7 +20,7 @@ public class ExceptionHelper {
      * @param exception
      * @return
      */
-    public static String convertExceptionStack2String(Exception exception)
+    public static String convertExceptionStack2StringByException(Exception exception)
     {
         StringBuilder builder = new StringBuilder();
         StackTraceElement[] stackTraceElements = exception.getStackTrace();
@@ -49,5 +49,40 @@ public class ExceptionHelper {
         return builder.toString();
     }
 
+
+
+    /**
+     * 将异常栈转换成字符串
+     * @param throwable
+     * @return
+     */
+    public static String convertExceptionStack2StringByThrowable(Throwable throwable)
+    {
+        StringBuilder builder = new StringBuilder();
+        StackTraceElement[] stackTraceElements = throwable.getStackTrace();
+        builder.append(throwable.getClass().getName());
+        builder.append(" ");
+        builder.append(throwable.getLocalizedMessage());
+        builder.append("<br>");
+        if(stackTraceElements!=null&&stackTraceElements.length>0)
+        {
+            for(int i=0;i<stackTraceElements.length;i++)
+            {
+                StackTraceElement stackTraceElement = stackTraceElements[i];
+                builder.append("at ");
+                builder.append(stackTraceElement.getClassName());
+                builder.append(".");
+                builder.append(stackTraceElement.getMethodName());
+                builder.append("(");
+                builder.append(stackTraceElement.getFileName());
+                builder.append(":");
+                builder.append(stackTraceElement.getLineNumber());
+                builder.append(")");
+                builder.append("<br>");
+            }
+        }
+
+        return builder.toString();
+    }
 
 }

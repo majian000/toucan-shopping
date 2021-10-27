@@ -43,7 +43,7 @@ public class EmailHelper {
         }catch(Exception e)
         {
             e.printStackTrace();
-            email.setContent(ExceptionHelper.convertExceptionStack2String(e));
+            email.setContent(ExceptionHelper.convertExceptionStack2StringByException(e));
         }
 
        EmailHelper.send(email);

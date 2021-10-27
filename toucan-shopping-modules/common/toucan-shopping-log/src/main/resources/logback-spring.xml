@@ -3,7 +3,7 @@
 
     <contextName>logback</contextName>
 
-
+<!--
     <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.LogEmailAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>warn</level>
@@ -11,6 +11,9 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
+
+ -->
+
 
 
 </configuration>
