@@ -4,6 +4,7 @@ import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.AppenderBase;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.EmailHelper;
 import com.toucan.shopping.modules.common.util.ExceptionHelper;
 import com.toucan.shopping.modules.common.vo.email.Email;
@@ -36,7 +37,8 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
         emailConfig.setReceivers(receivers);
 
         email.setEmailConfig(emailConfig);
-        email.setSubject("异常邮件");
+
+        email.setSubject(DateUtils.format(DateUtils.currentDate(),DateUtils.FORMATTER_SS)+"——异常邮件");
         IThrowableProxy throwableProxy = loggingEvent.getThrowableProxy();
         //email.setContent(ExceptionHelper.convertExceptionStack2StringByThrowable(loggingEvent.getThrowable()))
 
