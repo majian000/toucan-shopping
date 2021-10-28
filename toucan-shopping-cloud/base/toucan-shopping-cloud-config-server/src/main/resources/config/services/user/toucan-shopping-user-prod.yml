@@ -52,7 +52,7 @@ toucan:
     log: #日志模块
       email:
         enabled: true
-        title: 用户服务异常邮件
+        title: ——用户服务异常邮件
         sender: mmdrss@163.com #发件人
         sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
         receiver-list[0]:
