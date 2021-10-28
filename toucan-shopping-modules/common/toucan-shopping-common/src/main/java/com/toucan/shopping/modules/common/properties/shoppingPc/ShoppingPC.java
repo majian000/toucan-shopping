@@ -1,5 +1,6 @@
-package com.toucan.shopping.modules.common.properties;
+package com.toucan.shopping.modules.common.properties.shoppingPc;
 
+import com.toucan.shopping.modules.common.properties.shoppingPc.freemarker.Freemarker;
 import lombok.Data;
 
 /**

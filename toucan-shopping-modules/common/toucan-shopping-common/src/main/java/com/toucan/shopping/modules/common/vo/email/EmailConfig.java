@@ -21,6 +21,22 @@ public class EmailConfig {
      * smtp服务器的地址
      */
     private String smtpServer;
+
+    /**
+     * smtp是否需要认证
+     */
+    private String smtpAuth = "true";
+
+    /**
+     * 默认套接字实现类
+     */
+    private String smtpSocketFactoryClass = "javax.net.ssl.SSLSocketFactory";
+
+    /**
+     * 套接字是否需要回调
+     */
+    private String smtpSocketFactoryFallback="false";
+
     /**
      * 发送人
      */
@@ -61,12 +77,12 @@ public class EmailConfig {
     public Properties getProperties()
     {
         Properties props = new Properties();
-        props.setProperty("mail.transport.protocol", "smtp");
+        props.setProperty("mail.transport.protocol", protocol);
         props.setProperty("mail.smtp.host", smtpServer);
-        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.auth", smtpAuth);
         props.setProperty("mail.smtp.port", port);
-        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.socketFactory.class", smtpSocketFactoryClass);
+        props.setProperty("mail.smtp.socketFactory.fallback", smtpSocketFactoryFallback);
         props.setProperty("mail.smtp.socketFactory.port", port);
 
         return props;

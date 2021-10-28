@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -44,6 +45,9 @@ public class SmsController {
 
     @Value("${toucan.app-code}")
     private String appCode;
+
+    @Autowired
+    private Toucan toucan;
 
 
 
@@ -96,6 +100,9 @@ public class SmsController {
                 return resultObjectVO;
             }
 
+            toucan.getSeller();
+
+            int a=1/0;
             //调用第三方短信接口
             logger.info("{} send messsage {}",userSmsVO.getMobilePhone(),userSmsVO.getMsg());
 

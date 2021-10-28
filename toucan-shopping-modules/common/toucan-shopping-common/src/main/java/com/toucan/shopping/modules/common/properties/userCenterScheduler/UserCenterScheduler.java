@@ -1,4 +1,4 @@
-package com.toucan.shopping.modules.common.properties;
+package com.toucan.shopping.modules.common.properties.userCenterScheduler;
 
 import lombok.Data;
 

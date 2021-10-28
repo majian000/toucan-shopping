@@ -1,5 +1,15 @@
 package com.toucan.shopping.modules.common.properties;
 
+import com.toucan.shopping.modules.common.properties.adminAuth.AdminAuth;
+import com.toucan.shopping.modules.common.properties.adminAuthScheduler.AdminAuthScheduler;
+import com.toucan.shopping.modules.common.properties.modules.Modules;
+import com.toucan.shopping.modules.common.properties.plugins.Plugins;
+import com.toucan.shopping.modules.common.properties.seller.Seller;
+import com.toucan.shopping.modules.common.properties.shoppingPc.ShoppingPC;
+import com.toucan.shopping.modules.common.properties.sign.Sign;
+import com.toucan.shopping.modules.common.properties.user.User;
+import com.toucan.shopping.modules.common.properties.userAuth.UserAuth;
+import com.toucan.shopping.modules.common.properties.userCenterScheduler.UserCenterScheduler;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
