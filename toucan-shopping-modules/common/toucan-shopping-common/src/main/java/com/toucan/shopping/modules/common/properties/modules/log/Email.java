@@ -2,6 +2,8 @@ package com.toucan.shopping.modules.common.properties.modules.log;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 自定义日志邮件
  */
@@ -36,9 +38,9 @@ public class Email {
     private String senderAuthenticationCode;
 
     /**
-     * 收件人列表多个用,分割
+     * 收件人列表
      */
-    private String receiverList;
+    private List<ReceiverProperty> receiverList;
 
 
 }

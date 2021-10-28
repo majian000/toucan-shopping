@@ -11,6 +11,8 @@ import com.toucan.shopping.modules.common.vo.email.Email;
 import com.toucan.shopping.modules.common.vo.email.EmailConfig;
 import com.toucan.shopping.modules.common.vo.email.Receiver;
 import com.toucan.shopping.modules.log.helper.LogbackThrowableProxyHelper;
+import com.toucan.shopping.modules.log.message.LogEmailMessage;
+import com.toucan.shopping.modules.log.queue.LogEmailQueue;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -27,30 +29,24 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
      */
     public static boolean enabled;
 
+    public static LogEmailQueue logEmailQueue;
+
 
     @SneakyThrows
     @Override
     protected void append(LoggingEvent loggingEvent) {
         if(enabled) {
             IThrowableProxy throwableProxy = loggingEvent.getThrowableProxy();
-            if (throwableProxy != null&&emailConfig!=null) {
+            if (throwableProxy != null&&emailConfig!=null&&logEmailQueue!=null) {
                 Email email = new Email();
+                email.setEmailConfig(emailConfig);
+                email.setSubject(DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_SS) + "——异常邮件");
+                email.setContent(LogbackThrowableProxyHelper.convertExceptionStack2StringByThrowable(throwableProxy));
 
-//
-//                //设置收件人
-//                List<Receiver> receivers = new ArrayList<Receiver>();
-//                Receiver receiver = new Receiver();
-//                receiver.setEmail("695391446@qq.com");
-//                receiver.setName("user001");
-//                receivers.add(receiver);
-//                emailConfig.setReceivers(receivers);
-//
-//                email.setEmailConfig(emailConfig);
-//
-//                email.setSubject(DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_SS) + "——异常邮件");
-//                email.setContent(LogbackThrowableProxyHelper.convertExceptionStack2StringByThrowable(throwableProxy));
-//
-//                EmailHelper.send(email);
+                LogEmailMessage logEmailMessage = new LogEmailMessage();
+                logEmailMessage.setEmail(email);
+                logEmailQueue.push(logEmailMessage);
+
             }
         }
     }

@@ -2,12 +2,20 @@ package com.toucan.shopping.modules.log.config;
 
 
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.properties.modules.log.ReceiverProperty;
+import com.toucan.shopping.modules.common.util.EmailUtils;
 import com.toucan.shopping.modules.common.vo.email.EmailConfig;
+import com.toucan.shopping.modules.common.vo.email.Receiver;
 import com.toucan.shopping.modules.log.appender.LogEmailAppender;
+import com.toucan.shopping.modules.log.queue.LogEmailQueue;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class LogEmailConfig {
@@ -16,6 +24,8 @@ public class LogEmailConfig {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private LogEmailQueue logEmailQueue;
 
 
     @PostConstruct
@@ -33,6 +43,10 @@ public class LogEmailConfig {
         {
             throw new NullPointerException("日志邮件SMTP配置没有找到");
         }
+        if(CollectionUtils.isEmpty(toucan.getModules().getLog().getEmail().getReceiverList()))
+        {
+            throw new NullPointerException("日志邮件收件人列表为空");
+        }
 
         LogEmailAppender.emailConfig = new EmailConfig();
         LogEmailAppender.enabled = toucan.getModules().getLog().getEmail().isEnabled();
@@ -46,7 +60,26 @@ public class LogEmailConfig {
         LogEmailAppender.emailConfig.setSender(toucan.getModules().getLog().getEmail().getSender());
         //授权码
         LogEmailAppender.emailConfig.setSenderAccount(toucan.getModules().getLog().getEmail().getSenderAuthenticationCode());
-        System.out.println(toucan);
+        //收件人
+        List<ReceiverProperty> receiverPropertyList = toucan.getModules().getLog().getEmail().getReceiverList();
+        List<Receiver> receivers = new ArrayList<Receiver>();
+        for(ReceiverProperty receiverProperty:receiverPropertyList)
+        {
+            if(StringUtils.isEmpty(receiverProperty.getEmail()))
+            {
+                throw new IllegalArgumentException("收件人邮箱不能为空");
+            }
+            if(!EmailUtils.isEmail(receiverProperty.getEmail()))
+            {
+                throw new IllegalArgumentException("收件人邮箱有误");
+            }
+            Receiver receiver = new Receiver();
+            receiver.setEmail(receiverProperty.getEmail());
+            receiver.setName(receiverProperty.getName());
+            receivers.add(receiver);
+        }
+        LogEmailAppender.emailConfig.setReceivers(receivers);
+        LogEmailAppender.logEmailQueue = logEmailQueue;
     }
 
 }
