@@ -22,11 +22,7 @@ public class EmailUtils {
             return false;
         }
         Matcher m = p.matcher(email);
-        if(m.matches()){
-            return true;
-        }else{
-            return false;
-        }
+        return m.matches();
     }
 
 }

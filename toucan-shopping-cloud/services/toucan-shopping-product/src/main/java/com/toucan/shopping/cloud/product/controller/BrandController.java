@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.product.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.LetterFirstUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -128,26 +129,44 @@ public class BrandController {
             List<Map> rows = JSONObject.parseArray(buffer.toString(), Map.class);
             for(Map row:rows)
             {
-                Brand brand = new Brand();
-                brand.setCreateAdminId(-1L);
-                brand.setCreateDate(new Date());
-                brand.setChineseName(String.valueOf(row.get("text")));
-                Long brandId = idGenerator.id();
-                brand.setId(brandId);
-                brand.setTrademarkAreaType(1);
-                brand.setDeleteStatus(0);
-                brand.setEnabledStatus(1);
-                brandService.save(brand);
+                try {
+                    Brand brand = new Brand();
+                    brand.setCreateAdminId(-1L);
+                    brand.setCreateDate(new Date());
+                    String text = String.valueOf(row.get("text"));
+                    if(text.indexOf("/")!=-1)
+                    {
+                        String[] texts = text.split("/");
+                        brand.setEnglishName(texts[0]);
+                        brand.setChineseName(texts[1]);
+                    }else{
+                        if(LetterFirstUtil.isLetterFirst(text))
+                        {
+                            brand.setEnglishName(text); //英文名称
+                        }else{
+                            brand.setChineseName(text);
+                        }
+                    }
+                    Long brandId = idGenerator.id();
+                    brand.setId(brandId);
+                    brand.setTrademarkAreaType(1);
+                    brand.setDeleteStatus(0);
+                    brand.setEnabledStatus(1);
+                    brandService.save(brand);
 
-                BrandCategory brandCategory = new BrandCategory();
-                brandCategory.setId(idGenerator.id());
-                brandCategory.setCategoryId(889589266118606872L);
-                brandCategory.setBrandId(brandId);
-                brandCategory.setCreateDate(new Date());
-                brandCategory.setDeleteStatus(0);
-                brandCategory.setBrandSort(999);
+                    BrandCategory brandCategory = new BrandCategory();
+                    brandCategory.setId(idGenerator.id());
+                    brandCategory.setCategoryId(889589266118606872L);
+                    brandCategory.setBrandId(brandId);
+                    brandCategory.setCreateDate(new Date());
+                    brandCategory.setDeleteStatus(0);
+                    brandCategory.setBrandSort(999);
 
-                brandCategoryService.save(brandCategory);
+                    brandCategoryService.save(brandCategory);
+                }catch(Exception e)
+                {
+
+                }
 
             }
         }catch(Exception e)
