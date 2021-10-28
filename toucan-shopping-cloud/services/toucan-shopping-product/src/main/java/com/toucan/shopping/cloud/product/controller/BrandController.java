@@ -8,8 +8,10 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.Brand;
+import com.toucan.shopping.modules.product.entity.BrandCategory;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
+import com.toucan.shopping.modules.product.service.BrandCategoryService;
 import com.toucan.shopping.modules.product.service.BrandService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
@@ -21,9 +23,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -38,6 +44,9 @@ public class BrandController {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private BrandCategoryService brandCategoryService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -93,6 +102,60 @@ public class BrandController {
         return resultObjectVO;
     }
 
+
+
+
+
+
+    /**
+     * 保存类别
+     * @return
+     */
+    @RequestMapping(value="/saveByDisk",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO saveByDisk()
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            File file = new File("D:\\mj\\2021-10-28\\布鞋品牌.json");
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            StringBuffer buffer = new StringBuffer();
+            String line = null;
+            while((line = bufferedReader.readLine())!=null)
+            {
+                buffer.append(line);
+            }
+            List<Map> rows = JSONObject.parseArray(buffer.toString(), Map.class);
+            for(Map row:rows)
+            {
+                Brand brand = new Brand();
+                brand.setCreateAdminId(-1L);
+                brand.setCreateDate(new Date());
+                brand.setChineseName(String.valueOf(row.get("text")));
+                Long brandId = idGenerator.id();
+                brand.setId(brandId);
+                brand.setTrademarkAreaType(1);
+                brand.setDeleteStatus(0);
+                brand.setEnabledStatus(1);
+                brandService.save(brand);
+
+                BrandCategory brandCategory = new BrandCategory();
+                brandCategory.setId(idGenerator.id());
+                brandCategory.setCategoryId(889589266118606872L);
+                brandCategory.setBrandId(brandId);
+                brandCategory.setCreateDate(new Date());
+                brandCategory.setDeleteStatus(0);
+                brandCategory.setBrandSort(999);
+
+                brandCategoryService.save(brandCategory);
+
+            }
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return resultObjectVO;
+    }
 
 
 
