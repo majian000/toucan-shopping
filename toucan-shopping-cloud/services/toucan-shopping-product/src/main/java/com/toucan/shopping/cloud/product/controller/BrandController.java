@@ -134,35 +134,39 @@ public class BrandController {
                     brand.setCreateAdminId(-1L);
                     brand.setCreateDate(new Date());
                     String text = String.valueOf(row.get("text"));
-                    if(text.indexOf("/")!=-1)
+                    if(text.length()>50)
                     {
-                        String[] texts = text.split("/");
-                        brand.setEnglishName(texts[0]);
-                        brand.setChineseName(texts[1]);
-                    }else{
-                        if(LetterFirstUtil.isLetterFirst(text))
-                        {
-                            brand.setEnglishName(text); //英文名称
-                        }else{
-                            brand.setChineseName(text);
-                        }
+                        System.out.println(text);
                     }
-                    Long brandId = idGenerator.id();
-                    brand.setId(brandId);
-                    brand.setTrademarkAreaType(1);
-                    brand.setDeleteStatus(0);
-                    brand.setEnabledStatus(1);
-                    brandService.save(brand);
-
-                    BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setId(idGenerator.id());
-                    brandCategory.setCategoryId(889589266118606872L);
-                    brandCategory.setBrandId(brandId);
-                    brandCategory.setCreateDate(new Date());
-                    brandCategory.setDeleteStatus(0);
-                    brandCategory.setBrandSort(999);
-
-                    brandCategoryService.save(brandCategory);
+//                    if(text.indexOf("/")!=-1)
+//                    {
+//                        String[] texts = text.split("/");
+//                        brand.setEnglishName(texts[0]);
+//                        brand.setChineseName(texts[1]);
+//                    }else{
+//                        if(LetterFirstUtil.isLetterFirst(text))
+//                        {
+//                            brand.setEnglishName(text); //英文名称
+//                        }else{
+//                            brand.setChineseName(text);
+//                        }
+//                    }
+//                    Long brandId = idGenerator.id();
+//                    brand.setId(brandId);
+//                    brand.setTrademarkAreaType(1);
+//                    brand.setDeleteStatus(0);
+//                    brand.setEnabledStatus(1);
+//                    brandService.save(brand);
+//
+//                    BrandCategory brandCategory = new BrandCategory();
+//                    brandCategory.setId(idGenerator.id());
+//                    brandCategory.setCategoryId(889589266118606872L);
+//                    brandCategory.setBrandId(brandId);
+//                    brandCategory.setCreateDate(new Date());
+//                    brandCategory.setDeleteStatus(0);
+//                    brandCategory.setBrandSort(999);
+//
+//                    brandCategoryService.save(brandCategory);
                 }catch(Exception e)
                 {
 
