@@ -11,6 +11,11 @@ import java.util.List;
 public class Email {
 
     /**
+     * 邮件标题
+     */
+    private String title;
+
+    /**
      * SMTP服务器配置
      */
     private Smtp smtp;

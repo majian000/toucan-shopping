@@ -37,6 +37,12 @@ public class EmailConfig {
      */
     private String smtpSocketFactoryFallback="false";
 
+
+    /**
+     * 邮件标题
+     */
+    private String subject;
+
     /**
      * 发送人
      */

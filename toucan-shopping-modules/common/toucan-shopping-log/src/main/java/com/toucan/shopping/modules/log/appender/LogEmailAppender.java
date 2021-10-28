@@ -40,7 +40,7 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
             if (throwableProxy != null&&emailConfig!=null&&logEmailQueue!=null) {
                 Email email = new Email();
                 email.setEmailConfig(emailConfig);
-                email.setSubject(DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_SS) + "——异常邮件");
+                email.setSubject(DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_SS) + emailConfig.getSubject());
                 email.setContent(LogbackThrowableProxyHelper.convertExceptionStack2StringByThrowable(throwableProxy));
 
                 LogEmailMessage logEmailMessage = new LogEmailMessage();

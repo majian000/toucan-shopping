@@ -58,6 +58,8 @@ public class LogEmailConfig {
         LogEmailAppender.emailConfig.setSmtpSocketFactoryFallback(toucan.getModules().getLog().getEmail().getSmtp().getSocketFactoryFallback());
         //发件人
         LogEmailAppender.emailConfig.setSender(toucan.getModules().getLog().getEmail().getSender());
+        //邮件标题
+        LogEmailAppender.emailConfig.setSubject(toucan.getModules().getLog().getEmail().getTitle());
         //授权码
         LogEmailAppender.emailConfig.setSenderAccount(toucan.getModules().getLog().getEmail().getSenderAuthenticationCode());
         //收件人

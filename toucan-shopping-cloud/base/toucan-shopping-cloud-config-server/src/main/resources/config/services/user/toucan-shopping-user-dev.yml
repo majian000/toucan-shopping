@@ -52,6 +52,7 @@ toucan:
     log: #日志模块
       email:
         enabled: true
+        title: 用户服务异常邮件
         protocol: smtp
         smtp: #smtp服务器配置
           host: smtp.163.com #SMTP服务器
