@@ -80,3 +80,16 @@ toucan:
     xss-filter:
       enabled: true
       exclude-paths: /function/update,/function/save  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+  modules:
+    log: #日志模块
+      email:
+        enabled: true
+        title: ——权限中台应用——异常邮件
+        sender: mmdrss@163.com #发件人
+        sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
+        receiver-list[0]:
+          email: 695391446@qq.com
+          name: majian
+    #        receiver-list[1]:
+    #          email: 695391446@qq.com
+    #          name: majian
