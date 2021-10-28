@@ -4,7 +4,7 @@
     <contextName>logback</contextName>
 
 <!--
-    <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.LogEmailAppender">
+    <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.appender.LogEmailAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>warn</level>
             <onMatch>ACCEPT</onMatch>
