@@ -48,6 +48,7 @@ public class LogEmailConfig {
             throw new NullPointerException("日志邮件收件人列表为空");
         }
 
+        //启动的时候并没有先加载配置中心的文件后再初始化对象,所以配置会有延迟,所以采用全局配置对象的这种方式处理
         LogEmailAppender.emailConfig = new EmailConfig();
         LogEmailAppender.enabled = toucan.getModules().getLog().getEmail().isEnabled();
         //SMTP服务器配置

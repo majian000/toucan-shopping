@@ -39,3 +39,20 @@ toucan:
     xss-filter:
       enabled: true
       exclude-paths: /function/update,/function/save  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+  modules:
+    log: #日志模块
+      email:
+        enabled: false
+        title: ——权限中台服务——异常邮件
+        protocol: smtp
+        smtp: #smtp服务器配置
+          host: smtp.163.com #SMTP服务器
+          auth: true #SMTP认证
+          port: 465
+          socketFactory-class: javax.net.ssl.SSLSocketFactory
+          socketFactory-fallback: false
+        sender: mmdrss@163.com #发件人
+        sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
+        receiver-list[0]:
+          email: 695391446@qq.com
+          name: majian

@@ -55,6 +55,22 @@ toucan:
   workerId: 1 #工作ID 0~31, 每个服务实例都有一个工作ID
   datacenterId: 0 #数据中心ID (0~31)
   modules:
+    log: #日志模块
+      email:
+        enabled: false
+        title: ——地区服务——异常邮件
+        protocol: smtp
+        smtp: #smtp服务器配置
+          host: smtp.163.com #SMTP服务器
+          auth: true #SMTP认证
+          port: 465
+          socketFactory-class: javax.net.ssl.SSLSocketFactory
+          socketFactory-fallback: false
+        sender: mmdrss@163.com #发件人
+        sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
+        receiver-list[0]:
+          email: 695391446@qq.com
+          name: majian
     areaCache:
       redis:
         select: single # 可选值 single:单实例 cluster:集群
