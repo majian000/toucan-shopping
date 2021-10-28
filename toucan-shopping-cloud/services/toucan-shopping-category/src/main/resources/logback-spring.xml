@@ -109,12 +109,27 @@
         </filter>
     </appender>
 
+    <appender name="WARN_EMAIL" class="com.toucan.shopping.modules.log.appender.LogEmailAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>warn</level>
+        </filter>
+    </appender>
+
+    <appender name="ERROR_EMAIL" class="com.toucan.shopping.modules.log.appender.LogEmailAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+        </filter>
+    </appender>
+
 
 
     <springProfile name="dev">
         <logger name="com.toucan.shopping" level="debug"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
+            <!--日志邮件 -->
+            <appender-ref ref="WARN_EMAIL" />
+            <appender-ref ref="ERROR_EMAIL" />
         </root>
     </springProfile>
 
@@ -134,6 +149,9 @@
             <appender-ref ref="INFO_FILE" />
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="WARN_FILE" />
+            <!--日志邮件 -->
+            <appender-ref ref="WARN_EMAIL" />
+            <appender-ref ref="ERROR_EMAIL" />
         </root>
     </springProfile>
 
