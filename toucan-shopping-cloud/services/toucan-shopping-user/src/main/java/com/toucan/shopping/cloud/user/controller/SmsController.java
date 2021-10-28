@@ -100,9 +100,7 @@ public class SmsController {
                 return resultObjectVO;
             }
 
-            toucan.getSeller();
 
-            int a=1/0;
             //调用第三方短信接口
             logger.info("{} send messsage {}",userSmsVO.getMobilePhone(),userSmsVO.getMsg());
 

@@ -21,14 +21,9 @@ public class LogEmailQueueThread extends Thread {
     @Autowired
     private LogEmailQueue logEmailQueue;
 
-
-    @Autowired
-    private Toucan toucan;
-
     @Override
     public void run() {
 
-        int row = 0;
         while(true)
         {
             try {
