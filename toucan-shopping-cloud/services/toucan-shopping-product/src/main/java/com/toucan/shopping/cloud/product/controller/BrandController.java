@@ -175,7 +175,7 @@ public class BrandController {
                     }
                 }catch(Exception e)
                 {
-
+                    e.printStackTrace();
                 }
 
             }

@@ -18,7 +18,7 @@
 
 
     <select id="queryList" resultMap="brandCategoryMap" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory">
-        select * from t_brand_category
+        select * from t_brand_category t
         <where>
             1=1
 
