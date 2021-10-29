@@ -9,6 +9,7 @@ public interface BrandService {
 
     List<Brand> queryAllList(Brand queryModel);
 
+    List<Brand> queryList(Brand queryModel);
 
     int save(Brand entity);
 

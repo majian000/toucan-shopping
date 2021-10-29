@@ -19,9 +19,26 @@
     </resultMap>
 
     <select id="queryAllList" resultMap="brandMap" parameterType="com.toucan.shopping.modules.product.entity.Brand">
-        select * from t_brand
+        select * from t_brand where 1=1 and t.delete_status = 0
     </select>
 
+    <select id="queryList" resultMap="brandMap" parameterType="com.toucan.shopping.modules.product.entity.Brand">
+        select t.* from t_brand t
+        <where>
+            1=1
+
+            <if test="chineseName!=null and chineseName!='' ">
+                and t.chinese_name=#{chineseName}
+            </if>
+
+            <if test="englishName!=null and englishName!='' ">
+                and t.english_name=#{englishName}
+            </if>
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
 
 
 

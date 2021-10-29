@@ -10,6 +10,7 @@ public interface BrandCategoryService {
 
     List<BrandCategory> queryAllList(BrandCategory queryModel);
 
+    List<BrandCategory> queryList(BrandCategory queryModel);
 
     int save(BrandCategory entity);
 

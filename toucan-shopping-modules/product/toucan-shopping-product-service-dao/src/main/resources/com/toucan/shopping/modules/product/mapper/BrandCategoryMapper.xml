@@ -13,10 +13,27 @@
     </resultMap>
 
     <select id="queryAllList" resultMap="brandCategoryMap" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory">
-        select * from t_brand_category
+        select * from t_brand_category  where 1=1 and t.delete_status = 0
     </select>
 
 
+    <select id="queryList" resultMap="brandCategoryMap" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory">
+        select * from t_brand_category
+        <where>
+            1=1
+
+            <if test="categoryId!=null and categoryId!='' ">
+                and t.category_id=#{categoryId}
+            </if>
+
+            <if test="brandId!=null and brandId!='' ">
+                and t.brand_id=#{brandId}
+            </if>
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory" >
         insert into t_brand_category(id,brand_id,category_id,create_date,delete_status,brand_sort)

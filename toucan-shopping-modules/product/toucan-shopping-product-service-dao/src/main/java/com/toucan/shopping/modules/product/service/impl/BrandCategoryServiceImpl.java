@@ -23,6 +23,11 @@ public class BrandCategoryServiceImpl implements BrandCategoryService {
     }
 
     @Override
+    public List<BrandCategory> queryList(BrandCategory queryModel) {
+        return brandCategoryMapper.queryList(queryModel);
+    }
+
+    @Override
     public int save(BrandCategory entity) {
         return brandCategoryMapper.insert(entity);
     }

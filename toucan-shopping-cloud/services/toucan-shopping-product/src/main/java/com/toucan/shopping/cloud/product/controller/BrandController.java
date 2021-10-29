@@ -134,39 +134,45 @@ public class BrandController {
                     brand.setCreateAdminId(-1L);
                     brand.setCreateDate(new Date());
                     String text = String.valueOf(row.get("text"));
-                    if(text.length()>50)
+                    if(text.indexOf("/")!=-1)
                     {
-                        System.out.println(text);
+                        String[] texts = text.split("/");
+                        brand.setEnglishName(texts[0]);
+                        brand.setChineseName(texts[1]);
+                    }else{
+                        if(LetterFirstUtil.isLetterFirst(text))
+                        {
+                            brand.setEnglishName(text); //英文名称
+                        }else{
+                            brand.setChineseName(text);
+                        }
                     }
-//                    if(text.indexOf("/")!=-1)
-//                    {
-//                        String[] texts = text.split("/");
-//                        brand.setEnglishName(texts[0]);
-//                        brand.setChineseName(texts[1]);
-//                    }else{
-//                        if(LetterFirstUtil.isLetterFirst(text))
-//                        {
-//                            brand.setEnglishName(text); //英文名称
-//                        }else{
-//                            brand.setChineseName(text);
-//                        }
-//                    }
-//                    Long brandId = idGenerator.id();
-//                    brand.setId(brandId);
-//                    brand.setTrademarkAreaType(1);
-//                    brand.setDeleteStatus(0);
-//                    brand.setEnabledStatus(1);
-//                    brandService.save(brand);
-//
-//                    BrandCategory brandCategory = new BrandCategory();
-//                    brandCategory.setId(idGenerator.id());
-//                    brandCategory.setCategoryId(889589266118606872L);
-//                    brandCategory.setBrandId(brandId);
-//                    brandCategory.setCreateDate(new Date());
-//                    brandCategory.setDeleteStatus(0);
-//                    brandCategory.setBrandSort(999);
-//
-//                    brandCategoryService.save(brandCategory);
+                    List<Brand> brands = brandService.queryList(brand);
+                    Long brandId = -1L;
+                    if(CollectionUtils.isEmpty(brands)) {
+                        brandId = idGenerator.id();
+                        brand.setId(brandId);
+                        brand.setTrademarkAreaType(1);
+                        brand.setDeleteStatus(0);
+                        brand.setEnabledStatus(1);
+                        brandService.save(brand);
+                    }else {
+                        brandId =brands.get(0).getId();
+                    }
+
+                    BrandCategory brandCategory = new BrandCategory();
+                    brandCategory.setCategoryId(889589266118606872L);
+                    brandCategory.setBrandId(brandId);
+
+                    List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
+                    if(CollectionUtils.isEmpty(brandCategories)) {
+                        brandCategory.setId(idGenerator.id());
+                        brandCategory.setCreateDate(new Date());
+                        brandCategory.setDeleteStatus(0);
+                        brandCategory.setBrandSort(999);
+
+                        brandCategoryService.save(brandCategory);
+                    }
                 }catch(Exception e)
                 {
 
