@@ -53,6 +53,8 @@
         <module>common/toucan-shopping-freemarker</module>
         <!--日志封装 -->
         <module>common/toucan-shopping-log</module>
+        <!--日志web扩展 -->
+        <module>common/toucan-shopping-log-web</module>
 
         <!--用户中心实体VO -->
         <module>user/toucan-shopping-user-entity-vo</module>
@@ -184,6 +186,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-log</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-log-web</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
@@ -401,6 +410,7 @@
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
+
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
