@@ -107,6 +107,10 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-log-web</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>
