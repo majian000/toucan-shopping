@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.BrandCategory;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
+import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.service.BrandCategoryService;
 import com.toucan.shopping.modules.product.service.BrandService;
@@ -107,6 +108,46 @@ public class BrandController {
 
 
 
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            BrandPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandPageInfo.class);
+            PageInfo<BrandVO> pageInfo =  brandService.queryListPage(queryPageInfo);
+            resultObjectVO.setData(pageInfo);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
 
     /**
      * 保存类别
@@ -118,7 +159,7 @@ public class BrandController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            File file = new File("D:\\mj\\2021-10-28\\笔记本电脑品牌.json");
+            File file = new File("D:\\mj\\2021-10-28\\空调品牌.json");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             StringBuffer buffer = new StringBuffer();
             String line = null;
@@ -164,7 +205,7 @@ public class BrandController {
                     }
 
                     BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setCategoryId(889589266152161322L);
+                    brandCategory.setCategoryId(889589266072469568L);
                     brandCategory.setBrandId(brandId);
 
                     List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);

@@ -18,6 +18,15 @@
         
     </resultMap>
 
+    <resultMap id="brandVOMap" type="com.toucan.shopping.modules.product.vo.BrandVO" extends="brandMap" >
+    </resultMap>
+
+
+
+    <sql id="queryListPageWhere">
+    </sql>
+
+
     <select id="queryAllList" resultMap="brandMap" parameterType="com.toucan.shopping.modules.product.entity.Brand">
         select * from t_brand where 1=1 and t.delete_status = 0
     </select>
@@ -46,6 +55,32 @@
         insert into t_brand(id,trademark_area_type,chinese_name,english_name,regist_number_1,regist_number_2,seminary,owner_name,create_admin_id,create_date,delete_status,enabled_status)
         values(#{id},#{trademarkAreaType},#{chineseName},#{englishName},#{registNumber1},#{registNumber2},#{seminary},#{ownerName},#{createAdminId},#{createDate},#{deleteStatus},#{enabledStatus})
     </insert>
+
+
+
+    <select id="queryListPage" resultMap="brandVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
+        select t.* from t_brand t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
+        select count(*) from t_brand t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
 
 
 </mapper>
