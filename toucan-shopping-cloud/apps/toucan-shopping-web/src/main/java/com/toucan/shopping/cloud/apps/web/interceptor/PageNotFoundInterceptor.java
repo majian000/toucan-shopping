@@ -15,10 +15,10 @@ public class PageNotFoundInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
-            response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/dynamic/index");
+            response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/index");
             return false;
         } else if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-            response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/dynamic/index");
+            response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/index");
             return false;
         }
         return true;
