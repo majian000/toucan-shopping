@@ -118,7 +118,7 @@ public class BrandController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            File file = new File("D:\\mj\\2021-10-28\\布鞋品牌.json");
+            File file = new File("D:\\mj\\2021-10-28\\笔记本电脑品牌.json");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             StringBuffer buffer = new StringBuffer();
             String line = null;
@@ -127,8 +127,11 @@ public class BrandController {
                 buffer.append(line);
             }
             List<Map> rows = JSONObject.parseArray(buffer.toString(), Map.class);
-            for(Map row:rows)
+            int size = rows.size();
+            for(int i=0;i<size;i++)
             {
+                logger.info("遍历到{} 总数{}",i,size);
+                Map row=rows.get(i);
                 try {
                     Brand brand = new Brand();
                     brand.setCreateAdminId(-1L);
@@ -161,7 +164,7 @@ public class BrandController {
                     }
 
                     BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setCategoryId(889589266118606872L);
+                    brandCategory.setCategoryId(889589266152161322L);
                     brandCategory.setBrandId(brandId);
 
                     List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);

@@ -13,12 +13,15 @@ public class PageNotFoundInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
             response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/index/page");
+            return false;
         } else if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/index/page");
+            return false;
         }
+        return true;
     }
 }

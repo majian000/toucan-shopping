@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Writer;
 
-@Slf4j
 public class PageErrorException implements TemplateExceptionHandler {
 
 
