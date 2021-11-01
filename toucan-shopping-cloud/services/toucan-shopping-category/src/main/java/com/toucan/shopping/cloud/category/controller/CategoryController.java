@@ -836,7 +836,11 @@ public class CategoryController {
             }else {
                 //查询当前节点下的所有子节点
                 CategoryVO queryCategory = new CategoryVO();
-                queryCategory.setParentId(queryPageInfo.getParentId());
+                if(queryPageInfo.getParentId()!=null) {
+                    queryCategory.setParentId(queryPageInfo.getParentId());
+                }else{
+                    queryCategory.setParentId(-1L);
+                }
                 List<Category> categories = categoryService.queryList(queryCategory);
                 for (int i = 0; i < categories.size(); i++) {
                     Category category = categories.get(i);
