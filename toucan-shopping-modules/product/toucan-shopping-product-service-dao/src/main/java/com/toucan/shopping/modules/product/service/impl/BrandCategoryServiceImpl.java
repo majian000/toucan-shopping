@@ -41,4 +41,9 @@ public class BrandCategoryServiceImpl implements BrandCategoryService {
         }
         return brandCategoryMapper.queryListByBrandIds(brandIds);
     }
+
+    @Override
+    public List<Long> queryBrandIdListByCategoryId(List<Long> categoryIds) {
+        return brandCategoryMapper.queryBrandIdListByCategoryId(categoryIds);
+    }
 }

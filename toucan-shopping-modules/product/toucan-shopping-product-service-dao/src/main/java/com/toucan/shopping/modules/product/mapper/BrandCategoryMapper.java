@@ -19,4 +19,12 @@ public interface BrandCategoryMapper {
 
     List<BrandCategoryVO> queryListByBrandIds(List<Long> brandIds);
 
+
+    /**
+     * 返回所有品牌ID
+     * @param categoryIds
+     * @return
+     */
+    List<Long> queryBrandIdListByCategoryId(List<Long> categoryIds);
+
 }

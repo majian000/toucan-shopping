@@ -135,6 +135,11 @@ public class BrandController {
         }
         try {
             BrandPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandPageInfo.class);
+            //如果选择了分类
+            if(CollectionUtils.isNotEmpty(queryPageInfo.getCategoryIdList()))
+            {
+                queryPageInfo.setBrandIdList(brandCategoryService.queryBrandIdListByCategoryId(queryPageInfo.getCategoryIdList()));
+            }
             PageInfo<BrandVO> pageInfo =  brandService.queryListPage(queryPageInfo);
             if(CollectionUtils.isNotEmpty(pageInfo.getList()))
             {

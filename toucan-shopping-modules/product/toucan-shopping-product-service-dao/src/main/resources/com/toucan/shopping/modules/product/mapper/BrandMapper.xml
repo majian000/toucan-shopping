@@ -24,6 +24,13 @@
 
 
     <sql id="queryListPageWhere">
+
+        <if test="brandIdList!=null and brandIdList.size>0 ">
+            t.id in
+            <foreach item="item" index="index" collection="brandIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
     </sql>
 
 

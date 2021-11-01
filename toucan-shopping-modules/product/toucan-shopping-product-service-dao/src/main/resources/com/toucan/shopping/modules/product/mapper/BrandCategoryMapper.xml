@@ -48,6 +48,17 @@
         </foreach>
     </select>
 
+
+    <select id="queryBrandIdListByCategoryId" resultType="java.lang.Long">
+        select brand_id from t_brand_category t
+            where 1=1 and t.delete_status=0
+            and t.category_id
+            <foreach item="item" index="index" collection="categoryIds" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+            group by brand_id
+    </select>
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory" >
         insert into t_brand_category(id,brand_id,category_id,create_date,delete_status,brand_sort)
         values(#{id},#{brandId},#{categoryId},#{createDate},#{deleteStatus},#{brandSort})

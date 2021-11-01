@@ -30,6 +30,11 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
      */
     private List<Long> categoryIdList;
 
+    /**
+     * 品牌ID列表
+     */
+    private List<Long> brandIdList;
+
     //==============================================
 
 }
