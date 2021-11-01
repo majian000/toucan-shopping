@@ -19,7 +19,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
-import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
+import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -83,7 +83,7 @@ public class BrandController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, BrandPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

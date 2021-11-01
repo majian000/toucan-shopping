@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 列表查询页对象
  */
@@ -21,6 +23,12 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
 
     private Integer id;
 
+    private Long categoryId;
+
+    /**
+     * 查询指定类别下的品牌列表
+     */
+    private List<Long> categoryIdList;
 
     //==============================================
 
