@@ -33,7 +33,7 @@
         </if>
 
         <if test="name!=null and name!='' ">
-            and (t.chinese_name like concat(#{name},'%') or t.english_name like concat(#{name},'%'))
+            and (t.chinese_name like binary concat(#{name},'%') or t.english_name like binary concat(#{name},'%'))
 
         </if>
 
