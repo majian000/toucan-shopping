@@ -75,9 +75,9 @@ public class BrandController {
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.warn("没有找到对象编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象编码!");
+            resultObjectVO.setMsg("没有找到应用编码!");
             return resultObjectVO;
         }
 
@@ -135,11 +135,6 @@ public class BrandController {
         }
         try {
             BrandPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandPageInfo.class);
-            //如果选择了分类
-            if(CollectionUtils.isNotEmpty(queryPageInfo.getCategoryIdList()))
-            {
-                queryPageInfo.setBrandIdList(brandCategoryService.queryBrandIdListByCategoryId(queryPageInfo.getCategoryIdList()));
-            }
             PageInfo<BrandVO> pageInfo =  brandService.queryListPage(queryPageInfo);
             if(CollectionUtils.isNotEmpty(pageInfo.getList()))
             {
