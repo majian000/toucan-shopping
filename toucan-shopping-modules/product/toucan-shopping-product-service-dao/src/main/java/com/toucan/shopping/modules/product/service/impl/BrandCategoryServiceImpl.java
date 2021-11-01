@@ -6,8 +6,10 @@ import com.toucan.shopping.modules.product.mapper.BrandCategoryMapper;
 import com.toucan.shopping.modules.product.mapper.BrandMapper;
 import com.toucan.shopping.modules.product.service.BrandCategoryService;
 import com.toucan.shopping.modules.product.service.BrandService;
+import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -30,5 +32,13 @@ public class BrandCategoryServiceImpl implements BrandCategoryService {
     @Override
     public int save(BrandCategory entity) {
         return brandCategoryMapper.insert(entity);
+    }
+
+    @Override
+    public List<BrandCategoryVO> queryListByBrandIds(List<Long> brandIds) {
+        if(CollectionUtils.isEmpty(brandIds)) {
+            return null;
+        }
+        return brandCategoryMapper.queryListByBrandIds(brandIds);
     }
 }

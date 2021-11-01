@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.BrandCategory;
+import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,5 +17,6 @@ public interface BrandCategoryMapper {
 
     int insert(BrandCategory entity);
 
+    List<BrandCategoryVO> queryListByBrandIds(List<Long> brandIds);
 
 }

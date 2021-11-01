@@ -15,9 +15,9 @@ import java.util.List;
 public class BrandVO extends Brand {
 
     /**
-     * 品牌分类关联
+     * 品牌关联的分类ID
      */
-    private List<BrandCategoryVO> brandCategorys;
+    private List<Long> categoryIdList;
 
 
 

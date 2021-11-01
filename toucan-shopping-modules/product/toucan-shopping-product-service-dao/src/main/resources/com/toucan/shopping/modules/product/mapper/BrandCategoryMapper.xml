@@ -12,6 +12,10 @@
 
     </resultMap>
 
+    <resultMap id="brandCategoryVOMap" type="com.toucan.shopping.modules.product.vo.BrandCategoryVO" extends="brandCategoryMap">
+
+    </resultMap>
+
     <select id="queryAllList" resultMap="brandCategoryMap" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory">
         select * from t_brand_category  where 1=1 and t.delete_status = 0
     </select>
@@ -33,6 +37,15 @@
             and t.delete_status = 0
 
         </where>
+    </select>
+
+
+    <select id="queryListByBrandIds" resultMap="brandCategoryVOMap">
+        select * from t_brand_category t  where 1=1 and t.delete_status = 0
+        and t.brand_id in
+        <foreach item="item" index="index" collection="brandIds" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory" >

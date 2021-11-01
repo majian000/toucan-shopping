@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.service.BrandCategoryService;
 import com.toucan.shopping.modules.product.service.BrandService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
+import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -135,6 +136,30 @@ public class BrandController {
         try {
             BrandPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandPageInfo.class);
             PageInfo<BrandVO> pageInfo =  brandService.queryListPage(queryPageInfo);
+            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
+            {
+                List<BrandVO> brandVOS = pageInfo.getList();
+                List<Long> brandIds = new ArrayList<Long>();
+                for(BrandVO brandVO:brandVOS)
+                {
+                    brandVO.setCategoryIdList(new ArrayList<Long>());
+                    brandIds.add(brandVO.getId());
+                }
+                List<BrandCategoryVO> brandCategoryVOS = brandCategoryService.queryListByBrandIds(brandIds);
+                if(CollectionUtils.isNotEmpty(brandCategoryVOS))
+                {
+                    for(BrandVO brandVO:brandVOS)
+                    {
+                        for(BrandCategoryVO brandCategoryVO:brandCategoryVOS)
+                        {
+                            if(brandVO.getId().longValue()==brandCategoryVO.getBrandId().longValue())
+                            {
+                                brandVO.getCategoryIdList().add(brandCategoryVO.getCategoryId());
+                            }
+                        }
+                    }
+                }
+            }
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {

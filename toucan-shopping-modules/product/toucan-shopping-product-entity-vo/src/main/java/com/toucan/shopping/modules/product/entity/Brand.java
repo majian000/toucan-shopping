@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,6 +21,10 @@ public class Brand {
     private String registNumber2; //商标注册号
     private String seminary; //发源地 (仅在trademarkAreaType值为2时不为空)
     private String ownerName; //所有人姓名
+
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
     private Long createAdminId; //创建人ID
     private Integer deleteStatus; //删除状态 0未删除 1已删除

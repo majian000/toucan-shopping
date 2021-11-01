@@ -31,6 +31,9 @@
         select * from t_brand where 1=1 and t.delete_status = 0
     </select>
 
+
+
+
     <select id="queryList" resultMap="brandMap" parameterType="com.toucan.shopping.modules.product.entity.Brand">
         select t.* from t_brand t
         <where>
