@@ -8,8 +8,8 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionServi
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -98,6 +97,43 @@ public class BrandController extends UIController {
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<BrandVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BrandVO.class);
                     if(tableVO.getCount()>0) {
+                        List<Category> categories = new ArrayList<Category>();
+                        for(BrandVO brandVO:list)
+                        {
+                            brandVO.setCategoryNameList(new ArrayList<String>());
+                            List<Long> categoryIdList = brandVO.getCategoryIdList();
+                            if(CollectionUtils.isNotEmpty(categoryIdList)) {
+                                for(Long categoryId:categoryIdList) {
+                                    Category category = new Category();
+                                    category.setId(categoryId);
+                                    categories.add(category);
+                                }
+                            }
+                        }
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categories);
+                        resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess()) {
+                            List<Category> categoryList = resultObjectVO.formatDataList(Category.class);
+                            if(CollectionUtils.isNotEmpty(categoryList))
+                            {
+                                for(Category category:categoryList)
+                                {
+                                    for(BrandVO brandVO:list)
+                                    {
+                                        List<Long> categoryIdList = brandVO.getCategoryIdList();
+                                        if(CollectionUtils.isNotEmpty(categoryIdList)) {
+                                            for(Long categoryId:categoryIdList)
+                                            {
+                                                if(category.getId().longValue()==categoryId.longValue())
+                                                {
+                                                    brandVO.getCategoryNameList().add(category.getName());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         tableVO.setData((List)list);
                     }
                 }

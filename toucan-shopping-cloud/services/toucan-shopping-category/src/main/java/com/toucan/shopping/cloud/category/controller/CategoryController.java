@@ -306,16 +306,13 @@ public class CategoryController {
             return resultObjectVO;
         }
         try {
-            List<Category> Categorys = JSONArray.parseArray(requestJsonVO.getEntityJson(),Category.class);
-            if(!CollectionUtils.isEmpty(Categorys)) {
-                List<Category> categoryList = new ArrayList<Category>();
-                for(Category category:Categorys) {
-                    Category categoryEntity = categoryService.queryById(category.getId());
-                    if(categoryEntity!=null) {
-                        categoryList.add(categoryEntity);
-                    }
+            List<Category> categorys = JSONArray.parseArray(requestJsonVO.getEntityJson(),Category.class);
+            if(!CollectionUtils.isEmpty(categorys)) {
+                List<Long> categoryIdList = new ArrayList<Long>();
+                for(Category category:categorys) {
+                    categoryIdList.add(category.getId());
                 }
-                resultObjectVO.setData(categoryList);
+                resultObjectVO.setData(categoryService.queryListByIdList(categoryIdList));
             }
         }catch(Exception e)
         {

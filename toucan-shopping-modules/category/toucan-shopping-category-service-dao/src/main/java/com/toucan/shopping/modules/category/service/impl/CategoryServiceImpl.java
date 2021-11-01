@@ -63,6 +63,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.queryById(id);
     }
 
+    @Override
+    public List<Category> queryListByIdList(List<Long> ids) {
+        return categoryMapper.queryListByIdList(ids);
+    }
+
     @Transactional
     @Override
     public int deleteById(Long id) {

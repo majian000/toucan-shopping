@@ -19,6 +19,10 @@ public class BrandVO extends Brand {
      */
     private List<Long> categoryIdList;
 
+    /**
+     * 品牌管理的分类名称
+     */
+    private List<String> categoryNameList;
 
 
 }

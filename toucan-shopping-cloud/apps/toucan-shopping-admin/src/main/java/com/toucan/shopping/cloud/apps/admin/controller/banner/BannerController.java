@@ -8,9 +8,6 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerAreaService;
 import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
-import com.toucan.shopping.modules.admin.auth.entity.Admin;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
-import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.entity.Banner;
@@ -21,7 +18,6 @@ import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.area.vo.BannerAreaVO;
 import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
-import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -136,7 +132,7 @@ public class BannerController extends UIController {
                     resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess())
                     {
-                        List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataArray(AdminVO.class);
+                        List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
                         if(!CollectionUtils.isEmpty(adminVOS))
                         {
                             for(BannerVO bannerVO:list)

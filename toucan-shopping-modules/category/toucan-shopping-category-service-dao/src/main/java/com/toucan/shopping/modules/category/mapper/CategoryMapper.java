@@ -23,6 +23,8 @@ public interface CategoryMapper {
 
     List<Category> queryByParentId(Long parentId);
 
+    List<Category> queryListByIdList(List<Long> ids);
+
     int deleteById(Long id);
 
     int update(Category category);

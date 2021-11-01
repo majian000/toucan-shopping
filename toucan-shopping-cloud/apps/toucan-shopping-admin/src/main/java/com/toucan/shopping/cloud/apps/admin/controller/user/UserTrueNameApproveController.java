@@ -3,26 +3,19 @@ package com.toucan.shopping.cloud.apps.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
-import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
-import com.toucan.shopping.modules.user.vo.UserTrueNameApproveRecordVO;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +27,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -174,7 +165,7 @@ public class UserTrueNameApproveController extends UIController {
             ResultObjectVO resultObjectVO = feignUserTrueNameApproveService.queryById(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                List<UserTrueNameApproveVO> userTrueNameApproveVOS = resultObjectVO.formatDataArray(UserTrueNameApproveVO.class);
+                List<UserTrueNameApproveVO> userTrueNameApproveVOS = resultObjectVO.formatDataList(UserTrueNameApproveVO.class);
                 if(CollectionUtils.isNotEmpty(userTrueNameApproveVOS)) {
                     userTrueNameApproveVO = userTrueNameApproveVOS.get(0);
                     if(userTrueNameApproveVO.getIdcardImg1()!=null) {

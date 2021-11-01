@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
-import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -14,12 +12,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
-import com.toucan.shopping.modules.seller.entity.SellerShop;
-import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
-import com.toucan.shopping.modules.user.vo.UserVO;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -73,7 +62,7 @@ public class ShopProductPageController extends BaseController {
             ResultObjectVO resultObjectVO = feignShopCategoryService.queryAllList(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                List<ShopCategoryVO> shopCategoryVOList = resultObjectVO.formatDataArray(ShopCategoryVO.class);
+                List<ShopCategoryVO> shopCategoryVOList = resultObjectVO.formatDataList(ShopCategoryVO.class);
                 request.setAttribute("shopCategoryList", JSONArray.toJSONString(shopCategoryVOList));
             }else{
                 request.setAttribute("shopCategoryList", "[]");

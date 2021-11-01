@@ -120,7 +120,7 @@ public class AttributeKeyController extends UIController {
                         resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(),requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
-                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataArray(CategoryVO.class);
+                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
                             if(CollectionUtils.isNotEmpty(categoryVOS))
                             {
                                 for(AttributeKeyVO attributeKeyVO:list)
@@ -146,7 +146,7 @@ public class AttributeKeyController extends UIController {
                         resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
-                            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataArray(AdminVO.class);
+                            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
                             if(CollectionUtils.isNotEmpty(adminVOS))
                             {
                                 for(AttributeKeyVO attributeKeyVO:list)
@@ -270,7 +270,7 @@ public class AttributeKeyController extends UIController {
                         resultObjectVO = feignCategoryService.findById(requestJsonVO.sign(),requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
-                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataArray(CategoryVO.class);
+                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
                             if(CollectionUtils.isNotEmpty(categoryVOS))
                             {
                                 for(CategoryVO categoryVO:categoryVOS)

@@ -41,7 +41,7 @@ public class ResultObjectVO extends ResultVO {
     }
 
 
-    public <T> List<T> formatDataArray(Class<T> clazz)
+    public <T> List<T> formatDataList(Class<T> clazz)
     {
         if(data!=null) {
             return JSONArray.parseArray(JSONObject.toJSONString(data),clazz);

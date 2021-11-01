@@ -75,7 +75,7 @@ public class UserTrueNameApprovePageController extends BaseController {
             resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataList(UserTrueNameApprove.class);
                 if(CollectionUtils.isNotEmpty(userTrueNameApproves))
                 {
                     UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);
@@ -149,7 +149,7 @@ public class UserTrueNameApprovePageController extends BaseController {
             resultObjectVO = feignUserTrueNameApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                List<UserTrueNameApprove> userTrueNameApproves = resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                List<UserTrueNameApprove> userTrueNameApproves = resultObjectVO.formatDataList(UserTrueNameApprove.class);
                 if(CollectionUtils.isNotEmpty(userTrueNameApproves))
                 {
                     UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);

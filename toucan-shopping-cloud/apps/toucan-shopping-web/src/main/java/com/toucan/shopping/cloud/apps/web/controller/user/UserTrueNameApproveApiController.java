@@ -4,7 +4,6 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -13,7 +12,6 @@ import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -26,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -199,7 +196,7 @@ public class UserTrueNameApproveApiController extends BaseController {
                 String idcard2ImgFilePath = imageUploadService.uploadFile(userTrueNameApproveVO.getIdcardImg2File().getBytes(), idcard2ImgExt);
                 userTrueNameApproveVO.setIdcardImg2(idcard2ImgFilePath);
 
-                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataArray(UserTrueNameApprove.class);
+                List<UserTrueNameApprove> userTrueNameApproves = (List<UserTrueNameApprove>)resultObjectVO.formatDataList(UserTrueNameApprove.class);
                 if(CollectionUtils.isNotEmpty(userTrueNameApproves)) {
                     UserTrueNameApprove userTrueNameApprove = userTrueNameApproves.get(0);
 

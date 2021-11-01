@@ -35,6 +35,8 @@ public interface CategoryService {
 
     Category queryById(Long id);
 
+    List<Category> queryListByIdList(List<Long> ids);
+
     int deleteById(Long id);
 
     List<Category> findByParentId(Long parentId);
