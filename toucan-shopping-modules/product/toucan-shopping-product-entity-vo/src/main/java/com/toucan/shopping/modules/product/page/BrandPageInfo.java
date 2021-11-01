@@ -35,6 +35,11 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
      */
     private List<Long> brandIdList;
 
+    /**
+     * 品牌名称
+     */
+    private String name;
+
     //==============================================
 
 }
