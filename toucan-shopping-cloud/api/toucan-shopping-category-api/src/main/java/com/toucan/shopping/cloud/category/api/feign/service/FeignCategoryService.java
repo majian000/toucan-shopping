@@ -145,4 +145,14 @@ public interface FeignCategoryService {
     ResultObjectVO queryListByPid(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
+
+
+    /**
+     * 查询指定节点下所有子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
+
 }

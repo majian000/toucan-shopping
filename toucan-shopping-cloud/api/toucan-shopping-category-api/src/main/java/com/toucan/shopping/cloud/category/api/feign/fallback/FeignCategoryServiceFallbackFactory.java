@@ -248,6 +248,21 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryChildListByPid(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.queryChildListByPid faild  params:{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }
