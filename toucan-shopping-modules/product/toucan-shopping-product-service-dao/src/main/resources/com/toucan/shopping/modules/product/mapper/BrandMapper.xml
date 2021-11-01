@@ -88,15 +88,13 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
-        select count(*) from t_brand t left join t_brand_category tbc on t.id = tbc.brand_id
-        <where>
-            1=1 and t.delete_status = 0
+            select t.* from t_brand t left join t_brand_category tbc on t.id = tbc.brand_id
+            <where>
+                1=1 and t.delete_status = 0
 
-            <include refid="queryListPageWhere" />
-        </where>
-
-        group by t.id
-
+                <include refid="queryListPageWhere"/>
+            </where>
+            group by t.id
     </select>
 
 
