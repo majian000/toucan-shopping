@@ -25,9 +25,9 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">属性名</label>
+                            <label class="layui-form-label">品牌名</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="attributeName" autocomplete="off" class="layui-input">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -53,9 +53,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="attributeKeyTable" lay-filter="attributeKeyTableFilter"></table>
+        <table class="layui-hide" id="brandTable" lay-filter="brandTableFilter"></table>
 
-        <script type="text/html" id="attributeKeyTableBar">
+        <script type="text/html" id="brandTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -104,7 +104,7 @@
         }
 
         table.render({
-            elem: '#attributeKeyTable',
+            elem: '#brandTable',
             url: "[[@{/}]]product/brand/list",
             method:'POST',
             where:getFormParam(),
@@ -121,14 +121,15 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'attributeName',  title: '属性名'},
-                    {field: 'categoryName',  title: '所属类别'},
+                    {field: 'chineseName',  title: '品牌名(中文)'},
+                    {field: 'englishName',  title: '品牌名(英文)'},
+                    {field: 'registNumber1',  title: '商标注册号'},
+                    {field: 'registNumber2',  title: '商标注册号'},
+                    {field: 'seminary',  title: '发源地'},
+                    {field: 'ownerName',  title: '所有人'},
                     {field: 'attributeSort',  title: '排序'},
-                    {field: 'createAdminName', title: '创建人'},
                     {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#brandTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -140,7 +141,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('attributeKeyTable', {
+            table.reload('brandTable', {
                 page: {
                     curr: 1
                 }
@@ -212,7 +213,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(attributeKeyTableFilter)', function (obj) {
+        table.on('toolbar(brandTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加属性名',
@@ -227,7 +228,7 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('attributeKeyTable')
+                var checkStatus = table.checkStatus('brandTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -244,7 +245,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
+                            table.reload('brandTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -335,11 +336,11 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(attributeKeyTableFilter)', function (obj) {
+        table.on('checkbox(brandTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(attributeKeyTableFilter)', function (obj) {
+        table.on('tool(brandTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
@@ -366,7 +367,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
+                            table.reload('brandTable', {
                                 page: {
                                     curr: 1
                                 }
