@@ -153,7 +153,9 @@ public class RequestXssWrapper extends HttpServletRequestWrapper {
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-
+        if(body==null){
+            body=new byte[0];
+        }
         final ByteArrayInputStream inputStream = new ByteArrayInputStream(body);
 
         return new ServletInputStream() {
