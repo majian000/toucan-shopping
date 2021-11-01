@@ -121,6 +121,19 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
+                    {field: 'trademarkAreaType', width:150, title: '商标注册地区',
+                        templet: function (row) {
+                            if(row.trademarkAreaType == null){
+                                return "";
+                            }
+                            if(row.trademarkAreaType == "1"){
+                                return "中国大陆地区";
+                            }
+                            if(row.trademarkAreaType == "2"){
+                                return "香港、澳门特别行政区，台湾省和境外国家";
+                            }
+                            return row.trademarkAreaType;
+                        }},
                     {field: 'chineseName',  title: '品牌名(中文)'},
                     {field: 'englishName',  title: '品牌名(英文)'},
                     {field: 'registNumber1',  title: '商标注册号'},
