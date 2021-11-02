@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
+import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -179,7 +180,6 @@ public class BrandController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-
         return "pages/product/brand/add.html";
     }
 
@@ -215,19 +215,19 @@ public class BrandController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
-            BrandVO attributeKeyVO = new BrandVO();
-            attributeKeyVO.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, attributeKeyVO);
+            BrandVO brandVO = new BrandVO();
+            brandVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, brandVO);
             ResultObjectVO resultObjectVO = feignBrandService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
             {
                 if(resultObjectVO.getData()!=null) {
-                    List<BrandVO> attributeKeyVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),BrandVO.class);
-                    if(!CollectionUtils.isEmpty(attributeKeyVOS))
+                    List<BrandVO> brandVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),BrandVO.class);
+                    if(!CollectionUtils.isEmpty(brandVOS))
                     {
-                        attributeKeyVO = attributeKeyVOS.get(0);
+                        brandVO = brandVOS.get(0);
                         //查询类别名称
-                        request.setAttribute("model",attributeKeyVO);
+                        request.setAttribute("model",brandVO);
                     }
                 }
 
@@ -260,11 +260,10 @@ public class BrandController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            AttributeKey attributeKey =new AttributeKey();
-            attributeKey.setId(Long.parseLong(id));
-            attributeKey.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            Brand brand =new Brand();
+            brand.setId(Long.parseLong(id));
 
-            String entityJson = JSONObject.toJSONString(attributeKey);
+            String entityJson = JSONObject.toJSONString(brand);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
@@ -287,17 +286,17 @@ public class BrandController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/delete/ids",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteByIds( @RequestBody List<BrandVO> attributeKeyVOS)
+    public ResultObjectVO deleteByIds( @RequestBody List<BrandVO> brandVOS)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(org.springframework.util.CollectionUtils.isEmpty(attributeKeyVOS))
+            if(org.springframework.util.CollectionUtils.isEmpty(brandVOS))
             {
                 resultObjectVO.setMsg("请求失败,请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            String entityJson = JSONObject.toJSONString(attributeKeyVOS);
+            String entityJson = JSONObject.toJSONString(brandVOS);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
