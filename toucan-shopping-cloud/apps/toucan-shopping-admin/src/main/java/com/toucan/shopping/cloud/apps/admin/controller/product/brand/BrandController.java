@@ -61,9 +61,6 @@ public class BrandController extends UIController {
     @Autowired
     private FeignCategoryService feignCategoryService;
 
-    @Autowired
-    private FeignAdminService feignAdminService;
-
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
