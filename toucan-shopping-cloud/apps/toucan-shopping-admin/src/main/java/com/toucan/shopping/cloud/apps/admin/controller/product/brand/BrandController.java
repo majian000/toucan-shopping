@@ -110,7 +110,7 @@ public class BrandController extends UIController {
                             }
                         }
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categories);
-                        resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO.sign(),requestJsonVO);
+                        resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO);
                         if(resultObjectVO.isSuccess()) {
                             List<Category> categoryList = resultObjectVO.formatDataList(Category.class);
                             if(CollectionUtils.isNotEmpty(categoryList))

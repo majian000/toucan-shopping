@@ -112,8 +112,12 @@
             },
             cols: [
                 [
-                    {type: "checkbox", width: 50},
-                    {field: 'id',  title: '主键'},
+                    {type: "checkbox", width: 100},
+                    {field: 'id',width: 170,  title: '主键'},
+                    {field: 'categoryNameList', width:150, title: '所属类目',
+                        templet: function (row) {
+                            return row.categoryNameList.join(",");
+                        }},
                     {field: 'trademarkAreaType', width:150, title: '商标注册地区',
                         templet: function (row) {
                             if(row.trademarkAreaType == null){
@@ -134,7 +138,7 @@
                     {field: 'seminary',  title: '发源地'},
                     {field: 'ownerName',  title: '品牌所有人'},
                     {field: 'attributeSort',  title: '排序'},
-                    {field: 'createDate',  title: '创建时间'},
+                    {field: 'createDate',width:100,  title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#brandTableBar', align: "center"}
                 ]
             ],
