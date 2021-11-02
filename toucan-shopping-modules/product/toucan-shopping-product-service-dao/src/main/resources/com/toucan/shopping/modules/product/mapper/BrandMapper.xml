@@ -29,6 +29,7 @@
             and (t.chinese_name like binary concat(#{name},'%') or t.english_name like binary concat(#{name},'%'))
         </if>
 
+
     </sql>
 
 
@@ -87,6 +88,15 @@
         </where>
     </select>
 
+
+    <select id="queryByIdList">
+        select * from t_brand t
+        where 1=1
+        and t.id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
 
 
 </mapper>

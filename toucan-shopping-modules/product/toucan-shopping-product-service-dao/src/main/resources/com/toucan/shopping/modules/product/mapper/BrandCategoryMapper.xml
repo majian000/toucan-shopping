@@ -16,6 +16,15 @@
 
     </resultMap>
 
+
+    <sql id="queryListPageWhere">
+
+        <if test="categoryId!=null ">
+          and t.category_id = #{categoryId}
+        </if>
+
+    </sql>
+
     <select id="queryAllList" resultMap="brandCategoryMap" parameterType="com.toucan.shopping.modules.product.entity.BrandCategory">
         select * from t_brand_category  where 1=1 and t.delete_status = 0
     </select>
@@ -64,5 +73,29 @@
         values(#{id},#{brandId},#{categoryId},#{createDate},#{deleteStatus},#{brandSort})
     </insert>
 
+
+
+
+
+    <select id="queryListPage" resultMap="brandCategoryVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandCategoryPageInfo">
+        select t.* from t_brand_category t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.brand_sort desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandCategoryPageInfo">
+        select count(*) from t_brand_category t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere"/>
+        </where>
+    </select>
 
 </mapper>

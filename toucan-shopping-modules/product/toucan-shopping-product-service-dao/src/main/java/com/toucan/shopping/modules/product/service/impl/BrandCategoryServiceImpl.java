@@ -1,9 +1,11 @@
 package com.toucan.shopping.modules.product.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.BrandCategory;
 import com.toucan.shopping.modules.product.mapper.BrandCategoryMapper;
 import com.toucan.shopping.modules.product.mapper.BrandMapper;
+import com.toucan.shopping.modules.product.page.BrandCategoryPageInfo;
 import com.toucan.shopping.modules.product.service.BrandCategoryService;
 import com.toucan.shopping.modules.product.service.BrandService;
 import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
@@ -40,6 +42,15 @@ public class BrandCategoryServiceImpl implements BrandCategoryService {
             return null;
         }
         return brandCategoryMapper.queryListByBrandIds(brandIds);
+    }
+
+    @Override
+    public PageInfo<BrandCategoryVO> queryListPage(BrandCategoryPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<BrandCategoryVO> pageInfo = new PageInfo();
+        pageInfo.setList(brandCategoryMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(brandCategoryMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 
     @Override

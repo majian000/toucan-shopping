@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.BrandCategory;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
+import com.toucan.shopping.modules.product.page.BrandCategoryPageInfo;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.service.BrandCategoryService;
@@ -106,6 +107,65 @@ public class BrandController {
     }
 
 
+
+
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/categoryId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListByCategoryId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        try {
+            BrandCategoryPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandCategoryPageInfo.class);
+            PageInfo<BrandCategoryVO> pageInfo =  brandCategoryService.queryListPage(queryPageInfo);
+            List<Long> brandIdList = new ArrayList<Long>();
+            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
+            {
+                for(BrandCategoryVO brandCategoryVO:pageInfo.getList()) {
+                    brandIdList.add(brandCategoryVO.getBrandId());
+                }
+            }
+            List<Brand> brands = brandService.queryByIdList(brandIdList);
+            for(BrandCategoryVO brandCategoryVO:pageInfo.getList()) {
+                for(Brand brand:brands) {
+                    if(brandCategoryVO.getBrandId().longValue()==brand.getId().longValue())
+                    {
+                        if(StringUtils.isNotEmpty(brand.getChineseName())&&StringUtils.isNotEmpty(brand.getEnglishName()))
+                        {
+                            brandCategoryVO.setBrandName(brand.getChineseName()+"/"+brand.getEnglishName());
+                        }else{
+                            if(StringUtils.isNotEmpty(brand.getChineseName()))
+                            {
+                                brandCategoryVO.setBrandName(brand.getChineseName());
+                            }else{
+                                brandCategoryVO.setBrandName(brand.getEnglishName());
+                            }
+                        }
+                    }
+                }
+            }
+            resultObjectVO.setData(pageInfo);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+        return resultObjectVO;
+    }
 
 
 

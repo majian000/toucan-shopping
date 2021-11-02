@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.BrandCategory;
+import com.toucan.shopping.modules.product.page.BrandCategoryPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,6 +20,24 @@ public interface BrandCategoryMapper {
 
     List<BrandCategoryVO> queryListByBrandIds(List<Long> brandIds);
 
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<BrandCategoryVO> queryListPage(BrandCategoryPageInfo pageInfo);
+
+
+
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryListPageCount(BrandCategoryPageInfo pageInfo);
 
     /**
      * 返回所有品牌ID

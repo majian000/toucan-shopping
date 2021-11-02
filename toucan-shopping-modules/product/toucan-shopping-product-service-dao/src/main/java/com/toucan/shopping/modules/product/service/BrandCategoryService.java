@@ -1,8 +1,10 @@
 package com.toucan.shopping.modules.product.service;
 
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.BrandCategory;
+import com.toucan.shopping.modules.product.page.BrandCategoryPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
 
 import java.util.List;
@@ -16,6 +18,8 @@ public interface BrandCategoryService {
     int save(BrandCategory entity);
 
     List<BrandCategoryVO> queryListByBrandIds(List<Long> brandIds);
+
+    PageInfo<BrandCategoryVO> queryListPage(BrandCategoryPageInfo queryPageInfo);
 
 
     /**

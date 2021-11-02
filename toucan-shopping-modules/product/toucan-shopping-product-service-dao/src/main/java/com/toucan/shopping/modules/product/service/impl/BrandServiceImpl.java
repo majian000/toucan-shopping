@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.product.service.BrandService;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -26,6 +27,16 @@ public class BrandServiceImpl implements BrandService {
         pageInfo.setTotal(brandMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public List<Brand> queryByIdList(List<Long> idList) {
+        if(CollectionUtils.isEmpty(idList))
+        {
+            return null;
+        }
+        return brandMapper.queryByIdList(idList);
+    }
+
 
     @Override
     public List<Brand> queryAllList(Brand queryModel) {

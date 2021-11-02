@@ -24,6 +24,10 @@ public interface BrandService {
      */
     PageInfo<BrandVO> queryListPage(BrandPageInfo queryPageInfo);
 
+
+    List<Brand> queryByIdList(List<Long> id);
+
+
     List<Brand> queryAllList(Brand queryModel);
 
     List<Brand> queryList(Brand queryModel);

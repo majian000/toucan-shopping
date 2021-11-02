@@ -20,6 +20,10 @@ public interface BrandMapper {
      */
     List<BrandVO> queryListPage(BrandPageInfo pageInfo);
 
+
+    List<Brand> queryByIdList(List<Long> idList);
+
+
     /**
      * 返回列表页数量
      * @param pageInfo
