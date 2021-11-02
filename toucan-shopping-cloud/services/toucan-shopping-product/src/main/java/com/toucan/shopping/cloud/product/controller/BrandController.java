@@ -130,6 +130,13 @@ public class BrandController {
 
         try {
             BrandCategoryPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandCategoryPageInfo.class);
+            if(queryPageInfo.getCategoryId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空!");
+                return resultObjectVO;
+
+            }
             PageInfo<BrandCategoryVO> pageInfo =  brandCategoryService.queryListPage(queryPageInfo);
             List<Long> brandIdList = new ArrayList<Long>();
             if(CollectionUtils.isNotEmpty(pageInfo.getList()))
