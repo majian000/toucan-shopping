@@ -88,25 +88,6 @@ public class BrandController extends UIController {
     {
         TableVO tableVO = new TableVO();
         try {
-            if(pageInfo.getCategoryId()!=null&&pageInfo.getCategoryId().longValue()!=-1L)
-            {
-                Category queryCategory = new Category();
-                queryCategory.setId(pageInfo.getCategoryId());
-                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategory);
-                ResultObjectVO resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<Category> categoryList = resultObjectVO.formatDataList(Category.class);
-                    if(CollectionUtils.isNotEmpty(categoryList))
-                    {
-                        pageInfo.setCategoryIdList(new LinkedList<Long>());
-                        for(Category category:categoryList)
-                        {
-                            pageInfo.getCategoryIdList().add(category.getId());
-                        }
-                    }
-                }
-            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)

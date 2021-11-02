@@ -23,8 +23,7 @@ public class BrandServiceImpl implements BrandService {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<BrandVO> pageInfo = new PageInfo();
         pageInfo.setList(brandMapper.queryListPage(queryPageInfo));
-//        pageInfo.setTotal(brandMapper.queryListPageCount(queryPageInfo));
-        pageInfo.setTotal(1000L);
+        pageInfo.setTotal(brandMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
 
