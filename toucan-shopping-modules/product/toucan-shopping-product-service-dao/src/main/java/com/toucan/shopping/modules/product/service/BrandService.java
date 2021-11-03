@@ -34,4 +34,6 @@ public interface BrandService {
 
     int save(Brand entity);
 
+    int update(Brand entity);
+
 }

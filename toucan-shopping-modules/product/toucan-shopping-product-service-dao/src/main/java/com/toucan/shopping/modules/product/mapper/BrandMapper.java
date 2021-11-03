@@ -36,4 +36,8 @@ public interface BrandMapper {
     List<Brand> queryList(Brand queryModel);
 
     int insert(Brand entity);
+
+    int update(Brand entity);
+
+
 }

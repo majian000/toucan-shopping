@@ -17,7 +17,7 @@ public class BrandVO extends Brand {
     /**
      * 品牌关联的分类ID
      */
-    private List<Long> categoryIdList;
+    private List<Long> categoryIdLongList;
 
     /**
      * 品牌管理的分类名称

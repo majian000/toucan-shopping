@@ -54,6 +54,10 @@ public class BrandServiceImpl implements BrandService {
         return brandMapper.insert(entity);
     }
 
+    @Override
+    public int update(Brand entity) {
+        return brandMapper.update(entity);
+    }
 
 
 }

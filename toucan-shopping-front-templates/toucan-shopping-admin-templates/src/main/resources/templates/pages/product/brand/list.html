@@ -31,6 +31,13 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">所属分类</label>
+                            <div class="layui-input-inline">
+                                <input type="hidden" name="categoryId" id="categoryId">
+                                <input type="text" readonly  id="selectCategoryId"  class="layui-input" >
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                             <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                         </div>
@@ -166,6 +173,57 @@
 
 
 
+        $("#selectCategoryId").click(function(){
+            loadding = layer.load();
+            index = layer.open({
+                title: '选择所属分类',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+                shadeClose: true,
+                area: ['20%', '60%'],
+                content: "<div id='categoryTree'></div>",
+                success:function(layero){
+                    $.ajax({
+                        url:"[[@{/}]]product/brand/query/category/tree",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:null,
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#categoryTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        if(obj.data.id==-1)
+                                        {
+                                            layer.msg("不能选择根节点");
+                                            return;
+                                        }
+                                        $("#selectCategoryId").val(obj.data.title);
+                                        $("#categoryId").val(obj.data.id);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
+
         /**
          * toolbar监听事件
          */
@@ -219,6 +277,75 @@
         });
 
 
+
+        /**
+         * 拿到所有选中节点的ID
+         * @param data
+         * @param idArray
+         */
+        function getCheckdNodeId(data,idArray)
+        {
+            for(var i=0;i<data.length;i++)
+            {
+                roleTreeDataArray.push(data[i]);
+                if(data[i].state.checked==true)
+                {
+                    idArray.push(data[i].id);
+                }
+                if(data[i].children!=null&&data[i].children.length>0)
+                {
+                    getCheckdNodeId(data[i].children,idArray);
+                }
+            }
+        }
+
+
+        /**
+         * 拿到指定节点对象
+         */
+        function getNodeObject(nodeId)
+        {
+            for(var i=0;i<roleTreeDataArray.length;i++)
+            {
+                if(roleTreeDataArray[i].id==nodeId)
+                {
+                    return roleTreeDataArray[i];
+                }
+            }
+            return null;
+        }
+
+
+        /**
+         * 拿到上级节点信息
+         */
+        function getParentNode(rolesArray,pid)
+        {
+            for(var i=0;i<roleTreeDataArray.length;i++)
+            {
+
+                if(roleTreeDataArray[i].id==pid)
+                {
+                    var exists=false;
+                    //判断上级节点ID是否已经保存了
+                    for(var j=0;j<rolesArray.length;j++)
+                    {
+                        if(rolesArray[j].id==pid) {
+                            exists = true;
+                        }
+                    }
+                    //避免上级节点ID重复保存两份
+                    if(!exists)
+                    {
+                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
+                    }
+                    if(roleTreeDataArray[i].pid!=-1) {
+                        //找到这个节点的上级节点
+                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
+                    }
+                }
+            }
+        }
 
         //监听表格复选框选择
         table.on('checkbox(brandTableFilter)', function (obj) {

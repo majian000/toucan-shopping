@@ -11,8 +11,11 @@
         <result column="regist_number_2" jdbcType="VARCHAR" property="registNumber2" />
         <result column="seminary" jdbcType="VARCHAR" property="seminary" />
         <result column="owner_name" jdbcType="VARCHAR" property="ownerName" />
+        <result column="category_id_cache" jdbcType="VARCHAR" property="categoryIdCache" />
         <result column="create_admin_id" jdbcType="BIGINT" property="createAdminId" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_admin_id" jdbcType="BIGINT" property="updateAdminId" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="enabled_status" jdbcType="INTEGER" property="enabledStatus" />
         
@@ -61,10 +64,15 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.Brand" >
-        insert into t_brand(id,trademark_area_type,chinese_name,english_name,regist_number_1,regist_number_2,seminary,owner_name,create_admin_id,create_date,delete_status,enabled_status)
-        values(#{id},#{trademarkAreaType},#{chineseName},#{englishName},#{registNumber1},#{registNumber2},#{seminary},#{ownerName},#{createAdminId},#{createDate},#{deleteStatus},#{enabledStatus})
+        insert into t_brand(id,trademark_area_type,chinese_name,english_name,regist_number_1,regist_number_2,seminary,owner_name,create_admin_id,create_date,delete_status,enabled_status,category_id_cache)
+        values(#{id},#{trademarkAreaType},#{chineseName},#{englishName},#{registNumber1},#{registNumber2},#{seminary},#{ownerName},#{createAdminId},#{createDate},#{deleteStatus},#{enabledStatus},#{categoryIdCache})
     </insert>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.product.entity.Brand">
+        update t_brand set trademark_area_type=#{trademarkAreaType} , chinese_name=#{chineseName} , english_name=#{englishName} ,regist_number_1=#{registNumber1},category_id_cache=#{categoryIdCache},
+          regist_number_2=#{registNumber2},seminary=#{seminary},owner_name=#{ownerName},enabled_status=#{enabledStatus},update_date=#{updateDate},update_admin_id=#{updateAdminId}
+          where id =#{id}
+    </update>
 
 
     <select id="queryListPage" resultMap="brandVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">

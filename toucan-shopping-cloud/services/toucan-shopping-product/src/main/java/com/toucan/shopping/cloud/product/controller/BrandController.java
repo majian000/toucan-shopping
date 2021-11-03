@@ -209,7 +209,7 @@ public class BrandController {
                 List<Long> brandIds = new ArrayList<Long>();
                 for(BrandVO brandVO:brandVOS)
                 {
-                    brandVO.setCategoryIdList(new ArrayList<Long>());
+                    brandVO.setCategoryIdLongList(new ArrayList<Long>());
                     brandIds.add(brandVO.getId());
                 }
                 List<BrandCategoryVO> brandCategoryVOS = brandCategoryService.queryListByBrandIds(brandIds);
@@ -221,7 +221,7 @@ public class BrandController {
                         {
                             if(brandVO.getId().longValue()==brandCategoryVO.getBrandId().longValue())
                             {
-                                brandVO.getCategoryIdList().add(brandCategoryVO.getCategoryId());
+                                brandVO.getCategoryIdLongList().add(brandCategoryVO.getCategoryId());
                             }
                         }
                     }
@@ -238,6 +238,63 @@ public class BrandController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 刷新品牌主表的类别ID字段
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/flush/category/id/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO flushCategoryIdList(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        try {
+            BrandPageInfo brandPageInfo = new BrandPageInfo();
+            brandPageInfo.setLimit(500);
+            PageInfo<BrandVO> pageInfo = brandService.queryListPage(brandPageInfo);
+            while(CollectionUtils.isNotEmpty(pageInfo.getList()))
+            {
+                List<BrandVO> brandVOS = pageInfo.getList();
+                for(BrandVO brandVO:brandVOS)
+                {
+                    BrandCategory brandCategory = new BrandCategory();
+                    brandCategory.setBrandId(brandVO.getId());
+                    List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
+                    if(CollectionUtils.isNotEmpty(brandCategories))
+                    {
+                        String categoryIdString="";
+                        for(int i=0;i<brandCategories.size();i++) {
+                            categoryIdString+=String.valueOf(brandCategories.get(i).getCategoryId());
+                            if(i+1<brandCategories.size())
+                            {
+                                categoryIdString+=",";
+                            }
+                        }
+                        brandVO.setCategoryIdCache(categoryIdString);
+                    }
+                    brandService.update(brandVO);
+                }
+                brandPageInfo.setPage(brandPageInfo.getPage()+1);
+                pageInfo = brandService.queryListPage(brandPageInfo);
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
 
 

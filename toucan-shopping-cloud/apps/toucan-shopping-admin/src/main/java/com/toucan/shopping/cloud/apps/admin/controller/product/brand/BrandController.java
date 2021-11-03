@@ -100,9 +100,9 @@ public class BrandController extends UIController {
                         for(BrandVO brandVO:list)
                         {
                             brandVO.setCategoryNameList(new ArrayList<String>());
-                            List<Long> categoryIdList = brandVO.getCategoryIdList();
-                            if(CollectionUtils.isNotEmpty(categoryIdList)) {
-                                for(Long categoryId:categoryIdList) {
+                            List<Long> categoryIdLongList = brandVO.getCategoryIdLongList();
+                            if(CollectionUtils.isNotEmpty(categoryIdLongList)) {
+                                for(Long categoryId:categoryIdLongList) {
                                     Category category = new Category();
                                     category.setId(categoryId);
                                     categories.add(category);
@@ -119,7 +119,7 @@ public class BrandController extends UIController {
                                 {
                                     for(BrandVO brandVO:list)
                                     {
-                                        List<Long> categoryIdList = brandVO.getCategoryIdList();
+                                        List<Long> categoryIdList = brandVO.getCategoryIdLongList();
                                         if(CollectionUtils.isNotEmpty(categoryIdList)) {
                                             for(Long categoryId:categoryIdList)
                                             {

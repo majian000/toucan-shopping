@@ -21,10 +21,13 @@ public class Brand {
     private String registNumber2; //商标注册号
     private String seminary; //发源地 (仅在trademarkAreaType值为2时不为空)
     private String ownerName; //所有人姓名
+    private String categoryIdCache; //关联的类别ID(用于快速检索)
 
 
     private Date createDate; //创建时间
     private Long createAdminId; //创建人ID
+    private Date updateDate; //创建时间
+    private Long updateAdminId; //创建人ID
     private Integer deleteStatus; //删除状态 0未删除 1已删除
     private Integer enabledStatus; //启用状态 0禁用 1启用(审核通过后启用)
 
