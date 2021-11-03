@@ -308,7 +308,7 @@ public class BrandController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            File file = new File("D:\\mj\\2021-10-28\\空调品牌.json");
+            File file = new File("D:\\mj\\2021-10-28\\笔记本电脑品牌.json");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             StringBuffer buffer = new StringBuffer();
             String line = null;
@@ -351,10 +351,11 @@ public class BrandController {
                         brandService.save(brand);
                     }else {
                         brandId =brands.get(0).getId();
+                        brand = brands.get(0);
                     }
 
                     BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setCategoryId(889589266072469568L);
+                    brandCategory.setCategoryId(889589266089246775L);
                     brandCategory.setBrandId(brandId);
 
                     List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
@@ -365,7 +366,30 @@ public class BrandController {
                         brandCategory.setBrandSort(999);
 
                         brandCategoryService.save(brandCategory);
+
+                        brand.setCategoryIdCache(String.valueOf(brandCategory.getCategoryId()));
                     }
+
+                    //查询出关联的所有类目
+                    brandCategory.setCategoryId(null);
+                    brandCategories = brandCategoryService.queryList(brandCategory);
+                    if(brandCategories.size()>=2)
+                    {
+                        int a=0;
+                    }
+                    if(CollectionUtils.isNotEmpty(brandCategories))
+                    {
+                        String categoryIdString="";
+                        for(int j=0;j<brandCategories.size();j++) {
+                            categoryIdString+=String.valueOf(brandCategories.get(j).getCategoryId());
+                            if(j+1<brandCategories.size())
+                            {
+                                categoryIdString+=",";
+                            }
+                        }
+                        brand.setCategoryIdCache(categoryIdString);
+                    }
+                    brandService.update(brand);
                 }catch(Exception e)
                 {
                     e.printStackTrace();

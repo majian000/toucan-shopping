@@ -6,6 +6,8 @@ import java.util.Date;
 
 /**
  * 品牌分类表
+ * 分库用ID
+ * 分表用brandId
  * @author majian
  */
 @Data
