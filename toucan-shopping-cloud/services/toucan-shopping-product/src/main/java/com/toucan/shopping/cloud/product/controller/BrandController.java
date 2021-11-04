@@ -205,25 +205,12 @@ public class BrandController {
             PageInfo<BrandVO> pageInfo =  brandService.queryListPage(queryPageInfo);
             if(CollectionUtils.isNotEmpty(pageInfo.getList()))
             {
-                List<BrandVO> brandVOS = pageInfo.getList();
-                List<Long> brandIds = new ArrayList<Long>();
-                for(BrandVO brandVO:brandVOS)
+                for(BrandVO brandVO:pageInfo.getList())
                 {
-                    brandVO.setCategoryIdLongList(new ArrayList<Long>());
-                    brandIds.add(brandVO.getId());
-                }
-                List<BrandCategoryVO> brandCategoryVOS = brandCategoryService.queryListByBrandIds(brandIds);
-                if(CollectionUtils.isNotEmpty(brandCategoryVOS))
-                {
-                    for(BrandVO brandVO:brandVOS)
+                    if(StringUtils.isNotEmpty(brandVO.getCategoryIdCache()))
                     {
-                        for(BrandCategoryVO brandCategoryVO:brandCategoryVOS)
-                        {
-                            if(brandVO.getId().longValue()==brandCategoryVO.getBrandId().longValue())
-                            {
-                                brandVO.getCategoryIdLongList().add(brandCategoryVO.getCategoryId());
-                            }
-                        }
+                        String[] categoryIdArray = brandVO.getCategoryIdCache().split(",");
+                        brandVO.setCategoryIdCacheArray(categoryIdArray);
                     }
                 }
             }

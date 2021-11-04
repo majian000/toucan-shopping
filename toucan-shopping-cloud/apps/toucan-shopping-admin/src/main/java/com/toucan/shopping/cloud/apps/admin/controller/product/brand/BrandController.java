@@ -88,7 +88,7 @@ public class BrandController extends UIController {
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
                 {
@@ -99,33 +99,34 @@ public class BrandController extends UIController {
                         List<Category> categories = new ArrayList<Category>();
                         for(BrandVO brandVO:list)
                         {
-                            brandVO.setCategoryNameList(new ArrayList<String>());
-                            List<Long> categoryIdLongList = brandVO.getCategoryIdLongList();
-                            if(CollectionUtils.isNotEmpty(categoryIdLongList)) {
-                                for(Long categoryId:categoryIdLongList) {
-                                    Category category = new Category();
-                                    category.setId(categoryId);
-                                    categories.add(category);
+                            String[] categoryIdArray = brandVO.getCategoryIdCacheArray();
+                            if(categoryIdArray!=null&&categoryIdArray.length>0) {
+                                for(String categoryId:categoryIdArray) {
+                                    if(categoryId!=null) {
+                                        Category category = new Category();
+                                        category.setId(Long.parseLong(categoryId));
+                                        categories.add(category);
+                                    }
                                 }
                             }
                         }
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categories);
                         resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO);
                         if(resultObjectVO.isSuccess()) {
-                            List<Category> categoryList = resultObjectVO.formatDataList(Category.class);
+                            List<CategoryVO> categoryList = resultObjectVO.formatDataList(CategoryVO.class);
                             if(CollectionUtils.isNotEmpty(categoryList))
                             {
-                                for(Category category:categoryList)
+                                for(CategoryVO categoryVO:categoryList)
                                 {
                                     for(BrandVO brandVO:list)
                                     {
-                                        List<Long> categoryIdList = brandVO.getCategoryIdLongList();
-                                        if(CollectionUtils.isNotEmpty(categoryIdList)) {
-                                            for(Long categoryId:categoryIdList)
+                                        String[] categoryIdArray = brandVO.getCategoryIdCacheArray();
+                                        if(categoryIdArray!=null&&categoryIdArray.length>0) {
+                                            for(String categoryId:categoryIdArray)
                                             {
-                                                if(category.getId().longValue()==categoryId.longValue())
+                                                if(String.valueOf(categoryVO.getId()).equals(categoryId))
                                                 {
-                                                    brandVO.getCategoryNameList().add(category.getName());
+                                                    brandVO.setCategoryNamePath(categoryVO.getNamePath());
                                                 }
                                             }
                                         }

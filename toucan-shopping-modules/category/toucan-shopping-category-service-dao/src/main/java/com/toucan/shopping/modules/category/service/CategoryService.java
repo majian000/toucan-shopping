@@ -85,4 +85,11 @@ public interface CategoryService {
     List<CategoryTreeVO> queryTree();
 
 
+    /**
+     * 设置分类名称路径
+     * @param categoryVOS
+     */
+    void setNamePath(List<CategoryVO> categoryVOS,List<Long> parentIdList);
+
+
 }

@@ -25,6 +25,7 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
 
     private Long categoryId;
 
+
     /**
      * 查询指定类别下的品牌列表
      */

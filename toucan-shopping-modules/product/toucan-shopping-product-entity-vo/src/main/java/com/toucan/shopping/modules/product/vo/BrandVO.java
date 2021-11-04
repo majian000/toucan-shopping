@@ -17,12 +17,13 @@ public class BrandVO extends Brand {
     /**
      * 品牌关联的分类ID
      */
-    private List<Long> categoryIdLongList;
+    private String[] categoryIdCacheArray;
+
 
     /**
-     * 品牌管理的分类名称
+     * 分类名称全路径
      */
-    private List<String> categoryNameList;
+    private String categoryNamePath;
 
 
 }

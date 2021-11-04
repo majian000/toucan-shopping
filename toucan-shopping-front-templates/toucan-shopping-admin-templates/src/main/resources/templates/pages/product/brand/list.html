@@ -33,7 +33,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">所属分类</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" name="categoryIdCache" id="categoryIdCache">
+                                <input type="hidden" name="categoryId" id="categoryId">
                                 <input type="text" readonly  id="selectCategoryId"  class="layui-input" >
                             </div>
                         </div>
@@ -170,7 +170,7 @@
 
 
         $("#data-reset-btn").click(function(){
-            $("#categoryIdCache").val("");
+            $("#categoryId").val("");
             $("#userSearchForm")[0].reset();
             layui.form.render();
         });
@@ -207,7 +207,7 @@
                                             return;
                                         }
                                         $("#selectCategoryId").val(obj.data.title);
-                                        $("#categoryIdCache").val(obj.data.id);
+                                        $("#categoryId").val(obj.data.id);
                                         layer.close(index);
                                     }
                                 });

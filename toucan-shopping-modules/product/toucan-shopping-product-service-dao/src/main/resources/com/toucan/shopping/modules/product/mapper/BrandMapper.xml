@@ -32,8 +32,8 @@
             and (t.chinese_name like binary concat(#{name},'%') or t.english_name like binary concat(#{name},'%'))
         </if>
 
-        <if test="categoryIdCache!=null and categoryIdCache!='' ">
-            and t.category_id_cache like concat(#{categoryIdCache},'%')
+        <if test="categoryId!=null and categoryId!='' ">
+            and t.category_id_cache like concat(#{categoryId},'%')
         </if>
 
     </sql>

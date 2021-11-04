@@ -27,6 +27,11 @@ public class CategoryVO extends Category {
 
     private List<CategoryImg> categoryImgs;
 
+    /**
+     * 上级节点ID指针,随着遍历上级节点而改变
+     */
+    private Long parentIdPoint;
+
 
     /**
      * 创建人
@@ -49,5 +54,10 @@ public class CategoryVO extends Category {
      * PC端首页扩展样式
      */
     private String pcIndexStyle;
+
+    /**
+     * 节点路径,例如:家用电器/电视/全面屏电视
+     */
+    private String namePath;
 
 }

@@ -187,4 +187,37 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryTreeVOS;
     }
 
+    @Override
+    public void setNamePath(List<CategoryVO> categoryVOS,List<Long> parentIdList) {
+        if(CollectionUtils.isNotEmpty(parentIdList))
+        {
+            //查询出所有上级节点
+            List<Category> parentCategorys = categoryMapper.queryListByIdList(parentIdList);
+            parentIdList.clear();
+            if(CollectionUtils.isNotEmpty(parentCategorys))
+            {
+                for(Category parentCategory:parentCategorys)
+                {
+                    for(CategoryVO categoryVO:categoryVOS)
+                    {
+                        if(parentCategory.getId().longValue()==categoryVO.getParentIdPoint().longValue())
+                        {
+                            categoryVO.setNamePath(parentCategory.getName()+"》"+categoryVO.getNamePath());
+                            //移动上级ID指针
+                            categoryVO.setParentIdPoint(parentCategory.getParentId());
+                        }
+                    }
+                    if(parentCategory.getParentId()!=null&&parentCategory.getParentId().longValue()!=-1L)
+                    {
+                        parentIdList.add(parentCategory.getParentId());
+                    }
+                }
+            }
+            if(CollectionUtils.isNotEmpty(parentIdList))
+            {
+                setNamePath(categoryVOS,parentIdList);
+            }
+        }
+    }
+
 }

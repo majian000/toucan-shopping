@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -312,7 +313,25 @@ public class CategoryController {
                 for(Category category:categorys) {
                     categoryIdList.add(category.getId());
                 }
-                resultObjectVO.setData(categoryService.queryListByIdList(categoryIdList));
+                List<Category> categoryList = categoryService.queryListByIdList(categoryIdList);
+                List<CategoryVO> categoryVOS = new ArrayList<CategoryVO>();
+                if(!CollectionUtils.isEmpty(categoryList))
+                {
+                    List<Long> parentIds = new LinkedList<Long>();
+                    for(Category category:categoryList)
+                    {
+                        CategoryVO categoryVO = new CategoryVO();
+                        BeanUtils.copyProperties(categoryVO,category);
+                        categoryVO.setNamePath(categoryVO.getName());
+                        categoryVO.setParentIdPoint(categoryVO.getParentId());
+                        categoryVOS.add(categoryVO);
+                        if(categoryVO.getParentId()!=null&&categoryVO.getParentId().longValue()!=-1L) {
+                            parentIds.add(categoryVO.getParentId());
+                        }
+                    }
+                    categoryService.setNamePath(categoryVOS,parentIds);
+                }
+                resultObjectVO.setData(categoryVOS);
             }
         }catch(Exception e)
         {
