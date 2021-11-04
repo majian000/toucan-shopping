@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.category.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.toucan.shopping.modules.common.vo.bootstrap.State;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * 类别
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryTreeVO extends CategoryVO {
 
 
