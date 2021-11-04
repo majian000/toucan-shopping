@@ -365,7 +365,7 @@ public class BrandController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/search/query/category/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/list/page/query/category/tree",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO queryTree(HttpServletRequest request)
     {
