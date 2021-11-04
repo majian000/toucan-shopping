@@ -7,9 +7,11 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.entity.Category;
+import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -21,7 +23,9 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.Brand;
+import com.toucan.shopping.modules.product.entity.BrandCategory;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
+import com.toucan.shopping.modules.product.vo.BrandCategoryVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 品牌管理
@@ -61,6 +66,9 @@ public class BrandController extends UIController {
 
     @Autowired
     private FeignCategoryService feignCategoryService;
+
+    @Autowired
+    private FeignBrandCategoryService feignBrandCategoryService;
 
 
 
@@ -351,10 +359,13 @@ public class BrandController extends UIController {
     }
 
 
-
-
+    /**
+     * 列表页 查询分类树
+     * @param request
+     * @return
+     */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/search/query/category/tree",method = RequestMethod.GET)
     @ResponseBody
     public ResultObjectVO queryTree(HttpServletRequest request)
     {
@@ -374,6 +385,85 @@ public class BrandController extends UIController {
     }
 
 
+
+
+    public void setTreeNodeSelect(AtomicLong id,CategoryTreeVO parentTreeVO,List<CategoryVO> categoryTreeVOList,List<BrandCategoryVO> brandCategories)
+    {
+        for(CategoryVO categoryVO:categoryTreeVOList)
+        {
+            CategoryTreeVO categoryTreeVO = (CategoryTreeVO)categoryVO;
+            categoryTreeVO.setId(id.incrementAndGet());
+            categoryTreeVO.setNodeId(categoryTreeVO.getId());
+            categoryTreeVO.setParentId(parentTreeVO.getId());
+            categoryTreeVO.setParentId(categoryTreeVO.getParentId());
+            for(BrandCategory brandCategory:brandCategories) {
+                if(categoryTreeVO.getId().equals(brandCategory.getCategoryId())) {
+                    //设置节点被选中
+                    categoryTreeVO.getState().setChecked(true);
+                }
+            }
+            if(!CollectionUtils.isEmpty(categoryTreeVO.getChildren()))
+            {
+                setTreeNodeSelect(id,categoryTreeVO,categoryTreeVO.getChildren(),brandCategories);
+            }
+        }
+    }
+
+    /**
+     * 返回类别树
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryCategoryTree(HttpServletRequest request,Long brandId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            //查询类别树
+            CategoryVO query = new CategoryVO();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+            resultObjectVO = feignCategoryService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<CategoryTreeVO> categoryTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), CategoryTreeVO.class);
+
+                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
+                AtomicLong id = new AtomicLong();
+                BrandCategoryVO queryBrandCategory = new BrandCategoryVO();
+                queryBrandCategory.setBrandId(brandId);
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBrandCategory);
+                resultObjectVO = feignBrandCategoryService.findByBrandId(requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<BrandCategoryVO> brandCategoryVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BrandCategoryVO.class);
+                    if(!CollectionUtils.isEmpty(brandCategoryVOS)) {
+                        for(CategoryTreeVO categoryTreeVO:categoryTreeVOList) {
+                            categoryTreeVO.setId(id.incrementAndGet());
+                            categoryTreeVO.setNodeId(categoryTreeVO.getId());
+                            categoryTreeVO.setText(categoryTreeVO.getTitle());
+                            for(BrandCategory brandCategory:brandCategoryVOS) {
+                                if(categoryTreeVO.getId().equals(brandCategory.getCategoryId())) {
+                                    //设置节点被选中
+                                    categoryTreeVO.getState().setChecked(true);
+                                }
+                            }
+                            setTreeNodeSelect(id,categoryTreeVO,categoryTreeVO.getChildren(), brandCategoryVOS);
+                        }
+                    }
+                }
+                resultObjectVO.setData(categoryTreeVOList);
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 
