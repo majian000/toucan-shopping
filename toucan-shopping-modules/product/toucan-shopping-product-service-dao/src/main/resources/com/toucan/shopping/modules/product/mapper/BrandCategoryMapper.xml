@@ -98,4 +98,10 @@
         </where>
     </select>
 
+
+    <update id="deleteById">
+        update t_brand_category  set delete_status=1 where brand_id=#{brandId}   and delete_status=0
+    </update>
+
+
 </mapper>

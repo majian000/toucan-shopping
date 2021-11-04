@@ -39,5 +39,7 @@ public interface BrandMapper {
 
     int update(Brand entity);
 
+    int deleteById(Long id);
+
 
 }

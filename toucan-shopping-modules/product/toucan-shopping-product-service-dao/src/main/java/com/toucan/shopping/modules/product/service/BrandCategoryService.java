@@ -28,4 +28,8 @@ public interface BrandCategoryService {
      * @return
      */
     List<Long> queryBrandIdListByCategoryId(List<Long> categoryIds);
+
+
+    int deleteByBrandId(Long brandId);
+
 }

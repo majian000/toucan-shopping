@@ -59,5 +59,10 @@ public class BrandServiceImpl implements BrandService {
         return brandMapper.update(entity);
     }
 
+    @Override
+    public int deleteById(Long id) {
+        return brandMapper.deleteById(id);
+    }
+
 
 }

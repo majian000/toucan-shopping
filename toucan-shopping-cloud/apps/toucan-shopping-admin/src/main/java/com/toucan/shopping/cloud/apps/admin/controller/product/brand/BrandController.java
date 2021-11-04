@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.Brand;
@@ -158,7 +159,7 @@ public class BrandController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody BrandVO entity)
+    public ResultObjectVO save(@RequestBody BrandVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -181,6 +182,12 @@ public class BrandController extends UIController {
     {
         return "pages/product/brand/add.html";
     }
+
+
+
+
+
+
 
 
 

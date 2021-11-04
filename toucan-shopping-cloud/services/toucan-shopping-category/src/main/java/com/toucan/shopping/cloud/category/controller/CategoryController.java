@@ -945,75 +945,6 @@ public class CategoryController {
 
 
 
-    /**
-     * 根据ID删除
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用编码!");
-            return resultObjectVO;
-        }
-
-        try {
-            Category category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
-
-
-
-            if(category.getId()==null)
-            {
-                logger.info("ID为空 param:"+ JSONObject.toJSONString(category));
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("ID不能为空!");
-                return resultObjectVO;
-            }
-
-
-            CategoryVO queryCategory = new CategoryVO();
-            queryCategory.setId(category.getId());
-
-            List<Category> categoryList = categoryService.queryList(queryCategory);
-            if(CollectionUtils.isEmpty(categoryList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该类别!");
-                return resultObjectVO;
-            }
-
-            category = categoryList.get(0);
-            categoryService.deleteChildrenByParentId(category.getId());
-            int row = categoryService.deleteById(category.getId());
-            if (row <=0) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
-                return resultObjectVO;
-            }
-
-        }catch(Exception e)
-        {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
-
-
 
 
     /**
@@ -1060,6 +991,12 @@ public class CategoryController {
                             logger.warn("删除类别失败 {} ",JSONObject.toJSONString(c));
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("请求失败,请重试!");
+
+                            ResultObjectVO resultObjectRowVO = new ResultObjectVO();
+                            resultObjectRowVO.setCode(ResultVO.FAILD);
+                            resultObjectRowVO.setMsg("请求失败,请重试!");
+                            resultObjectRowVO.setData(c.getId());
+                            resultObjectVOList.add(resultObjectRowVO);
                             continue;
                         }
 

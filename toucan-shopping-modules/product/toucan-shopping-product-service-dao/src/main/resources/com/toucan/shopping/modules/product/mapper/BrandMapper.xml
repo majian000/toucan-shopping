@@ -94,6 +94,11 @@
 
 
 
+    <update id="deleteById">
+        update t_brand  set delete_status=1 where id=#{id}   and delete_status=0
+    </update>
+
+
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
         select count(*) from t_brand t

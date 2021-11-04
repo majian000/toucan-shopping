@@ -36,4 +36,6 @@ public interface BrandService {
 
     int update(Brand entity);
 
+    int deleteById(Long id);
+
 }
