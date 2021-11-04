@@ -21,9 +21,9 @@ public class BrandVO extends Brand {
 
 
     /**
-     * 分类名称全路径
+     * 分类名称路径列表
      */
-    private String categoryNamePath;
+    private List<String> categoryNamePathList;
 
 
 }

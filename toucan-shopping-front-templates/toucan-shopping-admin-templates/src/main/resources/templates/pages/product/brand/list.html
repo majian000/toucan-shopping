@@ -121,9 +121,9 @@
                 [
                     {type: "checkbox", width: 100},
                     {field: 'id',width: 170,  title: '主键'},
-                    {field: 'categoryNameList', width:150, title: '所属类目',
+                    {field: 'categoryNamePathList', width:150, title: '所属类目',
                         templet: function (row) {
-                            return row.categoryNameList.join(",");
+                            return row.categoryNamePathList.join(",");
                         }},
                     {field: 'trademarkAreaType', width:150, title: '商标注册地区',
                         templet: function (row) {

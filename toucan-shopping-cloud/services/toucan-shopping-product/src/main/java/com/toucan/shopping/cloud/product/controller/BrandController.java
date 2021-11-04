@@ -226,6 +226,70 @@ public class BrandController {
     }
 
 
+
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            BrandVO entity = JSONObject.parseObject(requestVo.getEntityJson(),BrandVO.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存
+            BrandVO query=new BrandVO();
+            query.setId(entity.getId());
+            List<Brand> entityList = brandService.queryList(query);
+            if(CollectionUtils.isEmpty(entityList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,对象不存在!");
+                return resultObjectVO;
+            }
+            List<BrandVO> brandVOS = new ArrayList<BrandVO>();
+            for(Brand brand:entityList)
+            {
+                BrandVO brandVO = new BrandVO();
+                BeanUtils.copyProperties(brandVO,brand);
+                if(StringUtils.isNotEmpty(brandVO.getCategoryIdCache())) {
+                    brandVO.setCategoryIdCacheArray(brandVO.getCategoryIdCache().split(","));
+                }
+                brandVOS.add(brandVO);
+            }
+
+            resultObjectVO.setData(brandVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
     /**
      * 刷新品牌主表的类别ID字段
      * @param requestJsonVO

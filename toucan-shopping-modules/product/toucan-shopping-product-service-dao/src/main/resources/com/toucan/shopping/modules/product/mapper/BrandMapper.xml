@@ -51,6 +51,10 @@
         <where>
             1=1
 
+            <if test="id!=null  ">
+                and t.id=#{id}
+            </if>
+
             <if test="chineseName!=null and chineseName!='' ">
                 and t.chinese_name=#{chineseName}
             </if>

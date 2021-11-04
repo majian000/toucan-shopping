@@ -99,6 +99,7 @@ public class BrandController extends UIController {
                         List<Category> categories = new ArrayList<Category>();
                         for(BrandVO brandVO:list)
                         {
+                            brandVO.setCategoryNamePathList(new LinkedList<>());
                             String[] categoryIdArray = brandVO.getCategoryIdCacheArray();
                             if(categoryIdArray!=null&&categoryIdArray.length>0) {
                                 for(String categoryId:categoryIdArray) {
@@ -126,7 +127,7 @@ public class BrandController extends UIController {
                                             {
                                                 if(String.valueOf(categoryVO.getId()).equals(categoryId))
                                                 {
-                                                    brandVO.setCategoryNamePath(categoryVO.getNamePath());
+                                                    brandVO.getCategoryNamePathList().add(categoryVO.getNamePath());
                                                 }
                                             }
                                         }
@@ -224,7 +225,41 @@ public class BrandController extends UIController {
                     if(!CollectionUtils.isEmpty(brandVOS))
                     {
                         brandVO = brandVOS.get(0);
-                        //查询类别名称
+
+                        List<Category> categories = new LinkedList<Category>();
+                        brandVO.setCategoryNamePathList(new LinkedList<>());
+                        String[] categoryIdArray = brandVO.getCategoryIdCacheArray();
+                        if(categoryIdArray!=null&&categoryIdArray.length>0) {
+                            for(String categoryId:categoryIdArray) {
+                                if(categoryId!=null) {
+                                    Category category = new Category();
+                                    category.setId(Long.parseLong(categoryId));
+                                    categories.add(category);
+                                }
+                            }
+                        }
+
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categories);
+                        resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO);
+                        if(resultObjectVO.isSuccess()) {
+                            List<CategoryVO> categoryList = resultObjectVO.formatDataList(CategoryVO.class);
+                            if(CollectionUtils.isNotEmpty(categoryList))
+                            {
+                                for(CategoryVO categoryVO:categoryList)
+                                {
+                                    if(categoryIdArray!=null&&categoryIdArray.length>0) {
+                                        for(String categoryId:categoryIdArray)
+                                        {
+                                            if(String.valueOf(categoryVO.getId()).equals(categoryId))
+                                            {
+                                                brandVO.getCategoryNamePathList().add(categoryVO.getNamePath());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         request.setAttribute("model",brandVO);
                     }
                 }
