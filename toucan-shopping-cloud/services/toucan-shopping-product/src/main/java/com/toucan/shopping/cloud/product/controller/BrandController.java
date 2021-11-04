@@ -544,170 +544,170 @@ public class BrandController {
     }
 
 
-
-    /**
-     * 刷新品牌主表的类别ID字段
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/flush/category/id/list",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO flushCategoryIdList(@RequestBody RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        try {
-            BrandPageInfo brandPageInfo = new BrandPageInfo();
-            brandPageInfo.setLimit(500);
-            PageInfo<BrandVO> pageInfo = brandService.queryListPage(brandPageInfo);
-            while(CollectionUtils.isNotEmpty(pageInfo.getList()))
-            {
-                List<BrandVO> brandVOS = pageInfo.getList();
-                for(BrandVO brandVO:brandVOS)
-                {
-                    BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setBrandId(brandVO.getId());
-                    List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
-                    if(CollectionUtils.isNotEmpty(brandCategories))
-                    {
-                        String categoryIdString="";
-                        for(int i=0;i<brandCategories.size();i++) {
-                            categoryIdString+=String.valueOf(brandCategories.get(i).getCategoryId());
-                            if(i+1<brandCategories.size())
-                            {
-                                categoryIdString+=",";
-                            }
-                        }
-                        brandVO.setCategoryIdCache(categoryIdString);
-                    }
-                    brandService.update(brandVO);
-                }
-                brandPageInfo.setPage(brandPageInfo.getPage()+1);
-                pageInfo = brandService.queryListPage(brandPageInfo);
-            }
-
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
-        }
-
-        return resultObjectVO;
-    }
-
-
-
-    /**
-     * 保存类别
-     * @return
-     */
-    @RequestMapping(value="/saveByDisk",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO saveByDisk()
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            File file = new File("D:\\mj\\2021-10-28\\机箱品牌.json");
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            StringBuffer buffer = new StringBuffer();
-            String line = null;
-            while((line = bufferedReader.readLine())!=null)
-            {
-                buffer.append(line);
-            }
-            List<Map> rows = JSONObject.parseArray(buffer.toString(), Map.class);
-            int size = rows.size();
-            for(int i=0;i<size;i++)
-            {
-                logger.info("遍历到{} 总数{}",i,size);
-                Map row=rows.get(i);
-                try {
-                    Brand brand = new Brand();
-                    brand.setCreateAdminId(-1L);
-                    brand.setCreateDate(new Date());
-                    String text = String.valueOf(row.get("text"));
-                    if(text.indexOf("/")!=-1)
-                    {
-                        String[] texts = text.split("/");
-                        brand.setEnglishName(texts[0]);
-                        brand.setChineseName(texts[1]);
-                    }else{
-                        if(LetterFirstUtil.isLetterFirst(text))
-                        {
-                            brand.setEnglishName(text); //英文名称
-                        }else{
-                            brand.setChineseName(text);
-                        }
-                    }
-                    List<Brand> brands = brandService.queryList(brand);
-                    Long brandId = -1L;
-                    if(CollectionUtils.isEmpty(brands)) {
-                        brandId = idGenerator.id();
-                        brand.setId(brandId);
-                        brand.setTrademarkAreaType(1);
-                        brand.setDeleteStatus(0);
-                        brand.setEnabledStatus(1);
-                        brandService.save(brand);
-                    }else {
-                        brandId =brands.get(0).getId();
-                        brand = brands.get(0);
-                    }
-
-                    BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setCategoryId(889589266152161331L);
-                    brandCategory.setBrandId(brandId);
-
-                    List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
-                    if(CollectionUtils.isEmpty(brandCategories)) {
-                        brandCategory.setId(idGenerator.id());
-                        brandCategory.setCreateDate(new Date());
-                        brandCategory.setDeleteStatus(0);
-                        brandCategory.setBrandSort(999);
-
-                        brandCategoryService.save(brandCategory);
-
-                        brand.setCategoryIdCache(String.valueOf(brandCategory.getCategoryId()));
-                    }
-
-                    //查询出关联的所有类目
-                    brandCategory.setCategoryId(null);
-                    brandCategories = brandCategoryService.queryList(brandCategory);
-                    if(brandCategories.size()>=2)
-                    {
-                        int a=0;
-                    }
-                    if(CollectionUtils.isNotEmpty(brandCategories))
-                    {
-                        String categoryIdString="";
-                        for(int j=0;j<brandCategories.size();j++) {
-                            categoryIdString+=String.valueOf(brandCategories.get(j).getCategoryId());
-                            if(j+1<brandCategories.size())
-                            {
-                                categoryIdString+=",";
-                            }
-                        }
-                        brand.setCategoryIdCache(categoryIdString);
-                    }
-                    brandService.update(brand);
-                }catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return resultObjectVO;
-    }
+//
+//    /**
+//     * 刷新品牌主表的类别ID字段
+//     * @param requestJsonVO
+//     * @return
+//     */
+//    @RequestMapping(value="/flush/category/id/list",produces = "application/json;charset=UTF-8")
+//    @ResponseBody
+//    public ResultObjectVO flushCategoryIdList(@RequestBody RequestJsonVO requestJsonVO)
+//    {
+//        ResultObjectVO resultObjectVO = new ResultObjectVO();
+//        if(requestJsonVO==null)
+//        {
+//            logger.info("请求参数为空");
+//            resultObjectVO.setCode(ResultVO.FAILD);
+//            resultObjectVO.setMsg("请重试!");
+//            return resultObjectVO;
+//        }
+//        try {
+//            BrandPageInfo brandPageInfo = new BrandPageInfo();
+//            brandPageInfo.setLimit(500);
+//            PageInfo<BrandVO> pageInfo = brandService.queryListPage(brandPageInfo);
+//            while(CollectionUtils.isNotEmpty(pageInfo.getList()))
+//            {
+//                List<BrandVO> brandVOS = pageInfo.getList();
+//                for(BrandVO brandVO:brandVOS)
+//                {
+//                    BrandCategory brandCategory = new BrandCategory();
+//                    brandCategory.setBrandId(brandVO.getId());
+//                    List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
+//                    if(CollectionUtils.isNotEmpty(brandCategories))
+//                    {
+//                        String categoryIdString="";
+//                        for(int i=0;i<brandCategories.size();i++) {
+//                            categoryIdString+=String.valueOf(brandCategories.get(i).getCategoryId());
+//                            if(i+1<brandCategories.size())
+//                            {
+//                                categoryIdString+=",";
+//                            }
+//                        }
+//                        brandVO.setCategoryIdCache(categoryIdString);
+//                    }
+//                    brandService.update(brandVO);
+//                }
+//                brandPageInfo.setPage(brandPageInfo.getPage()+1);
+//                pageInfo = brandService.queryListPage(brandPageInfo);
+//            }
+//
+//        }catch(Exception e)
+//        {
+//            logger.warn(e.getMessage(),e);
+//            resultObjectVO.setCode(ResultVO.FAILD);
+//            resultObjectVO.setMsg("查询失败!");
+//        }
+//
+//        return resultObjectVO;
+//    }
+//
+//
+//
+//    /**
+//     * 保存类别
+//     * @return
+//     */
+//    @RequestMapping(value="/saveByDisk",produces = "application/json;charset=UTF-8")
+//    @ResponseBody
+//    public ResultObjectVO saveByDisk()
+//    {
+//        ResultObjectVO resultObjectVO = new ResultObjectVO();
+//        try {
+//            File file = new File("D:\\mj\\2021-10-28\\机箱品牌.json");
+//            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+//            StringBuffer buffer = new StringBuffer();
+//            String line = null;
+//            while((line = bufferedReader.readLine())!=null)
+//            {
+//                buffer.append(line);
+//            }
+//            List<Map> rows = JSONObject.parseArray(buffer.toString(), Map.class);
+//            int size = rows.size();
+//            for(int i=0;i<size;i++)
+//            {
+//                logger.info("遍历到{} 总数{}",i,size);
+//                Map row=rows.get(i);
+//                try {
+//                    Brand brand = new Brand();
+//                    brand.setCreateAdminId(-1L);
+//                    brand.setCreateDate(new Date());
+//                    String text = String.valueOf(row.get("text"));
+//                    if(text.indexOf("/")!=-1)
+//                    {
+//                        String[] texts = text.split("/");
+//                        brand.setEnglishName(texts[0]);
+//                        brand.setChineseName(texts[1]);
+//                    }else{
+//                        if(LetterFirstUtil.isLetterFirst(text))
+//                        {
+//                            brand.setEnglishName(text); //英文名称
+//                        }else{
+//                            brand.setChineseName(text);
+//                        }
+//                    }
+//                    List<Brand> brands = brandService.queryList(brand);
+//                    Long brandId = -1L;
+//                    if(CollectionUtils.isEmpty(brands)) {
+//                        brandId = idGenerator.id();
+//                        brand.setId(brandId);
+//                        brand.setTrademarkAreaType(1);
+//                        brand.setDeleteStatus(0);
+//                        brand.setEnabledStatus(1);
+//                        brandService.save(brand);
+//                    }else {
+//                        brandId =brands.get(0).getId();
+//                        brand = brands.get(0);
+//                    }
+//
+//                    BrandCategory brandCategory = new BrandCategory();
+//                    brandCategory.setCategoryId(889589266152161331L);
+//                    brandCategory.setBrandId(brandId);
+//
+//                    List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
+//                    if(CollectionUtils.isEmpty(brandCategories)) {
+//                        brandCategory.setId(idGenerator.id());
+//                        brandCategory.setCreateDate(new Date());
+//                        brandCategory.setDeleteStatus(0);
+//                        brandCategory.setBrandSort(999);
+//
+//                        brandCategoryService.save(brandCategory);
+//
+//                        brand.setCategoryIdCache(String.valueOf(brandCategory.getCategoryId()));
+//                    }
+//
+//                    //查询出关联的所有类目
+//                    brandCategory.setCategoryId(null);
+//                    brandCategories = brandCategoryService.queryList(brandCategory);
+//                    if(brandCategories.size()>=2)
+//                    {
+//                        int a=0;
+//                    }
+//                    if(CollectionUtils.isNotEmpty(brandCategories))
+//                    {
+//                        String categoryIdString="";
+//                        for(int j=0;j<brandCategories.size();j++) {
+//                            categoryIdString+=String.valueOf(brandCategories.get(j).getCategoryId());
+//                            if(j+1<brandCategories.size())
+//                            {
+//                                categoryIdString+=",";
+//                            }
+//                        }
+//                        brand.setCategoryIdCache(categoryIdString);
+//                    }
+//                    brandService.update(brand);
+//                }catch(Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }catch(Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return resultObjectVO;
+//    }
 
 
 
