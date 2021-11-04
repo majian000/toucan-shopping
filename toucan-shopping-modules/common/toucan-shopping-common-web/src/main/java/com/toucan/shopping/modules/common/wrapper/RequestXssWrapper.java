@@ -118,7 +118,10 @@ public class RequestXssWrapper extends HttpServletRequestWrapper {
     @Override
     public String[] getParameterValues(String name) {
         String[] values = this.request.getParameterValues(name);
-        int count = values.length;
+        int count = 0;
+        if(values!=null){
+            count = values.length;
+        }
         String[] encodedValues = new String[count];
         for (int i = 0; i < count; i++) {
             try {

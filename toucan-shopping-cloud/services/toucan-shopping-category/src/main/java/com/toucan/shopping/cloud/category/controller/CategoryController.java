@@ -407,7 +407,7 @@ public class CategoryController {
                         }
                         categoryTreeVOS.add(treeVO);
 
-                        treeVO.setChildren(new ArrayList<CategoryVO>());
+                        treeVO.setChildren(new ArrayList<CategoryTreeVO>());
                         categoryService.setChildren(categoryList,treeVO);
                     }
                 }
@@ -560,7 +560,7 @@ public class CategoryController {
             List<Category> categoryList = categoryService.queryList(query);
             if(!CollectionUtils.isEmpty(categoryList))
             {
-                List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
+                List<CategoryTreeVO> categoryTreeVOS = new ArrayList<CategoryTreeVO>();
                 for(Category category : categoryList)
                 {
                     if(category.getParentId().longValue()==-1) {
@@ -572,7 +572,7 @@ public class CategoryController {
 
                         categoryTreeVOS.add(treeVO);
 
-                        treeVO.setChildren(new ArrayList<CategoryVO>());
+                        treeVO.setChildren(new ArrayList<CategoryTreeVO>());
                         categoryService.setChildren(categoryList,treeVO);
                     }
                 }
@@ -624,7 +624,7 @@ public class CategoryController {
                         treeVO.setText(category.getName());
                         categoryTreeVOS.add(treeVO);
 
-                        treeVO.setChildren(new ArrayList<CategoryVO>());
+                        treeVO.setChildren(new ArrayList<CategoryTreeVO>());
                         categoryService.setChildren(categoryList,treeVO);
                     }
                 }

@@ -23,7 +23,7 @@ public class CategoryVO extends Category {
     private String parentName;
 
 
-    private List<CategoryVO> children;
+    private List<CategoryTreeVO> children;
 
     private List<CategoryImg> categoryImgs;
 

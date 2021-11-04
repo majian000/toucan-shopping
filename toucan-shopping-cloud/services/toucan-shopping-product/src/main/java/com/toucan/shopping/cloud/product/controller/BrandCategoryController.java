@@ -66,14 +66,14 @@ public class BrandCategoryController {
 
         try {
             BrandCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),BrandCategoryVO.class);
-            if(entity.getId()==null)
+            if(entity.getBrandId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("请求失败,没有找到品牌ID");
                 return resultObjectVO;
             }
 
-            //查询是否存
+            //查询是否存在
             BrandCategoryVO query=new BrandCategoryVO();
             query.setBrandId(entity.getBrandId());
             List<BrandCategory> entityList = brandCategoryService.queryList(query);

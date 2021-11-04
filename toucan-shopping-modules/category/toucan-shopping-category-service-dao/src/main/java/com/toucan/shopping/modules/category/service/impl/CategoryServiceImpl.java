@@ -88,10 +88,10 @@ public class CategoryServiceImpl implements CategoryService {
     public void setChildrenByParentId(CategoryVO categoryVO,List<Category> categoryList) throws InvocationTargetException, IllegalAccessException {
         if(CollectionUtils.isNotEmpty(categoryList))
         {
-            List<CategoryVO> childrenCategoryVoList = new ArrayList<CategoryVO>();
+            List<CategoryTreeVO> childrenCategoryVoList = new ArrayList<CategoryTreeVO>();
             for(Category category:categoryList)
             {
-                CategoryVO childCategoryVo = new CategoryVO();
+                CategoryTreeVO childCategoryVo = new CategoryTreeVO();
                 BeanUtils.copyProperties(childCategoryVo,category);
                 if(category!=null&&categoryVO.getId().longValue() == category.getParentId().longValue()) {
                     childrenCategoryVoList.add(childCategoryVo);
@@ -130,7 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
                 BeanUtils.copyProperties(categoryTreeVO, category);
                 categoryTreeVO.setTitle(category.getName());
                 categoryTreeVO.setText(category.getName());
-                categoryTreeVO.setChildren(new ArrayList<CategoryVO>());
+                categoryTreeVO.setChildren(new ArrayList<CategoryTreeVO>());
 
                 currentNode.getChildren().add(categoryTreeVO);
 
@@ -173,7 +173,7 @@ public class CategoryServiceImpl implements CategoryService {
                     categoryTreeVO.setTitle(category.getName());
                     categoryTreeVO.setText(category.getName());
                     BeanUtils.copyProperties(categoryTreeVO, category);
-                    categoryTreeVO.setChildren(new ArrayList<CategoryVO>());
+                    categoryTreeVO.setChildren(new ArrayList<CategoryTreeVO>());
                     categoryTreeVOS.add(categoryTreeVO);
 
                     //递归查找子节点

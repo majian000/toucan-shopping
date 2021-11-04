@@ -138,13 +138,25 @@
                             }
                             return row.trademarkAreaType;
                         }},
-                    {field: 'chineseName',  title: '品牌名(中文)'},
-                    {field: 'englishName',  title: '品牌名(英文)'},
-                    {field: 'registNumber1',  title: '商标注册号'},
-                    {field: 'registNumber2',  title: '商标注册号'},
-                    {field: 'seminary',  title: '发源地'},
-                    {field: 'ownerName',  title: '品牌所有人'},
-                    {field: 'attributeSort',  title: '排序'},
+                    {field: 'chineseName', width:150, title: '品牌名(中文)'},
+                    {field: 'englishName', width:150, title: '品牌名(英文)'},
+                    {field: 'registNumber1', width:150, title: '商标注册号'},
+                    {field: 'registNumber2',width:150,  title: '商标注册号'},
+                    {field: 'seminary',  width:150,title: '发源地'},
+                    {field: 'ownerName', width:150, title: '品牌所有人'},
+                    {field: 'enabledStatus', width:150, title: '状态',
+                        templet: function (row) {
+                            if(row.enabledStatus == null){
+                                return "";
+                            }
+                            if(row.enabledStatus == 1){
+                                return "有效";
+                            }
+                            if(row.enabledStatus == 0){
+                                return "无效";
+                            }
+                            return row.enabledStatus;
+                        }},
                     {field: 'createDate',width:180,  title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#brandTableBar', align: "center"}
                 ]

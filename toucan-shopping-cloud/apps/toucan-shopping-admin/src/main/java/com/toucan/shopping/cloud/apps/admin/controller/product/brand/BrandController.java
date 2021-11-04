@@ -396,11 +396,10 @@ public class BrandController extends UIController {
 
 
 
-    public void setTreeNodeSelect(AtomicLong id,CategoryTreeVO parentTreeVO,List<CategoryVO> categoryTreeVOList,List<BrandCategoryVO> brandCategories)
+    public void setTreeNodeSelect(AtomicLong id,CategoryTreeVO parentTreeVO,List<CategoryTreeVO> categoryTreeVOList,List<BrandCategoryVO> brandCategories)
     {
-        for(CategoryVO categoryVO:categoryTreeVOList)
+        for(CategoryTreeVO categoryTreeVO:categoryTreeVOList)
         {
-            CategoryTreeVO categoryTreeVO = (CategoryTreeVO)categoryVO;
             categoryTreeVO.setId(id.incrementAndGet());
             categoryTreeVO.setNodeId(categoryTreeVO.getId());
             categoryTreeVO.setParentId(parentTreeVO.getId());
@@ -420,13 +419,12 @@ public class BrandController extends UIController {
 
     /**
      * 返回类别树
-     * @param request
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryCategoryTree(HttpServletRequest request,Long brandId)
+    public ResultObjectVO queryCategoryTree(Long brandId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
