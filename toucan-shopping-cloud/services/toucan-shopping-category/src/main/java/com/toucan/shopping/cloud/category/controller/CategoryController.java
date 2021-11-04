@@ -204,7 +204,7 @@ public class CategoryController {
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/delete/id",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/delete/id",method = RequestMethod.DELETE,produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO deleteById(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
     {
