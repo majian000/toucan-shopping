@@ -24,29 +24,83 @@
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" id="id" th:value="${model.id}">
     <div class="layui-form-item">
-        <label class="layui-form-label required">属性名</label>
+        <label class="layui-form-label required">商标注册地区</label>
+        <div class="layui-input-block"  th:if="${model.trademarkAreaType eq 1}" >
+            <select name="trademarkAreaType"  lay-search="">
+                <option value="1" selected>中国大陆地区</option>
+                <option value="2">香港、澳门特别行政区，台湾省和境外国家</option>
+            </select>
+        </div>
+        <div class="layui-input-block"  th:if="${model.trademarkAreaType eq 2}" >
+            <select name="trademarkAreaType"  lay-search="">
+                <option value="1" >中国大陆地区</option>
+                <option value="2" selected>香港、澳门特别行政区，台湾省和境外国家</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">品牌名(中文)</label>
         <div class="layui-input-block">
-            <input type="text" name="attributeName" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入属性名" th:value="${model.attributeName}" class="layui-input">
-            <tip>填写属性名。</tip>
+            <input type="text" name="chineseName"  maxlength="255" lay-reqtext="不能为空" placeholder="请输入品牌名(中文)" th:value="${model.chineseName}" class="layui-input">
+            <tip>填写品牌名(中文)。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">品牌名(英文)</label>
+        <div class="layui-input-block">
+            <input type="text" name="englishName"  maxlength="255" lay-reqtext="不能为空" placeholder="请输入品牌名(英文)" th:value="${model.englishName}" class="layui-input">
+            <tip>填写品牌名(英文)。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商标注册号</label>
+        <div class="layui-input-block">
+            <input type="text" name="registNumber1" lay-verify="required" maxlength="200" lay-reqtext="不能为空" placeholder="请输入商标注册号" th:value="${model.registNumber1}" class="layui-input">
+            <tip>填写商标注册号。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商标注册号</label>
+        <div class="layui-input-block">
+            <input type="text" name="registNumber2" lay-verify="required" maxlength="200" lay-reqtext="不能为空" placeholder="请输入商标注册号" th:value="${model.registNumber2}" class="layui-input">
+            <tip>填写商标注册号。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">发源地</label>
+        <div class="layui-input-block">
+            <input type="text" name="seminary" lay-verify="required" maxlength="200" lay-reqtext="不能为空" placeholder="请输入发源地" th:value="${model.seminary}" class="layui-input">
+            <tip>填写发源地。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">品牌所有人</label>
+        <div class="layui-input-block">
+            <input type="text" name="ownerName" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入所有人" th:value="${model.ownerName}" class="layui-input">
+            <tip>填写所有人。</tip>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">所属分类</label>
         <div class="layui-input-block">
-            <input type="hidden" name="categoryId" id="categoryId" th:value="${model.categoryId}">
-            <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择所属分类" th:value="${model.categoryName}" class="layui-input" >
+            <input type="hidden" name="categoryId" id="categoryId" th:value="${model.categoryIdCache}" >
+            <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择所属分类" th:value="${model.categoryNamePath}" class="layui-input" >
         </div>
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">排序</label>
-        <div class="layui-input-block">
-            <input type="number" name="attributeSort"    placeholder="请输入排序" th:value="${model.attributeSort}"  class="layui-input" lay-verify="number">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block"  th:if="${model.enabledStatus eq 1}"  >
+            <select name="enabledStatus"  lay-search="">
+                <option value="0">禁用</option>
+                <option value="1" selected >启用</option>
+            </select>
         </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">备注信息</label>
-        <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255" th:text="${model.remark}" placeholder="请输入备注信息"></textarea>
+        <div class="layui-input-block"  th:if="${model.enabledStatus eq 0}"  >
+            <select name="enabledStatus"  lay-search="">
+                <option value="0" selected>禁用</option>
+                <option value="1"  >启用</option>
+            </select>
         </div>
     </div>
 
@@ -72,6 +126,11 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            if(data.field.chineseName==""&&data.field.englishName=="")
+            {
+                layer.msg("品牌名不能为空");
+                return false;
+            }
             $.ajax({
                 url:"[[@{/product/brand/update}]]",
                 contentType: "application/json; charset=utf-8",

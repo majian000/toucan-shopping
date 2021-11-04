@@ -260,18 +260,27 @@ public class BrandController extends UIController {
                             List<CategoryVO> categoryList = resultObjectVO.formatDataList(CategoryVO.class);
                             if(CollectionUtils.isNotEmpty(categoryList))
                             {
-                                for(CategoryVO categoryVO:categoryList)
+                                StringBuilder categoryNamePath = new StringBuilder();
+                                int categoryListSize=categoryList.size();
+                                for(int i=0;i<categoryListSize;i++)
                                 {
+                                    CategoryVO categoryVO = categoryList.get(i);
                                     if(categoryIdArray!=null&&categoryIdArray.length>0) {
                                         for(String categoryId:categoryIdArray)
                                         {
                                             if(String.valueOf(categoryVO.getId()).equals(categoryId))
                                             {
                                                 brandVO.getCategoryNamePathList().add(categoryVO.getNamePath());
+                                                categoryNamePath.append(categoryVO.getNamePath());
                                             }
                                         }
                                     }
+                                    if(i+1<categoryListSize)
+                                    {
+                                        categoryNamePath.append(",");
+                                    }
                                 }
+                                brandVO.setCategoryNamePath(categoryNamePath.toString());
                             }
                         }
 

@@ -299,31 +299,32 @@ public class BrandController {
             }
 
             BrandVO queryBrand = new BrandVO();
-            queryBrand.setChineseName(entity.getChineseName());
-            queryBrand.setDeleteStatus(0);
+            List<Brand> brandList = null;
+            if(StringUtils.isNotEmpty(entity.getChineseName())) {
+                queryBrand.setChineseName(entity.getChineseName());
+                queryBrand.setDeleteStatus(0);
 
-            List<Brand> brandList = brandService.queryList(queryBrand);
-            if(!CollectionUtils.isEmpty(brandList))
-            {
-                if(entity.getId().longValue() != brandList.get(0).getId().longValue())
-                {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg(entity.getChineseName()+"名称已存在!");
-                    return resultObjectVO;
+                brandList = brandService.queryList(queryBrand);
+                if (!CollectionUtils.isEmpty(brandList)) {
+                    if (entity.getId().longValue() != brandList.get(0).getId().longValue()) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg(entity.getChineseName() + "名称已存在!");
+                        return resultObjectVO;
+                    }
                 }
             }
 
-            queryBrand = new BrandVO();
-            queryBrand.setEnglishName(entity.getEnglishName());
-            queryBrand.setDeleteStatus(0);
-            brandList = brandService.queryList(queryBrand);
-            if(!CollectionUtils.isEmpty(brandList))
-            {
-                if(entity.getId().longValue() != brandList.get(0).getId().longValue())
-                {
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg(entity.getEnglishName()+"名称已存在!");
-                    return resultObjectVO;
+            if(StringUtils.isNotEmpty(entity.getEnglishName())) {
+                queryBrand = new BrandVO();
+                queryBrand.setEnglishName(entity.getEnglishName());
+                queryBrand.setDeleteStatus(0);
+                brandList = brandService.queryList(queryBrand);
+                if (!CollectionUtils.isEmpty(brandList)) {
+                    if (entity.getId().longValue() != brandList.get(0).getId().longValue()) {
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg(entity.getEnglishName() + "名称已存在!");
+                        return resultObjectVO;
+                    }
                 }
             }
 

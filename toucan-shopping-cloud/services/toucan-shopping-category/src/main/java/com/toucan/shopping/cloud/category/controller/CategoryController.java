@@ -578,10 +578,10 @@ public class CategoryController {
                 }
 
                 CategoryTreeVO rootTreeVO = new CategoryTreeVO();
-                rootTreeVO.setTitle("根节点");
+                rootTreeVO.setTitle("商城分类");
                 rootTreeVO.setParentId(-1L);
                 rootTreeVO.setId(-1L);
-                rootTreeVO.setText("根节点");
+                rootTreeVO.setText("商城分类");
                 rootTreeVO.setChildren(categoryTreeVOS);
                 List<CategoryVO> rootCategoryTreeVOS = new ArrayList<CategoryVO>();
                 rootCategoryTreeVOS.add(rootTreeVO);

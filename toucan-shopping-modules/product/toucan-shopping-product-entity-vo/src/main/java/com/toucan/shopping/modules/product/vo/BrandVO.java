@@ -26,4 +26,10 @@ public class BrandVO extends Brand {
     private List<String> categoryNamePathList;
 
 
+    /**
+     * 分类名路径多个用,分割
+     */
+    private String categoryNamePath;
+
+
 }
