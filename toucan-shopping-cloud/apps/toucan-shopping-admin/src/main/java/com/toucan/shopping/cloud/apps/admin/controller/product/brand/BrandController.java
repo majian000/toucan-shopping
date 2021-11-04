@@ -193,7 +193,7 @@ public class BrandController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request,@RequestBody BrandVO entity)
+    public ResultObjectVO update(@RequestBody BrandVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

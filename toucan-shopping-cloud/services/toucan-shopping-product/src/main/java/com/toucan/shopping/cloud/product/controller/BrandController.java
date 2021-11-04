@@ -229,6 +229,87 @@ public class BrandController {
 
 
 
+
+
+    /**
+     * 更新类别
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        try {
+            BrandVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandVO.class);
+
+            if(entity.getId()==null)
+            {
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(entity));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+
+            BrandVO queryBrand = new BrandVO();
+            queryBrand.setChineseName(entity.getChineseName());
+            queryBrand.setDeleteStatus(0);
+
+            List<Brand> brandList = brandService.queryList(queryBrand);
+            if(!CollectionUtils.isEmpty(brandList))
+            {
+                if(entity.getId().longValue() != brandList.get(0).getId().longValue())
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg(entity.getChineseName()+"名称已存在!");
+                    return resultObjectVO;
+                }
+            }
+
+            queryBrand = new BrandVO();
+            queryBrand.setEnglishName(entity.getEnglishName());
+            queryBrand.setDeleteStatus(0);
+            brandList = brandService.queryList(queryBrand);
+            if(!CollectionUtils.isEmpty(brandList))
+            {
+                if(entity.getId().longValue() != brandList.get(0).getId().longValue())
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg(entity.getEnglishName()+"名称已存在!");
+                    return resultObjectVO;
+                }
+            }
+
+            entity.setUpdateDate(new Date());
+            int row = brandService.update(entity);
+            if (row != 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+
     /**
      * 根据ID查询
      * @param requestVo
