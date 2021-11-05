@@ -4,7 +4,7 @@
     <contextName>logback</contextName>
 
     <springProfile name="dev">
-        <property name="log.path" value="F:/log/dev/toucan_shopping/toucan_shopping_area" />
+        <property name="log.path" value="C:/log/dev/toucan_shopping/toucan_shopping_area" />
     </springProfile>
 
     <springProfile name="test">
