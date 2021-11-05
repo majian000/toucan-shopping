@@ -21,6 +21,16 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
 
     // ===============查询条件===================
 
+    /**
+     * 每页显示数量
+     */
+    private Integer pageSize = 10;
+
+    /**
+     * 页码
+     */
+    private Integer pageNumber = 1;
+
     private Integer id;
 
     private Long categoryId;

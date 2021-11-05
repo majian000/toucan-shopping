@@ -8,7 +8,7 @@ function initBrandListControl(brandDiv,brandPageId,categoryId)
 
     //初始化插件
     $('#'+brandPageId).selectPage({
-        showField : 'desc',
+        showField : 'name',
         keyField : 'id',
         data : basePath+'/product/brand/list',
         params : function(){
@@ -19,8 +19,11 @@ function initBrandListControl(brandDiv,brandPageId,categoryId)
         //返回的数据里必须包含list（Array）和totalRow（number|string）两个节点
         eAjaxSuccess : function(d){
             var result;
-            if(d) result = d.values.gridResult;
-            else result = undefined;
+            if(d) {
+                result = d.values.gridResult;
+            }else {
+                result = undefined;
+            }
             return result;
         }
     });

@@ -74,6 +74,10 @@ public class BrandController  {
         SelectPageTableVO selectPageTableVO = new SelectPageTableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            pageInfo.setLimit(pageInfo.getPageSize());
+            pageInfo.setPage(pageInfo.getPageNumber());
+            selectPageTableVO.getValues().getGridResult().setPageNumber(pageInfo.getPageNumber());
+            selectPageTableVO.getValues().getGridResult().setPageSize(pageInfo.getPageSize());
             ResultObjectVO resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
