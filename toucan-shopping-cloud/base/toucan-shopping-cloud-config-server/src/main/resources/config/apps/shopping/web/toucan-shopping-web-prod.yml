@@ -106,7 +106,7 @@ toucan:
     head-sculpture-max-size: 2048 #头像最大长度2MB(单位KB)
     default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
   user-auth:
-    enabled: true
+    enabled: false #用户请求量过大,容错率过低先停止权限校验(如果1个请求没通过直接跳转到登录页,用户体验不好)
     name: toucan-shopping-user
     #HTTP权限请求头
     # 例如 商城C端 Cookie:uid=d10590b318544049ba2104d1f5517a7d;lt=d10590b318544049ba2104d1f5517a7d
