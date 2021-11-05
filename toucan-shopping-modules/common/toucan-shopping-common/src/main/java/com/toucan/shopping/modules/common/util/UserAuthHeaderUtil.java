@@ -12,12 +12,12 @@ public class UserAuthHeaderUtil {
             throw new IllegalArgumentException("请求头参数无效");
         }
 
-        String adminId = StringUtils.substringAfter(authHeader,"tss_uid=");
-        if(adminId.indexOf(";")!=-1)
+        String userId = StringUtils.substringAfter(authHeader,"tss_uid=");
+        if(userId.indexOf(";")!=-1)
         {
-            adminId=adminId.substring(0,adminId.indexOf(";"));
+            userId=userId.substring(0,userId.indexOf(";"));
         }
-        return adminId;
+        return userId;
     }
 
 
