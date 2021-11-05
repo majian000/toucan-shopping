@@ -162,6 +162,14 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-log-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-product-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.product</groupId>
+            <artifactId>toucan-shopping-product-entity-vo</artifactId>
+        </dependency>
 
 
     </dependencies>

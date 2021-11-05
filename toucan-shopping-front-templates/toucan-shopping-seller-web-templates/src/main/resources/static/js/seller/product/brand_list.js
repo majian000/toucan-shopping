@@ -3,12 +3,6 @@
 function initBrandListControl(brandDiv,brandPageId,categoryId)
 {
     //定义数组，在服务端返回的数据也以该格式返回：Array[{Object},{...}]
-    var tag_data = [
-        {id:1 ,name:'Chicago Bulls',desc:'芝加哥公牛'},
-        {id:2 ,name:'Cleveland Cavaliers',desc:'克里夫兰骑士'},
-        {id:3 ,name:'Detroit Pistons',desc:'底特律活塞'},
-        {id:4 ,name:'Indiana Pacers',desc:'印第安纳步行者'}
-    ];
     $("#"+brandDiv).empty();
     $("#"+brandDiv).append("<input type=\"text\" id=\""+brandPageId+"\" >");
 
@@ -16,6 +10,18 @@ function initBrandListControl(brandDiv,brandPageId,categoryId)
     $('#'+brandPageId).selectPage({
         showField : 'desc',
         keyField : 'id',
-        data : tag_data
+        data : basePath+'/product/brand/list',
+        params : function(){
+            var qname=$("#selectBrand").val();
+            return {'name':qname,'categoryId':categoryId};
+        },
+        //ajax请求后服务端返回的数据格式处理
+        //返回的数据里必须包含list（Array）和totalRow（number|string）两个节点
+        eAjaxSuccess : function(d){
+            var result;
+            if(d) result = d.values.gridResult;
+            else result = undefined;
+            return result;
+        }
     });
 }
