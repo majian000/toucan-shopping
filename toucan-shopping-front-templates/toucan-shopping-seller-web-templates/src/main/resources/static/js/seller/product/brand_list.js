@@ -1,6 +1,6 @@
 
 
-function initBrandListControl(brandPageId,categoryId)
+function initBrandListControl(brandDiv,brandPageId,categoryId)
 {
     //定义数组，在服务端返回的数据也以该格式返回：Array[{Object},{...}]
     var tag_data = [
@@ -9,6 +9,9 @@ function initBrandListControl(brandPageId,categoryId)
         {id:3 ,name:'Detroit Pistons',desc:'底特律活塞'},
         {id:4 ,name:'Indiana Pacers',desc:'印第安纳步行者'}
     ];
+    $("#"+brandDiv).empty();
+    $("#"+brandDiv).append("<input type=\"text\" id=\""+brandPageId+"\" >");
+
     //初始化插件
     $('#'+brandPageId).selectPage({
         showField : 'desc',
