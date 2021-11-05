@@ -84,6 +84,12 @@ public class BrandController {
 
         try {
             BrandVO brandVo = JSONObject.parseObject(requestJsonVO.getEntityJson(), BrandVO.class);
+            if(StringUtils.isEmpty(brandVo.getChineseName())&&StringUtils.isEmpty(brandVo.getEnglishName()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌名称不能为空");
+                return resultObjectVO;
+            }
 
             BrandVO queryBrand = new BrandVO();
             queryBrand.setChineseName(brandVo.getChineseName());
@@ -295,6 +301,13 @@ public class BrandController {
                 logger.info("ID为空 param:"+ JSONObject.toJSONString(entity));
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+
+            if(StringUtils.isEmpty(entity.getChineseName())&&StringUtils.isEmpty(entity.getEnglishName()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌名称不能为空");
                 return resultObjectVO;
             }
 
