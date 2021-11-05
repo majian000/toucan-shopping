@@ -19,7 +19,7 @@ public class PageErrorException implements TemplateExceptionHandler {
             throws TemplateException {
         try {
             logger.warn(te.getMessage(),te);
-            out.write("<script>window.location.href='/index';</script>");
+            out.write("<script>window.location.href='/error';</script>");
         } catch (IOException e) {
             throw new TemplateException("Failed to print error message. Cause: " + e, env);
         }

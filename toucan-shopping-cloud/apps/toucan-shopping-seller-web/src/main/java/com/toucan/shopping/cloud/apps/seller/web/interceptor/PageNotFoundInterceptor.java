@@ -18,7 +18,7 @@ public class PageNotFoundInterceptor implements HandlerInterceptor {
             response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/index");
             return false;
         } else if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-            response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/index");
+            response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/freeShop");
             return false;
         }
         return true;
