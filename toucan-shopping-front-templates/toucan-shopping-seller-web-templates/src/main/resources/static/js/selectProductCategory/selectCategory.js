@@ -55,6 +55,8 @@ function selectCategoryLevel2(p,c) {
 	//如果没有下一级,按钮可以点击
 	if(category_list[p].children[c].children==null||category_list[p].children[c].children.length<=0)
 	{
+		//加载品牌列表
+		initBrandListControl("selectBrand",category_list[p].children[c].id);
 		$("#releaseBtn").removeAttr("disabled");
 	}else{
 		$("#releaseBtn").attr("disabled","disabled");
@@ -68,6 +70,10 @@ function selectD(p,c,d) {
 	$("#selectedSort").html(expressD);
 
 	$("#releaseBtn").removeAttr("disabled");
+
+
+	//加载品牌列表
+	initBrandListControl("selectBrand",category_list[p].children[c].children[d].id);
 }
 
 /*点击下一步*/

@@ -209,20 +209,20 @@
                 {
                     var exists=false;
                     //判断上级节点ID是否已经保存了
-                    for(var j=0;j<functionsArray.length;j++)
+                    for(var j=0;j<categoryArray.length;j++)
                     {
-                        if(functionsArray[j].id==pid) {
+                        if(categoryArray[j].id==pid) {
                             exists = true;
                         }
                     }
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        functionsArray.push({id:categoryTreeDataArray[i].id,functionId:categoryTreeDataArray[i].functionId})
+                        categoryArray.push({id:categoryTreeDataArray[i].id,categoryId:categoryTreeDataArray[i].categoryId})
                     }
                     if(categoryTreeDataArray[i].pid!=-1) {
                         //找到这个节点的上级节点
-                        getParentNode(functionsArray, categoryTreeDataArray[i].pid);
+                        getParentNode(categoryArray, categoryTreeDataArray[i].pid);
                     }
                 }
             }
@@ -286,15 +286,15 @@
                         layer.msg("请选择类别");
                         return false;
                     }
-                    var functionsArray =  new Array();
+                    var categoryArray =  new Array();
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        functionsArray.push({id:selectNodeObject.id,functionId:selectNodeObject.functionId});
-                        getParentNode(functionsArray,selectNodeObject.pid);
+                        categoryArray.push({id:selectNodeObject.id,categoryId:selectNodeObject.categoryId});
+                        getParentNode(categoryArray,selectNodeObject.pid);
                     }
 
-                    for (var j = 0; j < functionsArray.length; j++) {
-                        functionsArray[j]={functionId:functionsArray[j].functionId};
+                    for (var j = 0; j < categoryArray.length; j++) {
+                        categoryArray[j]={categoryId:categoryArray[j].categoryId};
                     }
                 }
             });

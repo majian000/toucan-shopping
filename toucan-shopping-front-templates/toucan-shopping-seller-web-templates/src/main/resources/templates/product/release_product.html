@@ -25,6 +25,12 @@
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
 
+
+    <link rel="stylesheet" href="${basePath}/static/lib/selectPage/selectpage.css" type="text/css">
+    <script type="text/javascript" src="${basePath}/static/lib/selectPage/selectpage.js" ></script>
+    <script type="text/javascript" src="${basePath}/static/js/seller/product/brand_list.js"></script>
+
+
     <#include "/common_js.html"/>
 
     <title>发布商品</title>
@@ -68,6 +74,12 @@
                             </div>
                             <div class="selectedSort"><b>您当前选择的商品类别是：</b><i id="selectedSort"></i></div>
 
+                            <div class="item">
+                                <span class="label">品牌：</span>
+                                <div class="fl">
+                                    <input type="text" id="selectBrand" >
+                                </div>
+                            </div><!--item end-->
 
                             <div class="item">
                                 <span class="label">&nbsp;</span>
@@ -246,6 +258,7 @@
 
 <script>
     $(function () {
+
 
         $("#refreshCaptcha").bind( 'click' ,function(){
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
