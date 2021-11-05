@@ -69,16 +69,13 @@ public class BrandController  {
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public SelectPageTableVO list(HttpServletRequest request, BrandPageInfo pageInfo)
+    public SelectPageTableVO list(BrandPageInfo pageInfo)
     {
         SelectPageTableVO selectPageTableVO = new SelectPageTableVO();
         try {
+            pageInfo.setName(pageInfo.getQ_word());
             pageInfo.setLimit(pageInfo.getPageSize());
             pageInfo.setPage(pageInfo.getPageNumber());
-            if(pageInfo.getQ_word()!=null&&pageInfo.getQ_word().length>0)
-            {
-                pageInfo.setName(pageInfo.getQ_word()[0]);
-            }
             selectPageTableVO.getValues().getGridResult().setPageNumber(pageInfo.getPageNumber());
             selectPageTableVO.getValues().getGridResult().setPageSize(pageInfo.getPageSize());
 

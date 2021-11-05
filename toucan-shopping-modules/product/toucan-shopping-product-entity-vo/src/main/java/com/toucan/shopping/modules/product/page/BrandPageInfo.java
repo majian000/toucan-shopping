@@ -54,7 +54,7 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
     /**
      * selectPage查询条件
      */
-    private String[] q_word;
+    private String q_word;
 
     //==============================================
 

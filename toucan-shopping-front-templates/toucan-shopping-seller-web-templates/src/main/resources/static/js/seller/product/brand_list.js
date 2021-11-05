@@ -12,7 +12,6 @@ function initBrandListControl(brandDiv,brandPageId,categoryId)
         keyField : 'id',
         data : basePath+'/product/brand/list',
         params : function(){
-            var qname=$("#selectBrand").val();
             return {'categoryId':categoryId};
         },
         //ajax请求后服务端返回的数据格式处理

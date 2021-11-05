@@ -39,19 +39,18 @@ public class RequestXssWrapper extends HttpServletRequestWrapper {
 
         //如果是json请求就替换掉这个json里的所有参数
         if(StringUtils.isNotEmpty(contentType)&&contentType.toLowerCase().indexOf("application/json")!=-1) {
-
             //备份request里的body
-            StringBuilder jsonData = new StringBuilder();
+            StringBuilder requestBody = new StringBuilder();
             BufferedReader reader = null;
             try {
                 reader = new BufferedReader(new InputStreamReader(request.getInputStream(), Charset.defaultCharset()));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    jsonData.append(line);
+                    requestBody.append(line);
                 }
 
                 //替换这个字符串的所有XSS代码
-                String jsonReplaceData = XSSConvert.replaceStringXSS(jsonData.toString());
+                String jsonReplaceData = XSSConvert.replaceStringXSS(requestBody.toString());
                 body = jsonReplaceData.getBytes(Charset.defaultCharset());
 
             } catch (Exception e) {

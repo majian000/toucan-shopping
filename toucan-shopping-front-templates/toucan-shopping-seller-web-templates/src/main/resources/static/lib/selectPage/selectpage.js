@@ -1295,7 +1295,7 @@
 		//when have new query keyword, then reset page number to 1.
 		if(q_word.length && q_word[0] && q_word[0] !== self.prop.prev_value) which_page_num = 1;
 		var _orgParams = {
-			q_word: q_word,
+			q_word: q_word!=null&&q_word.length>0?q_word[0]:"",
 			pageNumber: which_page_num,
 			pageSize: p.pageSize,
 			andOr: p.andOr,
