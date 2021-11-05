@@ -13,7 +13,7 @@ function initBrandListControl(brandDiv,brandPageId,categoryId)
         data : basePath+'/product/brand/list',
         params : function(){
             var qname=$("#selectBrand").val();
-            return {'name':qname,'categoryId':categoryId};
+            return {'categoryId':categoryId};
         },
         //ajax请求后服务端返回的数据格式处理
         //返回的数据里必须包含list（Array）和totalRow（number|string）两个节点
