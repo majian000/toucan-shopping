@@ -73,7 +73,9 @@ public class BrandController  {
     {
         SelectPageTableVO selectPageTableVO = new SelectPageTableVO();
         try {
-            pageInfo.setName(pageInfo.getQ_word());
+            if(StringUtils.isNotEmpty(pageInfo.getQ_word())) {
+                pageInfo.setName(pageInfo.getQ_word());
+            }
             pageInfo.setLimit(pageInfo.getPageSize());
             pageInfo.setPage(pageInfo.getPageNumber());
             selectPageTableVO.getValues().getGridResult().setPageNumber(pageInfo.getPageNumber());
@@ -89,8 +91,8 @@ public class BrandController  {
                     selectPageTableVO.getValues().getGridResult().setTotalRow(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     selectPageTableVO.getValues().getGridResult().setPageNumber(pageInfo.getPage());
                     List<BrandVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BrandVO.class);
+                    List<SelectPageBrandVO> selectPageBrandVOS = new ArrayList<SelectPageBrandVO>();
                     if(selectPageTableVO.getValues().getGridResult().getTotalRow()>0) {
-                        List<SelectPageBrandVO> selectPageBrandVOS = new ArrayList<SelectPageBrandVO>();
                         for(BrandVO brandVO:list)
                         {
                             SelectPageBrandVO selectPageBrandVO = new SelectPageBrandVO();
@@ -98,19 +100,18 @@ public class BrandController  {
                             if(StringUtils.isNotEmpty(brandVO.getChineseName())&&StringUtils.isNotEmpty(brandVO.getEnglishName()))
                             {
                                 selectPageBrandVO.setName(brandVO.getChineseName()+"/"+brandVO.getEnglishName());
-                            }
-                            if(StringUtils.isNotEmpty(brandVO.getChineseName()))
-                            {
-                                selectPageBrandVO.setName(brandVO.getChineseName());
-                            }
-                            if(StringUtils.isNotEmpty(brandVO.getEnglishName()))
-                            {
-                                selectPageBrandVO.setName(brandVO.getEnglishName());
+                            }else {
+                                if (StringUtils.isNotEmpty(brandVO.getChineseName())) {
+                                    selectPageBrandVO.setName(brandVO.getChineseName());
+                                }
+                                if (StringUtils.isNotEmpty(brandVO.getEnglishName())) {
+                                    selectPageBrandVO.setName(brandVO.getEnglishName());
+                                }
                             }
                             selectPageBrandVOS.add(selectPageBrandVO);
                         }
-                        selectPageTableVO.getValues().getGridResult().setList((List)selectPageBrandVOS);
                     }
+                    selectPageTableVO.getValues().getGridResult().setList((List)selectPageBrandVOS);
                 }
             }
         }catch(Exception e)
