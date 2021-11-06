@@ -37,10 +37,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 商品属性键管理
+ * 商品属性管理
  */
 @Controller
-@RequestMapping("/product/attributeKey")
+@RequestMapping("/product/attribute/attributeKey")
 public class AttributeKeyController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -70,8 +70,8 @@ public class AttributeKeyController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/product/attributeKey/listPage",feignFunctionService);
-        return "pages/product/attributeKey/list.html";
+        super.initButtons(request,toucan,"/product/attribute/attributeKey/listPage",feignFunctionService);
+        return "pages/product/attribute/attributeKey/list.html";
     }
 
 
@@ -214,7 +214,7 @@ public class AttributeKeyController extends UIController {
     public String addPage(HttpServletRequest request)
     {
 
-        return "pages/product/attributeKey/add.html";
+        return "pages/product/attribute/attributeKey/add.html";
     }
 
 
@@ -292,7 +292,7 @@ public class AttributeKeyController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/product/attributeKey/edit.html";
+        return "pages/product/attribute/attributeKey/edit.html";
     }
 
 
