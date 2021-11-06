@@ -6,17 +6,16 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.product.entity.AttributeKey;
-import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
-import com.toucan.shopping.modules.product.service.AttributeKeyService;
-import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
+import com.toucan.shopping.modules.product.entity.AttributeValue;
+import com.toucan.shopping.modules.product.page.AttributeValuePageInfo;
+import com.toucan.shopping.modules.product.service.AttributeValueService;
+import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,16 +24,16 @@ import java.util.List;
 
 
 /**
- * 属性键管理
+ * 属性值管理
  * @author majian
  */
 @RestController
-@RequestMapping("/attributeKey")
-public class AttributeKeyController {
+@RequestMapping("/attributeValue")
+public class AttributeValueController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private AttributeKeyService attributeKeyService;
+    private AttributeValueService attributeValueService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -66,8 +65,8 @@ public class AttributeKeyController {
             return resultObjectVO;
         }
         try {
-            AttributeKeyPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyPageInfo.class);
-            PageInfo<AttributeKeyVO> pageInfo =  attributeKeyService.queryListPage(queryPageInfo);
+            AttributeValuePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeValuePageInfo.class);
+            PageInfo<AttributeValueVO> pageInfo =  attributeValueService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {
@@ -98,7 +97,7 @@ public class AttributeKeyController {
         }
 
         try {
-            AttributeKeyVO attributeKeyVO = JSONObject.parseObject(requestVo.getEntityJson(),AttributeKeyVO.class);
+            AttributeValueVO attributeKeyVO = JSONObject.parseObject(requestVo.getEntityJson(),AttributeValueVO.class);
             if(attributeKeyVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -107,9 +106,9 @@ public class AttributeKeyController {
             }
 
             //查询是否存在该对象
-            AttributeKeyVO query=new AttributeKeyVO();
+            AttributeValueVO query=new AttributeValueVO();
             query.setId(attributeKeyVO.getId());
-            List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(query);
+            List<AttributeValueVO> attributeKeyVOS = attributeValueService.queryList(query);
             if(CollectionUtils.isEmpty(attributeKeyVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -158,7 +157,7 @@ public class AttributeKeyController {
         }
 
         try {
-            AttributeKeyVO vo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyVO.class);
+            AttributeValueVO vo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeValueVO.class);
 
             if(vo.getCategoryId()==null)
             {
@@ -168,11 +167,11 @@ public class AttributeKeyController {
                 return resultObjectVO;
             }
 
-            AttributeKey entity = new AttributeKey();
+            AttributeValue entity = new AttributeValue();
             BeanUtils.copyProperties(entity,vo);
             entity.setId(idGenerator.id());
             entity.setCreateDate(new Date());
-            int row = attributeKeyService.save(entity);
+            int row = attributeValueService.save(entity);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("保存失败,请重试!");
@@ -207,7 +206,7 @@ public class AttributeKeyController {
         }
 
         try {
-            AttributeKey entity = JSONObject.parseObject(requestVo.getEntityJson(),AttributeKey.class);
+            AttributeValue entity = JSONObject.parseObject(requestVo.getEntityJson(),AttributeValue.class);
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -215,7 +214,7 @@ public class AttributeKeyController {
                 return resultObjectVO;
             }
 
-            int row = attributeKeyService.deleteById(entity.getId());
+            int row = attributeValueService.deleteById(entity.getId());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
@@ -253,7 +252,7 @@ public class AttributeKeyController {
         }
 
         try {
-            List<AttributeKey> attributeKeys = JSONObject.parseArray(requestVo.getEntityJson(),AttributeKey.class);
+            List<AttributeValue> attributeKeys = JSONObject.parseArray(requestVo.getEntityJson(),AttributeValue.class);
             if(CollectionUtils.isEmpty(attributeKeys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -261,12 +260,12 @@ public class AttributeKeyController {
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(AttributeKey attributeKey:attributeKeys) {
+            for(AttributeValue attributeKey:attributeKeys) {
                 if(attributeKey.getId()!=null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(attributeKey);
 
-                    int row = attributeKeyService.deleteById(attributeKey.getId());
+                    int row = attributeValueService.deleteById(attributeKey.getId());
                     if (row < 1) {
                         logger.warn("删除失败，id:{}",attributeKey.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
@@ -307,9 +306,9 @@ public class AttributeKeyController {
         }
 
         try {
-            AttributeKeyVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AttributeKeyVO.class);
+            AttributeValueVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AttributeValueVO.class);
 
-            if(StringUtils.isEmpty(entity.getAttributeName()))
+            if(StringUtils.isEmpty(entity.getAttributeValue()))
             {
                 logger.info("属性名为空 param:"+ JSONObject.toJSONString(entity));
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -325,7 +324,7 @@ public class AttributeKeyController {
             }
 
             entity.setUpdateDate(new Date());
-            int row = attributeKeyService.update(entity);
+            int row = attributeValueService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
