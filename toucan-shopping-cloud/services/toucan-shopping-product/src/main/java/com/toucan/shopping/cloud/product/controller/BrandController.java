@@ -90,6 +90,21 @@ public class BrandController {
                 resultObjectVO.setMsg("品牌名称不能为空");
                 return resultObjectVO;
             }
+            if(StringUtils.isEmpty(brandVo.getCategoryIdCache()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌关联分类不能为空");
+                return resultObjectVO;
+            }
+
+            String[] categotyIdArray = brandVo.getCategoryIdCache().split(",");
+            if(categotyIdArray.length>10)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌最多只能关联10个分类");
+                return resultObjectVO;
+            }
+
 
             BrandVO queryBrand = new BrandVO();
             queryBrand.setChineseName(brandVo.getChineseName());
@@ -126,17 +141,15 @@ public class BrandController {
                 return resultObjectVO;
             }
 
-            if(StringUtils.isNotEmpty(brandVo.getCategoryIdCache())) {
-                String[] categotyIdArray = brandVo.getCategoryIdCache().split(",");
-                for(String categoryId:categotyIdArray) {
-                    BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setId(idGenerator.id());
-                    brandCategory.setCategoryId(Long.parseLong(categoryId));
-                    brandCategory.setBrandId(entity.getId());
-                    brandCategory.setCreateDate(new Date());
-                    brandCategory.setDeleteStatus(0);
-                    brandCategoryService.save(brandCategory);
-                }
+
+            for(String categoryId:categotyIdArray) {
+                BrandCategory brandCategory = new BrandCategory();
+                brandCategory.setId(idGenerator.id());
+                brandCategory.setCategoryId(Long.parseLong(categoryId));
+                brandCategory.setBrandId(entity.getId());
+                brandCategory.setCreateDate(new Date());
+                brandCategory.setDeleteStatus(0);
+                brandCategoryService.save(brandCategory);
             }
 
 
@@ -311,6 +324,17 @@ public class BrandController {
                 return resultObjectVO;
             }
 
+
+            String[] categotyIdArray = entity.getCategoryIdCache().split(",");
+            if(categotyIdArray.length>10)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌最多只能关联10个分类");
+                return resultObjectVO;
+            }
+
+
+
             BrandVO queryBrand = new BrandVO();
             List<Brand> brandList = null;
             if(StringUtils.isNotEmpty(entity.getChineseName())) {
@@ -348,6 +372,21 @@ public class BrandController {
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
             }
+
+            //更新关联
+            brandCategoryService.deleteByBrandId(entity.getId());
+
+
+            for(String categoryId:categotyIdArray) {
+                BrandCategory brandCategory = new BrandCategory();
+                brandCategory.setId(idGenerator.id());
+                brandCategory.setCategoryId(Long.parseLong(categoryId));
+                brandCategory.setBrandId(entity.getId());
+                brandCategory.setCreateDate(new Date());
+                brandCategory.setDeleteStatus(0);
+                brandCategoryService.save(brandCategory);
+            }
+
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -628,7 +667,7 @@ public class BrandController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            File file = new File("D:\\mj\\2021-10-28\\笔记本电脑品牌.json");
+            File file = new File("D:\\mj\\2021-10-28\\刀具品牌.json");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             StringBuffer buffer = new StringBuffer();
             String line = null;
@@ -675,7 +714,7 @@ public class BrandController {
                     }
 
                     BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setCategoryId(889589266089246776L);
+                    brandCategory.setCategoryId(889589266152161429L);
                     brandCategory.setBrandId(brandId);
 
                     List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
