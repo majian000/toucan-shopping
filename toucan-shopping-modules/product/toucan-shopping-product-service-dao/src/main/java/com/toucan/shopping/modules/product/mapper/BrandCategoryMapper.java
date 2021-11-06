@@ -46,6 +46,10 @@ public interface BrandCategoryMapper {
      */
     List<Long> queryBrandIdListByCategoryId(List<Long> categoryIds);
 
+    int deleteById(Long id);
+
     int deleteByBrandId(Long brandId);
+
+    int deleteByCategoryId(Long categoryId) ;
 
 }

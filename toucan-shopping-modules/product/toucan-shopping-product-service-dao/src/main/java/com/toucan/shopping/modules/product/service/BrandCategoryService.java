@@ -32,4 +32,7 @@ public interface BrandCategoryService {
 
     int deleteByBrandId(Long brandId);
 
+
+    int deleteByCategoryId(Long categoryId);
+
 }

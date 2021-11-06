@@ -62,4 +62,12 @@ public class BrandCategoryServiceImpl implements BrandCategoryService {
     public int deleteByBrandId(Long brandId) {
         return brandCategoryMapper.deleteByBrandId(brandId);
     }
+
+
+    @Override
+    public int deleteByCategoryId(Long categoryId) {
+        return brandCategoryMapper.deleteByCategoryId(categoryId);
+    }
+
+
 }
