@@ -159,6 +159,7 @@
         });
 
 
+
         /**
          * 拿到所有选中节点的ID
          * @param data
@@ -200,7 +201,7 @@
         /**
          * 拿到上级节点信息
          */
-        function getParentNode(functionsArray,pid)
+        function getParentNode(categoryArray,pid)
         {
             for(var i=0;i<categoryTreeDataArray.length;i++)
             {
@@ -218,7 +219,7 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        categoryArray.push({id:categoryTreeDataArray[i].id,categoryId:categoryTreeDataArray[i].categoryId})
+                        categoryArray.push({id:categoryTreeDataArray[i].id,name:categoryTreeDataArray[i].name})
                     }
                     if(categoryTreeDataArray[i].pid!=-1) {
                         //找到这个节点的上级节点
@@ -237,7 +238,7 @@
                 shade: 0.2,
                 maxmin:true,
                 shadeClose: true,
-                area: ['20%', '60%'],
+                area: ['40%', '70%'],
                 btn: ['确定'],
                 content: "<ul id='categoryTree' class='dtree' data-id='0' ></ul>",
                 success:function(layero){
@@ -289,13 +290,26 @@
                     var categoryArray =  new Array();
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        categoryArray.push({id:selectNodeObject.id,categoryId:selectNodeObject.categoryId});
+                        categoryArray.push({id:selectNodeObject.id,name:selectNodeObject.name});
                         getParentNode(categoryArray,selectNodeObject.pid);
                     }
 
+                    var categoryIdCache="";
+                    var categoryNames="";
                     for (var j = 0; j < categoryArray.length; j++) {
-                        categoryArray[j]={categoryId:categoryArray[j].categoryId};
+                        categoryIdCache+=categoryArray[j].id;
+                        categoryNames+=categoryArray[j].name;
+                        if(j+1<categoryArray.length)
+                        {
+                            categoryIdCache+=",";
+                            categoryNames+=",";
+                        }
                     }
+
+                    $("#categoryIdCache").val(categoryIdCache);
+                    $("#selectcategoryIdCache").val(categoryNames);
+
+                    layer.close(index);
                 }
             });
             $(window).on("resize", function () {

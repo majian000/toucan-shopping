@@ -396,14 +396,12 @@ public class BrandController extends UIController {
 
 
 
-    public void setTreeNodeSelect(AtomicLong id,CategoryTreeVO parentTreeVO,List<CategoryTreeVO> categoryTreeVOList,List<BrandCategoryVO> brandCategories)
+    public void setTreeNodeSelect(CategoryTreeVO parentTreeVO,List<CategoryTreeVO> categoryTreeVOList,List<BrandCategoryVO> brandCategories)
     {
         for(CategoryTreeVO categoryTreeVO:categoryTreeVOList)
         {
-            categoryTreeVO.setId(id.incrementAndGet());
             categoryTreeVO.setNodeId(categoryTreeVO.getId());
             categoryTreeVO.setParentId(parentTreeVO.getId());
-            categoryTreeVO.setParentId(categoryTreeVO.getParentId());
             for(BrandCategory brandCategory:brandCategories) {
                 if(categoryTreeVO.getId().equals(brandCategory.getCategoryId())) {
                     //设置节点被选中
@@ -412,10 +410,11 @@ public class BrandController extends UIController {
             }
             if(!CollectionUtils.isEmpty(categoryTreeVO.getChildren()))
             {
-                setTreeNodeSelect(id,categoryTreeVO,categoryTreeVO.getChildren(),brandCategories);
+                setTreeNodeSelect(categoryTreeVO,categoryTreeVO.getChildren(),brandCategories);
             }
         }
     }
+
 
     /**
      * 返回类别树
@@ -435,28 +434,25 @@ public class BrandController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 List<CategoryTreeVO> categoryTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), CategoryTreeVO.class);
-
-                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
-                AtomicLong id = new AtomicLong();
-                BrandCategoryVO queryBrandCategory = new BrandCategoryVO();
-                queryBrandCategory.setBrandId(brandId);
-                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBrandCategory);
-                resultObjectVO = feignBrandCategoryService.findByBrandId(requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<BrandCategoryVO> brandCategoryVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BrandCategoryVO.class);
-                    if(!CollectionUtils.isEmpty(brandCategoryVOS)) {
-                        for(CategoryTreeVO categoryTreeVO:categoryTreeVOList) {
-                            categoryTreeVO.setId(id.incrementAndGet());
-                            categoryTreeVO.setNodeId(categoryTreeVO.getId());
-                            categoryTreeVO.setText(categoryTreeVO.getTitle());
-                            for(BrandCategory brandCategory:brandCategoryVOS) {
-                                if(categoryTreeVO.getId().equals(brandCategory.getCategoryId())) {
-                                    //设置节点被选中
-                                    categoryTreeVO.getState().setChecked(true);
+                if(brandId!=null&&brandId.longValue()!=-1L) {
+                    BrandCategoryVO queryBrandCategory = new BrandCategoryVO();
+                    queryBrandCategory.setBrandId(brandId);
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrandCategory);
+                    resultObjectVO = feignBrandCategoryService.findByBrandId(requestJsonVO);
+                    if (resultObjectVO.isSuccess()) {
+                        List<BrandCategoryVO> brandCategoryVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BrandCategoryVO.class);
+                        if (!CollectionUtils.isEmpty(brandCategoryVOS)) {
+                            for (CategoryTreeVO categoryTreeVO : categoryTreeVOList) {
+                                categoryTreeVO.setNodeId(categoryTreeVO.getId());
+                                categoryTreeVO.setText(categoryTreeVO.getTitle());
+                                for (BrandCategory brandCategory : brandCategoryVOS) {
+                                    if (categoryTreeVO.getId().equals(brandCategory.getCategoryId())) {
+                                        //设置节点被选中
+                                        categoryTreeVO.getState().setChecked(true);
+                                    }
                                 }
+                                setTreeNodeSelect(categoryTreeVO, categoryTreeVO.getChildren(), brandCategoryVOS);
                             }
-                            setTreeNodeSelect(id,categoryTreeVO,categoryTreeVO.getChildren(), brandCategoryVOS);
                         }
                     }
                 }

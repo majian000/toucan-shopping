@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.category.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.toucan.shopping.modules.common.vo.bootstrap.State;
+import com.toucan.shopping.modules.common.vo.layui.dtree.CheckArr;
 import lombok.Data;
 
 import java.util.List;
@@ -40,6 +41,10 @@ public class CategoryTreeVO extends CategoryVO {
     private List<CategoryTreeVO> nodes;
 
 
+    /**
+     * 节点属性
+     */
+    private CheckArr checkArr = new CheckArr();
 
     /**
      * 节点属性

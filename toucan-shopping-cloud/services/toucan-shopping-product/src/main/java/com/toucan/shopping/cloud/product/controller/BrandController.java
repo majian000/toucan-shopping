@@ -134,6 +134,7 @@ public class BrandController {
             BeanUtils.copyProperties(entity,brandVo);
             entity.setId(idGenerator.id());
             entity.setCreateDate(new Date());
+            entity.setDeleteStatus(0);
             int row = brandService.save(entity);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
