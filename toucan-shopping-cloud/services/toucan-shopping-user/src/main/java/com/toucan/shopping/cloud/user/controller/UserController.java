@@ -1538,6 +1538,7 @@ public class UserController {
             String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
+            //在这里进行缓存的分片处理,用户登录的会话通过UserMainId路由到不同的集群
             Object loginTokenObject = toucanStringRedisService.get(loginTokenGroupKey,loginTokenAppKey);
             if (loginTokenObject != null) {
                 if(!StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
