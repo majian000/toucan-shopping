@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.order.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
 import com.toucan.shopping.modules.order.service.OrderItemService;
@@ -23,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -38,10 +40,26 @@ public class OrderController {
     @Autowired
     private OrderItemService orderItemService;
 
+    @Autowired
+    private IdGenerator idGenerator;
 
     @Autowired
     private SkylarkLock skylarkLock;
 
+
+    /**
+     * 创建订单
+     */
+    @RequestMapping(value="/testSharding",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO testSharding(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        Order order = new Order();
+        order.setId(idGenerator.id());
+        order.setCreateDate(new Date());
+        orderService.create(order);
+        return resultObjectVO;
+    }
 
 
     /**
