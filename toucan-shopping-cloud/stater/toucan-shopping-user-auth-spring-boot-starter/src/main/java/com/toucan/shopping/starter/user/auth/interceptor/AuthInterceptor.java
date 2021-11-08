@@ -151,14 +151,14 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     queryUserLogin.setUserMainId(Long.parseLong(uid));
                                     queryUserLogin.setLoginToken(lt);
 
-                                    //判断登录token和传过来的token是否一致
+                                    //判断登录token和传过来的token是否一致 以及用户登录状态是否在线
                                     RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
-                                    ResultObjectVO resultObjectVO = feignUserService.verifyLoginToken(SignUtil.sign(requestJsonVO),requestJsonVO);
+                                    ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                     if(!resultObjectVO.isSuccess())
                                     {
-                                        logger.info(" 校验loginToken不一致 {} loginToken {}" ,authHeader,lt);
+                                        logger.info(" 校验loginToken不一致 或用户会话超时 {} loginToken {}" ,authHeader,lt);
                                         resultVO.setCode(ResultVO.HTTPCODE_403);
-                                        resultVO.setMsg("校验登录会话不一致");
+                                        resultVO.setMsg("登录超时,请重新登录");
                                         response.setStatus(HttpStatus.FORBIDDEN.value());
                                         responseWrite(response, JSONObject.toJSONString(resultVO));
                                         return false;
@@ -175,20 +175,6 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
 
-                                //在这里调用用户中心 判断登录
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
-                                ResultObjectVO resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
-                                if (resultObjectVO.getCode() != ResultVO.SUCCESS
-                                        || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
-                                    logger.info("登录验证失败 " + authHeader);
-                                    resultVO.setCode(ResultVO.HTTPCODE_403);
-                                    resultVO.setMsg("登录超时,请重新登录");
-                                    //默认登录页面
-                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
-                                    responseWrite(response, JSONObject.toJSONString(resultVO));
-                                    return false;
-                                }
 
                             }
 
@@ -226,25 +212,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 queryUserLoginVO.setLoginToken(lt);
 
 
-                                //判断登录token和传过来的token是否一致
+                                //判断登录token和传过来的token是否一致 以及用户会话是否超时
                                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLoginVO);
-                                ResultObjectVO resultObjectVO = feignUserService.verifyLoginToken(SignUtil.sign(requestJsonVO),requestJsonVO);
+                                ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if(!resultObjectVO.isSuccess())
                                 {
                                     logger.info("登录token校验失败 {} loginToken {}" + authHeader,lt);
-
-                                    //删除cookies
-                                    deleteCookies(response);
-
-                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
-                                    return false;
-                                }
-
-                                requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLoginVO);
-                                resultObjectVO = feignUserService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
-                                if (resultObjectVO.getCode() != ResultVO.SUCCESS
-                                        || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
-                                    logger.info("登录验证失败 " + authHeader);
 
                                     //删除cookies
                                     deleteCookies(response);

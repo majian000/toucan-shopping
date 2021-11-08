@@ -1504,6 +1504,70 @@ public class UserController {
     }
 
 
+
+
+    /**
+     * 校验用户token以及判断登录会话
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/verify/login/token/is/online",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO verifyLoginTokenAndIsOnline(@RequestBody RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        try{
+            String entityJson = requestVo.getEntityJson();
+            UserLoginVO userLoginVO =JSONObject.parseObject(entityJson,UserLoginVO.class);
+            if(userLoginVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("查询失败,请传入用户ID");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(userLoginVO.getLoginToken()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("查询失败,请传入loginToken");
+                return resultObjectVO;
+            }
+            String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
+            String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
+
+            Object loginTokenObject = toucanStringRedisService.get(loginTokenGroupKey,loginTokenAppKey);
+            if (loginTokenObject != null) {
+                if(!StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
+                {
+                    //当前传过来的token和缓存中的token不一致
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    return resultObjectVO;
+                }
+
+                //登录时长重置
+                //延长登录token5个小时超时
+                toucanStringRedisService.expire(loginTokenGroupKey,UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                resultObjectVO.setCode(ResultVO.SUCCESS);
+
+            }else{
+                resultObjectVO.setCode(ResultVO.FAILD);
+            }
+
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 判断是否实名
      * @param requestVo

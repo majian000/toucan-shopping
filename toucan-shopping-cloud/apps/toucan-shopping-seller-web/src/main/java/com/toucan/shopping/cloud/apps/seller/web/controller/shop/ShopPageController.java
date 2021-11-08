@@ -56,7 +56,7 @@ public class ShopPageController extends BaseController {
      * 店铺信息
      * @return
      */
-//    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/info")
     public String info(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     {

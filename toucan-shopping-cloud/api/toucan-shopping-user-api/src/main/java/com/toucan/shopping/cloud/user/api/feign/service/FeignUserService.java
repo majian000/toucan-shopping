@@ -129,6 +129,16 @@ public interface FeignUserService {
 
 
     /**
+     * 校验用户token以及判断登录会话
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/verify/login/token/is/online",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO verifyLoginTokenAndIsOnline(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
      * 获取登录信息
      * @param signHeader
      * @param requestVo
