@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.order.entity.Order;
 import com.toucan.shopping.modules.order.entity.OrderItem;
+import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.service.OrderItemService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -46,18 +48,40 @@ public class OrderController {
     @Autowired
     private SkylarkLock skylarkLock;
 
+    @Autowired
+    private OrderNoService orderNoService;
+
 
     /**
-     * 创建订单
+     * 测试分片
      */
     @RequestMapping(value="/testSharding",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO testSharding(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO){
+    public ResultObjectVO testSharding(@RequestBody RequestJsonVO requestJsonVO) throws Exception{
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        Order order = new Order();
-        order.setId(idGenerator.id());
-        order.setCreateDate(new Date());
-        orderService.create(order);
+        for(int i=2021;i<=2023;i++) {
+            for(int j=1;j<=12;j++) {
+                String dateString=i+"-"+j+"-01 00:01:00";
+                if(j<10)
+                {
+                    dateString=i+"-0"+j+"-01 00:01:00";
+                }
+                Order order = new Order();
+                order.setId(idGenerator.id());
+                order.setCreateDate(DateUtils.parse(dateString,DateUtils.FORMATTER_SS));
+                order.setOrderNo(orderNoService.generateOrderNo());
+                order.setUserId("-1");
+                order.setOrderAmount(0.0D);
+                order.setPayAmount(0.0D);
+                order.setPayStatus(0);
+                order.setTradeStatus(0);
+                order.setTotalAmount(0.0D);
+                order.setPayType(0);
+                order.setCreateUserId("-1L");
+                order.setDeleteStatus((short) 0);
+                orderService.create(order);
+            }
+        }
         return resultObjectVO;
     }
 

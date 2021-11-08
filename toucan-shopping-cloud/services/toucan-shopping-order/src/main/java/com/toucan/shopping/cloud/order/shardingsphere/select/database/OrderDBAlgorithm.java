@@ -22,11 +22,10 @@ public class OrderDBAlgorithm implements PreciseShardingAlgorithm<Date> {
         Date createDate = shardingValue.getValue();
         String year = String.format("%tY", createDate);
 
-        String targetDBName =shardingValue.getLogicTableName() + "_" + year;
 
         for (String dbName : availableTargetNames) {
-            if (dbName.equals(targetDBName)) {
-                logger.info("库为：{}, 目标库为：{}, 最终被分到的表为：【{}】", availableTargetNames, targetDBName, dbName);
+            if (dbName.endsWith(year)) {
+                logger.info("库为：{}, 目标库后缀为：{}, 最终被分到的库为：【{}】", availableTargetNames, year, dbName);
                 return dbName;
             }
         }

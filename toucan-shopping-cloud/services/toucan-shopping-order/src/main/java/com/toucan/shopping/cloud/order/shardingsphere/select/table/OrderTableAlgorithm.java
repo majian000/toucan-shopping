@@ -21,7 +21,7 @@ public class OrderTableAlgorithm implements PreciseShardingAlgorithm<Date> {
 
         Date createDate = shardingValue.getValue();
         String year = String.format("%tY", createDate);
-        String month =String.format("%tm", createDate);
+        String month =String.valueOf(Integer.parseInt(String.format("%tm", createDate))); //去掉前面的0,如01,去掉后剩1
 
         String targetTableName =shardingValue.getLogicTableName() + "_" + year+"_"+month;
 
