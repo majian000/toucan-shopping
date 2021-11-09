@@ -37,6 +37,11 @@ public class CategoryTreeVO extends CategoryVO {
     private Long nodeId;
 
     /**
+     * 实体ID
+     */
+    private Long entityId;
+
+    /**
      * 标签
      */
     private List<String> tags;
