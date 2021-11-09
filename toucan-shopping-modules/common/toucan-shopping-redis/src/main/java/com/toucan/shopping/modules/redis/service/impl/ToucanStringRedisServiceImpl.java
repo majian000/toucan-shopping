@@ -16,6 +16,13 @@ public class ToucanStringRedisServiceImpl implements ToucanStringRedisService {
     @Qualifier("toucanRedisTemplate")
     private RedisTemplate redisTemplate;
 
+    public RedisTemplate getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public Object get(String key) {

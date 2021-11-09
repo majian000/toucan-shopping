@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.redis.service;
 
 
+import org.springframework.data.redis.core.RedisTemplate;
+
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -21,5 +23,8 @@ public interface ToucanStringRedisService {
     Object get(String var1, Object var2);
 
     Long delete(String var1, Object... var2);
+
+    RedisTemplate getRedisTemplate();
+
 }
 

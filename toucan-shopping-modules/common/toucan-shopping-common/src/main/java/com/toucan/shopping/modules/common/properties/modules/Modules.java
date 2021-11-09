@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.common.properties.modules.categoryCache.Categ
 import com.toucan.shopping.modules.common.properties.modules.log.Log;
 import com.toucan.shopping.modules.common.properties.modules.skylarkLock.SkylarkLock;
 import com.toucan.shopping.modules.common.properties.modules.toucanRedis.ToucanRedis;
+import com.toucan.shopping.modules.common.properties.modules.userLoginCache.UserLoginCache;
 import lombok.Data;
 
 /**
@@ -12,6 +13,8 @@ import lombok.Data;
  */
 @Data
 public class Modules {
+
+
 
     /**
      * 地区缓存模块
@@ -32,6 +35,11 @@ public class Modules {
      * redis封装
      */
     private ToucanRedis toucanRedis;
+
+    /**
+     * 用户登录缓存
+     */
+    private UserLoginCache userLoginCache;
 
     /**
      * 日志

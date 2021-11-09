@@ -51,7 +51,38 @@ toucan:
   modules:
     userLoginCache:
       cache-type: redis
-      sharding-class-type:
+      login-cache-redis-list[0]:
+          index: 0 #通过用户ID取余得到索引位置
+          select: single # 可选值 single:单实例 cluster:集群
+          timeout: 10000
+          password: mj_tocan_redis_7612 #多个集群要求每个密码统一
+          #单实例
+          host: 8.140.187.184
+          port: 6379
+          #集群配置
+          hosts: 192.168.80.129:6380,192.168.80.129:6381,192.168.80.129:6382 #多个用,分割
+          maxRedirects: 3 #最大连接转移数
+          #jedis pool配置
+          maxActive: 50 #最大活跃数
+          maxWaitMillis: 15 #最大等待数
+          maxIdle: 50 #最大核心线程数
+          minIdle: 0 #最小核心线程数
+      login-cache-redis-list[1]:
+        index: 1 #通过用户ID取余得到索引位置
+        select: single # 可选值 single:单实例 cluster:集群
+        timeout: 10000
+        password: mj_tocan_redis_7612 #多个集群要求每个密码统一
+        #单实例
+        host: 8.140.187.184
+        port: 6379
+        #集群配置
+        hosts: 192.168.80.129:6380,192.168.80.129:6381,192.168.80.129:6382 #多个用,分割
+        maxRedirects: 3 #最大连接转移数
+        #jedis pool配置
+        maxActive: 50 #最大活跃数
+        maxWaitMillis: 15 #最大等待数
+        maxIdle: 50 #最大核心线程数
+        minIdle: 0 #最小核心线程数
     log: #日志模块
       email:
         enabled: false
