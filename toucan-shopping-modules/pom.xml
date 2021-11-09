@@ -60,6 +60,8 @@
         <module>user/toucan-shopping-user-entity-vo</module>
         <!--用户Service和DAO -->
         <module>user/toucan-shopping-user-service-dao</module>
+        <!--用户登录缓存 -->
+        <module>user/toucan-shopping-user-login-cache</module>
 
 
         <!--地区编码实体和VO -->
@@ -415,6 +417,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-freemarker</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-user-login-cache</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
