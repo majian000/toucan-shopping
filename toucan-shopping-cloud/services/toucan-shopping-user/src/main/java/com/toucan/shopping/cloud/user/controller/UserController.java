@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.*;
 import com.toucan.shopping.modules.user.kafka.message.UserCreateMessage;
+import com.toucan.shopping.modules.user.login.cache.service.UserLoginCacheService;
 import com.toucan.shopping.modules.user.page.UserPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRedisKey;
@@ -51,13 +52,10 @@ public class UserController {
     @Autowired
     private SkylarkLock skylarkLock;
 
-    @Autowired
-    private ToucanStringRedisService toucanStringRedisService;
 
 
     @Autowired
     private IdGenerator idGenerator;
-
 
 
     @Autowired
@@ -75,6 +73,8 @@ public class UserController {
     @Autowired
     private UserRedisService userRedisService;
 
+    @Autowired
+    private UserLoginCacheService userLoginCacheService;
 
     @Autowired
     private Toucan toucan;
@@ -1188,7 +1188,6 @@ public class UserController {
                 return resultObjectVO;
             }
 
-
             //如果当前输入的是手机号判断手机号是否存在
             Long userId = 0L;
 
@@ -1242,6 +1241,10 @@ public class UserController {
                     String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userEntity.getUserMainId()));
                     String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
                     String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userEntity.getUserMainId()), requestJsonVO.getAppCode());
+
+                    UserVO userVO = new UserVO();
+                    userVO.setUserMainId(userEntity.getUserMainId());
+                    ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisService(userVO);
                     //判断是否已有登录token,如果有将删除掉
                     if (toucanStringRedisService.keys(loginGroupKey) != null) {
                         long deleteRows = 0;
@@ -1343,6 +1346,10 @@ public class UserController {
             String loginGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
+
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(userLoginVO.getUserMainId());
+            ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisService(userVO);
             Object loginTokenObject = toucanStringRedisService.get(loginGroupKey,loginInfoAppKey);
             if(loginTokenObject!=null) {
                 resultObjectVO.setData(JSONObject.parseObject(String.valueOf(loginTokenObject),UserVO.class));
@@ -1382,6 +1389,8 @@ public class UserController {
                 return resultObjectVO;
             }
             String loginGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
+
+            ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisServiceByUserMainId(userLoginVO.getUserMainId());
             //删除登录信息
             toucanStringRedisService.delete(loginGroupKey);
 
@@ -1429,6 +1438,7 @@ public class UserController {
             String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
+            ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisServiceByUserMainId(userLoginVO.getUserMainId());
             Object loginTokenObject = toucanStringRedisService.get(loginTokenGroupKey,loginTokenAppKey);
             if (loginTokenObject != null) {
                 if(StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
@@ -1484,6 +1494,7 @@ public class UserController {
             String loginTokenGroupKey =UserCenterLoginRedisKey.getLoginInfoGroupKey(String.valueOf(userLoginVO.getUserMainId()));
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
+            ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisServiceByUserMainId(userLoginVO.getUserMainId());
             Object loginTokenObject = toucanStringRedisService.get(loginTokenGroupKey,loginTokenAppKey);
             if (loginTokenObject != null) {
                 if(!StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
@@ -1539,6 +1550,7 @@ public class UserController {
             String loginTokenAppKey = UserCenterLoginRedisKey.getLoginTokenAppKey(String.valueOf(userLoginVO.getUserMainId()),requestVo.getAppCode());
 
             //在这里进行缓存的分片处理,用户登录的会话通过UserMainId路由到不同的集群
+            ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisServiceByUserMainId(userLoginVO.getUserMainId());
             Object loginTokenObject = toucanStringRedisService.get(loginTokenGroupKey,loginTokenAppKey);
             if (loginTokenObject != null) {
                 if(!StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))

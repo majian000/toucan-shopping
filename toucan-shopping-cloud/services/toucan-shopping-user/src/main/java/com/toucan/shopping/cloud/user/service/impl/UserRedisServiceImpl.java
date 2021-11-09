@@ -5,10 +5,12 @@ import com.toucan.shopping.cloud.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.user.entity.*;
+import com.toucan.shopping.modules.user.login.cache.service.UserLoginCacheService;
 import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.service.*;
 import com.toucan.shopping.modules.user.vo.UserLoginCacheVO;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +36,19 @@ public class UserRedisServiceImpl implements UserRedisService {
     @Autowired
     private UserDetailService userDetailService;
 
-    @Autowired
-    private ToucanStringRedisService toucanStringRedisService;
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserLoginCacheService userLoginCacheService;
+
     @Override
     public boolean flushLoginCache(String userMainId,String appCode) throws Exception {
         if(userMainId!=null) {
+            UserVO userVO = new UserVO();
+            userVO.setUserMainId(Long.parseLong(userMainId));
+            ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisService(userVO);
             String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(userMainId);
             String loginInfoAppKey = UserCenterLoginRedisKey.getLoginInfoAppKey(userMainId, appCode);
             if (toucanStringRedisService.keys(loginGroupKey) != null) {
@@ -105,6 +111,10 @@ public class UserRedisServiceImpl implements UserRedisService {
 
     @Override
     public void clearLoginCache(String userMainId) throws Exception {
+        UserVO userVO = new UserVO();
+        userVO.setUserMainId(Long.parseLong(userMainId));
+        ToucanStringRedisService toucanStringRedisService = userLoginCacheService.routeToucanRedisService(userVO);
+
         String loginGroupKey = UserCenterLoginRedisKey.getLoginInfoGroupKey(userMainId);
         //判断是否已有登录token,如果有将删除掉
         Set<String> loginKeys = toucanStringRedisService.keys(loginGroupKey);

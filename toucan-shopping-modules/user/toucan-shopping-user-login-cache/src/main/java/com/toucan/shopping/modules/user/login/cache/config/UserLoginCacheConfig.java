@@ -48,13 +48,22 @@ public class UserLoginCacheConfig {
 
         if("redis".equals(toucan.getModules().getUserLoginCache().getCacheType()))
         {
-            Map<String, ToucanStringRedisService> toucanStringRedisServiceMap = userLoginCacheService.getToucanStringRedisServiceMap();
+            //索引和redis缓存操作对象键值对,格式如下{redis索引:{db索引:obj,db索引:obj}}
+            Map<String, Map<String,ToucanStringRedisService>> toucanStringRedisServiceMap = userLoginCacheService.getToucanStringRedisServiceMap();
+            //索引和数据库数量映射键值对
+            Map<String,Integer> dbCountMap = userLoginCacheService.getDbCountMap();
             if(CollectionUtils.isNotEmpty(toucan.getModules().getUserLoginCache().getLoginCacheRedisList()))
             {
                 for(UserLoginRedis userLoginRedis:toucan.getModules().getUserLoginCache().getLoginCacheRedisList()) {
-                    ToucanStringRedisService toucanStringRedisService = new ToucanStringRedisServiceImpl();
-                    ((ToucanStringRedisServiceImpl)toucanStringRedisService).setRedisTemplate(createToucanRedisTemplate(userLoginRedis));
-                    toucanStringRedisServiceMap.put(userLoginRedis.getIndex(),toucanStringRedisService);
+                    Map<String,ToucanStringRedisService> toucanStringRedisServiceDBMap = new HashMap<String,ToucanStringRedisService>();
+                    for(int i=0;i<userLoginRedis.getDbCount();i++)
+                    {
+                        ToucanStringRedisService toucanStringRedisService = new ToucanStringRedisServiceImpl();
+                        ((ToucanStringRedisServiceImpl)toucanStringRedisService).setRedisTemplate(createToucanRedisTemplate(userLoginRedis,i));
+                        toucanStringRedisServiceDBMap.put(String.valueOf(i),toucanStringRedisService);
+                    }
+                    toucanStringRedisServiceMap.put(userLoginRedis.getIndex(),toucanStringRedisServiceDBMap);
+                    dbCountMap.put(userLoginRedis.getIndex(),userLoginRedis.getDbCount());
                 }
             }
         }
@@ -63,13 +72,14 @@ public class UserLoginCacheConfig {
 
 
 
-    public RedisTemplate<String, Object> createToucanRedisTemplate(UserLoginRedis userLoginRedis) {
+    public RedisTemplate<String, Object> createToucanRedisTemplate(UserLoginRedis userLoginRedis,int dbIndex) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(toucanRedisConnectionFactory(userLoginRedis));
+        redisTemplate.setConnectionFactory(toucanRedisConnectionFactory(userLoginRedis,dbIndex));
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(this.jackson2JsonRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(this.jackson2JsonRedisSerializer());
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 
@@ -94,7 +104,7 @@ public class UserLoginCacheConfig {
      * 连接配置
      * @return
      */
-    public RedisConnectionFactory toucanRedisConnectionFactory(UserLoginRedis userLoginRedis) {
+    public RedisConnectionFactory toucanRedisConnectionFactory(UserLoginRedis userLoginRedis,Integer dbIndex) {
         log.info(" 初始化犀鸟用户中心-用户登录redis模块 .............");
         try {
             Map<String, Object> source = new HashMap<String, Object>();
@@ -116,37 +126,21 @@ public class UserLoginCacheConfig {
             LettuceClientConfiguration lettuceClientConfiguration = builder.build();
 
             log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.index:{}",userLoginRedis.getIndex());
-            //集群模式
-            if ("cluster".equals(userLoginRedis.getSelect())) {
-                log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.hosts:{}",userLoginRedis.getHosts());
-                log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.maxRedirects:{}",userLoginRedis.getMaxRedirects());
-                source.put("spring.redis.cluster.nodes", userLoginRedis.getHosts());
-                source.put("spring.redis.cluster.max-redirects", userLoginRedis.getMaxRedirects());
-                redisClusterConfiguration = new RedisClusterConfiguration(new MapPropertySource("RedisClusterConfiguration", source));
-                if (!StringUtils.isEmpty(userLoginRedis.getPassword())) {
-                    redisClusterConfiguration.setPassword(userLoginRedis.getPassword());
-                }
-                //根据配置和客户端配置创建连接
-                LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisClusterConfiguration, lettuceClientConfiguration);
-                lettuceConnectionFactory.afterPropertiesSet();
-                return lettuceConnectionFactory;
-            } else {
-                log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.host:{}",userLoginRedis.getHost());
-                log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.port:{}",userLoginRedis.getPort());
-                log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.database:{}",userLoginRedis.getDatabase());
-                //单机模式
-                redisStandaloneConfiguration = new RedisStandaloneConfiguration(userLoginRedis.getHost(),
-                        userLoginRedis.getPort());
-                redisStandaloneConfiguration.setDatabase(userLoginRedis.getDatabase());
-                if (!StringUtils.isEmpty(userLoginRedis.getPassword())) {
-                    redisStandaloneConfiguration.setPassword(userLoginRedis.getPassword());
-                }
-                //根据配置和客户端配置创建连接工厂
-                LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration, lettuceClientConfiguration);
-                lettuceConnectionFactory.afterPropertiesSet();
-                return lettuceConnectionFactory;
-
+            log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.host:{}",userLoginRedis.getHost());
+            log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.port:{}",userLoginRedis.getPort());
+            log.info(" 初始化犀鸟用户中心-用户登录redis模块 加载配置 toucan.modules.userLoginCache.login-cache-redis-list.database:{}",dbIndex);
+            //单机模式
+            redisStandaloneConfiguration = new RedisStandaloneConfiguration(userLoginRedis.getHost(),
+                    userLoginRedis.getPort());
+            redisStandaloneConfiguration.setDatabase(dbIndex);
+            if (!StringUtils.isEmpty(userLoginRedis.getPassword())) {
+                redisStandaloneConfiguration.setPassword(userLoginRedis.getPassword());
             }
+            //根据配置和客户端配置创建连接工厂
+            LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration, lettuceClientConfiguration);
+            lettuceConnectionFactory.afterPropertiesSet();
+            return lettuceConnectionFactory;
+
         } catch (Exception e) {
             log.warn(e.getMessage(), e);
         }

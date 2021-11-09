@@ -11,29 +11,46 @@ import java.util.Map;
 
 public class UserLoginCacheServiceImpl implements UserLoginCacheService {
 
-    private Map<String, ToucanStringRedisService> toucanStringRedisServiceMap = new HashMap<String, ToucanStringRedisService>();
+    private Map<String, Map<String,ToucanStringRedisService>> toucanStringRedisServiceMap = new HashMap<String, Map<String,ToucanStringRedisService>>();
+    //索引和db数量的键值对
+    private Map<String,Integer> dbCountMap = new HashMap<String,Integer>();
 
+
+    public ToucanStringRedisService routeToucanRedisService(UserVO userVO)
+    {
+        String index = routeIndex(userVO);
+        Map<String,ToucanStringRedisService> toucanStringRedisServiceDBMap = toucanStringRedisServiceMap.get(index);
+        return toucanStringRedisServiceDBMap.get(String.valueOf(routeDBIndex(userVO,index)));
+    }
 
     @Override
-    public void login(UserVO userVO) {
-        if(userVO.getUserMainId()==null)
-        {
-            throw new IllegalArgumentException("用户主ID不能为空");
-        }
-
-        ToucanStringRedisService toucanStringRedisService = toucanStringRedisServiceMap.get(routeIndex(userVO));
-        RedisTemplate redisTemplate = toucanStringRedisService.getRedisTemplate();
-        LettuceConnectionFactory connectionFactory = (LettuceConnectionFactory) redisTemplate.getConnectionFactory();
+    public ToucanStringRedisService routeToucanRedisServiceByUserMainId(Long userMainId) {
+        UserVO userVO = new UserVO();
+        userVO.setUserMainId(userMainId);
+        return routeToucanRedisService(userVO);
     }
 
 
     public String routeIndex(UserVO userVO)
     {
-        return String.valueOf(userVO.getUserMainId()%toucanStringRedisServiceMap.size());
+        return String.valueOf((userVO.getUserMainId().hashCode()&Integer.MAX_VALUE)%toucanStringRedisServiceMap.size());
+    }
+
+
+    public Integer routeDBIndex(UserVO userVO,String index)
+    {
+        Integer dbCount = dbCountMap.get(index);
+        Integer dbIndex = (userVO.getUserMainId().hashCode()&Integer.MAX_VALUE)%dbCount;
+        return dbIndex;
     }
 
     @Override
-    public Map<String, ToucanStringRedisService> getToucanStringRedisServiceMap() {
+    public Map<String, Map<String,ToucanStringRedisService>> getToucanStringRedisServiceMap() {
         return toucanStringRedisServiceMap;
+    }
+
+    @Override
+    public Map<String, Integer> getDbCountMap() {
+        return dbCountMap;
     }
 }

@@ -11,12 +11,22 @@ import java.util.Map;
 public interface UserLoginCacheService {
 
 
-    void login(UserVO userVO);
 
     /**
      * 返回索引和redis对象的键值对
      * @return
      */
-    Map<String, ToucanStringRedisService> getToucanStringRedisServiceMap();
+    Map<String, Map<String,ToucanStringRedisService>> getToucanStringRedisServiceMap();
+
+    /**
+     * 索引和db数量的键值对
+     * @return
+     */
+    Map<String,Integer> getDbCountMap();
+
+    ToucanStringRedisService routeToucanRedisService(UserVO userVO);
+
+
+    ToucanStringRedisService routeToucanRedisServiceByUserMainId(Long userMainId);
 
 }

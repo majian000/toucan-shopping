@@ -16,6 +16,11 @@ public class UserLoginCache {
     private String cacheType;
 
     /**
+     * 这个节点的db数量,默认16个节点
+     */
+    private Integer dbCount = 16;
+
+    /**
      * 登录redis缓存
      */
     private List<UserLoginRedis> loginCacheRedisList;
