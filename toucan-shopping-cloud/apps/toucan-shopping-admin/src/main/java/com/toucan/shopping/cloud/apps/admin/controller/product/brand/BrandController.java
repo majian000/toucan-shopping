@@ -396,21 +396,24 @@ public class BrandController extends UIController {
 
 
 
-    public void setTreeNodeSelect(CategoryTreeVO parentTreeVO,List<CategoryTreeVO> categoryTreeVOList,List<BrandCategoryVO> brandCategories)
+    public void setTreeNodeSelect(AtomicLong id,CategoryTreeVO parentTreeVO,List<CategoryTreeVO> categoryTreeVOList,List<BrandCategoryVO> brandCategories)
     {
         for(CategoryTreeVO categoryTreeVO:categoryTreeVOList)
         {
             categoryTreeVO.setNodeId(categoryTreeVO.getId());
+            //将ID替换成自增
+            categoryTreeVO.setId(id.incrementAndGet());
             categoryTreeVO.setParentId(parentTreeVO.getId());
+            categoryTreeVO.setPid(parentTreeVO.getId());
             for(BrandCategory brandCategory:brandCategories) {
-                if(categoryTreeVO.getId().equals(brandCategory.getCategoryId())) {
+                if(categoryTreeVO.getNodeId().longValue()==brandCategory.getCategoryId().longValue()) {
                     //设置节点被选中
                     categoryTreeVO.getState().setChecked(true);
                 }
             }
             if(!CollectionUtils.isEmpty(categoryTreeVO.getChildren()))
             {
-                setTreeNodeSelect(categoryTreeVO,categoryTreeVO.getChildren(),brandCategories);
+                setTreeNodeSelect(id,categoryTreeVO,categoryTreeVO.getChildren(),brandCategories);
             }
         }
     }
@@ -440,18 +443,21 @@ public class BrandController extends UIController {
                     requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrandCategory);
                     resultObjectVO = feignBrandCategoryService.findByBrandId(requestJsonVO);
                     if (resultObjectVO.isSuccess()) {
+                        AtomicLong id = new AtomicLong();
                         List<BrandCategoryVO> brandCategoryVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), BrandCategoryVO.class);
                         if (!CollectionUtils.isEmpty(brandCategoryVOS)) {
                             for (CategoryTreeVO categoryTreeVO : categoryTreeVOList) {
                                 categoryTreeVO.setNodeId(categoryTreeVO.getId());
+                                //将ID替换成自增
+                                categoryTreeVO.setId(id.incrementAndGet());
                                 categoryTreeVO.setText(categoryTreeVO.getTitle());
                                 for (BrandCategory brandCategory : brandCategoryVOS) {
-                                    if (categoryTreeVO.getId().equals(brandCategory.getCategoryId())) {
+                                    if (categoryTreeVO.getNodeId().longValue()==brandCategory.getCategoryId().longValue()) {
                                         //设置节点被选中
                                         categoryTreeVO.getState().setChecked(true);
                                     }
                                 }
-                                setTreeNodeSelect(categoryTreeVO, categoryTreeVO.getChildren(), brandCategoryVOS);
+                                setTreeNodeSelect(id,categoryTreeVO, categoryTreeVO.getChildren(), brandCategoryVOS);
                             }
                         }
                     }

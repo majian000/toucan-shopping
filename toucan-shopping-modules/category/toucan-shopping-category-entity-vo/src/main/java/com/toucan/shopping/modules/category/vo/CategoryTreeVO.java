@@ -25,6 +25,12 @@ public class CategoryTreeVO extends CategoryVO {
      */
     private String text;
 
+
+    /**
+     * 上级菜单 -1表示当前是顶级
+     */
+    private Long pid;
+
     /**
      * 节点ID
      */

@@ -130,6 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
                 BeanUtils.copyProperties(categoryTreeVO, category);
                 categoryTreeVO.setTitle(category.getName());
                 categoryTreeVO.setText(category.getName());
+                categoryTreeVO.setPid(category.getParentId());
                 categoryTreeVO.setChildren(new ArrayList<CategoryTreeVO>());
 
                 currentNode.getChildren().add(categoryTreeVO);

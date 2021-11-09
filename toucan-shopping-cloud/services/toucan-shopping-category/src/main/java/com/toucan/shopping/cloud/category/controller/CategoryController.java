@@ -569,6 +569,7 @@ public class CategoryController {
 
                         treeVO.setTitle(category.getName());
                         treeVO.setText(category.getName());
+                        treeVO.setPid(category.getParentId());
 
                         categoryTreeVOS.add(treeVO);
 
@@ -580,6 +581,7 @@ public class CategoryController {
                 CategoryTreeVO rootTreeVO = new CategoryTreeVO();
                 rootTreeVO.setTitle("商城分类");
                 rootTreeVO.setParentId(-1L);
+                rootTreeVO.setPid(-1L);
                 rootTreeVO.setId(-1L);
                 rootTreeVO.setText("商城分类");
                 rootTreeVO.setChildren(categoryTreeVOS);
