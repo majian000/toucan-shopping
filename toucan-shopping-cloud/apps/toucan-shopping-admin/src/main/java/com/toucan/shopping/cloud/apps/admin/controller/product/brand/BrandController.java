@@ -401,14 +401,13 @@ public class BrandController extends UIController {
         for(CategoryTreeVO categoryTreeVO:categoryTreeVOList)
         {
             //保留数据库ID
-            categoryTreeVO.setEntityId(categoryTreeVO.getId());
+            categoryTreeVO.setNodeId(categoryTreeVO.getId());
             //将ID替换成自增
             categoryTreeVO.setId(id.incrementAndGet());
-            categoryTreeVO.setNodeId(categoryTreeVO.getId());
             categoryTreeVO.setParentId(parentTreeVO.getId());
             categoryTreeVO.setPid(parentTreeVO.getId());
             for(BrandCategory brandCategory:brandCategories) {
-                if(categoryTreeVO.getEntityId().longValue()==brandCategory.getCategoryId().longValue()) {
+                if(categoryTreeVO.getNodeId().longValue()==brandCategory.getCategoryId().longValue()) {
                     //设置节点被选中
                     categoryTreeVO.getState().setChecked(true);
                 }
@@ -450,13 +449,12 @@ public class BrandController extends UIController {
                         if (!CollectionUtils.isEmpty(brandCategoryVOS)) {
                             for (CategoryTreeVO categoryTreeVO : categoryTreeVOList) {
                                 //保留数据库ID
-                                categoryTreeVO.setEntityId(categoryTreeVO.getId());
+                                categoryTreeVO.setNodeId(categoryTreeVO.getId());
                                 //将ID替换成自增
                                 categoryTreeVO.setId(id.incrementAndGet());
-                                categoryTreeVO.setNodeId(categoryTreeVO.getId());
                                 categoryTreeVO.setText(categoryTreeVO.getTitle());
                                 for (BrandCategory brandCategory : brandCategoryVOS) {
-                                    if (categoryTreeVO.getEntityId().longValue()==brandCategory.getCategoryId().longValue()) {
+                                    if (categoryTreeVO.getNodeId().longValue()==brandCategory.getCategoryId().longValue()) {
                                         //设置节点被选中
                                         categoryTreeVO.getState().setChecked(true);
                                     }
