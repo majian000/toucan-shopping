@@ -65,7 +65,7 @@ public class ShopCategoryPageController extends BaseController {
                     //判断是个人店铺还是企业店铺
                     resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess()) {
-                        return "shop/category/list";
+                        return "shop/category/index";
                     }
 
                     return "shop/userShop/regist";
