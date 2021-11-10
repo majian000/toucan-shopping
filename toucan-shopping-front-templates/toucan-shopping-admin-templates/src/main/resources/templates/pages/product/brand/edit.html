@@ -191,7 +191,7 @@
         {
             for(var i=0;i<categoryTreeDataArray.length;i++)
             {
-                if(categoryTreeDataArray[i].id==nodeId)
+                if(categoryTreeDataArray[i].nodeId==nodeId)
                 {
                     return categoryTreeDataArray[i];
                 }
@@ -221,7 +221,7 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        categoryArray.push({id:categoryTreeDataArray[i].id,name:categoryTreeDataArray[i].name})
+                        categoryArray.push({nodeId:categoryTreeDataArray[i].nodeId,name:categoryTreeDataArray[i].name})
                     }
                     if(categoryTreeDataArray[i].pid!=-1) {
                         //找到这个节点的上级节点
@@ -293,14 +293,14 @@
                     var categoryArray =  new Array();
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        categoryArray.push({id:selectNodeObject.id,name:selectNodeObject.name});
+                        categoryArray.push({nodeId:selectNodeObject.nodeId,name:selectNodeObject.name});
                         getParentNode(categoryArray,selectNodeObject.pid);
                     }
 
                     var categoryIdCache="";
                     var categoryNames="";
                     for (var j = 0; j < categoryArray.length; j++) {
-                        categoryIdCache+=categoryArray[j].id;
+                        categoryIdCache+=categoryArray[j].nodeId;
                         categoryNames+=categoryArray[j].name;
                         if(j+1<categoryArray.length)
                         {
