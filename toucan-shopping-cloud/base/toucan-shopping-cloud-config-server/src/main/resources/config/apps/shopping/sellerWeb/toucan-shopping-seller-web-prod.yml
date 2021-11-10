@@ -17,6 +17,8 @@ spring:
         #采样率 1全部采集
         probability: 1
   mvc: #启动初始化servletdispatcher
+    view:
+      suffix: .html
     servlet:
       load-on-startup: 100
     static-path-pattern: /static/**

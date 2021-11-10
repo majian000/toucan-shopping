@@ -1,3 +1,47 @@
+GET http://localhost:8083/api/html/index/generate/release
+Accept: */*
+Cache-Control: no-cache
+ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
+
+<> 2021-11-10T081905.200.json
+
+###
+
+GET http://localhost:8083/api/html/index/generate/release
+Accept: */*
+Cache-Control: no-cache
+ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
+
+<> 2021-11-10T081859.200.json
+
+###
+
+GET http://localhost:8101/api/html/freeShop/generate/release
+Accept: */*
+Cache-Control: no-cache
+ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
+
+<> 2021-11-10T081610.200.json
+
+###
+
+GET http://localhost:8101/api/html/freeShop/generate/release
+Accept: */*
+Cache-Control: no-cache
+ts_web_generator_token: 1
+
+<> 2021-11-10T081601.200.json
+
+###
+
+GET http://localhost:8101/api/html/freeShop/generate/release
+Accept: */*
+Cache-Control: no-cache
+
+<> 2021-11-10T081524.200.json
+
+###
+
 GET http://localhost:8101/freeShop?loginUserName=script18701601893<<<<script><<<<script>
 Accept: */*
 Cache-Control: no-cache
@@ -469,60 +513,6 @@ ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
 {     	"appCode": "10001001",     	"entityJson": "{\"loginUserName\":\"18701601893\",\"password\":\"123456\"}"     }
 
 <> 2021-11-10T042522.200.json
-
-###
-
-GET http://localhost:8101/?loginUserName=script18701601893<<<<script><<<<script>
-Accept: */*
-Cache-Control: no-cache
-Content-Type: application/json;charset=UTF-8
-ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
-
-{     	"appCode": "10001001",     	"entityJson": "{\"loginUserName\":\"18701601893\",\"password\":\"123456\"}"     }
-
-###
-
-GET http://localhost:8101/?loginUserName=script18701601893<<<<script><<<<script>
-Accept: */*
-Cache-Control: no-cache
-Content-Type: application/json;charset=UTF-8
-ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
-
-{     	"appCode": "10001001",     	"entityJson": "{\"loginUserName\":\"18701601893\",\"password\":\"123456\"}"     }
-
-<> 2021-11-10T042413.200.html
-
-###
-
-GET http://localhost:8101/?loginUserName=script18701601893<<<<script><<<<script>
-Accept: */*
-Cache-Control: no-cache
-Content-Type: application/json;charset=UTF-8
-ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
-
-{     	"appCode": "10001001",     	"entityJson": "{\"loginUserName\":\"18701601893\",\"password\":\"123456\"}"     }
-
-<> 2021-11-10T042402.200.html
-
-###
-
-POST http://localhost:8101/?loginUserName=script18701601893<<<<script><<<<script>
-Accept: */*
-Cache-Control: no-cache
-Content-Type: application/json;charset=UTF-8
-ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
-
-{     	"appCode": "10001001",     	"entityJson": "{\"loginUserName\":\"18701601893\",\"password\":\"123456\"}"     }
-
-###
-
-POST http://localhost:8101/?loginUserName=script18701601893<<<<script><<<<script>
-Accept: */*
-Cache-Control: no-cache
-Content-Type: application/json;charset=UTF-8
-ts_web_generator_token: 8700075c1f7d8d2ce35578354071b319
-
-{     	"appCode": "10001001",     	"entityJson": "{\"loginUserName\":\"18701601893\",\"password\":\"123456\"}"     }
 
 ###
 
