@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.category;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -9,6 +10,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.slf4j.Logger;
@@ -38,12 +40,9 @@ public class ShopCategoryPageController extends BaseController {
     @Autowired
     private FeignUserService feignUserService;
 
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/index")
-    public String index(HttpServletRequest request)
-    {
-        return "shop/category/index";
-    }
+    @Autowired
+    private FeignSellerShopService feignSellerShopService;
+
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/list")
@@ -60,7 +59,16 @@ public class ShopCategoryPageController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if(result)
                 {
-                    return "shop/category/list";
+                    SellerShop querySellerShop = new SellerShop();
+                    querySellerShop.setUserMainId(userVO.getUserMainId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+                    //判断是个人店铺还是企业店铺
+                    resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess()) {
+                        return "shop/category/list";
+                    }
+
+                    return "shop/userShop/regist";
                 }else{
                     return "shop/please_true_name";
                 }
