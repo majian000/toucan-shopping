@@ -22,7 +22,7 @@ public class FreemarkerStaticPathMappingConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         if(toucan.getShoppingPC()!=null) {
-            if(toucan.getShoppingPC().getFreemarker()!=null) {
+            if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getFreemarker()!=null) {
                 logger.info("freemarker资源映射 {} to {}",toucan.getShoppingPC().getFreemarker().getReleaseLocation(),
                         toucan.getShoppingPC().getFreemarker().getReleaseMappingUrl());
                 //配置资源映射
@@ -35,6 +35,20 @@ public class FreemarkerStaticPathMappingConfig implements WebMvcConfigurer {
                 registry.addResourceHandler(toucan.getShoppingPC().getFreemarker().getPreviewMappingUrl())
                         .addResourceLocations("file:"+toucan.getShoppingPC().getFreemarker().getPreviewLocation());
 
+            }
+
+            if(toucan.getShoppingSellerWebPC()!=null&&toucan.getShoppingSellerWebPC().getFreemarker()!=null) {
+                logger.info("freemarker资源映射 {} to {}",toucan.getShoppingSellerWebPC().getFreemarker().getReleaseLocation(),
+                        toucan.getShoppingSellerWebPC().getFreemarker().getReleaseMappingUrl());
+                //配置资源映射
+                registry.addResourceHandler(toucan.getShoppingSellerWebPC().getFreemarker().getReleaseMappingUrl())
+                        .addResourceLocations("file:"+toucan.getShoppingSellerWebPC().getFreemarker().getReleaseLocation());
+
+                logger.info("freemarker资源映射 {} to {}",toucan.getShoppingSellerWebPC().getFreemarker().getPreviewLocation(),
+                        toucan.getShoppingSellerWebPC().getFreemarker().getPreviewMappingUrl());
+                //配置资源映射
+                registry.addResourceHandler(toucan.getShoppingSellerWebPC().getFreemarker().getPreviewMappingUrl())
+                        .addResourceLocations("file:"+toucan.getShoppingSellerWebPC().getFreemarker().getPreviewLocation());
 
             }
         }

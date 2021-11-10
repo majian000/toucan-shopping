@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.properties.modules.Modules;
 import com.toucan.shopping.modules.common.properties.plugins.Plugins;
 import com.toucan.shopping.modules.common.properties.seller.Seller;
 import com.toucan.shopping.modules.common.properties.shoppingPc.ShoppingPC;
+import com.toucan.shopping.modules.common.properties.shoppingPc.ShoppingSellerWebPC;
 import com.toucan.shopping.modules.common.properties.sign.Sign;
 import com.toucan.shopping.modules.common.properties.user.User;
 import com.toucan.shopping.modules.common.properties.userAuth.UserAuth;
@@ -68,6 +69,11 @@ public class Toucan {
      * 商城PC端
      */
     private ShoppingPC shoppingPC;
+
+    /**
+     * 卖家中心PC端
+     */
+    private ShoppingSellerWebPC shoppingSellerWebPC;
 
 
     /**

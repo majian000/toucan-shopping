@@ -58,7 +58,7 @@ public class IndexPageController {
     @RequestMapping("/freeShop")
     public String freeShop(HttpServletRequest request)
     {
-        return "freeShop";
+        return "/htmls/release/freeShop";
     }
 
 
@@ -111,7 +111,7 @@ public class IndexPageController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "index";
+        return "/htmls/release/freeShop";
     }
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)

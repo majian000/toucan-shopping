@@ -79,6 +79,8 @@ toucan:
   datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端页面静态化
     ip-list: 8.140.187.184:8083,8.140.187.184:8083 #多个用,分割
+  shopping-seller-web-pc: #PC端页面静态化
+    ip-list: 8.140.187.184:8101,8.140.187.184:8101 #多个用,分割
   admin-auth:
     enabled: true
     name: toucan-shopping-admin-auth

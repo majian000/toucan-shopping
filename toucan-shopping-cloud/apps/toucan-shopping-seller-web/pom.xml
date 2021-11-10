@@ -170,6 +170,10 @@
             <groupId>com.toucan.shopping.modules.product</groupId>
             <artifactId>toucan-shopping-product-entity-vo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-freemarker</artifactId>
+        </dependency>
 
 
     </dependencies>
