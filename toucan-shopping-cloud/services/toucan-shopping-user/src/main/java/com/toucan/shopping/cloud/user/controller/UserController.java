@@ -1612,14 +1612,7 @@ public class UserController {
         }
         logger.info(" 用户登录 {} ",requestVo.getEntityJson());
 
-        String userMainId = String.valueOf(userVo.getUserMainId());
         try {
-            boolean lockStatus = skylarkLock.lock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
-                return resultObjectVO;
-            }
 
             List<User> users = userService.findByUserMainId(userVo.getUserMainId());
             if(CollectionUtils.isEmpty(users))
@@ -1657,8 +1650,6 @@ public class UserController {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败,请稍后重试");
-        }finally{
-            skylarkLock.unLock(UserCenterLoginRedisKey.getVerifyRealNameLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }
