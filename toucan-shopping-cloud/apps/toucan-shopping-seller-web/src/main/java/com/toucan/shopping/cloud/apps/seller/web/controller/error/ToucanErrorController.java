@@ -15,7 +15,7 @@ public class ToucanErrorController implements ErrorController {
      */
     @Override
     public String getErrorPath() {
-        return "freeShop";
+        return "/htmls/release/freeShop";
     }
 
     @RequestMapping

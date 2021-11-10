@@ -17,6 +17,20 @@
     订单服务
 
 
+
+
+
+#### 首页静态化
+    
+    1.生成预览版静态化
+    http://localhost:8101/api/html/freeShop/generate/preview
+    
+    2.生成最终版静态化
+    http://localhost:8101/api/html/freeShop/generate/release
+
+
+
+
 #### 使用说明
 
 ### 访问界面

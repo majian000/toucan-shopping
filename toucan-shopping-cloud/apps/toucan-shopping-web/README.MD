@@ -54,6 +54,14 @@
     Set-Cookie: uid=177898789778;lt=355edd51285d4188a42c70c108683b7e
 
 
+#### 首页静态化
+    
+    1.生成预览版静态化
+    http://localhost:8083/api/html/index/generate/preview
+    
+    2.生成最终版静态化
+    http://localhost:8083/api/html/index/generate/release
+
 
 
 

@@ -29,7 +29,10 @@ spring:
     template-loader-path: classpath:/templates/
     settings:
       template_exception_handler: com.toucan.shopping.modules.freemarker.exception.PageErrorException
-
+  compression: #开启gzip压缩
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 2048 #只压缩2MB以上的内容
 
 
 eureka:
