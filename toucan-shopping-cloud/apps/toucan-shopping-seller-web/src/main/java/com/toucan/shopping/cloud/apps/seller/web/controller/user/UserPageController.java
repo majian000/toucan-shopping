@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.user;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.UserLoginRedisKey;
+import com.toucan.shopping.cloud.apps.seller.web.service.UserPageService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -41,6 +42,8 @@ public class UserPageController extends BaseController {
     @Autowired
     private FeignUserService feignUserService;
 
+    @Autowired
+    private UserPageService userPageService;
 
 
     @RequestMapping("/regist")
@@ -57,26 +60,7 @@ public class UserPageController extends BaseController {
     @RequestMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response)
     {
-        try {
-            //查询登录次数,失败3次要求输入验证码
-            String loginFaildCountKey = UserLoginRedisKey.getLoginFaildCountKey(IPUtil.getRemoteAddr(request));
-            Object loginFaildCountValueObject = toucanStringRedisService.get(loginFaildCountKey);
-            if (loginFaildCountValueObject != null) {
-                Integer faildCount = Integer.parseInt(String.valueOf(loginFaildCountValueObject));
-                if (faildCount >= 3) {
-                    request.setAttribute("isShowInputVcode", true);
-                } else {
-                    request.setAttribute("isShowInputVcode", false);
-                }
-            } else {
-                request.setAttribute("isShowInputVcode", false);
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            request.setAttribute("isShowInputVcode", false);
-        }
-        return "user/login";
+        return userPageService.loginPage(request);
     }
 
 

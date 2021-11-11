@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.seller.web.service.impl;
 
 import com.toucan.shopping.cloud.apps.seller.web.service.ShopPageService;
+import com.toucan.shopping.cloud.apps.seller.web.service.UserPageService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -36,6 +37,9 @@ public class ShopPageServiceImpl implements ShopPageService {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private UserPageService userPageService;
 
     public String shopInfo(HttpServletRequest httpServletRequest)
     {
@@ -86,6 +90,6 @@ public class ShopPageServiceImpl implements ShopPageService {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "user/login";
+        return userPageService.loginPage(httpServletRequest);
     }
 }
