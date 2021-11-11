@@ -95,9 +95,9 @@ public class FreeShopGeneratorController extends UIController {
     {
         List<HtmlGeneratorTab> releaseHtmlGeneratorTabList = new ArrayList<HtmlGeneratorTab>();
         List<HtmlGeneratorTab> previewHtmlGeneratorTabList = new ArrayList<HtmlGeneratorTab>();
-        if(toucan.getShoppingPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingPC().getIpList()))
+        if(toucan.getShoppingSellerWebPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingSellerWebPC().getIpList()))
         {
-            String ipList = toucan.getShoppingPC().getIpList();
+            String ipList = toucan.getShoppingSellerWebPC().getIpList();
             if(ipList.indexOf(",")!=-1)
             {
                 String[] ips = ipList.split(",");
@@ -161,9 +161,9 @@ public class FreeShopGeneratorController extends UIController {
             List<Header> headers = new ArrayList<Header>();
             headers.add(header);
 
-            if(toucan.getShoppingPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingPC().getIpList()))
+            if(toucan.getShoppingSellerWebPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingSellerWebPC().getIpList()))
             {
-                String ipList = toucan.getShoppingPC().getIpList();
+                String ipList = toucan.getShoppingSellerWebPC().getIpList();
                 if(ipList.indexOf(",")!=-1)
                 {
                     String[] ips = ipList.split(",");
@@ -230,9 +230,9 @@ public class FreeShopGeneratorController extends UIController {
             List<Header> headers = new ArrayList<Header>();
             headers.add(header);
 
-            if(toucan.getShoppingPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingPC().getIpList()))
+            if(toucan.getShoppingSellerWebPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingSellerWebPC().getIpList()))
             {
-                String ipList = toucan.getShoppingPC().getIpList();
+                String ipList = toucan.getShoppingSellerWebPC().getIpList();
                 if(ipList.indexOf(",")!=-1)
                 {
                     String[] ips = ipList.split(",");
