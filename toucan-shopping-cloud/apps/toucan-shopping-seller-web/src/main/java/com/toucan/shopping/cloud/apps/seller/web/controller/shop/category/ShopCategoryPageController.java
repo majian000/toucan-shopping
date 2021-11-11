@@ -4,6 +4,7 @@ import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
+import com.toucan.shopping.modules.auth.shop.ShopAuth;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -44,40 +45,12 @@ public class ShopCategoryPageController extends BaseController {
     private FeignSellerShopService feignSellerShopService;
 
 
+    @ShopAuth
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/list")
     public String list(HttpServletRequest request)
     {
-        try {
-            UserVO userVO = new UserVO();
-            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            userVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), userVO);
-            ResultObjectVO resultObjectVO = feignUserService.verifyRealName(requestJsonVO.sign(), requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
-                if(result)
-                {
-                    SellerShop querySellerShop = new SellerShop();
-                    querySellerShop.setUserMainId(userVO.getUserMainId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-                    //判断是个人店铺还是企业店铺
-                    resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
-                    if(resultObjectVO.isSuccess()) {
-                        return "shop/category/index";
-                    }
-
-                    return "shop/userShop/regist";
-                }else{
-                    return "shop/please_true_name";
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "index";
+        return "shop/category/index";
     }
 
 

@@ -119,7 +119,7 @@ toucan:
   modules:
     log: #日志模块
       email:
-        enabled: true
+        enabled: false
         title: ——商城卖家端应用——异常邮件
         ignore-exception-list[0]: com.toucan.shopping.modules.exception.user.UserHeaderException
         ignore-exception-list[1]: com.toucan.shopping.modules.exception.user.NotFountUserMainIdException
