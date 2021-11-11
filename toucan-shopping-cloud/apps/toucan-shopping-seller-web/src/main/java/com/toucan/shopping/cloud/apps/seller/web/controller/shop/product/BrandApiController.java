@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Controller
 @RequestMapping("/product/brand")
-public class BrandController  {
+public class BrandApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
