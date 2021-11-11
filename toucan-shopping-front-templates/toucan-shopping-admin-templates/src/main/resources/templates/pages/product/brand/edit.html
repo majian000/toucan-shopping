@@ -187,13 +187,13 @@
         /**
          * 拿到指定节点对象
          */
-        function getNodeObject(nodeId)
+        function getNodeObject(id)
         {
-            for(var i=0;i<categoryTreeDataArray.length;i++)
-            {
-                if(categoryTreeDataArray[i].nodeId==nodeId)
-                {
-                    return categoryTreeDataArray[i];
+            if(id!=-1) {
+                for (var i = 0; i < categoryTreeDataArray.length; i++) {
+                    if (categoryTreeDataArray[i].id == id) {
+                        return categoryTreeDataArray[i];
+                    }
                 }
             }
             return null;
@@ -205,27 +205,45 @@
          */
         function getParentNode(categoryArray,pid)
         {
-            for(var i=0;i<categoryTreeDataArray.length;i++)
-            {
+            if(pid!=-1) {
+                for (var i = 0; i < categoryTreeDataArray.length; i++) {
 
-                if(categoryTreeDataArray[i].id==pid)
-                {
-                    var exists=false;
-                    //判断上级节点ID是否已经保存了
-                    for(var j=0;j<categoryArray.length;j++)
-                    {
-                        if(categoryArray[j].id==pid) {
-                            exists = true;
+                    if (categoryTreeDataArray[i].id == pid) {
+                        var exists = false;
+                        //判断上级节点ID是否已经保存了
+                        for (var j = 0; j < categoryArray.length; j++) {
+                            if (categoryArray[j].id == pid) {
+                                exists = true;
+                            }
+                        }
+                        //避免上级节点ID重复保存两份
+                        if (!exists) {
+                            if(categoryTreeDataArray[i].pid!=-1) {
+                                categoryArray.push({
+                                    nodeId: categoryTreeDataArray[i].nodeId,
+                                    name: categoryTreeDataArray[i].name,
+                                    id: categoryTreeDataArray[i].id,
+                                    pid: categoryTreeDataArray[i].pid
+                                });
+                            }
+                        }
+
+                        if (categoryTreeDataArray[i].pid != -1) {
+                            //找到这个节点的上级节点
+                            getParentNode(categoryArray, categoryTreeDataArray[i].pid);
                         }
                     }
-                    //避免上级节点ID重复保存两份
-                    if(!exists)
-                    {
-                        categoryArray.push({nodeId:categoryTreeDataArray[i].nodeId,name:categoryTreeDataArray[i].name})
-                    }
-                    if(categoryTreeDataArray[i].pid!=-1) {
-                        //找到这个节点的上级节点
-                        getParentNode(categoryArray, categoryTreeDataArray[i].pid);
+                }
+            }
+        }
+
+        function setCategoryNamePath(pid,selectNodeObject,categoryArray)
+        {
+            for (var i = 0; i < categoryArray.length; i++) {
+                if (pid == categoryArray[i].id) {
+                    selectNodeObject.name = categoryArray[i].name + "》" + selectNodeObject.name;
+                    if (categoryArray[i].pid != -1) {
+                        setCategoryNamePath(categoryArray[i].pid, selectNodeObject, categoryArray);
                     }
                 }
             }
@@ -239,7 +257,6 @@
                 type: 1,
                 shade: 0.2,
                 maxmin:true,
-                shadeClose: true,
                 area: ['40%', '70%'],
                 btn: ['确定'],
                 content: "<ul id='categoryTree' class='dtree' data-id='0' ></ul>",
@@ -266,7 +283,6 @@
                                     done: function (res, $ul, first) {
                                         if (first) {
                                             if(idArray!=null&&idArray.length>0) {
-                                                console.log(idArray);
                                                 dtree.chooseDataInit("categoryTree", idArray); //"001001,001002"被选中的子节点id
                                                 dtree.initNoAllCheck("categoryTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
                                             }
@@ -293,8 +309,22 @@
                     var categoryArray =  new Array();
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        categoryArray.push({nodeId:selectNodeObject.nodeId,name:selectNodeObject.name});
-                        getParentNode(categoryArray,selectNodeObject.pid);
+                        console.log(selectNodeObject);
+                        if(selectNodeObject.pid!=-1) {
+                            selectNodeObject = {
+                                nodeId: selectNodeObject.nodeId,
+                                name: selectNodeObject.name,
+                                pid: selectNodeObject.pid,
+                                id: selectNodeObject.id
+                            };
+                            categoryArray.push(selectNodeObject);
+                            getParentNode(categoryArray, selectNodeObject.pid, selectNodeObject);
+                        }
+                    }
+
+                    for(var p=0;p<categoryArray.length;p++)
+                    {
+                        setCategoryNamePath(categoryArray[p].pid, categoryArray[p], categoryArray);
                     }
 
                     var categoryIdCache="";
@@ -305,7 +335,7 @@
                         if(j+1<categoryArray.length)
                         {
                             categoryIdCache+=",";
-                            categoryNames+=",";
+                            categoryNames+="、";
                         }
                     }
 

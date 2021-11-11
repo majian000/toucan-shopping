@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.category.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.toucan.shopping.modules.common.vo.bootstrap.State;
 import com.toucan.shopping.modules.common.vo.layui.dtree.CheckArr;
@@ -34,6 +37,8 @@ public class CategoryTreeVO extends CategoryVO {
     /**
      * 节点ID
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long nodeId;
 
     /**
