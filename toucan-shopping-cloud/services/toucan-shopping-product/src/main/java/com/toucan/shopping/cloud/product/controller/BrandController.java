@@ -325,6 +325,12 @@ public class BrandController {
                 return resultObjectVO;
             }
 
+            if(StringUtils.isEmpty(entity.getCategoryIdCache()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌分类不能为空");
+                return resultObjectVO;
+            }
 
             String[] categotyIdArray = entity.getCategoryIdCache().split(",");
             if(categotyIdArray.length>10)
