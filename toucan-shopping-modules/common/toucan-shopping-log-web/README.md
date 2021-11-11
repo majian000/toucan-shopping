@@ -19,6 +19,11 @@
     			"email": "695391446@qq.com",
     			"name": "majian"
     		}],
+    		"ignoreExceptionList":[
+    		    "com.toucan.shopping.modules.exception.user.UserHeaderException",
+    		    "com.toucan.shopping.modules.exception.user.NotFountUserMainIdException",
+    		    "com.toucan.shopping.modules.exception.user.NotFoundUserTokenException"
+    		  ],
     		"sender": "mmdrss@163.com",
     		"senderAuthenticationCode": "IJHWJFZINFUPQIUC",
     		"smtp": {

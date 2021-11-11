@@ -3,8 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-
-
     <parent>
         <groupId>com.toucan.shopping.modules</groupId>
         <artifactId>toucan-shopping-modules</artifactId>
@@ -12,42 +10,18 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <description>公共模块</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.modules.common</groupId>
-    <artifactId>toucan-shopping-common</artifactId>
+    <artifactId>toucan-shopping-exception</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.6</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-exception</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.5.0-b01</version>
-        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
@@ -66,4 +40,5 @@
             </resource>
         </resources>
     </build>
+
 </project>

@@ -77,6 +77,12 @@ public class EmailConfig {
 
 
     /**
+     * 忽略的异常列表
+     */
+    private List<String> ignoreExceptionList;
+
+
+    /**
      * 返回配置对象
      * @return
      */

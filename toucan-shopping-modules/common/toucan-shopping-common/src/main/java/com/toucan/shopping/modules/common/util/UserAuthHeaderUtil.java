@@ -1,6 +1,9 @@
 package com.toucan.shopping.modules.common.util;
 
 
+import com.toucan.shopping.modules.exception.user.NotFoundUserTokenException;
+import com.toucan.shopping.modules.exception.user.NotFountUserMainIdException;
+import com.toucan.shopping.modules.exception.user.UserHeaderException;
 import org.apache.commons.lang3.StringUtils;
 
 public class UserAuthHeaderUtil {
@@ -10,7 +13,7 @@ public class UserAuthHeaderUtil {
     public static String getUserMainId(String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
-            throw new IllegalArgumentException("请求头参数无效");
+            throw new UserHeaderException("请求头参数无效");
         }
 
         String userId = StringUtils.substringAfter(authHeader,"tss_uid=");
@@ -20,7 +23,7 @@ public class UserAuthHeaderUtil {
         }
         if(StringUtils.isEmpty(userId))
         {
-            throw new IllegalArgumentException("从请求头中没有找到用户ID 请求头值为:"+authHeader);
+            throw new NotFountUserMainIdException("从请求头中没有找到用户ID 请求头值为:"+authHeader);
         }
         return userId;
     }
@@ -30,8 +33,7 @@ public class UserAuthHeaderUtil {
     public static String getToken(String authHeader) throws Exception {
         if(StringUtils.isEmpty(authHeader))
         {
-            throw new IllegalArgumentException("请求头参数无效");
-
+            throw new UserHeaderException("请求头参数无效");
         }
 
         String token = StringUtils.substringAfter(authHeader,"tss_lt=");
@@ -41,7 +43,7 @@ public class UserAuthHeaderUtil {
         }
         if(StringUtils.isEmpty(token))
         {
-            throw new IllegalArgumentException("从请求头中没有找到用户token 请求头值为:"+authHeader);
+            throw new NotFoundUserTokenException("从请求头中没有找到用户token 请求头值为:"+authHeader);
         }
         return token;
     }

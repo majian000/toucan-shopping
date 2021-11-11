@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.log.queue.LogEmailQueue;
 import com.toucan.shopping.modules.log.validate.LogConfigValidator;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -45,12 +46,16 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
 
         LogEmailAppender.emailConfig = new EmailConfig();
         LogEmailAppender.enabled = log.getEmail().isEnabled();
+        //忽略异常列表
+        LogEmailAppender.emailConfig.setIgnoreExceptionList(log.getEmail().getIgnoreExceptionList());
+
         //SMTP服务器配置
         LogEmailAppender.emailConfig.setSmtpServer(log.getEmail().getSmtp().getHost());
         LogEmailAppender.emailConfig.setProtocol(log.getEmail().getProtocol());
         LogEmailAppender.emailConfig.setSmtpAuth(log.getEmail().getSmtp().getAuth());
         LogEmailAppender.emailConfig.setSmtpSocketFactoryClass(log.getEmail().getSmtp().getSocketFactoryClass());
         LogEmailAppender.emailConfig.setSmtpSocketFactoryFallback(log.getEmail().getSmtp().getSocketFactoryFallback());
+
         //发件人
         LogEmailAppender.emailConfig.setSender(log.getEmail().getSender());
         //邮件标题
@@ -86,6 +91,18 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
         if(enabled) {
             IThrowableProxy throwableProxy = loggingEvent.getThrowableProxy();
             if (throwableProxy != null&&emailConfig!=null&&logEmailQueue!=null) {
+                //判断是否该忽略这个异常
+                if(CollectionUtils.isNotEmpty(emailConfig.getIgnoreExceptionList()))
+                {
+                    for(String ignoreException:emailConfig.getIgnoreExceptionList())
+                    {
+                        //忽略掉这个异常
+                        if(throwableProxy.getClassName().equals(ignoreException))
+                        {
+                            return;
+                        }
+                    }
+                }
                 Email email = new Email();
                 email.setEmailConfig(emailConfig);
                 email.setSubject(DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_SS) + emailConfig.getSubject());

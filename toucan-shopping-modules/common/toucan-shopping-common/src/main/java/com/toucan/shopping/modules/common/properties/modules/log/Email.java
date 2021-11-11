@@ -47,5 +47,10 @@ public class Email {
      */
     private List<ReceiverProperty> receiverList;
 
+    /**
+     * 忽略的异常列表
+     */
+    private List<String> ignoreExceptionList;
+
 
 }

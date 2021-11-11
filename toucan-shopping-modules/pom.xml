@@ -55,6 +55,8 @@
         <module>common/toucan-shopping-log</module>
         <!--日志web扩展 -->
         <module>common/toucan-shopping-log-web</module>
+        <!--异常定义 -->
+        <module>common/toucan-shopping-exception</module>
 
         <!--用户中心实体VO -->
         <module>user/toucan-shopping-user-entity-vo</module>
@@ -417,6 +419,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-freemarker</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-exception</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
