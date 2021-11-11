@@ -10,7 +10,7 @@ function initBrandListControl(brandDiv,brandPageId,categoryId)
     $('#'+brandPageId).selectPage({
         showField : 'name',
         keyField : 'id',
-        data : basePath+'/product/brand/list',
+        data : basePath+'/api/product/brand/list',
         params : function(){
             return {'categoryId':categoryId};
         },
