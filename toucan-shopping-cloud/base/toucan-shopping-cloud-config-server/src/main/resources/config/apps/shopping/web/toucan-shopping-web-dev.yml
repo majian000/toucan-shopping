@@ -98,8 +98,8 @@ toucan:
     freemarker:
       release-mapping-url: /htmls/release/**
       preview-mapping-url: /htmls/preview/**
-      release-location: C:/toucan/toucan_shopping/htmls/release/
-      preview-location: C:/toucan/toucan_shopping/htmls/preview/
+      release-location: C:/toucan_shopping_htmls/web/htmls/release/
+      preview-location: C:/toucan_shopping_htmls/web/htmls/preview/
       ftl-location: templates/
   user:
     head-sculpture-max-size: 2048 #头像最大长度2MB(单位KB)
