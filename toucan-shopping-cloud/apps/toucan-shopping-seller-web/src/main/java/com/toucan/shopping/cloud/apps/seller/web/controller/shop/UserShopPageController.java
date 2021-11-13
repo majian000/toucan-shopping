@@ -81,7 +81,7 @@ public class UserShopPageController extends BaseController {
                         if(sellerShopVO!=null)
                         {
                             //重定向到店铺首页
-                            httpServletResponse.sendRedirect("/page/shop/info");
+                            httpServletResponse.sendRedirect("/page/index");
                         }
 
                     }

@@ -77,7 +77,7 @@ public class ShopPageServiceImpl implements ShopPageService {
                         if(sellerShopVO.getType().intValue()==1)
                         {
                             httpServletRequest.setAttribute("sellerShop",sellerShopVO);
-                            return "shop/info";
+                            return "index";
                         }
 
                     }
