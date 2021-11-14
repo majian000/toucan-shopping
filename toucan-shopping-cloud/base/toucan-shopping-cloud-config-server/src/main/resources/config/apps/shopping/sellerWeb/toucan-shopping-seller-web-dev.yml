@@ -112,7 +112,7 @@ toucan:
     #拦截指定路径
     path-patterns: /**
     #忽略拦截
-    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/**/*.ico
     #共享会话的所有域名
     sso-set-cookie-url-list: "http://127.0.0.1:8083/api/sso/setCookie,\
                               http://localhost:8083/api/sso/setCookie"

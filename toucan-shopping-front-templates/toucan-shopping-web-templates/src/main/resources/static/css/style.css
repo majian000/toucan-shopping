@@ -559,7 +559,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:2800px; height:375px; overflow:hidden; float:left; position:relative;
 }
 .hot_pro .featureBox{
-	width:243px; height:228px; overflow:hidden; background:url(../images/line.gif) no-repeat right 122px; float:left; border-right:1px solid #eaeaea; position:relative;
+	width:243px; height:228px; overflow:hidden;  float:left; border-right:1px solid #eaeaea; position:relative;
 }
 .hot_pro #botton-scroll{
 	width:975px; height:228px; overflow:hidden; float:left; z-index:0;
@@ -1020,7 +1020,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:2800px; height:375px; overflow:hidden; float:left; position:relative;
 }
 .like .featureBox{
-	width:238px; height:228px; overflow:hidden; background:url(../images/line.gif) no-repeat right 122px; float:left; border-left:1px solid #eaeaea; border-right:1px solid #eaeaea; position:relative;
+	width:238px; height:228px; overflow:hidden;  float:left; border-left:1px solid #eaeaea; border-right:1px solid #eaeaea; position:relative;
 }
 .like #botton-scroll{
 	width:1198px; height:228px; overflow:hidden; float:left; z-index:0;

@@ -20,5 +20,6 @@ public class StaticResourceConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         logger.info("初始化静态资源.......");
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/static/");
     }
 }
