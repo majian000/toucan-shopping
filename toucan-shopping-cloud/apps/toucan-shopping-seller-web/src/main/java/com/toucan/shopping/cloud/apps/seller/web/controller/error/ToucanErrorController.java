@@ -4,6 +4,8 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping(value = "/error")
 public class ToucanErrorController implements ErrorController {
@@ -19,7 +21,7 @@ public class ToucanErrorController implements ErrorController {
     }
 
     @RequestMapping
-    public String error() {
+    public String error(HttpServletRequest request) {
         return getErrorPath();
     }
 }
