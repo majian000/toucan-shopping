@@ -88,6 +88,7 @@ toucan:
     default-shop-logo: group1/M00/00/01/rB5PVWEniGuAEJw5AAA1H6b9sow877.png
   shopping-pc: #PC端配置
     regist-page: http://localhost:8083/page/user/regist
+    base-path: http://localhost:8083/
   shopping-seller-web-pc: #卖家PC端配置
     freemarker:
       release-mapping-url: /htmls/release/**

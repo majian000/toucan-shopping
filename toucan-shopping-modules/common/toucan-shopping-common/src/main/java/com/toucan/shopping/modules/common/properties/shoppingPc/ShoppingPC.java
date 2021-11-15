@@ -24,4 +24,10 @@ public class ShoppingPC {
      */
     private String registPage;
 
+    /**
+     *
+     * 根路径
+     */
+    private String basePath;
+
 }
