@@ -85,18 +85,6 @@ public class ShopPageController extends BaseController {
                         {
                             return "shop/select_regist_type";
                         }
-
-                        //设置店铺logo
-                        if(sellerShopVO.getLogo()!=null) {
-                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
-                        }
-                        //个人店铺
-                        if(sellerShopVO.getType().intValue()==1)
-                        {
-                            httpServletRequest.setAttribute("sellerShop",sellerShopVO);
-                            return "index";
-                        }
-
                     }
 
                 }else{
