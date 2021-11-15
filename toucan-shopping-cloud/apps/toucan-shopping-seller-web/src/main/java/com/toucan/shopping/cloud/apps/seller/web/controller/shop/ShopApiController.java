@@ -79,6 +79,7 @@ public class ShopApiController extends BaseController {
                         sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + toucan.getSeller().getDefaultShopLogo());
                     }
                 }
+                resultObjectVO.setData(sellerShopVO);
             }
         }catch(Exception e)
         {
