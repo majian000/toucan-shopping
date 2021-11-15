@@ -11,11 +11,11 @@
                 <li class="text"><a href="">帮助中心</a></li>
                 <li class="photo">
                 <span class="avatar avatar-online">
-                    <img src="${basePath}/static/images/5.jpg" alt="...">
+                    <img id="shop_logo"  alt="...">
                     <i></i>
                 </span>
                     <div class="info_text">
-                        <p>GUCCI旗舰店</p>
+                        <p id="shop_name">店铺名称</p>
                         <span class="btn btn-xs btn-default btn-outline btn-round" onclick="logout();">退出管理</span>
                     </div>
                 </li>
@@ -25,9 +25,11 @@
 </div>
 
 <#include "/common_js.html"/>
+<script src="${basePath}/static/js/seller/sellerInfo.js"></script>
 <script>
     function logout()
     {
         window.location.href=basePath+"/page/user/logout";
     }
+
 </script>

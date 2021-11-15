@@ -53,6 +53,7 @@ public class ShopApiController extends BaseController {
 
 
 
+    @UserAuth
     @RequestMapping(value="/shop/info")
     @ResponseBody
     public ResultObjectVO loginInfo(HttpServletRequest httpServletRequest){
@@ -65,10 +66,14 @@ public class ShopApiController extends BaseController {
             if(resultObjectVO.isSuccess())
             {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
-
+                if(sellerShopVO==null)
+                {
+                    sellerShopVO = new SellerShopVO();
+                }
                 if(sellerShopVO.getLogo()!=null) {
                     sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + sellerShopVO.getLogo());
                 }else{
+
                     //设置默认店铺图标
                     if(toucan.getSeller()!=null&&toucan.getSeller().getDefaultShopLogo()!=null) {
                         sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix() + "/" + toucan.getSeller().getDefaultShopLogo());
