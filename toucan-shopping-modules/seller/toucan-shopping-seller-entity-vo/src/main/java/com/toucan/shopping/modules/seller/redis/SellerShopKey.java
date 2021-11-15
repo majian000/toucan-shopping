@@ -28,4 +28,20 @@ public class SellerShopKey {
         return "TOUCAN_SHOPPING_WEB:SELLER:SHOP:UPDATE:"+userMainId+"_LOCK";
     }
 
+
+
+
+
+    /**
+     * 店铺缓存
+     * @param userMainId
+     * @return
+     */
+    public static String getShopCacheKey(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_WEB:SELLER:SHOP:CACHE:"+userMainId+"_SHOP";
+    }
+
+
+
 }

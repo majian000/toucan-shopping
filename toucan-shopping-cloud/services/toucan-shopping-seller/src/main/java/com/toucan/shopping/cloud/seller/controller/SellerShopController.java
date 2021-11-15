@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.common.xss.XSSConvert;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.constant.ShopConstant;
 import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
@@ -56,6 +57,8 @@ public class SellerShopController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private ToucanStringRedisService toucanStringRedisService;
 
 
 
@@ -201,41 +204,31 @@ public class SellerShopController {
                 return resultObjectVO;
             }
 
+
+            Object shopJsonObject = toucanStringRedisService.get(SellerShopKey.getShopCacheKey(String.valueOf(querySellerShop.getUserMainId())));
+            if(shopJsonObject!=null)
+            {
+                SellerShopVO sellerShopVO = JSONObject.parseObject(String.valueOf(shopJsonObject),SellerShopVO.class);
+                if(sellerShopVO!=null)
+                {
+                    resultObjectVO.setData(sellerShopVO);
+                    return resultObjectVO;
+                }
+
+            }
+
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
             if(!CollectionUtils.isEmpty(sellerShops)) {
                 SellerShop sellerShop = sellerShops.get(0);
                 SellerShopVO sellerShopVO = new SellerShopVO();
                 BeanUtils.copyProperties(sellerShopVO,sellerShop);
 
-                //查询登录记录
-                SellerLoginHistoryVO querySellerLoginHistoryVO = new SellerLoginHistoryVO();
-                querySellerLoginHistoryVO.setUserMainId(querySellerShop.getUserMainId());
-                querySellerLoginHistoryVO.setSize(10);
-                List<SellerLoginHistory> sellerLoginHistories = sellerLoginHistoryService.queryListByCreateDateDesc(querySellerLoginHistoryVO);
-                if(!CollectionUtils.isEmpty(sellerLoginHistories))
+                try {
+                    toucanStringRedisService.set(SellerShopKey.getShopCacheKey(String.valueOf(querySellerShop.getUserMainId())), JSONObject.toJSONString(sellerShopVO));
+                }catch(Exception e)
                 {
-                    List<SellerLoginHistoryVO> sellerLoginHistoryVOS = new ArrayList<SellerLoginHistoryVO>();
-                    for(int i=0;i<sellerLoginHistories.size();i++)
-                    {
-                        SellerLoginHistory sellerLoginHistory = sellerLoginHistories.get(i);
-                        //查询第2条登录记录,第1条为本次登录
-                        if(sellerLoginHistories.size()>2)
-                        {
-                            if(i==1)
-                            {
-                                sellerShopVO.setLastLoginTime(DateUtils.format(sellerLoginHistory.getCreateDate(),DateUtils.FORMATTER_SS));
-                            }
-                        }else{ //如果只有一条登录记录,就是本次登录时间
-                            sellerShopVO.setLastLoginTime(DateUtils.format(sellerLoginHistory.getCreateDate(),DateUtils.FORMATTER_SS));
-                        }
-
-                        SellerLoginHistoryVO sellerLoginHistoryVO = new SellerLoginHistoryVO();
-                        BeanUtils.copyProperties(sellerLoginHistoryVO,sellerLoginHistory);
-                        sellerLoginHistoryVOS.add(sellerLoginHistoryVO);
-                    }
-                    sellerShopVO.setLoginHistoryList(sellerLoginHistoryVOS);
+                    logger.warn(e.getMessage(),e);
                 }
-
                 resultObjectVO.setData(sellerShopVO);
             }
 
