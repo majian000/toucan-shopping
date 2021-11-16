@@ -140,7 +140,7 @@ public class FreeShopGeneratorController extends UIController {
         this.initButtons(request,"releaseTabButtons","/freeShop/html/generate/release");
 
 
-        return "pages/htmlPage/freeShop/freeShop.html";
+        return "pages/sellerWebHtmlPage/freeShop/freeShop.html";
     }
 
 
