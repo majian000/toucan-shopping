@@ -18,6 +18,7 @@
     <#include "/shop_common.html"/>
 
     <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
 </head>
 <body>
 
@@ -32,12 +33,49 @@
     </div>
 
     <div class="right_content">
-        <div class="right_bg mb-15">
-            <div class="index_top_left">
-                <div class="title"><span>店铺设置</span></div>
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>店铺设置</span></div>
                 <div class="right_panel">
-                    <form id="usform" method="post">
-                        <table border="0" style="width:650px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
+
+                    <form action="" method="post" class="bootstrap-frm">
+                        <label>
+                            <span><font color="#ff4e00">*</font>店铺名称 :</span>
+                            <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  maxlength="15"/>
+                            <a>可修改${sellerShop.surplusChangeNameCount!''}次</a>
+                        </label>
+                        <label>
+                            <span>店铺介绍 :</span>
+                            <textarea id="introduce" name="introduce"  maxlength="500"  placeholder="请填写介绍">${sellerShop.introduce!''}</textarea>
+                        </label>
+                        <label>
+                            <span>所在城市 :</span>
+                            <input name="" id="ms_city" type="text" placeholder="请选择" autocomplete="off" value="${selectProvinceCityAreaName!''}" readonly="true">
+                            <input type="hidden" id="province" name="province" value="${sellerShop.province!''}" />
+                            <input type="hidden" id="city" name="city" value="${sellerShop.city!''}" />
+                            <input type="hidden" id="area" name="area" value="${sellerShop.area!''}"  />
+                            <input type="hidden" id="province_code" name="provinceCode" value="${sellerShop.provinceCode!''}"  />
+                            <input type="hidden" id="city_code" name="cityCode" value="${sellerShop.cityCode!''}"  />
+                            <input type="hidden" id="area_code" name="areaCode" value="${sellerShop.areaCode!''}"  />
+                        </label>
+                        <label>
+                            <span>详细地址 :</span>
+                            <textarea id="detail_address" name="detailAddress"  maxlength="200"  placeholder="请填写详细地址">${sellerShop.detailAddress!''}</textarea>
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>验证码</span>
+                            <input type="text" value="" id="utm_vcode" name="vcode"  style="width:50%" />
+                            <img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
+                        </label>
+                        </label>
+                        <label>
+                            <span> </span>
+                            <input type="button" value="保存"  onclick="updateUserShop();"/>
+                        </label>
+                    </form>
+
+                    <!--<form id="usform" method="post">
+                        <table border="0"  cellspacing="0" cellpadding="0">
                             <tr height="50" valign="top">
                                 <td width="150">&nbsp;</td>
                                 <td>
@@ -45,7 +83,7 @@
                                 </td>
                             </tr>
                             <tr height="50">
-                                <td align="right"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
+                                <td align="right" style="font-size:15px;"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
                                 <td>
                                     <input type="text" id="name" name="name"   class="l_ipt_long" value="${sellerShop.name!''}"  maxlength="15"/>
                                     &nbsp;&nbsp;
@@ -60,7 +98,7 @@
                             </tr>
 
                             <tr height="50">
-                                <td align="right">&nbsp;店铺介绍 &nbsp;</td>
+                                <td align="right" style="font-size:15px;">&nbsp;店铺介绍 &nbsp;</td>
                                 <td>
                                     <textarea id="introduce" name="introduce" class="l_textarea_long" maxlength="500"  placeholder="请填写介绍">${sellerShop.introduce!''}</textarea>
                                     &nbsp;&nbsp;
@@ -68,7 +106,7 @@
                                 </td>
                             </tr>
                             <tr height="50">
-                                <td align="right">所在城市 &nbsp;</td>
+                                <td align="right" style="font-size:15px;">所在城市 &nbsp;</td>
                                 <td>
                                     <div class="s_pca_wrap">
                                         <input class="s_pca_input" name="" id="ms_city" type="text" placeholder="请选择" autocomplete="off" value="${selectProvinceCityAreaName!''}" readonly="true">
@@ -84,7 +122,7 @@
                             </tr>
 
                             <tr height="50">
-                                <td align="right">&nbsp;详细地址 &nbsp;</td>
+                                <td align="right" style="font-size:15px;">&nbsp;详细地址 &nbsp;</td>
                                 <td>
                                     <textarea id="detail_address" name="detailAddress" class="l_textarea_long" maxlength="200"  placeholder="请填写详细地址">${sellerShop.detailAddress!''}</textarea>
                                     &nbsp;&nbsp;
@@ -92,7 +130,7 @@
                                 </td>
                             </tr>
                             <tr height="50">
-                                <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
+                                <td align="right" style="font-size:15px;"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
                                 <td>
                                     <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
                                     <span style="vertical-align: middle">
@@ -114,7 +152,7 @@
                                 </td>
                             </tr>
                         </table>
-                    </form>
+                    </form>-->
                 </div>
             </div>
         </div>
