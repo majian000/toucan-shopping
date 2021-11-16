@@ -134,10 +134,10 @@ public class FreeShopGeneratorController extends UIController {
         request.setAttribute("previewHtmlGenerators",previewHtmlGeneratorTabList);
 
         //初始化预览文件选项卡里的按钮
-        this.initButtons(request,"previewTabButtons","/freeShop/html/generate/preview");
+        this.initButtons(request,"previewTabButtons","/seller/web/freeShop/html/generate/preview");
 
         //初始化最终文件选项卡里的按钮
-        this.initButtons(request,"releaseTabButtons","/freeShop/html/generate/release");
+        this.initButtons(request,"releaseTabButtons","/seller/web/freeShop/html/generate/release");
 
 
         return "pages/sellerWebHtmlPage/freeShop/freeShop.html";
