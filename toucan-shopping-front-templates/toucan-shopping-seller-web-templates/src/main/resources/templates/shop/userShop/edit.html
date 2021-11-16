@@ -50,7 +50,7 @@
                         </label>
                         <label>
                             <span>所在城市 :</span>
-                            <input name="" id="ms_city" type="text" placeholder="请选择" autocomplete="off" value="${selectProvinceCityAreaName!''}" readonly="true">
+                            <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" autocomplete="off" value="${selectProvinceCityAreaName!''}" readonly="true">
                             <input type="hidden" id="province" name="province" value="${sellerShop.province!''}" />
                             <input type="hidden" id="city" name="city" value="${sellerShop.city!''}" />
                             <input type="hidden" id="area" name="area" value="${sellerShop.area!''}"  />
@@ -70,7 +70,7 @@
                         </label>
                         <label>
                             <span> </span>
-                            <input type="button" value="保存"  onclick="updateUserShop();"/>
+                            <input type="button" class="button" value="保存"  onclick="updateUserShop();"/>
                         </label>
                     </form>
 
