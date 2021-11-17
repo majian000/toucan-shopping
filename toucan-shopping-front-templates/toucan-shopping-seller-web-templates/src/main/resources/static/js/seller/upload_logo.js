@@ -1,5 +1,6 @@
 
 function upimg() {
+    alert(1);
     var pic = $('#upload')[0].files[0];
     var file = new FormData();
     file.append('file', pic);

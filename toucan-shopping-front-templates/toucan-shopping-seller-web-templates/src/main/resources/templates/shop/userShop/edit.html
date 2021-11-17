@@ -52,16 +52,12 @@
 
                     <form action="" method="post" class="bootstrap-frm">
                         <label>
-                            <span><font color="#ff4e00">*</font>店铺LOGO :</span>
-                            <span style="width:70%;height:160px;text-align:left;">
-                                <a class="shopLogoTipsOuter">
-                                    <img src="${sellerShop.httpLogo!''}" id="pic" style="width:155px;height:150px;" />
-                                    <span class="shopLogoTips" id="logoTips">点击上传</span>
-                                    <div id="file_ipt_p">
-                                        <input id="upload" name="file" accept="image/*" type="file" style="display: none" />
-                                    </div>
-                                </a>
-                            </span>
+                            <span><font color="#ff4e00">*</font>店铺图标 :</span>
+                            <img src="${sellerShop.httpLogo!''}" id="pic" style="width:155px;height:150px;" />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>图标上传 :</span>
+                            <input type="file" name="logo" />
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>店铺名称 :</span>
@@ -127,7 +123,6 @@
 </script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/upload_logo.js"></script>
 <script>
     $(function () {
 
@@ -135,7 +130,6 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
-        bind_upload_event();
 
         $("#ms_city").click(function (e) {
             SelCity(this,e);
