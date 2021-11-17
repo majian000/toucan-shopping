@@ -133,14 +133,15 @@ public class ShopPageController extends BaseController {
                             return "shop/select_regist_type";
                         }
 
+                        if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
+                        {
+                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+sellerShopVO.getLogo());
+                        }else{
+                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+toucan.getSeller().getDefaultShopLogo());
+                        }
+
                         //个人店铺
                         if(sellerShopVO.getType().intValue()==1) {
-                            if (sellerShopVO.getEnableStatus().intValue() != 1)
-                            {
-                                httpServletRequest.setAttribute("rejectText","店铺已被禁用");
-                                return "shop/faild";
-                            }
-
                             if(sellerShopVO.getChangeNameCount()!=null)
                             {
                                 sellerShopVO.setSurplusChangeNameCount(3-sellerShopVO.getChangeNameCount().intValue());

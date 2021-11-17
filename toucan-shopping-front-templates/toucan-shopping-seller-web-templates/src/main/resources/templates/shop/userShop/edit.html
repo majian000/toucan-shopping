@@ -19,6 +19,7 @@
 
     <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/shopLogo.css" />
 </head>
 <body>
 
@@ -51,6 +52,18 @@
 
                     <form action="" method="post" class="bootstrap-frm">
                         <label>
+                            <span><font color="#ff4e00">*</font>店铺LOGO :</span>
+                            <span style="width:70%;height:160px;text-align:left;">
+                                <a class="shopLogoTipsOuter">
+                                    <img src="${sellerShop.httpLogo!''}" id="pic" style="width:155px;height:150px;" />
+                                    <span class="shopLogoTips" id="logoTips">点击上传</span>
+                                    <div id="file_ipt_p">
+                                        <input id="upload" name="file" accept="image/*" type="file" style="display: none" />
+                                    </div>
+                                </a>
+                            </span>
+                        </label>
+                        <label>
                             <span><font color="#ff4e00">*</font>店铺名称 :</span>
                             <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  maxlength="15"/>
                             <a>可修改${sellerShop.surplusChangeNameCount!''}次</a>
@@ -74,6 +87,15 @@
                             <textarea id="detail_address" name="detailAddress"  maxlength="200"  placeholder="请填写详细地址">${sellerShop.detailAddress!''}</textarea>
                         </label>
                         <label>
+                            <span>店铺状态 :</span>
+                            <#if sellerShop.enableStatus == 0>
+                                <span style="width:70%;height:30px;text-align:left;"><a style="color:red">禁用</a></span>
+                            </#if>
+                            <#if sellerShop.enableStatus == 1>
+                                <span style="width:70%;height:30px;text-align:left;"><a style="color:green">启用</a></span>
+                            </#if>
+                        </label>
+                        <label>
                             <span><font color="#ff4e00">*</font>验证码</span>
                             <input type="text" value="" id="utm_vcode" name="vcode"  style="width:50%" />
                             <img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
@@ -85,85 +107,6 @@
                         </label>
                     </form>
 
-                    <!--<form id="usform" method="post">
-                        <table border="0"  cellspacing="0" cellpadding="0">
-                            <tr height="50" valign="top">
-                                <td width="150">&nbsp;</td>
-                                <td>
-                                    <span class="fl" style="font-size:24px;"></span>
-                                </td>
-                            </tr>
-                            <tr height="50">
-                                <td align="right" style="font-size:15px;"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
-                                <td>
-                                    <input type="text" id="name" name="name"   class="l_ipt_long" value="${sellerShop.name!''}"  maxlength="15"/>
-                                    &nbsp;&nbsp;
-                                    <a id="name_msg" style="color:#ff4e00;"></a>
-                                </td>
-                            </tr>
-                            <tr height="50">
-                                <td align="right"></td>
-                                <td>
-                                    <a>可修改店铺名称次数剩余${sellerShop.surplusChangeNameCount!''}次</a>
-                                </td>
-                            </tr>
-
-                            <tr height="50">
-                                <td align="right" style="font-size:15px;">&nbsp;店铺介绍 &nbsp;</td>
-                                <td>
-                                    <textarea id="introduce" name="introduce" class="l_textarea_long" maxlength="500"  placeholder="请填写介绍">${sellerShop.introduce!''}</textarea>
-                                    &nbsp;&nbsp;
-                                    <a id="introduce_msg" style="color:#ff4e00;"></a>
-                                </td>
-                            </tr>
-                            <tr height="50">
-                                <td align="right" style="font-size:15px;">所在城市 &nbsp;</td>
-                                <td>
-                                    <div class="s_pca_wrap">
-                                        <input class="s_pca_input" name="" id="ms_city" type="text" placeholder="请选择" autocomplete="off" value="${selectProvinceCityAreaName!''}" readonly="true">
-                                        <s></s>
-                                    </div>
-                                    <input type="hidden" id="province" name="province" value="${sellerShop.province!''}" />
-                                    <input type="hidden" id="city" name="city" value="${sellerShop.city!''}" />
-                                    <input type="hidden" id="area" name="area" value="${sellerShop.area!''}"  />
-                                    <input type="hidden" id="province_code" name="provinceCode" value="${sellerShop.provinceCode!''}"  />
-                                    <input type="hidden" id="city_code" name="cityCode" value="${sellerShop.cityCode!''}"  />
-                                    <input type="hidden" id="area_code" name="areaCode" value="${sellerShop.areaCode!''}"  />
-                                </td>
-                            </tr>
-
-                            <tr height="50">
-                                <td align="right" style="font-size:15px;">&nbsp;详细地址 &nbsp;</td>
-                                <td>
-                                    <textarea id="detail_address" name="detailAddress" class="l_textarea_long" maxlength="200"  placeholder="请填写详细地址">${sellerShop.detailAddress!''}</textarea>
-                                    &nbsp;&nbsp;
-                                    <a id="detail_address_msg" style="color:#ff4e00;"></a>
-                                </td>
-                            </tr>
-                            <tr height="50">
-                                <td align="right" style="font-size:15px;"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
-                                <td>
-                                    <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
-                                    <span style="vertical-align: middle">
-									&nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
-								</span>
-                                    <a id="utm_vcode_msg" style="color:#ff4e00;"></a>
-                                </td>
-                            </tr>
-                            <tr height="60">
-                                <td>&nbsp;</td>
-                                <td><input type="button" value="保存"  onclick="updateUserShop();"/></td>
-                            </tr>
-                            <tr height="50">
-                                <td align="right"></td>
-                                <td>
-                                    <a id="tn_msg" style="color:#ff4e00;"></a>
-                                    <br>
-                                    <br>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>-->
                 </div>
             </div>
         </div>
@@ -184,6 +127,7 @@
 </script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/upload_logo.js"></script>
 <script>
     $(function () {
 
@@ -191,12 +135,15 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
+        bind_upload_event();
+
         $("#ms_city").click(function (e) {
             SelCity(this,e);
         });
         $(".s_pca_wrap s").click(function (e) {
             SelCity(document.getElementById("ms_city"),e);
         });
+
     });
 
 </script>

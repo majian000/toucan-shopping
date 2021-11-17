@@ -1,0 +1,19 @@
+.shopLogoTipsOuter {
+    display: block;
+    margin: 0px auto;
+    position: relative;
+    overflow: hidden;
+}
+.shopLogoTips {
+    width: 150px;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 0px;
+    text-align:center;
+    background-color: rgba(0, 0, 0, .50);
+    color: #FFFFFF;
+    font-size: 5px;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+}
