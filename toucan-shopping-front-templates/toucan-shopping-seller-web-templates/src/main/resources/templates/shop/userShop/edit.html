@@ -49,7 +49,7 @@
                 <div class="title" style="border-bottom: 1px solid#9a9999;"><span>店铺设置</span></div>
                 <div class="right_panel">
 
-                    <form action="" method="post" class="bootstrap-frm">
+                    <form action="" id="usform" method="post" class="bootstrap-frm">
                         <label>
                             <span>店铺状态 :</span>
                             <#if sellerShop.enableStatus == 0>
@@ -66,7 +66,7 @@
                         <label>
                             <span>图标上传 :</span>
                             <input type="hidden" id="isUpload" value="1"/>
-                            <input type="hidden" id="defaultLogo" value="${sellerShop.httpDefaultLogo!''}"/>
+                            <input type="hidden" id="shopLogo" value="${sellerShop.httpLogo!''}"/>
                             <input type="file" name="logo" id="logo" />
                         </label>
                         <label>

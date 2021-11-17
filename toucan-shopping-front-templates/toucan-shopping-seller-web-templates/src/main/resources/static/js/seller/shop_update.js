@@ -9,7 +9,7 @@ function bindFileUpload()
 
         // If no files were selected, or no FileReader support, return
         if (!files.length || !window.FileReader) {
-            $("#pic").attr("src",$("#defaultLogo").val());
+            $("#pic").attr("src",$("#shopLogo").val());
             $("#isUpload").val("0");
             return;
         }
