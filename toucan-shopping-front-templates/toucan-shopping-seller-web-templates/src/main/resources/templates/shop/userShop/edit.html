@@ -19,7 +19,6 @@
 
     <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
-    <link rel="stylesheet" href="${basePath}/static/css/shopLogo.css" />
 </head>
 <body>
 
@@ -52,16 +51,27 @@
 
                     <form action="" method="post" class="bootstrap-frm">
                         <label>
+                            <span>店铺状态 :</span>
+                            <#if sellerShop.enableStatus == 0>
+                                <span style="width:70%;height:30px;text-align:left;"><a style="color:red">禁用</a></span>
+                            </#if>
+                            <#if sellerShop.enableStatus == 1>
+                                <span style="width:70%;height:30px;text-align:left;"><a style="color:green">启用</a></span>
+                            </#if>
+                        </label>
+                        <label>
                             <span><font color="#ff4e00">*</font>店铺图标 :</span>
                             <img src="${sellerShop.httpLogo!''}" id="pic" style="width:155px;height:150px;" />
                         </label>
                         <label>
                             <span>图标上传 :</span>
-                            <input type="file" name="logo" />
+                            <input type="hidden" id="isUpload" value="1"/>
+                            <input type="hidden" id="defaultLogo" value="${sellerShop.httpDefaultLogo!''}"/>
+                            <input type="file" name="logo" id="logo" />
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>店铺名称 :</span>
-                            <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  maxlength="15"/>
+                            <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  style="width:40%" maxlength="15"/>
                             <a>可修改${sellerShop.surplusChangeNameCount!''}次</a>
                         </label>
                         <label>
@@ -83,17 +93,8 @@
                             <textarea id="detail_address" name="detailAddress"  maxlength="200"  placeholder="请填写详细地址">${sellerShop.detailAddress!''}</textarea>
                         </label>
                         <label>
-                            <span>店铺状态 :</span>
-                            <#if sellerShop.enableStatus == 0>
-                                <span style="width:70%;height:30px;text-align:left;"><a style="color:red">禁用</a></span>
-                            </#if>
-                            <#if sellerShop.enableStatus == 1>
-                                <span style="width:70%;height:30px;text-align:left;"><a style="color:green">启用</a></span>
-                            </#if>
-                        </label>
-                        <label>
                             <span><font color="#ff4e00">*</font>验证码</span>
-                            <input type="text" value="" id="utm_vcode" name="vcode"  style="width:50%" />
+                            <input type="text" value="" id="utm_vcode" name="vcode"  style="width:20%" />
                             <img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
                         </label>
                         </label>
@@ -123,6 +124,7 @@
 </script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/shop_update.js"></script>
 <script>
     $(function () {
 
@@ -130,6 +132,7 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
+        bindFileUpload();
 
         $("#ms_city").click(function (e) {
             SelCity(this,e);

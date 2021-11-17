@@ -37,6 +37,17 @@ public class SellerShopVO extends SellerShop {
      */
     private String lastLoginTime;
 
+    /**
+     * 默认图标路径
+     */
+    private String defaultLogo;
+
+
+    /**
+     * 默认图标路径
+     */
+    private String httpDefaultLogo;
+
 
     private String createAdminName; //创建人姓名
     private String updateAdminName; //修改人姓名

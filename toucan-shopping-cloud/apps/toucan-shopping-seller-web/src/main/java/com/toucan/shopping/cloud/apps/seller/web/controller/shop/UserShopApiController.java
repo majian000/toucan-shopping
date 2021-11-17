@@ -163,7 +163,7 @@ public class UserShopApiController extends BaseController {
     @UserAuth
     @RequestMapping(value="/edit",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO edit(HttpServletRequest request,@RequestBody SellerShopVO sellerShopVO)
+    public ResultObjectVO edit(HttpServletRequest request,SellerShopVO sellerShopVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";

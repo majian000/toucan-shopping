@@ -135,9 +135,14 @@ public class ShopPageController extends BaseController {
 
                         if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
                         {
-                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+sellerShopVO.getLogo());
+                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+ "/" +sellerShopVO.getLogo());
                         }else{
-                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+toucan.getSeller().getDefaultShopLogo());
+                            sellerShopVO.setHttpLogo(imageUploadService.getImageHttpPrefix()+ "/" +toucan.getSeller().getDefaultShopLogo());
+                        }
+
+                        if(toucan.getSeller().getDefaultShopLogo()!=null) {
+                            sellerShopVO.setDefaultLogo(toucan.getSeller().getDefaultShopLogo());
+                            sellerShopVO.setHttpDefaultLogo(imageUploadService.getImageHttpPrefix()+ "/" +toucan.getSeller().getDefaultShopLogo());
                         }
 
                         //个人店铺

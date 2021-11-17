@@ -294,6 +294,23 @@ public class SellerShopController {
     }
 
 
+    /**
+     * 刷新到缓存
+     * @param sellerShop
+     */
+    private void flushCache(SellerShop sellerShop)
+    {
+        try{
+            if(toucanStringRedisService.get(SellerShopKey.getShopCacheKey(String.valueOf(sellerShop.getUserMainId())))!=null) {
+                SellerShopVO sellerShopVO = new SellerShopVO();
+                BeanUtils.copyProperties(sellerShopVO, sellerShop);
+                toucanStringRedisService.set(SellerShopKey.getShopCacheKey(String.valueOf(sellerShopVO.getUserMainId())), JSONObject.toJSONString(sellerShopVO));
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
 
     /**
      * 更新
@@ -358,6 +375,9 @@ public class SellerShopController {
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
             }
+
+            flushCache(sellerShop);
+
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -419,6 +439,8 @@ public class SellerShopController {
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
             }
+
+            flushCache(sellerShop);
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -532,6 +554,11 @@ public class SellerShopController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
+            }
+            sellerShops = sellerShopService.findEnabledByUserMainId(sellerShop.getUserMainId());
+            if(CollectionUtils.isEmpty(sellerShops))
+            {
+                flushCache(sellerShops.get(0));
             }
         }catch(Exception e)
         {

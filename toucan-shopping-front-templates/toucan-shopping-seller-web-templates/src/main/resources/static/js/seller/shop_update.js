@@ -1,37 +1,37 @@
 
 
+function getFileUrl(file) {
+    var url = null ;
+    if (window.createObjectURL!=undefined) { // basic
+        url = window.createObjectURL(file) ;
+    } else if (window.URL!=undefined) { // mozilla(firefox)
+        url = window.URL.createObjectURL(file) ;
+    } else if (window.webkitURL!=undefined) { // webkit or chrome
+        url = window.webkitURL.createObjectURL(file) ;
+    }
+    return url ;
+}
+
+
+function bindFileUpload()
+{
+    $("#logo").on("change",function(){
+        var fileUrl = getFileUrl(this.files[0]);
+        if(fileUrl!=null) {
+            $("#pic").attr("src", fileUrl);
+            $("#isUpload").val("1");
+        }else{
+            $("#isUpload").val("0");
+        }
+    });
+}
 
 function updateUserShop()
 {
-    var nameValue=$("#name").val();
-    var vcodeValue=$("#utm_vcode").val();
 
-    $("#name_msg").text(" ");
-    $("#utm_vcode_msg").text(" ");
-
-    if(nameValue=="")
-    {
-        $("#name_msg").text("请输入店铺名称");
-        return ;
-    }
-    if(vcodeValue=="")
-    {
-        $("#utm_vcode_msg").text("请输入验证码");
-        return ;
-    }
-
-    var fields = $('#usform').serializeArray();
-    var params = {}; //声明一个对象
-    $.each(fields, function(index, field) {
-        params[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
-    });
-
-    $.ajax({
-        type: "POST",
+    $('#usform').ajaxSubmit({
         url: basePath+'/api/user/shop/edit',
-        contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify(params),
-        dataType: "json",
+        type:'POST',
         success: function (data) {
             if(data.code==401)
             {
@@ -42,13 +42,10 @@ function updateUserShop()
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/shop/update_success";
+                window.location.href=basePath+"/index";
             }
-        },
-        error: function (result) {
-            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
-            $("#tn_msg").text("请求失败,请重试");
         }
     });
+
 
 }

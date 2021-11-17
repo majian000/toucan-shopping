@@ -53,21 +53,12 @@
     width: 70%;
 }
 .bootstrap-frm .button {
-    width:318px;
-    height:42px;
-    line-height:42px\9;
-    overflow:hidden;
-    background:url(../images/btn_log.gif) repeat-x center top;
-    color:#FFF;
-    font-size:16px;
-    font-family:"Microsoft YaHei";
-    text-align:center;
-    padding:0;
-    border:0;
-    cursor:pointer;
-    -webkit-border-radius:2px;
-    -moz-border-radius:2px;
-    border-radius:2px;
+    width:150px;
+    background: #FFF;
+    border: 1px solid #CCC;
+    padding: 10px 25px 10px 25px;
+    color: #333;
+    border-radius: 4px;
 }
 
 .bootstrap-frm .button:hover {
