@@ -1,28 +1,35 @@
 
 
-function getFileUrl(file) {
-    var url = null ;
-    if (window.createObjectURL!=undefined) { // basic
-        url = window.createObjectURL(file) ;
-    } else if (window.URL!=undefined) { // mozilla(firefox)
-        url = window.URL.createObjectURL(file) ;
-    } else if (window.webkitURL!=undefined) { // webkit or chrome
-        url = window.webkitURL.createObjectURL(file) ;
-    }
-    return url ;
-}
-
 
 function bindFileUpload()
 {
-    $("#logo").on("change",function(){
-        var fileUrl = getFileUrl(this.files[0]);
-        if(fileUrl!=null) {
-            $("#pic").attr("src", fileUrl);
-            $("#isUpload").val("1");
-        }else{
+    $("#logo").on("change", function(){
+        // Get a reference to the fileList
+        var files = !!this.files ? this.files : [];
+
+        // If no files were selected, or no FileReader support, return
+        if (!files.length || !window.FileReader) {
+            $("#pic").attr("src",$("#defaultLogo").val());
             $("#isUpload").val("0");
+            return;
         }
+
+        // Only proceed if the selected file is an image
+        if (/^image/.test( files[0].type)){
+           // Create a new instance of the FileReader
+            var reader = new FileReader();
+
+            // Read the local file as a DataURL
+            reader.readAsDataURL(files[0]);
+
+            // When loaded, set image data as background of div
+            reader.onloadend = function(){
+                $("#pic").attr("src",this.result);
+                $("#isUpload").val("1");
+            }
+
+        }
+
     });
 }
 
