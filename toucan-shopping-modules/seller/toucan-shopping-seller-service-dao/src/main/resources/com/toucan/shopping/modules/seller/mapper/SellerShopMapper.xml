@@ -96,6 +96,9 @@
         update t_seller_shop set  name=#{name} , introduce=#{introduce} , change_name_count = #{changeNameCount} ,
          province=#{province},city=#{city},area=#{area},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},
          detail_address=#{detailAddress}
+         <if test="logo!=null">
+             ,logo=#{logo}
+         </if>
           where  user_main_id=#{userMainId} and enable_status = 1 and delete_status = 0
     </update>
 

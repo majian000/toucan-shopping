@@ -9,10 +9,12 @@ import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.xss.XSSConvert;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -53,6 +55,9 @@ public class UserShopApiController extends BaseController {
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 个人店铺申请
@@ -169,24 +174,32 @@ public class UserShopApiController extends BaseController {
         String userMainId="-1";
         try {
 
+            if(sellerShopVO.getLogoFile()!=null) {
+                if (!ImageUtils.isImage(sellerShopVO.getLogoFile().getOriginalFilename())) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
+                    resultObjectVO.setMsg("请求失败,请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
+                    return resultObjectVO;
+                }
+            }
 
             if(StringUtils.isEmpty(sellerShopVO.getVcode()))
             {
-                resultObjectVO.setMsg("修改失败,请输入验证码");
+                resultObjectVO.setMsg("请求失败,请输入验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
+
             String cookie = request.getHeader("Cookie");
             if(StringUtils.isEmpty(cookie))
             {
-                resultObjectVO.setMsg("修改失败,请重新刷新验证码");
+                resultObjectVO.setMsg("请求失败,请重新刷新验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
             if(StringUtils.isEmpty(ClientVCodeId))
             {
-                resultObjectVO.setMsg("修改失败,验证码异常");
+                resultObjectVO.setMsg("请求失败,验证码异常");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -194,19 +207,20 @@ public class UserShopApiController extends BaseController {
             Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
             if(vCodeObject==null)
             {
-                resultObjectVO.setMsg("修改失败,验证码过期请刷新");
+                resultObjectVO.setMsg("请求失败,验证码过期请刷新");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             if(!StringUtils.equals(sellerShopVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
             {
-                resultObjectVO.setMsg("修改失败,验证码输入有误");
+                resultObjectVO.setMsg("请求失败,验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
 
             //删除缓存中验证码
             toucanStringRedisService.delete(vcodeRedisKey);
+
 
             if(StringUtils.isEmpty(sellerShopVO.getName()))
             {
@@ -231,6 +245,17 @@ public class UserShopApiController extends BaseController {
             resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
+
+                if(sellerShopVO.getLogoFile()!=null) {
+                    //LOGO上传
+                    String logoImgExt = ImageUtils.getImageExt(sellerShopVO.getLogoFile().getOriginalFilename());
+                    if (logoImgExt.indexOf(".") != -1) {
+                        logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
+                    }
+                    String logoImgFilePath = imageUploadService.uploadFile(sellerShopVO.getLogoFile().getBytes(), logoImgExt);
+                    sellerShopVO.setLogo(logoImgFilePath);
+                }
+
                 //该账号存在店铺
                 SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVORet!=null&&sellerShopVORet.getEnableStatus().intValue()==1)

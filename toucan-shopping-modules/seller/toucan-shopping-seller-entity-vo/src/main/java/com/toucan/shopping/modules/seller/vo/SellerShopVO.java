@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.seller.vo;
 
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,6 +48,12 @@ public class SellerShopVO extends SellerShop {
      * 默认图标路径
      */
     private String httpDefaultLogo;
+
+
+    /**
+     * logo文件
+     */
+    private MultipartFile logoFile;
 
 
     private String createAdminName; //创建人姓名

@@ -547,6 +547,7 @@ public class SellerShopController {
             updateSellerShop.setCityCode(sellerShop.getCityCode());
             updateSellerShop.setAreaCode(sellerShop.getAreaCode());
             updateSellerShop.setDetailAddress(sellerShop.getDetailAddress());
+            updateSellerShop.setLogo(sellerShop.getLogo());
 
 
             int row = sellerShopService.updateInfo(updateSellerShop);

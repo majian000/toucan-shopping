@@ -9,11 +9,12 @@
     <meta name="screen-orientation" content="portrait">
     <meta name="x5-orientation" content="portrait">
     <meta name="copyright" content="Copyright © 2018 jxwanhe.com. All rights reserved.">
-    <title>卖家中心</title>
+
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="shortcut icon" href="" type="image/x-icon">
 
+    <#include "/title.html"/>
 
     <#include "/shop_common.html"/>
 
@@ -24,7 +25,6 @@
 
 <#include "/top.html"/>
 
-<#assign navigationName = "店铺设置">
 <#assign leftName = "shopSeting">
 
 <div class="body_box">
@@ -67,7 +67,7 @@
                             <span>图标上传 :</span>
                             <input type="hidden" id="isUpload" value="1"/>
                             <input type="hidden" id="shopLogo" value="${sellerShop.httpLogo!''}"/>
-                            <input type="file" name="logo" id="logo" />
+                            <input type="file" name="logoFile" id="logo" />
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>店铺名称 :</span>
@@ -145,13 +145,8 @@
 
 </script>
 
-<div class="footer_box">
-    <div class="w1200">
-        <p><span>站长图库</span><span>地址:广州市番禺区番禺大道北60-1号</span><a href="#">赣ICP备13003407号</a></p>
-        <p>Copyright © 2018 <a href="#">www.zztuku.com</a>, All Rights Reserved</p>
-    </div>
-</div>
 
+<#include "/footer.html"/>
 
 </body></html>
 
