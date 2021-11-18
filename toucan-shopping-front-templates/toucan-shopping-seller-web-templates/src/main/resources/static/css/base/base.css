@@ -69,6 +69,7 @@ img{border:0;vertical-align: middle;}
 .body_box .left_menu .nav-show ul { padding-bottom:5px; }
 .body_box .left_menu .nav-show ul li a span { font-size:15px!important; color:#8c8d93; }
 .body_box .left_menu li.active { background:#e4e4e4; }
+.body_box .left_menu .menu-item-cls {font-size:15px!important; color:#8c8d93; }
 
 /* 渐变图标-加阴影 */
 .circle-violet { color:#fff; display:block; background:#dc75d1; background:linear-gradient(to right,#dc75d1 30%,#fe8eea 70%); box-shadow:0px 0px 10px #fe8eea; }
