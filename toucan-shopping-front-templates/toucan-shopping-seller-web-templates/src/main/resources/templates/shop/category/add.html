@@ -1,62 +1,149 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- StyleSheets -->
-<link rel="stylesheet" href="${basePath}/static/css/slick.min.css" />
-<link rel="stylesheet" href="${basePath}/static/css/magnific-popup.min.css">
-<link rel="stylesheet" href="${basePath}/static/css/font-awesome-5.15.1.min.css" />
-
-    <!-- Custom css File -->
-    <link rel="stylesheet" href="${basePath}/static/css/style2.css" />
-    <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
-    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/jqueryFormValidate/style.css" />
-    <link rel="stylesheet" href="${basePath}/static/seller/product/selectProductCategory/style.css" />
-
-<!--[if IE 6]>
-<script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
-<script type="text/javascript">
-    EvPNG.fix('div, ul, img, li, input, a');
-</script>
-<![endif]-->
-<script type="text/javascript" src="${basePath}/static/js/jquery-1.11.1.min_044d0927.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
-
-<script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
-
 
     <#include "/common_js.html"/>
 
+    <#include "/shop_common.html"/>
+
 </head>
     <body>
-            <form id="scaf" method="post" onsubmit="return false;">
+            <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;">
                 <input type="hidden" id="parentId" name="parentId" value="${parentId!''}" >
-                <table border="0" style="width:400px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
-
-                    <tr height="50">
-                        <td align="right"><font color="#ff4e00">*</font>&nbsp;分类名称 &nbsp;</td>
-                        <td>
-                            <input type="text" id="shopCategoryName" maxlength="25"  name="name" class="l_ipt_long" tabindex="1"  />
-                            &nbsp;&nbsp;
-                            <label id="shopCategoryName_succeed" class="blank"></label>
-                            <span class="clear"></span>
-                            <div id="shopCategoryName_error"></div>
-                        </td>
-                    </tr>
-                    <tr height="60">
-                        <td>&nbsp;</td>
-                        <td><input type="button" id="scafbtn" value="保存" class="log_btn" /></td>
-                    </tr>
-                    <tr height="50">
-                        <td align="right"></td>
-                        <td>
-                            <span class="label">&nbsp;</span>
-                            <a id="scaf_msg" ></a>
-                        </td>
-                    </tr>
-                </table>
+                <label>
+                    <span><font color="#ff4e00">*</font>分类名称 :</span>
+                    <input type="text" id="shopCategoryName" maxlength="25"  name="name"  tabindex="1"  />
+                    <div id="shopCategoryName_error"></div>
+                </label>
+                <label>
+                    <span> </span>
+                    <input type="button" class="scafbtn" value="保存"  onclick="updateUserShop();"/>
+                </label>
+                <label>
+                    <span> </span>
+                    <a id="scaf_msg" ></a>
+                </label>
             </form>
 
         <script type="text/javascript" src="${basePath}/static/js/seller/shop/category/add.js"></script>
 
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+<html class="no-js css-menubar" lang="zh-cn"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="copyright" content="Copyright © 2018 jxwanhe.com. All rights reserved.">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+
+    <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "shopSeting">
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">店铺设置</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <div class="right_content">
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>店铺设置</span></div>
+                <div class="right_panel">
+
+                    <form action="" id="usform" method="post" class="bootstrap-frm">
+                    <label>
+                        <span><font color="#ff4e00">*</font>店铺名称 :</span>
+                        <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  style="width:40%" maxlength="15"/>
+                        <a>可修改${sellerShop.surplusChangeNameCount!''}次</a>
+                    </label>
+                    <label>
+                        <span> </span>
+                        <input type="button" class="button" value="保存"  onclick="updateUserShop();"/>
+                    </label>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="${basePath}/static/js/seller/info.js"></script>
+<script>
+    var province=${areaList!''};
+    var provinceHiddenId="province";
+    var provinceCodeHiddenId="province_code";
+    var cityHiddenId="city";
+    var cityCodeHiddenId="city_code";
+    var areaHiddenId="area";
+    var areaCodeHiddenId="area_code";
+</script>
+<script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/shop_update.js"></script>
+<script>
+    $(function () {
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        });
+
+        bindFileUpload();
+
+        $("#ms_city").click(function (e) {
+            SelCity(this,e);
+        });
+        $(".s_pca_wrap s").click(function (e) {
+            SelCity(document.getElementById("ms_city"),e);
+        });
+
+    });
+
+</script>
+
+
+<#include "/footer.html"/>
+
+</body></html>
+
+
