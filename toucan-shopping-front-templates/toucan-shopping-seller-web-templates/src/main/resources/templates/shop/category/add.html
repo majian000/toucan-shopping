@@ -1,42 +1,3 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-
-    <#include "/common_js.html"/>
-
-    <#include "/shop_common.html"/>
-
-</head>
-    <body>
-            <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;">
-                <input type="hidden" id="parentId" name="parentId" value="${parentId!''}" >
-                <label>
-                    <span><font color="#ff4e00">*</font>分类名称 :</span>
-                    <input type="text" id="shopCategoryName" maxlength="25"  name="name"  tabindex="1"  />
-                    <div id="shopCategoryName_error"></div>
-                </label>
-                <label>
-                    <span> </span>
-                    <input type="button" class="scafbtn" value="保存"  onclick="updateUserShop();"/>
-                </label>
-                <label>
-                    <span> </span>
-                    <a id="scaf_msg" ></a>
-                </label>
-            </form>
-
-        <script type="text/javascript" src="${basePath}/static/js/seller/shop/category/add.js"></script>
-
-    </body>
-</html>
-
-
-
-
-
-
-
-
-
 <html class="no-js css-menubar" lang="zh-cn"><head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
@@ -73,7 +34,10 @@
             <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="javascript:;">店铺设置</a>
+            <a href="${basePath}/page/shop/category/list">店铺分类</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">添加分类</a>
         </li>
     </ol>
 
@@ -85,19 +49,24 @@
     <div class="right_content">
         <div class="right_bg mb-15" style="width:100%">
             <div class="index_top_left" style="width:100%">
-                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>店铺设置</span></div>
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>添加分类</span></div>
                 <div class="right_panel">
 
-                    <form action="" id="usform" method="post" class="bootstrap-frm">
-                    <label>
-                        <span><font color="#ff4e00">*</font>店铺名称 :</span>
-                        <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  style="width:40%" maxlength="15"/>
-                        <a>可修改${sellerShop.surplusChangeNameCount!''}次</a>
-                    </label>
-                    <label>
-                        <span> </span>
-                        <input type="button" class="button" value="保存"  onclick="updateUserShop();"/>
-                    </label>
+                    <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;">
+                        <input type="hidden" id="parentId" name="parentId" value="${parentId!''}" >
+                        <label>
+                            <span><font color="#ff4e00">*</font>分类名称 :</span>
+                            <input type="text" id="shopCategoryName" maxlength="25"  name="name"  tabindex="1"  />
+                            <div id="shopCategoryName_error"></div>
+                        </label>
+                        <label>
+                            <span> </span>
+                            <input type="button" class="scafbtn" value="保存"  onclick="updateUserShop();"/>
+                        </label>
+                        <label>
+                            <span> </span>
+                            <a id="scaf_msg" ></a>
+                        </label>
                     </form>
 
                 </div>
@@ -107,39 +76,8 @@
     </div>
 </div>
 
+<script type="text/javascript" src="${basePath}/static/js/seller/shop/category/add.js"></script>
 
-<script src="${basePath}/static/js/seller/info.js"></script>
-<script>
-    var province=${areaList!''};
-    var provinceHiddenId="province";
-    var provinceCodeHiddenId="province_code";
-    var cityHiddenId="city";
-    var cityCodeHiddenId="city_code";
-    var areaHiddenId="area";
-    var areaCodeHiddenId="area_code";
-</script>
-<script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/shop_update.js"></script>
-<script>
-    $(function () {
-
-        $("#refreshCaptcha").bind( 'click' ,function(){
-            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
-        });
-
-        bindFileUpload();
-
-        $("#ms_city").click(function (e) {
-            SelCity(this,e);
-        });
-        $(".s_pca_wrap s").click(function (e) {
-            SelCity(document.getElementById("ms_city"),e);
-        });
-
-    });
-
-</script>
 
 
 <#include "/footer.html"/>
