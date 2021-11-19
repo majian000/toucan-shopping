@@ -78,9 +78,9 @@ toucan:
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
   datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端页面静态化
-    ip-list: 127.0.0.1:8083,127.0.0.1:8083 #多个用,分割
+    ip-list: localhost:8083,127.0.0.1:8083 #多个用,分割
   shopping-seller-web-pc: #PC端页面静态化
-    ip-list: 127.0.0.1:8101,127.0.0.1:8101 #多个用,分割
+    ip-list: localhost:8101,127.0.0.1:8101 #多个用,分割
   admin-auth:
     enabled: true
     name: toucan-shopping-admin-auth
