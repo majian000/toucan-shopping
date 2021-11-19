@@ -8,29 +8,13 @@ $(function () {
 
 function addChildCategory(id)
 {
-    layer.open({
-        type: 2,
-        title: '添加类别',
-        fix: false,
-        shadeClose: true,
-        maxmin: true,
-        area: ['500px', '260px'],
-        content: basePath+"/page/shop/category/"+id+"/add"
-    });
+    window.location.href=basePath+"/page/shop/category/"+id+"/add";
 }
 
 
 function editCategory(id)
 {
-    layer.open({
-        type: 2,
-        title: '修改类别',
-        fix: false,
-        shadeClose: true,
-        maxmin: true,
-        area: ['500px', '260px'],
-        content: basePath+"/page/shop/category/edit/"+id
-    });
+    window.location.href=basePath+"/page/shop/category/edit/"+id;
 }
 
 function deleteRow(id,name)
