@@ -30,9 +30,7 @@ function scafbtn_clicn()
         success: function (data) {
             if(data.code==1)
             {
-                parent.location.reload();
-                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-                parent.layer.close(index);
+                window.location.href=basePath+"/page/shop/category/list";
             }else{
                 $("#scaf_msg").show();
                 $("#scaf_msg").css("color","red");

@@ -30,9 +30,7 @@ function scefbtn_clicn()
         success: function (data) {
             if(data.code==1)
             {
-                parent.location.reload();
-                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
-                parent.layer.close(index);
+                window.location.href=basePath+"/page/shop/category/list";
             }else{
                 $("#scef_msg").show();
                 $("#scef_msg").css("color","red");
