@@ -70,7 +70,7 @@ public class FreeShopGeneratorController {
 
 
                 //设置basepath
-                params.put("basePath","/");
+                params.put("basePath","");
                 if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getBasePath()!=null) {
                     params.put("shoppingPcPath", toucan.getShoppingPC());
                 }else{
