@@ -214,7 +214,7 @@ public class FreeShopGeneratorController extends UIController {
     }
 
     /**
-     * 生成预览
+     * 生成最终版
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
