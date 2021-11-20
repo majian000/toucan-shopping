@@ -101,6 +101,8 @@ toucan:
       release-location: C:/toucan_shopping_htmls/web/htmls/release/
       preview-location: C:/toucan_shopping_htmls/web/htmls/preview/
       ftl-location: templates/
+  shopping-seller-web-pc: #卖家PC端配置
+    base-path: http://localhost:8101/
   user:
     head-sculpture-max-size: 2048 #头像最大长度2MB(单位KB)
     default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg

@@ -80,6 +80,13 @@ public class IndexGeneratorController {
                 //设置basepath
                 params.put("basePath","");
 
+                if(toucan.getShoppingSellerWebPC()!=null&&toucan.getShoppingSellerWebPC().getBasePath()!=null)
+                {
+                    httpServletRequest.setAttribute("shoppingSellerWebPcPath", toucan.getShoppingSellerWebPC().getBasePath());
+                }else {
+                    params.put("shoppingSellerWebPcPath", "");
+                }
+
 
                 template.process(params, fileWriterWithEncoding);
             }catch(Exception e)
