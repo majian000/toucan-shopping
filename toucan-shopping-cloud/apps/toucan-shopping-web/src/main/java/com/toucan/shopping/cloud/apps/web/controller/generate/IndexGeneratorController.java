@@ -82,7 +82,7 @@ public class IndexGeneratorController {
 
                 if(toucan.getShoppingSellerWebPC()!=null&&toucan.getShoppingSellerWebPC().getBasePath()!=null)
                 {
-                    httpServletRequest.setAttribute("shoppingSellerWebPcPath", toucan.getShoppingSellerWebPC().getBasePath());
+                    params.put("shoppingSellerWebPcPath", toucan.getShoppingSellerWebPC().getBasePath());
                 }else {
                     params.put("shoppingSellerWebPcPath", "");
                 }
