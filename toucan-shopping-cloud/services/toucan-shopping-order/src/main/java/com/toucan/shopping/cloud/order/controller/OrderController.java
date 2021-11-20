@@ -68,7 +68,7 @@ public class OrderController {
                 }
                 Order order = new Order();
                 order.setId(idGenerator.id());
-                order.setCreateDate(DateUtils.parse(dateString,DateUtils.FORMATTER_SS));
+                order.setCreateDate(DateUtils.parse(dateString,DateUtils.FORMATTER_SS.get()));
                 order.setOrderNo(orderNoService.generateOrderNo());
                 order.setUserId("-1");
                 order.setOrderAmount(0.0D);

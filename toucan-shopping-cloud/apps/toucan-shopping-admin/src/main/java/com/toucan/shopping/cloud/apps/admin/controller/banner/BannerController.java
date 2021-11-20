@@ -435,11 +435,11 @@ public class BannerController extends UIController {
                         banner = bannerVOS.get(0);
                         banner.setHttpImgPath(imageUploadService.getImageHttpPrefix() + banner.getImgPath());
                         if(banner.getStartShowDate()!=null) {
-                            banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS));
+                            banner.setStartShowDateString(DateUtils.format(banner.getStartShowDate(), DateUtils.FORMATTER_SS.get()));
                         }
 
                         if(banner.getEndShowDate()!=null) {
-                            banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS));
+                            banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
                         }
 
                         if(!CollectionUtils.isEmpty(banner.getAreas()))

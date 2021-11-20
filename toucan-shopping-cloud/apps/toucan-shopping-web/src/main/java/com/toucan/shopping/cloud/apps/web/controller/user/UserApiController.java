@@ -139,7 +139,7 @@ public class UserApiController extends BaseController {
 
             //保存生成验证码到缓存
             String code = NumberUtil.random(6);
-            userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN)+"申请了手机号码注册,验证码是"+code);
+            userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了手机号码注册,验证码是"+code);
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
             resultObjectVO = feignSmsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);

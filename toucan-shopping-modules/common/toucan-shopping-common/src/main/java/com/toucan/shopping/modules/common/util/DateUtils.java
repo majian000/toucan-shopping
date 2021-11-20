@@ -11,12 +11,43 @@ import java.util.Date;
 public final class DateUtils {
 
 
-    public static final DateFormat FORMATTER_YEAR = new SimpleDateFormat("yyyy");
-    public static final DateFormat FORMATTER_MON = new SimpleDateFormat("yyyy-MM");
-    public static final DateFormat FORMATTER_DD = new SimpleDateFormat("yyyy-MM-dd");
-    public static final DateFormat FORMATTER_DD_CN = new SimpleDateFormat("yyyy年MM月dd日");
-    public static final DateFormat FORMATTER_SS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public static final DateFormat FORMATTER_TSS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    public static final ThreadLocal<DateFormat> FORMATTER_YEAR =  new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy");
+        }
+    };
+    public static final ThreadLocal<DateFormat> FORMATTER_MON = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return  new SimpleDateFormat("yyyy-MM");
+        }
+    };
+    public static final ThreadLocal<DateFormat> FORMATTER_DD = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd");
+        }
+    };
+    public static final ThreadLocal<DateFormat> FORMATTER_DD_CN = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy年MM月dd日");
+        }
+    };
+    public static final ThreadLocal<DateFormat> FORMATTER_SS = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    };
+
+    public static final ThreadLocal<DateFormat> FORMATTER_TSS = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        }
+    };
 
 
     /**
@@ -72,5 +103,8 @@ public final class DateUtils {
     {
         return new Date();
     }
+
+
+
 
 }

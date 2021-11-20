@@ -14,7 +14,7 @@ public class Date2StringConverter implements Converter<Date,String> {
     @Override
     public String convert(Date date) {
         try {
-            return DateUtils.format(date, DateUtils.FORMATTER_SS);
+            return DateUtils.format(date, DateUtils.FORMATTER_SS.get());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

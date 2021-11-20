@@ -105,7 +105,7 @@ public class LogEmailAppender extends AppenderBase<LoggingEvent> {
                 }
                 Email email = new Email();
                 email.setEmailConfig(emailConfig);
-                email.setSubject(DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_SS) + emailConfig.getSubject());
+                email.setSubject(DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_SS.get()) + emailConfig.getSubject());
                 email.setContent(LogbackThrowableProxyHelper.convertExceptionStack2StringByThrowable(throwableProxy));
 
                 LogEmailMessage logEmailMessage = new LogEmailMessage();
