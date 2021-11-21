@@ -66,7 +66,7 @@ public class ShopPageServiceImpl implements ShopPageService {
                         SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                         if(sellerShopVO==null)
                         {
-                            return "shop/select_regist_type";
+                            return "/htmls/release/freeShop";
                         }
 
                         //设置店铺logo
