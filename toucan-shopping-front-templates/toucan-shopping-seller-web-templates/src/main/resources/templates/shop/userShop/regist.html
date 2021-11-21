@@ -1,140 +1,107 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
+
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>个人店铺注册</title>
+
+    <!-- Fav Icons -->
+    <link rel="shortcut icon" href="${basePath}/static/images/favicon.png" type="image/x-icon">
+
     <!-- StyleSheets -->
     <link rel="stylesheet" href="${basePath}/static/css/slick.min.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${basePath}/static/css/magnific-popup.min.css">
     <link rel="stylesheet" href="${basePath}/static/css/font-awesome-5.15.1.min.css" />
 
+
+    <link rel="stylesheet" href="${basePath}/static/css/userRegistShop/frozenui.css">
+    <link rel="stylesheet" href="${basePath}/static/css/userRegistShop/login.css">
+    <link rel="stylesheet" href="${basePath}/static/css/userRegistShop/base.css" />
+
     <!-- Custom css File -->
+    <link rel="stylesheet" href="${basePath}/static/css/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/style2.css" />
     <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
-    <!--[if IE 6]>
-    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        EvPNG.fix('div, ul, img, li, input, a');
-    </script>
-    <![endif]-->
-    <script type="text/javascript" src="${basePath}/static/js/jquery-1.11.1.min_044d0927.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/menu.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/select.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/lrscroll.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/iban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/fban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/f_ban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/mban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/bban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/hban.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/tban.js"></script>
-
-    <script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/seller/phone.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/seller/shop_regist.js"></script>
+    <script src="${basePath}/static/js/jquery-3.6.0.min.js"></script>
 
     <#include "/common_js.html"/>
 
-    <title>个人店铺申请</title>
+    <style>
+        a.index_shop_regist:hover{
+            color:#fff;
+        }
+    </style>
+
+
 </head>
 <body>
 
+
 <!--Begin Header Begin-->
 <div class="soubg">
-    <#include "/top.html"/>
-</div>
-
-<div class="page_nav_top">
     <div class="sou">
-        <#include "/logo_child.html"/>
-        <div class="page_nav_title" >
-            <a style="font-size:30px;" >个人店铺申请</a>
-        </div>
-    </div>
-</div>
-
-<!--Begin Login Begin-->
-<div class="i_bg bg_color">
-    <!--Begin 用户中心 Begin -->
-    <div class="m_content">
-        <div class="m_right">
-            <div >
-                <div >
-                    <div  style="width:100%;">
-                        <br>
-                        <form id="utnform" method="post">
-                            <table border="0" style="width:650px; font-size:14px; margin-top:20px;" cellspacing="0" cellpadding="0">
-                                <tr height="50" valign="top">
-                                    <td width="150">&nbsp;</td>
-                                    <td>
-                                        <span class="fl" style="font-size:24px;"></span>
-                                    </td>
-                                </tr>
-                                <tr height="50">
-                                    <td align="right"><font color="#ff4e00">*</font>&nbsp;店铺名称 &nbsp;</td>
-                                    <td>
-                                        <input type="text" id="name" name="name"   class="l_ipt_long"  maxlength="15"/>
-                                        &nbsp;&nbsp;
-                                        <a id="name_msg" style="color:#ff4e00;"></a>
-                                    </td>
-                                </tr>
-                                <tr height="50">
-                                    <td align="right"> <font color="#ff4e00">*</font>&nbsp;验证码 &nbsp;</td>
-                                    <td>
-                                        <input type="text" value="" id="utm_vcode" name="vcode" class="l_ipt" />
-                                        <span style="vertical-align: middle">
-									&nbsp;&nbsp;<img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
-								</span>
-                                        <a id="utm_vcode_msg" style="color:#ff4e00;"></a>
-                                    </td>
-                                </tr>
-                                <tr height="60">
-                                    <td>&nbsp;</td>
-                                    <td><input type="button" value="保存" class="log_btn" onclick="registUserShop();"/></td>
-                                </tr>
-                                <tr height="50">
-                                    <td align="right"></td>
-                                    <td>
-                                        <a id="tn_msg" style="color:#ff4e00;"></a>
-                                        <br>
-                                        <br>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
+        <span class="s_city_b">
+           <img src="${basePath}/static/images/icon_home.png" style="margin-bottom:6px;">
+           <a  href="${shoppingPcPath}">
+                首页
+            </a>
+        </span>
+        <!--End 所在收货地区 End-->
+        <span class="fr">
+                <span class="fl"><#include "/regist_login.html"/>&nbsp;|&nbsp;</span>
+                <span class="fr">
+                    <div class="ss_list">
+                        <a href="#">网站导航</a>
+                        <div class="ss_list_bg">
+                            <div class="s_city_t"></div>
+                            <div class="ss_list_c">
+                                <ul>
+                                    <li><a href="http://www.taobao.com">淘宝网</a></li>
+                                    <li><a href="http://www.jd.com">京东商城</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </span>
+            </span>
     </div>
-    <!--End 用户中心 End-->
 </div>
 
 
-<!--Begin Footer Begin-->
 
-<#include "/footer.html"/>
-<!--End Footer End -->
+<!-- HERO BANNER PART START -->
 
-</body>
+<div id="content">
 
-<script src="${basePath}/static/js/seller/info.js"></script>
-<script>
-    $(function () {
+    <div class="c-title">
+        <div >
+            <img src="${basePath}/static/images/userRegistShop/userRegistShopLogo.png"  alt="">
+        </div>
 
-        $("#refreshCaptcha").bind( 'click' ,function(){
-            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
-        });
+    </div>
 
-    });
+    <div class="c-login">
+        <form class="loginForm">
+            <input type="text" class="userLogo" placeholder="请输入店铺名称" lay-verify="required|userName" />
+            <input type="text"  placeholder="请输入手机号码" lay-verify="phone" />
+            <input type="text" class="codeText" placeholder="请输入验证密码" lay-verify="required" />
+            <input type="button" class="codeBtn" value="获取验证码" />
+            <input type="button" value="个人店铺申请" id="regBtn" />
+        </form>
+    </div>
 
-</script>
+</div>
+<!-- 内容部分结束 -->
+
+<#include "/public_footer.html"/>
+
+<script src="${basePath}/static/js/main.js"></script>
 
 
-</html>
+</body></html>
