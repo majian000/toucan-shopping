@@ -83,7 +83,7 @@ public class ShopPageController extends BaseController {
                         SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                         if(sellerShopVO==null)
                         {
-                            return "shop/select_regist_type";
+                            return "freeShop";
                         }
                     }
 
@@ -130,7 +130,7 @@ public class ShopPageController extends BaseController {
                         SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                         if(sellerShopVO==null)
                         {
-                            return "shop/select_regist_type";
+                            return "freeShop";
                         }
 
                         if(StringUtils.isNotEmpty(sellerShopVO.getLogo()))
