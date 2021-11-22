@@ -8,7 +8,7 @@
  */
 var checkInput = {
     shopName: [
-        /^{2,15}$/, '店铺名必须由2-15位的组成'
+        /^[\u0391-\uFFE5a-zA-Z0-9]{2,15}$/, '必须由2-15位的组成,不能包含特殊符号'
     ],
     phone: [
         /^1(3|4|5|6|7|8|9)\d{9}$/, '请输入正确的电话号码'
@@ -20,7 +20,7 @@ var checkInput = {
             return true;
         }
     }
-}
+};
 
 //定时器id
 var timer = null;
