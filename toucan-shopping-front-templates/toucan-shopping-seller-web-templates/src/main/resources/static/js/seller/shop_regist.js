@@ -1,4 +1,5 @@
 
+var g_countdownNum = 60;
 
 
 /**
@@ -192,26 +193,18 @@ function send_verify_code(mobilePhone)
 
 function getvcode()
 {
+    $("#verifyCode").removeAttr("lay-verify");
+    if(!checkInputFunction($('#regBtn'))){
+        return false;
+    }
+
+    $("#verifyCode").attr("lay-verify","required");
     $.message({
         message: "验证码为1234",
         type: 'error'
     });
-    $("#regist_msg_c").hide();
-    $("#regist_msg").text("");
-    var mobilePhoneValue=$("#registShopPhone").val();
 
-    if(mobilePhoneValue == ''){
-        $("#regist_msg_c").show();
-        $("#regist_msg").text("请输入手机号");
-        $("#regist_msg").css("color","red");
-        return ;
-    }else if(mobilePhoneValue.length !=11||!validPhone(mobilePhoneValue)){
-        $("#regist_msg_c").show();
-        $("#regist_msg").text("请输入合法手机号");
-        $("#regist_msg").css("color","red");
-        return ;
-    }
-    send_verify_code(mobilePhoneValue);
+    send_verify_code($("#registShopPhone").val());
 
 }
 
