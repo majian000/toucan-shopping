@@ -50,10 +50,8 @@ function send_verify_code(mobilePhone)
     $.post(basePath+"/api/shop/sendRegistVerifyCode",{mobilePhone:mobilePhone},function(result){
         if(result.code<=0)
         {
-            $.message({
-                message:result.msg,
-                type: 'error'
-            });
+            $("#tn_msg").show();
+            $("#tn_msg").text(result.msg);
         }else{
             countdown();
         }
