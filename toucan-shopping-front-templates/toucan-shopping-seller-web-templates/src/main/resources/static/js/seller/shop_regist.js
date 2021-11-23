@@ -167,6 +167,73 @@ function registUserShop()
 
 }
 
+
+
+
+
+
+function send_verify_code(mobilePhone)
+{
+    $.post(basePath+"/api/shop/sendRegistVerifyCode",{mobilePhone:mobilePhone},function(result){
+        if(result.code<=0)
+        {
+            $("#regist_msg_c").show();
+            $("#regist_msg").text(result.msg);
+            $("#regist_msg").css("color","red");
+        }else{
+            $("#regist_msg_c").hide();
+            $("#regist_msg").text("");
+            countdown();
+        }
+    });
+}
+
+
+
+function getvcode()
+{
+    $.message({
+        message: "验证码为1234",
+        type: 'error'
+    });
+    $("#regist_msg_c").hide();
+    $("#regist_msg").text("");
+    var mobilePhoneValue=$("#registShopPhone").val();
+
+    if(mobilePhoneValue == ''){
+        $("#regist_msg_c").show();
+        $("#regist_msg").text("请输入手机号");
+        $("#regist_msg").css("color","red");
+        return ;
+    }else if(mobilePhoneValue.length !=11||!validPhone(mobilePhoneValue)){
+        $("#regist_msg_c").show();
+        $("#regist_msg").text("请输入合法手机号");
+        $("#regist_msg").css("color","red");
+        return ;
+    }
+    send_verify_code(mobilePhoneValue);
+
+}
+
+
+function countdown() {
+    if(g_countdownNum == 0) {
+        $("#get_vcode").attr("onclick","getvcode();");
+        $("#get_vcode").text('获取验证码');
+        g_countdownNum = 60;
+        return;
+    } else {
+        $("#get_vcode").removeAttr("onclick");
+        $("#get_vcode").text(g_countdownNum + '秒后重新发送');
+        g_countdownNum--;
+    }
+
+    setTimeout(function () {
+        countdown();
+    }, 1000);
+}
+
+
 $(function () {
     /**
      * 配置验证须知
@@ -184,5 +251,8 @@ $(function () {
         //下面书写验证成功后执行的内容
         registUserShop();
     });
+
+
+    $("#get_vcode").attr("onclick","getvcode();");
 
 });

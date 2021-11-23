@@ -89,9 +89,9 @@
     <div class="c-login">
         <form class="loginForm">
             <input type="text" class="registShopLogo" name="name" placeholder="请输入店铺名称" lay-verify="required|shopName" />
-            <input type="text"  placeholder="请输入手机号码" lay-verify="phone" />
+            <input type="text"  id="registShopPhone" placeholder="请输入手机号码" lay-verify="phone" />
             <input type="text" class="codeText" placeholder="请输入验证密码" lay-verify="required" />
-            <input type="button" class="codeBtn" value="获取验证码" style="background-color: #f5753d;" />
+            <input type="button" class="codeBtn" id="get_vcode" value="获取验证码" style="background-color: #f5753d;" />
             <input type="button" value="个人店铺申请" id="regBtn" />
         </form>
     </div>

@@ -115,6 +115,7 @@ public class ShopApiController extends BaseController {
      * 发送注册验证码
      * @return
      */
+    @UserAuth
     @RequestMapping("/sendRegistVerifyCode")
     @ResponseBody
     public ResultObjectVO sendRegistVerifyCode(String mobilePhone)
