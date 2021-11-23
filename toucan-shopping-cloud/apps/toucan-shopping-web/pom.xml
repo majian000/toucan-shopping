@@ -110,6 +110,10 @@
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-sms</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.toucan.shopping.modules.stock</groupId>
             <artifactId>toucan-shopping-stock-entity-vo</artifactId>
         </dependency>

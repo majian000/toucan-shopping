@@ -8,7 +8,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
+import com.toucan.shopping.modules.sms.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.redis.UserCenterSendRegistSmsRedisKey;
 import com.toucan.shopping.modules.user.service.UserService;

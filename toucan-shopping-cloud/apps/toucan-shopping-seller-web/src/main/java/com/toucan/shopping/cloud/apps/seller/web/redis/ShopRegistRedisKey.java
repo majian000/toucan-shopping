@@ -25,4 +25,10 @@ public class ShopRegistRedisKey {
         return "TOUCAN_SHOPPING_SELLER_WEB:SHOP:LOCK:SHOP_EDIT_"+userMainId+"_LOCK";
     }
 
+
+    public static String getVerifyCodeKey(String phone)
+    {
+        return "TOUCAN_SHOPPING_SELLER_WEB:SHOP:SHOP_REGIST_VERIFY_CODE_"+phone;
+    }
+
 }

@@ -14,7 +14,6 @@ import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.user.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
