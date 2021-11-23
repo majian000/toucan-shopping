@@ -11,21 +11,8 @@ var timer = null;
 function registUserShop()
 {
     var nameValue=$("#name").val();
-    var vcodeValue=$("#utm_vcode").val();
+    var vcodeValue=$("#verifyCode").val();
 
-    $("#name_msg").text(" ");
-    $("#utm_vcode_msg").text(" ");
-
-    if(nameValue=="")
-    {
-        $("#name_msg").text("请输入店铺名称");
-        return ;
-    }
-    if(vcodeValue=="")
-    {
-        $("#utm_vcode_msg").text("请输入验证码");
-        return ;
-    }
     $.ajax({
         type: "POST",
         url: basePath+'/api/user/shop/regist',
@@ -38,14 +25,16 @@ function registUserShop()
                 window.location.href=basePath+data.data;
             }else  if(data.code==0)
             {
+                $("#tn_msg").show();
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/page/shop/regist_success";
+                window.location.href=basePath+"/index";
             }
         },
         error: function (result) {
-            $("#tn_msg").text("请求失败,请重试");
+            $("#tn_msg").show();
+            $("#tn_msg").text("申请失败,请重试");
         }
     });
 
@@ -81,10 +70,10 @@ function getvcode()
     }
 
     $("#verifyCode").attr("lay-verify","required");
-    $.message({
-        message: "验证码为1234",
-        type: 'error'
-    });
+
+    //todo:临时代码
+    $("#tn_msg").show();
+    $("#tn_msg").text("验证码为1234");
 
     send_verify_code($("#registShopPhone").val());
 

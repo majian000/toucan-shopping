@@ -33,10 +33,14 @@
     <#include "/common_js.html"/>
 
     <style>
-        a.index_shop_regist:hover{
-            color:#fff;
+        .reigst_warn_icon{
+            width:16px;
+            height:17px;
+            overflow:hidden;
+            background:url(../../../static/images/login-icons.png) -104px -24px no-repeat;
         }
     </style>
+
 
 
 </head>
@@ -88,12 +92,12 @@
 
     <div class="c-login">
         <form class="loginForm">
-            <input type="text" class="registShopLogo" name="name" placeholder="请输入店铺名称" lay-verify="required|shopName" />
+            <input type="text" class="registShopLogo"  id="name" placeholder="请输入店铺名称" lay-verify="required|shopName" />
             <input type="text"  id="registShopPhone" placeholder="请输入手机号码" lay-verify="phone" />
             <input type="text" class="codeText" id="verifyCode" placeholder="请输入验证密码" lay-verify="required" />
             <input type="button" class="codeBtn" id="get_vcode" value="获取验证码" style="background-color: #f5753d;" />
             <input type="button" value="个人店铺申请" id="regBtn" />
-            <div id="tn_msg"></div>
+            <div id="tn_msg" class="reigst_warn_icon" style="display: none"></div>
         </form>
     </div>
 
