@@ -85,7 +85,8 @@ public class SmsController {
             return resultObjectVO;
         }
 
-        if (userSmsVO.getType()==null||(userSmsVO.getType().intValue()!= SmsTypeConstant.USER_REGIST_TYPE&&userSmsVO.getType().intValue()!=SmsTypeConstant.USER_LOGIN_TYPE)) {
+        if (userSmsVO.getType()==null||
+                (userSmsVO.getType().intValue()!= SmsTypeConstant.USER_REGIST_TYPE&&userSmsVO.getType().intValue()!=SmsTypeConstant.USER_LOGIN_TYPE&&userSmsVO.getType().intValue()!=SmsTypeConstant.SHOP_REGIST_TYPE)) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_SMS_TYPE);
             resultObjectVO.setMsg("短信发送失败,请选择发送类型");
             return resultObjectVO;
@@ -100,7 +101,7 @@ public class SmsController {
                 return resultObjectVO;
             }
 
-            int a = 1/0;
+//            int a = 1/0;
 
             //调用第三方短信接口
             logger.info("{} send messsage {}",userSmsVO.getMobilePhone(),userSmsVO.getMsg());

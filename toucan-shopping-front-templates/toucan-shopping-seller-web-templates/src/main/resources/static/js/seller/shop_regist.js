@@ -178,12 +178,11 @@ function send_verify_code(mobilePhone)
     $.post(basePath+"/api/shop/sendRegistVerifyCode",{mobilePhone:mobilePhone},function(result){
         if(result.code<=0)
         {
-            $("#regist_msg_c").show();
-            $("#regist_msg").text(result.msg);
-            $("#regist_msg").css("color","red");
+            $.message({
+                message:result.msg,
+                type: 'error'
+            });
         }else{
-            $("#regist_msg_c").hide();
-            $("#regist_msg").text("");
             countdown();
         }
     });
