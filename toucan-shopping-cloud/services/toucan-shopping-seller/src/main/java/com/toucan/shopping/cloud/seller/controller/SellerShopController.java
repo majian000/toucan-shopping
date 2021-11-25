@@ -69,19 +69,19 @@ public class SellerShopController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("注册失败,没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            resultObjectVO.setMsg("注册失败,没有找到应用编码");
             return resultObjectVO;
         }
         SellerShopVO sellerShopVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShopVO.class);
         if(StringUtils.isEmpty(sellerShopVO.getName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,店铺名称不能为空");
+            resultObjectVO.setMsg("注册失败,店铺名称不能为空");
             return resultObjectVO;
         }
         //去空格
@@ -89,7 +89,7 @@ public class SellerShopController {
         if(sellerShopVO.getType()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,类型不能为空");
+            resultObjectVO.setMsg("注册失败,类型不能为空");
             return resultObjectVO;
         }
 
@@ -99,7 +99,7 @@ public class SellerShopController {
             boolean lockStatus = skylarkLock.lock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("注册失败,请稍后重试");
                 return resultObjectVO;
             }
             //查询关联店铺
@@ -116,7 +116,7 @@ public class SellerShopController {
                     //释放锁
                     skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,该用户已有店铺");
+                    resultObjectVO.setMsg("注册失败,该用户已有店铺");
                     return resultObjectVO;
                 }
 
@@ -130,7 +130,7 @@ public class SellerShopController {
                     //释放锁
                     skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,该店铺已注册");
+                    resultObjectVO.setMsg("注册失败,该店铺已注册");
                     return resultObjectVO;
                 }
 
@@ -157,14 +157,14 @@ public class SellerShopController {
             {
                 logger.warn("保存商户店铺失败 requestJson{} id{}",requestJsonVO.getEntityJson(),sellerShopVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("注册失败,请稍后重试");
             }
             resultObjectVO.setData(sellerShopVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("注册失败,请稍后重试");
         }finally{
             skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
         }

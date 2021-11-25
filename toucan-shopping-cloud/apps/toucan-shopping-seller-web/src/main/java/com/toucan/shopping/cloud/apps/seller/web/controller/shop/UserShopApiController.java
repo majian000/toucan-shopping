@@ -17,6 +17,7 @@ import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerShopRegistVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -66,7 +67,7 @@ public class UserShopApiController extends BaseController {
     @UserAuth
     @RequestMapping(value="/regist",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO regist(HttpServletRequest request,@RequestBody SellerShopVO sellerShopVO)
+    public ResultObjectVO regist(HttpServletRequest request,@RequestBody SellerShopRegistVO sellerShopVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -79,47 +80,33 @@ public class UserShopApiController extends BaseController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            String cookie = request.getHeader("Cookie");
-            if(StringUtils.isEmpty(cookie))
-            {
-                resultObjectVO.setMsg("注册失败,请重新刷新验证码");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
-            if(StringUtils.isEmpty(ClientVCodeId))
-            {
-                resultObjectVO.setMsg("注册失败,验证码异常");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),ClientVCodeId);
-            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
-            if(vCodeObject==null)
-            {
-                resultObjectVO.setMsg("注册失败,验证码过期请刷新");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            if(!StringUtils.equals(sellerShopVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
-            {
-                resultObjectVO.setMsg("注册失败,验证码输入有误");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-
-            //删除缓存中验证码
-            toucanStringRedisService.delete(vcodeRedisKey);
-
 
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             boolean lockStatus = redisLock.lock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
+                resultObjectVO.setMsg("注册失败,请稍后重试");
                 return resultObjectVO;
             }
 
+
+            //判断验证码
+            Object vcodeObject = toucanStringRedisService.get(ShopRegistRedisKey.getVerifyCodeKey(sellerShopVO.getMobilePhone()));
+            if (vcodeObject == null) {
+                redisLock.unLock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("注册失败,请发送验证码");
+                return resultObjectVO;
+            }
+            //TODO:临时开放注册
+            vcodeObject = "1234";
+            if (!sellerShopVO.getVcode().equals(String.valueOf(vcodeObject))) {
+                //释放注册锁
+                redisLock.unLock(ShopRegistRedisKey.getRegistLockKey(userMainId), userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("注册失败,验证码输入有误");
+                return resultObjectVO;
+            }
 
             UserVO userVO = new UserVO();
             userVO.setUserMainId(Long.parseLong(userMainId));
@@ -143,7 +130,7 @@ public class UserShopApiController extends BaseController {
                     }
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请先实名认证");
+                    resultObjectVO.setMsg("注册失败,请先实名认证");
                 }
             }
         }catch(Exception e)

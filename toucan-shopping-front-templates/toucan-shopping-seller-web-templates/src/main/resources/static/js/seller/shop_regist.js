@@ -12,12 +12,13 @@ function registUserShop()
 {
     var nameValue=$("#name").val();
     var vcodeValue=$("#verifyCode").val();
+    var mobilePhoneValue = $("#registShopPhone").val();
 
     $.ajax({
         type: "POST",
         url: basePath+'/api/user/shop/regist',
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify({"name":nameValue,"vcode":vcodeValue}),
+        data:  JSON.stringify({"name":nameValue,"vcode":vcodeValue,"mobilePhone":mobilePhoneValue}),
         dataType: "json",
         success: function (data) {
             if(data.code==401)
@@ -29,7 +30,7 @@ function registUserShop()
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/index";
+                window.location.href=basePath+"/page/shop/info";
             }
         },
         error: function (result) {
