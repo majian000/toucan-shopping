@@ -90,12 +90,13 @@
                 )ds
                 group by ds.admin_id
             )ds2 on tsa.admin_id = ds2.admin_id
+
+          order by create_date desc
         )tu
         <where>
             1=1 and tu.delete_status = 0 and tu.appNames is not null
             <include refid="queryListPageWhere" />
         </where>
-        order by tu.id desc
         limit #{start},#{limit}
     </select>
 
