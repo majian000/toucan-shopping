@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/common/toucan-form-validate.css" />
 </head>
 <body>
 
@@ -71,7 +72,7 @@
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>店铺名称 :</span>
-                            <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  style="width:40%" maxlength="15"/>
+                            <input type="text" id="name" name="name"  value="${sellerShop.name!''}"  style="width:40%" maxlength="15" lay-verify="required|shopName" />
                             <a>可修改${sellerShop.surplusChangeNameCount!''}次</a>
                         </label>
                         <label>
@@ -94,13 +95,15 @@
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>验证码</span>
-                            <input type="text" value="" id="utm_vcode" name="vcode"  style="width:20%" />
+                            <input type="text" value="" id="utm_vcode" name="vcode"  style="width:20%" lay-verify="required"  />
                             <img id="refreshCaptcha" style="width:100px;height:40px;"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新">
                         </label>
                         </label>
                         <div style="width:100%;text-align:center;">
-                            <input type="button" class="button" value="保存"  onclick="updateUserShop();"/>
+                            <input type="button" class="button" value="保存" id="updateUserShopBtn"  onclick="updateUserShop();"/>
                         </div>
+                        <br>
+                        <div id="tn_msg"  style="display: none;width:100%;height:25px;color:red;text-align:center;"></div>
                     </form>
 
                 </div>
@@ -122,6 +125,7 @@
 </script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/citySet.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/selectProviderCityArea/Popt.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/shop_update.js"></script>
 <script>
     $(function () {

@@ -1,4 +1,8 @@
 
+//定时器id
+var toucan_timer = null;
+var toucan_wrn_type = 1; //1:默认 2:messagebox
+
 /**
  * 验证方式为两种
  * 1、数组类型：要求length=1，key：正则表达式，value：提示内容
@@ -25,40 +29,49 @@ var checkInput = {
 //错误提示框和成功提示框
 var showTip = {
     fall: function(value) {
-        //清楚定时器
-        clearTimeout(timer);
-        //移除提示框
-        $('[name="checkInputTip"]').remove();
-        //设置提示框内容
-        var tip = '<div name="checkInputTip" class="checkInputFallTip">' +
-            '<span>' + value + '</span>' +
-            '</div>';
-        //添加提示框
-        $('body').append(tip);
-        //淡入提示框并震动
-        $('[name="checkInputTip"]').fadeIn(20, function() {
-            $('[name="checkInputTip"]').addClass('checkInputTipFallHover');
-        });;
-        timer = setTimeout(cleanTip, 2000);
+        if(toucan_wrn_type==1) {
+            //清楚定时器
+            clearTimeout(toucan_timer);
+            //移除提示框
+            $('[name="checkInputTip"]').remove();
+            //设置提示框内容
+            var tip = '<div name="checkInputTip" class="checkInputFallTip">' +
+                '<span>' + value + '</span>' +
+                '</div>';
+            //添加提示框
+            $('body').append(tip);
+            //淡入提示框并震动
+            $('[name="checkInputTip"]').fadeIn(20, function () {
+                $('[name="checkInputTip"]').addClass('checkInputTipFallHover');
+            });
+            toucan_timer = setTimeout(cleanTip, 2000);
+        }else{
+            $.message({
+                message: value,
+                type: 'error'
+            });
+        }
     },
     success: function(value) {
-        //清楚定时器
-        clearTimeout(timer);
-        //移除提示框
-        $('[name="checkInputTip"]').remove();
-        //设置提示框内容
-        var tip = '<div name="checkInputTip" class="checkInputSuccessTip">' +
-            '<span>' + value + '</span>' +
-            '</div>';
-        //添加提示框(提示框默认状态为隐藏)
-        $('body').append(tip);
-        //淡入提示框并震动
-        $('[name="checkInputTip"]').fadeIn(20, function() {
-            $('[name="checkInputTip"]').addClass('checkInputSuccessTip');
-        });
-        timer = setTimeout(cleanTip, 2000);
+        if(toucan_wrn_type==1) {
+            //清楚定时器
+            clearTimeout(toucan_timer);
+            //移除提示框
+            $('[name="checkInputTip"]').remove();
+            //设置提示框内容
+            var tip = '<div name="checkInputTip" class="checkInputSuccessTip">' +
+                '<span>' + value + '</span>' +
+                '</div>';
+            //添加提示框(提示框默认状态为隐藏)
+            $('body').append(tip);
+            //淡入提示框并震动
+            $('[name="checkInputTip"]').fadeIn(20, function () {
+                $('[name="checkInputTip"]').addClass('checkInputSuccessTip');
+            });
+            toucan_timer = setTimeout(cleanTip, 2000);
+        }
     }
-}
+};
 
 //清除提示
 function cleanTip() {
@@ -70,7 +83,11 @@ function cleanTip() {
 
 
 //验证函数
-function checkInputFunction(el) {
+function checkInputFunction(el,wt) {
+    if(wt!=null)
+    {
+        toucan_wrn_type = wt;
+    }
     //定义i (当i=1时则验证失败，i=0验证通过)
     var i = 0;
     //通过传入的el对象获取其为form元素的祖先 并查找所有input对象

@@ -35,6 +35,9 @@ function bindFileUpload()
 
 function updateUserShop()
 {
+    if(!checkInputFunction($('#updateUserShopBtn'),2)){
+        return false;
+    }
 
     $('#usform').ajaxSubmit({
         url: basePath+'/api/user/shop/edit',
@@ -46,6 +49,7 @@ function updateUserShop()
             }else  if(data.code==0)
             {
                 $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+                $("#tn_msg").show();
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {

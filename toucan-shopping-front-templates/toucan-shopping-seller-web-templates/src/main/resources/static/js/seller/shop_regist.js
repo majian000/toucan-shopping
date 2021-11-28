@@ -2,8 +2,6 @@
 var g_countdownNum = 60;
 
 
-//定时器id
-var timer = null;
 
 
 
