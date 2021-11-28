@@ -4,20 +4,16 @@ package com.toucan.shopping.cloud.seller.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.constant.ShopConstant;
-import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.redis.SellerShopKey;
 import com.toucan.shopping.modules.seller.service.SellerLoginHistoryService;
 import com.toucan.shopping.modules.seller.service.SellerShopService;
-import com.toucan.shopping.modules.seller.vo.SellerLoginHistoryVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
@@ -223,12 +219,8 @@ public class SellerShopController {
                 SellerShopVO sellerShopVO = new SellerShopVO();
                 BeanUtils.copyProperties(sellerShopVO,sellerShop);
 
-                try {
-                    toucanStringRedisService.set(SellerShopKey.getShopCacheKey(String.valueOf(querySellerShop.getUserMainId())), JSONObject.toJSONString(sellerShopVO));
-                }catch(Exception e)
-                {
-                    logger.warn(e.getMessage(),e);
-                }
+                flushRedisCache(sellerShopVO);
+
                 resultObjectVO.setData(sellerShopVO);
             }
 
@@ -298,7 +290,7 @@ public class SellerShopController {
      * 刷新到缓存
      * @param sellerShop
      */
-    private void flushCache(SellerShop sellerShop)
+    private void flushRedisCache(SellerShop sellerShop)
     {
         try{
             if(toucanStringRedisService.get(SellerShopKey.getShopCacheKey(String.valueOf(sellerShop.getUserMainId())))!=null) {
@@ -311,6 +303,49 @@ public class SellerShopController {
             logger.warn(e.getMessage(),e);
         }
     }
+
+
+    /**
+     * 刷新缓存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/flushCache",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            SellerShop querySellerShop = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShop.class);
+
+            if(StringUtils.isEmpty(requestJsonVO.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            if(querySellerShop.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户ID");
+                return resultObjectVO;
+            }
+
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            if(!CollectionUtils.isEmpty(sellerShops)) {
+                SellerShop sellerShop = sellerShops.get(0);
+                SellerShopVO sellerShopVO = new SellerShopVO();
+                BeanUtils.copyProperties(sellerShopVO,sellerShop);
+                resultObjectVO.setData(sellerShopVO);
+
+                flushRedisCache(sellerShopVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
     /**
      * 更新
@@ -376,7 +411,7 @@ public class SellerShopController {
                 return resultObjectVO;
             }
 
-            flushCache(sellerShop);
+            flushRedisCache(sellerShop);
 
         }catch(Exception e)
         {
@@ -440,7 +475,7 @@ public class SellerShopController {
                 return resultObjectVO;
             }
 
-            flushCache(sellerShop);
+            flushRedisCache(sellerShop);
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -557,9 +592,9 @@ public class SellerShopController {
                 return resultObjectVO;
             }
             sellerShops = sellerShopService.findEnabledByUserMainId(sellerShop.getUserMainId());
-            if(CollectionUtils.isEmpty(sellerShops))
+            if(!CollectionUtils.isEmpty(sellerShops))
             {
-                flushCache(sellerShops.get(0));
+                flushRedisCache(sellerShops.get(0));
             }
         }catch(Exception e)
         {

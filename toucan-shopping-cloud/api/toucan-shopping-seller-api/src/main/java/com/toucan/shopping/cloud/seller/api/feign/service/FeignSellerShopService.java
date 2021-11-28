@@ -38,6 +38,16 @@ public interface FeignSellerShopService {
     ResultObjectVO findByUser(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+
+
+    /**
+     * 刷新缓存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/flushCache",produces = "application/json;charset=UTF-8")
+    ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 启用禁用店铺
      * @param signHeader

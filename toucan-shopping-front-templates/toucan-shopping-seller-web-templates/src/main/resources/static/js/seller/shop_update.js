@@ -41,7 +41,8 @@ function updateUserShop()
 
     $('#usform').ajaxSubmit({
         url: basePath+'/api/user/shop/edit',
-        type:'POST',
+        dataType:"json",
+        contentType:"application/json;charset=utf-8",
         success: function (data) {
             if(data.code==401)
             {
@@ -53,7 +54,7 @@ function updateUserShop()
                 $("#tn_msg").text(data.msg);
             }else if(data.code==1)
             {
-                window.location.href=basePath+"/index";
+                window.location.href=basePath+"/page/shop/edit";
             }
         }
     });

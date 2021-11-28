@@ -157,7 +157,7 @@ public class UserShopApiController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value="/edit")
     @ResponseBody
-    public ResultObjectVO edit(HttpServletRequest request, @RequestParam MultipartFile logoFile, SellerShopVO sellerShopVO)
+    public ResultObjectVO edit(HttpServletRequest request, @RequestParam(value="logoFile",required=false) MultipartFile logoFile, SellerShopVO sellerShopVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";

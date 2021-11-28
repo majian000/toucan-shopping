@@ -6,6 +6,7 @@ import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.queue.SellerLoginHistoryQueue;
 import com.toucan.shopping.cloud.apps.seller.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.redis.VerifyCodeRedisKey;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -72,6 +73,8 @@ public class UserApiController extends BaseController {
     @Autowired
     private SellerLoginHistoryQueue sellerLoginHistoryQueue;
 
+    @Autowired
+    private FeignSellerShopService feignSellerShopService;
 
 
     /**
@@ -193,6 +196,17 @@ public class UserApiController extends BaseController {
 
                     //删除登录验证码
                     toucanStringRedisService.delete(vcodeRedisKey);
+
+                    try{
+                        //刷新店铺缓存
+                        UserVO queryUserVO = new UserVO();
+                        queryUserVO.setUserMainId(userLoginVO.getUserMainId());
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
+                        feignSellerShopService.flushCache(requestJsonVO);
+                    }catch(Exception e)
+                    {
+                        logger.warn(e.getMessage(),e);
+                    }
 
                     try {
                         //保存登录信息
