@@ -50,11 +50,6 @@ public class SellerShopVO extends SellerShop {
     private String httpDefaultLogo;
 
 
-    /**
-     * logo文件
-     */
-    private MultipartFile logoFile;
-
 
     private String createAdminName; //创建人姓名
     private String updateAdminName; //修改人姓名

@@ -28,7 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -152,17 +154,17 @@ public class UserShopApiController extends BaseController {
      * 个人店铺编辑
      * @return
      */
-    @UserAuth
-    @RequestMapping(value="/edit",produces = "application/json;charset=UTF-8")
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
+    @RequestMapping(value="/edit")
     @ResponseBody
-    public ResultObjectVO edit(HttpServletRequest request,SellerShopVO sellerShopVO)
+    public ResultObjectVO edit(HttpServletRequest request, @RequestParam MultipartFile logoFile, SellerShopVO sellerShopVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
         try {
 
-            if(sellerShopVO.getLogoFile()!=null) {
-                if (!ImageUtils.isImage(sellerShopVO.getLogoFile().getOriginalFilename())) {
+            if(logoFile!=null) {
+                if (!ImageUtils.isImage(logoFile.getOriginalFilename())) {
                     resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
                     resultObjectVO.setMsg("请求失败,请上传图片格式(.jpg|.jpeg|.png|.gif|bmp)");
                     return resultObjectVO;
@@ -233,13 +235,13 @@ public class UserShopApiController extends BaseController {
             if(resultObjectVO.isSuccess())
             {
 
-                if(sellerShopVO.getLogoFile()!=null) {
+                if(logoFile!=null) {
                     //LOGO上传
-                    String logoImgExt = ImageUtils.getImageExt(sellerShopVO.getLogoFile().getOriginalFilename());
+                    String logoImgExt = ImageUtils.getImageExt(logoFile.getOriginalFilename());
                     if (logoImgExt.indexOf(".") != -1) {
                         logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
                     }
-                    String logoImgFilePath = imageUploadService.uploadFile(sellerShopVO.getLogoFile().getBytes(), logoImgExt);
+                    String logoImgFilePath = imageUploadService.uploadFile(logoFile.getBytes(), logoImgExt);
                     sellerShopVO.setLogo(logoImgFilePath);
                 }
 
