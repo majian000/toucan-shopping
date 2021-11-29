@@ -65,7 +65,6 @@ public class IndexGeneratorController {
                 direFile.mkdirs();
             }
             String outFilePath = outDirePath+templateAndStatisFileName;
-            File outFile = new File(outFilePath);
             FileWriterWithEncoding fileWriterWithEncoding = null;
             try {
                 fileWriterWithEncoding = new FileWriterWithEncoding(outFilePath, "UTF-8");

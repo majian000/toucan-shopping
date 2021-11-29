@@ -98,6 +98,8 @@ public class IndexPageController {
 
         return "/index";
     }
+
+
     @RequestMapping("/")
     public String defaultIndex(HttpServletRequest request)
     {

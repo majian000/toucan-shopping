@@ -49,6 +49,7 @@ public class UserPageController extends BaseController {
     private ImageUploadService imageUploadService;
 
 
+
     @RequestMapping("/regist")
     public String regist()
     {
