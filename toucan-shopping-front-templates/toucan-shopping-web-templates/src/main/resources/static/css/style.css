@@ -1113,7 +1113,23 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:127px; height:38px; line-height:38px\9; overflow:hidden; background-color:#FFF; color:#888888; font-size:14px; font-family:"Microsoft YaHei"; padding:0 10px; border:1px solid #cccccc;
 }
 .log_btn{
-	width:318px; height:42px; line-height:42px\9; overflow:hidden; background:url(../images/btn_log.gif) repeat-x center top; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; padding:0; border:0; cursor:pointer; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;
+	background: #f40;
+	border-color: #f40;
+	font-size: 16px;
+	background-color: #f40;
+	border: 1px solid #ff9000;
+	border-radius: 3px;
+	font-size: 20px;
+	height: 42px;
+	line-height: 42px;
+	outline: none;
+	color: #fff;
+	width: 100%;
+	cursor: pointer;
+}
+.log_btn:hover{
+	background: #db3a00;
+	border-color: #db3a00;
 }
 .send_vcode_btn{
 	width:100px; height:35px; line-height:35px\9; overflow:hidden; background:url(../images/vcode_btn.gif) repeat-x center top; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; padding:0; border:0; cursor:pointer; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;
