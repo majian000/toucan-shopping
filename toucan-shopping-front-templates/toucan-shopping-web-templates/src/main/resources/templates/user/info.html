@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
     <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
     <!--[if IE 6]>
     <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
@@ -12,12 +13,12 @@
     </script>
     <![endif]-->
 
-    <#include "/common_js.html"/>
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/product/product_scroll.js"></script>
-
-
     <#include "/common_js.html"/>
+    <script type="text/javascript" src="${basePath}/static/js/product/product_scroll.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/n_nav.js"></script>
+
+
 
     <#include "/title.html"/>
 </head>
@@ -32,1106 +33,351 @@
     <#include "/buy_car.html"/>
 
 </div>
-<!--End Header End-->
-<div class="i_bg bg_color">
-    <!--Begin 用户中心 Begin -->
-    <div class="m_content">
-        <div class="m_left">
-            <#include "/user/info_left.html"/>
-        </div>
-        <div class="m_right_user_info">
-            <div class="m_des">
-                <table border="0" style="width:870px; line-height:22px;" cellspacing="0" cellpadding="0">
-                    <tr valign="top">
-                        <td width="115">
-                            <a class="userLogoTipsOuter">
-                                <img src="${userVO.httpHeadSculpture!''}" id="pic" width="90" height="90" />
-                                <span class="userLogoTips" id="logoTips">点击上传</span>
-                            </a>
-                            <div id="file_ipt_p">
-                                <input id="upload" name="file" accept="image/*" type="file" style="display: none" />
-                            </div>
-                        </td>
-                        <td>
-                            <div class="m_user">
-                                ${userVO.nickName!''}
-                            </div>
-                            <div style="margin-top:8px;">
-                                <#if userVO.isVip?? && userVO.isVip==1 >
-                                <a href="#" target="_blank" class="icon-plus-icon" style="margin-top: 2px;float:left"></a><a>犀鸟plus会员</a>
-                                <#elseif userVO.isVip?? && userVO.isVip==0 >
-                                <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
-                                <#else>
-                                <a href="#" target="_blank" class="icon-plus-dropdown" style="float:left"></a><a>开通犀鸟plus会员</a>
-                            </#if>
-            </div>
-            <p class="userInfoPersonalizedSignature">
-                个性签名:${userVO.personalizedSignature!''}
-            </p>
-            </td>
-            </tr>
-            </table>
-        </div>
 
-    </div>
-
-    <div class="m_right_user_order">
-
-        <div class="mem_t">&nbsp;&nbsp;我的订单</div>
-        <table border="0" class="mon_tab" style="width:870px; margin-bottom:20px;" cellspacing="0" cellpadding="0">
-            <tr>
-                <td >
-                    <div class="userAlarm">
-                        <a href="#">
-                            <div class="userPayImg"></div>
-                        </a>
-
-                        待付款 <a href="#" style="color:red;font-size: 15px;">99</a>
-
-                    </div>
-                </td>
-                <td >
-                    <div class="userAlarm">
-                        <a href="#">
-                            <div class="userReceiveGoodsTrainImg"></div>
-                        </a>
-                        待收货 <a href="#" style="color:red;font-size: 15px;">99</a>
-                    </div>
-                </td>
-                <td >
-                    <div class="userAlarm">
-                        <a href="#">
-                            <div class="userAppraiseImg"></div>
-                        </a>
-                        待评价 <a href="#" style="color:red;font-size: 15px;">99</a>
-                    </div>
-                </td>
-                <td >
-                    <div class="userAlarm">
-                        <a href="#">
-                            <div class="userRefundImg"></div>
-                        </a>
-                        退换/售后 <a href="#" style="color:red;font-size: 15px;">99</a>
-                    </div>
-                </td>
-                <td >
-                    <div class="userAlarm">
-                        <a href="#">
-                            <div class="userOrderListImg"></div>
-                        </a>
-                        全部订单 <a href="#" style="color:red;font-size: 15px;">99</a>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-
-
-    <div class="m_right_follow">
-        <div class="mem_follow_t">&nbsp;&nbsp;我的关注</div>
-        <table border="0" class="mon_tab" style=" margin-bottom:20px;" cellspacing="0" cellpadding="0">
-            <tr>
-                <td >
-                    <div class="userAlarm">
-                        <a href="#">
-                            <div class="userProductImg"></div>
-                        </a>
-
-                        商品关注 <a href="#" style="color:red;font-size: 15px;">99</a>
-
-                    </div>
-                </td>
-                <td >
-                    <div class="userAlarm">
-                        <a href="#">
-                            <div class="userShopImg"></div>
-                        </a>
-
-                        店铺关注 <a href="#" style="color:red;font-size: 15px;">99</a>
-
-                    </div>
-                </td>
-
-            </tr>
-        </table>
-    </div>
-
-    <div class="m_right_plus">
-        <div class="m m-block m-plus">
-            <div class="mt">
-                <div style="margin-top: -5px;">
-                    <h3>PLUS尊享</h3>
-                    <a class="button" href="#" target="_blank" rel="noopener noreferrer" >
-                        <em>开通PLUS会员</em><span>&gt;</span>
-                    </a>
-                </div>
-            </div>
-            <div class="mc">
-
-                <div class="flashSale_wrap">
-                    <div class="flashSale area">
-
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <div class="flashSaleDeals">
-                                    <div class="v_cont" style="width:9648px;overflow: hidden">
-                                        <ul class="flder">
-                                            <li index="0">
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg2.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>1</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg4.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>1</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg5.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>1</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg6.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>1</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li index="1">
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg8.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>2</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg10.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>2</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg11.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>2</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg12.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>2</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li index="2">
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg2.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>3</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg4.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>3</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg5.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>3</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg6.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>3</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li index="3">
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg8.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>4</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg10.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>4</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg11.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>4</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg12.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>4</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li index="4">
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg2.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>5</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg4.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>5</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg5.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>5</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg6.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>5</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li index="5">
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg8.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>6</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg10.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>6</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg11.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>6</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg12.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>6</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li index="6">
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg2.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>7</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="xsq_deal_wrapper">
-                                                    <a class="saleDeal" href="" target="_blank">
-                                                        <div class="dealCon">
-                                                            <img class="dealImg" src="${basePath}/static/images/xlqg4.jpg" alt="">
-                                                            <div class="zt2Qrcode overlay">
-                                                                <div class="xsqMask"></div>
-                                                                <p class="word1">15:00开抢</p>
-                                                                <p class="word2">限100件，抢完恢复25.8元</p>
-                                                                <p class="word3">查看商品&gt;&gt;</p>
-                                                            </div>
-                                                            <div class="stock">
-                                                                <div class="xsqMask"></div>
-                                                                <span class="stockWord"><i class="stocknumber">还剩73件</i> 抢完恢复原价16.8元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="title_new">
-                                                            <p class="word" title="925银流苏珍珠耳坠耳钉"><span class="baoyouText">[包邮]</span>925银流苏珍珠耳坠耳钉</p>
-                                                        </div>
-                                                        <div class="dealInfo">
-                                                            <span class="price">¥<em>7</em></span>
-
-                                                            <span class="shop_preferential">满2件8.8折</span>
-                                                        </div>
-                                                    </a>
-                                                </div>
-
-
-                                            </li>
-                                        </ul>
-                                        <a href="javascript:;" class="zuo trigger"></a>
-                                        <a href="javascript:;" class="you trigger"></a>
-                                    </div>
+<div class="menu_bg">
+    <div class="menu">
+        <!--Begin 商品分类详情 Begin-->
+        <div class="nav">
+            <div class="nav_t">全部商品分类</div>
+            <div class="leftNav none" style="display: none;">
+                <ul>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav1.png"></span>
+                            <span class="fl">进口食品、生鲜</span>
+                        </div>
+                        <div class="zj" style="display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
                                 </div>
                             </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav2.png"></span>
+                            <span class="fl">食品、饮料、酒</span>
+                        </div>
+                        <div class="zj" style="top: -40px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力2</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav3.png"></span>
+                            <span class="fl">母婴、玩具、童装</span>
+                        </div>
+                        <div class="zj" style="top: -80px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力3</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav4.png"></span>
+                            <span class="fl">家居、家庭清洁、纸品</span>
+                        </div>
+                        <div class="zj" style="top: -120px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力4</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav5.png"></span>
+                            <span class="fl">美妆、个人护理、洗护</span>
+                        </div>
+                        <div class="zj" style="top: -160px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力5</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav6.png"></span>
+                            <span class="fl">女装、内衣、中老年</span>
+                        </div>
+                        <div class="zj" style="top: -200px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力6</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav7.png"></span>
+                            <span class="fl">鞋靴、箱包、腕表配饰</span>
+                        </div>
+                        <div class="zj" style="top: -240px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力7</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav8.png"></span>
+                            <span class="fl">男装、运动</span>
+                        </div>
+                        <div class="zj" style="top: -280px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力8</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav9.png"></span>
+                            <span class="fl">手机、小家电、电脑</span>
+                        </div>
+                        <div class="zj" style="top: -320px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力9</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="fj">
+                            <span class="n_img"><span></span><img src="images/nav10.png"></span>
+                            <span class="fl">礼品、充值</span>
+                        </div>
+                        <div class="zj" style="top: -360px; display: none;">
+                            <div class="zj_l">
+                                <div class="zj_l_c">
+                                    <h2>零食 / 糖果 / 巧克力10</h2>
+                                    <a href="#">坚果</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">巧克力</a>|
+                                    <a href="#">口香糖</a>|<a href="#">海苔</a>|<a href="#">鱼干</a>|<a href="#">蜜饯</a>|<a href="#">红枣</a>|
+                                    <a href="#">蜜饯</a>|<a href="#">红枣</a>|<a href="#">牛肉干</a>|<a href="#">蜜饯</a>|
+                                </div>
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="images/n_img1.jpg" width="236" height="200"></a>
+                                <a href="#"><img src="images/n_img2.jpg" width="236" height="200"></a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--End 商品分类详情 End-->
+        <ul class="menu_r">
+            <li><a href="Index.html">首页</a></li>
+            <li><a href="Food.html">美食</a></li>
+            <li><a href="Fresh.html">生鲜</a></li>
+            <li><a href="HomeDecoration.html">家居</a></li>
+            <li><a href="SuitDress.html">女装</a></li>
+            <li><a href="MakeUp.html">美妆</a></li>
+            <li><a href="Digital.html">数码</a></li>
+            <li><a href="GroupBuying.html">团购</a></li>
+        </ul>
+        <div class="m_ad">中秋送好礼！</div>
+    </div>
+</div>
 
+<!------------main---------------->
+<div class="main">
+    <div class="current-position"><h2><a href="#">首页</a> &gt; <a href="#">个人中心</a></h2></div>
+    <div class="user-content">
+        <div class="user-menu">
+            <dl>
+                <dt>个人中心</dt>
+                <dd class="active"><a href="personal.html">我的个人中心</a></dd>
+                <dd><a href="order.html">我的订单</a></dd>
+                <dd><a href="comment.html">商品评价</a></dd>
+                <dd><a href="favorite.html">我的收藏</a></dd>
+
+                <dt>售后服务</dt>
+                <dd><a href="order-th.html">退货单</a></dd>
+                <dd><a href="order-tk.html">退款单</a></dd>
+                <dd><a href="order-tk.html">维修单</a></dd>
+
+                <dt>帐号管理</dt>
+                <dd><a href="address.html">收货地址管理</a></dd>
+                <dd><a href="changePassword.html">修改密码</a></dd>
+            </dl>
+        </div>
+
+        <div class="user-right">
+            <div class="personal-tou">
+                <div class="user-header"><img src="${userVO.httpHeadSculpture!''}" width="90" height="90"><i></i></div>
+                <div class="personal-info">
+                    <h2>${userVO.nickName!''}<span>下午好～</span></h2>
+                    <!-----------class-middle普通--class-high较高----class-low较低--------------------->
+                    <p>
+                        <span>账户安全级别：</span><i class="class-middle"></i><span>普通&nbsp;&nbsp;|</span>
+                        <i class="binding"></i><span><a href="#">绑定手机</a>&nbsp;&nbsp;|</span>
+                        <i class="binding-not"></i><span><a href="#">绑定邮箱</a></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-list">
+                <dl>
+                    <!--默认显示前5个 -->
+                    <dt><h2>未支付订单</h2><a href="#">更多&gt;</a></dt>
+                    <dd>
+                        <ul class="user-order-list">
+                            <li>
+                                <a href="#"><img src="${basePath}/static/images/4-2li.jpg" width="60px" height="60px"></a>
+                                <p class="user-order-num"><a href="#">订单号：1141124860003088</a></p>
+                                <p class="user-order-price"><strong>¥29.00</strong><i>在线支付</i></p>
+                                <p class="user-order-price"><a href="#">订单详情</a></p>
+                                <p class="user-order-btn"><a href="checkout.html">立即付款</a></p>
+                            </li>
+                            <li style="border-bottom:none">
+                                <a href="#"><img src="${basePath}/static/images/4-2li.jpg" width="60px" height="60px"></a>
+                                <p class="user-order-num"><a href="#">订单号：1141124860003088</a></p>
+                                <p class="user-order-price"><strong>¥29.00</strong><i>在线支付</i></p>
+                                <p class="user-order-price"><a href="#">订单详情</a></p>
+                                <p class="user-order-btn"><a href="checkout.html">立即付款</a></p>
+                            </li>
+                        </ul>
+                    </dd>
+
+                    <dt><h2>未收货订单</h2><a href="#">更多&gt;</a></dt>
+                    <dd><p class="no-news">您暂时没有未收货订单。<a href="#">挑挑喜欢的商品去»</a></p></dd>
+
+                    <dt><div class="dt-L"><h2>购物车</h2><a href="#">更多&gt;</a></div><div class="dt-R"><h2>收藏夹</h2><a href="#">更多&gt;</a></div></dt>
+                    <dd>
+                        <!-------购物车------>
+                        <ul class="dt-L-div">
+                            <li><a href="#"><img src="${basePath}/static/images/4li.jpg" width="60px" height="60px"></a></li>
+                            <li><a href="#"><img src="${basePath}/static/images/4-2li.jpg" width="60px" height="60px"></a></li>
+                            <p class="no-news hidden">您的购物车是空的，<a href="#">马上去购物~</a></p>
+                        </ul>
+                        <!-------收藏夹------>
+                        <ul class="dt-R-div">
+                            <p class="no-news">您可将喜欢的商品放入收藏夹，方便随时再次查看~<br>当商品享优惠时，还会通知您哟~</p>
+                        </ul>
+                    </dd>
+                </dl>
             </div>
         </div>
     </div>
 
 
-    <div class="m_right_logistics">
-
-        <div class="mem_t">&nbsp;&nbsp;我的物流</div>
-        <div class="s-content">
-            <ul class="lg-list">
-
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/65.jpg_120x120xz.jpg" alt="抗严寒冬天保暖隔凉羊毛毡底鞋垫超薄0.35厘米厚吸汗排湿气舒适">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>快件已从 义乌 发出</p>
-                        <time>2015-12-20 17:58:05</time>
-
-                        <div class="lg-detail-wrap">
-                            <a class="lg-detail i-tip-trigger" href="logistics.html">查看物流明细</a>
-
-                        </div>
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <div class="clear"></div>
-
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-                <li class="lg-item">
-                    <div class="item-info">
-                        <a href="#">
-                            <img src="${basePath}/static/images/88.jpg_120x120xz.jpg" alt="礼盒袜子女秋冬 纯棉袜加厚 女式中筒袜子 韩国可爱 女袜 女棉袜">
-                        </a>
-
-                    </div>
-                    <div class="lg-info">
-
-                        <p>已签收,签收人是青年城签收</p>
-                        <time>2015-12-19 15:35:42</time>
-
-
-                    </div>
-                    <div class="lg-confirm">
-                        <a class="i-btn-typical" href="#">确认收货</a>
-                    </div>
-                </li>
-            </ul>
-
-        </div>
-    </div>
-</div>
-<!--End 用户中心 End-->
-</div>
-
-<#include "/footer.html"/>
+    <#include "/footer.html"/>
 
 </body>
 

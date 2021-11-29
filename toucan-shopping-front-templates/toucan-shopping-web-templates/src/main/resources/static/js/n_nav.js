@@ -2,10 +2,10 @@
 var jq = jQuery.noConflict();
 
 jQuery(document).ready(function(){
-	jq(".nav").hover(function(){						   
-		jq(this).find(".leftNav").show();
+	$(".nav").hover(function(){
+		$(this).find(".leftNav").show();
 	},function(){
-		jq(this).find(".leftNav").hide();
+		$(this).find(".leftNav").hide();
 	});
 });	
 
