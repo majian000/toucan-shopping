@@ -25,5 +25,13 @@ public class CategoryRedisKey {
         return "TOUCAN_SHOPPING_WEB:INDEX:CATEGORY:MINI";
     }
 
+    /**
+     * 简洁版导航条类别树
+     * @return
+     */
+    public static String getNavigationMiniTreeKey()
+    {
+        return "TOUCAN_SHOPPING_WEB:INDEX:CATEGORY:NAVIGATION:MINI";
+    }
 
 }

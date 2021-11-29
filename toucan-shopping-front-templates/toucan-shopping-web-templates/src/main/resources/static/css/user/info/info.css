@@ -125,7 +125,7 @@
     margin-left:10px;
     padding-left:30px;
     background-color:#e8f0ff;
-    background-image: url(../images/prompt.jpg);
+    background-image: url(../../../images/prompt.jpg);
     background-repeat: no-repeat;
     background-position: 10px center;
 }
@@ -227,12 +227,12 @@
     font-weight:bold;
     padding-left:20px;
     margin-top:30px;
-    background-image: url(../images/login-right-btn.jpg);
+    background-image: url(../../../images/login-right-btn.jpg);
     background-repeat: no-repeat;
 }
 
 .login-right a:hover{
-    background-image: url(../images/login-right-btn1.jpg);
+    background-image: url(../../../images/login-right-btn1.jpg);
 }
 
 
@@ -314,7 +314,7 @@
     height:120px;
     display:block;
     position:absolute;
-    background-image: url(../images/user-header.png);
+    background-image: url(../../../images/user-header.png);
     background-repeat: no-repeat;
 }
 
@@ -363,7 +363,7 @@
     display:block;
     overflow:hidden;
     margin-right:10px;
-    background-image: url(../images/icon-common.png);
+    background-image: url(../../../images/icon-common.png);
     background-repeat: no-repeat;
 }
 
@@ -618,7 +618,7 @@
     height:100px;
     display:block;
     margin:50px auto 0px auto;
-    background-image: url(../images/payment.jpg);
+    background-image: url(../../../images/payment.jpg);
     background-repeat: no-repeat;
 }
 
@@ -900,7 +900,7 @@
     height:27px;
     display:block;
     margin:60px auto 0px auto;
-    background-image: url(../images/add.png);
+    background-image: url(../../../images/add.png);
     background-repeat: no-repeat;
 }
 
@@ -1086,7 +1086,7 @@
     float:left;
     width:14px;
     height:30px;
-    background-image: url(../images/icon-check.gif);
+    background-image: url(../../../images/icon-check.gif);
     background-repeat: no-repeat;
     background-position: left center;
 }
@@ -1095,7 +1095,7 @@
     float:left;
     width:14px;
     height:30px;
-    background-image: url(../images/icon-check-active.gif);
+    background-image: url(../../../images/icon-check-active.gif);
     background-repeat: no-repeat;
     background-position: left center;
 }
@@ -1371,7 +1371,7 @@
     display:block;
     width:65px;
     height:11px;
-    background-image: url(../images/icon-stat.png);
+    background-image: url(../../../images/icon-stat.png);
     background-repeat: no-repeat;
 }
 
@@ -1447,7 +1447,7 @@
     padding-left:40px;
     background-color:#1d7ad9;
     border:solid 1px #1d7ad9;
-    background-image: url(../images/cart3.png);
+    background-image: url(../../../images/cart3.png);
     background-repeat: no-repeat;
     background-position: 18px center;
 }
@@ -1550,7 +1550,7 @@
     height:36px;
     cursor:pointer;
     text-indent:-9999px;
-    background:url(../images/star.gif) no-repeat;
+    background:url(../../../images/star.gif) no-repeat;
     margin-right:2px;
 }
 #star strong{
@@ -1591,7 +1591,7 @@
     float:left;
     width:14px;
     height:40px;
-    background-image: url(../images/icon-check.gif);
+    background-image: url(../../../images/icon-check.gif);
     background-repeat: no-repeat;
     background-position: left center;
 }
@@ -1600,7 +1600,7 @@
     float:left;
     width:14px;
     height:40px;
-    background-image: url(../images/icon-check-active.gif);
+    background-image: url(../../../images/icon-check-active.gif);
     background-repeat: no-repeat;
     background-position: left center;
 }
@@ -1637,12 +1637,12 @@
     width:80px;
     height:80px;
     display:block;
-    background-image: url(../images/add-pic.jpg);
+    background-image: url(../../../images/add-pic.jpg);
     background-repeat: no-repeat;
 }
 
 .add-pic:hover{
-    background-image: url(../images/add-pic2.jpg);
+    background-image: url(../../../images/add-pic2.jpg);
     background-repeat: no-repeat;
 }
 
@@ -1724,7 +1724,7 @@ a.review-btn-tj{
     display:block;
     z-index:2;
     position:absolute;
-    background-image: url(../images/user-header.png);
+    background-image: url(../../../images/user-header.png);
     background-repeat: no-repeat;
     background-position: center center;
 }
@@ -1745,7 +1745,7 @@ a.review-btn-tj{
     height:12px;
     display:block;
     overflow:hidden;
-    background-image: url(../images/icon-stat.png);
+    background-image: url(../../../images/icon-stat.png);
     background-repeat: no-repeat;
 }
 
@@ -1934,7 +1934,7 @@ a.review-btn-tj{
     _margin-left:15px;
     background-color:#1d7ad9;
     FONT-FAMILY: "Microsoft Yahei";
-    background-image: url(../images/cart3.png);
+    background-image: url(../../../images/cart3.png);
     background-repeat: no-repeat;
     background-position: 33px 14px;
 }
@@ -1949,13 +1949,13 @@ a.review-btn-tj{
     height:40px;
     display:block;
     margin-left:10px;
-    background-image: url(../images/collection.png);
+    background-image: url(../../../images/collection.png);
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 .review-show-right .bottom .sc:hover{
-    background-image: url(../images/collection1.png);
+    background-image: url(../../../images/collection1.png);
 }
 
 /* order.html */
@@ -2001,7 +2001,7 @@ a.review-btn-tj{
     border-left:solid 1px #dfdfdf;
     border-right:solid 1px #dfdfdf;
     FONT-FAMILY: "Microsoft Yahei";
-    background-image: url(../images/jg.jpg);
+    background-image: url(../../../images/jg.jpg);
     background-repeat: repeat-y;
     background-position: 670px top;
 }
@@ -2426,7 +2426,7 @@ a.review-btn-tj{
     height:25px;
     position:absolute;
     right:0px; bottom:0px;
-    background:url(../images/gou2.png) no-repeat;
+    background:url(../../../images/gou2.png) no-repeat;
 }
 
 .repairorder-pro textarea{

@@ -24,5 +24,11 @@ public interface IndexService {
 
     List<CategoryVO> queryCategorys();
 
+    /**
+     * 查询首页类别列表
+     * @return
+     */
+
+    List<CategoryVO> queryNavigationCategorys();
 
 }

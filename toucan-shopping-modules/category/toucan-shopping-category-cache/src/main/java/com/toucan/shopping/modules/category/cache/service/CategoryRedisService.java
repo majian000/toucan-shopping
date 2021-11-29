@@ -20,6 +20,13 @@ public interface CategoryRedisService {
      */
     void flushWMiniTree(List<CategoryVO> categoryVOS);
 
+
+    /**
+     * 刷新导航条树
+     * @param categoryVOS
+     */
+    void flushNavigationMiniTree(List<CategoryVO> categoryVOS);
+
     /**
      * 查询商城首页缓存
      * @return
@@ -27,6 +34,11 @@ public interface CategoryRedisService {
     List<CategoryVO> queryWebIndexCache();
 
 
+    /**
+     * 查询分类导航条缓存
+     * @return
+     */
+    List<CategoryVO> queryWebNavigationCache();
     /**
      * 查询简洁版的类别树(只有id,name,children)
      * @return

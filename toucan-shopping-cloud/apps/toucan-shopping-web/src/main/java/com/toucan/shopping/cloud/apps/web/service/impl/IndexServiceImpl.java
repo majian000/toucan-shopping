@@ -134,4 +134,50 @@ public class IndexServiceImpl implements IndexService {
     }
 
 
+    /**
+     * 查询类别列表
+     */
+    public List<CategoryVO> queryNavigationCategorys()
+    {
+        try {
+            ResultObjectVO resultObjectVO = new ResultObjectVO();
+            List<CategoryVO>  categoryVOS = categoryRedisService.queryWebNavigationCache();
+            if(!CollectionUtils.isEmpty(categoryVOS))
+            {
+                if(!CollectionUtils.isEmpty(categoryVOS))
+                {
+                    for(int i=0;i<categoryVOS.size();i++)
+                    {
+                        CategoryVO categoryTreeVO = categoryVOS.get(i);
+                        categoryTreeVO.setPcIndexStyle("top:"+(0-(i*40))+"px"); //控制首页右侧面板位置置顶
+                    }
+                }
+                return categoryVOS;
+            }else {
+                CategoryVO categoryVO = new CategoryVO();
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
+                resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    List<CategoryVO> categoryVOList = categoryRedisService.queryWebNavigationCache();
+                    if(!CollectionUtils.isEmpty(categoryVOList))
+                    {
+                        for(int i=0;i<categoryVOList.size();i++)
+                        {
+                            CategoryVO categoryTreeVO = categoryVOList.get(i);
+                            categoryTreeVO.setPcIndexStyle(String.valueOf(0-(i*40))+"px"); //控制首页右侧面板位置置顶
+                        }
+                    }
+                    return categoryVOList;
+                }else{
+                    return new ArrayList<CategoryVO>();
+                }
+            }
+        } catch (Exception e) {
+            logger.warn(e.getMessage(),e);
+
+            return new ArrayList<CategoryVO>();
+        }
+
+    }
+
 }

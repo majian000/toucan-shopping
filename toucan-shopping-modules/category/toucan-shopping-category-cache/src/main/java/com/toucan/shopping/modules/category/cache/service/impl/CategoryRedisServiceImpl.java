@@ -25,6 +25,7 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
 
 
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
+    private SimplePropertyPreFilter navigationPropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","href","showStatus","rootLinks","icon","children");
 
     @Override
     public void flushWebIndexCaches(List<CategoryVO> categoryVOS) {
@@ -50,6 +51,18 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
         redisTemplate.opsForValue().set(CategoryRedisKey.getMiniTreeKey(), JSONObject.toJSONString(categoryVOS,simplePropertyPreFilter));
     }
 
+
+    @Override
+    public void flushNavigationMiniTree(List<CategoryVO> categoryVOS) {
+        Object bannersRedisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getNavigationMiniTreeKey());
+        if(bannersRedisObject!=null) {
+            //先删除已有缓存
+            redisTemplate.delete(CategoryRedisKey.getNavigationMiniTreeKey());
+        }
+        //保存到redis
+        redisTemplate.opsForValue().set(CategoryRedisKey.getNavigationMiniTreeKey(), JSONObject.toJSONString(categoryVOS,navigationPropertyPreFilter));
+    }
+
     @Override
     public List<CategoryVO> queryWebIndexCache() {
         Object bannersRedisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getWebIndexKey());
@@ -62,6 +75,17 @@ public class CategoryRedisServiceImpl implements CategoryRedisService {
         return categoryVOList;
     }
 
+    @Override
+    public List<CategoryVO> queryWebNavigationCache() {
+        Object bannersRedisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getNavigationMiniTreeKey());
+        List<CategoryVO> categoryVOList=null;
+        if(bannersRedisObject!=null) {
+            categoryVOList=JSONArray.parseArray(String.valueOf(bannersRedisObject), CategoryVO.class);
+        }else{
+            categoryVOList=new ArrayList<CategoryVO>();
+        }
+        return categoryVOList;
+    }
     @Override
     public List<CategoryVO> queryMiniTree() {
         Object bannersRedisObject = redisTemplate.opsForValue().get(CategoryRedisKey.getMiniTreeKey());

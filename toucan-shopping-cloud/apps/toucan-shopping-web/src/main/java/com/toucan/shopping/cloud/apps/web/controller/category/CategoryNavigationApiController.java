@@ -12,6 +12,7 @@ import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
@@ -64,8 +65,9 @@ public class CategoryNavigationApiController extends BaseController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
+            List<CategoryVO> categoryVOS = indexService.queryCategorys();
             //查询类别列表
-            resultObjectVO.setData(indexService.queryCategorys());
+            resultObjectVO.setData(categoryVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

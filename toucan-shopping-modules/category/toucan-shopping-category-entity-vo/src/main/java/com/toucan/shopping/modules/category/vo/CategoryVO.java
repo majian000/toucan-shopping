@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.category.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.entity.CategoryImg;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
  * @author majian
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryVO extends Category {
 
 
