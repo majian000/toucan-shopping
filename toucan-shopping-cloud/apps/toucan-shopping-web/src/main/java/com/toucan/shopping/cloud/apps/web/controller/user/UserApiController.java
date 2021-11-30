@@ -561,6 +561,12 @@ public class UserApiController extends BaseController {
                     ltCookie.setMaxAge(86400);
                     response.addCookie(ltCookie);
 
+                    //权限Token 半小时内不再进行权限校验
+                    Cookie latCookie = new Cookie( "tss_lat", userLoginVO.getLoginAuthToken());
+                    latCookie.setPath("/");
+                    latCookie.setMaxAge(1800); //30分钟过期
+                    response.addCookie(latCookie);
+
                     //删除登录失败计数
                     toucanStringRedisService.delete(loginFaildCountKey);
 

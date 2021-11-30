@@ -12,7 +12,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.common.wrapper.RequestWrapper;
-import com.toucan.shopping.modules.user.util.LoginTokenUtil;
+import com.toucan.shopping.modules.user.util.LoginAuthTokenUtil;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -64,6 +64,22 @@ public class AuthInterceptor implements HandlerInterceptor {
         //立刻清除
         ltCookie.setMaxAge(0);
         response.addCookie(ltCookie);
+
+        //权限 TOKEN
+        Cookie latCookie = new Cookie("tss_lat", "-1");
+        latCookie.setPath("/");
+        //立刻清除
+        latCookie.setMaxAge(0);
+        response.addCookie(latCookie);
+    }
+
+    public void flushAuthToken(String LoginAuthToken,HttpServletResponse response)
+    {
+        //重新生成权限token 半小时内不再进行权限校验
+        Cookie latCookie = new Cookie( "tss_lat", LoginAuthToken);
+        latCookie.setPath("/");
+        latCookie.setMaxAge(1800); //30分钟过期
+        response.addCookie(latCookie);
     }
 
     @Override
@@ -127,12 +143,16 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String[] authHeaderArray = authHeader.split(";");
                                 String uid = "-1";
                                 String lt = "-1";
+                                String lat = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
                                     if (authHeaderArray[i].indexOf("tss_uid=") != -1) {
                                         uid = authHeaderArray[i].split("=")[1];
                                     }
                                     if (authHeaderArray[i].indexOf("tss_lt=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
+                                    }
+                                    if (authHeaderArray[i].indexOf("tss_lat=") != -1) {
+                                        lat = authHeaderArray[i].split("=")[1];
                                     }
                                 }
                                 if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
@@ -144,6 +164,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
+                                }
+                                //判断当前Token和超级Token能否对应的上
+                                String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
+                                if(glat.equals(lat))
+                                {
+                                    return true;
                                 }
                                 //判断当前的token和userId是否对应的上
                                 UserLoginVO queryUserLogin = new UserLoginVO();
@@ -163,6 +189,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                                         responseWrite(response, JSONObject.toJSONString(resultVO));
                                         return false;
                                     }
+
+                                    flushAuthToken(glat,response);
+
                                 }catch(Exception e)
                                 {
                                     logger.info("请求头参数异常 " + authHeader);
@@ -189,12 +218,16 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String[] authHeaderArray = authHeader.split(";");
                                 String uid = "-1";
                                 String lt = "-1";
+                                String lat = "-1";
                                 for (int i = 0; i < authHeaderArray.length; i++) {
                                     if (authHeaderArray[i].indexOf("tss_uid=") != -1) {
                                         uid = authHeaderArray[i].split("=")[1];
                                     }
                                     if (authHeaderArray[i].indexOf("tss_lt=") != -1) {
                                         lt = authHeaderArray[i].split("=")[1];
+                                    }
+                                    if (authHeaderArray[i].indexOf("tss_lat=") != -1) {
+                                        lat = authHeaderArray[i].split("=")[1];
                                     }
                                 }
                                 if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
@@ -205,6 +238,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
 
+                                //判断当前Token和超级Token能否对应的上
+                                String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
+                                if(glat.equals(lat))
+                                {
+                                    return true;
+                                }
 
                                 //在这里调用用户中心 判断登录
                                 UserLoginVO queryUserLoginVO = new UserLoginVO();
@@ -225,6 +264,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
                                     return false;
                                 }
+
+                                flushAuthToken(glat,response);
 
                             }
                         }

@@ -24,6 +24,11 @@ public class UserLoginVO extends UserVO {
      */
     private String loginToken;
 
+    /**
+     * 权限token (用户忽略权限校验,优化流量开销)
+     */
+    private String loginAuthToken;
+
 
     /**
      * 要登录的应用
