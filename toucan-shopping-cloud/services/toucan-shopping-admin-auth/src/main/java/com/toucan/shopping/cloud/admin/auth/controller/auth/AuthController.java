@@ -268,7 +268,7 @@ public class AuthController {
      * 首先从es中查询权限关联,如果es中没有就查询数据库就进行一次同步,如果数据库也没有 就认为没有权限
      * 这样设计的好处是 让所有正常的用户请求全部走缓存,那些不正常的用户虽然最后也会查询到数据库层面,但是后续会做黑名单限制恶意用户的访问
      * @param requestVo
-     * @return
+     * @return -1 登录超时 -2 权限校验失败 1成功
      */
     @RequestMapping(value="/verifyLoginAndUrl",produces = "application/json;charset=UTF-8")
     @ResponseBody
