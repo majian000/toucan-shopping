@@ -20,6 +20,12 @@ public interface CategoryHotService {
 
     List<CategoryHot> queryList(CategoryHotVO category);
 
+    /**
+     * 保存实体
+     * @param category
+     * @return
+     */
+    int save(CategoryHot category);
 
     /**
      * 查询树表格

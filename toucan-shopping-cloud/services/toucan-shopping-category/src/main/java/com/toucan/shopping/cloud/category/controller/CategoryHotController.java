@@ -51,6 +51,65 @@ public class CategoryHotController {
     private IdGenerator idGenerator;
 
 
+    /**
+     * 保存类别
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO save(@RequestHeader(value = "toucan-sign-header",defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        try {
+            CategoryHotVO categoryHot = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryHotVO.class);
+
+
+
+            if(categoryHot.getCategoryId()==null)
+            {
+                logger.info("类别名称为空 param:"+ JSONObject.toJSONString(categoryHot));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("类别名称不能为空!");
+                return resultObjectVO;
+            }
+
+            CategoryHotVO queryCategory = new CategoryHotVO();
+            queryCategory.setName(categoryHot.getName());
+            queryCategory.setDeleteStatus((short)0);
+
+            if(!CollectionUtils.isEmpty(categoryHotService.queryList(queryCategory)))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("已存在该类别!");
+                return resultObjectVO;
+            }
+
+            categoryHot.setId(idGenerator.id());
+            categoryHot.setCreateDate(new Date());
+            int row = categoryHotService.save(categoryHot);
+            if (row != 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请重试!");
+                return resultObjectVO;
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("保存失败,请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
     public boolean existsAdminId(List<String> adminIds,String adminId)
     {

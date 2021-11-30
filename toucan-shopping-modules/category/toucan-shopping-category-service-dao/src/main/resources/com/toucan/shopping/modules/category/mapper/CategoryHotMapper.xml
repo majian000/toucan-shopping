@@ -31,6 +31,9 @@
             and t.parent_id = #{parentId}
         </if>
 
+        <if test="categoryId!=null">
+            and t.category_id = #{categoryId}
+        </if>
 
         <if test="showStatus!=null">
             and t.show_status = #{showStatus}
@@ -83,5 +86,14 @@
         </where>
 
     </select>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.category.entity.CategoryHot" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_category_hot(id,parent_id,category_id,category_sort,show_status,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{parentId},#{categoryId},#{categorySort},#{showStatus},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+    </insert>
+
+
 
 </mapper>

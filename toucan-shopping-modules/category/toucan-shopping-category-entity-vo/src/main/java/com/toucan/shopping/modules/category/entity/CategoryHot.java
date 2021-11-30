@@ -29,6 +29,7 @@ public class CategoryHot {
     private Long categoryId; //关联类别ID
 
     private Long categorySort; //排序
+    private Integer showStatus; //显示状态 0隐藏 1显示
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

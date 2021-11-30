@@ -26,6 +26,13 @@ public class CategoryHotServiceImpl implements CategoryHotService {
     @Autowired
     private CategoryHotMapper categoryHotMapper;
 
+
+
+    @Override
+    public int save(CategoryHot category) {
+        return categoryHotMapper.insert(category);
+    }
+
     @Override
     public List<CategoryHot> queryList(CategoryHotVO category) {
         return categoryHotMapper.queryList(category);
