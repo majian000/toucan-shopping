@@ -15,6 +15,16 @@ public interface FeignAuthService {
 
 
     @RequestMapping(value="/verify",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO verify(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO verify(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 校验权限 并验证是否登录
+     * @param signHeader
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/verifyLoginAndUrl",produces = "application/json;charset=UTF-8")
+    ResultObjectVO verifyLoginAndUrl(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 }

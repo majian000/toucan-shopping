@@ -4,7 +4,6 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAuthService;
-import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,9 +57,10 @@ public class AuthInterceptor implements HandlerInterceptor {
      * @param method
      * @return
      */
-    public boolean authVerify(String adminId,Class clazz,Method method) throws NoSuchAlgorithmException {
+    public Integer authVerifyLoginAndUrl(String adminId, String loginToken, Class clazz, Method method) throws NoSuchAlgorithmException {
         AuthVerifyVO authVerifyVO = new AuthVerifyVO();
         authVerifyVO.setAdminId(adminId);
+        authVerifyVO.setLoginToken(loginToken);
         String url="";
         //拿到控制器的路径
         RequestMapping controllerRequestMapping =((RequestMapping)clazz.getAnnotation(RequestMapping.class));
@@ -121,19 +120,16 @@ public class AuthInterceptor implements HandlerInterceptor {
         authVerifyVO.setUrl(url);
         authVerifyVO.setAppCode(toucan.getAppCode());
 
+        //这里可以优化,初始化的时候 传入这个bean
         FeignAuthService feignAuthService = springContextHolder.getBean(FeignAuthService.class);
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),authVerifyVO);
-        ResultObjectVO resultObjectVO = feignAuthService.verify(SignUtil.sign(requestJsonVO),requestJsonVO);
-        if(resultObjectVO.isSuccess())
-        {
-            boolean status = Boolean.parseBoolean(String.valueOf(resultObjectVO.getData()));
-            if(status)
-            {
-                return true;
-            }
-        }
+        ResultObjectVO resultObjectVO = feignAuthService.verifyLoginAndUrl(SignUtil.sign(requestJsonVO),requestJsonVO);
 
-        return false;
+        //-1 登录超时 -2没有权限
+        if(resultObjectVO.getData()!=null) {
+            return resultObjectVO.formatData(Integer.class);
+        }
+        return -1;
     }
 
     @Override
@@ -212,15 +208,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
                                 //在这里调用权限中台 判断登录
-                                Admin queryAdminLogin = new Admin();
-                                queryAdminLogin.setAdminId(aid);
-                                queryAdminLogin.setLoginToken(lt);
-
-
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),aid,queryAdminLogin);
-                                ResultObjectVO resultObjectVO = feignAdminService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
-                                if (resultObjectVO.getCode() != ResultVO.SUCCESS
-                                        || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
+                                int verifyRet = authVerifyLoginAndUrl(aid,lt,handlerMethod.getBeanType(),method);
+                                if (verifyRet==-1) {
                                     logger.info("登录验证失败 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
                                     resultVO.setMsg("登录超时,请重新登录");
@@ -231,7 +220,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 
                                 //校验请求权限
-                                if(!authVerify(aid,handlerMethod.getBeanType(),method))
+                                if(verifyRet==-2)
                                 {
                                     logger.info("权限校验失败 " + authHeader);
                                     resultVO.setCode(ResultVO.FAILD);
@@ -270,14 +259,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 
                                 //在这里调用权限中台 判断登录
-                                Admin queryAdminLogin = new Admin();
-                                queryAdminLogin.setAdminId(aid);
-                                queryAdminLogin.setLoginToken(lt);
-
-                                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),aid,queryAdminLogin);
-                                ResultObjectVO resultObjectVO = feignAdminService.isOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
-                                if (resultObjectVO.getCode() != ResultVO.SUCCESS
-                                        || !(Boolean.valueOf(String.valueOf(resultObjectVO.getData())).booleanValue())) {
+                                int verifyRet = authVerifyLoginAndUrl(aid,lt,handlerMethod.getBeanType(),method);
+                                if (verifyRet==-1) {
                                     logger.info("登录验证失败 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                                             + request.getContextPath() + "/" + toucan.getAdminAuth().getLoginPage());
@@ -285,7 +268,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
                                 //校验请求权限
-                                if(!authVerify(aid,handlerMethod.getBeanType(),method))
+                                if(verifyRet==-2)
                                 {
                                     logger.info("权限校验失败 " + authHeader);
                                     response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()

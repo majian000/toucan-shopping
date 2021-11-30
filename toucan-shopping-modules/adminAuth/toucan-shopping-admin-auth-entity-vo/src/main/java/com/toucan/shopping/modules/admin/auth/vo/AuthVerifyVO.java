@@ -20,5 +20,10 @@ public class AuthVerifyVO {
      */
     private String appCode;
 
+    /**
+     * 登录会话
+     */
+    private String loginToken;
+
 
 }
