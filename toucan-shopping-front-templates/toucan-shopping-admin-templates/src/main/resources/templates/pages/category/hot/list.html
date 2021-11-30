@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+
+    <span th:replace="common_page::common"></span>
+</head>
+<body>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="categorySearchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="categoryHotTreeTable" lay-filter="categoryHotTreeTableFilter"></table>
+
+        <!-- 操作列 -->
+        <script type="text/html" id="categoryHotTreeTableToolbar">
+            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
+<script th:src="@{/js/common/selectApp.js}" charset="utf-8"></script>
+
+<script>
+
+
+    layui.config({
+        base: basePath+'/lib/layui_ext/treeTable/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        treeTable: 'treeTable' //定义该组件模块名
+    }).use(['form', 'table', 'treeTable'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var treetable = layui.treeTable;
+        var loadding;
+        var treetableHandler;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam(row)
+        {
+            var formParam = $("#categorySearchForm").serializeJson();
+            if(row!=null) {
+                formParam.parentId = row.id;
+            }else{
+                formParam.parentId=-1;
+            }
+            return formParam;
+        }
+
+        function loadTreeTable()
+        {
+            loadding = layer.load();
+            treetableHandler = treetable.render({
+                elem: '#categoryHotTreeTable',
+                tree: {
+                    iconIndex: 2
+                },
+                toolbar: '#toolbarDemo',
+                page: false,
+                cols: [
+                    [
+                        {type: 'numbers'},
+                        {type: 'checkbox'},
+                        {field: 'name', width: 200, title: '名称'},
+                        {field: 'categorySort', title: '排序'},
+                        {field: 'showStatus', title: '显示状态', templet: function (d) {
+                                if (d.showStatus == 1) {
+                                    return '显示';
+                                } else if (d.showStatus == 0) {
+                                    return '隐藏';
+                                }
+                                return d.showStatus;
+                            }},
+                        {field: 'href', title: '跳转路径'},
+                        {field: 'noticeTips', width: 260,  title: '注意事项'},
+                        {field: 'remark', width: 260,  title: '备注'},
+                        {field: 'createAdminUsername', title: '创建人'},
+                        {field: 'createDate',  title: '创建时间'},
+                        {field: 'updateAdminUsername',  title: '修改人'},
+                        {field: 'updateDate',  title: '修改时间'},
+                        {templet: '#categoryHotTreeTableToolbar', width: 200, align: 'center', title: '操作'}
+                    ]
+                ],
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]category/hot/tree/table/by/pid",
+                        type:'GET',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
+                }
+            });
+
+        }
+
+        loadTreeTable();
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+
+            loadTreeTable();
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        treetable.on('toolbar(categoryHotTreeTable)', function (obj) {
+
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加类别',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: "[[@{/category/hot/addPage}]]",
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var data = treetableHandler.checkStatus();
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定删除类别?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/hot/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            loadTreeTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'flushIndexCache') {
+                layer.confirm('确定刷新缓存?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/hot/flush/index/cache",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:null,
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('categoryTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }else if (obj.event === 'clearCacheToolbar') {
+                layer.confirm('确定清空缓存?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/hot/clear/index/cache",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:null,
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('categoryTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        treetable.on('checkbox(categoryHotTreeTable)', function (obj) {
+            console.log(obj)
+        });
+
+        treetable.on('tool(categoryHotTreeTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var index = layer.open({
+                    title: '编辑类别',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]category/hot/editPage/'+data.id,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定删除该类别?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]category/hot/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            loadTreeTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

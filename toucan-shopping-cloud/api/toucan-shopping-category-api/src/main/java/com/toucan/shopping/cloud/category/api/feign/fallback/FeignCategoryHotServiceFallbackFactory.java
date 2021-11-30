@@ -1,7 +1,8 @@
 package com.toucan.shopping.cloud.category.api.feign.fallback;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryHotService;
+import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryHotService;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import feign.hystrix.FallbackFactory;
@@ -10,17 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 类别服务
+ * 热门分类服务
  */
 @Component
-public class FeignCategoryServiceFallbackFactory implements FallbackFactory<FeignCategoryService> {
+public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<FeignCategoryHotService> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public FeignCategoryService create(Throwable throwable) {
+    public FeignCategoryHotService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
-        return new FeignCategoryService(){
+        return new FeignCategoryHotService(){
 
             @Override
             public ResultObjectVO save(String signHeader, RequestJsonVO requestJsonVO) {
@@ -31,7 +32,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -46,7 +47,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -61,7 +62,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryByIdList faild header:{} params:{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryByIdList faild header:{} params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -76,7 +77,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.findByIdArray faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.findByIdArray faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -92,7 +93,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.findById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.findById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -107,7 +108,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryTreeTable faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryTreeTable faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -122,7 +123,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.update faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.update faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -137,7 +138,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryTreeTableByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryTreeTableByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -152,7 +153,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -167,7 +168,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryWebIndexTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryWebIndexTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -182,7 +183,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.flushWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.flushWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -198,7 +199,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.clearWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.clearWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -213,7 +214,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.deleteByIds faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.deleteByIds faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -228,7 +229,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.deleteById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
+                logger.warn("FeignCategoryHotService.deleteById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -243,7 +244,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryListByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryListByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;
@@ -258,7 +259,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请求失败,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryChildListByPid faild  params:{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryHotService.queryChildListByPid faild  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
                 return resultObjectVO;

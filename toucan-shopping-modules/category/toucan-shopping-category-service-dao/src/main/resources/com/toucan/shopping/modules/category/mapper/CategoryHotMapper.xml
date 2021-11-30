@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="parent_id" jdbcType="BIGINT" property="parentId" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="category_sort" jdbcType="INTEGER" property="categorySort" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />

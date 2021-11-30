@@ -28,6 +28,7 @@ public class CategoryHot {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //关联类别ID
 
+    private Long categorySort; //排序
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
