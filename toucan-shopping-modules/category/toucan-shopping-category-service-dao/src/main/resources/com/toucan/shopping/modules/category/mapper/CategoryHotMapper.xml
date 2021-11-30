@@ -51,22 +51,24 @@
 
 
 
-    <select id="queryList" resultMap="categoryHotMap" parameterType="com.toucan.shopping.modules.category.vo.CategoryHotVO">
-        select t.* from t_category_hot t
+    <select id="queryList" resultMap="categoryHotVOMap" parameterType="com.toucan.shopping.modules.category.vo.CategoryHotVO">
+        select tc.name,tc.icon,tc.href,t.* from t_category_hot t left join t_category tc
+        on t.category_id = tc.id
         <where>
             1=1
-
+            and tc.show_status = 1
             <include refid="queryListWhere" />
-
 
         </where>
     </select>
 
 
     <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.category.vo.CategoryHotVO">
-        select count(*) from t_category_hot t
+        select count(*) from t_category_hot t left join t_category tc
+        on t.category_id = tc.id
         <where>
             1=1
+            and tc.show_status = 1
             <include refid="queryListWhere" />
 
         </where>

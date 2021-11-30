@@ -148,7 +148,7 @@ public class CategoryHotController {
             {
                 CategoryHotVO queryCategoryHot = new CategoryHotVO();
                 queryCategoryHot.setName(queryPageInfo.getName());
-                List<CategoryHot> categories = categoryHotService.queryList(queryCategoryHot);
+                List<CategoryHotVO> categories = categoryHotService.queryList(queryCategoryHot);
                 for (int i = 0; i < categories.size(); i++) {
                     CategoryHot category = categories.get(i);
                     CategoryHotTreeVO categoryTreeVO = new CategoryHotTreeVO();
@@ -163,7 +163,7 @@ public class CategoryHotController {
                 }else{
                     queryCategoryHot.setParentId(-1L);
                 }
-                List<CategoryHot> categories = categoryHotService.queryList(queryCategoryHot);
+                List<CategoryHotVO> categories = categoryHotService.queryList(queryCategoryHot);
                 for (int i = 0; i < categories.size(); i++) {
                     CategoryHot category = categories.get(i);
                     CategoryHotTreeVO categoryTreeVO = new CategoryHotTreeVO();

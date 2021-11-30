@@ -34,12 +34,12 @@ public class CategoryHotServiceImpl implements CategoryHotService {
     }
 
     @Override
-    public List<CategoryHot> queryList(CategoryHotVO category) {
+    public List<CategoryHotVO> queryList(CategoryHotVO category) {
         return categoryHotMapper.queryList(category);
     }
 
     @Override
-    public Long queryCount(CategoryHot category) {
+    public Long queryCount(CategoryHotVO category) {
         return categoryHotMapper.queryCount(category);
     }
 

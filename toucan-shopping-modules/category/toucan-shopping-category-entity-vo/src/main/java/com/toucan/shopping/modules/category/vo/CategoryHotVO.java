@@ -23,6 +23,9 @@ public class CategoryHotVO extends CategoryHot {
      */
     private String name;
 
+    private String icon; //图标
+
+    private String href; //点击类别跳转路径
 
     /**
      * 上级节点名称

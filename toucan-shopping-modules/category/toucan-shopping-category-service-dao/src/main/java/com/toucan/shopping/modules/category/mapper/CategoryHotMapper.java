@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface CategoryHotMapper {
 
-    List<CategoryHot> queryList(CategoryHotVO categoryHot);
+    List<CategoryHotVO> queryList(CategoryHotVO categoryHot);
 
     int insert(CategoryHot categoryHot);
     /**
@@ -21,6 +21,6 @@ public interface CategoryHotMapper {
      */
     List<CategoryHotVO> findTreeTableByPageInfo(CategoryHotTreeInfo queryTreeInfo);
 
-    Long queryCount(CategoryHot categoryHot);
+    Long queryCount(CategoryHotVO categoryHot);
 
 }

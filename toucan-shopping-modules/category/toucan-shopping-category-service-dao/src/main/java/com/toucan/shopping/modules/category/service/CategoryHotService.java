@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface CategoryHotService {
 
-    List<CategoryHot> queryList(CategoryHotVO category);
+    List<CategoryHotVO> queryList(CategoryHotVO category);
 
     /**
      * 保存实体
@@ -35,6 +35,6 @@ public interface CategoryHotService {
     List<CategoryHotVO> findTreeTable(CategoryHotTreeInfo queryTreeInfo);
 
 
-    Long queryCount(CategoryHot category);
+    Long queryCount(CategoryHotVO category);
 
 }
