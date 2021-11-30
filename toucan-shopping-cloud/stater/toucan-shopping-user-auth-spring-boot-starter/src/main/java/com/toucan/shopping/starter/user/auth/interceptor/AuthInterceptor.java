@@ -165,7 +165,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
-                                //判断当前Token和超级Token能否对应的上
+                                //判断当前Token和权限Token能否对应的上
                                 String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
                                 if(glat.equals(lat))
                                 {
@@ -238,7 +238,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
 
-                                //判断当前Token和超级Token能否对应的上
+                                //判断当前Token和权限Token能否对应的上
                                 String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
                                 if(glat.equals(lat))
                                 {
