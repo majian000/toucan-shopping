@@ -818,7 +818,7 @@ public class UserApiController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/forget/pwd/step2", method = RequestMethod.POST)
-    public ResultObjectVO forgetPwdByStep2(@RequestBody UserForgetPasswordVO userForgetPasswordVO)
+    public ResultObjectVO forgetPwdByStep2(HttpServletRequest request,@RequestBody UserForgetPasswordVO userForgetPasswordVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
@@ -829,13 +829,48 @@ public class UserApiController extends BaseController {
             return resultObjectVO;
         }
 
+
         try{
+
             boolean lockStatus = skylarkLock.lock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("操作超时,请稍后重试");
                 return resultObjectVO;
             }
+
+
+            if(StringUtils.isEmpty(userForgetPasswordVO.getVcode()))
+            {
+                resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+                resultObjectVO.setMsg("请输入验证码");
+                //释放锁
+                skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
+                return resultObjectVO;
+            }
+
+            String vcodeRedisKey = VerifyCodeRedisKey.getForgetVerifyCodeKey(this.getAppCode(), IPUtil.getRemoteAddr(request));
+            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
+            if(vCodeObject==null)
+            {
+                resultObjectVO.setMsg("验证码过期,请刷新");
+                resultObjectVO.setCode(UserRegistConstant.SHOW_LOGIN_VERIFY_CODE);
+                //释放锁
+                skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
+                return resultObjectVO;
+            }
+            if(!StringUtils.equals(userForgetPasswordVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+            {
+                resultObjectVO.setMsg("验证码输入有误");
+                resultObjectVO.setCode(UserRegistConstant.LOGIN_VERIFY_CODE_FAILD);
+                //释放锁
+                skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
+
+                return resultObjectVO;
+            }
+            //校验通过,删除验证码
+            toucanStringRedisService.delete(vcodeRedisKey);
+
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
             resultObjectVO = feignUserService.findByUsername(requestJsonVO);
@@ -845,7 +880,7 @@ public class UserApiController extends BaseController {
                     if(userVO.getEnableStatus().intValue()==1) {
                         logger.info("找回密码 用户 {}", JSONObject.toJSONString(userVO));
                         resultObjectVO.setCode(ResultObjectVO.SUCCESS);
-                        resultObjectVO.setData("page/user/forgetPwd/forget_pwd_step2");
+                        resultObjectVO.setData("page/user/forget/pwd/step2");
                     }else{
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
                         resultObjectVO.setMsg("该账号已被禁用");

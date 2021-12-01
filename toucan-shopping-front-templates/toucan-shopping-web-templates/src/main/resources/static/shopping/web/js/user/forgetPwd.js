@@ -43,7 +43,7 @@ function forgetPwdStep2()
 
                 flushVcode();
             }else{
-                window.location.href= result.data;
+                window.location.href= basePath+"/"+result.data;
             }
         },
         error: function (result) {
