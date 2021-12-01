@@ -48,23 +48,7 @@
 <body>  
 <!--Begin Header Begin-->
 <div class="soubg">
-	<div class="sou">
-        <!--Begin 所在收货地区 Begin-->
-        <span class="s_city_b">
-            <span class="fl">
-                <img src="${basePath}/static/images/icon_home.png">
-                <a class="navbar-brand" href="/index">
-                商城首页
-                </a>&nbsp;&nbsp;&nbsp;
-            </span>
-        </span>
-        <span class="fr">
-        	<span class="fl"><#include "/regist_login.html"/>&nbsp; </span>
-            <span class="fl">|&nbsp;关注我们：</span>
-            <span class="s_sh"><a href="#" class="sh1">新浪</a><a href="#" class="sh2">微信</a></span>
-            <span class="fr">|&nbsp;<a href="#">手机版&nbsp;<img src="${basePath}/static/images/s_tel.png" align="absmiddle" /></a></span>
-        </span>
-    </div>
+    <#include "/top_child.html"/>
 </div>
 <!--End Header End-->
 <div class="top">
@@ -107,7 +91,7 @@
                 	<span  class="fl">
                         &nbsp;&nbsp;&nbsp;
                     </span>
-                    <span class="fr"><a href="#" style="color:#ff4e00;">忘记密码</a></span>
+                    <span class="fr"><a href="${basePath}/page/user/forget/pwd" style="color:#ff4e00;">忘记密码</a></span>
                 </td>
               </tr>
               <tr height="60">

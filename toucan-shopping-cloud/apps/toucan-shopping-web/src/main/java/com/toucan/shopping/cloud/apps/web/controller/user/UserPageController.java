@@ -56,6 +56,48 @@ public class UserPageController extends BaseController {
         return "user/regist";
     }
 
+
+    /**
+     * 找回密码
+     * @return
+     */
+    @RequestMapping("/forget/pwd")
+    public String forgetPwd()
+    {
+        return "user/forgetPwd/forget_pwd";
+    }
+
+    /**
+     * 找回密码 步骤2
+     * @return
+     */
+    @RequestMapping("/forget/pwd/step2")
+    public String forgetPwdByStep2()
+    {
+        return "user/forgetPwd/forget_pwd_step2";
+    }
+
+    /**
+     * 找回密码 步骤3
+     * @return
+     */
+    @RequestMapping("/forget/pwd/step3")
+    public String forgetPwdByStep3()
+    {
+        return "user/forgetPwd/forget_pwd_step3";
+    }
+
+    /**
+     * 找回密码 步骤3
+     * @return
+     */
+    @RequestMapping("/forget/pwd/success")
+    public String forgetPwdBySuccess()
+    {
+        return "user/forgetPwd/forget_pwd_success";
+    }
+
+
     @RequestMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response)
     {
