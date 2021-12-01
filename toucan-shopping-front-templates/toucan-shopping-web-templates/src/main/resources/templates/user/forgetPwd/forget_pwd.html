@@ -29,9 +29,7 @@
 
     <#include "/common_js.html"/>
 	<script type="text/javascript" src="${basePath}/static/js/lrscroll_1.js"></script>
-    <script type="text/javascript" src="${basePath}/static/shopping/web/js/cookie.js"></script>
-    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/login.js"></script>
-    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/sso.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/forgetPwd.js"></script>
 
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/forgetPwd/forgetPwd.css" />
 
@@ -74,21 +72,26 @@
             </div><!--for-liucheng/-->
             <form action="forgetPwd2.html" method="get" class="forget-pwd">
                 <dl>
-                    <dt>账户名：</dt>
-                    <dd><input type="text"  class="l_ipt" /></dd>
+                    <dt>用户名：</dt>
+                    <dd><input type="text" id="username"  class="l_ipt" style="width:240px;"  placeholder="手机号/邮箱/用户名" maxlength="50" /></dd>
                     <div class="clears"></div>
                 </dl>
                 <dl>
                     <dt>验证码：</dt>
                     <dd>
-                        <input type="text"  class="l_ipt" />
+                        <input type="text" id="vcode"  placeholder="请输入验证码" class="l_ipt" maxlength="4" />
                         <div class="yanzma">
                             <img id="refreshCaptcha" style="width:100px;height:40px;vertical-align:middle;"  src="${basePath}/api/user/forget/vcode" alt="换一换" title="换一换">
                         </div>
                     </dd>
                     <div class="clears"></div>
                 </dl>
-                <div class="subtijiao"><input type="submit" value="提交" /></div>
+                <div class="subtijiao"><button type="button" onclick="forgetPwdStep2();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button></div>
+
+                <br>
+                <div id="wrn_msg" style="width:100%;text-align:center;">
+                    <a id="wrn_msg_tip" style="color:#ff0000;"></a>
+                </div>
             </form><!--forget-pwd/-->
         </div><!--web-width/-->
     </div><!--content/-->
@@ -107,7 +110,6 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/forget/vcode?"+new Date().getTime());
         });
 
-        bind_upload_event();
 
     });
 

@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.user.vo;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.toucan.shopping.modules.user.entity.User;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,15 +13,11 @@ import java.util.Date;
  * 用户
  */
 @Data
-public class UserVO {
+public class UserVO extends User {
 
     /**
      * ===================用户主表========================
      */
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long id;
 
     /**
      * long类型的id转成字符串
@@ -28,39 +25,18 @@ public class UserVO {
     private String userId;
 
     /**
-     * 用户ID
-     */
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long userMainId;
-
-    /**
      * 用户ID字符串
      */
     private String userMainIdString;
 
 
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 所属应用
      */
     private String appCode ="10001001";
 
-    /**
-     * 删除状态 0未删除 1已删除
-     */
-    private Short deleteStatus;
 
-    /**
-     * 创建时间
-     */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createDate;
 
 
     //=====================用户手机号关联表====================

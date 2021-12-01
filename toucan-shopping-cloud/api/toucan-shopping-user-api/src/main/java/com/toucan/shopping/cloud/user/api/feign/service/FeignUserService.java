@@ -332,4 +332,16 @@ public interface FeignUserService {
     @RequestMapping(value="/update/headsculpture",produces = "application/json;charset=UTF-8")
     ResultObjectVO updateHeadsculpture(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 根据用户名查询用户信息
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/by/username",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findByUsername(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
 }

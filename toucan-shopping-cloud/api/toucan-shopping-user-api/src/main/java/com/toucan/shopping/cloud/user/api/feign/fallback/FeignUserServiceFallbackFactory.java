@@ -525,6 +525,21 @@ public class FeignUserServiceFallbackFactory implements FallbackFactory<FeignUse
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO findByUsername(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("查询超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignUserService.findByUsername 失败 params {}",requestJsonVO.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询超时,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }

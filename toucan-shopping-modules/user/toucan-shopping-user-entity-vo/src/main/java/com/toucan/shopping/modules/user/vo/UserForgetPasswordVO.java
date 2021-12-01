@@ -6,10 +6,10 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 重置密码
+ * 找回密码
  */
 @Data
-public class UserResetPasswordVO extends UserVO {
+public class UserForgetPasswordVO extends UserVO {
 
     /**
      * 用户所属应用

@@ -88,7 +88,7 @@
                     <dd><input type="password" /></dd>
                     <div class="clears"></div>
                 </dl>
-                <div class="subtijiao"><input type="submit" value="提交" /></div>
+                <div class="subtijiao"><button type="button" onclick="forgetPwdStep();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button></div>
             </form><!--forget-pwd/-->
         </div><!--web-width/-->
     </div><!--content/-->
@@ -102,12 +102,6 @@
 <script>
     $(function () {
 
-
-        $("#refreshCaptcha").bind( 'click' ,function(){
-            $("#refreshCaptcha").attr("src",basePath+"/api/user/forget/vcode?"+new Date().getTime());
-        });
-
-        bind_upload_event();
 
     });
 

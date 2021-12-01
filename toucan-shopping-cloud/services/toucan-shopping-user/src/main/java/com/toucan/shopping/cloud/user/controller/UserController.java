@@ -1322,6 +1322,113 @@ public class UserController {
     }
 
 
+
+
+
+    /**
+     * 根据用户名查询用户信息
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/by/username",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findByUsername(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestJsonVO == null) {
+            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("查询失败,没有找到要查询的用户");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("查询失败,没有找到应用编码");
+            return resultObjectVO;
+        }
+
+        UserVO user = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserVO.class);
+        if(user==null)
+        {
+            resultObjectVO.setCode(UserLoginConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("登录失败,没有找到账号");
+            return resultObjectVO;
+        }
+        logger.info(" 用户查询 {} ",requestJsonVO.getEntityJson());
+
+        if(StringUtils.isEmpty(user.getUsername()))
+        {
+            resultObjectVO.setCode(UserLoginConstant.USERNAME_NOT_FOUND);
+            resultObjectVO.setMsg("查询失败,请输入账号");
+            return resultObjectVO;
+        }
+
+        try {
+
+            //如果当前输入的是手机号判断手机号是否存在
+            Long userId = 0L;
+
+            User userEntity=null;
+            if(PhoneUtils.isChinaPhoneLegal(user.getUsername()))
+            {
+                List<UserMobilePhone> userMobilePhones = userMobilePhoneService.findListByMobilePhone(user.getUsername());
+                if (!CollectionUtils.isEmpty(userMobilePhones)) {
+                    if (userMobilePhones.get(0) != null && userMobilePhones.get(0).getUserMainId() != null) {
+                        userId = userMobilePhones.get(0).getUserMainId();
+                    }
+                }
+
+            }else if(EmailUtils.isEmail(user.getUsername())) //如果输入邮箱,拿到邮箱对应的用户主ID
+            {
+                List<UserEmail> userEmails = userEmailService.findListByEmail(user.getUsername());
+                if (!CollectionUtils.isEmpty(userEmails)) {
+                    if (userEmails.get(0) != null && userEmails.get(0).getUserMainId() != null) {
+                        userId = userEmails.get(0).getUserMainId();
+                    }
+                }
+            }else if(UsernameUtils.isUsername(user.getUsername())) //如果输入用户名,拿到用户名对应的用户主ID
+            {
+                List<UserUserName> userUserNames = userUserNameService.findListByUserName(user.getUsername());
+                if (!CollectionUtils.isEmpty(userUserNames)) {
+                    if (userUserNames.get(0) != null && userUserNames.get(0).getUserMainId() != null) {
+                        userId = userUserNames.get(0).getUserMainId();
+                    }
+                }
+            }
+
+            List<User> users = userService.findByUserMainId(userId);
+            if (CollectionUtils.isEmpty(users)) {
+                resultObjectVO.setData(null);
+                return resultObjectVO;
+            } else {
+                userEntity = users.get(0);
+            }
+
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(userVO,userEntity);
+
+            //设置用户详情
+            UserDetail queryUserDetail = new UserDetail();
+            queryUserDetail.setUserMainId(userVO.getUserMainId());
+            List<UserDetail> userDetails = userDetailService.findListByEntity(queryUserDetail);
+            if(CollectionUtils.isNotEmpty(userDetails))
+            {
+                UserDetail userDetail = userDetails.get(0);
+                BeanUtils.copyProperties(userVO,userDetail);
+            }
+            resultObjectVO.setData(userVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败,请稍后重试");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+
+
     /**
      * 判断是否在线
      * @param requestVo

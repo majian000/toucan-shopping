@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.user.vo.UserForgetPasswordVO;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -67,15 +69,8 @@ public class UserPageController extends BaseController {
         return "user/forgetPwd/forget_pwd";
     }
 
-    /**
-     * 找回密码 步骤2
-     * @return
-     */
-    @RequestMapping("/forget/pwd/step2")
-    public String forgetPwdByStep2()
-    {
-        return "user/forgetPwd/forget_pwd_step2";
-    }
+
+
 
     /**
      * 找回密码 步骤3

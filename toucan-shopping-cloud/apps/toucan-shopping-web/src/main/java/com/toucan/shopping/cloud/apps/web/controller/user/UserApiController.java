@@ -2,15 +2,12 @@ package com.toucan.shopping.cloud.apps.web.controller.user;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.apps.web.redis.UserEditInfoRedisKey;
-import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
-import com.toucan.shopping.cloud.apps.web.redis.VerifyCodeRedisKey;
+import com.toucan.shopping.cloud.apps.web.redis.*;
 import com.toucan.shopping.cloud.apps.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignSmsService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.util.*;
-import com.toucan.shopping.modules.common.xss.XSSConvert;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -18,7 +15,6 @@ import com.toucan.shopping.modules.sms.constant.SmsTypeConstant;
 import com.toucan.shopping.modules.user.constant.UserLoginConstant;
 import com.toucan.shopping.modules.user.constant.UserRegistConstant;
 import com.toucan.shopping.modules.user.entity.UserMobilePhone;
-import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -26,7 +22,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
-import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -167,12 +162,12 @@ public class UserApiController extends BaseController {
 
 
     /**
-     * 发送重置密码验证码
+     * 发送找回密码验证码
      * @return
      */
-    @RequestMapping("/sendResetPwdVerifyCode")
+    @RequestMapping("/sendForgetPwdVerifyCode")
     @ResponseBody
-    public ResultObjectVO sendResetPwdVerifyCode(String mobilePhone)
+    public ResultObjectVO sendForgetPwdVerifyCode(String mobilePhone)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(StringUtils.isEmpty(mobilePhone)||!PhoneUtils.isChinaPhoneLegal(mobilePhone))
@@ -183,7 +178,7 @@ public class UserApiController extends BaseController {
         }
 
         try {
-            UserResetPasswordVO userResetPasswordVO = new UserResetPasswordVO();
+            UserForgetPasswordVO userResetPasswordVO = new UserForgetPasswordVO();
             userResetPasswordVO.setMobilePhone(mobilePhone);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userResetPasswordVO);
             resultObjectVO = feignUserService.findByMobilePhone(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -225,7 +220,7 @@ public class UserApiController extends BaseController {
 
             //保存生成验证码到缓存
             String code = NumberUtil.random(6);
-            userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"申请了手机号码注册,验证码是"+code);
+            userSmsVO.setMsg("[犀鸟电商]您于"+ DateUtils.format(DateUtils.currentDate(), DateUtils.FORMATTER_DD_CN.get())+"发起了找回密码申请,验证码是"+code);
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userSmsVO);
 
             resultObjectVO = feignSmsService.send(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -818,6 +813,55 @@ public class UserApiController extends BaseController {
         }
     }
 
+    /**
+     * 找回密码 步骤2
+     * @return
+     */
+    @RequestMapping(value = "/forget/pwd/step2", method = RequestMethod.POST)
+    public ResultObjectVO forgetPwdByStep2(HttpServletRequest request, UserForgetPasswordVO userForgetPasswordVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            if(StringUtils.isEmpty(userForgetPasswordVO.getUsername()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setData("请输入用户名");
+                return resultObjectVO;
+            }
+
+            boolean lockStatus = skylarkLock.lock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("操作超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userForgetPasswordVO);
+            resultObjectVO = feignUserService.findByUsername(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+                    UserVO userVO = resultObjectVO.formatData(UserVO.class);
+                    if(userVO.getEnableStatus().intValue()==1) {
+                        logger.info("找回密码 用户 {}", JSONObject.toJSONString(userVO));
+                        resultObjectVO.setData("user/forgetPwd/forget_pwd_step2");
+                    }else{
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setData("该账号已被禁用");
+                    }
+                }else{
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setData("没有找到该账号");
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }finally{
+            //释放锁
+            skylarkLock.unLock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 忘记密码 验证码
