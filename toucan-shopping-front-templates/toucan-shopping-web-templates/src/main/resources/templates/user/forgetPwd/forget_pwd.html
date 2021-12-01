@@ -86,12 +86,15 @@
                     </dd>
                     <div class="clears"></div>
                 </dl>
-                <div class="subtijiao"><button type="button" onclick="forgetPwdStep2();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button></div>
+                <div class="subtijiao">
+                    <button type="button" onclick="forgetPwdStep2();"  id="login_btn" class="log_btn" style="width:200px;" >提交</button>
 
-                <br>
+                </div>
+                <br/>
                 <div id="wrn_msg" style="width:100%;text-align:center;">
                     <a id="wrn_msg_tip" style="color:#ff0000;"></a>
                 </div>
+
             </form><!--forget-pwd/-->
         </div><!--web-width/-->
     </div><!--content/-->
@@ -107,7 +110,7 @@
 
 
         $("#refreshCaptcha").bind( 'click' ,function(){
-            $("#refreshCaptcha").attr("src",basePath+"/api/user/forget/vcode?"+new Date().getTime());
+            flushVcode();
         });
 
 

@@ -814,21 +814,22 @@ public class UserApiController extends BaseController {
     }
 
     /**
-     * 找回密码 步骤2
+     * 找回密码 步骤2 (输入短信验证码或邮箱找回)
      * @return
      */
     @RequestMapping(value = "/forget/pwd/step2", method = RequestMethod.POST)
-    public ResultObjectVO forgetPwdByStep2(HttpServletRequest request, UserForgetPasswordVO userForgetPasswordVO)
+    public ResultObjectVO forgetPwdByStep2(UserForgetPasswordVO userForgetPasswordVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try{
-            if(StringUtils.isEmpty(userForgetPasswordVO.getUsername()))
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setData("请输入用户名");
-                return resultObjectVO;
-            }
 
+        if(StringUtils.isEmpty(userForgetPasswordVO.getUsername()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请输入用户名");
+            return resultObjectVO;
+        }
+
+        try{
             boolean lockStatus = skylarkLock.lock(UserForgetPasswordRedisKey.getForgetPasswordLockKey(userForgetPasswordVO.getUsername()), userForgetPasswordVO.getUsername());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -843,16 +844,17 @@ public class UserApiController extends BaseController {
                     UserVO userVO = resultObjectVO.formatData(UserVO.class);
                     if(userVO.getEnableStatus().intValue()==1) {
                         logger.info("找回密码 用户 {}", JSONObject.toJSONString(userVO));
-                        resultObjectVO.setData("user/forgetPwd/forget_pwd_step2");
+                        resultObjectVO.setData("page/user/forgetPwd/forget_pwd_step2");
                     }else{
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setData("该账号已被禁用");
+                        resultObjectVO.setMsg("该账号已被禁用");
                     }
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setData("没有找到该账号");
+                    resultObjectVO.setMsg("没有找到该账号");
                 }
             }
+            resultObjectVO.setData(null);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -71,6 +71,17 @@ public class UserPageController extends BaseController {
 
 
 
+    /**
+     * 找回密码 步骤2
+     * @return
+     */
+    @RequestMapping("/forget/pwd/step2")
+    public String forgetPwdByStep2()
+    {
+        return "user/forgetPwd/forget_pwd_step2";
+    }
+
+
 
     /**
      * 找回密码 步骤3
