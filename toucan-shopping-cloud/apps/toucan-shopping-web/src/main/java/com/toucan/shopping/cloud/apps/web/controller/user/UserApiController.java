@@ -818,7 +818,7 @@ public class UserApiController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/forget/pwd/step2", method = RequestMethod.POST)
-    public ResultObjectVO forgetPwdByStep2(UserForgetPasswordVO userForgetPasswordVO)
+    public ResultObjectVO forgetPwdByStep2(@RequestBody UserForgetPasswordVO userForgetPasswordVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
@@ -844,6 +844,7 @@ public class UserApiController extends BaseController {
                     UserVO userVO = resultObjectVO.formatData(UserVO.class);
                     if(userVO.getEnableStatus().intValue()==1) {
                         logger.info("找回密码 用户 {}", JSONObject.toJSONString(userVO));
+                        resultObjectVO.setCode(ResultObjectVO.SUCCESS);
                         resultObjectVO.setData("page/user/forgetPwd/forget_pwd_step2");
                     }else{
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -854,7 +855,6 @@ public class UserApiController extends BaseController {
                     resultObjectVO.setMsg("没有找到该账号");
                 }
             }
-            resultObjectVO.setData(null);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
