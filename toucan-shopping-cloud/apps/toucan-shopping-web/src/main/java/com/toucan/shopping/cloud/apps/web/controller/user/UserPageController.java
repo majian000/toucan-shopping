@@ -169,7 +169,7 @@ public class UserPageController extends BaseController {
     public String editInfo(HttpServletRequest httpServletRequest)
     {
         this.setAttributeUser(httpServletRequest);
-        return "user/edit_info";
+        return "user/info/edit_info";
     }
 
     @RequestMapping(value="/logout")
