@@ -54,76 +54,79 @@
 
         <div class="user-right">
                 <form id="userEditInfo" method="post" onsubmit="return false;">
-                    <div class="form-group">
+                    <div class="toucan-form">
                         <h3>帐户信息</h3>
-                        <#if userVO.username??>
-                        <div class="item">
-                            <span class="label">登录名：</span>
-                            <div class="fl">
-                                ${userVO.username!''}
+                        <div class="toucan-form-body">
+                            <#if userVO.username??>
+                            <div class="item">
+                                <span class="label">登录名：</span>
+                                <div class="fl">
+                                    ${userVO.username!''}
+                                </div>
                             </div>
-                        </div>
-                    </#if>
+                        </#if>
 
-                    <div class="item">
-                        <span class="label"><span class="red">*</span>昵称：</span>
-                        <div class="fl">
-                            <input type="text" id="nickname" name="nickName" maxlength="15" class="text" tabindex="1" value="${userVO.nickName!''}" />
-                            <label id="nickname_succeed" class="blank"></label>
-                            <span class="clear"></span>
-                            <div id="nickname_error"></div>
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>昵称：</span>
+                            <div class="fl">
+                                <input type="text" id="nickname" name="nickName" maxlength="15" class="text" tabindex="1" value="${userVO.nickName!''}" />
+                                <label id="nickname_succeed" class="blank"></label>
+                                <span class="clear"></span>
+                                <div id="nickname_error"></div>
+                            </div>
+                        </div><!--item end-->
+
+
+                        <div class="item">
+                            <span class="label">性别</span>
+                            <div class="fl">
+                                <#if userVO.sex?? && userVO.sex==1 >
+                                <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
+                                <input type="radio" class="radio" name="sex" id="sex_0" value="0" /><label for="sex_1">女</label>
+                                <#elseif userVO.sex?? && userVO.sex==0 >
+                                <input type="radio" class="radio" name="sex" id="sex_1" value="1" /> <label for="sex_1">男</label>
+                                <input type="radio" class="radio" name="sex" id="sex_0" value="0" checked /><label for="sex_1">女</label>
+                                <#else>
+                                <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
+                                <input type="radio" class="radio" name="sex" id="sex_0" value="0"  /><label for="sex_1">女</label>
+                            </#if>
                         </div>
                     </div><!--item end-->
 
+                    <div class="item">
+                        <span class="label"><span class="red">*</span>个性签名：</span>
+                        <div class="fl">
+                            <input type="text" id="personalizedSignature" name="personalizedSignature" maxlength="50" class="text" tabindex="1" value="${userVO.personalizedSignature!''}" />
+                            <label id="personalizedSignature_succeed" class="blank"></label>
+                            <span class="clear"></span>
+                            <div id="personalizedSignature_error"></div>
+                        </div>
+                    </div><!--item end-->
+                    <div class="item">
+                        <span class="label"><span class="red">*</span>验证码：</span>
+                        <div class="fl">
+                            <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
+                            <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
+                            </label>
+                            <label>&nbsp;看不清？点击验证码图片更换</label>
+                            <label id="vcode_succeed" class="blank invisible"></label>
+                            <span class="clear"></span>
+                            <label id="vcode_error"></label>
+                        </div>
+                    </div><!--item end-->
 
                     <div class="item">
-                        <span class="label">性别</span>
-                        <div class="fl">
-                            <#if userVO.sex?? && userVO.sex==1 >
-                            <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
-                            <input type="radio" class="radio" name="sex" id="sex_0" value="0" /><label for="sex_1">女</label>
-                            <#elseif userVO.sex?? && userVO.sex==0 >
-                            <input type="radio" class="radio" name="sex" id="sex_1" value="1" /> <label for="sex_1">男</label>
-                            <input type="radio" class="radio" name="sex" id="sex_0" value="0" checked /><label for="sex_1">女</label>
-                            <#else>
-                            <input type="radio" class="radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
-                            <input type="radio" class="radio" name="sex" id="sex_0" value="0"  /><label for="sex_1">女</label>
-                        </#if>
+                        <span class="label">&nbsp;</span>
+                        <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
+                    </div><!--item end-->
+
+                    <div class="item">
+                        <span class="label">&nbsp;</span>
+                        <a id="edit_info_msg" style="color:#ff4e00;"></a>
                     </div>
-            </div><!--item end-->
 
-            <div class="item">
-                <span class="label"><span class="red">*</span>个性签名：</span>
-                <div class="fl">
-                    <input type="text" id="personalizedSignature" name="personalizedSignature" maxlength="50" class="text" tabindex="1" value="${userVO.personalizedSignature!''}" />
-                    <label id="personalizedSignature_succeed" class="blank"></label>
-                    <span class="clear"></span>
-                    <div id="personalizedSignature_error"></div>
-                </div>
-            </div><!--item end-->
-            <div class="item">
-                <span class="label"><span class="red">*</span>验证码：</span>
-                <div class="fl">
-                    <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
-                    <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
-                    </label>
-                    <label>&nbsp;看不清？点击验证码图片更换</label>
-                    <label id="vcode_succeed" class="blank invisible"></label>
-                    <span class="clear"></span>
-                    <label id="vcode_error"></label>
-                </div>
-            </div><!--item end-->
-
-            <div class="item">
-                <span class="label">&nbsp;</span>
-                <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
-            </div><!--item end-->
-
-            <div class="item">
-                <span class="label">&nbsp;</span>
-                <a id="edit_info_msg" style="color:#ff4e00;"></a>
-            </div>
-            </form>
+                        </div>
+                </form>
         </div>
     </div>
 
