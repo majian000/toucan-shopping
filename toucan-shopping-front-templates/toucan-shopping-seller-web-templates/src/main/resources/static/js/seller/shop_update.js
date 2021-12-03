@@ -47,7 +47,7 @@ function updateUserShop()
             if(data.code==401)
             {
                 window.location.href=basePath+data.data;
-            }else  if(data.code==0)
+            }else  if(data.code<=0)
             {
                 $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
                 $("#tn_msg").show();
