@@ -9,7 +9,7 @@ var toucan_wrn_type = 1; //1:默认 2:messagebox
  * 2、函数：value为文本框的值、验证失败:return 提示文字，验证成功：return true（不能不写）
  */
 var checkInput = {
-    shopName: [
+    nickName: [
         /^[\u0391-\uFFE5a-zA-Z0-9]{2,15}$/, '必须由2-15位的组成,不能包含特殊符号'
     ],
     phone: [

@@ -69,7 +69,7 @@
                         <div class="item">
                             <span class="label"><span class="red">*</span>昵称：</span>
                             <div class="fl">
-                                <input type="text" id="nickname" name="nickName" maxlength="15" class="text" tabindex="1" value="${userVO.nickName!''}" />
+                                <input type="text" id="nickname" name="nickName" maxlength="15" class="text" tabindex="1" lay-verify="required|nickName" value="${userVO.nickName!''}" />
                                 <label id="nickname_succeed" class="blank"></label>
                                 <span class="clear"></span>
                                 <div id="nickname_error"></div>
