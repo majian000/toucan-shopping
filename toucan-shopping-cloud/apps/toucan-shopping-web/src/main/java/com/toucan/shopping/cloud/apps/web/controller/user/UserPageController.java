@@ -6,6 +6,7 @@ import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.IPUtil;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 
 /**
@@ -159,6 +161,25 @@ public class UserPageController extends BaseController {
     @RequestMapping("/info")
     public String info(HttpServletRequest httpServletRequest)
     {
+        Date currentDate = DateUtils.currentDate();
+        String welcomeText = "欢迎回来～";
+        try {
+            String hours = DateUtils.format(currentDate, DateUtils.FORMATTER_HH.get());
+            int hoursInteger = Integer.parseInt(hours);
+            if(hoursInteger>=9&&hoursInteger<11){
+                welcomeText="早上好～";
+            }else if(hoursInteger>=11&&hoursInteger<13){
+                welcomeText="中午好～";
+            }else if(hoursInteger>=13&&hoursInteger<18){
+                welcomeText="下午好～";
+            }else{
+                welcomeText="晚上好～";
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        httpServletRequest.setAttribute("welcomeText",welcomeText);
         this.setAttributeUser(httpServletRequest);
         return "user/info";
     }

@@ -49,6 +49,12 @@ public final class DateUtils {
         }
     };
 
+    public static final ThreadLocal<DateFormat> FORMATTER_HH = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("HH");
+        }
+    };
 
     /**
      * 提前几秒钟方法
