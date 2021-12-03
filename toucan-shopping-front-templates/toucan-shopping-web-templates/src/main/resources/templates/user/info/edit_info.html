@@ -38,7 +38,14 @@
 
 <!------------main---------------->
 <div class="main">
-    <div class="current-position"><h2><a href="#">首页</a> &gt; <a href="#">个人中心</a></h2></div>
+
+    <div class="current-position">
+        <h2>
+            <a href="${basePath}/page/user/info">账号管理</a>
+            &gt;
+            <a href="#">修改资料</a>
+        </h2>
+    </div>
     <div class="user-content">
 
         <div class="user-menu">
@@ -47,7 +54,7 @@
 
         <div class="user-right">
                 <form id="userEditInfo" method="post" onsubmit="return false;">
-                    <div class="form">
+                    <div class="form-group">
                         <h3>帐户信息</h3>
                         <#if userVO.username??>
                         <div class="item">
