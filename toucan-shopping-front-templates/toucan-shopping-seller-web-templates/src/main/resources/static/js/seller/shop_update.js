@@ -50,8 +50,11 @@ function updateUserShop()
             }else  if(data.code<=0)
             {
                 $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
-                $("#tn_msg").show();
-                $("#tn_msg").text(data.msg);
+                $.message({
+                    time:'4000',
+                    message: data.msg,
+                    type: 'error'
+                });
             }else if(data.code==1)
             {
                 window.location.href=basePath+"/page/shop/edit";
