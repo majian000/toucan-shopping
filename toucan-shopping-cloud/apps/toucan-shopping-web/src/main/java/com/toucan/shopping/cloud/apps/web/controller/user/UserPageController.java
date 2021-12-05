@@ -193,6 +193,16 @@ public class UserPageController extends BaseController {
         return "user/info/edit_info";
     }
 
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/editHeadSculpture")
+    public String editHeadSculpture(HttpServletRequest httpServletRequest)
+    {
+        this.setAttributeUser(httpServletRequest);
+        return "user/info/edit_head_sculpture";
+    }
+
+
     @RequestMapping(value="/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         try{
