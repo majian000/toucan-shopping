@@ -87,17 +87,17 @@
                     <div class="item">
                         <span class="label"><span class="red">*</span>个性签名：</span>
                         <div class="field">
-                            <input type="text" id="personalizedSignature" name="personalizedSignature" style="width:307px" maxlength="50" class="l_ipt" tabindex="1" value="${userVO.personalizedSignature!''}" />
+                            <input type="text" id="personalizedSignature" name="personalizedSignature" style="width:307px" maxlength="50" class="l_ipt" lay-verify="required" tabindex="1" value="${userVO.personalizedSignature!''}" />
                         </div>
                     </div><!--item end-->
                     <div class="item">
                         <span class="label"><span class="red">*</span>验证码：</span>
                         <div class="field" >
                             <span style="float:left;">
-                                <input type="text" id="vcode" name="vcode" class="l_ipt" autocomplete="off" MaxLength="4" tabindex="6" />
+                                <input type="text" id="vcode" name="vcode" class="l_ipt" autocomplete="off" lay-verify="required"  MaxLength="4" tabindex="6" />
                             </span>
                             <span style="float:left;margin-left:5px;">
-                                <img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:40px;"/
+                                <img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:40px;"/>
                             </span>
                         </div>
                     </div><!--item end-->
@@ -135,7 +135,6 @@
             $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
         });
 
-        init_events();
     });
 
 
