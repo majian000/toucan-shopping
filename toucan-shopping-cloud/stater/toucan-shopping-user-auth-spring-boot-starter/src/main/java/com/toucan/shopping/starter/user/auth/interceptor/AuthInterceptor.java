@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.common.wrapper.RequestWrapper;
 import com.toucan.shopping.modules.user.util.LoginAuthTokenUtil;
+import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -171,6 +172,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 {
                                     return true;
                                 }
+                                //判断UserMainId和登录Token能否对应的上
+                                String loginToken = LoginTokenUtil.generatorTokenByString(uid);
+                                if(loginToken.equals(lt))
+                                {
+                                    return true;
+                                }
                                 //判断当前的token和userId是否对应的上
                                 UserLoginVO queryUserLogin = new UserLoginVO();
                                 try {
@@ -245,6 +252,12 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return true;
                                 }
 
+                                //判断UserMainId和登录Token能否对应的上
+                                String loginToken = LoginTokenUtil.generatorTokenByString(uid);
+                                if(loginToken.equals(lt))
+                                {
+                                    return true;
+                                }
                                 //在这里调用用户中心 判断登录
                                 UserLoginVO queryUserLoginVO = new UserLoginVO();
                                 queryUserLoginVO.setUserMainId(Long.parseLong(uid));

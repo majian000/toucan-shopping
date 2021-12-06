@@ -5,7 +5,7 @@ import com.toucan.shopping.modules.common.util.MD5Util;
 
 public class LoginAuthTokenUtil {
 
-    public static String salt="0.9474";
+    public static String salt="0.9474";  //这个必须要修改成你自己的,要不然会有很严重的安全性问题
 
 
     /**
