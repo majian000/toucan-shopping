@@ -166,15 +166,20 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
+                                //判断UserMainId和登录Token能否对应的上
+                                String loginToken = LoginTokenUtil.generatorTokenByString(uid);
+                                if(!loginToken.equals(lt))
+                                {
+                                    logger.info(" 校验用户ID和loginToken不一致 {} loginToken {}" ,authHeader,lt);
+                                    resultVO.setCode(ResultVO.HTTPCODE_403);
+                                    resultVO.setMsg("登录超时,请重新登录");
+                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    responseWrite(response, JSONObject.toJSONString(resultVO));
+                                    return false;
+                                }
                                 //判断当前Token和权限Token能否对应的上
                                 String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
                                 if(glat.equals(lat))
-                                {
-                                    return true;
-                                }
-                                //判断UserMainId和登录Token能否对应的上
-                                String loginToken = LoginTokenUtil.generatorTokenByString(uid);
-                                if(loginToken.equals(lt))
                                 {
                                     return true;
                                 }
@@ -184,7 +189,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     queryUserLogin.setUserMainId(Long.parseLong(uid));
                                     queryUserLogin.setLoginToken(lt);
 
-                                    //判断登录token和传过来的token是否一致 以及用户登录状态是否在线
+                                    //判断用户登录状态是否在线
                                     RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLogin);
                                     ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                     if(!resultObjectVO.isSuccess())
@@ -245,6 +250,17 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
 
+                                //判断UserMainId和登录Token能否对应的上
+                                String loginToken = LoginTokenUtil.generatorTokenByString(uid);
+                                if(!loginToken.equals(lt))
+                                {
+                                    logger.info("用户ID和登录Token不一致 " + authHeader);
+                                    //删除cookies
+                                    deleteCookies(response);
+                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
+                                    return false;
+                                }
+
                                 //判断当前Token和权限Token能否对应的上
                                 String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
                                 if(glat.equals(lat))
@@ -252,19 +268,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return true;
                                 }
 
-                                //判断UserMainId和登录Token能否对应的上
-                                String loginToken = LoginTokenUtil.generatorTokenByString(uid);
-                                if(loginToken.equals(lt))
-                                {
-                                    return true;
-                                }
                                 //在这里调用用户中心 判断登录
                                 UserLoginVO queryUserLoginVO = new UserLoginVO();
                                 queryUserLoginVO.setUserMainId(Long.parseLong(uid));
                                 queryUserLoginVO.setLoginToken(lt);
 
 
-                                //判断登录token和传过来的token是否一致 以及用户会话是否超时
+                                //判断登录用户会话是否超时
                                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(),uid,queryUserLoginVO);
                                 ResultObjectVO resultObjectVO = feignUserService.verifyLoginTokenAndIsOnline(SignUtil.sign(requestJsonVO),requestJsonVO);
                                 if(!resultObjectVO.isSuccess())
