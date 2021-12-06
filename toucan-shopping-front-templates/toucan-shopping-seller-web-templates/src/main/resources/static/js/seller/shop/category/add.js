@@ -1,22 +1,20 @@
 
-function scafbtn_clicn()
+function scafbtn_click()
 {
 
-    $("#scaf_msg").hide();
-    var shopCategoryName=$("#shopCategoryName").val();
-    if(shopCategoryName==null||shopCategoryName=="")
-    {
-        $("#scaf_msg").show();
-        $("#scaf_msg").text("类别名称不能为空");
-        $("#scaf_msg").css("color","red");
-        return;
+
+    if(!checkInputFunction($('#saveBtn'),2)){
+        return false;
     }
+
+    var shopCategoryName=$("#shopCategoryName").val();
 
     if(shopCategoryName.length<2||shopCategoryName.length>25)
     {
-        $("#scaf_msg").show();
-        $("#scaf_msg").text("类别名称长度只能在2-25位字符之间");
-        $("#scaf_msg").css("color","red");
+        $.message({
+            message: "类别名称长度只能在2-25位字符之间",
+            type: 'error'
+        });
         return;
     }
 
@@ -32,14 +30,17 @@ function scafbtn_clicn()
             {
                 window.location.href=basePath+"/page/shop/category/list";
             }else{
-                $("#scaf_msg").show();
-                $("#scaf_msg").css("color","red");
-                $("#scaf_msg").text(data.msg);
+                $.message({
+                    message: data.msg,
+                    type: 'error'
+                });
             }
         },
         error: function (result) {
-            $("#scaf_msg").show();
-            $("#scaf_msg").text("保存失败,请稍后重试");
+            $.message({
+                message: "保存失败,请稍后重试",
+                type: 'error'
+            });
         }
     });
 
@@ -51,7 +52,14 @@ function scafbtn_clicn()
 
 $(function () {
 
-    $('#scafbtn').on('click', function () {
-        scafbtn_clicn();
+    $('#saveBtn').on('click', function () {
+        scafbtn_click();
     });
+
+
+    $('#backBtn').on('click', function () {
+        window.location.href=basePath+"/page/shop/category/list";
+    });
+
+
 });

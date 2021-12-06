@@ -56,11 +56,11 @@
                         <input type="hidden" id="id" name="id" value="${model.id!''}" >
                         <label>
                             <span><font color="#ff4e00">*</font>分类名称 :</span>
-                            <input type="text" id="shopCategoryName" maxlength="25"  name="name"  tabindex="1"  value="${model.name!''}" />
+                            <input type="text" id="shopCategoryName" maxlength="25"  name="name" lay-verify="required"  tabindex="1"  value="${model.name!''}" />
                             <div id="shopCategoryName_error"></div>
                         </label>
                         <div style="width:100%;text-align:center;">
-                            <input type="button" id="saveBtn" class="button" value="保存"  onclick="updateUserShop();"/>
+                            <input type="button" id="updateBtn" class="button" value="保存"  />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="button" id="backBtn" class="button" value="返回"  />
                         </div>
