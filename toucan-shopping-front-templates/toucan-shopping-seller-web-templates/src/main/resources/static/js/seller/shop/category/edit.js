@@ -18,7 +18,7 @@ function scefbtn_click()
         type: "POST",
         url: basePath+'/api/shop/category/update',
         contentType: "application/json;charset=utf-8",
-        data:  getAjaxFormData("#scef"),
+        data:  getAjaxFormData("#scaf"),
         dataType: "json",
         success: function (data) {
             if(data.code==1)
