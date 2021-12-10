@@ -27,7 +27,7 @@ import java.util.List;
  * 用户实名审核
  */
 @Controller("pageUserTrueNameApprovePageController")
-@RequestMapping("/page/user/trueName/true/name/approve")
+@RequestMapping("/page/user/true/name/approve")
 public class UserTrueNameApprovePageController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
