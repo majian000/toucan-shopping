@@ -27,7 +27,7 @@ import java.util.List;
  * 用户实名审核
  */
 @Controller("pageUserTrueNameApprovePageController")
-@RequestMapping("/page/user/true/name/approve")
+@RequestMapping("/page/user/trueName/true/name/approve")
 public class UserTrueNameApprovePageController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -44,7 +44,7 @@ public class UserTrueNameApprovePageController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/submit_success")
     public String submit_success(HttpServletRequest request){
-        return "user/true_name_submit_success";
+        return "user/trueName/true_name_submit_success";
     }
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
@@ -65,7 +65,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if (result) {
                     //审核通过
-                    return "user/true_name_success";
+                    return "user/trueName/true_name_success";
                 }
             }
 
@@ -83,7 +83,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                     if(userTrueNameApprove.getApproveStatus().intValue()==1)
                     {
                         //审核中
-                        return "user/true_name_submit_success";
+                        return "user/trueName/true_name_submit_success";
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==2)
                     {
@@ -97,18 +97,18 @@ public class UserTrueNameApprovePageController extends BaseController {
                             userVO = resultObjectVO.formatData(UserVO.class);
                             if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
                             {
-                                return "user/true_name";
+                                return "user/trueName/true_name";
                             }
                         }else {
                             //审核通过
-                            return "user/true_name_success";
+                            return "user/trueName/true_name_success";
                         }
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==3)
                     {
                         request.setAttribute("userTrueNameApprove",userTrueNameApprove);
                         //审核驳回
-                        return "user/true_name_update";
+                        return "user/trueName/true_name_update";
                     }
                 }
             }
@@ -117,7 +117,7 @@ public class UserTrueNameApprovePageController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "user/true_name_update";
+        return "user/trueName/true_name_update";
     }
 
 
@@ -141,7 +141,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                 boolean result = Boolean.valueOf(String.valueOf(resultObjectVO.getData()));
                 if (result) {
                     //审核通过
-                    return "user/true_name_success";
+                    return "user/trueName/true_name_success";
                 }
             }
 
@@ -159,7 +159,7 @@ public class UserTrueNameApprovePageController extends BaseController {
                     if(userTrueNameApprove.getApproveStatus().intValue()==1)
                     {
                         //审核中
-                        return "user/true_name_submit_success";
+                        return "user/trueName/true_name_submit_success";
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==2)
                     {
@@ -172,18 +172,18 @@ public class UserTrueNameApprovePageController extends BaseController {
                             userVO = resultObjectVO.formatData(UserVO.class);
                             if(userVO.getTrueNameStatus()==null||userVO.getTrueNameStatus().intValue()==0)
                             {
-                                return "user/true_name";
+                                return "user/trueName/true_name";
                             }
                         }else {
                             //审核通过
-                            return "user/true_name_success";
+                            return "user/trueName/true_name_success";
                         }
                     }
                     if(userTrueNameApprove.getApproveStatus().intValue()==3)
                     {
                         //审核驳回
                         request.setAttribute("rejectText",userTrueNameApprove.getRejectText());
-                        return "user/true_name_faild";
+                        return "user/trueName/true_name_faild";
                     }
                 }
             }
@@ -192,7 +192,7 @@ public class UserTrueNameApprovePageController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "user/true_name";
+        return "user/trueName/true_name";
     }
 
 

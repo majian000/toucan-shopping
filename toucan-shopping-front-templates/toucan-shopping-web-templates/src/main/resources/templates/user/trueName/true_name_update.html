@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
+    <!--[if IE 6]>
+    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+
+    <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
+    <#include "/common_js.html"/>
+    <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
+
+
+
+    <#include "/title.html"/>
+</head>
+<body>
+<!--Begin Header Begin-->
+<div class="soubg">
+    <#include "/top_child.html"/>
+</div>
+<div class="top">
+    <#include "/logo.html"/>
+    <#include "/search.html"/>
+    <#include "/buy_car.html"/>
+
+</div>
+
+<#include "/category_navigation.html">
+
+<!------------main---------------->
+<div class="main">
+
+    <div class="current-position">
+        <h2>
+            <a href="${basePath}/page/user/info">账号管理</a>
+            &gt;
+            <a href="#">实名认证</a>
+        </h2>
+    </div>
+    <div class="user-content">
+
+        <div class="user-menu">
+            <#include "/user/info_left.html"/>
+        </div>
+
+        <div class="user-right">
+            <form id="utnform" method="post">
+                <div class="toucan-form">
+                    <div class="toucan-form-title">
+                        <h3 style="font-size:20px;">实名信息</h3>
+                    </div>
+                    <div class="toucan-form-body">
+
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>姓名：</span>
+                            <div class="field">
+                                <input type="text" id="trueName" name="trueName" value="${userTrueNameApprove.trueName!''}"   class="l_user"  maxlength="11"/>
+                            </div>
+                        </div><!--item end-->
+
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>证件类型：</span>
+                            <div class="field">
+                                <input type="hidden" value="${userTrueNameApprove.idcardType!''}" id="idcardTypeValue"/>
+                                <select class="l_select" id="idcardType" name="idcardType">
+                                    <option value="1">身份证</option>
+                                    <option value="2">护照</option>
+                                    <option value="3" >海外</option>
+                                </select>
+                            </div>
+                        </div><!--item end-->
+
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>证件号码：</span>
+                            <div class="field">
+                                <input type="text" id="idCard" name="idCard" value="${userTrueNameApprove.idCard!''}" class="l_num"  maxlength="30"/>
+                            </div>
+                        </div><!--item end-->
+
+                        <div class="item">
+                            <span class="label"></span>
+                            <div class="field">
+                                &nbsp;&nbsp;<img src="${basePath}/static/images/id_card1.png" >
+                            </div>
+                        </div><!--item end-->
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>证件正面：</span>
+                            <div class="field">
+                                <input type="file" name="idcardImg1File" id="idcardImg1File" >
+                            </div>
+                        </div><!--item end-->
+                        <div class="item">
+                            <span class="label"></span>
+                            <div class="field">
+                                &nbsp;&nbsp;<img src="${basePath}/static/images/id_card2.png" >
+                            </div>
+                        </div><!--item end-->
+
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>证件背面：</span>
+                            <div class="field">
+                                <input type="file" name="idcardImg2File" id="idcardImg2File" >
+                            </div>
+                        </div><!--item end-->
+                        <div class="item">
+                            <span class="label"><span class="red">*</span>验证码：</span>
+                            <div class="field" >
+                            <span style="float:left;">
+                                <input type="text" id="vcode" name="vcode" class="l_ipt" autocomplete="off" lay-verify="required"  MaxLength="4" tabindex="6" />
+                            </span>
+                                <span style="float:left;margin-left:5px;">
+                                <img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:40px;"/>
+                            </span>
+                            </div>
+                        </div><!--item end-->
+                        <br>
+                        <br>
+                        <div class="item" style="width:150px;">
+                            <span class="label">&nbsp;</span>
+                            <input type="button" value="重新提交" class="log_btn" id="ueibtn" onclick="submitTrueName();" style="font-size:15px;" />
+                        </div><!--item end-->
+
+                        <div class="item">
+                            <br>
+                            <a id="tn_msg" style="color:#ff4e00;"></a>
+                        </div>
+
+                    </div>
+            </form>
+        </div>
+    </div>
+
+
+    <#include "/footer.html"/>
+
+</body>
+
+<link rel="stylesheet" href="${basePath}/static/css/common/toucan-form-validate.css" />
+<script type="text/javascript" src="${basePath}/static/js/common/toucan-form-validate.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/truename.js"></script>
+<script>
+    $(function () {
+
+        $("#refreshCaptcha").bind( 'click' ,function(){
+            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        });
+
+    });
+
+
+</script>
+
+
+</html>
