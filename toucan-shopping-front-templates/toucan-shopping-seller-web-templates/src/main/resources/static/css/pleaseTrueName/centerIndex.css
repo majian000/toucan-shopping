@@ -1,0 +1,570 @@
+
+
+.safeindex-wrap {
+	width: 1128px;
+	margin: 0 auto
+}
+
+
+
+.safe-level {
+	float: left;
+	margin-left: 40px
+}
+
+.safe-level .level-progress {
+	float: left;
+	position: relative;
+	width: 100px;
+	height: 100px;
+	margin-top: 25px;
+	margin-right: 29px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+	background-position: 50%
+}
+
+
+
+
+.safe-level .level-info {
+	float: left;
+	margin-top: 42px
+}
+
+.safe-level .level-info .txt1 {
+	height: 29px;
+	margin-bottom: 5px;
+	font-size: 22px;
+	color: #333;
+	letter-spacing: -.34px;
+	text-align: left
+}
+
+.safe-level .level-info .txt2 {
+	font-size: 14px;
+	color: #333;
+	letter-spacing: -.22px;
+	text-align: left
+}
+
+.s-nav {
+	float: right;
+	margin-top: 67px;
+	margin-right: 40px;
+	font-size: 20px;
+	color: #333;
+	letter-spacing: -.31px;
+	text-align: left
+}
+
+.s-nav li {
+	float: left;
+	height: 26px;
+	line-break: 26px;
+	margin-right: 60px
+}
+
+.s-nav li:last-child {
+	margin-right: 0
+}
+
+.s-nav li a {
+	color: #333;
+	text-decoration: none
+}
+
+.s-nav li a:hover {
+	color: #e0071c
+}
+
+.safeindex-authlist {
+	margin: 20px auto 0;
+	width:450px;
+}
+
+.safeindex-authlist .list-item {
+	position: relative;
+	float: left;
+	/*width: 200px;*/
+	height: 400px;
+	padding: 36px 33px 25px;
+	margin: 0 21px 21px 0;
+	background: #fff
+}
+
+.safeindex-authlist .list-item:nth-child(4n+0) {
+	margin-right: 0
+}
+
+.safeindex-authlist .list-status {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 41px;
+	height: 47px
+}
+
+.safeindex-authlist .list-status i {
+	display: block;
+	position: absolute;
+	right: 1px;
+	top: 3px;
+	width: 22px;
+	height: 21px
+}
+
+.safeindex-authlist .status-unlock {
+	background: url(../../images/pleaseTrueName/green-bg.png)
+}
+
+.safeindex-authlist .status-unlock i {
+	background: url(../../images/pleaseTrueName/unlock.png) no-repeat 50%
+}
+
+.safeindex-authlist .status-lock {
+	background: url(../../images/pleaseTrueName/gray-bg.png)
+}
+
+.safeindex-authlist .status-lock i {
+	background: url(../../images/pleaseTrueName/lock.png) no-repeat 50%
+}
+
+.safeindex-authlist .list-ico {
+	width: 84px;
+	height: 70px;
+	margin: 0 auto 25px;
+	background-repeat: no-repeat;
+	background-image: url(../../images/pleaseTrueName/auth-index-ico.png);
+	overflow: hidden
+}
+
+.safeindex-authlist .sjh-ico {
+	background-position: 0 0
+}
+
+.safeindex-authlist .dlmm-ico {
+	background-position: 0 -80px
+}
+
+.safeindex-authlist .smrz-ico {
+	background-position: -94px -240px
+}
+
+.safeindex-authlist .szzs-ico {
+	background-position: 0 -400px
+}
+
+.safeindex-authlist .yx-ico {
+	background-position: 0 -240px
+}
+
+.safeindex-authlist .dlbh-ico {
+	background-position: 0 -320px
+}
+
+.safeindex-authlist .zfmm-ico {
+	background-position: 0 -160px
+}
+
+.safeindex-authlist .mbwt-ico {
+	background-position: -94px -320px
+}
+
+.safeindex-authlist .lock_pc-ico {
+	background-position: -94px -160px
+}
+
+.safeindex-authlist .qysmrz-ico {
+	background-position: -94px -400px
+}
+
+.safeindex-authlist .lock_app-ico {
+	background-position: -94px 0
+}
+
+.safeindex-authlist .lock_wx-ico {
+	background-position: -94px -80px
+}
+
+.safeindex-authlist .list-tit {
+	margin-bottom: 17px;
+	font-size: 20px;
+	color: #333;
+	letter-spacing: -.31px;
+	text-align: left;
+	text-align: center
+}
+
+.safeindex-authlist .list-desc {
+	height: 28px;
+	margin-bottom: 20px;
+	font-size: 14px;
+	color: #999;
+	letter-spacing: -.22px;
+	line-height: 18px;
+	text-align: center
+}
+
+.safeindex-authlist .list-desc.ac {
+	text-align: center
+}
+
+.safeindex-authlist .list-btn {
+	display: block;
+	background: #fff;
+	border: 1px solid #999;
+	width: 400px;
+	height: 46px;
+	line-height: 46px;
+	font-size: 16px;
+	color: #333;
+	letter-spacing: -.25px;
+	text-align: center;
+	text-decoration: none
+}
+
+.safeindex-authlist .list-btn:hover {
+	border-color: #e2231a;
+	color: #e2231a;
+	cursor: pointer
+}
+
+.safeindex-authlist .list-btn-disabled,.safeindex-authlist .list-btn-disabled:hover {
+	border-color: #ccc;
+	color: #ccc
+}
+
+.safeindex-authlist .disable {
+	cursor: not-allowed
+}
+
+.device-list {
+	width: 840px;
+	margin-bottom: 0
+}
+
+.device-list .list-item:nth-child(4n+0) {
+	margin-right: 0
+}
+
+.device-list .btn-lockall {
+	height: 30px;
+	line-height: 30px;
+	padding: 0 12px;
+	margin: 20px 0
+}
+
+.device-choice {
+	margin: 0 auto;
+	background: #fff;
+	width: 840px;
+	height: 48px;
+	line-height: 48px
+}
+
+.device-choice .checkbox {
+	margin-left: 10px
+}
+
+.device-choice .checkbox i {
+	display: inline-block;
+	vertical-align: text-top;
+	border: 1px solid #ccc;
+	width: 12px;
+	height: 12px;
+	margin-right: 10px
+}
+
+.device-choice .btn-primary {
+	float: right;
+	width: 132px;
+	height: 48px;
+	line-height: 48px;
+	font-size: 16px;
+	color: #fff;
+	letter-spacing: -.28px;
+	text-align: center;
+	background: #e2231a
+}
+
+.safeindex-mini-authlist {
+	padding: 0 21px 20px;
+	background: #fff
+}
+
+.safeindex-mini-authlist .list-item {
+	float: left;
+	width: 183px;
+	margin-right: 42px
+}
+
+.safeindex-mini-authlist .list-item:last-child {
+	margin-right: 0
+}
+
+.safeindex-mini-authlist .list-item .list-ico {
+	display: block;
+	margin: 25px auto 27px;
+	width: 58px;
+	height: 46px;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	background-image: url(../../images/pleaseTrueName/auth-index-ico.png);
+	overflow: hidden
+}
+
+.safeindex-mini-authlist .list-item .zhsd-ico {
+	background-position: -185px -56px
+}
+
+.safeindex-mini-authlist .list-item .zhsq-ico {
+	background-position: -185px -112px
+}
+
+.safeindex-mini-authlist .list-item .zhss-ico {
+	background-position: -185px -168px
+}
+
+.safeindex-mini-authlist .list-item .zxzh-ico {
+	background-position: -185px -224px
+}
+
+.safeindex-mini-authlist .list-item .list-tit {
+	margin-bottom: 17px;
+	font-size: 16px;
+	color: #333;
+	letter-spacing: -.25px;
+	text-align: left;
+	text-align: center
+}
+
+.safeindex-mini-authlist .list-item .list-desc {
+	height: 22px;
+	margin-bottom: 17px;
+	font-size: 14px;
+	color: #999;
+	letter-spacing: -.22px;
+	text-align: center
+}
+
+.safeindex-mini-authlist .list-item .list-btn {
+	display: block;
+	width: 181px;
+	height: 44px;
+	line-height: 44px;
+	background: #fff;
+	border: 1px solid #999;
+	text-decoration: none;
+	font-size: 16px;
+	color: #333;
+	letter-spacing: -.25px;
+	text-align: center
+}
+
+.safeindex-mini-authlist .list-item .list-btn:hover {
+	border-color: #e2231a;
+	color: #e2231a
+}
+
+.safeindex-mini-authlist .list-item .list-btn-disabled,.safeindex-mini-authlist .list-item .list-btn-disabled:hover {
+	border-color: #ccc;
+	color: #ccc
+}
+
+.safeindex-mini-authlist .list-item .list-img {
+	height: 169px;
+	text-align: center;
+	line-height: 169px
+}
+
+.safeindex-tipwrap {
+	background: #fff8f0;
+	border-radius: 1px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 14px;
+	color: #f82;
+	letter-spacing: -.22px;
+	text-align: left
+}
+
+.safeindex-tipwrap .icon-tip {
+	margin-right: 10px
+}
+
+.safeindex-tipwrap .alink {
+	color: #2c72ea;
+	margin-left: 10px
+}
+
+.safeindex-warnwrap {
+	background: #fff;
+	width: 1186px;
+	margin: 20px auto;
+	text-align: center;
+	padding: 40px 0 60px
+}
+
+.safeindex-warnwrap .succ-icon,.safeindex-warnwrap .warn-icon {
+	display: inline-block;
+	color: #f82;
+	width: 56px;
+	height: 56px;
+	line-height: 56px;
+	margin: 0 auto 17px;
+	font-size: 56px
+}
+
+.safeindex-warnwrap .succ-icon {
+	color: #4c3
+}
+
+.safeindex-warnwrap .auth-ico {
+	width: 70px;
+	height: 76px;
+}
+
+.safeindex-warnwrap .warn-tit {
+	height: 26px;
+	line-height: 26px;
+	margin-bottom: 5px;
+	font-size: 20px;
+	color: #333;
+	letter-spacing: -.31px;
+	text-align: center
+}
+
+.safeindex-warnwrap .warn-hint {
+	line-height: 20px;
+	font-size: 14px;
+	color: #999;
+	letter-spacing: -.22px;
+	text-align: center
+}
+
+.safeindex-warnwrap .warn-desc {
+	color: #888;
+	font-size: 14px;
+	text-align: left;
+	width: 450px;
+	margin: 10px auto;
+	line-height: 25px
+}
+
+.safeindex-warnwrap .warn-opbtns {
+	margin-top: 28px
+}
+
+.safeindex-warnwrap .check-text {
+	margin-top: 20px;
+	color: #999
+}
+
+.safeindex-warnwrap .primary-link {
+	color: #06c;
+	cursor: default
+}
+
+.safeindex-warnwrap .check-ico,.safeindex-warnwrap .checked-ico {
+	display: inline-block;
+	vertical-align: middle;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	margin-right: 5px;
+	cursor: default
+}
+
+
+.safeindex-warnwrap .warn-extra {
+	height: 20px;
+	line-height: 20px;
+	margin-top: 5px;
+	color: #ccc
+}
+
+.safeindex-warnwrap .warn-extra .icon-tip {
+	margin-right: 5px
+}
+
+.safeindex-warnwrap .btn-primary {
+	padding: 0 27px;
+	height: 46px;
+	line-height: 46px;
+	font-size: 18px;
+	color: #fff;
+	letter-spacing: -.28px;
+	text-align: center;
+	background: #e2231a
+}
+
+.safeindex-warnwrap .btn-s {
+	padding: 0 26px;
+	height: 25px;
+	line-height: 25px;
+	font-size: 12px
+}
+
+.safeindex-warnwrap .qr-hint {
+	margin-top: 15px;
+	font-size: 14px;
+	color: #666
+}
+
+.safeindex-warnwrap .qr-cont {
+	height: 200px;
+	margin: 36px auto 5px
+}
+
+.safeindex-warnwrap .qr-img {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	border: 1px solid #f4f4f4;
+	padding: 15px
+}
+
+.safeindex-warnwrap .qr-img img {
+	width: 147px;
+	height: 147px
+}
+
+.safeindex-warnwrap .fail-msg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	color: #fff;
+	background: rgba(0,0,0,.5);
+	text-align: center;
+	overflow: hidden;
+	font-size: 14px
+}
+
+.safeindex-warnwrap .fail-msg .fail-txt {
+	margin: 60px 0 10px
+}
+
+.safeindex-warnwrap .qrcode-help {
+	display: none;
+	vertical-align: top;
+	width: 148px;
+	height: 168px;
+	margin-left: 5px;
+}
+
+.safeindex-warnwrap .qr-cont-hover .qrcode-help {
+	display: inline-block
+}
+
+.safeindex-warnwrap .qr-txt {
+	line-height: 25px;
+	font-size: 14px
+}
+
+.safeindex-warnwrap .ftx-01 {
+	color: #d1392b
+}
+

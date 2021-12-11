@@ -60,6 +60,7 @@ function login()
             return ;
         }
     }
+    $("#loginsubmit").text("登陆中...");
     $.ajax({
         type: "POST",
         url: basePath+"/api/user/login/password",
