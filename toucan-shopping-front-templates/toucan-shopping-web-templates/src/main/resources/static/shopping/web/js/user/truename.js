@@ -7,33 +7,44 @@ function submitTrueName()
     var idCardValue=$("#idCard").val();
     var vcodeValue=$("#utm_vcode").val();
 
-    $("#trueName_msg").text(" ");
-    $("#idCard_msg").text(" ");
-    $("#utm_vcode_msg").text(" ");
-
     if(trueNameValue=="")
     {
-        $("#trueName_msg").text("请输入姓名");
+        $.message({
+            message: "请输入姓名",
+            type: 'error'
+        });
         return ;
     }
     if(idCardValue=="")
     {
-        $("#idCard_msg").text("请输入证件号码");
+        $.message({
+            message: "请输入证件号码",
+            type: 'error'
+        });
         return ;
     }
     if($("#idcardImg1File").val() =="")
     {
-        $("#idcardImg1File_msg").text("请上传证件正面照片");
+        $.message({
+            message: "请上传证件正面照片",
+            type: 'error'
+        });
         return ;
     }
     if($("#idcardImg2File").val() =="")
     {
-        $("#idcardImg2File_msg").text("请上传证件背面照片");
+        $.message({
+            message: "请上传证件背面照片",
+            type: 'error'
+        });
         return ;
     }
-    if(vcodeValue=="")
+    if(vcodeValue==null||vcodeValue=="")
     {
-        $("#utm_vcode_msg").text("请输入验证码");
+        $.message({
+            message: "请输入验证码",
+            type: 'error'
+        });
         return ;
     }
     $('#utnform').ajaxSubmit({
