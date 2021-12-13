@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.user.mapper.UserHeadSculptureApproveMapper">
+
+    <resultMap id="userHeadSculptureApproveMap" type="com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
+        <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        
+    </resultMap>
+
+
+    <sql id="queryListPageWhere">
+        and t.delete_status = 0
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+
+    </sql>
+
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+
+        <if test="approveStatus!=null ">
+            and t.approve_status = #{approveStatus}
+        </if>
+    </sql>
+
+    <select id="findListByEntity" resultMap="userHeadSculptureApproveMap" parameterType="com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove">
+        select * from t_user_head_sculpture_approve t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+        </where>
+
+    </select>
+
+
+    <select id="findListByEntityOrderByUpdateDateDesc" resultMap="userHeadSculptureApproveMap" parameterType="com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove">
+        select * from t_user_head_sculpture_approve t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+        </where>
+        order by t.update_date desc
+
+    </select>
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove" useGeneratedKeys="false" keyProperty="id" >
+        insert into t_user_head_sculpture_approve(id,user_main_id,head_sculpture,approve_status,create_date,delete_status)
+        values(#{id},#{userMainId},#{headSculpture},#{approveStatus},#{createDate},#{deleteStatus})
+    </insert>
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove"  >
+        update t_user_head_sculpture_approve set  head_sculpture=#{headSculpture},
+        approve_status=#{approveStatus},update_date=#{updateDate},reject_text=#{rejectText}
+          where user_main_id=#{userMainId} and id=#{id} and delete_status = 0
+    </update>
+
+    <select id="queryListPage" resultMap="userHeadSculptureApproveMap" parameterType="com.toucan.shopping.modules.user.page.UserHeadSculptureApprovePageInfo">
+        select t.* from t_user_head_sculpture_approve t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.create_date desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.UserHeadSculptureApprovePageInfo">
+        select count(*) from t_user_head_sculpture_approve t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+
+
+    <update id="deleteById">
+        update t_user_head_sculpture_approve  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
+</mapper>
