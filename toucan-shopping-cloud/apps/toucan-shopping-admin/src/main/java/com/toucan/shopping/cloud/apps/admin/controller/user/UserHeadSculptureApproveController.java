@@ -61,7 +61,7 @@ public class UserHeadSculptureApproveController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/user/head/sculpture/approve/listPage",feignFunctionService);
-        return "pages/user/trueNameApprove/list.html";
+        return "pages/user/headSculptureApprove/list.html";
     }
 
 
@@ -168,7 +168,7 @@ public class UserHeadSculptureApproveController extends UIController {
 
             request.setAttribute("model", userHeadSculptureApproveVO);
         }
-        return "pages/user/trueNameApprove/reject.html";
+        return "pages/user/headSculptureApprove/reject.html";
     }
 
 

@@ -25,9 +25,15 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">真实姓名</label>
+                            <label class="layui-form-label">提交时间</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="trueName" autocomplete="off" class="layui-input">
+                                <input type="text" name="createDateStart" id="createDateStart" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        至&nbsp;&nbsp;
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="createDateEnd" id="createDateEnd" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -61,7 +67,8 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
+    }).use(['laydate','form', 'table','tree','dtree'], function () {
+        var laydate = layui.laydate;
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
@@ -71,6 +78,14 @@
         var dtree = layui.dtree;
         var roleTree;
         var roleTreeDataArray = new Array();
+
+        laydate.render({
+            elem: '#createDateStart' //指定元素
+        });
+
+        laydate.render({
+            elem: '#createDateEnd' //指定元素
+        });
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -115,28 +130,9 @@
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
                     {field: 'userMainId', width: 150, title: '用户ID'},
-                    {field: 'trueName',  title: '真实姓名'},
-                    {field: 'idCard',  width: 200, title: '证件号码'},
-                    {field: 'idcardImg1', width: 150, title: '证件正面',
+                    {field: 'idcardImg1', width: 150, title: '头像',
                         templet: function (row) {
                             return "<a href='"+row.httpIdcardImg1+"' target='_blank'><img src='"+row.httpIdcardImg1+"' width='30' height='30'  /></a>";
-                        }},
-                    {field: 'idcardImg2', width: 150, title: '证件背面',
-                        templet: function (row) {
-                            return "<a href='"+row.httpIdcardImg2+"' target='_blank'><img src='"+row.httpIdcardImg2+"' width='30' height='30'  /></a>";
-                        }},
-                    {field: 'idcardType', width: 150, title: '证件类型',
-                        templet: function (row) {
-                            if(row.idcardType == "1"){
-                                return "身份证"
-                            }
-                            if(row.idcardType == "2"){
-                                return "护照"
-                            }
-                            if(row.idcardType == "3"){
-                                return "海外"
-                            }
-                            return row.idcardType;
                         }},
                     {field: 'approveStatus', width: 150, title: '审核状态',
                         templet: function (row) {
