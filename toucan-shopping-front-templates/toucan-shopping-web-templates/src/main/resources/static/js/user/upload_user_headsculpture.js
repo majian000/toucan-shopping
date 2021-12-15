@@ -1,4 +1,9 @@
 $(function () {
+
+    $("#upbtn").click(function(){
+        $('#avatar-modal').modal('show');
+    });
+
     $('#avatarInput').on('change', function(e) {
         var filemaxsize = 1024 * 5;//5M
         var target = $(e.target);
@@ -47,7 +52,9 @@ $(function () {
             type: "POST",
             dataType: 'json',
             success: function(re) {
-
+                if(re.status == '1') {
+                    $('.user_pic img').attr('src',src );
+                }
             }
         });
     }
