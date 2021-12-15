@@ -199,7 +199,7 @@ public class UserPageController extends BaseController {
     public String editHeadSculpture(HttpServletRequest httpServletRequest)
     {
         this.setAttributeUser(httpServletRequest);
-        return "user/info/edit_head_sculpture";
+        return "user/headSculpture/edit_head_sculpture";
     }
 
 
