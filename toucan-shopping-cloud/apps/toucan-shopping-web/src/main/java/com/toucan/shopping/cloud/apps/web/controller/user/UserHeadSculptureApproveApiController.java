@@ -65,7 +65,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
 
 
 
-    @UserAuth(verifyMethod = UserAuth.VERIFYMETHOD_USER_AUTH,requestType = UserAuth.REQUEST_AJAX)
+    @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value="/save")
     @ResponseBody
     public ResultObjectVO save(HttpServletRequest request,UserHeadSculptureApproveVO userHeadSculptureApproveVO){
