@@ -44,10 +44,9 @@ $(function () {
 
     function imagesAjax(src) {
         var data = {};
-        data.img = src;
-        data.jid = $('#jid').val();
+        data.headSculptureFile = src;
         $.ajax({
-            url: "upload-logo.php",
+            url: basePath+"/api/user/head/sculpture/approve/save",
             data: data,
             type: "POST",
             dataType: 'json',

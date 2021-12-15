@@ -12,12 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserHeadSculptureApproveVO extends UserHeadSculptureApprove {
 
 
-    /**
-     * 验证码
-     */
-    private String vcode;
-
-
 
     /**
      * 审核管理员ID

@@ -99,45 +99,6 @@ public class UserHeadSculptureApproveApiController extends BaseController {
                 return resultObjectVO;
             }
 
-            if(StringUtils.isEmpty(userHeadSculptureApproveVO.getVcode()))
-            {
-                resultObjectVO.setMsg("提交失败,请输入验证码");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-
-            String cookie = request.getHeader("Cookie");
-            if(StringUtils.isEmpty(cookie))
-            {
-                resultObjectVO.setMsg("提交失败,请重新刷新验证码");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
-            if(StringUtils.isEmpty(ClientVCodeId))
-            {
-                resultObjectVO.setMsg("提交失败,验证码异常");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            String vcodeRedisKey = VerifyCodeRedisKey.getVerifyCodeKey(this.getAppCode(),ClientVCodeId);
-            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
-            if(vCodeObject==null)
-            {
-                resultObjectVO.setMsg("提交失败,验证码过期请刷新");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-            if(!StringUtils.equals(userHeadSculptureApproveVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
-            {
-                resultObjectVO.setMsg("提交失败,验证码输入有误");
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                return resultObjectVO;
-            }
-
-            //删除缓存中验证码
-            toucanStringRedisService.delete(vcodeRedisKey);
-
 
             boolean lockStatus = skylarkLock.lock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {
