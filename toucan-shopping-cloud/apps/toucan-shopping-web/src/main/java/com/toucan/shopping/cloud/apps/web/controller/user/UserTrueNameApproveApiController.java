@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * 用户实名认证审核
  */
-@RestController("apiUserTreeNameApproveApiController")
+@RestController("apiUserTrueNameApproveApiController")
 @RequestMapping("/api/user/true/name/approve")
 public class UserTrueNameApproveApiController extends BaseController {
 

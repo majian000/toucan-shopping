@@ -1,14 +1,15 @@
 package com.toucan.shopping.modules.user.vo;
 
+import com.toucan.shopping.modules.user.entity.UserHeadSculptureApprove;
 import com.toucan.shopping.modules.user.entity.UserTrueNameApprove;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 用户审核
+ * 用户头像审核
  */
 @Data
-public class UserHeadSculptureApproveVO extends UserTrueNameApprove {
+public class UserHeadSculptureApproveVO extends UserHeadSculptureApprove {
 
 
     /**
@@ -24,5 +25,9 @@ public class UserHeadSculptureApproveVO extends UserTrueNameApprove {
     private String approveAdminId;
 
 
+    /**
+     * 头像照片
+     */
+    private MultipartFile headSculptureFile;
 
 }
