@@ -43,16 +43,19 @@ $(function () {
     });
 
     function imagesAjax(src) {
-        var data = {};
-        data.headSculptureFile = src;
-        $.ajax({
+        $('#uhnform').ajaxSubmit({
             url: basePath+"/api/user/head/sculpture/approve/save",
-            data: data,
-            type: "POST",
-            dataType: 'json',
-            success: function(re) {
-                if(re.status == '1') {
-                    $('.user_pic img').attr('src',src );
+            type:'POST',
+            success: function (data) {
+                if(data.code==401)
+                {
+                    window.location.href=basePath+data.data;
+                }else  if(data.code==0)
+                {
+                    $("#tn_msg").text(data.msg);
+                }else if(data.code==1)
+                {
+                    window.location.href=basePath+"/page/user/editHeadSculpture";
                 }
             }
         });

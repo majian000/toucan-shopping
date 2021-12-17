@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,7 +69,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value="/save")
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request,UserHeadSculptureApproveVO userHeadSculptureApproveVO){
+    public ResultObjectVO save(HttpServletRequest request, UserHeadSculptureApproveVO userHeadSculptureApproveVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(userHeadSculptureApproveVO==null)
         {

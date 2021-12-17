@@ -27,6 +27,7 @@
     <script type="text/javascript" src="${basePath}/static/lib/cropper/head/bootstrap.min.js"></script>
     <script type="text/javascript" src="${basePath}/static/lib/cropper/head/cropper.js"></script>
     <script type="text/javascript" src="${basePath}/static/lib/cropper/head/sitelogo.js"></script>
+    <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
 
 
     <#include "/title.html"/>
@@ -88,6 +89,10 @@
                             </div><!--item end-->
                         <br>
                         <br>
+                            <div class="item">
+                                <br>
+                                <a id="tn_msg" style="color:#ff4e00;"></a>
+                            </div>
 
 
                         </div>
@@ -102,7 +107,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <!--<form class="avatar-form" action="upload-logo.php" enctype="multipart/form-data" method="post">-->
-                <form class="avatar-form">
+                <form class="avatar-form" id="uhnform" method="post">
                     <div class="modal-header">
                         <button class="close" data-dismiss="modal" type="button">&times;</button>
                         <h4 class="modal-title" id="avatar-modal-label">上传图片</h4>
@@ -115,7 +120,7 @@
                                 <label for="avatarInput" style="line-height: 35px;">图片上传</label>
                                 <button class="btn btn-danger"  type="button" style="height: 35px;" onClick="$('input[id=avatarInput]').click();">请选择图片</button>
                                 <span id="avatar-name"></span>
-                                <input class="avatar-input hide" id="avatarInput" name="avatar_file" type="file"></div>
+                                <input class="avatar-input hide" id="avatarInput" name="headSculptureFile" type="file"></div>
                             <div class="row">
                                 <div class="col-md-9">
                                     <div class="avatar-wrapper"></div>
