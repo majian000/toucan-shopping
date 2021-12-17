@@ -130,9 +130,9 @@
                     {type: "checkbox", width: 50},
                     {field: 'id',  width: 100,  title: '主键'},
                     {field: 'userMainId', width: 150, title: '用户ID'},
-                    {field: 'idcardImg1', width: 150, title: '头像',
+                    {field: 'httpHeadSculpture', width: 150, title: '头像',
                         templet: function (row) {
-                            return "<a href='"+row.httpIdcardImg1+"' target='_blank'><img src='"+row.httpIdcardImg1+"' width='30' height='30'  /></a>";
+                            return "<a href='"+row.httpHeadSculpture+"' target='_blank'><img src='"+row.httpHeadSculpture+"' width='30' height='30'  /></a>";
                         }},
                     {field: 'approveStatus', width: 150, title: '审核状态',
                         templet: function (row) {

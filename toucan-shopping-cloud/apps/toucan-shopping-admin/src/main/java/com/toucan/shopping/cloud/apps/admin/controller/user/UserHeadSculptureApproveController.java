@@ -88,6 +88,12 @@ public class UserHeadSculptureApproveController extends UIController {
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<UserHeadSculptureApproveVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),UserHeadSculptureApproveVO.class);
                     if(tableVO.getCount()>0) {
+                        for(UserHeadSculptureApproveVO userHeadSculptureApproveVO:list)
+                        {
+                            if(StringUtils.isNotEmpty(userHeadSculptureApproveVO.getHeadSculpture())) {
+                                userHeadSculptureApproveVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userHeadSculptureApproveVO.getHeadSculpture());
+                            }
+                        }
                         tableVO.setData((List)list);
                     }
                 }
