@@ -31,6 +31,7 @@ $(function () {
         html2canvas(img_lg, {
             allowTaint: true,
             taintTest: false,
+            outputType:"png",
             onrendered: function(canvas) {
                 canvas.id = "mycanvas";
                 //生成base64图片数据
