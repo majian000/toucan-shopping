@@ -42,7 +42,8 @@ $(function () {
         });
     });
 
-    function imagesAjax(src) {
+    function imagesAjax(imgData) {
+        $("#headSculptureBase64").val(imgData);
         $('#uhnform').ajaxSubmit({
             url: basePath+"/api/user/head/sculpture/approve/save",
             type:'POST',

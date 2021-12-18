@@ -25,6 +25,11 @@ public class UserHeadSculptureApproveVO extends UserHeadSculptureApprove {
     private MultipartFile headSculptureFile;
 
     /**
+     * 头像base64
+     */
+    private String headSculptureBase64;
+
+    /**
      * 头像http地址
      */
     private String httpHeadSculpture;

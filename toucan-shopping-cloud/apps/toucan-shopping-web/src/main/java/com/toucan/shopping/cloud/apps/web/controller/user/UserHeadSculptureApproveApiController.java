@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.ImageUtils;
+import com.toucan.shopping.modules.common.util.MultipartFileUtil;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -30,8 +31,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -92,8 +95,17 @@ public class UserHeadSculptureApproveApiController extends BaseController {
                 return resultObjectVO;
             }
 
-            String headSculptureFileName = userHeadSculptureApproveVO.getHeadSculptureFile().getOriginalFilename();
-            if(!ImageUtils.isImage(headSculptureFileName)||!ImageUtils.isImage(headSculptureFileName))
+            String headSculptureBase64 = userHeadSculptureApproveVO.getHeadSculptureBase64();
+            if(StringUtils.isEmpty(headSculptureBase64))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD-4);
+                resultObjectVO.setMsg("提交失败,请上传头像");
+                return resultObjectVO;
+            }
+            if(!headSculptureBase64.startsWith("data:image/jpeg;")||!headSculptureBase64.startsWith("data:image/jpg;")
+                    ||!headSculptureBase64.startsWith("data:image/png;")||!headSculptureBase64.startsWith("data:image/gif;")
+                    ||!headSculptureBase64.startsWith("data:image/bmp;")
+            )
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD-4);
                 resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|.gif|.bmp)");
@@ -114,47 +126,48 @@ public class UserHeadSculptureApproveApiController extends BaseController {
             resultObjectVO = feignUserHeadSculptureApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                //头像上传
-                String headSculptureImgExt = ImageUtils.getImageExt(headSculptureFileName);
-                if (headSculptureImgExt.indexOf(".") != -1) {
-                    headSculptureImgExt = headSculptureImgExt.substring(headSculptureImgExt.indexOf(".") + 1, headSculptureImgExt.length());
-                }
-                String headSculptureImgFilePath = imageUploadService.uploadFile(userHeadSculptureApproveVO.getHeadSculptureFile().getBytes(), headSculptureImgExt);
-                userHeadSculptureApproveVO.setHeadSculpture(headSculptureImgFilePath);
-
-                List<UserHeadSculptureApprove> userHeadSculptureApproves = (List<UserHeadSculptureApprove>)resultObjectVO.formatDataList(UserHeadSculptureApprove.class);
-                if(CollectionUtils.isNotEmpty(userHeadSculptureApproves)) {
-                    UserHeadSculptureApprove userHeadSculptureApprove = userHeadSculptureApproves.get(0);
-
-                    userHeadSculptureApproveVO.setId(userHeadSculptureApprove.getId());
-                    userHeadSculptureApproveVO.setUpdateDate(new Date());
-                    userHeadSculptureApproveVO.setHeadSculptureFile(null);
-                    userHeadSculptureApproveVO.setApproveStatus(1);
-
-                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userHeadSculptureApproveVO);
-
-                    logger.info(" 用户头像重新发起 {} ", requestJsonVO.getEntityJson());
-
-                    resultObjectVO = feignUserHeadSculptureApproveService.update(requestJsonVO.sign(), requestJsonVO);
-
-                    return resultObjectVO;
-                }else{
-                    userHeadSculptureApproveVO.setApproveStatus(1);
-                    userHeadSculptureApproveVO.setCreateDate(new Date());
-                    userHeadSculptureApproveVO.setHeadSculptureFile(null);
-
-                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userHeadSculptureApproveVO);
-
-                    logger.info(" 用户头像审核 {} ", requestJsonVO.getEntityJson());
-
-                    resultObjectVO = feignUserHeadSculptureApproveService.save(requestJsonVO.sign(), requestJsonVO);
-                    if (!resultObjectVO.isSuccess()) {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("提交失败,请稍后重试!");
-                        return resultObjectVO;
-                    }
-                }
-                resultObjectVO.setData(null);
+                MultipartFile multipartFile = MultipartFileUtil.base64ConvertMutipartFile(headSculptureBase64);
+//                //头像上传
+//                String headSculptureImgExt = ImageUtils.getImageExt(headSculptureFileName);
+//                if (headSculptureImgExt.indexOf(".") != -1) {
+//                    headSculptureImgExt = headSculptureImgExt.substring(headSculptureImgExt.indexOf(".") + 1, headSculptureImgExt.length());
+//                }
+//                String headSculptureImgFilePath = imageUploadService.uploadFile(userHeadSculptureApproveVO.getHeadSculptureFile().getBytes(), headSculptureImgExt);
+//                userHeadSculptureApproveVO.setHeadSculpture(headSculptureImgFilePath);
+//
+//                List<UserHeadSculptureApprove> userHeadSculptureApproves = (List<UserHeadSculptureApprove>)resultObjectVO.formatDataList(UserHeadSculptureApprove.class);
+//                if(CollectionUtils.isNotEmpty(userHeadSculptureApproves)) {
+//                    UserHeadSculptureApprove userHeadSculptureApprove = userHeadSculptureApproves.get(0);
+//
+//                    userHeadSculptureApproveVO.setId(userHeadSculptureApprove.getId());
+//                    userHeadSculptureApproveVO.setUpdateDate(new Date());
+//                    userHeadSculptureApproveVO.setHeadSculptureFile(null);
+//                    userHeadSculptureApproveVO.setApproveStatus(1);
+//
+//                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userHeadSculptureApproveVO);
+//
+//                    logger.info(" 用户头像重新发起 {} ", requestJsonVO.getEntityJson());
+//
+//                    resultObjectVO = feignUserHeadSculptureApproveService.update(requestJsonVO.sign(), requestJsonVO);
+//
+//                    return resultObjectVO;
+//                }else{
+//                    userHeadSculptureApproveVO.setApproveStatus(1);
+//                    userHeadSculptureApproveVO.setCreateDate(new Date());
+//                    userHeadSculptureApproveVO.setHeadSculptureFile(null);
+//
+//                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userHeadSculptureApproveVO);
+//
+//                    logger.info(" 用户头像审核 {} ", requestJsonVO.getEntityJson());
+//
+//                    resultObjectVO = feignUserHeadSculptureApproveService.save(requestJsonVO.sign(), requestJsonVO);
+//                    if (!resultObjectVO.isSuccess()) {
+//                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+//                        resultObjectVO.setMsg("提交失败,请稍后重试!");
+//                        return resultObjectVO;
+//                    }
+//                }
+//                resultObjectVO.setData(null);
             }
         }catch(Exception e)
         {
