@@ -102,10 +102,15 @@ public class UserHeadSculptureApproveApiController extends BaseController {
                 resultObjectVO.setMsg("提交失败,请上传头像");
                 return resultObjectVO;
             }
-            if(!headSculptureBase64.startsWith("data:image/jpeg;")||!headSculptureBase64.startsWith("data:image/jpg;")
-                    ||!headSculptureBase64.startsWith("data:image/png;")||!headSculptureBase64.startsWith("data:image/gif;")
-                    ||!headSculptureBase64.startsWith("data:image/bmp;")
+            boolean acceptUpload = false;
+            if(headSculptureBase64.startsWith("data:image/jpeg;")||headSculptureBase64.startsWith("data:image/jpg;")
+                    ||headSculptureBase64.startsWith("data:image/png;")||headSculptureBase64.startsWith("data:image/gif;")
+                    ||headSculptureBase64.startsWith("data:image/bmp;")
             )
+            {
+                acceptUpload = true;
+            }
+            if(!acceptUpload)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD-4);
                 resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|.gif|.bmp)");
