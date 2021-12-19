@@ -59,6 +59,7 @@ function login()
             return ;
         }
     }
+    $("#login_btn").text("登陆中...");
     $.ajax({
         type: "POST",
         url: basePath+"/api/user/login/password",

@@ -1,6 +1,7 @@
 $(function () {
 
     $("#upbtn").click(function(){
+
         $('#avatar-modal').modal('show');
     });
 
@@ -44,6 +45,10 @@ $(function () {
     });
 
     function imagesAjax(imgData) {
+        loading.showLoading({
+            type:1,
+            tip:"上传中..."
+        });
         $("#headSculptureBase64").val(imgData);
         $('#uhnform').ajaxSubmit({
             url: basePath+"/api/user/head/sculpture/approve/save",
@@ -59,6 +64,9 @@ $(function () {
                 {
                     window.location.href=basePath+"/page/user/editHeadSculpture";
                 }
+            },
+            complete:function(data,status){
+                loading.hideLoading();
             }
         });
     }
