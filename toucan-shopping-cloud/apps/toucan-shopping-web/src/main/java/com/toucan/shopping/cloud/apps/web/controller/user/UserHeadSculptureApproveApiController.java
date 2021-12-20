@@ -114,9 +114,6 @@ public class UserHeadSculptureApproveApiController extends BaseController {
             }else if(headSculptureBase64.startsWith("data:image/png;")){
                 acceptUpload = true;
                 headSculptureImgExt = "png";
-            }else if(headSculptureBase64.startsWith("data:image/gif;")){
-                acceptUpload = true;
-                headSculptureImgExt = "gif";
             }else if(headSculptureBase64.startsWith("data:image/bmp;")){
                 acceptUpload = true;
                 headSculptureImgExt = "bmp";
@@ -125,7 +122,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
             if(!acceptUpload)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD-4);
-                resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|.gif|.bmp)");
+                resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|.bmp)");
                 return resultObjectVO;
             }
 
