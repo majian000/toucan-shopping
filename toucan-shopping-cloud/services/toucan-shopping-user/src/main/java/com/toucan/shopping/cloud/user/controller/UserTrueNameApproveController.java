@@ -468,17 +468,18 @@ public class UserTrueNameApproveController {
                             }
 
 
-                            try {
-                                //更新商城用户缓存
-                                userRedisService.flushLoginCache(String.valueOf(userTrueNameApprove.getUserMainId()), AppCodeEnum.SHOPPING_WEB.value());
-                            }catch(Exception e)
-                            {
-                                logger.warn(e.getMessage(),e);
-                            }
-
                             return resultObjectVO;
                         }
 
+
+
+                        try {
+                            //更新商城用户缓存
+                            userRedisService.flushLoginCache(String.valueOf(userTrueNameApprove.getUserMainId()), AppCodeEnum.SHOPPING_WEB.value());
+                        }catch(Exception e)
+                        {
+                            logger.warn(e.getMessage(),e);
+                        }
 
                     }
 

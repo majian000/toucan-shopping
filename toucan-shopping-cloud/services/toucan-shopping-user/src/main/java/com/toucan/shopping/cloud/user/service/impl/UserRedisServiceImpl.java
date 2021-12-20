@@ -104,6 +104,7 @@ public class UserRedisServiceImpl implements UserRedisService {
                 toucanStringRedisService.expire(loginGroupKey,
                         UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
+                return true;
             }
         }
         return false;

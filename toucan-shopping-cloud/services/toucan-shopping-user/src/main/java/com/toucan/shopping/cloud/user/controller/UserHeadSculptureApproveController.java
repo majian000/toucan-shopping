@@ -417,17 +417,16 @@ public class UserHeadSculptureApproveController {
                                 resultObjectVO.setMsg("操作失败,请稍后重试");
                             }
 
-                            try {
-                                //更新商城用户缓存
-                                userRedisService.flushLoginCache(String.valueOf(userHeadSculptureApprove.getUserMainId()), AppCodeEnum.SHOPPING_WEB.value());
-                            }catch(Exception e)
-                            {
-                                logger.warn(e.getMessage(),e);
-                            }
-
                             return resultObjectVO;
                         }
 
+                        try {
+                            //更新商城用户缓存
+                            userRedisService.flushLoginCache(String.valueOf(userHeadSculptureApprove.getUserMainId()), AppCodeEnum.SHOPPING_WEB.value());
+                        }catch(Exception e)
+                        {
+                            logger.warn(e.getMessage(),e);
+                        }
 
                     }
 
