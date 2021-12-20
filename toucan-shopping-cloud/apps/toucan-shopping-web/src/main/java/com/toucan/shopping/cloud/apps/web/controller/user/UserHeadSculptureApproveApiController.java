@@ -155,8 +155,6 @@ public class UserHeadSculptureApproveApiController extends BaseController {
 
                 resultObjectVO = feignUserHeadSculptureApproveService.save(requestJsonVO.sign(), requestJsonVO);
                 if (!resultObjectVO.isSuccess()) {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("提交失败,请稍后重试!");
                     return resultObjectVO;
                 }
                 resultObjectVO.setData(null);

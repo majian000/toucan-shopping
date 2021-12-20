@@ -33,6 +33,13 @@ public class UserHeadSculptureApproveServiceImpl implements UserHeadSculptureApp
         return userHeadSculptureApproveMapper.findListByEntity(entity);
     }
 
+
+    @Override
+    public List<UserHeadSculptureApprove> findListByEntityOrderByCreateDateDesc(UserHeadSculptureApprove entity) {
+        return userHeadSculptureApproveMapper.findListByEntityOrderByCreateDateDesc(entity);
+    }
+
+
     @Override
     public List<UserHeadSculptureApprove> findListByEntityOrderByUpdateDateDesc(UserHeadSculptureApprove entity) {
         return userHeadSculptureApproveMapper.findListByEntityOrderByUpdateDateDesc(entity);

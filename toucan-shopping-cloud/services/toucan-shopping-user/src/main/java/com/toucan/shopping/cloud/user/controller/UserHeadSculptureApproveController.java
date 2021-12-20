@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 用户实名制审核
+ * 用户头像制审核
  */
 @RestController
 @RequestMapping("/user/head/sculpture/approve")
@@ -106,9 +106,10 @@ public class UserHeadSculptureApproveController {
             if(CollectionUtils.isNotEmpty(userHeadSculptureApproves))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,实名认证正在审核中");
+                resultObjectVO.setMsg("保存失败,头像认证正在审核中");
                 return resultObjectVO;
             }
+
 
             userHeadSculptureApprove.setId(idGenerator.id());
             userHeadSculptureApprove.setDeleteStatus((short)0);
@@ -273,6 +274,46 @@ public class UserHeadSculptureApproveController {
     }
 
 
+
+
+
+    @RequestMapping(value="/queryAliveByUserMainId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryAliveByUserMainId(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
+            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            return resultObjectVO;
+        }
+        UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
+        if(userHeadSculptureApprove.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            return resultObjectVO;
+        }
+        try {
+            UserHeadSculptureApprove queryUserHeadSculptureApprove = new UserHeadSculptureApprove();
+            queryUserHeadSculptureApprove.setUserMainId(userHeadSculptureApprove.getUserMainId());
+            if(userHeadSculptureApprove.getApproveStatus()!=null) {
+                queryUserHeadSculptureApprove.setApproveStatus(userHeadSculptureApprove.getApproveStatus());
+            }
+            List<UserHeadSculptureApprove> userHeadSculptureApproves = userHeadSculptureApproveService.findListByEntityOrderByCreateDateDesc(queryUserHeadSculptureApprove);
+            if(CollectionUtils.isNotEmpty(userHeadSculptureApproves)) {
+                resultObjectVO.setData(userHeadSculptureApproves.get(0));
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     @RequestMapping(value="/queryListByUserMainIdAndOrderByUpdateDateDesc",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO queryListByUserMainIdAndOrderByUpdateDateDesc(@RequestBody RequestJsonVO requestJsonVO){
@@ -396,7 +437,7 @@ public class UserHeadSculptureApproveController {
                     userHeadSculptureApproveRecord.setDeleteStatus((short)0);
                     userHeadSculptureApproveRecordService.save(userHeadSculptureApproveRecord);
 
-                    //设置用户实名
+                    //设置用户头像
                     List<UserDetail> userDetails = userDetailService.findByUserMainId(userHeadSculptureApprove.getUserMainId());
                     if(CollectionUtils.isNotEmpty(userDetails))
                     {

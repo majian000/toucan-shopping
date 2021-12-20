@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.user.api.feign.service;
 
+import com.toucan.shopping.cloud.user.api.feign.fallback.FeignUserHeadSculptureApproveServiceFallbackFactory;
 import com.toucan.shopping.cloud.user.api.feign.fallback.FeignUserTrueNameApproveServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * 用户头像审核服务
  */
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-user-proxy/user/head/sculpture/approve",fallbackFactory = FeignUserTrueNameApproveServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-user-proxy/user/head/sculpture/approve",fallbackFactory = FeignUserHeadSculptureApproveServiceFallbackFactory.class)
 public interface FeignUserHeadSculptureApproveService {
 
 
@@ -43,6 +44,17 @@ public interface FeignUserHeadSculptureApproveService {
      */
     @RequestMapping(value="/queryByUserMainId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByUserMainId(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 根据用户主ID查询激活的的审批
+     * @param signHeader
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/queryAliveByUserMainId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryAliveByUserMainId(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
 
     /**
      * 根据用户主ID查询,并且根据创建时间倒序

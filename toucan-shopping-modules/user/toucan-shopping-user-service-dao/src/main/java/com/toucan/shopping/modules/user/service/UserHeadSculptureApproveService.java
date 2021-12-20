@@ -35,6 +35,13 @@ public interface UserHeadSculptureApproveService {
     List<UserHeadSculptureApprove> findListByEntity(UserHeadSculptureApprove entity);
 
 
+    /**
+     * 查询列表
+     * @param entity
+     * @return
+     */
+    List<UserHeadSculptureApprove> findListByEntityOrderByCreateDateDesc(UserHeadSculptureApprove entity);
+
 
     /**
      * 查询列表根据创建时间倒序

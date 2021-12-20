@@ -19,6 +19,8 @@ public interface UserHeadSculptureApproveMapper {
 
     List<UserHeadSculptureApprove> findListByEntity(UserHeadSculptureApprove entity);
 
+    List<UserHeadSculptureApprove> findListByEntityOrderByCreateDateDesc(UserHeadSculptureApprove entity);
+
     List<UserHeadSculptureApprove> findListByEntityOrderByUpdateDateDesc(UserHeadSculptureApprove entity);
 
 

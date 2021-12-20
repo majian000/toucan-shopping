@@ -47,91 +47,10 @@ public class UserHeadSculptureApprovePageController extends BaseController {
     @RequestMapping("/page")
     public String page(HttpServletRequest request)
     {
-        try {
-            //从请求头中拿到uid
-            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
-
-
-            UserHeadSculptureApproveVO queryUserHeadSculptureApproveVO = new UserHeadSculptureApproveVO();
-            queryUserHeadSculptureApproveVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserHeadSculptureApproveVO);
-            //查询当前人的头像审核记录
-            ResultObjectVO resultObjectVO = feignUserHeadSculptureApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<UserHeadSculptureApprove> userHeadSculptureApproves = resultObjectVO.formatDataList(UserHeadSculptureApprove.class);
-                if(CollectionUtils.isNotEmpty(userHeadSculptureApproves))
-                {
-                    UserHeadSculptureApprove userHeadSculptureApprove = userHeadSculptureApproves.get(0);
-                    if(userHeadSculptureApprove.getApproveStatus().intValue()==1)
-                    {
-                        //审核中
-                        return "user/headSculpture/submit_success";
-                    }
-                    if(userHeadSculptureApprove.getApproveStatus().intValue()==2)
-                    {
-                        //审核通过,可以接着上传图片
-                        return "user/headSculpture/edit_head_sculpture";
-                    }
-                    if(userHeadSculptureApprove.getApproveStatus().intValue()==3)
-                    {
-                        //审核驳回,可以接着上传图片
-                        request.setAttribute("rejectText",userHeadSculptureApprove.getRejectText());
-                        return "user/headSculpture/faild";
-                    }
-                }
-            }
-
-        }catch (Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
         return "user/headSculpture/edit_head_sculpture";
     }
 
 
-
-
-
-
-    @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/reupload/page")
-    public String reUploadPage(HttpServletRequest request)
-    {
-        try {
-            //从请求头中拿到uid
-            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()));
-
-
-            UserHeadSculptureApproveVO queryUserHeadSculptureApproveVO = new UserHeadSculptureApproveVO();
-            queryUserHeadSculptureApproveVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(),queryUserHeadSculptureApproveVO);
-            //查询当前人的头像审核记录
-            ResultObjectVO resultObjectVO = feignUserHeadSculptureApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<UserHeadSculptureApprove> userHeadSculptureApproves = resultObjectVO.formatDataList(UserHeadSculptureApprove.class);
-                if(CollectionUtils.isNotEmpty(userHeadSculptureApproves))
-                {
-                    UserHeadSculptureApprove userHeadSculptureApprove = userHeadSculptureApproves.get(0);
-                    if(userHeadSculptureApprove.getApproveStatus().intValue()==1)
-                    {
-                        //审核中
-                        return "user/headSculpture/submit_success";
-                    }else{
-
-                        //审核通过,可以接着上传图片
-                        return "user/headSculpture/edit_head_sculpture";
-                    }
-                }
-            }
-
-        }catch (Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-        return "user/headSculpture/edit_head_sculpture";
-    }
 
 
 }
