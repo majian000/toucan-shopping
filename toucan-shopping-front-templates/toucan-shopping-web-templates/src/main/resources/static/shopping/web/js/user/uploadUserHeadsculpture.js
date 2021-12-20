@@ -62,7 +62,7 @@ $(function () {
                     $("#tn_msg").text(data.msg);
                 }else if(data.code==1)
                 {
-                    window.location.href=basePath+"/page/user/editHeadSculpture";
+                    window.location.href=basePath+"/page/user/head/sculpture/approve/page";
                 }
             },
             complete:function(data,status){

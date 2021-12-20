@@ -153,7 +153,7 @@ public class UserHeadSculptureApproveController extends UIController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/reject/page/{id}",method = RequestMethod.GET)
-    public String updateDetailPage(HttpServletRequest request,@PathVariable String id)
+    public String rejectPage(HttpServletRequest request,@PathVariable String id)
     {
         UserHeadSculptureApproveVO userHeadSculptureApproveVO = new UserHeadSculptureApproveVO();
         try {
@@ -165,6 +165,10 @@ public class UserHeadSculptureApproveController extends UIController {
                 List<UserHeadSculptureApproveVO> userHeadSculptureApproveVOS = resultObjectVO.formatDataList(UserHeadSculptureApproveVO.class);
                 if(CollectionUtils.isNotEmpty(userHeadSculptureApproveVOS)) {
                     userHeadSculptureApproveVO = userHeadSculptureApproveVOS.get(0);
+
+                    if(StringUtils.isNotEmpty(userHeadSculptureApproveVO.getHeadSculpture())) {
+                        userHeadSculptureApproveVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userHeadSculptureApproveVO.getHeadSculpture());
+                    }
                     request.setAttribute("model",userHeadSculptureApproveVO);
                 }
             }

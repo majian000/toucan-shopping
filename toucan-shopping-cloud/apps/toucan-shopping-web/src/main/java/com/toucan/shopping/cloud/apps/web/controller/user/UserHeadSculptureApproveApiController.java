@@ -145,37 +145,19 @@ public class UserHeadSculptureApproveApiController extends BaseController {
                 String headSculptureImgFilePath = imageUploadService.uploadFile(multipartFile.getBytes(), headSculptureImgExt);
                 userHeadSculptureApproveVO.setHeadSculpture(headSculptureImgFilePath);
 
-                List<UserHeadSculptureApprove> userHeadSculptureApproves = (List<UserHeadSculptureApprove>)resultObjectVO.formatDataList(UserHeadSculptureApprove.class);
-                if(CollectionUtils.isNotEmpty(userHeadSculptureApproves)) {
-                    UserHeadSculptureApprove userHeadSculptureApprove = userHeadSculptureApproves.get(0);
+                userHeadSculptureApproveVO.setApproveStatus(1);
+                userHeadSculptureApproveVO.setCreateDate(new Date());
+                userHeadSculptureApproveVO.setHeadSculptureFile(null);
 
-                    userHeadSculptureApproveVO.setId(userHeadSculptureApprove.getId());
-                    userHeadSculptureApproveVO.setUpdateDate(new Date());
-                    userHeadSculptureApproveVO.setHeadSculptureFile(null);
-                    userHeadSculptureApproveVO.setApproveStatus(1);
+                requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userHeadSculptureApproveVO);
 
-                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userHeadSculptureApproveVO);
+                logger.info(" 用户头像审核 {} ", requestJsonVO.getEntityJson());
 
-                    logger.info(" 用户头像重新发起 {} ", requestJsonVO.getEntityJson());
-
-                    resultObjectVO = feignUserHeadSculptureApproveService.update(requestJsonVO.sign(), requestJsonVO);
-
+                resultObjectVO = feignUserHeadSculptureApproveService.save(requestJsonVO.sign(), requestJsonVO);
+                if (!resultObjectVO.isSuccess()) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("提交失败,请稍后重试!");
                     return resultObjectVO;
-                }else{
-                    userHeadSculptureApproveVO.setApproveStatus(1);
-                    userHeadSculptureApproveVO.setCreateDate(new Date());
-                    userHeadSculptureApproveVO.setHeadSculptureFile(null);
-
-                    requestJsonVO = RequestJsonVOGenerator.generator(getAppCode(), userHeadSculptureApproveVO);
-
-                    logger.info(" 用户头像审核 {} ", requestJsonVO.getEntityJson());
-
-                    resultObjectVO = feignUserHeadSculptureApproveService.save(requestJsonVO.sign(), requestJsonVO);
-                    if (!resultObjectVO.isSuccess()) {
-                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("提交失败,请稍后重试!");
-                        return resultObjectVO;
-                    }
                 }
                 resultObjectVO.setData(null);
             }

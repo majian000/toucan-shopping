@@ -2,6 +2,8 @@ package com.toucan.shopping.cloud.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.user.constant.AppCodeEnum;
+import com.toucan.shopping.cloud.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -50,6 +52,8 @@ public class UserHeadSculptureApproveController {
     @Autowired
     private UserDetailService userDetailService;
 
+    @Autowired
+    private UserRedisService userRedisService;
 
 
     @Autowired
@@ -111,7 +115,7 @@ public class UserHeadSculptureApproveController {
             int ret = userHeadSculptureApproveService.save(userHeadSculptureApprove);
             if(ret<=0)
             {
-                logger.warn("保存用户实名审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userHeadSculptureApprove.getId());
+                logger.warn("保存用户头像审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userHeadSculptureApprove.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
             }
@@ -176,7 +180,7 @@ public class UserHeadSculptureApproveController {
             int ret = userHeadSculptureApproveService.update(userHeadSculptureApprove);
             if(ret<=0)
             {
-                logger.warn("保存用户实名审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userHeadSculptureApprove.getId());
+                logger.warn("保存用户头像审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userHeadSculptureApprove.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请求失败,请稍后重试");
             }
@@ -374,7 +378,7 @@ public class UserHeadSculptureApproveController {
                 if(ret>0) {
 
                     if (ret <= 0) {
-                        logger.warn("实名审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
+                        logger.warn("头像审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
                         resultObjectVO.setCode(ResultVO.FAILD);
                         resultObjectVO.setMsg("操作失败,请稍后重试");
                         return resultObjectVO;
@@ -392,7 +396,7 @@ public class UserHeadSculptureApproveController {
                     userHeadSculptureApproveRecord.setDeleteStatus((short)0);
                     userHeadSculptureApproveRecordService.save(userHeadSculptureApproveRecord);
 
-                    //设置姓名和身份证号码
+                    //设置用户实名
                     List<UserDetail> userDetails = userDetailService.findByUserMainId(userHeadSculptureApprove.getUserMainId());
                     if(CollectionUtils.isNotEmpty(userDetails))
                     {
@@ -400,7 +404,7 @@ public class UserHeadSculptureApproveController {
                         userDetail.setHeadSculpture(userHeadSculptureApprove.getHeadSculpture());
                         ret = userDetailService.update(userDetail);
                         if (ret <= 0) {
-                            logger.warn("修改姓名和身份证失败 {} ", JSONObject.toJSONString(userDetail));
+                            logger.warn("修改头像失败 {} ", JSONObject.toJSONString(userDetail));
                             resultObjectVO.setCode(ResultVO.FAILD);
                             resultObjectVO.setMsg("操作失败,请稍后重试");
 
@@ -408,9 +412,17 @@ public class UserHeadSculptureApproveController {
                             userHeadSculptureApprove.setApproveStatus(1); //设置审核中
                             ret = userHeadSculptureApproveService.update(userHeadSculptureApprove);
                             if (ret <= 0) {
-                                logger.warn("回滚实名审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
+                                logger.warn("回滚头像审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
                                 resultObjectVO.setCode(ResultVO.FAILD);
                                 resultObjectVO.setMsg("操作失败,请稍后重试");
+                            }
+
+                            try {
+                                //更新商城用户缓存
+                                userRedisService.flushLoginCache(String.valueOf(userHeadSculptureApprove.getUserMainId()), AppCodeEnum.SHOPPING_WEB.value());
+                            }catch(Exception e)
+                            {
+                                logger.warn(e.getMessage(),e);
                             }
 
                             return resultObjectVO;
@@ -479,7 +491,7 @@ public class UserHeadSculptureApproveController {
                 if(ret>0) {
 
                     if (ret <= 0) {
-                        logger.warn("实名审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
+                        logger.warn("头像审核失败 {} ", JSONObject.toJSONString(userHeadSculptureApproves));
                         resultObjectVO.setCode(ResultVO.FAILD);
                         resultObjectVO.setMsg("操作失败,请稍后重试");
                         return resultObjectVO;

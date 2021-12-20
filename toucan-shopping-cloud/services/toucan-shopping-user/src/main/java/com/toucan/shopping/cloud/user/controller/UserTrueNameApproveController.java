@@ -2,6 +2,8 @@ package com.toucan.shopping.cloud.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.user.constant.AppCodeEnum;
+import com.toucan.shopping.cloud.user.service.UserRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -48,15 +50,8 @@ public class UserTrueNameApproveController {
     @Autowired
     private UserDetailService userDetailService;
 
-
     @Autowired
-    private UserMobilePhoneService userMobilePhoneService;
-
-    @Autowired
-    private UserUserNameService userUserNameService;
-
-    @Autowired
-    private UserEmailService userEmailService;
+    private UserRedisService userRedisService;
 
     @Autowired
     private Toucan toucan;
@@ -470,6 +465,15 @@ public class UserTrueNameApproveController {
                                 logger.warn("回滚实名审核失败 {} ", JSONObject.toJSONString(userTrueNameApproves));
                                 resultObjectVO.setCode(ResultVO.FAILD);
                                 resultObjectVO.setMsg("操作失败,请稍后重试");
+                            }
+
+
+                            try {
+                                //更新商城用户缓存
+                                userRedisService.flushLoginCache(String.valueOf(userTrueNameApprove.getUserMainId()), AppCodeEnum.SHOPPING_WEB.value());
+                            }catch(Exception e)
+                            {
+                                logger.warn(e.getMessage(),e);
                             }
 
                             return resultObjectVO;

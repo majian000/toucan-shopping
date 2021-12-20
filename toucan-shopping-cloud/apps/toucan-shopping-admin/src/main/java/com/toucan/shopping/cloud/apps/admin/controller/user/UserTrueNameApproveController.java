@@ -156,7 +156,7 @@ public class UserTrueNameApproveController extends UIController {
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/reject/page/{id}",method = RequestMethod.GET)
-    public String updateDetailPage(HttpServletRequest request,@PathVariable String id)
+    public String rejectPage(HttpServletRequest request,@PathVariable String id)
     {
         UserTrueNameApproveVO userTrueNameApproveVO = new UserTrueNameApproveVO();
         try {
