@@ -104,7 +104,7 @@
  | services/toucan-shopping-user-center         | 8087                   | 用户中心服务                                      |
  | services/toucan-shopping-app-center          | 8099                   | 权限中台服务                                      |
  | services/toucan-shopping-seller              | 8100                   | 卖家服务                                          |
- | services/toucan-shopping-message             | 8101                 | 消息应用                                           |
+ | services/toucan-shopping-message             | 8101                 | 消息服务                                           |
 
     
 
