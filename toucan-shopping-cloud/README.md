@@ -99,12 +99,11 @@
  | services/toucan-shopping-category            | 8090                   | 类别服务                                          |
  | services/toucan-shopping-stock               | 8093                   | 库存服务                                          |
  | services/toucan-shopping-area                | 8094                   | 地区编码、收货地区服务                            |
- | services/toucan-shopping-content             | 8095                   | 新闻资讯服务                                      |
- | services/toucan-shopping-column              | 8096                   | 栏目服务                                          |
- | services/toucan-shopping-user-center         | 8087                   | 用户中心服务                                      |
- | services/toucan-shopping-app-center          | 8099                   | 权限中台服务                                      |
+ | services/toucan-shopping-column              | 8096                   | 栏目、新闻资讯服务                                |
+ | services/toucan-shopping-user                | 8087                   | 用户中心服务                                      |
+ | services/toucan-shopping-admin-auth          | 8099                   | 权限中台服务                                      |
  | services/toucan-shopping-seller              | 8100                   | 卖家服务                                          |
- | services/toucan-shopping-message             | 8101                 | 消息服务                                           |
+ | services/toucan-shopping-message             | 8101                  | 消息服务                                           |
 
     
 
