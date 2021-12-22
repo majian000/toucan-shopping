@@ -42,7 +42,8 @@ spring:
                             classpath:/config/apps/scheduler/user,\
                             classpath:/config/apps/scheduler/adminAuth,\
                             classpath:/config/apps/shopping/sellerWeb,\
-                            classpath:/config/apps/shopping/admin,"
+                            classpath:/config/apps/shopping/messageWeb,\
+                            classpath:/config/apps/shopping/admin"
 
   profiles:
     active: native
