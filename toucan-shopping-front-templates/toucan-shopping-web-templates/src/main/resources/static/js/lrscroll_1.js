@@ -134,31 +134,32 @@ var jq = jQuery.noConflict();
 
 
 
-
-jQuery(function() {
-	jq("#botton-scroll1").jCarouselLite1({
-		btnNext: ".l_next",
-		btnPrev: ".l_prev"
+function initlr1scroll(){
+	jQuery(function() {
+		jq("#botton-scroll1").jCarouselLite1({
+			btnNext: ".l_next",
+			btnPrev: ".l_prev"
+		});
 	});
-});
 
-jQuery(function () {
-	jq('#top-menu1 li').hover(
-		function () {jq('ul', this).slideDown(200);}, 
-		function () {jq('ul', this).slideUp(200);
+	jQuery(function () {
+		jq('#top-menu1 li').hover(
+			function () {jq('ul', this).slideDown(200);},
+			function () {jq('ul', this).slideUp(200);
+		});
 	});
-});
 
-jQuery(function () {
-	jq(".click").click(function(){
-		jq("#panel1").slideToggle("slow");
-			jq(this).toggleClass("active"); return false;
-	}); 
-});
-
-jQuery(function () {
-	jq('.fade').hover(
-		function() {jq(this).fadeTo("slow", 0.5);},
-		function() {jq(this).fadeTo("slow", 5);
+	jQuery(function () {
+		jq(".click").click(function(){
+			jq("#panel1").slideToggle("slow");
+				jq(this).toggleClass("active"); return false;
+		});
 	});
-});
+
+	jQuery(function () {
+		jq('.fade').hover(
+			function() {jq(this).fadeTo("slow", 0.5);},
+			function() {jq(this).fadeTo("slow", 5);
+		});
+	});
+}
