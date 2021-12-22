@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.message.app.config;
 
 
-import com.toucan.shopping.cloud.user.kafka.callback.SendCallback;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
