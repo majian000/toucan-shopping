@@ -9,7 +9,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserLoginCacheServiceImpl implements UserLoginCacheService {
+
+/**
+ * 登录缓存 自定义分片
+ * @auth majian
+ */
+public class UserLoginCacheCustomShardingRedisServiceImpl implements UserLoginCacheService {
 
     private Map<String, Map<String,ToucanStringRedisService>> toucanStringRedisServiceMap = new HashMap<String, Map<String,ToucanStringRedisService>>();
     //索引和db数量的键值对
@@ -44,12 +49,19 @@ public class UserLoginCacheServiceImpl implements UserLoginCacheService {
         return dbIndex;
     }
 
-    @Override
+
+    /**
+     * 返回索引和redis对象的键值对
+     * @return
+     */
     public Map<String, Map<String,ToucanStringRedisService>> getToucanStringRedisServiceMap() {
         return toucanStringRedisServiceMap;
     }
 
-    @Override
+    /**
+     * 索引和db数量的键值对
+     * @return
+     */
     public Map<String, Integer> getDbCountMap() {
         return dbCountMap;
     }

@@ -67,6 +67,9 @@ public class UserLoginRedis {
     //最小核心线程数
     private int minIdle = 0;
 
+    //节点配置
+    private String hosts;
+
     //最大连接转移数
     private Long maxRedirects = 3L;
 
