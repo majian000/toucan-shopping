@@ -59,6 +59,7 @@ function login()
             return ;
         }
     }
+    $("#login_btn").attr('onclick', '');
     $("#login_btn").text("登陆中...");
     $.ajax({
         type: "POST",
@@ -69,6 +70,7 @@ function login()
         success: function (result) {
             if(result.code<=0)
             {
+                $("#login_btn").text("登录");
                 $("#vcode").val("");
                 $("#login_msg_c").show();
                 $("#login_msg").text(result.msg);
@@ -80,8 +82,13 @@ function login()
             }else{
                 share_cookie();
             }
+
+            $("#login_btn").attr('onclick','login();');
         },
         error: function (result) {
+
+            $("#login_btn").attr('onclick','login()');
+            $("#login_btn").text("登录");
             $("#login_msg_c").show();
             $("#login_msg").text("登陆失败,请重试");
         }
