@@ -73,21 +73,12 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-auth</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-sms</artifactId>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-redis</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -115,7 +106,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.user.app.CloudUserServiceApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.message.app.CloudMessageServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
