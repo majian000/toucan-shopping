@@ -27,6 +27,7 @@ $(function () {
                     ulHtml+=template;
                 }
                 $("#like_product_ul").html(ulHtml);
+
             }
         }
     });
