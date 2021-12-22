@@ -78,6 +78,8 @@
         <module>services/toucan-shopping-admin-auth</module>
         <!--卖家服务 -->
         <module>services/toucan-shopping-seller</module>
+        <!--消息服务 -->
+        <module>services/toucan-shopping-message</module>
 
         <!-- ===============================================-->
 

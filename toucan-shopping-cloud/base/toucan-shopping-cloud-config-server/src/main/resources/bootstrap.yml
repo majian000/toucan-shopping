@@ -33,7 +33,7 @@ spring:
                             classpath:/config/services/column,\
                             classpath:/config/services/stock,\
                             classpath:/config/services/user,\
-                            classpath:/config/services/app,\
+                            classpath:/config/services/message,\
                             classpath:/config/services/adminAuth,\
                             classpath:/config/services/seller,\
                             classpath:/config/apps/shopping/web,\
