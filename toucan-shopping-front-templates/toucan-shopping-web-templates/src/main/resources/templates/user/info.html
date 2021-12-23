@@ -14,7 +14,6 @@
     <![endif]-->
 
     <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
-    <#include "/common_js.html"/>
     <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
 
 
@@ -115,20 +114,6 @@
 
 </body>
 
-<script src="${basePath}/static/js/user/upload_user_headsculpture.js"></script>
-<script>
-    $(function () {
-
-
-        $("#refreshCaptcha").bind( 'click' ,function(){
-            $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
-        });
-
-        bind_upload_event();
-
-    });
-
-</script>
 
 
 </html>
