@@ -17,10 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
- * 收货地址 增删改查
+ * 消息类型
  */
 @RestController
 @RequestMapping("/messageType")
@@ -84,10 +85,11 @@ public class MessageTypeController {
 
             messageTypeVO.setId(idGenerator.id());
             messageTypeVO.setDeleteStatus((short)0);
+            messageTypeVO.setCreateDate(new Date());
             int ret = messageTypeService.save(messageTypeVO);
             if(ret<=0)
             {
-                logger.warn("保存收货信息失败 requestJson{} id{}",requestJsonVO.getEntityJson(),messageTypeVO.getId());
+                logger.warn("保存消息类型失败 requestJson{} id{}",requestJsonVO.getEntityJson(),messageTypeVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("保存失败,请稍后重试");
             }
