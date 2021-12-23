@@ -13,6 +13,18 @@
 
     </resultMap>
 
+    <resultMap id="messageTypeVOMap" type="com.toucan.shopping.modules.message.vo.MessageTypeVO" extends="entityMap" >
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="name!=null and name!='' ">
+            and t.name  like concat(#{name},'%')
+
+        </if>
+    </sql>
+    
+    
     <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageType" >
         insert into t_message_type(id,code,name,app_code,create_date,delete_status)
         values(#{id},#{code},#{name},#{appCode},#{createDate},#{deleteStatus})
@@ -46,6 +58,28 @@
                 and t.id = #{id}
             </if>
             and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+    <select id="queryListPage" resultMap="messageTypeVOMap" parameterType="com.toucan.shopping.modules.message.page.MessageTypePageInfo">
+        select t.* from t_message_type t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.message.page.MessageTypePageInfo">
+        select t.* from t_message_type t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
         </where>
 
     </select>

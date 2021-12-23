@@ -1,8 +1,11 @@
 package com.toucan.shopping.modules.message.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.message.entity.MessageType;
 import com.toucan.shopping.modules.message.mapper.MessageTypeMapper;
+import com.toucan.shopping.modules.message.page.MessageTypePageInfo;
 import com.toucan.shopping.modules.message.service.MessageTypeService;
+import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 收货地址服务
+ * 消息类型服务
  * @author majian
- * @date 2021-8-4 17:44:57
+ * @date 2021-12-23 18:10:54
  */
 @Service
 public class MessageTypeServiceImpl implements MessageTypeService {
@@ -44,6 +47,15 @@ public class MessageTypeServiceImpl implements MessageTypeService {
     @Override
     public List<MessageType> findListByEntity(MessageType query) {
         return messageTypeMapper.findListByEntity(query);
+    }
+
+    @Override
+    public PageInfo<MessageTypeVO> queryListPage(MessageTypePageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<MessageTypeVO> pageInfo = new PageInfo();
+        pageInfo.setList(messageTypeMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(messageTypeMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 
 }

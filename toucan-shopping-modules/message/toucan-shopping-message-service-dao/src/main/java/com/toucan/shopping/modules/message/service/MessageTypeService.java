@@ -1,14 +1,17 @@
 package com.toucan.shopping.modules.message.service;
 
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.message.entity.MessageType;
+import com.toucan.shopping.modules.message.page.MessageTypePageInfo;
+import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 
 import java.util.List;
 
 /**
- * 收货地址服务
+ * 消息类型服务
  * @author majian
- * @date 2021-8-4 17:44:57
+ * @date 2021-12-23 18:10:54
  */
 public interface MessageTypeService {
 
@@ -31,4 +34,11 @@ public interface MessageTypeService {
 
     List<MessageType> findListByEntity(MessageType query);
 
+
+    /**
+     * 查询列表页
+     * @param appPageInfo
+     * @return
+     */
+    PageInfo<MessageTypeVO> queryListPage(MessageTypePageInfo pageInfo);
 }
