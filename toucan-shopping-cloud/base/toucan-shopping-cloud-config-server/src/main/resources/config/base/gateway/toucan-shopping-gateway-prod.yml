@@ -27,6 +27,7 @@ ribbon:
               toucan-shopping-user,\
               toucan-shopping-seller,\
               toucan-shopping-area,\
+              toucan-shopping-message,\
               toucan-shopping-stock"
 
 
@@ -89,6 +90,12 @@ spring:
           uri: lb://toucan-shopping-area
           predicates:
             - Path=/toucan-shopping-area-proxy/**
+          filters:
+            - StripPrefix=1
+        - id: toucan-shopping-message-proxy
+          uri: lb://toucan-shopping-message
+          predicates:
+            - Path=/toucan-shopping-message-proxy/**
           filters:
             - StripPrefix=1
         - id: toucan-shopping-admin-auth-proxy
