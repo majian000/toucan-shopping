@@ -33,7 +33,7 @@ jQuery(document).ready(function() {
 			})
 		})
 	});
-	jq('#calendar td').live('mouseover',
+	jq('#calendar td').on('mouseover',null,
 	function() {
 		jq('#calendar td').removeClass('hover');
 		jq(this).addClass('hover')
