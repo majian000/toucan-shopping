@@ -45,9 +45,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="bannerTable" lay-filter="bannerTableFilter"></table>
+        <table class="layui-hide" id="messageTypeTable" lay-filter="messageTypeTableFilter"></table>
 
-        <script type="text/html" id="bannerTableBar">
+        <script type="text/html" id="messageTypeTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -96,7 +96,7 @@
         }
 
         table.render({
-            elem: '#bannerTable',
+            elem: '#messageTypeTable',
             url: "[[@{/}]]messageType/list",
             method:'POST',
             where:getFormParam(),
@@ -113,41 +113,12 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'title',  title: '标题'},
-                    {field: 'httpImgPath', width: 80, title: '预览',
-                        templet: function (row) {
-                            return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
-                        }},
-                    {field: 'startShowDate',  title: '开始展示时间'},
-                    {field: 'endShowDate',  title: '结束展示时间'},
-                    {field: 'imgPath',  title: '图片路径'},
-                    {field: 'clickPath',  title: '点击路径'},
-                    {field: 'showStatus', title: '显示状态',
-                        templet: function (row) {
-                            if(row.showStatus == "0"){
-                                return "隐藏"
-                            }else
-                            if(row.showStatus == "1"){
-                                return "显示"
-                            }
-                            return row.showStatus;
-                        }},
-                    {field: 'position', title: '类型',
-                        templet: function (row) {
-                            if(row.position == "0"){
-                                return "首页顶部"
-                            }else
-                            if(row.position == "1"){
-                                return "栏目左侧"
-                            }
-                            return row.position;
-                        }},
-                    {field: 'bannerSort',  title: '排序'},
-                    {field: 'createAdminName', title: '创建人'},
+                    {field: 'code',  title: '类型编码'},
+                    {field: 'name',  title: '类型名称'},
+                    {field: 'appAode',  title: '应用编码'},
                     {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
                     {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#bannerTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#messageTypeTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -159,7 +130,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('bannerTable', {
+            table.reload('messageTypeTable', {
                 page: {
                     curr: 1
                 }
@@ -175,10 +146,10 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(bannerTableFilter)', function (obj) {
+        table.on('toolbar(messageTypeTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加轮播图',
+                    title: '添加消息类型',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -189,14 +160,14 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
+                var checkStatus = table.checkStatus('messageTypeTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除轮播图?', function (index) {
+                layer.confirm('确定删除消息类型?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]messageType/delete/ids",
                         contentType: "application/json; charset=utf-8",
@@ -206,7 +177,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('messageTypeTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -221,7 +192,7 @@
                     });
                 });
             }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
+                var checkStatus = table.checkStatus('messageTypeTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -238,7 +209,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('messageTypeTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -253,7 +224,7 @@
                     });
                 });
             }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
+                var checkStatus = table.checkStatus('messageTypeTable')
                     , data = checkStatus.data;
                 layer.confirm('确定清空PC首页缓存?', function (index) {
                     $.ajax({
@@ -265,7 +236,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('messageTypeTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -356,16 +327,16 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(bannerTableFilter)', function (obj) {
+        table.on('checkbox(messageTypeTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(bannerTableFilter)', function (obj) {
+        table.on('tool(messageTypeTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
                 var index = layer.open({
-                    title: '编辑轮播图',
+                    title: '编辑消息类型',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -377,7 +348,7 @@
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该轮播图?', function (index) {
+                layer.confirm('确定删除该消息类型?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]messageType/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
@@ -386,7 +357,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('messageTypeTable', {
                                 page: {
                                     curr: 1
                                 }
