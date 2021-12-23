@@ -22,6 +22,20 @@ public class FeignMessageTypeServiceFallbackFactory implements FallbackFactory<F
         logger.warn(throwable.getMessage(),throwable);
         return new FeignMessageTypeService(){
 
+            @Override
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignMessageTypeService.save失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }

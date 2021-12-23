@@ -14,5 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-message-proxy/messageType",fallbackFactory = FeignMessageTypeServiceFallbackFactory.class)
 public interface FeignMessageTypeService {
 
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 }

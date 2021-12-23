@@ -109,6 +109,15 @@
             <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-message-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.message</groupId>
+            <artifactId>toucan-shopping-message-entity-vo</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.front.templates</groupId>
