@@ -1,4 +1,7 @@
 // JavaScript Document
+
+var $ = jQuery;
+
 $.fn.extend({
 	jselect:function(){
 		return $(this).each(function(){
