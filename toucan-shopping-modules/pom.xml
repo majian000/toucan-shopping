@@ -117,6 +117,8 @@
 
         <!--消息实体和VO -->
         <module>message/toucan-shopping-message-entity-vo</module>
+        <!--消息Service和DAO -->
+        <module>message/toucan-shopping-message-service-dao</module>
 
         <!-- 卖家实体和VO -->
         <module>seller/toucan-shopping-seller-entity-vo</module>
@@ -378,6 +380,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.message</groupId>
                 <artifactId>toucan-shopping-message-entity-vo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.user</groupId>
+                <artifactId>toucan-shopping-message-service-dao</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
