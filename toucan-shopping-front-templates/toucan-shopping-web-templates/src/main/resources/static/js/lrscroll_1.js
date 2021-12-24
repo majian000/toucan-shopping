@@ -26,14 +26,14 @@ var jq = jQuery.noConflict();
 			var c = jq(this),
 				ul = jq("ul", c),
 				tLi = jq("li", ul),
-				tl = tLi.size(),
+				tl = tLi.length,
 				v = o.visible;
 			if (o.circular) {
 				ul.prepend(tLi.slice(tl - v - 1 + 1).clone()).append(tLi.slice(0, v).clone());
 				o.start += v
 			}
 			var f = jq("li", ul),
-				itemLength = f.size(),
+				itemLength = f.length,
 				curr = o.start;
 			c.css("visibility", "visible");
 			f.css({
