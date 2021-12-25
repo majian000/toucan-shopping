@@ -37,6 +37,14 @@ $(function () {
     bindFileUpload();
 
     $("#upbtn").click(function(){
+        var headSculptureFileValue = $("#headSculptureFile").val();
+        if(headSculptureFileValue==null||headSculptureFileValue=="")
+        {
+            $("#tn_msg").attr("style","color:#ff4e00;");
+            $("#tn_msg").text("请先上传头像");
+            return;
+        }
+
         loading.showLoading({
             type:1,
             tip:"上传中..."
