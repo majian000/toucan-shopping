@@ -56,7 +56,7 @@ $(function () {
                 if(data.code==401)
                 {
                     window.location.href=basePath+data.data;
-                }else  if(data.code==0)
+                }else  if(data.code<=0)
                 {
                     $("#tn_msg").attr("style","color:#ff4e00;");
                     $("#tn_msg").text(data.msg);
