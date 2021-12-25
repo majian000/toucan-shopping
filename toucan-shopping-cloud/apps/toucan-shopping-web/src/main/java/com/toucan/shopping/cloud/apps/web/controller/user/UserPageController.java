@@ -1,7 +1,9 @@
 package com.toucan.shopping.cloud.apps.web.controller.user;
 
+import com.netflix.discovery.converters.Auto;
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
+import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -51,6 +53,9 @@ public class UserPageController extends BaseController {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private LoginUserService loginUserService;
 
 
 
@@ -131,31 +136,7 @@ public class UserPageController extends BaseController {
         return "user/login";
     }
 
-    void setAttributeUser(HttpServletRequest request)
-    {
-        try {
-            UserVO queryUserVO = new UserVO();
-            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId( request.getHeader(this.getToucan().getUserAuth().getHttpToucanAuthHeader()))));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryUserVO);
-            ResultObjectVO resultObjectVO = feignUserService.queryLoginInfo(requestJsonVO.sign(),requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                UserVO userVO = resultObjectVO.formatData(UserVO.class);
-                if(userVO!=null&& StringUtils.isNotEmpty(userVO.getHeadSculpture())) {
-                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+userVO.getHeadSculpture());
-                }else{
-                    userVO.setHttpHeadSculpture(imageUploadService.getImageHttpPrefix()+"/"+toucan.getUser().getDefaultHeadSculpture());
-                }
-                request.setAttribute("userVO",userVO);
-            }else{
-                request.setAttribute("userVO",new UserVO());
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-            request.setAttribute("userVO",new UserVO());
-        }
-    }
+
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/info")
@@ -180,7 +161,7 @@ public class UserPageController extends BaseController {
             logger.warn(e.getMessage(),e);
         }
         httpServletRequest.setAttribute("welcomeText",welcomeText);
-        this.setAttributeUser(httpServletRequest);
+        loginUserService.setAttributeUser(httpServletRequest);
         return "user/info";
     }
 
@@ -189,7 +170,7 @@ public class UserPageController extends BaseController {
     @RequestMapping("/editInfo")
     public String editInfo(HttpServletRequest httpServletRequest)
     {
-        this.setAttributeUser(httpServletRequest);
+        loginUserService.setAttributeUser(httpServletRequest);
         return "user/info/edit_info";
     }
 

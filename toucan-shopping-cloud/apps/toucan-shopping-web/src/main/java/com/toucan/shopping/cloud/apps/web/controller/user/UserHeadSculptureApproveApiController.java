@@ -27,10 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,20 +69,15 @@ public class UserHeadSculptureApproveApiController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value="/save")
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, UserHeadSculptureApproveVO userHeadSculptureApproveVO){
+    public ResultObjectVO save(HttpServletRequest request, @RequestParam(value="headSculptureFile",required=false) MultipartFile headSculptureFile){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(userHeadSculptureApproveVO==null)
-        {
-            resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("提交失败,没有找到头像信息");
-            return resultObjectVO;
-        }
 
         String userMainId="-1";
         try {
 
             //从请求头中拿到uid
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            UserHeadSculptureApproveVO userHeadSculptureApproveVO = new UserHeadSculptureApproveVO();
             userHeadSculptureApproveVO.setUserMainId(Long.parseLong(userMainId));
 
             if(userHeadSculptureApproveVO.getUserMainId()==null)
@@ -94,43 +86,25 @@ public class UserHeadSculptureApproveApiController extends BaseController {
                 resultObjectVO.setMsg("提交失败,用户ID不能为空");
                 return resultObjectVO;
             }
-
-            String headSculptureBase64 = userHeadSculptureApproveVO.getHeadSculptureBase64();
-            if(StringUtils.isEmpty(headSculptureBase64))
+            if(headSculptureFile==null)
             {
-                resultObjectVO.setCode(ResultObjectVO.FAILD-4);
-                resultObjectVO.setMsg("提交失败,请上传头像");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("提交失败,请上传图片");
                 return resultObjectVO;
             }
-            boolean acceptUpload = false;
-            String headSculptureImgExt="jpeg";
-            if(headSculptureBase64.startsWith("data:image/jpeg;"))
-            {
-                acceptUpload = true;
-                headSculptureImgExt = "jpeg";
-            }else if(headSculptureBase64.startsWith("data:image/jpg;")){
-                acceptUpload = true;
-                headSculptureImgExt = "jpg";
-            }else if(headSculptureBase64.startsWith("data:image/png;")){
-                acceptUpload = true;
-                headSculptureImgExt = "png";
-            }else if(headSculptureBase64.startsWith("data:image/bmp;")){
-                acceptUpload = true;
-                headSculptureImgExt = "bmp";
-            }
 
-            if(!acceptUpload)
-            {
-                resultObjectVO.setCode(ResultObjectVO.FAILD-4);
-                resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|.bmp)");
+            if (!ImageUtils.isStaticImage(headSculptureFile.getOriginalFilename())) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
+                resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|bmp)");
                 return resultObjectVO;
             }
+
 
 
             boolean lockStatus = skylarkLock.lock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求超时,请稍后重试");
+                resultObjectVO.setMsg("提交失败,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -140,10 +114,16 @@ public class UserHeadSculptureApproveApiController extends BaseController {
             resultObjectVO = feignUserHeadSculptureApproveService.queryByUserMainId(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                MultipartFile multipartFile = MultipartFileUtil.base64ConvertMutipartFile(headSculptureBase64);
-                //头像上传
-                String headSculptureImgFilePath = imageUploadService.uploadFile(multipartFile.getBytes(), headSculptureImgExt);
-                userHeadSculptureApproveVO.setHeadSculpture(headSculptureImgFilePath);
+                if(headSculptureFile!=null) {
+                    //LOGO上传
+                    String logoImgExt = ImageUtils.getImageExt(headSculptureFile.getOriginalFilename());
+                    if (logoImgExt.indexOf(".") != -1) {
+                        logoImgExt = logoImgExt.substring(logoImgExt.indexOf(".") + 1, logoImgExt.length());
+                    }
+                    String headSculptureImgFilePath = imageUploadService.uploadFile(headSculptureFile.getBytes(), logoImgExt);
+
+                    userHeadSculptureApproveVO.setHeadSculpture(headSculptureImgFilePath);
+                }
 
                 userHeadSculptureApproveVO.setApproveStatus(1);
                 userHeadSculptureApproveVO.setCreateDate(new Date());

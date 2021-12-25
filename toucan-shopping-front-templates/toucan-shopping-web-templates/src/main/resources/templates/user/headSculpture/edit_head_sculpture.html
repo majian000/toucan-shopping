@@ -5,15 +5,10 @@
 
     <#include "/common_js.html"/>
 
-    <link rel="stylesheet" type="text/css" href="${basePath}/static/lib/cropper/css/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/style.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/style.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/user/info/info.css" />
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
-    <link rel="stylesheet" href="${basePath}/static/css/product/product_scroll.css">
-    <link href="${basePath}/static/lib/cropper/head/cropper.min.css" rel="stylesheet">
-    <link href="${basePath}/static/lib/cropper/head/sitelogo.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="${basePath}/static/lib/cropper/css/font-awesome.min.css">
 
 
     <!--[if IE 6]>
@@ -61,34 +56,27 @@
         </div>
 
         <div class="user-right">
-                <form id="userEditInfo" method="post" onsubmit="return false;">
+                <form id="uhnform" method="post" onsubmit="return false;">
                     <div class="toucan-form">
                         <div class="toucan-form-title">
                             <h3 style="font-size:20px;">头像信息</h3>
                         </div>
                         <div class="toucan-form-body">
+                            <div class="item">
+                                <span class="label">头像预览：</span>
+                                <div class="field">
+                                    <img src="${userVO.httpHeadSculpture!''}" id="pic" style="width:155px;height:150px;" />
+                                    <input type="hidden" id="isUpload" value="1"/>
+                                    <input type="hidden" id="httpHeadSculpture" value="${userVO.httpHeadSculpture!''}"/>
+                                </div>
+                            </div><!--item end-->
 
-                        <div class="item">
-                            <div class="field"  >
-                                1.不能使用涉及政治和涉及黄色的图片，包括但不限于：
-                                <br>
-                                （1）军、政单位指定特殊服装不能通过审核，如军服、警察制服等。
-                                <br>
-                                （2）涉及国家领导人、时政事件的图片不予通过。
-                                <br>
-                                （3）涉及黄色、性暗示，集中在人体的敏感部位，此类图片不予通过。
-                                <br>
-                                2.保证图片清晰可辨，请勿上传过于模糊的图片。
-                                <br>
-                                3.照片中带有其他网站标识或者网站地址的不能通过审核。
-                                <br>
-                                4.不雅、低俗的照片均不能通过审核，如抽烟、裸露上身等。
-                                <br>
-                                5.我们将在1-2个工作日内完成审核。
-                            </div>
-                        </div><!--item end-->
-
-
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>头像上传：</span>
+                                <div class="field">
+                                    <input type="file" name="headSculptureFile" id="headSculptureFile" >
+                                </div>
+                            </div><!--item end-->
                             <div class="item" style="width:150px;">
                                 <span class="label">&nbsp;</span>
                                 <input type="button" value="开始上传"   class="log_btn" id="upbtn" style="font-size:15px;" />
@@ -100,6 +88,27 @@
                                 <a id="tn_msg" style="color:#ff4e00;"></a>
                             </div>
 
+                            <br>
+                            <br>
+                            <div class="item">
+                                <div class="field"  >
+                                    1.不能使用涉及政治和涉及黄色的图片，包括但不限于：
+                                    <br>
+                                    （1）军、政单位指定特殊服装不能通过审核，如军服、警察制服等。
+                                    <br>
+                                    （2）涉及国家领导人、时政事件的图片不予通过。
+                                    <br>
+                                    （3）涉及黄色、性暗示，集中在人体的敏感部位，此类图片不予通过。
+                                    <br>
+                                    2.保证图片清晰可辨，请勿上传过于模糊的图片。
+                                    <br>
+                                    3.照片中带有其他网站标识或者网站地址的不能通过审核。
+                                    <br>
+                                    4.不雅、低俗的照片均不能通过审核，如抽烟、裸露上身等。
+                                    <br>
+                                    5.我们将在1-2个工作日内完成审核。
+                                </div>
+                            </div><!--item end-->
 
                         </div>
                 </form>
@@ -108,74 +117,6 @@
 
 
 
-
-    <div class="modal fade" id="avatar-modal"  aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <!--<form class="avatar-form" action="upload-logo.php" enctype="multipart/form-data" method="post">-->
-                <form class="avatar-form" id="uhnform" method="post">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal" type="button">&times;</button>
-                        <h4 class="modal-title" id="avatar-modal-label">上传图片</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="avatar-body">
-                            <div class="avatar-upload">
-                                <input class="avatar-src" name="avatar_src" type="hidden">
-                                <input class="avatar-data" name="avatar_data" type="hidden">
-                                <label for="avatarInput" style="line-height: 35px;">图片上传</label>
-                                <button class="btn btn-danger"  type="button" style="height: 35px;" onClick="$('input[id=avatarInput]').click();">请选择图片</button>
-                                <span id="avatar-name"></span>
-                                <input class="avatar-input hide" id="avatarInput"  type="file"></div>
-                                <input type="hidden" id="headSculptureBase64" name="headSculptureBase64"/>
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div class="avatar-wrapper"></div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="avatar-preview preview-lg" id="imageHead"></div>
-                                    <!--<div class="avatar-preview preview-md"></div>
-                            <div class="avatar-preview preview-sm"></div>-->
-                                </div>
-                            </div>
-                            <div class="row avatar-btns">
-                                <div class="col-md-4">
-                                    <div class="btn-group">
-                                        <button class="btn btn-danger fa fa-undo" data-method="rotate" data-option="-90" type="button" title="Rotate -90 degrees"> 向左旋转</button>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button class="btn  btn-danger fa fa-repeat" data-method="rotate" data-option="90" type="button" title="Rotate 90 degrees"> 向右旋转</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-5" style="text-align: right;">
-                                    <button class="btn btn-danger fa fa-arrows" data-method="setDragMode" data-option="move" type="button" title="移动">
-								<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;setDragMode&quot;, &quot;move&quot;)">
-								</span>
-                                    </button>
-                                    <button type="button" class="btn btn-danger fa fa-search-plus" data-method="zoom" data-option="0.1" title="放大图片">
-								<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;zoom&quot;, 0.1)">
-								  <!--<span class="fa fa-search-plus"></span>-->
-								</span>
-                                    </button>
-                                    <button type="button" class="btn btn-danger fa fa-search-minus" data-method="zoom" data-option="-0.1" title="缩小图片">
-								<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;zoom&quot;, -0.1)">
-								  <!--<span class="fa fa-search-minus"></span>-->
-								</span>
-                                    </button>
-                                    <button type="button" class="btn btn-danger fa fa-refresh" data-method="reset" title="重置图片">
-									<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;reset&quot;)" aria-describedby="tooltip866214">
-                                    </button>
-                                </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-danger btn-block avatar-save fa fa-save" type="button" data-dismiss="modal"> 保存修改</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
 
@@ -185,12 +126,8 @@
 
 <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/cropper/head/jquery.min.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/cropper/head/bootstrap.min.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/cropper/head/cropper.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/cropper/head/sitelogo.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
 <link rel="stylesheet" href="${basePath}/static/css/common/toucan-form-validate.css" />
-<script src="${basePath}/static/lib/cropper/head/html2canvas.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="${basePath}/static/shopping/web/js/user/uploadUserHeadsculpture.js"></script>
 
 

@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.user;
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.web.service.LoginUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserHeadSculptureApproveService;
@@ -42,11 +43,15 @@ public class UserHeadSculptureApprovePageController extends BaseController {
     @Autowired
     private FeignUserHeadSculptureApproveService feignUserHeadSculptureApproveService;
 
+    @Autowired
+    private LoginUserService loginUserService;
+
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/page")
     public String page(HttpServletRequest request)
     {
+        loginUserService.setAttributeUser(request);
         return "user/headSculpture/edit_head_sculpture";
     }
 
