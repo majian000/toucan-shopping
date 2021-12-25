@@ -59,10 +59,12 @@ $(function () {
                     window.location.href=basePath+data.data;
                 }else  if(data.code==0)
                 {
+                    $("#tn_msg").attr("style","color:#ff4e00;");
                     $("#tn_msg").text(data.msg);
                 }else if(data.code==1)
                 {
-                    window.location.href=basePath+"/page/user/head/sculpture/approve/page";
+                    $("#tn_msg").attr("style","color:#008000;");
+                    $("#tn_msg").text("上传成功,请等待工作人员审核!");
                 }
             },
             complete:function(data,status){
