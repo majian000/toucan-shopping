@@ -45,15 +45,25 @@
 
     <div class="current-position">
         <h2>
-            <a href="${basePath}/page/user/info">账号管理</a>
+            <a href="${basePath}/page/user/info">个人中心</a>
             &gt;
-            <a href="#">实名认证</a>
+            <a href="#">消息中心</a>
         </h2>
     </div>
     <div class="user-content">
 
         <div class="user-menu">
             <#include "/user/info_left.html"/>
+        </div>
+
+        <div class="user-right">
+            <div class="toucan-form">
+                <div class="toucan-form-title">
+                    <h3 style="font-size:20px;float:left;">消息中心</h3>
+                    &nbsp;&nbsp;&nbsp;
+                    <a style="float:right;color:#0400ff;font-size: 15px;">全部已读</a>
+                </div>
+            </div>
         </div>
 
     </div>

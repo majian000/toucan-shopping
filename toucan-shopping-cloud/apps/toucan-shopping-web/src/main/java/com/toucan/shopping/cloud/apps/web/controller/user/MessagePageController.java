@@ -26,10 +26,10 @@ public class MessagePageController extends BaseController {
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/page")
+    @RequestMapping("/")
     public String page(HttpServletRequest request)
     {
-        return "user/message/edit_head_sculpture";
+        return "user/message/message_list";
     }
 
 

@@ -9,7 +9,12 @@
         <dd><a href="${basePath}/page/order/list">我的订单</a></dd>
         <dd><a href="comment.html">商品评价</a></dd>
         <dd><a href="favorite.html">我的收藏</a></dd>
-        <dd><a href="favorite.html">消息中心</a></dd>
+
+        <#if leftMenuName??&&leftMenuName=="message">
+                <dd class="active" ><a href="${basePath}/page/user/message/">消息中心</a></dd>
+        <#else>
+                <dd><a href="${basePath}/page/user/message/">消息中心</a></dd>
+        </#if>
 
         <dt>售后服务</dt>
         <dd><a href="order-th.html">退货单</a></dd>
