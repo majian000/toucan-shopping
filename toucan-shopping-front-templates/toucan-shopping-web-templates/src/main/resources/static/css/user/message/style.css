@@ -43,6 +43,15 @@
   padding: 1em 1.5em 1em 0;
 }
 
+.accordion button .redpoint {
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background-color:red;
+  float:left;
+  margin-top: 5px;
+}
+
 .accordion button .accordion-title-time {
   font-size:13px;
 }
