@@ -130,19 +130,6 @@
                         </div>
                     </div>
                     <div class="pagination">
-                        <span class="btn-first-page item">上一页</span>
-                        <div class="pageList-wrap">
-                            <li class="item" value="1"><span>1</span></li>
-                            <li class="item active" value="2"><span>2</span></li>
-                            <li class="item" value="3"><span>3</span></li>
-                            <li class="item" value="4"><span>4</span></li>
-                            <li class="item" value="5"><span>5</span></li>
-                            <li class="item" value="6"><span>6</span></li>
-                            <li class="item" value="7"><span>7</span></li>
-                            <li class="item eliplise"><span>...</span></li>
-                        </div>
-                        <span class="btn-next-page item">下一页</span>
-                        <span class="page-count">当前共有<i class="page-count_num">10</i>条</span>
                     </div>
 
                 </div>
@@ -161,7 +148,7 @@
 
 <script>
     $(function () {
-        var pagination = new pagination({
+        new pagination({
             pagination:$('.pagination'),
             maxPage: 7, //最大页码数,支持奇数，左右对称
             startPage: 1,    //默认第一页
