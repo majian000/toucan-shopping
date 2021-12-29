@@ -18,6 +18,7 @@
 <body>
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}">
+    <input type="hidden" name="userMainId" th:value="${model.userMainId}">
     <div class="layui-form-item">
         <label class="layui-form-label ">姓名</label>
         <div class="layui-input-block" th:text="${model.trueName}">

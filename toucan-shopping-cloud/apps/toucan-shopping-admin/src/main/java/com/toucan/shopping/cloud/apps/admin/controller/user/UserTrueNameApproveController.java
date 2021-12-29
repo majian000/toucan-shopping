@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
 import com.toucan.shopping.modules.message.enums.MessageTypeEnum;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
@@ -129,9 +130,9 @@ public class UserTrueNameApproveController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/pass/{id}",method = RequestMethod.POST)
+    @RequestMapping(value = "/pass/{id}/{userMainId}",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id)
+    public ResultObjectVO passById(HttpServletRequest request,  @PathVariable String id,@PathVariable Long userMainId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -150,7 +151,7 @@ public class UserTrueNameApproveController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 //发送消息
-                MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),"恭喜您,实名审核完成",userTrueNameApproveVO.getUserMainId());
+                MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),"恭喜您,实名审核完成",MessageContentTypeConstant.CONTENT_TYPE_1,userMainId);
                 messageVO.setMessageType(MessageTypeEnum.TRUENAME.getCode(),MessageTypeEnum.TRUENAME.getName(),MessageTypeEnum.TRUENAME.getAppCode());
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
                 resultObjectVO = feignMessageService.send(requestJsonVO);
@@ -191,6 +192,7 @@ public class UserTrueNameApproveController extends UIController {
                     }
                     request.setAttribute("model",userTrueNameApproveVO);
                 }
+
             }
         }catch(Exception e)
         {
@@ -224,6 +226,14 @@ public class UserTrueNameApproveController extends UIController {
             userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
             resultObjectVO = feignUserTrueNameApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                //发送消息
+                MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),userTrueNameApproveVO.getRejectText(), MessageContentTypeConstant.CONTENT_TYPE_1,userTrueNameApproveVO.getUserMainId());
+                messageVO.setMessageType(MessageTypeEnum.TRUENAME.getCode(),MessageTypeEnum.TRUENAME.getName(),MessageTypeEnum.TRUENAME.getAppCode());
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
+                resultObjectVO = feignMessageService.send(requestJsonVO);
+            }
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

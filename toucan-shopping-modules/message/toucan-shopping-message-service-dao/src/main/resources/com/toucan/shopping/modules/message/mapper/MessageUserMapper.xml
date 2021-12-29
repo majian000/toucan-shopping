@@ -36,10 +36,10 @@
 
 
     <insert id="inserts"  useGeneratedKeys="false" keyProperty="id" >
-        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_id,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
+        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.messageBodyId},#{entity.userMainId},#{entity.sendDate},#{entity.status},#{entity.messageTypeId},#{entity.messageTypeCode},#{entity.messageTypeName},#{entity.messageTypeAppCode},#{entity.createDate},#{entity.deleteStatus})
+            (#{entity.id},#{entity.messageBodyId},#{entity.userMainId},#{entity.sendDate},#{entity.status},#{entity.messageTypeCode},#{entity.messageTypeName},#{entity.messageTypeAppCode},#{entity.createDate},#{entity.deleteStatus})
         </foreach>
 
     </insert>

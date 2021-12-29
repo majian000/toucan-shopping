@@ -81,6 +81,31 @@ public class MessageVO {
         }
     }
 
+
+    public MessageVO(String title, String content,Integer contentType, Long userMainId)
+    {
+        this.messageBody = new MessageBodyVO();
+        this.messageBody.setTitle(title);
+        this.messageBody.setContent(content);
+        this.messageBody.setDeleteStatus((short)0);
+        this.messageBody.setContentType(contentType);
+
+        if(userMainId!=null)
+        {
+            this.users = new LinkedList<MessageUserVO>();
+            MessageUserVO messageUserVO = new MessageUserVO();
+            messageUserVO.setUserMainId(userMainId);
+            Date createDate = new Date();
+            messageUserVO.setSendDate(createDate);
+            messageUserVO.setStatus(0);
+            messageUserVO.setDeleteStatus((short)0);
+            messageUserVO.setCreateDate(createDate);
+
+            this.users.add(messageUserVO);
+        }
+    }
+
+
     public String getTitle()
     {
         return this.messageBody.getTitle();

@@ -201,7 +201,7 @@
             if (obj.event == 'pass') {
                 layer.confirm('确定审核通过?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]user/true/name/approve/pass/"+data.id,
+                        url:"[[@{/}]]user/true/name/approve/pass/"+data.id+"/"+data.userMainId,
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         success:function(data){
