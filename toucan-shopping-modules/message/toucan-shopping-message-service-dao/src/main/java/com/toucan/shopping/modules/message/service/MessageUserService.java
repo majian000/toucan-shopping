@@ -17,6 +17,8 @@ public interface MessageUserService {
 
     int save(MessageUser entity);
 
+    int saves(List<MessageUserVO> entitys);
+
     /**
      * 根据ID删除
      * @param id

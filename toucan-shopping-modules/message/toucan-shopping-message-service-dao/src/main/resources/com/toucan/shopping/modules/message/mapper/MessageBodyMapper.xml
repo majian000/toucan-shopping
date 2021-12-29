@@ -7,7 +7,7 @@
         <result column="title" jdbcType="VARCHAR" property="title" />
         <result column="content" jdbcType="VARCHAR" property="content" />
         <result column="content_type" jdbcType="INTEGER" property="contentType" />
-        <result column="message_type_id" jdbcType="INTEGER" property="messageTypeId" />
+        <result column="message_type_id" jdbcType="BIGINT" property="messageTypeId" />
         <result column="message_type_code" jdbcType="VARCHAR" property="messageTypeCode" />
         <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
         <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />

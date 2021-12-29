@@ -4,11 +4,11 @@
 
     <resultMap id="entityMap" type="com.toucan.shopping.modules.message.entity.MessageUser" >
         <id column="id" jdbcType="BIGINT"  property="id" />
-        <result column="message_body_id" jdbcType="INTEGER" property="messageBodyId" />
-        <result column="user_main_id" jdbcType="VARCHAR" property="userMainId" />
+        <result column="message_body_id" jdbcType="BIGINT" property="messageBodyId" />
+        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="send_date" jdbcType="TIMESTAMP" property="sendDate" />
         <result column="status" jdbcType="INTEGER" property="status" />
-        <result column="message_type_id" jdbcType="INTEGER" property="messageTypeId" />
+        <result column="message_type_id" jdbcType="BIGINT" property="messageTypeId" />
         <result column="message_type_code" jdbcType="VARCHAR" property="messageTypeCode" />
         <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
         <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />
@@ -35,6 +35,15 @@
         values(#{id},#{messageBodyId},#{userMainId},#{sendDate},#{status},#{messageTypeId},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
     </insert>
 
+
+    <insert id="inserts"  useGeneratedKeys="false" keyProperty="id" >
+        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_id,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.messageBodyId},#{entity.userMainId},#{entity.sendDate},#{entity.status},#{entity.messageTypeId},#{entity.messageTypeCode},#{entity.messageTypeName},#{entity.messageTypeAppCode},#{entity.createDate},#{entity.deleteStatus})
+        </foreach>
+
+    </insert>
 
     <update id="deleteById" parameterType="java.lang.Long">
         update t_message_user set delete_status=1 where id = #{id}

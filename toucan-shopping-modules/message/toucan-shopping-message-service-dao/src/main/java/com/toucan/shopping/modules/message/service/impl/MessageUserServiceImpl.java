@@ -32,6 +32,10 @@ public class MessageUserServiceImpl implements MessageUserService {
         return messageBodyMapper.insert(entity);
     }
 
+    @Override
+    public int saves(List<MessageUserVO> entitys) {
+        return messageBodyMapper.inserts(entitys);
+    }
 
 
     @Override

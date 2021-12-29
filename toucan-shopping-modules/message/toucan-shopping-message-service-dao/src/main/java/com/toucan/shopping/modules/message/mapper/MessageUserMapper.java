@@ -13,6 +13,7 @@ public interface MessageUserMapper {
 
     int insert(MessageUser entity);
 
+    int inserts(List<MessageUserVO> entitys);
 
     /**
      * 根据ID删除

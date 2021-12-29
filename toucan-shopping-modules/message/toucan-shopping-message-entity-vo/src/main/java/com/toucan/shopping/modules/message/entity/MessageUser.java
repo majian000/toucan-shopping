@@ -24,17 +24,19 @@ public class MessageUser {
     /**
      * 消息主体ID
      */
-    private Integer messageBodyId;
+    private Long messageBodyId;
 
 
     /**
      * 接收用户ID
      */
-    private Integer userMainId;
+    private Long userMainId;
 
     /**
      * 发送时间
      */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date sendDate;
 
     /**
@@ -46,7 +48,7 @@ public class MessageUser {
     /**
      * 消息类型ID(用于消息历史)
      */
-    private Integer messageTypeId;
+    private Long messageTypeId;
 
     /**
      * 消息类型编码(用于消息历史)
