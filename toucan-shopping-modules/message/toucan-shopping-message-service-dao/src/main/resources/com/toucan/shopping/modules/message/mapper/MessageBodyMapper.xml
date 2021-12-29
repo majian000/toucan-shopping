@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.message.mapper.MessageBodyMapper">
+
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.message.entity.MessageBody" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="content_type" jdbcType="INTEGER" property="contentType" />
+        <result column="message_type_id" jdbcType="INTEGER" property="messageTypeId" />
+        <result column="message_type_code" jdbcType="VARCHAR" property="messageTypeCode" />
+        <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
+        <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
+    <resultMap id="messageBodyVOMap" type="com.toucan.shopping.modules.message.vo.MessageBodyVO" extends="entityMap" >
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="title!=null and title!='' ">
+            and t.title  like concat(#{title},'%')
+
+        </if>
+    </sql>
+    
+    
+    <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageBody" >
+        insert into t_message_body(id,title,content,content_type,message_type_id,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
+        values(#{id},#{title},#{content},#{contentType},#{messageTypeId},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
+    </insert>
+
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_message_body set delete_status=1 where id = #{id}
+    </update>
+
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.message.entity.MessageBody">
+        update t_message_body set  title=#{title},content=#{content},content_type=#{contentType},message_type_id=#{messageTypeId},
+        message_type_code=#{messageTypeCode},message_type_name=#{messageTypeName},message_type_app_code=#{messageTypeAppCode},update_date=#{updateDate}
+          where id = #{id}
+    </update>
+
+
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.message.entity.MessageBody">
+        select * from t_message_body t
+        <where>
+            1=1
+            <if test="ids!=null ">
+                and t.id in
+                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+    <select id="queryListPage" resultMap="messageBodyVOMap" parameterType="com.toucan.shopping.modules.message.page.MessageBodyPageInfo">
+        select t.* from t_message_body t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.message.page.MessageBodyPageInfo">
+        select t.* from t_message_body t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+</mapper>

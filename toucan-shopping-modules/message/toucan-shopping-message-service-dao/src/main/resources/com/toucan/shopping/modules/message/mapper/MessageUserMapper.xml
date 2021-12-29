@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.message.mapper.MessageUserMapper">
+
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.message.entity.MessageUser" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="message_body_id" jdbcType="INTEGER" property="messageBodyId" />
+        <result column="user_main_id" jdbcType="VARCHAR" property="userMainId" />
+        <result column="send_date" jdbcType="TIMESTAMP" property="sendDate" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="message_type_id" jdbcType="INTEGER" property="messageTypeId" />
+        <result column="message_type_code" jdbcType="VARCHAR" property="messageTypeCode" />
+        <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
+        <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
+    <resultMap id="messageUserVOMap" type="com.toucan.shopping.modules.message.vo.MessageUserVO" extends="entityMap" >
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="userMainId!=null ">
+            and t.user_main_id = #{userMainId}
+
+        </if>
+    </sql>
+    
+    
+    <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageUser" >
+        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_id,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
+        values(#{id},#{messageBodyId},#{userMainId},#{sendDate},#{status},#{messageTypeId},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
+    </insert>
+
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_message_user set delete_status=1 where id = #{id}
+    </update>
+
+
+
+
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.message.entity.MessageUser">
+        select * from t_message_user t
+        <where>
+            1=1
+            <if test="ids!=null ">
+                and t.id in
+                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
+    <select id="queryListPage" resultMap="messageUserVOMap" parameterType="com.toucan.shopping.modules.message.page.MessageUserPageInfo">
+        select t.* from t_message_user t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.message.page.MessageUserPageInfo">
+        select t.* from t_message_user t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+</mapper>
