@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -15,6 +16,8 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.message.enums.MessageTypeEnum;
+import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +57,9 @@ public class UserTrueNameApproveController extends UIController {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private FeignMessageService feignMessageService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -140,6 +147,14 @@ public class UserTrueNameApproveController extends UIController {
             userTrueNameApproveVO.setApproveAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,userTrueNameApproveVO);
             resultObjectVO = feignUserTrueNameApproveService.passById(requestJsonVO.sign(), requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                //发送消息
+                MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),"恭喜您,实名审核完成",userTrueNameApproveVO.getUserMainId());
+                messageVO.setMessageType(MessageTypeEnum.TRUENAME.getCode(),MessageTypeEnum.TRUENAME.getName(),MessageTypeEnum.TRUENAME.getAppCode());
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
+                resultObjectVO = feignMessageService.send(requestJsonVO);
+            }
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

@@ -108,6 +108,7 @@ public class MessageController {
                     for(MessageUserVO messageUserVO:messageUserVOList)
                     {
                         messageUserVO.setId(idGenerator.id());
+                        messageUserVO.setMessageBodyId(messageBodyVO.getId());
                         messageUserVO.setCreateDate(new Date());
                     }
                     ret = messageUserService.saves(messageUserVOList);

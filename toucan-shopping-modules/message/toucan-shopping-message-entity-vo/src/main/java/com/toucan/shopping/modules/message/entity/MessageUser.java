@@ -45,10 +45,6 @@ public class MessageUser {
     private Integer status;
 
 
-    /**
-     * 消息类型ID(用于消息历史)
-     */
-    private Long messageTypeId;
 
     /**
      * 消息类型编码(用于消息历史)

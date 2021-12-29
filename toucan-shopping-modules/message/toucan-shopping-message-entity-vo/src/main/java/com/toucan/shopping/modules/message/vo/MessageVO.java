@@ -58,6 +58,29 @@ public class MessageVO {
         }
     }
 
+
+    public MessageVO(String title, String content, Long userMainId)
+    {
+        this.messageBody = new MessageBodyVO();
+        this.messageBody.setTitle(title);
+        this.messageBody.setContent(content);
+        this.messageBody.setDeleteStatus((short)0);
+
+        if(userMainId!=null)
+        {
+            this.users = new LinkedList<MessageUserVO>();
+            MessageUserVO messageUserVO = new MessageUserVO();
+            messageUserVO.setUserMainId(userMainId);
+            Date createDate = new Date();
+            messageUserVO.setSendDate(createDate);
+            messageUserVO.setStatus(0);
+            messageUserVO.setDeleteStatus((short)0);
+            messageUserVO.setCreateDate(createDate);
+
+            this.users.add(messageUserVO);
+        }
+    }
+
     public String getTitle()
     {
         return this.messageBody.getTitle();
@@ -75,22 +98,32 @@ public class MessageVO {
 
     public void setMessageType(MessageType messageType)
     {
-        this.messageBody.setMessageTypeId(messageType.getId());
         this.messageBody.setMessageTypeCode(messageType.getCode());
         this.messageBody.setMessageTypeName(messageType.getName());
         this.messageBody.setMessageTypeAppCode(messageType.getAppCode());
 
         for(MessageUserVO userVO:this.users)
         {
-            userVO.setMessageTypeId(messageType.getId());
             userVO.setMessageTypeCode(messageType.getCode());
             userVO.setMessageTypeName(messageType.getName());
             userVO.setMessageTypeAppCode(messageType.getAppCode());
         }
-
     }
 
 
+    public void setMessageType(String typeCode,String typeName,String typeAppCode)
+    {
+        this.messageBody.setMessageTypeCode(typeCode);
+        this.messageBody.setMessageTypeName(typeName);
+        this.messageBody.setMessageTypeAppCode(typeAppCode);
+
+        for(MessageUserVO userVO:this.users)
+        {
+            userVO.setMessageTypeCode(typeCode);
+            userVO.setMessageTypeName(typeName);
+            userVO.setMessageTypeAppCode(typeAppCode);
+        }
+    }
 
 
 

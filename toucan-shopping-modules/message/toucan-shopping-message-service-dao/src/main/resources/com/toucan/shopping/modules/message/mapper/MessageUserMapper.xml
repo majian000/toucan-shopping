@@ -8,7 +8,6 @@
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="send_date" jdbcType="TIMESTAMP" property="sendDate" />
         <result column="status" jdbcType="INTEGER" property="status" />
-        <result column="message_type_id" jdbcType="BIGINT" property="messageTypeId" />
         <result column="message_type_code" jdbcType="VARCHAR" property="messageTypeCode" />
         <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
         <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />
@@ -31,8 +30,8 @@
     
     
     <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageUser" >
-        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_id,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
-        values(#{id},#{messageBodyId},#{userMainId},#{sendDate},#{status},#{messageTypeId},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
+        insert into t_message_user(id,message_body_id,user_main_id,send_date,status,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
+        values(#{id},#{messageBodyId},#{userMainId},#{sendDate},#{status},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
     </insert>
 
 

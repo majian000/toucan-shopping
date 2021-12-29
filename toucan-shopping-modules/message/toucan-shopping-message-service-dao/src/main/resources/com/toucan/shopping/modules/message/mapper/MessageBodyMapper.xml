@@ -7,7 +7,6 @@
         <result column="title" jdbcType="VARCHAR" property="title" />
         <result column="content" jdbcType="VARCHAR" property="content" />
         <result column="content_type" jdbcType="INTEGER" property="contentType" />
-        <result column="message_type_id" jdbcType="BIGINT" property="messageTypeId" />
         <result column="message_type_code" jdbcType="VARCHAR" property="messageTypeCode" />
         <result column="message_type_name" jdbcType="VARCHAR" property="messageTypeName" />
         <result column="message_type_app_code" jdbcType="VARCHAR" property="messageTypeAppCode" />
@@ -30,8 +29,8 @@
     
     
     <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageBody" >
-        insert into t_message_body(id,title,content,content_type,message_type_id,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
-        values(#{id},#{title},#{content},#{contentType},#{messageTypeId},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
+        insert into t_message_body(id,title,content,content_type,message_type_code,message_type_name,message_type_app_code,create_date,delete_status)
+        values(#{id},#{title},#{content},#{contentType},#{messageTypeCode},#{messageTypeName},#{messageTypeAppCode},#{createDate},#{deleteStatus})
     </insert>
 
 

@@ -2,12 +2,15 @@ package com.toucan.shopping.modules.message.enums;
 
 public enum MessageTypeEnum {
 
-    HEAD_SCULPTURE("头像审核","30010");
+    HEAD_SCULPTURE("10001001","头像审核","30010"),
+    TRUENAME("10001001","实名审核","30011");
 
-    private String typeCode;
+    private String appCode;
     private String typeName;
+    private String typeCode;
 
-    MessageTypeEnum(String typeName,String typeCode){
+    MessageTypeEnum(String appCode,String typeName,String typeCode){
+        this.appCode = appCode;
         this.typeName = typeName;
         this.typeCode = typeCode;
     }
@@ -15,13 +18,17 @@ public enum MessageTypeEnum {
 
     public String getCode()
     {
-        return typeCode;
+        return this.typeCode;
     }
 
     public String getName()
     {
-        return typeName;
+        return this.typeName;
     }
 
+    public String getAppCode()
+    {
+        return this.appCode;
+    }
 
 }
