@@ -68,7 +68,7 @@
 
     </select>
 
-    <select id="queryList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
+    <select id="queryList" resultMap="messageTypeVOMap" parameterType="com.toucan.shopping.modules.message.vo.MessageTypeVO">
         select t.* from t_message_type t
         <where>
             1=1
