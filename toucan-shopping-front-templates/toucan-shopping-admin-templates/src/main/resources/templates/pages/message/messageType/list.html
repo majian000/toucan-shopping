@@ -97,7 +97,7 @@
 
         table.render({
             elem: '#messageTypeTable',
-            url: "[[@{/}]]messageType/list",
+            url: "[[@{/}]]message/messageType/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -154,7 +154,7 @@
                     shade: 0.2,
                     maxmin:true,
                     area: ['100%', '100%'],
-                    content: "[[@{/messageType/addPage}]]",
+                    content: "[[@{/message/messageType/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -169,69 +169,10 @@
                 }
                 layer.confirm('确定删除消息类型?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]messageType/delete/ids",
+                        url:"[[@{/}]]message/messageType/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('messageTypeTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
-                var checkStatus = table.checkStatus('messageTypeTable')
-                    , data = checkStatus.data;
-                if(data==null||data.length<=0)
-                {
-                    layer.msg("请选择要操作的记录");
-                    return;
-                }
-                layer.confirm('确定刷新PC首页缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]messageType/flush/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('messageTypeTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('messageTypeTable')
-                    , data = checkStatus.data;
-                layer.confirm('确定清空PC首页缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]messageType/clear/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:null,
                         success:function(data){
                             layer.msg(data.msg);
 
@@ -341,7 +282,7 @@
                     shade: 0.2,
                     maxmin:true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]messageType/editPage/'+data.id
+                    content: '[[@{/}]]message/messageType/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -350,7 +291,7 @@
             } else if (obj.event == 'delete') {
                 layer.confirm('确定删除该消息类型?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]messageType/delete/"+data.id,
+                        url:"[[@{/}]]message/messageType/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

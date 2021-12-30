@@ -30,6 +30,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 消息类型管理
  */
 @Controller
-@RequestMapping("/messageType")
+@RequestMapping("/message/messageType")
 public class MessageTypeController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -74,8 +75,84 @@ public class MessageTypeController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/messageType/listPage",feignFunctionService);
-        return "pages/messageType/list.html";
+        super.initButtons(request,toucan,"/message/messageType/listPage",feignFunctionService);
+        return "pages/message/messageType/list.html";
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request)
+    {
+
+        return "pages/message/messageType/add.html";
+    }
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            MessageTypeVO queryEntity = new MessageTypeVO();
+            queryEntity.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
+            ResultObjectVO resultObjectVO = feignMessageTypeService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<MessageTypeVO> messageTypeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),MessageTypeVO.class);
+                    if(!CollectionUtils.isEmpty(messageTypeVOS))
+                    {
+                        queryEntity = messageTypeVOS.get(0);
+
+                        request.setAttribute("model",queryEntity);
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/message/messageType/edit.html";
+    }
+
+
+    /**
+     * 查询列表
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO list(HttpServletRequest request, BannerPageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            ResultObjectVO resultObjectVO = feignMessageTypeService.queryListPage(requestJsonVO);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
+                    List<MessageTypeVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),MessageTypeVO.class);
+
+
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData((List)list);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请求失败,请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
     }
 
 

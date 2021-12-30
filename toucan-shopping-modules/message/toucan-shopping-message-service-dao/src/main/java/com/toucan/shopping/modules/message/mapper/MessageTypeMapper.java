@@ -14,6 +14,8 @@ public interface MessageTypeMapper {
     int insert(MessageType entity);
 
 
+    List<MessageTypeVO> queryList(MessageTypeVO entity);
+
     /**
      * 根据ID删除
      * @param id

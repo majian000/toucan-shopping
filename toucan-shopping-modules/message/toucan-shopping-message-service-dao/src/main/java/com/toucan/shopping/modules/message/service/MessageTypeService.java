@@ -37,8 +37,12 @@ public interface MessageTypeService {
 
     /**
      * 查询列表页
-     * @param appPageInfo
+     * @param pageInfo
      * @return
      */
     PageInfo<MessageTypeVO> queryListPage(MessageTypePageInfo pageInfo);
+
+
+
+    List<MessageTypeVO> queryList(MessageTypeVO query);
 }

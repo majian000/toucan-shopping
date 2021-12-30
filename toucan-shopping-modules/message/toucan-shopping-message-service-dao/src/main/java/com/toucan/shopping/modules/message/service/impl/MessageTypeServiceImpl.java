@@ -58,4 +58,9 @@ public class MessageTypeServiceImpl implements MessageTypeService {
         return pageInfo;
     }
 
+    @Override
+    public List<MessageTypeVO> queryList(MessageTypeVO query) {
+        return messageTypeMapper.queryList(query);
+    }
+
 }

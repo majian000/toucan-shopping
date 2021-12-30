@@ -20,10 +20,16 @@
 
         <if test="name!=null and name!='' ">
             and t.name  like concat(#{name},'%')
-
         </if>
     </sql>
-    
+
+
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+    </sql>
     
     <insert id="insert" parameterType="com.toucan.shopping.modules.message.entity.MessageType" >
         insert into t_message_type(id,code,name,app_code,create_date,delete_status)
@@ -60,6 +66,16 @@
             and t.delete_status = 0
         </where>
 
+    </select>
+
+    <select id="queryList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
+        select t.* from t_message_type t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+
+        </where>
     </select>
 
 
