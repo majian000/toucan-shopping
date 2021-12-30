@@ -103,7 +103,7 @@
  | services/toucan-shopping-user                | 8087                   | 用户中心服务                                      |
  | services/toucan-shopping-admin-auth          | 8099                   | 权限中台服务                                      |
  | services/toucan-shopping-seller              | 8100                   | 卖家服务                                          |
- | services/toucan-shopping-message             | 8101                  | 消息服务                                           |
+ | services/toucan-shopping-message             | 8103                  | 消息服务                                           |
 
     
 

@@ -1,7 +1,7 @@
 #========================消息服务 开发环境====================================
 
 server:
-  port: 8101
+  port: 8103
 spring:
   application:
     name: toucan-shopping-message #应用名称
@@ -20,7 +20,7 @@ eureka:
     lease-expiration-duration-in-seconds: 3 #3秒没发心跳将剔除
     lease-renewal-interval-in-seconds: 1 #心跳1秒
     prefer-ip-address: true
-    instance-id: 127.0.0.1:8087    #使用IP地址注册
+    instance-id: 127.0.0.1:8103    #使用IP地址注册
   client:
     registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
     serviceUrl:
