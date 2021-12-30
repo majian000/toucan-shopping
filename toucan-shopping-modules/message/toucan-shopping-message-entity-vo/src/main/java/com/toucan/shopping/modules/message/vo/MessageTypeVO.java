@@ -1,6 +1,5 @@
 package com.toucan.shopping.modules.message.vo;
 
-import com.toucan.shopping.modules.message.entity.InternalMessage;
 import com.toucan.shopping.modules.message.entity.MessageType;
 import lombok.Data;
 
