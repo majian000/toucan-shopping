@@ -11,13 +11,13 @@ import java.util.List;
 public interface EventProcessMapper {
 
 
-    public List<EventProcess> queryFaildListByBefore(Date date);
+    List<EventProcess> queryFaildListByBefore(Date date);
 
-    public List<EventProcess> queryList(EventProcess eventProcess);
+    List<EventProcess> queryList(EventProcess eventProcess);
 
-    public int insert(EventProcess eventProcess);
+    int insert(EventProcess eventProcess);
 
-    public EventProcess findById(Long id);
+    EventProcess findById(Long id);
 
-    public int updateStatus(EventProcess eventProcess);
+    int updateStatus(EventProcess eventProcess);
 }

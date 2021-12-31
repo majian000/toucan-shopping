@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 处理事件表
+ * 处理事件表(服务提供者)
  * 每收到一次事件 就保存一次,如果期间执行失败 定时任务会轮训这张表 做事务补偿
  * @author majian
  */

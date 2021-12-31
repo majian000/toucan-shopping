@@ -16,9 +16,9 @@ public interface EventPublishService {
      */
     public List<EventPublish> queryFaildListByBefore(Date date);
 
-    public List<EventPublish> queryList(EventPublish mqTransaction);
+    public List<EventPublish> queryList(EventPublish eventPublish);
 
-    public int insert(EventPublish mqTransaction);
+    public int insert(EventPublish eventPublish);
 
     public int updateStatus(EventPublish eventPublish);
 

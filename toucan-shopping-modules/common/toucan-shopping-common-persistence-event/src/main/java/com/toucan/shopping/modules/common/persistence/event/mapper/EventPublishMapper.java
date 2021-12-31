@@ -10,13 +10,13 @@ import java.util.List;
 @Mapper
 public interface EventPublishMapper {
 
-    public List<EventPublish> queryFaildListByBefore(Date date);
+    List<EventPublish> queryFaildListByBefore(Date date);
 
-    public List<EventPublish> queryList(EventPublish eventPublish);
+    List<EventPublish> queryList(EventPublish eventPublish);
 
-    public int insert(EventPublish eventPublish);
+    int insert(EventPublish eventPublish);
 
-    public EventPublish findById(Long id);
+    EventPublish findById(Long id);
 
-    public int updateStatus(EventPublish eventPublish);
+    int updateStatus(EventPublish eventPublish);
 }

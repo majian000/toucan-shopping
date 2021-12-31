@@ -8,7 +8,12 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
+import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
+import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
+import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
@@ -34,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 用户实名审核管理
@@ -62,6 +68,11 @@ public class UserTrueNameApproveController extends UIController {
     @Autowired
     private FeignMessageService feignMessageService;
 
+    @Autowired
+    private EventPublishService eventPublishService;
+
+    @Autowired
+    private IdGenerator idGenerator;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -122,6 +133,23 @@ public class UserTrueNameApproveController extends UIController {
 
 
 
+    EventPublish saveEventPublish(MessageVO messageVO)
+    {
+        String globalTransactionId = UUID.randomUUID().toString().replace("-","");
+
+        EventPublish eventPublish = new EventPublish();
+        eventPublish.setCreateDate(new Date());
+        eventPublish.setId(idGenerator.id());
+        eventPublish.setRemark(messageVO.getTitle());
+        eventPublish.setTransactionId(globalTransactionId);
+        eventPublish.setPayload(JSONObject.toJSONString(messageVO));
+        eventPublish.setStatus((short)0); //待发送
+        eventPublish.setType(EventPublishTypeEnum.USER_TRUESCULPTURE_MESSAGE.getCode());
+        if(eventPublishService.insert(eventPublish)>0) {
+            return eventPublish;
+        }
+        return null;
+    }
 
 
     /**
@@ -153,8 +181,22 @@ public class UserTrueNameApproveController extends UIController {
                 //发送消息
                 MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),"恭喜您,实名审核完成",MessageContentTypeConstant.CONTENT_TYPE_1,userMainId);
                 messageVO.setMessageType(MessageTypeEnum.TRUENAME.getCode(),MessageTypeEnum.TRUENAME.getName(),MessageTypeEnum.TRUENAME.getAppCode());
+
+                //保存消息发布事件
+                EventPublish eventPublish = saveEventPublish(messageVO);
+                if(eventPublish==null)
+                {
+                    logger.warn("消息发布事件保存失败 payload {} ",JSONObject.toJSONString(messageVO));
+                }
+
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
                 resultObjectVO = feignMessageService.send(requestJsonVO);
+                if (resultObjectVO.isSuccess())
+                {
+                    //设置消息为已发送
+                    eventPublish.setStatus((short)1);
+                    eventPublishService.updateStatus(eventPublish);
+                }
             }
         }catch(Exception e)
         {
@@ -228,11 +270,27 @@ public class UserTrueNameApproveController extends UIController {
             resultObjectVO = feignUserTrueNameApproveService.rejectById(requestJsonVO.sign(), requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
+
                 //发送消息
                 MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),userTrueNameApproveVO.getRejectText(), MessageContentTypeConstant.CONTENT_TYPE_1,userTrueNameApproveVO.getUserMainId());
                 messageVO.setMessageType(MessageTypeEnum.TRUENAME.getCode(),MessageTypeEnum.TRUENAME.getName(),MessageTypeEnum.TRUENAME.getAppCode());
+
+                //保存消息发布事件
+                EventPublish eventPublish = saveEventPublish(messageVO);
+                if(eventPublish==null)
+                {
+                    logger.warn("消息发布事件保存失败 payload {} ",JSONObject.toJSONString(messageVO));
+                }
+
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
                 resultObjectVO = feignMessageService.send(requestJsonVO);
+
+                if (resultObjectVO.isSuccess())
+                {
+                    //设置消息为已发送
+                    eventPublish.setStatus((short)1);
+                    eventPublishService.updateStatus(eventPublish);
+                }
             }
         }catch(Exception e)
         {
