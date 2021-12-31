@@ -30,6 +30,15 @@ public interface FeignMessageTypeService {
 
 
     /**
+     * 批量删除
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
+
+
+    /**
      * 編輯
      * @param requestVo
      * @return
