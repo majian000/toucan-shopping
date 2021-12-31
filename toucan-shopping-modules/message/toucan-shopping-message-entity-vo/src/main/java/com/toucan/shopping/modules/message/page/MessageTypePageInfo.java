@@ -28,6 +28,7 @@ public class MessageTypePageInfo extends PageInfo<MessageTypeVO> {
     private String title;
 
 
+
     private Long[] idArray; //ID数组
 
     //==============================================

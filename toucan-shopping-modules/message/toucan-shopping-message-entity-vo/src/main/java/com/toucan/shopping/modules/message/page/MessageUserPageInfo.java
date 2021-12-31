@@ -22,6 +22,10 @@ public class MessageUserPageInfo extends PageInfo<MessageUserVO> {
     private Integer id;
 
 
+    /**
+     * 接收用户ID
+     */
+    private Long userMainId;
 
 
     private Long[] idArray; //ID数组

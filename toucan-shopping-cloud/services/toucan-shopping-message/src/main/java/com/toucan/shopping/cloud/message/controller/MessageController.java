@@ -8,7 +8,9 @@ import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.message.entity.MessageBody;
 import com.toucan.shopping.modules.message.page.MessageTypePageInfo;
+import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.redis.MessageKey;
 import com.toucan.shopping.modules.message.redis.MessageTypeKey;
 import com.toucan.shopping.modules.message.service.MessageBodyService;
@@ -30,7 +32,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 消息内容
@@ -163,6 +167,83 @@ public class MessageController {
         try {
             MessageTypePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypePageInfo.class);
             PageInfo<MessageTypeVO> pageInfo =  messageTypeService.queryListPage(queryPageInfo);
+            resultObjectVO.setData(pageInfo);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/user/query/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListPageByUserMianId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            MessageUserPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageUserPageInfo.class);
+            if(queryPageInfo.getUserMainId()==null)
+            {
+                logger.info("用户ID不能为空 :"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+            PageInfo<MessageUserVO> pageInfo =  messageUserService.queryListPage(queryPageInfo);
+            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
+            {
+                List<MessageUserVO> messageUserVOS = pageInfo.getList();
+                if(CollectionUtils.isNotEmpty(messageUserVOS))
+                {
+                    Set<Long> messageBodyIdSet = new HashSet<>();
+                    for(MessageUserVO messageUserVO:messageUserVOS)
+                    {
+                        messageBodyIdSet.add(messageUserVO.getMessageBodyId());
+                    }
+                    //查询消息主体
+                    MessageBodyVO messageBodyVO = new MessageBodyVO();
+                    messageBodyVO.setIdSet(messageBodyIdSet);
+                    List<MessageBody> messageBodyList = messageBodyService.findListByEntity(messageBodyVO);
+                    if(CollectionUtils.isNotEmpty(messageBodyList))
+                    {
+
+                        for(MessageUserVO messageUserVO:messageUserVOS) {
+                            for (MessageBody messageBody : messageBodyList) {
+                                if(messageUserVO.getMessageBodyId().longValue()==messageBody.getId().longValue())
+                                {
+                                    messageUserVO.setTitle(messageBody.getTitle());
+                                    messageUserVO.setContent(messageBody.getContent());
+                                    messageUserVO.setContentType(messageBody.getContentType());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {

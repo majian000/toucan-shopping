@@ -91,7 +91,7 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.message.page.MessageTypePageInfo">
-        select t.* from t_message_type t
+        select count(*) from t_message_type t
         <where>
             1=1 and t.delete_status = 0
 

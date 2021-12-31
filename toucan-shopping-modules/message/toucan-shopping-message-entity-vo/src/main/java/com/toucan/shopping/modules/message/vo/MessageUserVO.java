@@ -11,4 +11,20 @@ import lombok.Data;
 @Data
 public class MessageUserVO extends MessageUser {
 
+    /**
+     * 消息标题
+     */
+    private String title;
+
+    /**
+     * 消息内容
+     */
+    private String content;
+
+    /**
+     * 内容类型 1:纯文本
+     */
+    private Integer contentType;
+
+
 }

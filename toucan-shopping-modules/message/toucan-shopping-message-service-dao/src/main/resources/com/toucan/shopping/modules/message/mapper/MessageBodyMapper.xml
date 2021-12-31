@@ -23,7 +23,27 @@
 
         <if test="title!=null and title!='' ">
             and t.title  like concat(#{title},'%')
+        </if>
 
+        <if test="idSet!=null and idSet.size>0">
+            and t.id in
+            <foreach item="item" index="index" collection="idSet" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+    </sql>
+
+    <sql id="queryListWhere">
+
+        <if test="idSet!=null and idSet.size>0">
+            and t.id in
+            <foreach item="item" index="index" collection="idSet" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="id!=null">
+            and t.id = #{id}
         </if>
     </sql>
     
@@ -51,15 +71,7 @@
         select * from t_message_body t
         <where>
             1=1
-            <if test="ids!=null ">
-                and t.id in
-                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
+            <include refid="queryListWhere" />
             and t.delete_status = 0
         </where>
 
@@ -78,7 +90,7 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.message.page.MessageBodyPageInfo">
-        select t.* from t_message_body t
+        select count(*) from t_message_body t
         <where>
             1=1 and t.delete_status = 0
 

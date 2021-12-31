@@ -37,4 +37,6 @@ public interface MessageUserService {
      * @return
      */
     PageInfo<MessageUserVO> queryListPage(MessageUserPageInfo pageInfo);
+
+
 }
