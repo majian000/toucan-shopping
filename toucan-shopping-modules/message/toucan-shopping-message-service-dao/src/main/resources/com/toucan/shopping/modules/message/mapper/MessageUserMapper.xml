@@ -27,7 +27,7 @@
 
         </if>
 
-        <if test="status!=null and status!='' ">
+        <if test="status!=null  ">
             and t.status = #{status}
 
         </if>
