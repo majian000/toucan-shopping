@@ -27,6 +27,11 @@ public class MessageUserPageInfo extends PageInfo<MessageUserVO> {
      */
     private Long userMainId;
 
+    /**
+     * 是否读取 0:未读 1:已读
+     */
+    private Integer status;
+
 
     private Long[] idArray; //ID数组
 

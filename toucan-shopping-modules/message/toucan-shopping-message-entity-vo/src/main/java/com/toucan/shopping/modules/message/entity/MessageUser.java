@@ -30,6 +30,8 @@ public class MessageUser {
     /**
      * 接收用户ID
      */
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
     /**

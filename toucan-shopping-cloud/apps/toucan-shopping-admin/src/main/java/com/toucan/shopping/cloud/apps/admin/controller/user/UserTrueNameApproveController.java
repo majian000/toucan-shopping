@@ -5,14 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageService;
+import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
-import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -66,7 +65,7 @@ public class UserTrueNameApproveController extends UIController {
     private ImageUploadService imageUploadService;
 
     @Autowired
-    private FeignMessageService feignMessageService;
+    private FeignMessageUserService feignMessageUserService;
 
     @Autowired
     private EventPublishService eventPublishService;
@@ -190,7 +189,7 @@ public class UserTrueNameApproveController extends UIController {
                 }
 
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
-                resultObjectVO = feignMessageService.send(requestJsonVO);
+                resultObjectVO = feignMessageUserService.send(requestJsonVO);
                 if (resultObjectVO.isSuccess())
                 {
                     //设置消息为已发送
@@ -283,7 +282,7 @@ public class UserTrueNameApproveController extends UIController {
                 }
 
                 requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
-                resultObjectVO = feignMessageService.send(requestJsonVO);
+                resultObjectVO = feignMessageUserService.send(requestJsonVO);
 
                 if (resultObjectVO.isSuccess())
                 {

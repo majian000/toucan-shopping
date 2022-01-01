@@ -40,8 +40,8 @@ import java.util.Set;
  * 消息内容
  */
 @RestController
-@RequestMapping("/message")
-public class MessageController {
+@RequestMapping("/message/user")
+public class MessageUserController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -165,8 +165,39 @@ public class MessageController {
             return resultObjectVO;
         }
         try {
-            MessageTypePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypePageInfo.class);
-            PageInfo<MessageTypeVO> pageInfo =  messageTypeService.queryListPage(queryPageInfo);
+            MessageUserPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageUserPageInfo.class);
+            PageInfo<MessageUserVO> pageInfo =  messageUserService.queryListPage(queryPageInfo);
+            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
+            {
+                List<MessageUserVO> messageUserVOS = pageInfo.getList();
+                if(CollectionUtils.isNotEmpty(messageUserVOS))
+                {
+                    Set<Long> messageBodyIdSet = new HashSet<>();
+                    for(MessageUserVO messageUserVO:messageUserVOS)
+                    {
+                        messageBodyIdSet.add(messageUserVO.getMessageBodyId());
+                    }
+                    //查询消息主体
+                    MessageBodyVO messageBodyVO = new MessageBodyVO();
+                    messageBodyVO.setIdSet(messageBodyIdSet);
+                    List<MessageBody> messageBodyList = messageBodyService.findListByEntity(messageBodyVO);
+                    if(CollectionUtils.isNotEmpty(messageBodyList))
+                    {
+
+                        for(MessageUserVO messageUserVO:messageUserVOS) {
+                            for (MessageBody messageBody : messageBodyList) {
+                                if(messageUserVO.getMessageBodyId().longValue()==messageBody.getId().longValue())
+                                {
+                                    messageUserVO.setTitle(messageBody.getTitle());
+                                    messageUserVO.setContent(messageBody.getContent());
+                                    messageUserVO.setContentType(messageBody.getContentType());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {
