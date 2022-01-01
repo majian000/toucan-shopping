@@ -24,13 +24,16 @@
 
         <if test="userMainId!=null ">
             and t.user_main_id = #{userMainId}
-
         </if>
 
         <if test="status!=null  ">
             and t.status = #{status}
-
         </if>
+
+        <if test="messageTypeCode!=null and messageTypeCode!='' ">
+            and t.message_type_code = #{messageTypeCode}
+        </if>
+
     </sql>
     
     

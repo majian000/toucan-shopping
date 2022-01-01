@@ -32,6 +32,11 @@ public class MessageUserPageInfo extends PageInfo<MessageUserVO> {
      */
     private Integer status;
 
+    /**
+     * 消息类型编码(用于消息历史)
+     */
+    private String messageTypeCode;
+
 
     private Long[] idArray; //ID数组
 
