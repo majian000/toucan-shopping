@@ -14,10 +14,12 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
 import com.toucan.shopping.modules.message.entity.MessageType;
 import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
+import com.toucan.shopping.modules.message.vo.MessageVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,8 +112,11 @@ public class MessageUserController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignMessageUserService.save(requestJsonVO);
+            //发送消息
+            MessageVO messageVO = new MessageVO(entity.getTitle(),entity.getContent(), MessageContentTypeConstant.CONTENT_TYPE_1,entity.getUserMainId());
+            messageVO.setMessageType(entity.getMessageTypeCode(),entity.getMessageTypeName(),entity.getMessageTypeAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
+            resultObjectVO = feignMessageUserService.send(requestJsonVO);;
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

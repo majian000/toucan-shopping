@@ -30,6 +30,20 @@ public class MessageUserVO extends MessageUser {
      */
     private Integer contentType;
 
+    /**
+     * 消息类型编码
+     */
+    private String messageTypeCode;
+
+    /**
+     * 消息类型名称
+     */
+    private String messageTypeName;
+
+    /**
+     * 消息类型应用编码
+     */
+    private String messageTypeAppCode;
 
     /**
      * 发送时间
