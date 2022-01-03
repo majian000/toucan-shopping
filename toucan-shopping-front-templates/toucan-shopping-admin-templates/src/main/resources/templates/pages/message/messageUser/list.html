@@ -46,7 +46,7 @@
                             <div class="layui-input-inline">
                                 <select id="messageTypeCode" name="messageTypeCode"  lay-search="">
                                     <option value="">全部</option>
-                                    <!--<option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}">-->
+                                    <option th:each="mt : ${messageTypes}" th:value="${mt.code}" th:text="${mt.code}+' '+${mt.name}">
                                 </select>
                             </div>
                         </div>

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageTypeService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.modules.area.page.BannerPageInfo;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -13,7 +14,9 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.message.entity.MessageType;
 import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
+import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +51,9 @@ public class MessageUserController extends UIController {
     @Autowired
     private FeignMessageUserService feignMessageUserService;
 
+    @Autowired
+    private FeignMessageTypeService feignMessageTypeService;
+
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -54,6 +61,23 @@ public class MessageUserController extends UIController {
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/message/messageUser/listPage",feignFunctionService);
+        try {
+            MessageTypeVO messageTypeVO = new MessageTypeVO();
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), messageTypeVO);
+            ResultObjectVO resultObjectVO = feignMessageTypeService.queryList(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    request.setAttribute("messageTypes", resultObjectVO.formatDataList(MessageTypeVO.class));
+                }else{
+                    request.setAttribute("messageTypes",new ArrayList<>());
+                }
+            }
+        }catch(Exception e)
+        {
+            request.setAttribute("messageTypes",new ArrayList<>());
+            logger.warn(e.getMessage(),e);
+        }
         return "pages/message/messageUser/list.html";
     }
 

@@ -64,4 +64,12 @@ public interface FeignMessageTypeService {
     @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
 }
