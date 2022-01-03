@@ -46,4 +46,21 @@ public interface FeignMessageUserService {
     @RequestMapping(value="/user/query/unread/count",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryUnreadCountByUserMainId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 更新为已读
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/user/update/read/status",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateReadStatus(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 更新全部为已读
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/user/update/all/read/status",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updateAllReadStatus(@RequestBody RequestJsonVO requestJsonVO);
 }

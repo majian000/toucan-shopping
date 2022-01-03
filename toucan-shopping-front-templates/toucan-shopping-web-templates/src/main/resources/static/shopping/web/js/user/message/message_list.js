@@ -34,7 +34,7 @@ function queryMessageList(cpage)
                     for(var i=0;i<result.data.list.length;i++) {
                         var obj = result.data.list[i];
                         var row = " <div class='accordion-item'>";
-                        row += "<button id='accordion-button-"+(i+1)+"' aria-expanded='false' onclick=\"messageExpand('accordion-button-"+(i+1)+"');\">";
+                        row += "<button id='accordion-button-"+(i+1)+"' aria-expanded='false' onclick=\"messageExpand('accordion-button-"+(i+1)+"','"+obj.id+"');\">";
                         row += "<span class='accordion-title'>";
                         if (obj.status==0)
                         {
@@ -77,7 +77,7 @@ function queryMessageList(cpage)
 
 }
 
-function messageExpand(btnId)
+function messageExpand(btnId,rowId)
 {
     var expAttr = $("#"+btnId).attr("aria-expanded");
     if(expAttr=="true")
@@ -85,7 +85,44 @@ function messageExpand(btnId)
         $("#"+btnId).find(".icon").html("展开");
         $("#"+btnId).attr("aria-expanded","false");
     }else{
+        $("#"+btnId).find(".redpoint").remove();
         $("#"+btnId).find(".icon").html("收起");
         $("#"+btnId).attr("aria-expanded","true");
+        readStatus(rowId);
     }
+}
+
+function readStatus(rowId)
+{
+    $.ajax({
+        type: "POST",
+        url: messageBasePath + "/api/user/message/read/"+rowId,
+        data: null,
+        dataType: 'json',
+        xhrFields: {
+            withCredentials: true //允许跨域带Cookie
+        },
+        success: function (result) {
+
+        }
+    });
+}
+
+function allRead()
+{
+
+    $.ajax({
+        type: "POST",
+        url: messageBasePath + "/api/user/message/read/all",
+        data: null,
+        dataType: 'json',
+        xhrFields: {
+            withCredentials: true //允许跨域带Cookie
+        },
+        success: function (result) {
+            if (result.code > 0) {
+                queryMessageList(1);
+            }
+        }
+    });
 }

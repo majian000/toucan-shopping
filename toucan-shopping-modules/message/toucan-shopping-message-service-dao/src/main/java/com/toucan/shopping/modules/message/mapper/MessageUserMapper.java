@@ -56,4 +56,14 @@ public interface MessageUserMapper {
     Long queryMyListPageCount(MessageUserPageInfo pageInfo);
 
     Long queryListCount(MessageUserVO query);
+
+
+    /**
+     * 更新已读
+     * @param messageUserVO
+     * @return
+     */
+    int updateStatus(MessageUserVO messageUserVO);
+
+    int updateAllReadStatus(Long userMainId);
 }

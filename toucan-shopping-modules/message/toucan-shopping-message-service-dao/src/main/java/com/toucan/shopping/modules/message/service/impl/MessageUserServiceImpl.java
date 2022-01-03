@@ -71,4 +71,16 @@ public class MessageUserServiceImpl implements MessageUserService {
         pageInfo.setTotal(messageUserMapper.queryMyListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public int updateStatus(MessageUserVO messageUserVO) {
+        return messageUserMapper.updateStatus(messageUserVO);
+    }
+
+
+    @Override
+    public int updateAllReadStatus(Long userMainId) {
+        return messageUserMapper.updateAllReadStatus(userMainId);
+    }
+
 }

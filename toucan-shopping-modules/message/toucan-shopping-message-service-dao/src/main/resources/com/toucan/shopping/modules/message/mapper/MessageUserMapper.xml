@@ -67,7 +67,14 @@
     </update>
 
 
+    <update id="updateStatus" parameterType="com.toucan.shopping.modules.message.vo.MessageUserVO">
+        update t_message_user set status=#{status} where id = #{id} and user_main_id=#{userMainId}
+    </update>
 
+
+    <update id="updateAllReadStatus" parameterType="java.lang.Long">
+        update t_message_user set status=1 where  user_main_id=#{userMainId}
+    </update>
 
     <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.message.entity.MessageUser">
         select * from t_message_user t

@@ -336,4 +336,118 @@ public class MessageUserController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 更新为已读
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/user/update/read/status",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateReadStatus(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            MessageUserVO messageUserVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageUserVO.class);
+            if(messageUserVO.getId()==null)
+            {
+                logger.info("ID不能为空 :"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+            if(messageUserVO.getUserMainId()==null)
+            {
+                logger.info("用户ID不能为空 :"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+            messageUserVO.setStatus(1);
+            int ret  =  messageUserService.updateStatus(messageUserVO);
+            if(ret<=0)
+            {
+                logger.warn("更新消息状态失败 {}",JSONObject.toJSONString(messageUserVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("更新消息状态失败!");
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 更新全部为已读
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/user/update/all/read/status",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updateAllReadStatus(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            MessageUserVO messageUserVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageUserVO.class);
+            if(messageUserVO.getUserMainId()==null)
+            {
+                logger.info("用户ID不能为空 :"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+            int ret  =  messageUserService.updateAllReadStatus(messageUserVO.getUserMainId());
+            if(ret<=0)
+            {
+                logger.warn("更新消息状态失败 {}",JSONObject.toJSONString(messageUserVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("更新消息状态失败!");
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
 }

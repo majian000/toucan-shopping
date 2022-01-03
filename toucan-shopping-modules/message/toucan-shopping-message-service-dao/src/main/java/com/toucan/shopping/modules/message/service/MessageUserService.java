@@ -32,6 +32,8 @@ public interface MessageUserService {
 
     Long queryListCount(MessageUserVO query);
 
+
+
     /**
      * 查询列表页
      * @param pageInfo
@@ -46,4 +48,17 @@ public interface MessageUserService {
      */
     PageInfo<MessageUserVO> queryMyListPage(MessageUserPageInfo pageInfo);
 
+    /**
+     * 更新已读
+     * @param messageUserVO
+     * @return
+     */
+    int updateStatus(MessageUserVO messageUserVO);
+
+    /**
+     * 更新已读
+     * @param userMainId
+     * @return
+     */
+    int updateAllReadStatus(Long userMainId);
 }
