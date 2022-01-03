@@ -39,4 +39,6 @@ public interface MessageUserMapper {
      * @return
      */
     Long queryListPageCount(MessageUserPageInfo pageInfo);
+
+    Long queryListCount(MessageUserVO query);
 }

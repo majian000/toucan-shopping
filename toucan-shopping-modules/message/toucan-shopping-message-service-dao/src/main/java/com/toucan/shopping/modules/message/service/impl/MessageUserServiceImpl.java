@@ -22,39 +22,44 @@ import java.util.List;
 public class MessageUserServiceImpl implements MessageUserService {
 
     @Autowired
-    private MessageUserMapper messageBodyMapper;
+    private MessageUserMapper messageUserMapper;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Override
     public int save(MessageUser entity) {
-        return messageBodyMapper.insert(entity);
+        return messageUserMapper.insert(entity);
     }
 
     @Override
     public int saves(List<MessageUserVO> entitys) {
-        return messageBodyMapper.inserts(entitys);
+        return messageUserMapper.inserts(entitys);
     }
 
 
     @Override
     public int deleteById(Long id) {
-        return messageBodyMapper.deleteById(id);
+        return messageUserMapper.deleteById(id);
     }
 
 
     @Override
     public List<MessageUser> findListByEntity(MessageUser query) {
-        return messageBodyMapper.findListByEntity(query);
+        return messageUserMapper.findListByEntity(query);
+    }
+
+    @Override
+    public Long queryListCount(MessageUserVO query) {
+        return messageUserMapper.queryListCount(query);
     }
 
     @Override
     public PageInfo<MessageUserVO> queryListPage(MessageUserPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<MessageUserVO> pageInfo = new PageInfo();
-        pageInfo.setList(messageBodyMapper.queryListPage(queryPageInfo));
-        pageInfo.setTotal(messageBodyMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setList(messageUserMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(messageUserMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
 

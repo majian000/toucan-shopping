@@ -288,4 +288,51 @@ public class MessageUserController {
 
 
 
+
+    /**
+     * 查询未读数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/user/query/unread/count",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryUnreadCountByUserMainId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            MessageUserVO messageUserVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageUserVO.class);
+            if(messageUserVO.getUserMainId()==null)
+            {
+                logger.info("用户ID不能为空 :"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+            messageUserVO.setStatus(0);
+            Long unreadCount  =  messageUserService.queryListCount(messageUserVO);
+            resultObjectVO.setData(unreadCount);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
 }

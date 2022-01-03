@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
-@CrossOrigin
 @Controller("messageController")
 @RequestMapping("/api/user/message")
 public class UserMessageController {
@@ -36,7 +35,7 @@ public class UserMessageController {
     @UserAuth
     @RequestMapping("/list")
     @ResponseBody
-    public ResultObjectVO myMessageList(HttpServletRequest request)
+    public ResultObjectVO queryMyMessageList(HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId = "-1";
@@ -55,5 +54,31 @@ public class UserMessageController {
         }
         return resultObjectVO;
     }
+
+
+
+    @UserAuth
+    @RequestMapping("/unread/count")
+    @ResponseBody
+    public ResultObjectVO queryUnreadCount(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId = "-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            MessageUserVO messageUserVO=new MessageUserVO();
+            messageUserVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
+
+            resultObjectVO = feignMessageUserService.queryUnreadCountByUserMainId(requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请求失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 }

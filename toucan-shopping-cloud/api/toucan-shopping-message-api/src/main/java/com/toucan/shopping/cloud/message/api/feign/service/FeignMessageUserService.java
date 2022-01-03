@@ -38,5 +38,12 @@ public interface FeignMessageUserService {
     ResultObjectVO queryListPageByUserMianId(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 查询未读数量
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/user/query/unread/count",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryUnreadCountByUserMainId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

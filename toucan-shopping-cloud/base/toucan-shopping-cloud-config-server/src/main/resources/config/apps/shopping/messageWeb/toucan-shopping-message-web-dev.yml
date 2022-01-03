@@ -88,6 +88,10 @@ ribbon:
 toucan:
   app-code: 10001005 #自定义应用编码
   machine-id: 2202 #机器编码
+  message-web-pc:
+    #允许跨域访问的地址
+    allowed-origins[0]: http://localhost:8083
+    allowed-origins[1]: http://127.0.0.1:8083
   plugins:
     xss-filter:
       enabled: true

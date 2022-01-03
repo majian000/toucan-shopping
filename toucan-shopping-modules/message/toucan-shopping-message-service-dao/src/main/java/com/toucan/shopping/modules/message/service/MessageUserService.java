@@ -30,6 +30,7 @@ public interface MessageUserService {
 
     List<MessageUser> findListByEntity(MessageUser query);
 
+    Long queryListCount(MessageUserVO query);
 
     /**
      * 查询列表页
