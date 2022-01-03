@@ -252,6 +252,7 @@ public class MessageUserController {
                     Set<Long> messageBodyIdSet = new HashSet<>();
                     for(MessageUserVO messageUserVO:messageUserVOS)
                     {
+                        messageUserVO.setSendDateYearMonthDay(messageUserVO.getSendDate());
                         messageBodyIdSet.add(messageUserVO.getMessageBodyId());
                     }
                     //查询消息主体

@@ -39,5 +39,11 @@ public interface MessageUserService {
      */
     PageInfo<MessageUserVO> queryListPage(MessageUserPageInfo pageInfo);
 
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    PageInfo<MessageUserVO> queryMyListPage(MessageUserPageInfo pageInfo);
 
 }

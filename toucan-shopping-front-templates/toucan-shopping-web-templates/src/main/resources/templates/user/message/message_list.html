@@ -67,69 +67,9 @@
 
                 <div class="toucan-form-body">
                     <div class="accordion">
-                        <div class="accordion-item">
-                            <button id="accordion-button-1" aria-expanded="false"><span class="accordion-title"><i class="redpoint"></i>&nbsp;实名认证消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-2" aria-expanded="false"><span class="accordion-title"><i class="redpoint"></i>&nbsp;头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
 
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-3" aria-expanded="false"><span class="accordion-title"><i class="redpoint"></i>&nbsp;头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-4" aria-expanded="false"><span class="accordion-title">头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-5" aria-expanded="false"><span class="accordion-title">头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-6" aria-expanded="false"><span class="accordion-title">实名认证消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-7" aria-expanded="false"><span class="accordion-title">头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-8" aria-expanded="false"><span class="accordion-title">头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-9" aria-expanded="false"><span class="accordion-title">头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button id="accordion-button-10" aria-expanded="false"><span class="accordion-title">头像审核消息&nbsp;&nbsp;&nbsp;<a class="accordion-title-time">2021-12-27</a></span><span class="icon" aria-hidden="true">展开</span></button>
-                            <div class="accordion-content">
-                                <p>输入内容不合法,请重新输入</p>
-                            </div>
-                        </div>
                     </div>
-                    <div class="pagination">
+                    <div class="pagination" id="pagination">
                     </div>
 
                 </div>
@@ -141,6 +81,7 @@
     <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/message/script.js"></script>
     <script type="text/javascript" src="${basePath}/static/lib/pagination/underscore.js"></script>
     <script type="text/javascript" src="${basePath}/static/lib/pagination/pagination.build.js"></script>
+    <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/message/message_list.js"></script>
 
     <#include "/footer.html"/>
 
@@ -148,17 +89,7 @@
 
 <script>
     $(function () {
-        new pagination({
-            pagination:$('.pagination'),
-            maxPage: 7, //最大页码数,支持奇数，左右对称
-            startPage: 1,    //默认第一页
-            currentPage: 2,          //当前页码
-            totalItemCount: 10,    //项目总数,大于0，显示页码总数
-            totalPageCount: 20,        //总页数
-            callback:function(pageNum){
-                console.info(pageNum);
-            }
-        });
+
     });
 
 

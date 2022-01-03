@@ -110,6 +110,26 @@
     </select>
 
 
+    <select id="queryMyListPage" resultMap="messageUserVOMap" parameterType="com.toucan.shopping.modules.message.page.MessageUserPageInfo">
+        select t.* from t_message_user t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.status desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryMyListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.message.page.MessageUserPageInfo">
+        select count(*) from t_message_user t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
 
     <select id="queryListCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.message.vo.MessageUserVO">
         select count(*) from t_message_user t

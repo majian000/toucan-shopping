@@ -40,5 +40,20 @@ public interface MessageUserMapper {
      */
     Long queryListPageCount(MessageUserPageInfo pageInfo);
 
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<MessageUserVO> queryMyListPage(MessageUserPageInfo pageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryMyListPageCount(MessageUserPageInfo pageInfo);
+
     Long queryListCount(MessageUserVO query);
 }

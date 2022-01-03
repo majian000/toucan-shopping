@@ -1,5 +1,6 @@
 
 $(function () {
+    queryUnreadCount();
     setInterval(queryUnreadCount, genBlink()*1000);
 });
 

@@ -63,4 +63,12 @@ public class MessageUserServiceImpl implements MessageUserService {
         return pageInfo;
     }
 
+    @Override
+    public PageInfo<MessageUserVO> queryMyListPage(MessageUserPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<MessageUserVO> pageInfo = new PageInfo();
+        pageInfo.setList(messageUserMapper.queryMyListPage(queryPageInfo));
+        pageInfo.setTotal(messageUserMapper.queryMyListPageCount(queryPageInfo));
+        return pageInfo;
+    }
 }
