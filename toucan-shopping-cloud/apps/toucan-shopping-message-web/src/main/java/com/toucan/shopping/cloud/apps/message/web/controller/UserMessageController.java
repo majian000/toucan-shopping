@@ -119,6 +119,7 @@ public class UserMessageController {
         try {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             MessageUserVO messageUserVO=new MessageUserVO();
+            messageUserVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
 
             resultObjectVO = feignMessageUserService.updateAllReadStatus(requestJsonVO);
