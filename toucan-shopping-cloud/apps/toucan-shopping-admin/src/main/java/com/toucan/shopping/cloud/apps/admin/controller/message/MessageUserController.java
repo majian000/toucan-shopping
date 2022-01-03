@@ -54,13 +54,8 @@ public class MessageUserController extends UIController {
     @Autowired
     private FeignMessageTypeService feignMessageTypeService;
 
-
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
+    void initMessageTypes(HttpServletRequest request)
     {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/message/messageUser/listPage",feignFunctionService);
         try {
             MessageTypeVO messageTypeVO = new MessageTypeVO();
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), messageTypeVO);
@@ -78,6 +73,15 @@ public class MessageUserController extends UIController {
             request.setAttribute("messageTypes",new ArrayList<>());
             logger.warn(e.getMessage(),e);
         }
+    }
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
+    public String listPage(HttpServletRequest request)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/message/messageUser/listPage",feignFunctionService);
+        initMessageTypes(request);
         return "pages/message/messageUser/list.html";
     }
 
@@ -86,7 +90,7 @@ public class MessageUserController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-
+        initMessageTypes(request);
         return "pages/message/messageUser/add.html";
     }
 

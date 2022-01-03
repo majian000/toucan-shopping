@@ -22,18 +22,45 @@
 <span th:replace="common_page::common"></span>
 
 <div class="layui-form layuimini-form">
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型编码</label>
+        <label class="layui-form-label required">用户ID</label>
         <div class="layui-input-block">
-            <input type="code" name="code" lay-verify="required" maxlength="50" lay-reqtext="不能为空" placeholder="请输入编码" value="" class="layui-input">
-            <tip>填写编码。</tip>
+            <input type="userMainId" name="userMainId" lay-verify="required" maxlength="20" lay-reqtext="不能为空" placeholder="请输入用户ID" value="" class="layui-input">
+            <tip>填写用户ID。</tip>
         </div>
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型名称</label>
+        <label class="layui-form-label required">消息标题</label>
         <div class="layui-input-block">
-            <input type="name" name="name" lay-verify="required" maxlength="25" lay-reqtext="不能为空" placeholder="请输入名称" value="" class="layui-input">
-            <tip>填写名称。</tip>
+            <input type="title" name="title" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入消息标题" value="" class="layui-input">
+            <tip>填写标题。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">消息内容</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="500" placeholder="请输入消息内容"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">消息类型</label>
+        <div class="layui-input-block">
+            <select id="messageTypeCode" name="messageTypeCode"  lay-search="">
+                <option th:each="mt : ${messageTypes}" th:value="${mt.code}" th:text="${mt.code}+' '+${mt.name}">
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">发送时间</label>
+        <div class="layui-input-block">
+            <input type="title" name="title" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入消息标题" value="" class="layui-input">
+            <tip>填写标题。</tip>
         </div>
     </div>
 
