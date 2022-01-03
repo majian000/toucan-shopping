@@ -21,6 +21,11 @@
         <if test="name!=null and name!='' ">
             and t.name  like concat(#{name},'%')
         </if>
+
+        <if test="code!=null and code!='' ">
+            and t.code =#{code}
+        </if>
+
     </sql>
 
 

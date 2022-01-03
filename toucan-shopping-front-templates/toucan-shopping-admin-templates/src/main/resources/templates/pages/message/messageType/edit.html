@@ -25,19 +25,31 @@
     <input type="hidden" name="id" id="id" th:value="${model.id}">
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型编码</label>
+        <label class="layui-form-label required">编码</label>
         <div class="layui-input-block">
             <input type="code" name="code" lay-verify="required" maxlength="50" lay-reqtext="不能为空" placeholder="请输入编码"  th:value="${model.code}"  class="layui-input">
             <tip>填写编码。</tip>
         </div>
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型名称</label>
+        <label class="layui-form-label required">名称</label>
         <div class="layui-input-block">
             <input type="name" name="name" lay-verify="required" maxlength="25" lay-reqtext="不能为空" placeholder="请输入名称"  th:value="${model.name}"   class="layui-input">
             <tip>填写名称。</tip>
         </div>
     </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">所属应用</label>
+        <div class="layui-input-block">
+            <select  th:value="${model.appCode}" th:switch="${model.appCode}" name="appCode" >
+                <option th:case="'10001001'" th:selected="selected" value="10001001"   >商城应用</option>
+            </select>
+        </div>
+    </div>
+
 
     <div class="layui-form-item">
         <div class="layui-input-block">
@@ -59,7 +71,7 @@
         form.on('submit(saveBtn)', function (data) {
 
             $.ajax({
-                url:"[[@{/messageType/update}]]",
+                url:"[[@{/message/messageType/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

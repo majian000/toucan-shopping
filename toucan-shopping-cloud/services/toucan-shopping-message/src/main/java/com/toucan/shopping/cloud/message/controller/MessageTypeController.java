@@ -202,12 +202,8 @@ public class MessageTypeController {
             }
 
 
-            MessageTypeVO queryMessageType = new MessageTypeVO();
-            queryMessageType.setId(messageTypeVO.getId());
-            queryMessageType.setDeleteStatus((short)0);
-
-            List<MessageTypeVO> entitys = messageTypeService.queryList(queryMessageType);
-            if(CollectionUtils.isEmpty(entitys))
+            int ret = messageTypeService.deleteById(messageTypeVO.getId());
+            if(ret<=0)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("不存在该类型!");

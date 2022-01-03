@@ -104,9 +104,7 @@ public class MessageTypeController extends UIController {
                     List<MessageTypeVO> messageTypeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),MessageTypeVO.class);
                     if(!CollectionUtils.isEmpty(messageTypeVOS))
                     {
-                        queryEntity = messageTypeVOS.get(0);
-
-                        request.setAttribute("model",queryEntity);
+                        request.setAttribute("model",messageTypeVOS.get(0));
                     }
                 }
 
@@ -182,6 +180,43 @@ public class MessageTypeController extends UIController {
         }
         return tableVO;
     }
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            MessageTypeVO messageTypeVO =new MessageTypeVO();
+            messageTypeVO.setId(Long.parseLong(id));
+
+            String entityJson = JSONObject.toJSONString(messageTypeVO);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignMessageTypeService.deleteById(requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 
 }

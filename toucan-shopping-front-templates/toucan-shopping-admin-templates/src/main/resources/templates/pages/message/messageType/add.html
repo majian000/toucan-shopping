@@ -38,6 +38,14 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label required">所属应用</label>
+        <div class="layui-input-block">
+            <select id="appCode" name="appCode"  lay-search="">
+                <option  value="10001001">商城应用</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
         </div>
@@ -56,7 +64,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/messageType/save}]]",
+                url:"[[@{/message/messageType/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

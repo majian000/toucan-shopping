@@ -23,11 +23,15 @@ public class MessageTypePageInfo extends PageInfo<MessageTypeVO> {
 
 
     /**
-     * 标题
+     * 名称
      */
-    private String title;
+    private String name;
 
 
+    /**
+     * 名称
+     */
+    private String code;
 
     private Long[] idArray; //ID数组
 
