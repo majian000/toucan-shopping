@@ -21,6 +21,10 @@ public class BasePathInterceptor implements HandlerInterceptor {
         {
             httpServletRequest.setAttribute("shoppingSellerWebPcPath", toucan.getShoppingSellerWebPC().getBasePath());
         }
+        if(toucan.getMessageWebPC()!=null&&toucan.getMessageWebPC().getBasePath()!=null)
+        {
+            httpServletRequest.setAttribute("messageWebPcPath", toucan.getMessageWebPC().getBasePath());
+        }
         return true;
     }
 }

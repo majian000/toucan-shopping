@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.common.properties;
 
 import com.toucan.shopping.modules.common.properties.adminAuth.AdminAuth;
 import com.toucan.shopping.modules.common.properties.adminAuthScheduler.AdminAuthScheduler;
+import com.toucan.shopping.modules.common.properties.messageWebPc.MessageWebPC;
 import com.toucan.shopping.modules.common.properties.modules.Modules;
 import com.toucan.shopping.modules.common.properties.plugins.Plugins;
 import com.toucan.shopping.modules.common.properties.seller.Seller;
@@ -69,6 +70,11 @@ public class Toucan {
      * 商城PC端
      */
     private ShoppingPC shoppingPC;
+
+    /**
+     * 消息web服务
+     */
+    private MessageWebPC messageWebPC;
 
     /**
      * 卖家中心PC端

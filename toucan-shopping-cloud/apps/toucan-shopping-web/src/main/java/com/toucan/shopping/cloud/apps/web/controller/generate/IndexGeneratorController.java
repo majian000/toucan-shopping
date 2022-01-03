@@ -86,6 +86,14 @@ public class IndexGeneratorController {
                     params.put("shoppingSellerWebPcPath", "");
                 }
 
+                if(toucan.getMessageWebPC()!=null&&toucan.getMessageWebPC().getBasePath()!=null)
+                {
+                    params.put("messageWebPcPath", toucan.getMessageWebPC().getBasePath());
+                }else{
+                    params.put("messageWebPcPath", "");
+                }
+
+
 
                 template.process(params, fileWriterWithEncoding);
             }catch(Exception e)

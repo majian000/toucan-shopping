@@ -79,17 +79,33 @@ ribbon:
   ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
   eager-load:
     enabled: true
-    clients: "toucan-shopping-gateway"
+    clients: "toucan-shopping-gateway,\
+              toucan-shopping-message"
 
 
 
 
 toucan:
+  app-code: 10001005 #自定义应用编码
   machine-id: 2202 #机器编码
   plugins:
     xss-filter:
       enabled: true
       exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+  user-auth:
+    enabled: true
+    name: toucan-shopping-user
+    #HTTP权限请求头
+    # 例如 商城C端 Cookie:uid=d10590b318544049ba2104d1f5517a7d;lt=d10590b318544049ba2104d1f5517a7d
+    http-toucan-auth-header: Cookie
+    #当前项目登录页
+    login-page: http://8.140.187.184:8083/page/user/login
+    #没有权限时跳转页面
+    page-403: /403
+    #拦截指定路径
+    path-patterns: /**
+    #忽略拦截
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/**/*.ico
   modules:
     log: #日志模块
       email:
