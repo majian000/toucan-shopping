@@ -102,8 +102,6 @@ toucan:
     #HTTP权限请求头
     # 例如 商城C端 Cookie:uid=d10590b318544049ba2104d1f5517a7d;lt=d10590b318544049ba2104d1f5517a7d
     http-toucan-auth-header: Cookie
-    #登录页
-    login-page: http://localhost:8083/page/user/login
     #没有权限时跳转页面
     page-403: /403
     #拦截指定路径

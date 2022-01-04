@@ -114,7 +114,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
                                     resultVO.setMsg("访问失败,请检查请求权限参数");
                                     //默认登录页面
-                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        resultVO.setData(toucan.getUserAuth().getLoginPage());
+                                    }
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
@@ -126,7 +129,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
                                     resultVO.setMsg("tss_lt不能为空");
                                     //默认登录页面
-                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        resultVO.setData(toucan.getUserAuth().getLoginPage());
+                                    }
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
@@ -136,7 +142,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
                                     resultVO.setMsg("tss_uid不能为空");
                                     //默认登录页面
-                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        resultVO.setData(toucan.getUserAuth().getLoginPage());
+                                    }
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
@@ -161,7 +170,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
                                     resultVO.setMsg("请求头参数异常");
                                     //默认登录页面
-                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        resultVO.setData(toucan.getUserAuth().getLoginPage());
+                                    }
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
@@ -210,7 +222,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
                                     resultVO.setMsg("请求头参数异常");
                                     //默认登录页面
-                                    resultVO.setData(toucan.getUserAuth().getLoginPage());
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        resultVO.setData(toucan.getUserAuth().getLoginPage());
+                                    }
                                     response.setStatus(HttpStatus.FORBIDDEN.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
@@ -222,8 +237,11 @@ public class AuthInterceptor implements HandlerInterceptor {
                             //如果是直接请求
                             if (authAnnotation.requestType() == UserAuth.REQUEST_FORM) {
                                 if (StringUtils.isEmpty(authHeader)) {
-                                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                            + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                                                + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+                                    }
                                     return false;
                                 }
 
@@ -246,7 +264,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info("请求头参数异常 " + authHeader);
                                     //删除cookies
                                     deleteCookies(response);
-                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request, response);
+                                    }
                                     return false;
                                 }
 
@@ -257,7 +278,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info("用户ID和登录Token不一致 " + authHeader);
                                     //删除cookies
                                     deleteCookies(response);
-                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
+
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request, response);
+                                    }
                                     return false;
                                 }
 
@@ -284,7 +308,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     //删除cookies
                                     deleteCookies(response);
 
-                                    request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request,response);
+                                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                                        request.getRequestDispatcher(toucan.getUserAuth().getLoginPage()).forward(request, response);
+                                    }
                                     return false;
                                 }
 
@@ -304,8 +330,10 @@ public class AuthInterceptor implements HandlerInterceptor {
                     response.getWriter().write(JSONObject.toJSONString(resultVO));
                 }
                 if (authAnnotation.requestType() == UserAuth.REQUEST_FORM) {
-                    response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                            + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+                    if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
+                        response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                                + request.getContextPath() + "/" + toucan.getUserAuth().getLoginPage());
+                    }
                 }
 
                 return false;
