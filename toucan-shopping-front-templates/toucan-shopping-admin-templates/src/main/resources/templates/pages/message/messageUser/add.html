@@ -26,7 +26,7 @@
     <input type="hidden" name="messageTypeAppCode" id="messageTypeAppCode" />
     <input type="hidden" name="messageTypeName" id="messageTypeName" />
     <div class="layui-form-item">
-        <label class="layui-form-label required">用户ID</label>
+        <label class="layui-form-label required">接收用户</label>
         <div class="layui-input-block">
             <input type="userMainId" name="userMainId" lay-verify="required" maxlength="20" lay-reqtext="不能为空" placeholder="请输入用户ID" value="" class="layui-input">
             <tip>填写用户ID。</tip>
@@ -41,6 +41,13 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label required">发送时间</label>
+        <div class="layui-input-block">
+            <input type="title" id="sendDate" name="sendDate" lay-verify="required"  lay-reqtext="不能为空" placeholder="请输入发送时间" value="" class="layui-input">
+        </div>
+    </div>
+
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">消息内容</label>
         <div class="layui-input-block">
@@ -52,19 +59,12 @@
         <label class="layui-form-label required">消息类型</label>
         <div class="layui-input-block">
             <select id="messageTypeCode" name="messageTypeCode"  lay-search="">
-                <option th:each="mt : ${messageTypes}" th:value="${mt.code}" th:text="${mt.code}+' '+${mt.name}">
+                <option th:each="mt : ${messageTypes}" th:value="${mt.code}" th:text="${mt.name}">
             </select>
         </div>
     </div>
 
 
-    <div class="layui-form-item">
-        <label class="layui-form-label required">发送时间</label>
-        <div class="layui-input-block">
-            <input type="title" name="title" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入消息标题" value="" class="layui-input">
-            <tip>填写标题。</tip>
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
@@ -76,11 +76,19 @@
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).use(['form'], function () {
+    }).use(['form','laydate'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
+        var laydate = layui.laydate;
 
+
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#sendDate' //指定元素
+            ,type: 'datetime'
+        });
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
