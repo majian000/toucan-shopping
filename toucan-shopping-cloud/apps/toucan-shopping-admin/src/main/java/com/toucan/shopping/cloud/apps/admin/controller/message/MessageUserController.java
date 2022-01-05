@@ -97,6 +97,14 @@ public class MessageUserController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/selectUserListPage",method = RequestMethod.GET)
+    public String selectUserListPage(HttpServletRequest request)
+    {
+        return "pages/message/messageUser/user_list.html";
+    }
+
+
 
 
 
