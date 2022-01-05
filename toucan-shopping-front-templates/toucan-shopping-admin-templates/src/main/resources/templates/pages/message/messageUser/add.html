@@ -97,8 +97,13 @@
                 type: 2,
                 shade: 0.2,
                 maxmin:true,
+                btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
+                yes: function (index) {
+                  alert(1);
+                },
                 area: ['80%', '80%'],
                 content: "[[@{/message/messageUser/selectUserListPage}]]"
+
             });
             $(window).on("resize", function () {
                 layer.full(index);
