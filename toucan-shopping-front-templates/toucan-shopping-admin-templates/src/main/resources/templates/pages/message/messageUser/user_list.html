@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+</head>
+<body>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userMainId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">手机号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="mobilePhone" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+
+        <table class="layui-hide" id="userTable" lay-filter="userTableFilter"></table>
+
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#userSearchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#userTable',
+            url: "[[@{/}]]user/list",
+            method:'POST',
+            where:getFormParam(),
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'userId', width: 180, title: 'ID'},
+                    {field: 'userMainIdString', width: 180, title: '用户ID'},
+                    {field: 'mobilePhone', width: 200, title: '手机号'},
+                    {field: 'nickName', width: 240, title: '昵称'},
+                    {field: 'email', width: 240, title: '邮箱'},
+                    {field: 'httpHeadSculpture', width: 150, title: '头像',
+                        templet: function (row) {
+                            if(row.httpHeadSculpture!=null) {
+                                return "<a href='" + row.httpHeadSculpture + "' target='_blank'><img src='" + row.httpHeadSculpture + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'httpIdcardImg1', width: 150, title: '证件照正面',
+                        templet: function (row) {
+                            if(row.httpIdcardImg1!=null) {
+                                return "<a href='" + row.httpIdcardImg1 + "' target='_blank'><img src='" + row.httpIdcardImg1 + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'httpIdcardImg2', width: 150, title: '证件照背面',
+                        templet: function (row) {
+                            if(row.httpIdcardImg2!=null) {
+                                return "<a href='" + row.httpIdcardImg2 + "' target='_blank'><img src='" + row.httpIdcardImg2 + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'username', width: 240, title: '用户名'},
+                    {field: 'trueName', width: 240, title: '真实姓名'},
+                    {field: 'idCard', width: 240, title: '证件号码'},
+                    {field: 'idcardType', width:150, title: '证件类型',
+                        templet: function (row) {
+                            if(row.idcardType == null){
+                                return "";
+                            }
+                            if(row.idcardType == "1"){
+                                return "身份证";
+                            }
+                            if(row.idcardType == "2"){
+                                return "护照";
+                            }
+                            if(row.idcardType == "3"){
+                                return "海外"
+                            }
+                            return row.idcardType;
+                        }},
+                    {field: 'trueNameStatus', width:150, title: '实名状态',
+                        templet: function (row) {
+                            if(row.trueNameStatus == "1"){
+                                return "已实名";
+                            }
+                            return "未实名";
+                        }},
+                    {field: 'enableStatus', width: 80, title: '状态',
+                        templet: function (row) {
+                            if(row.enableStatus == "1"){
+                                return "启用";
+                            }
+                            return "禁用";
+                        }},
+                    {field: 'sex', width: 80, title: '性别',
+                        templet: function (row) {
+                            if(row.sex == "1"){
+                                return "男";
+                            }
+                            return "女";
+                        }},
+                    {field: 'personalizedSignature', width: 240, title: '个性签名'},
+                    {field: 'isShop', width: 150, title: '店铺状态',
+                        templet: function (row) {
+                            if(row.isShop == "0"){
+                                return "否";
+                            }
+                            if(row.isShop == "1"){
+                                return "是";
+                            }
+                            return row.isShop;
+                        }},
+                    {field: 'isVip', width: 150, title: '会员状态',
+                        templet: function (row) {
+                            if(row.isVip == "0"){
+                                return "否";
+                            }
+                            if(row.isVip == "1"){
+                                return "是";
+                            }
+                            return row.isVip;
+                        }},
+                    {field: 'createDate', width: 240, title: '注册时间'}
+                ]
+            ],
+            limits: [15,50,100,300],
+            limit: 15,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: [ 'count', 'page', 'next','limit'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                ,groups: 1 //只显示 1 个连续页码
+                ,first: false //不显示首页
+                ,last: false //不显示尾页
+
+            },
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('userTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+        //监听表格复选框选择
+        table.on('checkbox(userTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+
+    });
+</script>
+
+</body>
+</html>
