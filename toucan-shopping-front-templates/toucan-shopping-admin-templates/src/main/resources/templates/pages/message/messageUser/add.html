@@ -37,7 +37,8 @@
     <div class="layui-form-item" id="receiveUserListDiv" style="display: none">
         <label class="layui-form-label required">接收用户</label>
         <div class="layui-input-block">
-            <input id="userMainIdSelect" name="userMainIdList" lay-verify="required" maxlength="20" lay-reqtext="不能为空" placeholder="请输入用户ID" value="" class="layui-input">
+            <!--最大限制选择500个用户 -->
+            <textarea id="userMainIdSelect" name="userMainIdList" class="layui-textarea" maxlength="9500" placeholder="请输入消息内容"></textarea>
             <tip>填写用户ID。</tip>
         </div>
     </div>
