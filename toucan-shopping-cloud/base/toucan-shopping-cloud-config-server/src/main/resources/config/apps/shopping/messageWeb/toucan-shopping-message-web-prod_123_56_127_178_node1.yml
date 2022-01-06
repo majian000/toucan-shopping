@@ -1,0 +1,128 @@
+#========================消息Web端 生产环境====================================
+
+server:
+  port: 8102
+spring:
+  application:
+    name: toucan-shopping-message-web #应用名称
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true #开启重试机制
+  zipkin: #链路追踪
+    enabled: false
+    base-url: http://localhost:9411
+    sleuth:
+      sampler:
+        #采样率 1全部采集
+        probability: 1
+  mvc: #启动初始化servletdispatcher
+    view:
+      suffix: .html
+    servlet:
+      load-on-startup: 100
+    static-path-pattern: /static/**
+  freemarker:
+    cache: false
+    charset: UTF-8
+    suffix: .html
+    enabled: true
+    content-type: text/html
+    template-loader-path: classpath:/templates/
+    settings:
+      template_exception_handler: com.toucan.shopping.modules.freemarker.exception.PageErrorException
+  servlet:
+    multipart:
+      max-file-size: 5MB  #单个文件最大5MB
+      max-request-size: 15MB #单次请求上传文件最大15NB
+  compression: #开启gzip压缩
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 2048 #只压缩2MB以上的内容
+
+
+
+
+
+eureka:
+  client:
+    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 30000
+        readTimeout: 30000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000 #请求时间超过30秒产生熔断
+      circuitBreaker:
+        requestVolumeThreshold: 15  #30秒内15个以上请求失败,产生熔断
+
+
+
+#开启饥饿加载
+ribbon:
+  OkToRetryOnAllOperations: true #开启重试机制
+  MaxAutoRetriesNextServer: 2 #重试其他实例最大重试次数
+  MaxAutoRetries: 1 #同一实例重试次数
+  ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
+  eager-load:
+    enabled: true
+    clients: "toucan-shopping-gateway,\
+              toucan-shopping-message"
+
+
+
+
+toucan:
+  app-code: 10001005 #自定义应用编码
+  machine-id: 2202 #机器编码
+  message-web-pc:
+    #允许跨域访问的地址
+    allowed-origins[0]: http://8.140.187.184:8083
+  plugins:
+    xss-filter:
+      enabled: true
+      exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+  user-auth:
+    enabled: true
+    name: toucan-shopping-user
+    #HTTP权限请求头
+    # 例如 商城C端 Cookie:uid=d10590b318544049ba2104d1f5517a7d;lt=d10590b318544049ba2104d1f5517a7d
+    http-toucan-auth-header: Cookie
+    #没有权限时跳转页面
+    page-403: /403
+    #拦截指定路径
+    path-patterns: /**
+    #忽略拦截
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/**/*.ico
+  modules:
+    log: #日志模块
+      email:
+        enabled: false
+        title: ——商城PC端——异常邮件
+        protocol: smtp
+        smtp: #smtp服务器配置
+          host: smtp.163.com #SMTP服务器
+          auth: true #SMTP认证
+          port: 465
+          socketFactory-class: javax.net.ssl.SSLSocketFactory
+          socketFactory-fallback: false
+        sender: mmdrss@163.com #发件人
+        sender-authentication-code: IJHWJFZINFUPQIUC #发件人授权码
+        receiver-list[0]:
+          email: 695391446@qq.com
+          name: majian
+
+
