@@ -34,7 +34,7 @@
             </select>
         </div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item" id="receiveUserListDiv" style="display: none">
         <label class="layui-form-label required">接收用户</label>
         <div class="layui-input-block">
             <input id="userMainIdSelect" name="userMainIdList" lay-verify="required" maxlength="20" lay-reqtext="不能为空" placeholder="请输入用户ID" value="" class="layui-input">
@@ -122,6 +122,14 @@
 
 
         $("#userScope").change(function(){
+            var userScopeValue = $("#userScope").val();
+            if(userScopeValue=="1")
+            {
+                $("#receiveUserListDiv").css('display','none');
+            }else if(userScopeValue=="0"){
+                $("#receiveUserListDiv").css('display','block');
+            }
+
 
         });
 
