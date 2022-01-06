@@ -61,6 +61,13 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
+
+    var selectUserMainIdArray = new Array();
+
+    function getSelectUserMainIdArray()
+    {
+        return selectUserMainIdArray;
+    }
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -207,6 +214,21 @@
 
             },
             skin: 'line'
+        });
+
+        table.on('row(userTable)', function(obj){
+            //清空所有选中
+            selectUserMainIdArray.clear();
+            //拿到当前所有选中行
+            var checkStatus = table.checkStatus('userTable')
+                , data = checkStatus.data;
+            if(data.length>0)
+            {
+                for(var i=0;i<data.length;i++)
+                {
+                    selectUserMainIdArray.push(data[i].userMainId);
+                }
+            }
         });
 
         // 监听搜索操作

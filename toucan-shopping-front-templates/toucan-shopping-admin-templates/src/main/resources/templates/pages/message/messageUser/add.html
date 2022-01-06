@@ -84,6 +84,43 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
+
+    function existsByUserMainId(selectUserMainId,userMainIdArray)
+    {
+        if(userMainIdArray!=null&&userMainIdArray.length>0)
+        {
+            for(var i=0;i<userMainIdArray.length;i++)
+            {
+                if(userMainIdArray[i]==selectUserMainId)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function setUserMainId(selelectUserMainIdList)
+    {
+        var userMainIdValues = $("#userMainIdSelect").val();
+        if(userMainIdValues!=null&&userMainIdValues!="")
+        {
+            var userMainIdArray = userMainIdValues.split(",");
+            for(var i=0;i<selelectUserMainIdList.length;i++)
+            {
+                var selectUserMainId = selelectUserMainIdList[i];
+                //去重
+                if(!existsByUserMainId(selectUserMainId,userMainIdArray))
+                {
+                    userMainIdArray.push(selectUserMainId);
+                }
+            }
+            $("#userMainIdSelect").val(userMainIdArray.join(","));
+        }else{ //首次保存
+            $("#userMainIdSelect").val(userMainIdValues.join(","));
+        }
+
+    }
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).use(['form','laydate'], function () {
@@ -109,11 +146,15 @@
                 maxmin:true,
                 btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
                 yes: function (index) {
-                  alert(1);
+                  alert(window["layui-layer-iframe" + index].getSelectUserMainIdArray());
                 },
                 area: ['80%', '80%'],
-                content: "[[@{/message/messageUser/selectUserListPage}]]"
-
+                content: "[[@{/message/messageUser/selectUserListPage}]]",
+                zIndex: layer.zIndex,
+                success: function(layero){
+                    layer.setTop(layero);
+                }
+            })
             });
             $(window).on("resize", function () {
                 layer.full(index);
