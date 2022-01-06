@@ -70,6 +70,7 @@ function login()
         success: function (result) {
             if(result.code<=0)
             {
+                $("#loginsubmit").text("登  录");
                 $("#vcode").val("");
                 $("#login_msg_c").show();
                 $("#login_msg").text(result.msg);
