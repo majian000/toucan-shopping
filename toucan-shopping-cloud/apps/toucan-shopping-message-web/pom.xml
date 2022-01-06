@@ -108,7 +108,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.toucan.shopping.cloud.apps.web.app.CloudWebApplication</mainClass>
+                    <mainClass>com.toucan.shopping.cloud.apps.message.web.app.CloudMessageWebApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
