@@ -10,6 +10,7 @@ logging:
 
 
 
+
 ---
 spring:
   profiles: prod

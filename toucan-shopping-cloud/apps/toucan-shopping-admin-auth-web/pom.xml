@@ -118,6 +118,11 @@
             <artifactId>toucan-shopping-log-web</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.modules.config</groupId>
+            <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
+        </dependency>
+
 
 
     </dependencies>

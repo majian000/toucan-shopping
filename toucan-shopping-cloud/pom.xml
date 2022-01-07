@@ -115,6 +115,8 @@
 
         <!-- 权限管理公共控制器-->
         <module>modules/apps/toucan-shopping-cloud-admin-auth-controller</module>
+        <!-- 启动配置公共模块-->
+        <module>modules/config/toucan-shopping-cloud-config-bootstrap</module>
 
         <!-- ===============================================-->
 
@@ -212,6 +214,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.api</groupId>
                 <artifactId>toucan-shopping-admin-auth-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.modules.config</groupId>
+                <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
