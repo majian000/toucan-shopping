@@ -86,6 +86,10 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
         <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.modules.config</groupId>
+            <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
+        </dependency>
     </dependencies>
 
 

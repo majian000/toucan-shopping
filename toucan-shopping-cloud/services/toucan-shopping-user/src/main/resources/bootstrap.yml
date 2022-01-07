@@ -19,7 +19,7 @@ spring:
     config: #指定配置中心服务端
       username: toucan_sp #用户名
       password: toucan_sp_0987 #密码
-      uri: http://localhost:9090
+      uri: http://${toucan.config.server.ip}:${toucan.config.server.port}
       label: master
       profile: prod
 
