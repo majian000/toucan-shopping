@@ -10,6 +10,15 @@ logging:
 
 
 
+#动态配置,根据服务器的IP在启动的时候动态传入
+toucan:
+  ip: 127.0.0.1 #当前机器IP
+  port: 8081
+  eureka:
+    ip: 127.0.0.1
+    port: 8081
+
+
 ---
 spring:
   profiles: prod
