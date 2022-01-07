@@ -51,7 +51,7 @@ public class SkylarkRedisLockManagerThread extends Thread {
     public void run() {
         while(SkylarkRedisLockManagerThread.enableLockManager) {
             try {
-                logger.info("锁管理线程启动 查询表:"+ SkylarkRedisLockManagerThread.globalLockTable);
+//                logger.info("锁管理线程启动 查询表:"+ SkylarkRedisLockManagerThread.globalLockTable);
                 Set<Object> lockKeys = redisTemplate.opsForHash().keys(SkylarkRedisLockManagerThread.globalLockTable);
                 if(!CollectionUtils.isEmpty(lockKeys)) {
                     Iterator lockKeyIterator = lockKeys.iterator();
