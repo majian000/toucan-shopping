@@ -74,25 +74,12 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-lock-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-web</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
+            <artifactId>toucan-shopping-admin-auth-controller</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-es</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>

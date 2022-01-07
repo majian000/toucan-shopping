@@ -114,7 +114,7 @@
         <!-- =======================公共模块层=========================-->
 
         <!-- 权限管理公共控制器-->
-        <module>modules/apps/toucan-shopping-admin-auth-controller</module>
+        <module>modules/apps/toucan-shopping-cloud-admin-auth-controller</module>
 
         <!-- ===============================================-->
 
@@ -263,7 +263,7 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.cloud.modules.apps</groupId>
-                <artifactId>toucan-shopping-admin-auth-controller</artifactId>
+                <artifactId>toucan-shopping-cloud-admin-auth-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

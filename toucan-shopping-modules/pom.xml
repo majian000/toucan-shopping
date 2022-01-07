@@ -80,6 +80,8 @@
         <module>adminAuth/toucan-shopping-admin-auth-entity-vo</module>
         <!--权限服务Service和Dao -->
         <module>adminAuth/toucan-shopping-admin-auth-service-dao</module>
+        <!--权限服务控制器 -->
+        <module>adminAuth/toucan-shopping-admin-auth-controller</module>
         <!-- 权限服务 elasticsearch模块-->
         <module>adminAuth/toucan-shopping-admin-auth-es</module>
 
@@ -274,6 +276,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.adminAuth</groupId>
                 <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                <artifactId>toucan-shopping-admin-auth-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

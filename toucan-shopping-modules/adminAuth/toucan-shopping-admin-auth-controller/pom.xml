@@ -4,68 +4,43 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
+
     <parent>
-        <artifactId>toucan-shopping-cloud</artifactId>
-        <groupId>com.toucan.shopping</groupId>
+        <groupId>com.toucan.shopping.modules</groupId>
+        <artifactId>toucan-shopping-modules</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <description>权限管理控制器公共模块</description>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.toucan.shopping.cloud.modules.apps</groupId>
+
+    <groupId>com.toucan.shopping.modules.adminAuth</groupId>
     <artifactId>toucan-shopping-admin-auth-controller</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
-
     <dependencies>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
-
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-layui</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-admin-auth-api</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
             <artifactId>toucan-shopping-admin-auth-entity-vo</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-service-dao</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-auth</artifactId>
+            <artifactId>toucan-shopping-redis</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-lock-redis</artifactId>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-es</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common-web</artifactId>
-        </dependency>
-
     </dependencies>
 
 
@@ -86,4 +61,5 @@
             </resource>
         </resources>
     </build>
+
 </project>

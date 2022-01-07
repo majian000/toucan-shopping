@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.admin.auth.controller.role;
+package com.toucan.shopping.modules.admin.auth.controller.role;
 
 
 import com.alibaba.fastjson.JSONArray;

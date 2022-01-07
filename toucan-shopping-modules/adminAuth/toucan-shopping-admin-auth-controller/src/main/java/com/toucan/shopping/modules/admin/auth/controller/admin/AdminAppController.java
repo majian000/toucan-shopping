@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.admin.auth.controller.admin;
+package com.toucan.shopping.modules.admin.auth.controller.admin;
 
 
 import com.alibaba.fastjson.JSONObject;

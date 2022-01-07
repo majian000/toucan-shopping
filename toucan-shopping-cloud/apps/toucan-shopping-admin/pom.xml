@@ -136,7 +136,7 @@
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.modules.apps</groupId>
-            <artifactId>toucan-shopping-admin-auth-controller</artifactId>
+            <artifactId>toucan-shopping-cloud-admin-auth-controller</artifactId>
         </dependency>
 
         <dependency>
