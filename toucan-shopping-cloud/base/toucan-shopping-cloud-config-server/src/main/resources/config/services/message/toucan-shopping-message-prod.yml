@@ -1,7 +1,7 @@
 #========================消息服务 开发环境====================================
 
 server:
-  port: 8103
+  port: ${toucan.port}
 spring:
   application:
     name: toucan-shopping-message #应用名称

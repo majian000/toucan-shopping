@@ -1,7 +1,7 @@
 #========================地区服务 开发环境====================================
 
 server:
-  port: 8094
+  port: ${toucan.port}
 spring:
   application:
     name: toucan-shopping-area #应用名称
@@ -24,7 +24,7 @@ eureka:
   client:
     registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
     serviceUrl:
-      defaultZone: http://localhost:8081/eureka
+      defaultZone: http://${toucan.eureka.ip}:${toucan.eureka.port}/eureka
 
 
 
