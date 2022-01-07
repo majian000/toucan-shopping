@@ -20,7 +20,7 @@ eureka:
     lease-expiration-duration-in-seconds: 3 #3秒没发心跳将剔除
     lease-renewal-interval-in-seconds: 1 #心跳1秒
     prefer-ip-address: true
-    instance-id: 127.0.0.1:8084    #使用IP地址注册
+    instance-id: ${toucan.ip}:${toucan.port}    #使用IP地址注册
   client:
     registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
     serviceUrl:
