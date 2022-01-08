@@ -27,7 +27,7 @@
     <sql id="queryListPageWhere">
 
         <if test="title!=null and title!='' ">
-            and tu.title  like concat('%',#{title},'%')
+            and t.title  like concat('%',#{title},'%')
 
         </if>
     </sql>
@@ -74,24 +74,20 @@
     </select>
 
     <select id="queryListPage" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
-        select tu.* from (
          select t.* from t_banner t
-        )tu
         <where>
-            1=1 and tu.delete_status = 0
+            1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
         </where>
-        order by tu.id desc
+        order by t.id desc
         limit #{start},#{limit}
     </select>
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
-        select count(*) from (
-          select t.* from t_banner t
-        )tu
+          select count(*) from t_banner t
         <where>
-            1=1 and tu.delete_status = 0
+            1=1 and t.delete_status = 0
 
             <include refid="queryListPageWhere" />
         </where>
