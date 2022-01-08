@@ -18,7 +18,7 @@ spring:
 eureka:
   instance:
     lease-expiration-duration-in-seconds: 10 #10秒没发心跳将剔除
-    lease-renewal-interval-in-seconds: 1 #心跳1秒
+    lease-renewal-interval-in-seconds: 3 #心跳3秒
     prefer-ip-address: true
     instance-id: ${toucan.ip}:${toucan.port}    #使用IP地址注册
   client:
