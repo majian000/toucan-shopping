@@ -17,7 +17,7 @@ spring:
       load-on-startup: 100
 eureka:
   instance:
-    lease-expiration-duration-in-seconds: 3 #3秒没发心跳将剔除
+    lease-expiration-duration-in-seconds: 10 #10秒没发心跳将剔除
     lease-renewal-interval-in-seconds: 1 #心跳1秒
     prefer-ip-address: true
     instance-id: 127.0.0.1:8094    #使用IP地址注册
