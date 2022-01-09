@@ -126,7 +126,9 @@ toucan:
     sso-set-cookie-url-list: "http://127.0.0.1:8083/api/sso/setCookie,\
                               http://localhost:8083/api/sso/setCookie,\
                               http://127.0.0.1:8101/api/sso/setCookie,\
-                              http://localhost:8101/api/sso/setCookie"
+                              http://localhost:8101/api/sso/setCookie,\
+                              http://127.0.0.1:8102/api/sso/setCookie,\
+                              http://localhost:8102/api/sso/setCookie"
   plugins:
     xss-filter:
       enabled: true
