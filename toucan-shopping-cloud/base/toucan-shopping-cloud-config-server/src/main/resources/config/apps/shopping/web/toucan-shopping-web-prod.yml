@@ -105,7 +105,7 @@ toucan:
   shopping-seller-web-pc: #卖家PC端配置
     base-path: http://8.140.187.184:8101/
   message-web-pc:
-    base-path: http://123.56.127.178:8102/
+    base-path: http://8.140.187.184:8102/
   user:
     head-sculpture-max-size: 2048 #头像最大长度2MB(单位KB)
     default-head-sculpture: group1/M00/00/00/rB5PVWC0wtCAfEp6AAAMz-h0lpc563_big.jpg
