@@ -11,6 +11,11 @@ $("#ueibtn").click(function() {
     $.each(fields, function(index, field) {
         params[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
     });
+
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
     $.ajax({
         type: "POST",
         url: basePath+"/api/user/edit/info",
@@ -29,6 +34,9 @@ $("#ueibtn").click(function() {
         },
         error: function (result) {
             $("#edit_info_msg").text("修改失败,请稍后重试");
+        },
+        complete:function(data,status){
+            loading.hideLoading();
         }
     });
 });

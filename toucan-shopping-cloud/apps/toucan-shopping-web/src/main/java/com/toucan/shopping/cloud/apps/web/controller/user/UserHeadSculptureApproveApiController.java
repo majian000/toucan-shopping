@@ -83,19 +83,19 @@ public class UserHeadSculptureApproveApiController extends BaseController {
             if(userHeadSculptureApproveVO.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("提交失败,用户ID不能为空");
+                resultObjectVO.setMsg("用户ID不能为空");
                 return resultObjectVO;
             }
             if(headSculptureFile==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("提交失败,请上传图片");
+                resultObjectVO.setMsg("请上传图片");
                 return resultObjectVO;
             }
 
             if (!ImageUtils.isStaticImage(headSculptureFile.getOriginalFilename())) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
-                resultObjectVO.setMsg("提交失败,请上传图片格式(.jpg|.jpeg|.png|bmp)");
+                resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|bmp)");
                 return resultObjectVO;
             }
 
@@ -104,7 +104,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
             boolean lockStatus = skylarkLock.lock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("提交失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -143,7 +143,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("提交失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKey(userMainId), userMainId);
         }

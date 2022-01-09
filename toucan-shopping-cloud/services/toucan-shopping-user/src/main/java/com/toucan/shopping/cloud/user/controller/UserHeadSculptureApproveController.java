@@ -106,7 +106,7 @@ public class UserHeadSculptureApproveController {
             if(CollectionUtils.isNotEmpty(userHeadSculptureApproves))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,头像认证正在审核中");
+                resultObjectVO.setMsg("头像认证正在审核中");
                 return resultObjectVO;
             }
 
@@ -118,14 +118,14 @@ public class UserHeadSculptureApproveController {
             {
                 logger.warn("保存用户头像审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userHeadSculptureApprove.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userHeadSculptureApprove);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
         }

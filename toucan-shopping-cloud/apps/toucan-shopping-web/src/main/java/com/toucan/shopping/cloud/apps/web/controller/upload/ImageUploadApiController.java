@@ -70,7 +70,7 @@ public class ImageUploadApiController extends BaseController {
             if(fileSize>0&&fileSize>toucan.getUser().getHeadSculptureMaxSize().longValue()) //大于2MB
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("文件大小超过限制,不能大于2MB!");
+                resultObjectVO.setMsg("文件大小超过限制,不能大于"+(toucan.getUser().getHeadSculptureMaxSize().longValue()/1024)+"MB!");
                 return resultObjectVO;
             }
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));

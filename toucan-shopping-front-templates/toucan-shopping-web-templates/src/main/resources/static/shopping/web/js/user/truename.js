@@ -47,6 +47,11 @@ function submitTrueName()
         });
         return ;
     }
+
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
     $('#utnform').ajaxSubmit({
         url: basePath+'/api/user/true/name/approve/save',
         type:'POST',
@@ -62,6 +67,9 @@ function submitTrueName()
             {
                 window.location.href=basePath+"/page/user/true/name/approve/submit_success";
             }
+        },
+        complete:function(data,status){
+            loading.hideLoading();
         }
     });
 
