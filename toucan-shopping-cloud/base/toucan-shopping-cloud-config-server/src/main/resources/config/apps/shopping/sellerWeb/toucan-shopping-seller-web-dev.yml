@@ -116,7 +116,9 @@ toucan:
     exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/**/*.ico
     #共享会话的所有域名
     sso-set-cookie-url-list: "http://127.0.0.1:8083/api/sso/setCookie,\
-                              http://localhost:8083/api/sso/setCookie"
+                              http://localhost:8083/api/sso/setCookie,\
+                              http://localhost:8102/api/sso/setCookie,\
+                              http://localhost:8102/api/sso/setCookie"
   modules:
     log: #日志模块
       email:
