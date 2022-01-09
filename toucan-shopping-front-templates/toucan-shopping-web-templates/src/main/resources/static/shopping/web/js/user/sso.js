@@ -1,3 +1,7 @@
+/**
+ * 注意:
+ *      采用这种方式需要服务端安装HTTPS证书,新版本浏览器不支持跨域写Cookie,除非安装HTTPS证书还有设置Secure=True;SameSite=None;响应头
+ */
 
 function share_cookie()
 {

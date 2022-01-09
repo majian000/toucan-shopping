@@ -125,7 +125,7 @@ toucan:
     exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/**/*.ico
     #共享会话的所有域名
     sso-set-cookie-url-list: "http://8.140.187.184:8101/api/sso/setCookie,\
-                              http://123.56.127.178:8102/api/sso/setCookie"
+                              http://8.140.187.184:8102/api/sso/setCookie"
   plugins:
     xss-filter:
       enabled: true
