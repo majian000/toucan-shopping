@@ -28,7 +28,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">用户范围</label>
         <div class="layui-input-block">
-            <select id="userScope"  lay-search="">
+            <select id="userScope"  lay-search="" lay-filter="userScope">
                 <option value="-1">全部用户</option>
                 <option value="1">指定用户</option>
             </select>
@@ -85,42 +85,7 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
 
-    function existsByUserMainId(selectUserMainId,userMainIdArray)
-    {
-        if(userMainIdArray!=null&&userMainIdArray.length>0)
-        {
-            for(var i=0;i<userMainIdArray.length;i++)
-            {
-                if(userMainIdArray[i]==selectUserMainId)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
-    function setUserMainId(selelectUserMainIdList)
-    {
-        var userMainIdValues = $("#userMainIdSelect").val();
-        if(userMainIdValues!=null&&userMainIdValues!="")
-        {
-            var userMainIdArray = userMainIdValues.split(",");
-            for(var i=0;i<selelectUserMainIdList.length;i++)
-            {
-                var selectUserMainId = selelectUserMainIdList[i];
-                //去重
-                if(!existsByUserMainId(selectUserMainId,userMainIdArray))
-                {
-                    userMainIdArray.push(selectUserMainId);
-                }
-            }
-            $("#userMainIdSelect").val(userMainIdArray.join(","));
-        }else{ //首次保存
-            $("#userMainIdSelect").val(userMainIdValues.join(","));
-        }
-
-    }
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).use(['form','laydate'], function () {
@@ -146,7 +111,9 @@
                 maxmin:true,
                 btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
                 yes: function (index) {
-                  alert(window["layui-layer-iframe" + index].getSelectUserMainIdArray());
+                    var userMainIdListString = window["layui-layer-iframe" + index].getSelectUserMainIdArray();
+                    setUserMainId(userMainIdListString);
+                    layer.close(index);
                 },
                 area: ['80%', '80%'],
                 content: "[[@{/message/messageUser/selectUserListPage}]]",
@@ -162,16 +129,53 @@
 
 
 
-        $("#userScope").change(function(){
-            var userScopeValue = $("#userScope").val();
-            if(userScopeValue=="1")
+
+        function existsByUserMainId(selectUserMainId,userMainIdArray)
+        {
+            if(userMainIdArray!=null&&userMainIdArray.length>0)
             {
-                $("#receiveUserListDiv").css('display','none');
-            }else if(userScopeValue=="0"){
-                $("#receiveUserListDiv").css('display','block');
+                for(var i=0;i<userMainIdArray.length;i++)
+                {
+                    if(userMainIdArray[i]==selectUserMainId)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function setUserMainId(selelectUserMainIdList)
+        {
+            var userMainIdValues = $("#userMainIdSelect").val();
+            if(userMainIdValues!=null&&userMainIdValues!="")
+            {
+                var userMainIdArray = userMainIdValues.split(",");
+                for(var i=0;i<selelectUserMainIdList.length;i++)
+                {
+                    var selectUserMainId = selelectUserMainIdList[i];
+                    //去重
+                    if(!existsByUserMainId(selectUserMainId,userMainIdArray))
+                    {
+                        userMainIdArray.push(selectUserMainId);
+                    }
+                }
+                $("#userMainIdSelect").val(userMainIdArray.join(","));
+            }else{ //首次保存
+                $("#userMainIdSelect").val(selelectUserMainIdList.join(","));
             }
 
+        }
 
+
+
+        form.on('select(userScope)', function(data){
+            if(data.value=="-1")
+            {
+                $("#receiveUserListDiv").css('display','none');
+            }else if(data.value=="1"){
+                $("#receiveUserListDiv").css('display','block');
+            }
         });
 
         //监听提交

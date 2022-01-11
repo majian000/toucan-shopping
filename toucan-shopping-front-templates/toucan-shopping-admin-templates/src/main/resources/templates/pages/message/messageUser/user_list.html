@@ -216,20 +216,9 @@
             skin: 'line'
         });
 
-        table.on('row(userTable)', function(obj){
-            //清空所有选中
-            selectUserMainIdArray.clear();
-            //拿到当前所有选中行
-            var checkStatus = table.checkStatus('userTable')
-                , data = checkStatus.data;
-            if(data.length>0)
-            {
-                for(var i=0;i<data.length;i++)
-                {
-                    selectUserMainIdArray.push(data[i].userMainId);
-                }
-            }
-        });
+        // table.on('row(userTable)', function(obj){
+        //
+        // });
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
@@ -247,7 +236,18 @@
 
         //监听表格复选框选择
         table.on('checkbox(userTableFilter)', function (obj) {
-            console.log(obj)
+            //清空所有选中
+            selectUserMainIdArray.splice(0,selectUserMainIdArray.length);
+            //拿到当前所有选中行
+            var checkStatus = table.checkStatus('userTable')
+                , data = checkStatus.data;
+            if(data.length>0)
+            {
+                for(var i=0;i<data.length;i++)
+                {
+                    selectUserMainIdArray.push(data[i].userMainId);
+                }
+            }
         });
 
 
