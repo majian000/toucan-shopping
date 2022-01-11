@@ -37,7 +37,7 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
 
                 logger.warn("FeignRoleFunctionService.saveFunctions faild sign {} params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -54,7 +54,7 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
 
                 logger.warn("FeignRoleFunctionService.queryRoleFunctionList faild sign {} params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -71,7 +71,7 @@ public class FeignRoleFunctionServiceFallbackFactory implements FallbackFactory<
 
                 logger.warn("FeignRoleFunctionService.list faild sign {} params {}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
         };

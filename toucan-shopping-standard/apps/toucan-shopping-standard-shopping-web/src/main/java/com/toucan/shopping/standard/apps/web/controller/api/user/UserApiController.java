@@ -169,46 +169,46 @@ public class UserApiController extends BaseController {
         if(userRegistVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("没有找到要注册的用户");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userRegistVO.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("注册失败,请输入注册手机号");
+            resultObjectVO.setMsg("请输入注册手机号");
             return resultObjectVO;
         }
 
         if(StringUtils.isEmpty(userRegistVO.getVcode()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_VCODE);
-            resultObjectVO.setMsg("注册失败,请输入验证码");
+            resultObjectVO.setMsg("请输入验证码");
             return resultObjectVO;
         }
         if(!PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("注册失败,手机号错误");
+            resultObjectVO.setMsg("手机号错误");
             return resultObjectVO;
         }
 
         if(StringUtils.isEmpty(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,请输入密码");
+            resultObjectVO.setMsg("请输入密码");
             return resultObjectVO;
         }
         if(!StringUtils.equals(userRegistVO.getPassword(),userRegistVO.getConfirmPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,密码与确认密码不一致");
+            resultObjectVO.setMsg("密码与确认密码不一致");
             return resultObjectVO;
         }
 
         if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("请输入6至15位的密码");
             return resultObjectVO;
         }
 
@@ -229,7 +229,7 @@ public class UserApiController extends BaseController {
                 //释放注册锁
                 redisLock.unLock(UserRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("注册失败,请发送验证码");
+                resultObjectVO.setMsg("请发送验证码");
                 return resultObjectVO;
             }
             if(!userRegistVO.getVcode().equals(vcodeObject))
@@ -237,7 +237,7 @@ public class UserApiController extends BaseController {
                 //释放注册锁
                 redisLock.unLock(UserRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("注册失败,验证码输入有误");
+                resultObjectVO.setMsg("验证码输入有误");
                 return resultObjectVO;
             }
 
@@ -267,7 +267,7 @@ public class UserApiController extends BaseController {
                 if (row < 1) {
                     logger.warn("用户注册失败 {}", requestJsonVO.getEntityJson());
                     resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("注册失败,请重试!");
+                    resultObjectVO.setMsg("请重试!");
                 } else {
                     //保存用户手机子表
                     UserMobilePhone userMobilePhone = new UserMobilePhone();
@@ -284,7 +284,7 @@ public class UserApiController extends BaseController {
                         userService.deleteById(user.getId());
                         logger.warn("手机号注册失败 {}", requestJsonVO.getEntityJson());
                         resultObjectVO.setCode(UserResultVO.FAILD);
-                        resultObjectVO.setMsg("手机号注册失败,请重试!");
+                        resultObjectVO.setMsg("手机号请重试!");
                     } else {
                         //保存用户昵称
                         UserDetail userDetail = new UserDetail();
@@ -327,7 +327,7 @@ public class UserApiController extends BaseController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             redisLock.unLock(UserRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
         }
@@ -372,7 +372,7 @@ public class UserApiController extends BaseController {
         if(!UserRegistUtil.checkPwd(userLoginVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("请输入6至15位的密码");
             return resultObjectVO;
         }
         try {

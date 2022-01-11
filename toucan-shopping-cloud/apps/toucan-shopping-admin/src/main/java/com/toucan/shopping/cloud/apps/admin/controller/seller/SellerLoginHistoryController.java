@@ -94,7 +94,7 @@ public class SellerLoginHistoryController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

@@ -152,7 +152,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到参数");
+            resultObjectVO.setMsg("没有找到参数");
             return resultObjectVO;
         }
 
@@ -166,7 +166,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -196,14 +196,14 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if(StringUtils.isEmpty(adminVO.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("请求失败,请输入密码");
+                resultObjectVO.setMsg("请输入密码");
                 return resultObjectVO;
             }
 
             if(!UserRegistUtil.checkPwd(adminVO.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("请求失败,请输入6至15位的密码");
+                resultObjectVO.setMsg("请输入6至15位的密码");
                 return resultObjectVO;
             }
             adminVO.setPassword(MD5Util.md5(adminVO.getPassword()));
@@ -211,7 +211,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if (row < 1) {
 
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -338,7 +338,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要注销的用户");
+            resultObjectVO.setMsg("没有找到要注销的用户");
             return resultObjectVO;
         }
 
@@ -348,13 +348,13 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if(StringUtils.isEmpty(admin.getAdminId()))
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入adminId");
+                resultObjectVO.setMsg("请传入adminId");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(admin.getLoginToken()))
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入登录token");
+                resultObjectVO.setMsg("请传入登录token");
                 return resultObjectVO;
             }
 
@@ -395,7 +395,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -404,7 +404,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if(admin.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -415,7 +415,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if(CollectionUtils.isEmpty(adminList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,账号不存在!");
+                resultObjectVO.setMsg("账号不存在!");
                 return resultObjectVO;
             }
 
@@ -433,7 +433,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -449,7 +449,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestVo.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         try{
@@ -458,7 +458,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if(StringUtils.isEmpty(admin.getUsername()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入账号");
+                resultObjectVO.setMsg("请传入账号");
                 return resultObjectVO;
             }
             Admin queryAdmin = new Admin();
@@ -468,7 +468,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if(CollectionUtils.isEmpty(adminList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,账号不存在");
+                resultObjectVO.setMsg("账号不存在");
                 return resultObjectVO;
             }
 
@@ -487,7 +487,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -506,7 +506,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
         resultObjectVO.setData(false);
         if (requestVo.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         try{
@@ -515,13 +515,13 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             if(StringUtils.isEmpty(admin.getUsername())&&StringUtils.isEmpty(admin.getAdminId()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入账号或管理员ID");
+                resultObjectVO.setMsg("请传入账号或管理员ID");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(admin.getLoginToken()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入loginToken");
+                resultObjectVO.setMsg("请传入loginToken");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(admin.getAdminId()))
@@ -532,7 +532,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
                 List<Admin> adminList = adminService.findListByEntity(queryAdmin);
                 if (CollectionUtils.isEmpty(adminList)) {
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,账号不存在");
+                    resultObjectVO.setMsg("账号不存在");
                     return resultObjectVO;
                 }
 
@@ -555,7 +555,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -572,7 +572,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -688,7 +688,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -707,7 +707,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -731,7 +731,7 @@ public class AdminServiceProxyImpl implements AdminServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

@@ -38,7 +38,7 @@ function scafbtn_click()
         },
         error: function (result) {
             $.message({
-                message: "保存失败,请稍后重试",
+                message: "请稍后重试",
                 type: 'error'
             });
         }

@@ -25,19 +25,36 @@
     <input type="hidden" name="id" id="id" th:value="${model.id}">
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型编码</label>
+        <label class="layui-form-label required">消息标题</label>
         <div class="layui-input-block">
-            <input type="code" name="code" lay-verify="required" maxlength="50" lay-reqtext="不能为空" placeholder="请输入编码"  th:value="${model.code}"  class="layui-input">
-            <tip>填写编码。</tip>
+            <input type="title" name="title" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入消息标题" th:value="${model.title}" class="layui-input">
+            <tip>填写标题。</tip>
         </div>
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型名称</label>
+        <label class="layui-form-label required">发送时间</label>
         <div class="layui-input-block">
-            <input type="name" name="name" lay-verify="required" maxlength="25" lay-reqtext="不能为空" placeholder="请输入名称"  th:value="${model.name}"   class="layui-input">
-            <tip>填写名称。</tip>
+            <input type="title" id="sendDate" name="sendDate" lay-verify="required"  lay-reqtext="不能为空" placeholder="请输入发送时间"  th:value="${model.sendDate}" class="layui-input">
         </div>
     </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">消息内容</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="500" placeholder="请输入消息内容" th:text="${model.remark}" ></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">消息类型</label>
+        <div class="layui-input-block">
+            <select id="messageTypeCode" name="messageTypeCode"  lay-search="">
+                <option th:each="mt : ${messageTypes}" th:value="${mt.code}" th:text="${mt.name}">
+            </select>
+        </div>
+    </div>
+
 
     <div class="layui-form-item">
         <div class="layui-input-block">

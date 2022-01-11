@@ -34,7 +34,7 @@ public class FeignAuthServiceFallbackFactory implements FallbackFactory<FeignAut
                 }
                 logger.warn("FeignAuthService.verify faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -49,7 +49,7 @@ public class FeignAuthServiceFallbackFactory implements FallbackFactory<FeignAut
                 }
                 logger.warn("FeignAuthService.verifyLoginAndUrl faild sign {} params {}", signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
         };

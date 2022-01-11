@@ -47,31 +47,31 @@ public class ConsigneeAddressController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         ConsigneeAddressVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ConsigneeAddressVO.class);
         if(StringUtils.isEmpty(consigneeAddressVO.getName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,收货人不能为空");
+            resultObjectVO.setMsg("收货人不能为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(consigneeAddressVO.getAddress()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,收货地址不能为空");
+            resultObjectVO.setMsg("收货地址不能为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(consigneeAddressVO.getPhone()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,联系电话不能为空");
+            resultObjectVO.setMsg("联系电话不能为空");
             return resultObjectVO;
         }
         String userMainId = String.valueOf(consigneeAddressVO.getUserMainId());
@@ -79,7 +79,7 @@ public class ConsigneeAddressController {
             boolean lockStatus = skylarkLock.lock(UserCenterConsigneeAddressKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
             //查询收货人数量,最多20个
@@ -89,7 +89,7 @@ public class ConsigneeAddressController {
             if(!CollectionUtils.isEmpty(consigneeAddresses)&&consigneeAddresses.size()>=20)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,收货信息数量达到上限");
+                resultObjectVO.setMsg("收货信息数量达到上限");
                 return resultObjectVO;
             }
 
@@ -100,14 +100,14 @@ public class ConsigneeAddressController {
             {
                 logger.warn("保存收货信息失败 requestJson{} id{}",requestJsonVO.getEntityJson(),consigneeAddressVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(consigneeAddressVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterConsigneeAddressKey.getSaveLockKey(userMainId), userMainId);
         }
@@ -131,7 +131,7 @@ public class ConsigneeAddressController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -140,7 +140,7 @@ public class ConsigneeAddressController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -151,7 +151,7 @@ public class ConsigneeAddressController {
             if(CollectionUtils.isEmpty(adminList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,收货信息不存在!");
+                resultObjectVO.setMsg("收货信息不存在!");
                 return resultObjectVO;
             }
 
@@ -159,7 +159,7 @@ public class ConsigneeAddressController {
             int row = consigneeAddressService.deleteById(entity.getId());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(entity);
@@ -169,7 +169,7 @@ public class ConsigneeAddressController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -187,37 +187,37 @@ public class ConsigneeAddressController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         ConsigneeAddressVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ConsigneeAddressVO.class);
         if(StringUtils.isEmpty(consigneeAddressVO.getName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,收货人不能为空");
+            resultObjectVO.setMsg("收货人不能为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(consigneeAddressVO.getAddress()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,收货地址不能为空");
+            resultObjectVO.setMsg("收货地址不能为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(consigneeAddressVO.getPhone()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,联系电话不能为空");
+            resultObjectVO.setMsg("联系电话不能为空");
             return resultObjectVO;
         }
         if(consigneeAddressVO.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            resultObjectVO.setMsg("用户ID不能为空");
             return resultObjectVO;
         }
         try {
@@ -229,7 +229,7 @@ public class ConsigneeAddressController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

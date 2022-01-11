@@ -85,7 +85,7 @@ public class ShopCategoryController {
             boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -183,7 +183,7 @@ public class ShopCategoryController {
                     skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("保存失败,上级分类不存在");
+                    resultObjectVO.setMsg("上级分类不存在");
                     return resultObjectVO;
                 }
 
@@ -194,7 +194,7 @@ public class ShopCategoryController {
                     skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
 
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("保存失败,只能添加二级分类");
+                    resultObjectVO.setMsg("只能添加二级分类");
                     return resultObjectVO;
 
                 }
@@ -213,12 +213,12 @@ public class ShopCategoryController {
             int row = shopCategoryService.save(shopCategory);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
             }
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请稍后重试!");
+            resultObjectVO.setMsg("请稍后重试!");
             logger.warn(e.getMessage(),e);
         }finally{
             skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(userMainId), userMainId);
@@ -260,7 +260,7 @@ public class ShopCategoryController {
             boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -350,7 +350,7 @@ public class ShopCategoryController {
                     skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
 
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("保存失败,上级分类不存在");
+                    resultObjectVO.setMsg("上级分类不存在");
                     return resultObjectVO;
                 }
 
@@ -361,7 +361,7 @@ public class ShopCategoryController {
                     skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
 
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("保存失败,只能添加二级分类");
+                    resultObjectVO.setMsg("只能添加二级分类");
                     return resultObjectVO;
 
                 }
@@ -380,12 +380,12 @@ public class ShopCategoryController {
             int row = shopCategoryService.save(shopCategory);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
             }
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请稍后重试!");
+            resultObjectVO.setMsg("请稍后重试!");
             logger.warn(e.getMessage(),e);
         }finally{
             skylarkLock.unLock(ShopCategoryKey.getSaveLockKey(shopId), shopId);
@@ -453,7 +453,7 @@ public class ShopCategoryController {
                 //释放锁
                 skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(userMainId), userMainId);
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
         }catch(Exception e)
@@ -548,7 +548,7 @@ public class ShopCategoryController {
                 //释放锁
                 skylarkLock.unLock(ShopCategoryKey.getUpdateLockKey(shopCategoryId), shopCategoryId);
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
         }catch(Exception e)
@@ -1416,7 +1416,7 @@ public class ShopCategoryController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
         try {
@@ -1484,7 +1484,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1512,7 +1512,7 @@ public class ShopCategoryController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1532,7 +1532,7 @@ public class ShopCategoryController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -1541,7 +1541,7 @@ public class ShopCategoryController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -1552,7 +1552,7 @@ public class ShopCategoryController {
             if(CollectionUtils.isEmpty(ShopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,对象不存在!");
+                resultObjectVO.setMsg("对象不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(ShopCategorys);
@@ -1562,7 +1562,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1580,7 +1580,7 @@ public class ShopCategoryController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -1589,7 +1589,7 @@ public class ShopCategoryController {
             if(entity.getIdArray()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID数组");
+                resultObjectVO.setMsg("没有找到ID数组");
                 return resultObjectVO;
             }
 
@@ -1600,7 +1600,7 @@ public class ShopCategoryController {
             if(CollectionUtils.isEmpty(ShopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,不存在!");
+                resultObjectVO.setMsg("不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(ShopCategorys);
@@ -1610,7 +1610,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1665,7 +1665,7 @@ public class ShopCategoryController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1707,7 +1707,7 @@ public class ShopCategoryController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1726,7 +1726,7 @@ public class ShopCategoryController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -1736,7 +1736,7 @@ public class ShopCategoryController {
             if(queryPageInfo.getShopId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到店铺ID");
+                resultObjectVO.setMsg("没有找到店铺ID");
                 return resultObjectVO;
             }
             //查询所有结构树
@@ -1768,7 +1768,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1787,7 +1787,7 @@ public class ShopCategoryController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
         try {
@@ -1799,7 +1799,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1817,7 +1817,7 @@ public class ShopCategoryController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
         try {
@@ -1873,7 +1873,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1891,7 +1891,7 @@ public class ShopCategoryController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -1950,7 +1950,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -2007,7 +2007,7 @@ public class ShopCategoryController {
             boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("删除失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -2051,14 +2051,14 @@ public class ShopCategoryController {
                 skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(userMainId), userMainId);
 
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }finally{
             //释放锁
@@ -2118,7 +2118,7 @@ public class ShopCategoryController {
             boolean lockStatus = skylarkLock.lock(ShopCategoryKey.getDeleteLockKey(shopId), shopId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("删除失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -2153,14 +2153,14 @@ public class ShopCategoryController {
                 skylarkLock.unLock(ShopCategoryKey.getDeleteLockKey(shopId), shopId);
 
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }finally{
             //释放锁
@@ -2182,7 +2182,7 @@ public class ShopCategoryController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -2191,7 +2191,7 @@ public class ShopCategoryController {
             if(CollectionUtils.isEmpty(ShopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找ID");
+                resultObjectVO.setMsg("没有找ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -2213,7 +2213,7 @@ public class ShopCategoryController {
                         if (row < 1) {
                             logger.warn("删除分类失败 {} ",JSONObject.toJSONString(c));
                             resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("请求失败,请重试!");
+                            resultObjectVO.setMsg("请重试!");
                             continue;
                         }
 
@@ -2228,7 +2228,7 @@ public class ShopCategoryController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

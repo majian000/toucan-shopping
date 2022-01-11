@@ -226,7 +226,7 @@ public class AdminController extends UIController {
             resultObjectVO = adminServiceProxy.save(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -255,7 +255,7 @@ public class AdminController extends UIController {
             resultObjectVO = adminRoleServiceProxy.saveRoles(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -282,7 +282,7 @@ public class AdminController extends UIController {
             resultObjectVO = adminServiceProxy.updatePassword(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -308,7 +308,7 @@ public class AdminController extends UIController {
             resultObjectVO = adminServiceProxy.updatePassword(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -345,7 +345,7 @@ public class AdminController extends UIController {
             resultObjectVO = adminServiceProxy.update(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -381,7 +381,7 @@ public class AdminController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

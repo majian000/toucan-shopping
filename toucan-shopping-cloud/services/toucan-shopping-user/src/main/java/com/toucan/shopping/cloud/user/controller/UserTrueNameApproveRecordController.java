@@ -48,12 +48,12 @@ public class UserTrueNameApproveRecordController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         UserTrueNameApproveRecord userTrueNameApproveRecord = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserTrueNameApproveRecord.class);
@@ -61,7 +61,7 @@ public class UserTrueNameApproveRecordController {
             if(userTrueNameApproveRecord.getApproveStatus()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,审核状态不能为空");
+                resultObjectVO.setMsg("审核状态不能为空");
                 return resultObjectVO;
             }
 
@@ -72,14 +72,14 @@ public class UserTrueNameApproveRecordController {
             {
                 logger.warn("保存用户实名审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userTrueNameApproveRecord.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userTrueNameApproveRecord);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

@@ -50,31 +50,31 @@ public class MessageTypeController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         MessageTypeVO messageTypeVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageTypeVO.class);
         if(StringUtils.isEmpty(messageTypeVO.getName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,类型名称不能为空");
+            resultObjectVO.setMsg("类型名称不能为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(messageTypeVO.getCode()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,类型编码不能为空");
+            resultObjectVO.setMsg("类型编码不能为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(messageTypeVO.getAppCode()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,所属应用不能为空");
+            resultObjectVO.setMsg("所属应用不能为空");
             return resultObjectVO;
         }
         String lockKey = messageTypeVO.getAppCode()+"_"+messageTypeVO.getCode();
@@ -82,7 +82,7 @@ public class MessageTypeController {
             boolean lockStatus = skylarkLock.lock(MessageTypeKey.getSaveLockKey(lockKey), lockKey);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -94,14 +94,14 @@ public class MessageTypeController {
             {
                 logger.warn("保存消息类型失败 requestJson{} id{}",requestJsonVO.getEntityJson(),messageTypeVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(messageTypeVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(MessageTypeKey.getSaveLockKey(lockKey), lockKey);
         }
@@ -123,7 +123,7 @@ public class MessageTypeController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -132,7 +132,7 @@ public class MessageTypeController {
             if(CollectionUtils.isEmpty(messageTypeVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -145,7 +145,7 @@ public class MessageTypeController {
                     if (row < 1) {
                         logger.warn("删除消息类型失败，id:{}",messageTypeVO.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
                         continue;
                     }
                 }
@@ -157,7 +157,7 @@ public class MessageTypeController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -213,7 +213,7 @@ public class MessageTypeController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -233,7 +233,7 @@ public class MessageTypeController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -258,7 +258,7 @@ public class MessageTypeController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 return resultObjectVO;
             }
 
@@ -266,7 +266,7 @@ public class MessageTypeController {
             int row = messageTypeService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -277,7 +277,7 @@ public class MessageTypeController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -296,7 +296,7 @@ public class MessageTypeController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -305,7 +305,7 @@ public class MessageTypeController {
             if(messageTypeVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -316,7 +316,7 @@ public class MessageTypeController {
             if(CollectionUtils.isEmpty(entitys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,不存在!");
+                resultObjectVO.setMsg("不存在!");
                 return resultObjectVO;
             }
 
@@ -327,7 +327,7 @@ public class MessageTypeController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

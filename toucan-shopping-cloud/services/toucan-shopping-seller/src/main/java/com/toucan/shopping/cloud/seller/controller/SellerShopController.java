@@ -65,19 +65,19 @@ public class SellerShopController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("注册失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("注册失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         SellerShopVO sellerShopVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), SellerShopVO.class);
         if(StringUtils.isEmpty(sellerShopVO.getName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("注册失败,店铺名称不能为空");
+            resultObjectVO.setMsg("店铺名称不能为空");
             return resultObjectVO;
         }
         //去空格
@@ -85,7 +85,7 @@ public class SellerShopController {
         if(sellerShopVO.getType()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("注册失败,类型不能为空");
+            resultObjectVO.setMsg("类型不能为空");
             return resultObjectVO;
         }
 
@@ -95,7 +95,7 @@ public class SellerShopController {
             boolean lockStatus = skylarkLock.lock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("注册失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
             //查询关联店铺
@@ -112,7 +112,7 @@ public class SellerShopController {
                     //释放锁
                     skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("注册失败,该用户已有店铺");
+                    resultObjectVO.setMsg("该用户已有店铺");
                     return resultObjectVO;
                 }
 
@@ -126,7 +126,7 @@ public class SellerShopController {
                     //释放锁
                     skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("注册失败,该店铺已注册");
+                    resultObjectVO.setMsg("该店铺已注册");
                     return resultObjectVO;
                 }
 
@@ -153,14 +153,14 @@ public class SellerShopController {
             {
                 logger.warn("保存商户店铺失败 requestJson{} id{}",requestJsonVO.getEntityJson(),sellerShopVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("注册失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(sellerShopVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(SellerShopKey.getSaveLockKey(userMainId), userMainId);
         }
@@ -180,7 +180,7 @@ public class SellerShopController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -230,7 +230,7 @@ public class SellerShopController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -250,7 +250,7 @@ public class SellerShopController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -259,7 +259,7 @@ public class SellerShopController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -270,7 +270,7 @@ public class SellerShopController {
             if(CollectionUtils.isEmpty(sellerShops))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,对象不存在!");
+                resultObjectVO.setMsg("对象不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(sellerShops);
@@ -280,7 +280,7 @@ public class SellerShopController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -407,7 +407,7 @@ public class SellerShopController {
             int row = sellerShopService.update(sellerShop);
             if (row != 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -416,7 +416,7 @@ public class SellerShopController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -471,7 +471,7 @@ public class SellerShopController {
             int row = sellerShopService.updateLogo(updateSellerShop);
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -479,7 +479,7 @@ public class SellerShopController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -588,7 +588,7 @@ public class SellerShopController {
             int row = sellerShopService.updateInfo(updateSellerShop);
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
             sellerShops = sellerShopService.findEnabledByUserMainId(sellerShop.getUserMainId());
@@ -599,7 +599,7 @@ public class SellerShopController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -659,14 +659,14 @@ public class SellerShopController {
             int row = sellerShopService.deleteById(sellerShop.getId());
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -687,7 +687,7 @@ public class SellerShopController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -696,7 +696,7 @@ public class SellerShopController {
             if(CollectionUtils.isEmpty(sellerShops))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找ID");
+                resultObjectVO.setMsg("没有找ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -707,7 +707,7 @@ public class SellerShopController {
                     if (row < 1) {
                         logger.warn("删除店铺失败 {} ",JSONObject.toJSONString(sellerShop));
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
                         continue;
                     }
                 }
@@ -719,7 +719,7 @@ public class SellerShopController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -738,7 +738,7 @@ public class SellerShopController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -760,7 +760,7 @@ public class SellerShopController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -780,7 +780,7 @@ public class SellerShopController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -789,7 +789,7 @@ public class SellerShopController {
             if(entity.getPublicShopId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -827,7 +827,7 @@ public class SellerShopController {
                 {
                     logger.warn("启用/禁用店铺失败 requestJson{} sellerShop {} ",requestVo.getEntityJson(),JSONObject.toJSONString(sellerShop));
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                 }
             }
 
@@ -838,7 +838,7 @@ public class SellerShopController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

@@ -62,6 +62,13 @@
 
     </insert>
 
+
+    <update id="update" parameterType="com.toucan.shopping.modules.message.entity.MessageUser">
+        update t_message_type set  message_body_id=#{messageBodyId},send_date=#{sendDate}
+        update_date=#{updateDate}
+          where id = #{id}
+    </update>
+
     <update id="deleteById" parameterType="java.lang.Long">
         update t_message_user set delete_status=1 where id = #{id}
     </update>

@@ -114,7 +114,7 @@ public class AreaController {
             int row = areaService.save(area);
             if (row != 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
             try{
@@ -129,7 +129,7 @@ public class AreaController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -202,7 +202,7 @@ public class AreaController {
             int row = areaService.deleteById(area.getAppCode(),area.getId());
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -218,7 +218,7 @@ public class AreaController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -275,7 +275,7 @@ public class AreaController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -284,7 +284,7 @@ public class AreaController {
             if(CollectionUtils.isEmpty(areas))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找地区ID");
+                resultObjectVO.setMsg("没有找地区ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -305,7 +305,7 @@ public class AreaController {
                         int row = areaService.deleteById(a.getAppCode(),a.getId());
                         if (row < 1) {
                             resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("请求失败,请重试!");
+                            resultObjectVO.setMsg("请重试!");
                             continue;
                         }
 
@@ -330,7 +330,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -446,7 +446,7 @@ public class AreaController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -455,7 +455,7 @@ public class AreaController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到功能项ID");
+                resultObjectVO.setMsg("没有找到功能项ID");
                 return resultObjectVO;
             }
 
@@ -466,7 +466,7 @@ public class AreaController {
             if(CollectionUtils.isEmpty(areas))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,地区不存在!");
+                resultObjectVO.setMsg("地区不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(areas);
@@ -476,7 +476,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -496,7 +496,7 @@ public class AreaController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -523,7 +523,7 @@ public class AreaController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 return resultObjectVO;
             }
 
@@ -542,7 +542,7 @@ public class AreaController {
             int row = areaService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -563,7 +563,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -582,7 +582,7 @@ public class AreaController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -653,7 +653,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -671,7 +671,7 @@ public class AreaController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -786,7 +786,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -806,7 +806,7 @@ public class AreaController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -834,7 +834,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -853,7 +853,7 @@ public class AreaController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -879,7 +879,7 @@ public class AreaController {
                     areas = areaService.queryList(queryArea);
                     if (CollectionUtils.isEmpty(areas)) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,没有找到该节点");
+                        resultObjectVO.setMsg("没有找到该节点");
                         return resultObjectVO;
                     }
                     Area currentArea = areas.get(0);
@@ -923,7 +923,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -943,7 +943,7 @@ public class AreaController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -964,7 +964,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -981,7 +981,7 @@ public class AreaController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -994,7 +994,7 @@ public class AreaController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -1264,7 +1264,7 @@ public class AreaController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

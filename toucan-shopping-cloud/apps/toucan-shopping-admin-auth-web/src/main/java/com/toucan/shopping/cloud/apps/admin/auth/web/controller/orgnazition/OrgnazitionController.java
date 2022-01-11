@@ -177,7 +177,7 @@ public class OrgnazitionController extends UIController {
             resultObjectVO = feignOrgnazitionService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -203,7 +203,7 @@ public class OrgnazitionController extends UIController {
             resultObjectVO = feignOrgnazitionService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -230,7 +230,7 @@ public class OrgnazitionController extends UIController {
             return resultObjectVO;
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -253,7 +253,7 @@ public class OrgnazitionController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -268,7 +268,7 @@ public class OrgnazitionController extends UIController {
             resultObjectVO = feignOrgnazitionService.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -394,7 +394,7 @@ public class OrgnazitionController extends UIController {
         try {
             if(CollectionUtils.isEmpty(OrgnazitionVOS))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -405,7 +405,7 @@ public class OrgnazitionController extends UIController {
             resultObjectVO = feignOrgnazitionService.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

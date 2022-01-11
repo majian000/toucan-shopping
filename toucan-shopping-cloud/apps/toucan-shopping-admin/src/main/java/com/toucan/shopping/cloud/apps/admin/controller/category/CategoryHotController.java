@@ -95,7 +95,7 @@ public class CategoryHotController extends UIController {
             resultObjectVO = feignCategoryHotService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -119,7 +119,7 @@ public class CategoryHotController extends UIController {
             return resultObjectVO;
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

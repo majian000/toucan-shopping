@@ -34,7 +34,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 }
                 logger.warn("FeignRoleService.save faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -49,7 +49,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 }
                 logger.warn("FeignRoleService.update faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -64,7 +64,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 }
                 logger.warn("FeignRoleService.listPage faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -79,7 +79,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 }
                 logger.warn("FeignRoleService.queryRoleTree faild  sign {} params {} ",signHeader, JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -94,7 +94,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 }
                 logger.warn("FeignRoleService.deleteById faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -109,7 +109,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 }
                 logger.warn("FeignRoleService.findById faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
 
@@ -124,7 +124,7 @@ public class FeignRoleServiceFallbackFactory implements FallbackFactory<FeignRol
                 }
                 logger.warn("FeignRoleService.deleteByIds faild params:"+ JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试!");
+                resultObjectVO.setMsg("请稍后重试!");
                 return resultObjectVO;
             }
         };

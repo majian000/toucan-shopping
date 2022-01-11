@@ -211,7 +211,7 @@ public class ShopController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -236,7 +236,7 @@ public class ShopController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -251,7 +251,7 @@ public class ShopController extends UIController {
             resultObjectVO = feignSellerShopService.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -276,7 +276,7 @@ public class ShopController extends UIController {
         try {
             if(CollectionUtils.isEmpty(sellerShopVOS))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -287,7 +287,7 @@ public class ShopController extends UIController {
             resultObjectVO = feignSellerShopService.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -309,7 +309,7 @@ public class ShopController extends UIController {
         try {
             if(StringUtils.isEmpty(publicShopId))
             {
-                resultObjectVO.setMsg("请求失败,请传入公开店铺ID");
+                resultObjectVO.setMsg("请传入公开店铺ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -320,7 +320,7 @@ public class ShopController extends UIController {
             resultObjectVO = feignSellerShopService.disabledEnabled(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -391,7 +391,7 @@ public class ShopController extends UIController {
             resultObjectVO = feignSellerShopService.update(requestJsonVO.sign(),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

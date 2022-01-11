@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.area.page.BannerPageInfo;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
@@ -20,13 +21,13 @@ import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,6 +108,60 @@ public class MessageUserController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            MessageUserVO queryEntity = new MessageUserVO();
+            queryEntity.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
+            ResultObjectVO resultObjectVO = feignMessageUserService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<MessageUserVO> messageTypeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),MessageUserVO.class);
+                    if(!CollectionUtils.isEmpty(messageTypeVOS))
+                    {
+                        request.setAttribute("model",messageTypeVOS.get(0));
+                    }
+                }
+
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/message/messageUser/edit.html";
+    }
+
+
+
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request,@RequestBody MessageUserVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setUpdateDate(new Date());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignMessageUserService.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
     /**
      * 保存
@@ -151,7 +206,7 @@ public class MessageUserController extends UIController {
             resultObjectVO = feignMessageUserService.send(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -190,7 +245,7 @@ public class MessageUserController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

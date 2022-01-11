@@ -113,7 +113,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -122,13 +122,13 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             if(StringUtils.isEmpty(entity.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入角色名称");
+                resultObjectVO.setMsg("请传入角色名称");
                 return resultObjectVO;
             }
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入角色ID");
+                resultObjectVO.setMsg("请传入角色ID");
                 return resultObjectVO;
             }
 
@@ -148,7 +148,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             int row = roleService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -160,7 +160,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -232,7 +232,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -248,7 +248,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -261,7 +261,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -276,7 +276,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -285,7 +285,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到角色ID");
+                resultObjectVO.setMsg("没有找到角色ID");
                 return resultObjectVO;
             }
 
@@ -296,7 +296,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             if(CollectionUtils.isEmpty(roleList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,角色不存在!");
+                resultObjectVO.setMsg("角色不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(roleList);
@@ -306,7 +306,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -322,7 +322,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -331,7 +331,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             if(StringUtils.isEmpty(adminVO.getAdminId()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到AdminID");
+                resultObjectVO.setMsg("没有找到AdminID");
                 return resultObjectVO;
             }
 
@@ -358,7 +358,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -374,7 +374,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -383,7 +383,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到角色ID");
+                resultObjectVO.setMsg("没有找到角色ID");
                 return resultObjectVO;
             }
 
@@ -394,7 +394,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             if(CollectionUtils.isEmpty(roleList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,角色不存在!");
+                resultObjectVO.setMsg("角色不存在!");
                 return resultObjectVO;
             }
 
@@ -402,7 +402,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             int row = roleService.deleteById(entity.getId());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -421,7 +421,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -437,7 +437,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -446,7 +446,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             if(CollectionUtils.isEmpty(roleList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到角色ID");
+                resultObjectVO.setMsg("没有找到角色ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -461,7 +461,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
                     List<Role> roleEntityList = roleService.findListByEntity(query);
                     if (CollectionUtils.isEmpty(roleEntityList)) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,角色不存在!");
+                        resultObjectVO.setMsg("角色不存在!");
                         continue;
                     }
 
@@ -469,7 +469,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
                     int row = roleService.deleteById(role.getId());
                     if (row < 1) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
                         continue;
                     }
 
@@ -488,7 +488,7 @@ public class RoleServiceProxyImpl implements RoleServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

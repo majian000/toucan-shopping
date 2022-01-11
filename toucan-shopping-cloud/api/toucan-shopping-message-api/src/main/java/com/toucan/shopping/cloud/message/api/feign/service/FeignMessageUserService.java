@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 消息服务
@@ -36,6 +37,24 @@ public interface FeignMessageUserService {
      */
     @RequestMapping(value="/user/query/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPageByUserMianId(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 編輯
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestVo);
+
+    /**
+     * 根据ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**

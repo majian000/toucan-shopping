@@ -93,7 +93,7 @@ public class AttributeKeyController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -102,7 +102,7 @@ public class AttributeKeyController {
             if(attributeKeyVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -113,7 +113,7 @@ public class AttributeKeyController {
             if(CollectionUtils.isEmpty(attributeKeyVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,不存在!");
+                resultObjectVO.setMsg("不存在!");
                 return resultObjectVO;
             }
 
@@ -124,7 +124,7 @@ public class AttributeKeyController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -175,14 +175,14 @@ public class AttributeKeyController {
             int row = attributeKeyService.save(entity);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
 
         }
@@ -202,7 +202,7 @@ public class AttributeKeyController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -211,14 +211,14 @@ public class AttributeKeyController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
             int row = attributeKeyService.deleteById(entity.getId());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -230,7 +230,7 @@ public class AttributeKeyController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -248,7 +248,7 @@ public class AttributeKeyController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -257,7 +257,7 @@ public class AttributeKeyController {
             if(CollectionUtils.isEmpty(attributeKeys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -270,7 +270,7 @@ public class AttributeKeyController {
                     if (row < 1) {
                         logger.warn("删除失败，id:{}",attributeKey.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
                         continue;
                     }
 
@@ -283,7 +283,7 @@ public class AttributeKeyController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -302,7 +302,7 @@ public class AttributeKeyController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -320,7 +320,7 @@ public class AttributeKeyController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 return resultObjectVO;
             }
 
@@ -328,7 +328,7 @@ public class AttributeKeyController {
             int row = attributeKeyService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(entity);
@@ -338,7 +338,7 @@ public class AttributeKeyController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

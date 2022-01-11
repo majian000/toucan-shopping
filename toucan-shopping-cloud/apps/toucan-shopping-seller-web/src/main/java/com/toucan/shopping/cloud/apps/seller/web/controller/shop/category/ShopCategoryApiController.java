@@ -58,7 +58,7 @@ public class ShopCategoryApiController extends BaseController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -225,7 +225,7 @@ public class ShopCategoryApiController extends BaseController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

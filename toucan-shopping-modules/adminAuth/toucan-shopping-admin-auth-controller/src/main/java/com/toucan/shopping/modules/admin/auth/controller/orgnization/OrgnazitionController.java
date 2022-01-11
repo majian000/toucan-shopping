@@ -132,7 +132,7 @@ public class OrgnazitionController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -149,13 +149,13 @@ public class OrgnazitionController {
             if(StringUtils.isEmpty(entity.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入组织机构名称");
+                resultObjectVO.setMsg("请传入组织机构名称");
                 return resultObjectVO;
             }
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入组织机构ID");
+                resultObjectVO.setMsg("请传入组织机构ID");
                 return resultObjectVO;
             }
 
@@ -175,7 +175,7 @@ public class OrgnazitionController {
             int row = orgnazitionService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -207,7 +207,7 @@ public class OrgnazitionController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -226,7 +226,7 @@ public class OrgnazitionController {
         if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -246,7 +246,7 @@ public class OrgnazitionController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -263,7 +263,7 @@ public class OrgnazitionController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -272,7 +272,7 @@ public class OrgnazitionController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到组织机构ID");
+                resultObjectVO.setMsg("没有找到组织机构ID");
                 return resultObjectVO;
             }
 
@@ -283,7 +283,7 @@ public class OrgnazitionController {
             if(CollectionUtils.isEmpty(orgnazitionVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,组织机构不存在!");
+                resultObjectVO.setMsg("组织机构不存在!");
                 return resultObjectVO;
             }
             for(OrgnazitionVO orgnazitionVO:orgnazitionVOS) {
@@ -299,7 +299,7 @@ public class OrgnazitionController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -330,7 +330,7 @@ public class OrgnazitionController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -351,7 +351,7 @@ public class OrgnazitionController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -360,7 +360,7 @@ public class OrgnazitionController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到组织机构ID");
+                resultObjectVO.setMsg("没有找到组织机构ID");
                 return resultObjectVO;
             }
 
@@ -375,7 +375,7 @@ public class OrgnazitionController {
                 int row = orgnazitionService.deleteById(f.getId());
                 if (row < 1) {
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请重试!");
+                    resultObjectVO.setMsg("请重试!");
                     continue;
                 }
 
@@ -398,7 +398,7 @@ public class OrgnazitionController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -416,7 +416,7 @@ public class OrgnazitionController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -425,7 +425,7 @@ public class OrgnazitionController {
             if(CollectionUtils.isEmpty(OrgnazitionList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到组织机构ID");
+                resultObjectVO.setMsg("没有找到组织机构ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -446,7 +446,7 @@ public class OrgnazitionController {
                         int row = orgnazitionService.deleteById(f.getId());
                         if (row < 1) {
                             resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("请求失败,请重试!");
+                            resultObjectVO.setMsg("请重试!");
                             continue;
                         }
 
@@ -470,7 +470,7 @@ public class OrgnazitionController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -499,7 +499,7 @@ public class OrgnazitionController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

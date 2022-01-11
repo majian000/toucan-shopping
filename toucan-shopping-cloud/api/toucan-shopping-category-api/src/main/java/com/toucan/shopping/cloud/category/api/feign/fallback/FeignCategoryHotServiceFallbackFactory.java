@@ -29,12 +29,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.save faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -44,12 +44,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -59,12 +59,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryByIdList faild header:{} params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -74,12 +74,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.findByIdArray faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -90,12 +90,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.findById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -105,12 +105,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryTreeTable faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -120,12 +120,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.update faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -135,12 +135,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryTreeTableByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -150,12 +150,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -165,12 +165,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryWebIndexTree faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -180,12 +180,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.flushWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -196,12 +196,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.clearWebIndexCache faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -211,12 +211,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.deleteByIds faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -226,12 +226,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestVo==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.deleteById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -241,12 +241,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryListByPid faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -256,12 +256,12 @@ public class FeignCategoryHotServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,请稍后重试");
+                    resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignCategoryHotService.queryChildListByPid faild  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
         };

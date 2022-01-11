@@ -118,7 +118,7 @@ public class AppController extends UIController {
             resultObjectVO = feignAppService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -143,7 +143,7 @@ public class AppController extends UIController {
             resultObjectVO = feignAppService.update(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -179,7 +179,7 @@ public class AppController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -201,7 +201,7 @@ public class AppController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -216,7 +216,7 @@ public class AppController extends UIController {
             resultObjectVO = feignAppService.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -238,7 +238,7 @@ public class AppController extends UIController {
         try {
             if(CollectionUtils.isEmpty(appVOs))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -249,7 +249,7 @@ public class AppController extends UIController {
             resultObjectVO = feignAppService.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

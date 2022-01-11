@@ -69,25 +69,25 @@ public class UserHeadSculptureApproveController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
         if(StringUtils.isEmpty(userHeadSculptureApprove.getHeadSculpture()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,真实姓名不能为空");
+            resultObjectVO.setMsg("真实姓名不能为空");
             return resultObjectVO;
         }
         if(userHeadSculptureApprove.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            resultObjectVO.setMsg("用户ID不能为空");
             return resultObjectVO;
         }
         String userMainId = String.valueOf(userHeadSculptureApprove.getUserMainId());
@@ -95,7 +95,7 @@ public class UserHeadSculptureApproveController {
             boolean lockStatus = skylarkLock.lock(UserCenterHeadSculptureApproveKey.getSaveApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
             //查询是否存在审核中
@@ -140,31 +140,31 @@ public class UserHeadSculptureApproveController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
         if(userHeadSculptureApprove.getId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,ID为空");
+            resultObjectVO.setMsg("ID为空");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userHeadSculptureApprove.getHeadSculpture()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,真实姓名不能为空");
+            resultObjectVO.setMsg("真实姓名不能为空");
             return resultObjectVO;
         }
         if(userHeadSculptureApprove.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            resultObjectVO.setMsg("用户ID不能为空");
             return resultObjectVO;
         }
 
@@ -173,7 +173,7 @@ public class UserHeadSculptureApproveController {
             boolean lockStatus = skylarkLock.lock(UserCenterHeadSculptureApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
@@ -183,14 +183,14 @@ public class UserHeadSculptureApproveController {
             {
                 logger.warn("保存用户头像审核记录失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userHeadSculptureApprove.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(userHeadSculptureApprove);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterHeadSculptureApproveKey.getUpdateApproveLockKeyForService(userMainId), userMainId);
         }
@@ -210,7 +210,7 @@ public class UserHeadSculptureApproveController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -232,7 +232,7 @@ public class UserHeadSculptureApproveController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -246,14 +246,14 @@ public class UserHeadSculptureApproveController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
         if(userHeadSculptureApprove.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            resultObjectVO.setMsg("用户ID不能为空");
             return resultObjectVO;
         }
         try {
@@ -268,7 +268,7 @@ public class UserHeadSculptureApproveController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -284,14 +284,14 @@ public class UserHeadSculptureApproveController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
         if(userHeadSculptureApprove.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            resultObjectVO.setMsg("用户ID不能为空");
             return resultObjectVO;
         }
         try {
@@ -308,7 +308,7 @@ public class UserHeadSculptureApproveController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -321,14 +321,14 @@ public class UserHeadSculptureApproveController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         UserHeadSculptureApprove userHeadSculptureApprove = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserHeadSculptureApprove.class);
         if(userHeadSculptureApprove.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("请求失败,用户ID不能为空");
+            resultObjectVO.setMsg("用户ID不能为空");
             return resultObjectVO;
         }
         try {
@@ -343,7 +343,7 @@ public class UserHeadSculptureApproveController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -583,7 +583,7 @@ public class UserHeadSculptureApproveController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("删除失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -592,7 +592,7 @@ public class UserHeadSculptureApproveController {
             if(CollectionUtils.isEmpty(userHeadSculptureApproves))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("删除失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -605,7 +605,7 @@ public class UserHeadSculptureApproveController {
                     if (row < 1) {
                         logger.warn("删除失败，id:{}",userHeadSculptureApprove.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("删除失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
                         continue;
                     }
 
@@ -618,7 +618,7 @@ public class UserHeadSculptureApproveController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("删除失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

@@ -294,7 +294,7 @@ public class UserController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -331,7 +331,7 @@ public class UserController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -369,7 +369,7 @@ public class UserController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -406,7 +406,7 @@ public class UserController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -427,40 +427,40 @@ public class UserController extends UIController {
         if(user==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("没有找到要注册的用户");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(user.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("注册失败,请输入注册手机号");
+            resultObjectVO.setMsg("请输入注册手机号");
             return resultObjectVO;
         }
 
         if(!PhoneUtils.isChinaPhoneLegal(user.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("注册失败,手机号错误");
+            resultObjectVO.setMsg("手机号错误");
             return resultObjectVO;
         }
 
         if(StringUtils.isEmpty(user.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,请输入密码");
+            resultObjectVO.setMsg("请输入密码");
             return resultObjectVO;
         }
         if(!StringUtils.equals(user.getPassword(),user.getConfirmPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,密码与确认密码不一致");
+            resultObjectVO.setMsg("密码与确认密码不一致");
             return resultObjectVO;
         }
 
         if(!UserRegistUtil.checkPwd(user.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("请输入6至15位的密码");
             return resultObjectVO;
         }
 
@@ -545,7 +545,7 @@ public class UserController extends UIController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(lockKey, mobilePhone);
         }
@@ -569,14 +569,14 @@ public class UserController extends UIController {
         if(user==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要修改的用户");
+            resultObjectVO.setMsg("没有找到要修改的用户");
             return resultObjectVO;
         }
 
         if(user.getUserMainId()==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要用户ID");
+            resultObjectVO.setMsg("没有找到要用户ID");
             return resultObjectVO;
         }
 
@@ -647,7 +647,7 @@ public class UserController extends UIController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(lockKey, userMainId);
         }
@@ -763,7 +763,7 @@ public class UserController extends UIController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(lockKey, userMainId);
         }
@@ -786,20 +786,20 @@ public class UserController extends UIController {
         if(user==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("没有找到要注册的用户");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(user.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("注册失败,请输入关联手机号");
+            resultObjectVO.setMsg("请输入关联手机号");
             return resultObjectVO;
         }
 
         if(!PhoneUtils.isChinaPhoneLegal(user.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("注册失败,手机号错误");
+            resultObjectVO.setMsg("手机号错误");
             return resultObjectVO;
         }
 
@@ -827,7 +827,7 @@ public class UserController extends UIController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(lockKey, mobilePhone);
         }
@@ -889,7 +889,7 @@ public class UserController extends UIController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(lockKey, email);
         }
@@ -951,7 +951,7 @@ public class UserController extends UIController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(lockKey, username);
         }
@@ -975,7 +975,7 @@ public class UserController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -990,7 +990,7 @@ public class UserController extends UIController {
             resultObjectVO = feignUserService.disabledEnabledById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -1011,7 +1011,7 @@ public class UserController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -1024,7 +1024,7 @@ public class UserController extends UIController {
             resultObjectVO = feignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -1047,7 +1047,7 @@ public class UserController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -1060,7 +1060,7 @@ public class UserController extends UIController {
             resultObjectVO = feignUserService.disabledEnabledEmailByUserMainIdAndEmail(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -1084,7 +1084,7 @@ public class UserController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -1097,7 +1097,7 @@ public class UserController extends UIController {
             resultObjectVO = feignUserService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -1118,7 +1118,7 @@ public class UserController extends UIController {
         try {
             if(CollectionUtils.isEmpty(userVOS))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -1136,7 +1136,7 @@ public class UserController extends UIController {
             resultObjectVO = feignUserService.disabledByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

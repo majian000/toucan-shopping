@@ -130,47 +130,47 @@ public class UserController {
         if(requestJsonVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("没有找到要注册的用户");
             return resultObjectVO;
         }
 
         if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到应用编码");
+            resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
         UserRegistVO userRegistVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),UserRegistVO.class);
         if(userRegistVO==null)
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_USER);
-            resultObjectVO.setMsg("注册失败,没有找到要注册的用户");
+            resultObjectVO.setMsg("没有找到要注册的用户");
             return resultObjectVO;
         }
         if(StringUtils.isEmpty(userRegistVO.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.NOT_FOUND_MOBILE);
-            resultObjectVO.setMsg("注册失败,请输入注册手机号");
+            resultObjectVO.setMsg("请输入注册手机号");
             return resultObjectVO;
         }
 
         if(!PhoneUtils.isChinaPhoneLegal(userRegistVO.getMobilePhone()))
         {
             resultObjectVO.setCode(UserRegistConstant.MOBILE_ERROR);
-            resultObjectVO.setMsg("注册失败,手机号错误");
+            resultObjectVO.setMsg("手机号错误");
             return resultObjectVO;
         }
 
         if(StringUtils.isEmpty(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_NOT_FOUND);
-            resultObjectVO.setMsg("注册失败,请输入密码");
+            resultObjectVO.setMsg("请输入密码");
             return resultObjectVO;
         }
 
         if(!UserRegistUtil.checkPwd(userRegistVO.getPassword()))
         {
             resultObjectVO.setCode(UserRegistConstant.PASSWORD_ERROR);
-            resultObjectVO.setMsg("注册失败,请输入6至15位的密码");
+            resultObjectVO.setMsg("请输入6至15位的密码");
             return resultObjectVO;
         }
 
@@ -180,7 +180,7 @@ public class UserController {
             boolean lockStatus = skylarkLock.lock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("注册失败,请稍后重试");
+                resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
             //查询手机号是否已注册
@@ -203,7 +203,7 @@ public class UserController {
                 if (row < 1) {
                     logger.warn("用户注册失败 {}", requestJsonVO.getEntityJson());
                     resultObjectVO.setCode(UserResultVO.FAILD);
-                    resultObjectVO.setMsg("注册失败,请重试!");
+                    resultObjectVO.setMsg("请重试!");
                 } else {
                     //保存用户手机子表
                     UserMobilePhone userMobilePhone = new UserMobilePhone();
@@ -220,7 +220,7 @@ public class UserController {
                         userService.deleteById(user.getId());
                         logger.warn("手机号注册失败 {}", requestJsonVO.getEntityJson());
                         resultObjectVO.setCode(UserResultVO.FAILD);
-                        resultObjectVO.setMsg("手机号注册失败,请重试!");
+                        resultObjectVO.setMsg("手机号请重试!");
                     } else {
                         //保存用户昵称
                         UserDetail userDetail = new UserDetail();
@@ -271,7 +271,7 @@ public class UserController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("注册失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(UserCenterRegistRedisKey.getRegistLockKey(userRegistVO.getMobilePhone()), userRegistVO.getMobilePhone());
         }
@@ -325,7 +325,7 @@ public class UserController {
             int row = userDetailService.updateHeadSculpture(userDetail);
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -342,7 +342,7 @@ public class UserController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -2443,7 +2443,7 @@ public class UserController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("删除失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -2452,7 +2452,7 @@ public class UserController {
             if(CollectionUtils.isEmpty(users))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("删除失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -2478,7 +2478,7 @@ public class UserController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("删除失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

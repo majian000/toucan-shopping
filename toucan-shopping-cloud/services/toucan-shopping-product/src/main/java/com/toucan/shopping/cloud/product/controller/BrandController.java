@@ -138,7 +138,7 @@ public class BrandController {
             int row = brandService.save(entity);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -157,7 +157,7 @@ public class BrandController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
 
         }
@@ -376,7 +376,7 @@ public class BrandController {
             int row = brandService.update(entity);
             if (row != 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -397,7 +397,7 @@ public class BrandController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -420,7 +420,7 @@ public class BrandController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -429,7 +429,7 @@ public class BrandController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -440,7 +440,7 @@ public class BrandController {
             if(CollectionUtils.isEmpty(entityList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,对象不存在!");
+                resultObjectVO.setMsg("对象不存在!");
                 return resultObjectVO;
             }
             List<BrandVO> brandVOS = new ArrayList<BrandVO>();
@@ -461,7 +461,7 @@ public class BrandController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -524,7 +524,7 @@ public class BrandController {
             int row = brandService.deleteById(brand.getId());
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -535,7 +535,7 @@ public class BrandController {
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
@@ -556,7 +556,7 @@ public class BrandController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -565,7 +565,7 @@ public class BrandController {
             if(CollectionUtils.isEmpty(brandVOS))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找ID");
+                resultObjectVO.setMsg("没有找ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -575,11 +575,11 @@ public class BrandController {
                     if (row < 1) {
                         logger.warn("删除品牌失败 {} ",JSONObject.toJSONString(brandVO));
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
 
                         ResultObjectVO resultObjectRowVO = new ResultObjectVO();
                         resultObjectRowVO.setCode(ResultVO.FAILD);
-                        resultObjectRowVO.setMsg("请求失败,请重试!");
+                        resultObjectRowVO.setMsg("请重试!");
                         resultObjectRowVO.setData(brandVO.getId());
                         resultObjectVOList.add(resultObjectRowVO);
 
@@ -598,7 +598,7 @@ public class BrandController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

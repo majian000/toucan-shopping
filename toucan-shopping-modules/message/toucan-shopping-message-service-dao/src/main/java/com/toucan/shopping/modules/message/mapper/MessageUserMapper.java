@@ -23,6 +23,14 @@ public interface MessageUserMapper {
     int deleteById(Long id);
 
 
+    /**
+     * 更新
+     * @param entity
+     * @return
+     */
+    int update(MessageUser entity);
+
+
     List<MessageUser> findListByEntity(MessageUser query);
 
 

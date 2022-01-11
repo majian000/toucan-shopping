@@ -43,6 +43,11 @@ public class MessageUserServiceImpl implements MessageUserService {
         return messageUserMapper.deleteById(id);
     }
 
+    @Override
+    public int update(MessageUser entity) {
+        return messageUserMapper.update(entity);
+    }
+
 
     @Override
     public List<MessageUser> findListByEntity(MessageUser query) {

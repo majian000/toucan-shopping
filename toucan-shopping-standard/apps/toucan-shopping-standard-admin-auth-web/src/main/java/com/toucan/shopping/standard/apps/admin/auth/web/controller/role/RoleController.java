@@ -147,7 +147,7 @@ public class RoleController extends UIController {
             resultObjectVO = roleServiceProxy.update(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -248,7 +248,7 @@ public class RoleController extends UIController {
             resultObjectVO = roleServiceProxy.save(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -275,7 +275,7 @@ public class RoleController extends UIController {
             resultObjectVO = roleFunctionServiceProxy.saveFunctions(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -311,7 +311,7 @@ public class RoleController extends UIController {
             }
         }catch(Exception e)
         {
-            tableVO.setMsg("请求失败,请重试");
+            tableVO.setMsg("请重试");
             tableVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -334,7 +334,7 @@ public class RoleController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -349,7 +349,7 @@ public class RoleController extends UIController {
             resultObjectVO = roleServiceProxy.deleteById(requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -372,7 +372,7 @@ public class RoleController extends UIController {
         try {
             if(CollectionUtils.isEmpty(roleVOS))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -383,7 +383,7 @@ public class RoleController extends UIController {
             resultObjectVO = roleServiceProxy.deleteByIds(requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

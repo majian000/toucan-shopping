@@ -143,7 +143,7 @@ public class AdminRoleController {
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -164,7 +164,7 @@ public class AdminRoleController {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到参数");
+            resultObjectVO.setMsg("没有找到参数");
             return resultObjectVO;
         }
 
@@ -177,7 +177,7 @@ public class AdminRoleController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -198,7 +198,7 @@ public class AdminRoleController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -215,7 +215,7 @@ public class AdminRoleController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

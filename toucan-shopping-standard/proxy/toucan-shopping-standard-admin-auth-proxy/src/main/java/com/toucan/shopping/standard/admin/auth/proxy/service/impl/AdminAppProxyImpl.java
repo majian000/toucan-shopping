@@ -48,7 +48,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到参数");
+            resultObjectVO.setMsg("没有找到参数");
             return resultObjectVO;
         }
 
@@ -57,13 +57,13 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
             if(StringUtils.isEmpty(adminApp.getAppCode()))
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入应用编码");
+                resultObjectVO.setMsg("请传入应用编码");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(adminApp.getAdminId()))
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入账号ID");
+                resultObjectVO.setMsg("请传入账号ID");
                 return resultObjectVO;
             }
 
@@ -81,7 +81,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -101,7 +101,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到参数");
+            resultObjectVO.setMsg("没有找到参数");
             return resultObjectVO;
         }
 
@@ -115,7 +115,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -134,7 +134,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到参数");
+            resultObjectVO.setMsg("没有找到参数");
             return resultObjectVO;
         }
 
@@ -148,7 +148,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -163,7 +163,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到参数");
+            resultObjectVO.setMsg("没有找到参数");
             return resultObjectVO;
         }
 
@@ -176,7 +176,7 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

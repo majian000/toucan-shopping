@@ -66,7 +66,7 @@ public class AdminProductSkuController {
         if(row!=1)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("保存失败,请重试!");
+            resultObjectVO.setMsg("请重试!");
             return resultObjectVO;
         }
 

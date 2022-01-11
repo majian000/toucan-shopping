@@ -145,7 +145,7 @@ public class CategoryController extends UIController {
             resultObjectVO = feignCategoryService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -169,7 +169,7 @@ public class CategoryController extends UIController {
             resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -194,7 +194,7 @@ public class CategoryController extends UIController {
             resultObjectVO = feignCategoryService.clearWebIndexCache(requestJsonVO.sign(),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -219,7 +219,7 @@ public class CategoryController extends UIController {
             resultObjectVO = feignCategoryService.update(requestJsonVO.sign(),requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -267,7 +267,7 @@ public class CategoryController extends UIController {
             return resultObjectVO;
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -290,7 +290,7 @@ public class CategoryController extends UIController {
             return resultObjectVO;
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -311,7 +311,7 @@ public class CategoryController extends UIController {
         try {
             if(StringUtils.isEmpty(id))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -326,7 +326,7 @@ public class CategoryController extends UIController {
             resultObjectVO = feignCategoryService.deleteById(SignUtil.sign(requestVo),requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -349,7 +349,7 @@ public class CategoryController extends UIController {
         try {
             if(CollectionUtils.isEmpty(categoryVOS))
             {
-                resultObjectVO.setMsg("请求失败,请传入ID");
+                resultObjectVO.setMsg("请传入ID");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -360,7 +360,7 @@ public class CategoryController extends UIController {
             resultObjectVO = feignCategoryService.deleteByIds(SignUtil.sign(requestVo), requestVo);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请求失败,请重试");
+            resultObjectVO.setMsg("请重试");
             resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

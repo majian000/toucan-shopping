@@ -164,7 +164,7 @@ public class AdminController {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到参数");
+            resultObjectVO.setMsg("没有找到参数");
             return resultObjectVO;
         }
 
@@ -178,7 +178,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -209,14 +209,14 @@ public class AdminController {
             if(StringUtils.isEmpty(adminVO.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("请求失败,请输入密码");
+                resultObjectVO.setMsg("请输入密码");
                 return resultObjectVO;
             }
 
             if(!UserRegistUtil.checkPwd(adminVO.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("请求失败,请输入6至15位的密码");
+                resultObjectVO.setMsg("请输入6至15位的密码");
                 return resultObjectVO;
             }
             adminVO.setPassword(MD5Util.md5(adminVO.getPassword()));
@@ -224,7 +224,7 @@ public class AdminController {
             if (row < 1) {
 
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -353,7 +353,7 @@ public class AdminController {
         if(requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
-            resultObjectVO.setMsg("请求失败,没有找到要注销的用户");
+            resultObjectVO.setMsg("没有找到要注销的用户");
             return resultObjectVO;
         }
 
@@ -363,13 +363,13 @@ public class AdminController {
             if(StringUtils.isEmpty(admin.getAdminId()))
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入adminId");
+                resultObjectVO.setMsg("请传入adminId");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(admin.getLoginToken()))
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入登录token");
+                resultObjectVO.setMsg("请传入登录token");
                 return resultObjectVO;
             }
 
@@ -411,7 +411,7 @@ public class AdminController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -420,7 +420,7 @@ public class AdminController {
             if(admin.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到ID");
+                resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
 
@@ -431,7 +431,7 @@ public class AdminController {
             if(CollectionUtils.isEmpty(adminList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,账号不存在!");
+                resultObjectVO.setMsg("账号不存在!");
                 return resultObjectVO;
             }
 
@@ -449,7 +449,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -466,7 +466,7 @@ public class AdminController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestVo.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         try{
@@ -475,7 +475,7 @@ public class AdminController {
             if(StringUtils.isEmpty(admin.getUsername()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入账号");
+                resultObjectVO.setMsg("请传入账号");
                 return resultObjectVO;
             }
             Admin queryAdmin = new Admin();
@@ -485,7 +485,7 @@ public class AdminController {
             if(CollectionUtils.isEmpty(adminList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,账号不存在");
+                resultObjectVO.setMsg("账号不存在");
                 return resultObjectVO;
             }
 
@@ -504,7 +504,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -524,7 +524,7 @@ public class AdminController {
         resultObjectVO.setData(false);
         if (requestVo.getEntityJson() == null) {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到请求对象");
+            resultObjectVO.setMsg("没有找到请求对象");
             return resultObjectVO;
         }
         try{
@@ -533,13 +533,13 @@ public class AdminController {
             if(StringUtils.isEmpty(admin.getUsername())&&StringUtils.isEmpty(admin.getAdminId()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入账号或管理员ID");
+                resultObjectVO.setMsg("请传入账号或管理员ID");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(admin.getLoginToken()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入loginToken");
+                resultObjectVO.setMsg("请传入loginToken");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(admin.getAdminId()))
@@ -550,7 +550,7 @@ public class AdminController {
                 List<Admin> adminList = adminService.findListByEntity(queryAdmin);
                 if (CollectionUtils.isEmpty(adminList)) {
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,账号不存在");
+                    resultObjectVO.setMsg("账号不存在");
                     return resultObjectVO;
                 }
 
@@ -571,7 +571,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -589,7 +589,7 @@ public class AdminController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -713,7 +713,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -733,7 +733,7 @@ public class AdminController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -757,7 +757,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -778,7 +778,7 @@ public class AdminController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -787,7 +787,7 @@ public class AdminController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到账号ID");
+                resultObjectVO.setMsg("没有找到账号ID");
                 return resultObjectVO;
             }
 
@@ -798,7 +798,7 @@ public class AdminController {
             if(CollectionUtils.isEmpty(adminList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,账号不存在!");
+                resultObjectVO.setMsg("账号不存在!");
                 return resultObjectVO;
             }
 
@@ -806,7 +806,7 @@ public class AdminController {
             int row = adminService.deleteById(entity.getId());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -824,7 +824,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -842,7 +842,7 @@ public class AdminController {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -851,7 +851,7 @@ public class AdminController {
             if(CollectionUtils.isEmpty(admins))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到账号ID");
+                resultObjectVO.setMsg("没有找到账号ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -866,7 +866,7 @@ public class AdminController {
                     List<Admin> adminList = adminService.findListByEntity(query);
                     if (CollectionUtils.isEmpty(adminList)) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,账号不存在!");
+                        resultObjectVO.setMsg("账号不存在!");
                         continue;
                     }
 
@@ -874,7 +874,7 @@ public class AdminController {
                     int row = adminService.deleteById(admin.getId());
                     if (row < 1) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
                         continue;
                     }
 
@@ -893,7 +893,7 @@ public class AdminController {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

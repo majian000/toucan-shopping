@@ -72,7 +72,7 @@ public class SignInterceptor implements HandlerInterceptor {
                     if (StringUtils.isEmpty(requestSign)) {
                         logger.warn(toucan.getSign().getSignHeader()+" 签名请求头为空 ");
                         resultVO.setCode(ResultVO.FAILD);
-                        resultVO.setMsg("请求失败,签名请求头为空");
+                        resultVO.setMsg("签名请求头为空");
                         responseWrite(response, JSONObject.toJSONString(resultVO));
                         return false;
                     }
@@ -85,7 +85,7 @@ public class SignInterceptor implements HandlerInterceptor {
                     if (StringUtils.isEmpty(jsonBody)) {
                         logger.warn(" 请求体为 {}",jsonBody);
                         resultVO.setCode(ResultVO.FAILD);
-                        resultVO.setMsg("请求失败,请求体不能为空");
+                        resultVO.setMsg("请求体不能为空");
                         responseWrite(response, JSONObject.toJSONString(resultVO));
                         return false;
                     }
@@ -95,7 +95,7 @@ public class SignInterceptor implements HandlerInterceptor {
                     {
                         logger.warn("签名校验失败");
                         resultVO.setCode(ResultVO.FAILD);
-                        resultVO.setMsg("请求失败,签名校验失败");
+                        resultVO.setMsg("签名校验失败");
                         responseWrite(response, JSONObject.toJSONString(resultVO));
                         return false;
                     }

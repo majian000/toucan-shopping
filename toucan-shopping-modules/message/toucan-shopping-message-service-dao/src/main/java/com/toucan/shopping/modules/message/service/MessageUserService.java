@@ -26,6 +26,8 @@ public interface MessageUserService {
      */
     int deleteById(Long id);
 
+    int update(MessageUser entity);
+
 
 
     List<MessageUser> findListByEntity(MessageUser query);

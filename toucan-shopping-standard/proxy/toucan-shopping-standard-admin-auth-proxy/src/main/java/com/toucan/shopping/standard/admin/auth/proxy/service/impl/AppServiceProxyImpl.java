@@ -113,7 +113,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -122,19 +122,19 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(StringUtils.isEmpty(app.getName()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入应用名称");
+                resultObjectVO.setMsg("请传入应用名称");
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(app.getCode()))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入应用编码");
+                resultObjectVO.setMsg("请传入应用编码");
                 return resultObjectVO;
             }
             if(app.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请传入应用ID");
+                resultObjectVO.setMsg("请传入应用ID");
                 return resultObjectVO;
             }
 
@@ -161,7 +161,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             int row = appService.update(app);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -173,7 +173,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -191,7 +191,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -204,7 +204,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -222,7 +222,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
         try {
@@ -233,7 +233,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -250,7 +250,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -259,7 +259,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(app.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到应用ID");
+                resultObjectVO.setMsg("没有找到应用ID");
                 return resultObjectVO;
             }
 
@@ -270,7 +270,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(CollectionUtils.isEmpty(appList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,应用不存在!");
+                resultObjectVO.setMsg("应用不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(appList);
@@ -280,7 +280,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -298,7 +298,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -307,7 +307,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(app.getCode()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到应用编码");
+                resultObjectVO.setMsg("没有找到应用编码");
                 return resultObjectVO;
             }
 
@@ -318,7 +318,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(CollectionUtils.isEmpty(appList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,应用不存在!");
+                resultObjectVO.setMsg("应用不存在!");
                 return resultObjectVO;
             }
             resultObjectVO.setData(appList.get(0));
@@ -328,7 +328,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -345,7 +345,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -354,7 +354,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(app.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到应用ID");
+                resultObjectVO.setMsg("没有找到应用ID");
                 return resultObjectVO;
             }
 
@@ -365,7 +365,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(CollectionUtils.isEmpty(appList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,应用不存在!");
+                resultObjectVO.setMsg("应用不存在!");
                 return resultObjectVO;
             }
 
@@ -373,7 +373,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             int row = appService.deleteById(app.getId());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,请重试!");
+                resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
 
@@ -388,7 +388,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
 
                 if (row <= 0) {
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("请求失败,删除应用下所有管理账户失败!");
+                    resultObjectVO.setMsg("删除应用下所有管理账户失败!");
                     return resultObjectVO;
                 }
             }
@@ -400,7 +400,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }
@@ -417,7 +417,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,没有找到实体对象");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
 
@@ -426,7 +426,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             if(CollectionUtils.isEmpty(appList))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请求失败,没有找到应用ID");
+                resultObjectVO.setMsg("没有找到应用ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
@@ -441,7 +441,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
                     List<App> appEntityList = appService.findListByEntity(query);
                     if (CollectionUtils.isEmpty(appEntityList)) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,应用不存在!");
+                        resultObjectVO.setMsg("应用不存在!");
                         continue;
                     }
 
@@ -449,7 +449,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
                     int row = appService.deleteById(app.getId());
                     if (row < 1) {
                         resultObjectVO.setCode(ResultVO.FAILD);
-                        resultObjectVO.setMsg("请求失败,请重试!");
+                        resultObjectVO.setMsg("请重试!");
                         continue;
                     }
 
@@ -463,7 +463,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
 
                         if (row <= 0) {
                             resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("请求失败,删除应用下所有管理账户失败!");
+                            resultObjectVO.setMsg("删除应用下所有管理账户失败!");
                             return resultObjectVO;
                         }
                     }
@@ -477,7 +477,7 @@ public class AppServiceProxyImpl implements AppServiceProxy {
             logger.warn(e.getMessage(),e);
 
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请求失败,请稍后重试");
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

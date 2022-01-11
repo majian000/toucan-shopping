@@ -75,13 +75,13 @@ public class LogoutController {
             String loginToken = AuthHeaderUtil.getToken(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader()));
             if(StringUtils.isEmpty(adminId))
             {
-                resultObjectVO.setMsg("请求失败,没有找到adminId");
+                resultObjectVO.setMsg("没有找到adminId");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
             if(StringUtils.isEmpty(loginToken))
             {
-                resultObjectVO.setMsg("请求失败,没有找到loginToken");
+                resultObjectVO.setMsg("没有找到loginToken");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
