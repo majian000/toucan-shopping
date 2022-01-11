@@ -20,6 +20,8 @@ import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 用户消息管理
@@ -120,11 +120,35 @@ public class MessageUserController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            MessageVO messageVO = new MessageVO(entity.getTitle(),entity.getContent(), MessageContentTypeConstant.CONTENT_TYPE_1,null);
+            if(entity.getUserScope()!=null&&entity.getUserScope().intValue()==1){ //指定用户
+                if(StringUtils.isNotEmpty(entity.getUserMainIdListString()))
+                {
+                    String[] userMainIdArray = entity.getUserMainIdListString().split(",");
+                    //借助Set进行去重
+                    Set<String> userMainIdSet = new HashSet<String>();
+                    for(String userMainId:userMainIdArray)
+                    {
+                        userMainIdSet.add(userMainId);
+                    }
+                    for(String userMainId:userMainIdSet)
+                    {
+                        try {
+                            messageVO.addReceiveUser(Long.parseLong(userMainId));
+                        }catch(Exception e)
+                        {
+                            logger.info("用户ID为 {}",userMainId);
+                            logger.warn(e.getMessage(),e);
+                        }
+                    }
+
+                }
+            }
+            messageVO.setUserScope(entity.getUserScope()); //设置用户范围
             //发送消息
-            MessageVO messageVO = new MessageVO(entity.getTitle(),entity.getContent(), MessageContentTypeConstant.CONTENT_TYPE_1,entity.getUserMainId());
             messageVO.setMessageType(entity.getMessageTypeCode(),entity.getMessageTypeName(),entity.getMessageTypeAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,messageVO);
-            resultObjectVO = feignMessageUserService.send(requestJsonVO);;
+            resultObjectVO = feignMessageUserService.send(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败,请重试");

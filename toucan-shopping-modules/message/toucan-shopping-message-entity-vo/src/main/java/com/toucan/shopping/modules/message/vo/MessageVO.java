@@ -27,6 +27,11 @@ public class MessageVO {
      */
     private List<MessageUserVO> users;
 
+    /**
+     * 用户范围 -1:全部用户 1:指定用户
+     */
+    private Integer userScope;
+
     public MessageVO()
     {
         this.messageBody = new MessageBodyVO();
@@ -105,6 +110,23 @@ public class MessageVO {
         }
     }
 
+    /**
+     * 添加收消息用户
+     * @param userMainId
+     */
+    public void addReceiveUser(Long userMainId)
+    {
+        MessageUserVO messageUserVO = new MessageUserVO();
+        messageUserVO.setUserMainId(userMainId);
+        Date createDate = new Date();
+        messageUserVO.setSendDate(createDate);
+        messageUserVO.setStatus(0);
+        messageUserVO.setDeleteStatus((short)0);
+        messageUserVO.setCreateDate(createDate);
+
+        this.users.add(messageUserVO);
+
+    }
 
     public String getTitle()
     {
