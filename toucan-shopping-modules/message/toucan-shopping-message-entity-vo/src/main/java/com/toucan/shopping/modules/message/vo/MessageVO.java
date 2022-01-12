@@ -124,6 +124,10 @@ public class MessageVO {
         messageUserVO.setDeleteStatus((short)0);
         messageUserVO.setCreateDate(createDate);
 
+        if(CollectionUtils.isEmpty(this.users))
+        {
+            this.users = new LinkedList<>();
+        }
         this.users.add(messageUserVO);
 
     }
@@ -164,11 +168,12 @@ public class MessageVO {
         this.messageBody.setMessageTypeName(typeName);
         this.messageBody.setMessageTypeAppCode(typeAppCode);
 
-        for(MessageUserVO userVO:this.users)
-        {
-            userVO.setMessageTypeCode(typeCode);
-            userVO.setMessageTypeName(typeName);
-            userVO.setMessageTypeAppCode(typeAppCode);
+        if(CollectionUtils.isNotEmpty(this.users)) {
+            for (MessageUserVO userVO : this.users) {
+                userVO.setMessageTypeCode(typeCode);
+                userVO.setMessageTypeName(typeName);
+                userVO.setMessageTypeAppCode(typeAppCode);
+            }
         }
     }
 

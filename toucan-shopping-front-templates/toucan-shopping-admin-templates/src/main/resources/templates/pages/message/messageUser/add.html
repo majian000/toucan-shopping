@@ -23,12 +23,10 @@
 
 <div class="layui-form layuimini-form">
 
-    <input type="hidden" name="messageTypeAppCode" id="messageTypeAppCode" />
-    <input type="hidden" name="messageTypeName" id="messageTypeName" />
     <div class="layui-form-item">
         <label class="layui-form-label required">用户范围</label>
         <div class="layui-input-block">
-            <select id="userScope"  lay-search="" lay-filter="userScope">
+            <select id="userScope"  name="userScope" lay-search="" lay-filter="userScope">
                 <option value="-1">全部用户</option>
                 <option value="1">指定用户</option>
             </select>
@@ -61,7 +59,7 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">消息内容</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="500" placeholder="请输入消息内容"></textarea>
+            <textarea name="content" class="layui-textarea" maxlength="500" placeholder="请输入消息内容"></textarea>
         </div>
     </div>
 
@@ -181,7 +179,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/messageType/save}]]",
+                url:"[[@{/message/messageUser/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

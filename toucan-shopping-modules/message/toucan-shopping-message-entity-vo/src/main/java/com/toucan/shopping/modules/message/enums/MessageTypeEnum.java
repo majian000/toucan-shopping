@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.message.enums;
 
 public enum MessageTypeEnum {
-
+    NOTICE_MESSAGE("10001001","通知消息","30009"),
     HEAD_SCULPTURE("10001001","头像审核","30010"),
     TRUENAME("10001001","实名审核","30011");
 
