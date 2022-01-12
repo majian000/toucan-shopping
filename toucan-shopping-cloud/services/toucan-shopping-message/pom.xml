@@ -114,6 +114,11 @@
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-user-api</artifactId>
+        </dependency>
+
 
     </dependencies>
 
