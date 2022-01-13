@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -114,6 +115,8 @@ public class MessageTypeController {
                 resultObjectVO.setMsg("请稍后重试");
             }
             resultObjectVO.setData(messageTypeVO);
+
+            this.flushCache();
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -125,7 +128,21 @@ public class MessageTypeController {
         return resultObjectVO;
     }
 
-
+    private void flushCache() throws InvocationTargetException, IllegalAccessException {
+        MessageType query=new MessageType();
+        List<MessageType> messageTypes = messageTypeService.findListByEntity(query);
+        List<MessageTypeVO> messageTypeVOS = new ArrayList<MessageTypeVO>();
+        if(!CollectionUtils.isEmpty(messageTypes))
+        {
+            for(MessageType messageType:messageTypes)
+            {
+                MessageTypeVO messageTypeCache = new MessageTypeVO();
+                BeanUtils.copyProperties(messageTypeCache,messageType);
+                messageTypeVOS.add(messageTypeCache);
+            }
+        }
+        messageTypeRedisService.flush(messageTypeVOS);
+    }
 
 
 
@@ -140,19 +157,7 @@ public class MessageTypeController {
             return resultObjectVO;
         }
         try {
-            MessageType query=new MessageType();
-            List<MessageType> messageTypes = messageTypeService.findListByEntity(query);
-            List<MessageTypeVO> messageTypeVOS = new ArrayList<MessageTypeVO>();
-            if(!CollectionUtils.isEmpty(messageTypes))
-            {
-                for(MessageType messageType:messageTypes)
-                {
-                    MessageTypeVO messageTypeCache = new MessageTypeVO();
-                    BeanUtils.copyProperties(messageTypeCache,messageType);
-                    messageTypeVOS.add(messageTypeCache);
-                }
-            }
-            messageTypeRedisService.flush(messageTypeVOS);
+            flushCache();
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -338,6 +343,8 @@ public class MessageTypeController {
             }
 
             resultObjectVO.setData(entity);
+
+            this.flushCache();
 
         }catch(Exception e)
         {
