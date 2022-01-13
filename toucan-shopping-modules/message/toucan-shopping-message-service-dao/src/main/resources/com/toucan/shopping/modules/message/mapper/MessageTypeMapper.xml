@@ -65,14 +65,11 @@
         select * from t_message_type t
         <where>
             1=1
-            <if test="ids!=null ">
-                and t.id in
-                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
             <if test="id!=null">
                 and t.id = #{id}
+            </if>
+            <if test="code!=null">
+                and t.code = #{code}
             </if>
             and t.delete_status = 0
         </where>
