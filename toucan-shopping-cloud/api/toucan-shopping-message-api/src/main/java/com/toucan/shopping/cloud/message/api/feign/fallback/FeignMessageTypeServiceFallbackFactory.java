@@ -141,6 +141,21 @@ public class FeignMessageTypeServiceFallbackFactory implements FallbackFactory<F
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO flushCache(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignMessageTypeService.flushCache失败  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }

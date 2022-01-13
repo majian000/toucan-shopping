@@ -128,6 +128,42 @@ public class MessageTypeController {
 
 
 
+
+    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        try {
+            MessageType query=new MessageType();
+            List<MessageType> messageTypes = messageTypeService.findListByEntity(query);
+            List<MessageTypeVO> messageTypeVOS = new ArrayList<MessageTypeVO>();
+            if(!CollectionUtils.isEmpty(messageTypes))
+            {
+                for(MessageType messageType:messageTypes)
+                {
+                    MessageTypeVO messageTypeCache = new MessageTypeVO();
+                    BeanUtils.copyProperties(messageTypeCache,messageType);
+                    messageTypeVOS.add(messageTypeCache);
+                }
+            }
+            messageTypeRedisService.flush(messageTypeVOS);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
     /**
      * 批量删除
      * @param requestVo

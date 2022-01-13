@@ -81,4 +81,11 @@ public interface FeignMessageTypeService {
      */
     @RequestMapping(value="/cache/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findCacheByCode(@RequestBody RequestJsonVO requestVo);
+
+
+
+
+    @RequestMapping(value="/flush/cache",produces = "application/json;charset=UTF-8")
+    ResultObjectVO flushCache(@RequestBody RequestJsonVO requestJsonVO);
+
 }
