@@ -7,11 +7,15 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.message.entity.MessageType;
+import com.toucan.shopping.modules.message.entity.MessageUser;
 import com.toucan.shopping.modules.message.page.MessageTypePageInfo;
-import com.toucan.shopping.modules.message.redis.MessageTypeKey;
+import com.toucan.shopping.modules.message.redis.MessageTypeLockKey;
+import com.toucan.shopping.modules.message.redis.service.MessageTypeRedisService;
 import com.toucan.shopping.modules.message.service.MessageTypeService;
 import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +45,9 @@ public class MessageTypeController {
 
     @Autowired
     private MessageTypeService messageTypeService;
+
+    @Autowired
+    private MessageTypeRedisService messageTypeRedisService;
 
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
@@ -79,10 +86,20 @@ public class MessageTypeController {
         }
         String lockKey = messageTypeVO.getAppCode()+"_"+messageTypeVO.getCode();
         try {
-            boolean lockStatus = skylarkLock.lock(MessageTypeKey.getSaveLockKey(lockKey), lockKey);
+            boolean lockStatus = skylarkLock.lock(MessageTypeLockKey.getSaveLockKey(lockKey), lockKey);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            MessageTypeVO query = new MessageTypeVO();
+            query.setCode(messageTypeVO.getCode());
+            List<MessageTypeVO> messageTypes = messageTypeService.queryList(query);
+            if(!CollectionUtils.isEmpty(messageTypes))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("该编码已存在");
                 return resultObjectVO;
             }
 
@@ -103,7 +120,7 @@ public class MessageTypeController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }finally{
-            skylarkLock.unLock(MessageTypeKey.getSaveLockKey(lockKey), lockKey);
+            skylarkLock.unLock(MessageTypeLockKey.getSaveLockKey(lockKey), lockKey);
         }
         return resultObjectVO;
     }
@@ -262,6 +279,20 @@ public class MessageTypeController {
                 return resultObjectVO;
             }
 
+            MessageTypeVO query = new MessageTypeVO();
+            query.setCode(entity.getCode());
+            List<MessageTypeVO> messageTypes = messageTypeService.queryList(query);
+            if(!CollectionUtils.isEmpty(messageTypes))
+            {
+                for(MessageTypeVO messageTypeVO:messageTypes) {
+                    if(messageTypeVO.getId().longValue()!=entity.getId().longValue()) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("该编码已存在");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
             entity.setUpdateDate(new Date());
             int row = messageTypeService.update(entity);
             if (row < 1) {
@@ -271,6 +302,81 @@ public class MessageTypeController {
             }
 
             resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 根据code查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/cache/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findCacheByCode(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            MessageTypeVO messageTypeVO = JSONObject.parseObject(requestVo.getEntityJson(),MessageTypeVO.class);
+            if(messageTypeVO.getCode()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到Code");
+                return resultObjectVO;
+            }
+
+            MessageTypeVO messageTypeCacheVO = messageTypeRedisService.queryByCode(messageTypeVO.getCode());
+            if(messageTypeCacheVO!=null)
+            {
+                resultObjectVO.setData(messageTypeCacheVO);
+                return resultObjectVO;
+            }
+
+            //如果缓存为空 刷新到缓存
+            MessageType query=new MessageType();
+            query.setCode(messageTypeVO.getCode());
+            List<MessageType> entitys = messageTypeService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(entitys))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("不存在!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(entitys.get(0));
+
+            try {
+                query.setCode(null);
+                List<MessageType> messageTypes = messageTypeService.findListByEntity(query);
+                List<MessageTypeVO> messageTypeVOS = new ArrayList<MessageTypeVO>();
+                if(!CollectionUtils.isEmpty(messageTypes))
+                {
+                    for(MessageType messageType:messageTypes)
+                    {
+                        MessageTypeVO messageTypeCache = new MessageTypeVO();
+                        BeanUtils.copyProperties(messageTypeCache,messageType);
+                        messageTypeVOS.add(messageTypeCache);
+                    }
+                }
+                messageTypeRedisService.flush(messageTypeVOS);
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
 
         }catch(Exception e)
         {

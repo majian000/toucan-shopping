@@ -3,7 +3,7 @@ package com.toucan.shopping.modules.message.redis;
 /**
  * 消息
  */
-public class MessageKey {
+public class MessageLockKey {
 
 
 

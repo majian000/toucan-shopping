@@ -9,11 +9,11 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.message.entity.MessageBody;
+import com.toucan.shopping.modules.message.entity.MessageType;
 import com.toucan.shopping.modules.message.entity.MessageUser;
-import com.toucan.shopping.modules.message.page.MessageTypePageInfo;
 import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
-import com.toucan.shopping.modules.message.redis.MessageKey;
-import com.toucan.shopping.modules.message.redis.MessageTypeKey;
+import com.toucan.shopping.modules.message.redis.MessageLockKey;
+import com.toucan.shopping.modules.message.redis.service.MessageTypeRedisService;
 import com.toucan.shopping.modules.message.service.MessageBodyService;
 import com.toucan.shopping.modules.message.service.MessageTypeService;
 import com.toucan.shopping.modules.message.service.MessageUserService;
@@ -30,10 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 消息内容
@@ -57,6 +54,61 @@ public class MessageUserController {
     @Autowired
     private MessageUserService messageUserService;
 
+    @Autowired
+    private MessageTypeService messageTypeService;
+
+    @Autowired
+    private MessageTypeRedisService messageTypeRedisService;
+
+    /**
+     * 根据编码从缓存中拿到消息分类
+     * @param code
+     * @return
+     */
+    MessageTypeVO queryByCode(String code)
+    {
+
+        MessageTypeVO returnMessageTypeVO = new MessageTypeVO();
+
+        MessageTypeVO messageTypeCacheVO = messageTypeRedisService.queryByCode(code);
+        if(messageTypeCacheVO!=null)
+        {
+            return messageTypeCacheVO;
+        }
+
+        //如果缓存为空 刷新到缓存
+        MessageType query=new MessageType();
+        query.setCode(code);
+        List<MessageType> entitys = messageTypeService.findListByEntity(query);
+        if(CollectionUtils.isEmpty(entitys))
+        {
+            return null;
+        }
+
+        //刷新缓存
+        try {
+            BeanUtils.copyProperties(returnMessageTypeVO,entitys.get(0));
+
+            query.setCode(null);
+            List<MessageType> messageTypes = messageTypeService.findListByEntity(query);
+            List<MessageTypeVO> messageTypeVOS = new ArrayList<MessageTypeVO>();
+            if(!CollectionUtils.isEmpty(messageTypes))
+            {
+                for(MessageType messageType:messageTypes)
+                {
+                    MessageTypeVO messageTypeCache = new MessageTypeVO();
+                    BeanUtils.copyProperties(messageTypeCache,messageType);
+                    messageTypeVOS.add(messageTypeCache);
+                }
+            }
+            messageTypeRedisService.flush(messageTypeVOS);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+
+        return returnMessageTypeVO;
+    }
 
 
     @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
@@ -85,12 +137,22 @@ public class MessageUserController {
         String lockKey = null;
         try {
             lockKey = MD5Util.md5(messageVO.getTitle());
-            boolean lockStatus = skylarkLock.lock(MessageKey.getSaveLockKey(lockKey), lockKey);
+            boolean lockStatus = skylarkLock.lock(MessageLockKey.getSaveLockKey(lockKey), lockKey);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
+
+            String messageTypeCode = messageVO.getMessageBody().getMessageTypeCode();
+            MessageTypeVO messageTypeVO = queryByCode(messageTypeCode);
+            if(messageTypeVO==null)
+            {
+                logger.warn("消息分类对象为空 request{}",JSONObject.toJSONString(requestJsonVO));
+                throw new NullPointerException("消息分类对象为空");
+            }
+            messageVO.setMessageType(messageTypeVO.getCode(),messageTypeVO.getName(),messageTypeVO.getAppCode());
+
             MessageBodyVO messageBodyVO = messageVO.getMessageBody();
             messageBodyVO.setId(idGenerator.id());
             messageBodyVO.setCreateDate(new Date());
@@ -128,7 +190,7 @@ public class MessageUserController {
             resultObjectVO.setMsg("请稍后重试");
         }finally{
             if(lockKey!=null) {
-                skylarkLock.unLock(MessageKey.getSaveLockKey(lockKey), lockKey);
+                skylarkLock.unLock(MessageLockKey.getSaveLockKey(lockKey), lockKey);
             }
         }
         return resultObjectVO;
@@ -155,7 +217,7 @@ public class MessageUserController {
         try {
             MessageUserVO entity = JSONObject.parseObject(requestVo.getEntityJson(),MessageUserVO.class);
             lockKey = MD5Util.md5(entity.getTitle());
-            boolean lockStatus = skylarkLock.lock(MessageKey.getUpdateLockKey(lockKey), lockKey);
+            boolean lockStatus = skylarkLock.lock(MessageLockKey.getUpdateLockKey(lockKey), lockKey);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
@@ -249,11 +311,13 @@ public class MessageUserController {
             resultObjectVO.setMsg("请稍后重试");
         }finally{
             if(lockKey!=null) {
-                skylarkLock.unLock(MessageKey.getUpdateLockKey(lockKey), lockKey);
+                skylarkLock.unLock(MessageLockKey.getUpdateLockKey(lockKey), lockKey);
             }
         }
         return resultObjectVO;
     }
+
+
 
 
 

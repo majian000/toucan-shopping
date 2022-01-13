@@ -121,6 +121,8 @@
         <module>message/toucan-shopping-message-entity-vo</module>
         <!--消息Service和DAO -->
         <module>message/toucan-shopping-message-service-dao</module>
+        <!--消息的redis -->
+        <module>message/toucan-shopping-message-redis</module>
 
         <!-- 卖家实体和VO -->
         <module>seller/toucan-shopping-seller-entity-vo</module>

@@ -17,7 +17,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
 import com.toucan.shopping.modules.message.entity.MessageType;
-import com.toucan.shopping.modules.message.enums.MessageTypeEnum;
 import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
@@ -42,6 +41,7 @@ import java.util.*;
 public class MessageUserController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
 
     @Value("${toucan.app-code}")
     private String appCode;
@@ -201,15 +201,10 @@ public class MessageUserController extends UIController {
                 }
             }
             messageVO.setUserScope(entity.getUserScope()); //设置用户范围
-            MessageTypeEnum[] messageTypeEnums = MessageTypeEnum.values();
-            for(MessageTypeEnum messageTypeEnum:messageTypeEnums) {
-                if(messageTypeEnum.getCode().equals(entity.getMessageTypeCode())) {
-                    //发送消息
-                    messageVO.setMessageType(messageTypeEnum.getCode(), messageTypeEnum.getName(), messageTypeEnum.getAppCode());
-                    RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, messageVO);
-                    resultObjectVO = feignMessageUserService.send(requestJsonVO);
-                }
-            }
+            //发送消息
+            messageVO.setMessageTypeCode(entity.getMessageTypeCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, messageVO);
+            resultObjectVO = feignMessageUserService.send(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

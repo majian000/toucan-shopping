@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageTypeService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserTrueNameApproveService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -21,7 +22,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
-import com.toucan.shopping.modules.message.enums.MessageTypeEnum;
+import com.toucan.shopping.modules.message.vo.MessageTypeVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.user.page.UserTrueNameApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserTrueNameApproveVO;
@@ -49,6 +50,8 @@ public class UserTrueNameApproveController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final String TRUENAME_MESSAGE_TYPE_CODE="30011";
+
     @Value("${toucan.app-code}")
     private String appCode;
 
@@ -72,6 +75,7 @@ public class UserTrueNameApproveController extends UIController {
 
     @Autowired
     private IdGenerator idGenerator;
+
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -178,8 +182,8 @@ public class UserTrueNameApproveController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 //发送消息
-                MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),"恭喜您,实名审核完成",MessageContentTypeConstant.CONTENT_TYPE_1,userMainId);
-                messageVO.setMessageType(MessageTypeEnum.TRUENAME.getCode(),MessageTypeEnum.TRUENAME.getName(),MessageTypeEnum.TRUENAME.getAppCode());
+                MessageVO messageVO = new MessageVO("实名认证消息","恭喜您,实名审核完成",MessageContentTypeConstant.CONTENT_TYPE_1,userMainId);
+                messageVO.setMessageTypeCode(TRUENAME_MESSAGE_TYPE_CODE);
 
                 //保存消息发布事件
                 EventPublish eventPublish = saveEventPublish(messageVO);
@@ -271,8 +275,8 @@ public class UserTrueNameApproveController extends UIController {
             {
 
                 //发送消息
-                MessageVO messageVO = new MessageVO(MessageTypeEnum.TRUENAME.getName(),userTrueNameApproveVO.getRejectText(), MessageContentTypeConstant.CONTENT_TYPE_1,userTrueNameApproveVO.getUserMainId());
-                messageVO.setMessageType(MessageTypeEnum.TRUENAME.getCode(),MessageTypeEnum.TRUENAME.getName(),MessageTypeEnum.TRUENAME.getAppCode());
+                MessageVO messageVO = new MessageVO("实名认证消息",userTrueNameApproveVO.getRejectText(), MessageContentTypeConstant.CONTENT_TYPE_1,userTrueNameApproveVO.getUserMainId());
+                messageVO.setMessageTypeCode(TRUENAME_MESSAGE_TYPE_CODE);
 
                 //保存消息发布事件
                 EventPublish eventPublish = saveEventPublish(messageVO);

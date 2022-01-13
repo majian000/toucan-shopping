@@ -115,9 +115,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-user-api</artifactId>
+            <groupId>com.toucan.shopping.modules.message</groupId>
+            <artifactId>toucan-shopping-message-redis</artifactId>
         </dependency>
+
 
 
     </dependencies>

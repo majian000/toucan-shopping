@@ -21,7 +21,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.constant.MessageContentTypeConstant;
-import com.toucan.shopping.modules.message.enums.MessageTypeEnum;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.user.page.UserHeadSculptureApprovePageInfo;
 import com.toucan.shopping.modules.user.vo.UserHeadSculptureApproveVO;
@@ -48,6 +47,8 @@ import java.util.UUID;
 public class UserHeadSculptureApproveController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private final String USER_HEAD_SCULPTURE_MESSAGE_TYPE_CODE="30010";
 
     @Value("${toucan.app-code}")
     private String appCode;
@@ -251,8 +252,8 @@ public class UserHeadSculptureApproveController extends UIController {
             {
 
                 //发送消息
-                MessageVO messageVO = new MessageVO(MessageTypeEnum.HEAD_SCULPTURE.getName(),userHeadSculptureApproveVO.getRejectText(), MessageContentTypeConstant.CONTENT_TYPE_1,userHeadSculptureApproveVO.getUserMainId());
-                messageVO.setMessageType(MessageTypeEnum.HEAD_SCULPTURE.getCode(),MessageTypeEnum.HEAD_SCULPTURE.getName(),MessageTypeEnum.HEAD_SCULPTURE.getAppCode());
+                MessageVO messageVO = new MessageVO("头像审核消息",userHeadSculptureApproveVO.getRejectText(), MessageContentTypeConstant.CONTENT_TYPE_1,userHeadSculptureApproveVO.getUserMainId());
+                messageVO.setMessageTypeCode(USER_HEAD_SCULPTURE_MESSAGE_TYPE_CODE);
 
                 //保存消息发布事件
                 EventPublish eventPublish = saveEventPublish(messageVO);

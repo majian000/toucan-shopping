@@ -178,5 +178,16 @@ public class MessageVO {
     }
 
 
+    public void setMessageTypeCode(String typeCode)
+    {
+        this.messageBody.setMessageTypeCode(typeCode);
+
+        if(CollectionUtils.isNotEmpty(this.users)) {
+            for (MessageUserVO userVO : this.users) {
+                userVO.setMessageTypeCode(typeCode);
+            }
+        }
+    }
+
 
 }

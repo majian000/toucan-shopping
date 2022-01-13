@@ -71,5 +71,14 @@ public interface FeignMessageTypeService {
      * @return
      */
     @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
-    public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 根据code查询(从缓存拿数据)
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/cache/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findCacheByCode(@RequestBody RequestJsonVO requestVo);
 }
