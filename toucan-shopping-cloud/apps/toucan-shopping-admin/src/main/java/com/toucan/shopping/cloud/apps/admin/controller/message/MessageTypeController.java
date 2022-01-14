@@ -142,21 +142,42 @@ public class MessageTypeController extends UIController {
         return resultObjectVO;
     }
 
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody MessageTypeVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignMessageTypeService.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
     /**
      * 刷新缓存
-     * @param entity
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/flush/cache",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO flushCache(HttpServletRequest request, @RequestBody MessageTypeVO entity)
+    public ResultObjectVO flushCache(HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, null);
             resultObjectVO = feignMessageTypeService.flushCache(requestJsonVO);
         }catch(Exception e)
         {
