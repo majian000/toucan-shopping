@@ -1,256 +1,265 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <!-- StyleSheets -->
-    <link rel="stylesheet" href="${basePath}/static/css/slick.min.css" />
-    <link rel="stylesheet" href="${basePath}/static/css/magnific-popup.min.css">
-    <link rel="stylesheet" href="${basePath}/static/css/font-awesome-5.15.1.min.css" />
+<html class="no-js css-menubar" lang="zh-cn"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
 
-    <!-- Custom css File -->
-    <link rel="stylesheet" href="${basePath}/static/css/style2.css" />
-    <link rel="stylesheet" href="${basePath}/static/css/responsive.css" />
-    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/jqueryFormValidate/style.css" />
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+
+    <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
     <link rel="stylesheet" href="${basePath}/static/js/seller/product/selectProductCategory/style.css" />
-
-
-
-    <!--[if IE 6]>
-    <script src="${basePath}/static/js/iepng.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        EvPNG.fix('div, ul, img, li, input, a');
-    </script>
-    <![endif]-->
-
-    <script type="text/javascript" src="${basePath}/static/js/jquery-1.8.2.min.js"></script>
-    <script type="text/javascript" src="${basePath}/static/js/jquery-form.js"></script>
-
-
+    <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/selectPage/selectpage.css" type="text/css">
     <script type="text/javascript" src="${basePath}/static/lib/selectPage/selectpage.js" ></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/product/brand_list.js"></script>
 
-
-    <#include "/common_js.html"/>
-
-    <title>发布商品</title>
 </head>
 <body>
 
-<!--Begin Header Begin-->
-<div class="soubg">
-    <#include "/top.html"/>
-</div>
+<#include "/top.html"/>
 
-<div class="page_nav_top">
-    <div class="sou">
-        <#include "/logo_child.html"/>
-        <div class="page_nav_title" >
-            <a style="font-size:30px;" >发布商品</a>
-        </div>
+<#assign leftName = "releaseProduct">
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="${basePath}/page/shop/category/list">店铺分类</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">添加分类</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
     </div>
-</div>
 
-<!--Begin Login Begin-->
-<div class="i_bg bg_color">
-    <!--Begin 用户中心 Begin -->
-    <div class="m_content">
-        <div class="m_right">
-            <div id="formbox">
-                <form id="productReleaseForm" method="post" onsubmit="return false;">
-                    <div class="form">
+    <div class="right_content">
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%;height:1000px;">
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>发布商品</span></div>
+                <div class="right_panel">
 
-                        <div id="step1">
-                            <h3>商品分类</h3>
+                    <form id="productReleaseForm" method="post" onsubmit="return false;">
+                        <div class="toucan-form">
+                            <div id="step1">
+                                <div class="toucan-form-body">
+                                    <div class="item">
+                                        <!--商品分类-->
+                                        <div class="wareSort clearfix">
+                                            <ul id="sort1"></ul>
+                                            <ul id="sort2" style="display: none;"></ul>
+                                            <ul id="sort3" style="display: none;"></ul>
+                                        </div>
+                                        <div class="selectedSort"><b>您当前选择的商品类别是：</b><i id="selectedSort"></i></div>
 
-                            <!--商品分类-->
-                            <div class="wareSort clearfix">
-                                <ul id="sort1"></ul>
-                                <ul id="sort2" style="display: none;"></ul>
-                                <ul id="sort3" style="display: none;"></ul>
-                            </div>
-                            <div class="selectedSort"><b>您当前选择的商品类别是：</b><i id="selectedSort"></i></div>
+                                    </div>
+
+                                    <div class="item" id="brandDiv" style="display:block">
+                                        <div class="item">
+                                            <span class="label">品牌：</span>
+                                            <div class="field">
+                                                <span  id="selectBrandDiv">
+                                                    <input type="text" id="selectBrand" >
+                                                </span>
+                                                未找到需要的品牌，<a href="#">点击申请</a>
+                                            </div>
+                                        </div>
+                                        <div class="item" style="float:left">
+                                            <span class="label">货号：</span>
+                                            <div class="field">
+                                                <input type="text" id="articleNumber" name="articleNumber"  class="text" >
+                                            </div>
+                                        </div>
+                                    </div>
 
 
-                            <div class="item" id="brandDiv" style="display:none">
-                                <div style="width:400px;float:left;">
-                                    <span style="float: left;font-size: 12px;">品牌：</span>
-                                    <span  id="selectBrandDiv">
-                                        <input type="text" id="selectBrand" >
-                                    </span>
-                                    未找到需要的品牌，<a href="#">点击申请</a>
+                                    <div class="item">
+                                        <span class="wareSortBtn">
+                                            <input type="button" id="releaseBtn" class="button" value="下一步，完善商品信息" disabled="disabled"  />
+                                        </span>
+                                    </div><!--item end-->
+
                                 </div>
 
-                                <div style="width:400px;float:left;">
-                                    <span  style="float: left;font-size: 12px;">货号：</span>
-                                    <input type="text" id="articleNumber" name="articleNumber"  class="text" >
+                            </div>
+
+
+                            <div id="step2" style="display:none">
+                                <div class="toucan-form-body">
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>名称：</span>
+                                        <div class="fl">
+                                            <input type="text" id="productName" name="name" class="text" tabindex="1"  />
+                                            <label id="productName_succeed" class="blank"></label>
+                                            <span class="clear"></span>
+                                            <div id="productName_error"></div>
+                                        </div>
+                                    </div><!--item end-->
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>一口价：</span>
+                                        <div class="fl">
+                                            <input type="text" id="price" name="price" class="text" tabindex="1"  />
+                                            <label id="price_succeed" class="blank"></label>
+                                            <span class="clear"></span>
+                                            <div id="price_error"></div>
+                                        </div>
+                                    </div><!--item end-->
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>总数量：</span>
+                                        <div class="fl">
+                                            <input type="text" id="count" name="count" class="text" tabindex="1"  />
+                                            <label id="count_succeed" class="blank"></label>
+                                            <span class="clear"></span>
+                                            <div id="count_error"></div>
+                                        </div>
+                                    </div><!--item end-->
+                                    <div class="item">
+                                        <span class="label">自定义商品属性：</span>
+                                        <div class="fl">
+                                            您最多可添加5组自定义属性，可参考如下2组示例：工艺：磨毛；图案：千鸟格
+                                        </div>
+                                    </div><!--item end-->
+
+                                    <div class="item" style="display: flex;">
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="step2Back" class="button" value="上一步，调整商品分类"  />
+                                        </div>
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="step2Next" class="button" value="下一步，完善支付信息"  />
+                                        </div>
+                                    </div><!--item end-->
                                 </div>
                             </div>
 
+                            <div id="step3" style="display:none">
+                                <div class="toucan-form-body">
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>付款方式：</span>
+                                        <div class="fl">
+                                            <input type="radio" class="radio" name="pay_method" id="pay_method_1" value="1" checked/> <label for="pay_method_1">一口价(普通交易模式)</label>
+                                        </div>
+                                    </div><!--item end-->
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>库存计数：</span>
+                                        <div class="fl">
+                                            <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_1" value="1" checked/> <label for="buckle_inventory_method_1">买家拍下减库存</label>
+                                            <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_2" value="2" checked/> <label for="buckle_inventory_method_2">买家付款减库存</label>
+                                        </div>
+                                    </div><!--item end-->
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>售后服务：</span>
+                                        <div class="fl">
+                                            <input type="checkbox" class="checkbox" name="invoice" id="invoice_1" value="1" /> <label for="invoice_1">提供发票</label>
+                                            <input type="checkbox" class="checkbox" name="changingOrRefunding" id="changingOrRefunding_1" value="1" /> <label for="changingOrRefunding_1">退换货承诺</label>
+
+                                        </div>
+                                    </div><!--item end-->
+
+
+                                    <div class="item" style="display: flex;">
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="step3Back" class="button" value="上一步，调整商品信息"  />
+                                        </div>
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="step3Next" class="button" value="下一步，完善物流信息"  />
+                                        </div>
+                                    </div><!--item end-->
+                                </div>
+                            </div>
+
+                            <div id="step4" style="display:none">
+                                <div class="toucan-form-body">
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>提取方式：</span>
+                                        <div class="fl">
+                                            <input type="checkbox" class="checkbox" name="logistics" id="logistics_1" value="1" /> <label for="logistics_1">使用物流配送</label>
+                                        </div>
+                                    </div><!--item end-->
+
+
+                                    <div class="item" style="display: flex;">
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="step4Back" class="button" value="上一步，调整支付信息"  />
+                                        </div>
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="step4Next" class="button" value="下一步，完善店铺分类"  />
+                                        </div>
+                                    </div><!--item end-->
+                                </div>
+                            </div>
+
+                            <div id="step5" style="display:none" >
+                                <div class="toucan-form-body">
+                                    <!--商品分类-->
+                                    <div class="wareSort clearfix">
+                                        <ul id="shop_category_sort1"></ul>
+                                        <ul id="shop_category_sort2" style="display: none;"></ul>
+                                    </div>
+                                    <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
+
+                                    <div class="item">
+                                        <span class="label"><span class="red">*</span>验证码：</span>
+                                        <div class="fl">
+                                            <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
+                                            <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
+                                            </label>
+                                            <label>&nbsp;看不清？点击验证码图片更换</label>
+                                            <label id="vcode_succeed" class="blank invisible"></label>
+                                            <span class="clear"></span>
+                                            <label id="vcode_error"></label>
+                                        </div>
+                                    </div><!--item end-->
+
+                                    <div class="item" style="display: flex;">
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="step5Back" class="button" value="上一步，调整物流信息"  />
+                                        </div>
+                                        <div class="wareSortBtn">
+                                            <input type="button" id="ppfbtn" class="button" value="发布"  />
+                                        </div>
+                                    </div><!--item end-->
+                                </div>
+                            </div>
 
                             <div class="item">
                                 <span class="label">&nbsp;</span>
-                                <div class="wareSortBtn">
-                                    <input id="releaseBtn" type="button" value="下一步，完善商品信息" disabled="disabled" />
-                                </div>
-                            </div><!--item end-->
-                        </div>
-
-
-                        <div id="step2" style="display:none">
-                            <h3>商品信息</h3>
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>名称：</span>
-                                <div class="fl">
-                                    <input type="text" id="productName" name="name" class="text" tabindex="1"  />
-                                    <label id="productName_succeed" class="blank"></label>
-                                    <span class="clear"></span>
-                                    <div id="productName_error"></div>
-                                </div>
-                            </div><!--item end-->
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>一口价：</span>
-                                <div class="fl">
-                                    <input type="text" id="price" name="price" class="text" tabindex="1"  />
-                                    <label id="price_succeed" class="blank"></label>
-                                    <span class="clear"></span>
-                                    <div id="price_error"></div>
-                                </div>
-                            </div><!--item end-->
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>总数量：</span>
-                                <div class="fl">
-                                    <input type="text" id="count" name="count" class="text" tabindex="1"  />
-                                    <label id="count_succeed" class="blank"></label>
-                                    <span class="clear"></span>
-                                    <div id="count_error"></div>
-                                </div>
-                            </div><!--item end-->
-                            <div class="item">
-                                <span class="label">自定义商品属性：</span>
-                                <div class="fl">
-                                    您最多可添加5组自定义属性，可参考如下2组示例：工艺：磨毛；图案：千鸟格
-                                </div>
-                            </div><!--item end-->
-
-                            <div class="item" style="display: flex;">
-                                <div class="wareSortBtn">
-                                         <input id="step2Back" type="button" value="上一步，调整商品分类"  />&nbsp;&nbsp;
-                                </div>
-                                <div class="wareSortBtn">
-                                        <input id="step2Next" type="button" value="下一步，完善支付信息"  />
-                                </div>
-                            </div><!--item end-->
-                        </div>
-
-                        <div id="step3" style="display:none">
-                            <h3>支付信息</h3>
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>付款方式：</span>
-                                <div class="fl">
-                                    <input type="radio" class="radio" name="pay_method" id="pay_method_1" value="1" checked/> <label for="pay_method_1">一口价(普通交易模式)</label>
-                                </div>
-                            </div><!--item end-->
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>库存计数：</span>
-                                <div class="fl">
-                                    <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_1" value="1" checked/> <label for="buckle_inventory_method_1">买家拍下减库存</label>
-                                    <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_2" value="2" checked/> <label for="buckle_inventory_method_2">买家付款减库存</label>
-                                </div>
-                            </div><!--item end-->
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>售后服务：</span>
-                                <div class="fl">
-                                    <input type="checkbox" class="checkbox" name="invoice" id="invoice_1" value="1" /> <label for="invoice_1">提供发票</label>
-                                    <input type="checkbox" class="checkbox" name="changingOrRefunding" id="changingOrRefunding_1" value="1" /> <label for="changingOrRefunding_1">退换货承诺</label>
-
-                                </div>
-                            </div><!--item end-->
-
-
-                            <div class="item" style="display: flex;">
-                                <div class="wareSortBtn">
-                                    <input id="step3Back" type="button" value="上一步，调整商品信息"  />&nbsp;&nbsp;
-                                </div>
-                                <div class="wareSortBtn">
-                                    <input id="step3Next" type="button" value="下一步，完善物流信息"/>
-                                </div>
-                            </div><!--item end-->
-                        </div>
-
-                        <div id="step4" style="display:none">
-                            <h3>物流信息</h3>
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>提取方式：</span>
-                                <div class="fl">
-                                    <input type="checkbox" class="checkbox" name="logistics" id="logistics_1" value="1" /> <label for="logistics_1">使用物流配送</label>
-                                </div>
-                            </div><!--item end-->
-
-
-                            <div class="item" style="display: flex;">
-                                <div class="wareSortBtn">
-                                    <input id="step4Back" type="button" value="上一步，调整支付信息"  />&nbsp;&nbsp;
-                                </div>
-                                <div class="wareSortBtn">
-                                    <input id="step4Next" type="button" value="下一步，完善店铺分类"/>
-                                </div>
-                            </div><!--item end-->
-                        </div>
-
-                        <div id="step5" style="display:none" >
-                            <h3>店铺分类</h3>
-
-                            <!--商品分类-->
-                            <div class="wareSort clearfix">
-                                <ul id="shop_category_sort1"></ul>
-                                <ul id="shop_category_sort2" style="display: none;"></ul>
+                                <a id="edit_info_msg" style="color:#ff4e00;"></a>
                             </div>
-                            <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
-
-                            <div class="item">
-                                <span class="label"><span class="red">*</span>验证码：</span>
-                                <div class="fl">
-                                    <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
-                                    <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:26px;"/>
-                                    </label>
-                                    <label>&nbsp;看不清？点击验证码图片更换</label>
-                                    <label id="vcode_succeed" class="blank invisible"></label>
-                                    <span class="clear"></span>
-                                    <label id="vcode_error"></label>
-                                </div>
-                            </div><!--item end-->
-
-                            <div class="item" style="display: flex;">
-                                <div class="wareSortBtn">
-                                    <input id="step5Back" type="button" value="上一步，调整物流信息"  />&nbsp;&nbsp;
-                                </div>
-                                <div class="wareSortBtn">
-                                    <input id="ppfbtn" type="button" value="发布"/>
-                                </div>
-                            </div><!--item end-->
-
                         </div>
+                    </form>
 
-                        <div class="item">
-                            <span class="label">&nbsp;</span>
-                            <a id="edit_info_msg" style="color:#ff4e00;"></a>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
+
     </div>
-    <!--End 用户中心 End-->
 </div>
 
 
-<!--Begin Footer Begin-->
+
 
 <#include "/footer.html"/>
-<!--End Footer End -->
 
 </body>
+
 
 <script>
     /*定义三级分类数据*/
@@ -260,7 +269,6 @@
 
 <script src="${basePath}/static/js/seller/product/selectProductCategory/selectCategory.js"></script>
 <script src="${basePath}/static/js/seller/product/selectShopCategory/selectShopCategory.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/Validate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/release_product.js"></script>
 
 <script>
@@ -342,5 +350,6 @@
 
 </script>
 
-
 </html>
+
+
