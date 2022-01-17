@@ -20,10 +20,29 @@
     <link type="text/css" rel="stylesheet" href="${basePath}/static/css/formStyle.css" />
     <link rel="stylesheet" href="${basePath}/static/js/seller/product/selectProductCategory/style.css" />
     <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
-    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/selectPage/selectpage.css" type="text/css">
     <script type="text/javascript" src="${basePath}/static/lib/selectPage/selectpage.js" ></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/product/brand_list.js"></script>
+
+    <style>
+        .releaseProductInputText {
+            border: 1px solid #CCC;
+            color: #000000;
+            height: 30px;
+            line-height:15px;
+            margin-bottom: 16px;
+            margin-right: 6px;
+            margin-top: 2px;
+            outline: 0 none;
+            padding: 5px 0px 5px 5px;
+            border-radius: 4px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+    </style>
 
 </head>
 <body>
@@ -57,7 +76,7 @@
                 <div class="title" style="border-bottom: 1px solid#9a9999;"><span>发布商品</span></div>
                 <div class="right_panel">
 
-                    <form id="productReleaseForm" method="post" onsubmit="return false;">
+                    <form id="productReleaseForm" class="bootstrap-frm" method="post" onsubmit="return false;">
                         <div class="toucan-form">
                             <div id="step1">
                                 <div class="toucan-form-body">
@@ -72,26 +91,29 @@
 
                                     </div>
 
-                                    <div class="item" id="brandDiv" style="display:block">
-                                        <div class="item">
-                                            <span class="label">品牌：</span>
-                                            <div class="field">
+                                    <div class="item" id="brandDiv" style="display:none;">
+                                        <div style="width:50%;float:left;">
+                                            <div class="field" style="width:100%;text-align:right;" >
+                                                品牌：
                                                 <span  id="selectBrandDiv">
-                                                    <input type="text" id="selectBrand" >
+                                                    <input type="text" id="selectBrand" class="releaseProductInputText" >
                                                 </span>
-                                                未找到需要的品牌，<a href="#">点击申请</a>
+                                                未找到需要的品牌？<a href="#">点击申请</a>
                                             </div>
                                         </div>
-                                        <div class="item" style="float:left">
-                                            <span class="label">货号：</span>
-                                            <div class="field">
-                                                <input type="text" id="articleNumber" name="articleNumber"  class="text" >
+
+                                        <div style="width:45%;float:left;">
+                                            <div class="field" style="text-align:right;" >
+                                                货号：<input type="text" id="articleNumber" name="articleNumber"  class="releaseProductInputText" style="width:200px;">
                                             </div>
                                         </div>
+
                                     </div>
 
 
-                                    <div class="item">
+
+
+                                    <div class="item" style="clear:both">
                                         <span class="wareSortBtn">
                                             <input type="button" id="releaseBtn" class="button" value="下一步，完善商品信息" disabled="disabled"  />
                                         </span>
