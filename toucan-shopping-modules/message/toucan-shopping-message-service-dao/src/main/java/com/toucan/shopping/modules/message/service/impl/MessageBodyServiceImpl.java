@@ -50,6 +50,11 @@ public class MessageBodyServiceImpl implements MessageBodyService {
     }
 
     @Override
+    public List<MessageBody> queryList(MessageBody query) {
+        return messageBodyMapper.queryList(query);
+    }
+
+    @Override
     public PageInfo<MessageBodyVO> queryListPage(MessageBodyPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<MessageBodyVO> pageInfo = new PageInfo();

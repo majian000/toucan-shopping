@@ -25,6 +25,7 @@ public interface MessageBodyMapper {
 
     List<MessageBody> findListByEntity(MessageBody query);
 
+    List<MessageBody> queryList(MessageBody query);
 
     /**
      * 查询列表页

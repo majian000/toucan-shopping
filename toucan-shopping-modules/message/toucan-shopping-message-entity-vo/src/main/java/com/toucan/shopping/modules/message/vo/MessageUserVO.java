@@ -45,12 +45,6 @@ public class MessageUserVO extends MessageUser {
      */
     private String messageTypeAppCode;
 
-    /**
-     * 发送时间
-     */
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
-    private Date sendDateYearMonthDay;
 
     /**
      * 用户范围 -1:全部用户 1:指定用户

@@ -23,6 +23,9 @@
 
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden" name="userMainId" id="userMainId" th:value="${model.userMainId}">
+    <input type="hidden" name="messageBodyId" id="messageBodyId" th:value="${model.messageBodyId}">
+    <input type="hidden"  id="sendDateString" th:value="${#dates.format(model.sendDate,'yyyy-MM-dd HH:mm:ss')}">
 
     <div class="layui-form-item">
         <label class="layui-form-label required">消息标题</label>
@@ -35,14 +38,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">发送时间</label>
         <div class="layui-input-block">
-            <input type="title" id="sendDate" name="sendDate" lay-verify="required"  lay-reqtext="不能为空" placeholder="请输入发送时间"  th:value="${model.sendDate}" class="layui-input">
+            <input type="title" id="sendDate" name="sendDate" lay-verify="required"  lay-reqtext="不能为空" placeholder="请输入发送时间"   class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">消息内容</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="500" placeholder="请输入消息内容" th:text="${model.remark}" ></textarea>
+            <textarea name="content" class="layui-textarea" maxlength="500" placeholder="请输入消息内容" th:text="${model.content}" ></textarea>
         </div>
     </div>
 
@@ -50,7 +53,7 @@
         <label class="layui-form-label required">消息类型</label>
         <div class="layui-input-block">
             <select id="messageTypeCode" name="messageTypeCode"  lay-search="">
-                <option th:each="mt : ${messageTypes}" th:value="${mt.code}" th:text="${mt.name}">
+                <option th:each="mt : ${messageTypes}" th:value="${mt.code}" th:selected="${mt.code} eq ${model.messageTypeCode}"  th:text="${mt.name}">
             </select>
         </div>
     </div>
@@ -66,17 +69,27 @@
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).use(['form'], function () {
+    }).use(['form','laydate'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
+        var laydate = layui.laydate;
+
+
+
+        //初始化时间控件
+        var sendDate=laydate.render({
+            elem: '#sendDate' //指定元素
+            ,type: 'datetime'
+        });
+        sendDate.config.value=$("#sendDateString").val();
 
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
             $.ajax({
-                url:"[[@{/messageType/update}]]",
+                url:"[[@{/message/messageUser/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),

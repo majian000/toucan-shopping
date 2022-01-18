@@ -132,10 +132,10 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '主键'},
-                    {field: 'title',  title: '消息标题'},
+                    {field: 'id',width: 200,  title: '主键'},
+                    {field: 'title',width: 200,  title: '消息标题'},
                     {field: 'content', width: 240, title: '消息内容'},
-                    {field: 'contentType', title: '消息内容类型',
+                    {field: 'contentType',width: 80, title: '类型',
                         templet: function (row) {
                             if(row.contentType == "1"){
                                 return "文本"
@@ -153,8 +153,9 @@
                             }
                             return row.status;
                         }},
-                    {field: 'messageTypeCode',  title: '消息编码'},
+                    {field: 'messageTypeCode',width: 150,  title: '消息编码'},
                     {field: 'messageTypeName',  title: '消息名称'},
+                    {field: 'sendDate', width: 170,  title: '发送时间'},
                     {field: 'createDate',width: 170,  title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#messageUserTableBar', align: "center"}
                 ]

@@ -111,6 +111,61 @@ public class MessageUserController {
     }
 
 
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            MessageUserVO messageUserVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), MessageUserVO.class);
+
+            if(messageUserVO.getId()==null)
+            {
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(messageUserVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+
+
+            int ret = messageUserService.deleteById(messageUserVO.getId());
+            if(ret<=0)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("不存在该消息!");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
     @RequestMapping(value="/send",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public ResultObjectVO send(@RequestBody RequestJsonVO requestJsonVO){
@@ -262,9 +317,9 @@ public class MessageUserController {
                 return resultObjectVO;
             }
 
-            MessageBody queryMessageBody = new MessageBody();
-            queryMessageBody.setId(entity.getMessageBodyId());
-            List<MessageBody> messageBodyList = messageBodyService.findListByEntity(queryMessageBody);
+            MessageBodyVO queryMessageBodyVO =new MessageBodyVO();
+            queryMessageBodyVO.setId(entity.getMessageBodyId());
+            List<MessageBody> messageBodyList = messageBodyService.queryList(queryMessageBodyVO);
 
             boolean isModify = false;
             MessageBody messageBodyNew =new MessageBody();
@@ -357,7 +412,42 @@ public class MessageUserController {
                 return resultObjectVO;
             }
 
-            resultObjectVO.setData(entitys);
+            List<MessageUserVO> messageUserVOS = new ArrayList<MessageUserVO>();
+            for(MessageUser messageUser:entitys)
+            {
+                MessageUserVO muVo = new MessageUserVO();
+                BeanUtils.copyProperties(muVo,messageUser);
+                messageUserVOS.add(muVo);
+            }
+            if(CollectionUtils.isNotEmpty(messageUserVOS))
+            {
+                Set<Long> messageBodyIdSet = new HashSet<>();
+                for(MessageUserVO vo:messageUserVOS)
+                {
+                    messageBodyIdSet.add(vo.getMessageBodyId());
+                }
+                //查询消息主体
+                MessageBodyVO messageBodyVO = new MessageBodyVO();
+                messageBodyVO.setIdSet(messageBodyIdSet);
+                List<MessageBody> messageBodyList = messageBodyService.queryList(messageBodyVO);
+                if(CollectionUtils.isNotEmpty(messageBodyList))
+                {
+
+                    for(MessageUserVO vo:messageUserVOS) {
+                        for (MessageBody messageBody : messageBodyList) {
+                            if(vo.getMessageBodyId().longValue()==messageBody.getId().longValue())
+                            {
+                                vo.setTitle(messageBody.getTitle());
+                                vo.setContent(messageBody.getContent());
+                                vo.setContentType(messageBody.getContentType());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            resultObjectVO.setData(messageUserVOS);
 
         }catch(Exception e)
         {
@@ -410,7 +500,7 @@ public class MessageUserController {
                     //查询消息主体
                     MessageBodyVO messageBodyVO = new MessageBodyVO();
                     messageBodyVO.setIdSet(messageBodyIdSet);
-                    List<MessageBody> messageBodyList = messageBodyService.findListByEntity(messageBodyVO);
+                    List<MessageBody> messageBodyList = messageBodyService.queryList(messageBodyVO);
                     if(CollectionUtils.isNotEmpty(messageBodyList))
                     {
 
@@ -482,13 +572,12 @@ public class MessageUserController {
                     Set<Long> messageBodyIdSet = new HashSet<>();
                     for(MessageUserVO messageUserVO:messageUserVOS)
                     {
-                        messageUserVO.setSendDateYearMonthDay(messageUserVO.getSendDate());
                         messageBodyIdSet.add(messageUserVO.getMessageBodyId());
                     }
                     //查询消息主体
                     MessageBodyVO messageBodyVO = new MessageBodyVO();
                     messageBodyVO.setIdSet(messageBodyIdSet);
-                    List<MessageBody> messageBodyList = messageBodyService.findListByEntity(messageBodyVO);
+                    List<MessageBody> messageBodyList = messageBodyService.queryList(messageBodyVO);
                     if(CollectionUtils.isNotEmpty(messageBodyList))
                     {
 

@@ -58,6 +58,16 @@ public interface FeignMessageUserService {
 
 
     /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
      * 查询未读数量
      * @param requestJsonVO
      * @return
