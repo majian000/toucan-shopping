@@ -131,14 +131,14 @@
                                         <div style="width:40%;float:left;">
                                             <div class="field" style="width:100%;text-align:center;" >
                                                 <span class="red">*</span>名称：
-                                                <input type="text" id="productName" name="name" class="releaseProductInputText" style="width:200px;" tabindex="1"  />
+                                                <input type="text" id="productName" name="name" class="releaseProductInputText" lay-verify="required|productName" style="width:200px;" tabindex="1"  />
                                             </div>
                                         </div>
 
                                         <div style="width:45%;float:left;">
                                             <div class="field" style="text-align:center;" >
                                                 <span class="red">*</span>一口价：
-                                                <input type="text" id="price" name="price" class="releaseProductInputText" style="width:200px;" tabindex="1"  />
+                                                <input type="text" id="price" name="price" class="releaseProductInputText" lay-verify="required|nickName" style="width:200px;" tabindex="1"  />
                                             </div>
                                         </div>
 
@@ -337,11 +337,14 @@
         });
 
         $("#step2Next").bind( 'click' ,function(){
-            $("#step5").hide();
-            $("#step4").hide();
-            $("#step3").show();
-            $("#step2").hide();
-            $("#step1").hide();
+            var result = checkInputFunctionByContainerId("step2",2);
+            if(result) {
+                $("#step5").hide();
+                $("#step4").hide();
+                $("#step3").show();
+                $("#step2").hide();
+                $("#step1").hide();
+            }
         });
 
 
