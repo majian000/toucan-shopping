@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.admin.controller.product.attributeKey;
+package com.toucan.shopping.cloud.apps.admin.controller.product.attribute;
 
 
 import com.alibaba.fastjson.JSONArray;
@@ -7,7 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.category.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeValueService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -40,8 +40,8 @@ import java.util.Map;
  * 商品属性管理
  */
 @Controller
-@RequestMapping("/product/attribute/attributeKey")
-public class AttributeKeyController extends UIController {
+@RequestMapping("/product/attribute/attributeValue")
+public class AttributeValueController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,7 +55,7 @@ public class AttributeKeyController extends UIController {
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignAttributeKeyService feignAttributeKeyService;
+    private FeignAttributeValueService feignAttributeKeyService;
 
     @Autowired
     private FeignCategoryService feignCategoryService;
