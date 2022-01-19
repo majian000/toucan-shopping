@@ -105,7 +105,7 @@
 
         table.render({
             elem: '#attributeKeyTable',
-            url: "[[@{/}]]product/attributeKey/list",
+            url: "[[@{/}]]product/attribute/attributeKey/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -170,7 +170,7 @@
                 content: "<div id='categoryTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/query/category/tree",
+                        url:"[[@{/}]]product/attribute/attributeKey/query/category/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
@@ -221,7 +221,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/attributeKey/addPage}]]",
+                    content: "[[@{/product/attribute/attributeKey/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -236,7 +236,7 @@
                 }
                 layer.confirm('确定删除属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/delete/ids",
+                        url:"[[@{/}]]product/attribute/attributeKey/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -350,7 +350,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]product/attributeKey/editPage/'+data.id
+                    content: '[[@{/}]]product/attribute/attributeKey/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -359,7 +359,7 @@
             } else if (obj.event == 'delete') {
                 layer.confirm('确定删除该属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/delete/"+data.id,
+                        url:"[[@{/}]]product/attribute/attributeKey/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

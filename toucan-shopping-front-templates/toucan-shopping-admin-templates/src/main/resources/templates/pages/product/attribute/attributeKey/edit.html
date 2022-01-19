@@ -72,7 +72,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url:"[[@{/product/attributeKey/update}]]",
+                url:"[[@{/product/attribute/attributeKey/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -108,7 +108,7 @@
                 content: "<div id='categoryTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/query/category/tree",
+                        url:"[[@{/}]]product/attribute/attributeKey/query/category/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
