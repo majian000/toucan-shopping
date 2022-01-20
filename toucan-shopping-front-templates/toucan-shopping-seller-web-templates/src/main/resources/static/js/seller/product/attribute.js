@@ -2,20 +2,20 @@
  * Created by Administrator on 14-12-01.
  * 模拟淘宝SKU添加组合
  * 页面注意事项：
- *      1、 .div_contentlist   这个类变化这里的js单击事件类名也要改
- *      2、 .Father_Title      这个类作用是取到所有标题的值，赋给表格，如有改变JS也应相应改动
+ *      1、 .rp_attr_div   这个类变化这里的js单击事件类名也要改
+ *      2、 .rp_attr_kt      这个类作用是取到所有标题的值，赋给表格，如有改变JS也应相应改动
  *      3、 .rpai       这个类作用是取类型组数，有多少类型就添加相应的类名：如: rpai1、rpai2、rpai3 ...
  */
 $(function () {
     //SKU信息
-    $(".div_contentlist label").bind("change", function () {
+    $(".rp_attr_div label").bind("change", function () {
         step.Creat_Table();
     });
     var step = {
         //SKU信息组合
         Creat_Table: function () {
             step.hebingFunction();
-            var SKUObj = $(".Father_Title");
+            var SKUObj = $(".rp_attr_kt");
             //var skuCount = SKUObj.length;//
             var arrayTile = new Array();//标题组数
             var arrayInfor = new Array();//盛放每组选中的CheckBox值的对象

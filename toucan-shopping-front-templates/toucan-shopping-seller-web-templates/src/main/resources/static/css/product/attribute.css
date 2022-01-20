@@ -1,2 +1,8 @@
-.rpai_li{list-style: none;margin-right:10px;}
-.rpai_li label{cursor: pointer;}
+.rpai_li{
+    list-style: none;
+    margin-right:10px;
+    float:left;
+}
+.rpai_li label{
+    cursor: pointer;
+}
