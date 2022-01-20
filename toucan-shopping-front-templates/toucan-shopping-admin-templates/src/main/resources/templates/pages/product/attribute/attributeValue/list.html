@@ -53,9 +53,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="attributeKeyTable" lay-filter="attributeKeyTableFilter"></table>
+        <table class="layui-hide" id="attributeValueTable" lay-filter="attributeValueTableFilter"></table>
 
-        <script type="text/html" id="attributeKeyTableBar">
+        <script type="text/html" id="attributeValueTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -104,8 +104,8 @@
         }
 
         table.render({
-            elem: '#attributeKeyTable',
-            url: "[[@{/}]]product/attributeKey/list",
+            elem: '#attributeValueTable',
+            url: "[[@{/}]]product/attribute/attributeValue/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -121,14 +121,13 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'attributeName',  title: '属性名'},
-                    {field: 'categoryName',  title: '所属类别'},
+                    {field: 'attributeValue',  title: '属性值'},
                     {field: 'attributeSort',  title: '排序'},
                     {field: 'createAdminName', title: '创建人'},
                     {field: 'createDate',  title: '创建时间'},
                     {field: 'updateAdminName',  title: '修改人'},
                     {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#attributeValueTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -140,7 +139,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('attributeKeyTable', {
+            table.reload('attributeValueTable', {
                 page: {
                     curr: 1
                 }
@@ -170,7 +169,7 @@
                 content: "<div id='categoryTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/query/category/tree",
+                        url:"[[@{/}]]product/attribute/attributeValue/query/category/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
@@ -212,7 +211,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(attributeKeyTableFilter)', function (obj) {
+        table.on('toolbar(attributeValueTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加属性名',
@@ -221,13 +220,13 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/attributeKey/addPage}]]",
+                    content: "[[@{/product/attribute/attributeValue/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('attributeKeyTable')
+                var checkStatus = table.checkStatus('attributeValueTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -236,7 +235,7 @@
                 }
                 layer.confirm('确定删除属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/delete/ids",
+                        url:"[[@{/}]]product/attribute/attributeValue/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -244,7 +243,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
+                            table.reload('attributeValueTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -335,11 +334,11 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(attributeKeyTableFilter)', function (obj) {
+        table.on('checkbox(attributeValueTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(attributeKeyTableFilter)', function (obj) {
+        table.on('tool(attributeValueTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
@@ -350,7 +349,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]product/attributeKey/editPage/'+data.id
+                    content: '[[@{/}]]product/attribute/attributeValue/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -359,14 +358,14 @@
             } else if (obj.event == 'delete') {
                 layer.confirm('确定删除该属性名?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/attributeKey/delete/"+data.id,
+                        url:"[[@{/}]]product/attribute/attributeValue/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
+                            table.reload('attributeValueTable', {
                                 page: {
                                     curr: 1
                                 }

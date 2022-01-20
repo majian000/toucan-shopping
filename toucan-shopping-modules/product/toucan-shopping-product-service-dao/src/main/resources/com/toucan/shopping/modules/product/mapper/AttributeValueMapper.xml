@@ -5,7 +5,6 @@
     <resultMap id="attributeValueMap" type="com.toucan.shopping.modules.product.entity.AttributeValue" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="attribute_name" jdbcType="VARCHAR" property="attributeName" />
-        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -25,9 +24,6 @@
             and t.attribute_name  like concat('%',#{attributeName},'%')
         </if>
 
-        <if test="categoryId!=null">
-            and t.category_id = #{categoryId}
-        </if>
     </sql>
 
 
@@ -38,10 +34,6 @@
 
             <if test="id!=null">
                 and t.id = #{id}
-            </if>
-
-            <if test="categoryId!=null">
-                and t.category_id = #{categoryId}
             </if>
 
             <if test="idArray!=null ">
@@ -58,8 +50,8 @@
     
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeValue"  keyProperty="id" >
-        insert into t_attribute_value(id,attribute_value,attribute_key_id,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{id},#{attributeValue},#{attributeKeyId},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_attribute_value(id,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{attributeValue},#{attributeKeyId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 
@@ -76,7 +68,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeValue">
-        update t_attribute_value set attribute_key_id=#{attributeKeyId},attribute_value=#{attributeValue},category_id=#{categoryId},attribute_sort=#{attributeSort},remark=#{remark},
+        update t_attribute_value set attribute_key_id=#{attributeKeyId},attribute_value=#{attributeValue},attribute_sort=#{attributeSort},remark=#{remark},
           update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>

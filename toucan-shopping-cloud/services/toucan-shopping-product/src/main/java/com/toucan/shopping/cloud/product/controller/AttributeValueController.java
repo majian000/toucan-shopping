@@ -159,14 +159,6 @@ public class AttributeValueController {
         try {
             AttributeValueVO vo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeValueVO.class);
 
-            if(vo.getCategoryId()==null)
-            {
-                logger.warn("关联类别为空 param:"+ requestJsonVO.getEntityJson());
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("关联类别为空!");
-                return resultObjectVO;
-            }
-
             AttributeValue entity = new AttributeValue();
             BeanUtils.copyProperties(entity,vo);
             entity.setId(idGenerator.id());

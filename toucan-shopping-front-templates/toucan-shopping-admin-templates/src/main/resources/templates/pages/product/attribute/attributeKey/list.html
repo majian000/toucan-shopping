@@ -380,6 +380,19 @@
                         }
                     });
                 });
+            }else if (obj.event == 'valueList') { //属性值管理
+                var index = layer.open({
+                    title: '属性值管理',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    btn: ["关闭" ],
+                    area: ['80%', '80%'],
+                    content: "[[@{/product/attribute/attributeValue/listPage}]]"
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
             }
         });
 
