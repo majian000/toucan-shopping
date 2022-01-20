@@ -142,7 +142,6 @@
 
                             <div id="step2" style="display:none">
                                 <div class="toucan-form-body">
-
                                     <div class="item" >
                                         <div style="width:40%;float:left;">
                                             <div class="field" style="width:100%;text-align:center;" >
@@ -154,10 +153,9 @@
                                         <div style="width:45%;float:left;">
                                             <div class="field" style="text-align:center;" >
                                                 <span class="red">*</span>一口价：
-                                                <input type="text" id="price" name="price" class="releaseProductInputText" lay-verify="required|nickName" style="width:200px;" tabindex="1"  />元
+                                                <input type="text" id="price" name="price" class="releaseProductInputText" lay-verify="required|nickName" style="width:200px;" tabindex="2"  />元
                                             </div>
                                         </div>
-
                                     </div>
 
 
@@ -166,12 +164,14 @@
                                         <div style="width:40%;float:left;">
                                             <div class="field" style="width:100%;text-align:center;" >
                                                 <span class="red">*</span>总数量：
-                                                <input type="text" id="count" name="count" class="releaseProductInputText" style="width:200px;" lay-verify="required|productCount"  tabindex="1"  />件
+                                                <input type="text" id="count" name="count" class="releaseProductInputText" style="width:200px;" lay-verify="required|productCount"  tabindex="3"  />件
                                             </div>
                                         </div>
 
                                         <div style="width:45%;float:left;">
                                             <div class="field" style="text-align:center;" >
+                                                商家编码：
+                                                <input type="text" id="sellerNo" name="sellerNo" class="releaseProductInputText" style="width:200px;"  tabindex="4"  />
 
                                             </div>
                                         </div>
@@ -182,7 +182,7 @@
                                         <div class="item" style="clear:both;text-align: left;" >
                                             <div style="padding-left: 6%;">
                                                 <a>颜色分类</a>
-                                                <input type="text" id="attributeValue_1" name="attributeValue" class="releaseProductInputText" lay-verify="required|attributeValue" style="width:200px;" tabindex="1"  />
+                                                <input type="text" id="attributeValue_1" name="attributeValue" class="releaseProductInputText" lay-verify="required|attributeValue" style="width:200px;" tabindex="1"  placeholder="请输入自定义值" />
                                                 <input type="button"  value="添加"  />
                                             </div>
                                             <div class="attributeList">
@@ -234,7 +234,7 @@
                                         <div class="item" style="clear:both;text-align: left;" >
                                             <div style="padding-left: 6%;">
                                                 <a>尺寸</a>
-                                                <input type="text" id="attributeValue_2" name="attributeValue" class="releaseProductInputText" lay-verify="required|attributeValue" style="width:200px;" tabindex="2"  />
+                                                <input type="text" id="attributeValue_2" name="attributeValue" class="releaseProductInputText" lay-verify="required|attributeValue" style="width:200px;" tabindex="2"    placeholder="请输入自定义值" />
                                                 <input type="button"  value="添加"  />
                                             </div>
                                             <div class="attributeList" >
@@ -248,10 +248,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="rp_attr_div2">
-                                            <ul>
-                                                <li><div id="createTable"></div></li>
-                                            </ul>
+                                        <div class="sku_attribute_list">
+                                            销售规格
+                                            <div id="createTable"></div>
                                         </div>
                                     </div>
                                     <div class="item" style="clear:both">
