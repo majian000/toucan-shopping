@@ -2,6 +2,7 @@
     list-style: none;
     margin-right:10px;
     float:left;
+    margin-top:-5px;
 }
 .rpai_li label{
     cursor: pointer;
