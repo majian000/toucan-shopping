@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -26,9 +28,9 @@ import java.util.List;
 /**
  * 店铺商品信息
  */
-@Controller("shopProductPageController")
-@RequestMapping("/page/shop/product")
-public class ShopProductPageController extends BaseController {
+@Controller("shopProductApiController")
+@RequestMapping("/api/shop/product")
+public class ShopProductApiController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,37 +46,11 @@ public class ShopProductPageController extends BaseController {
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/release")
-    public String release(HttpServletRequest request){
-
-        try {
-            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryMiniCategorys(),simplePropertyPreFilter));
-        }catch(Exception e)
-        {
-            request.setAttribute("categoryList", "[]");
-            logger.warn(e.getMessage(),e);
-        }
-
-        try{
-            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
-            queryShopCategory.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategory);
-            ResultObjectVO resultObjectVO = feignShopCategoryService.queryAllList(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<ShopCategoryVO> shopCategoryVOList = resultObjectVO.formatDataList(ShopCategoryVO.class);
-                request.setAttribute("shopCategoryList", JSONArray.toJSONString(shopCategoryVOList));
-            }else{
-                request.setAttribute("shopCategoryList", "[]");
-            }
-
-        }catch(Exception e)
-        {
-            request.setAttribute("shopCategoryList", "[]");
-            logger.warn(e.getMessage(),e);
-        }
-
-        return "product/release_product";
+    @RequestMapping(value = "/release",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO release(HttpServletRequest request){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        return resultObjectVO;
     }
 
 }
