@@ -81,9 +81,7 @@
 			html += '</div>';
 			$("#" + divId).html(html);
 			$("#fileImage").change(function () {
-				console.log('处理图片')
 				var num = parseInt($("#fileNum").val()) + parseInt(this.files.length);
-				console.log(num)
 				if (num < $.Tupload.fileNum + 1) {
 					$("#fileNum").val(num);
 					// $("#fileText").val("选中"+num+"张文件");
