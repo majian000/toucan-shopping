@@ -136,8 +136,9 @@ public class RoleFunctionController {
             try{
                 RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
                 if(roleFunctionCacheService!=null) {
-                    //刷新到es缓存
+                    //先清空所有缓存,让权限校验的时候第一次从缓存中没有找到之后初始化,在某种意义上降低数据不一致性的风险
                     roleFunctionCacheService.deleteIndex();
+                    //刷新到es缓存
                     if (roleFunctions != null && roleFunctions.length > 0) {
                         RoleFunctionCacheVO[] roleFunctionCacheVOS = new RoleFunctionCacheVO[roleFunctions.length];
                         for (int i = 0; i < roleFunctions.length; i++) {
