@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
+import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
@@ -43,9 +44,6 @@ public class AdminRoleController {
 
     @Autowired
     private AdminAppService adminAppService;
-
-    @Autowired
-    private AdminRoleCacheService adminRoleCacheService;
 
 
     /**
@@ -113,22 +111,25 @@ public class AdminRoleController {
 
 
             try {
-                //同步缓存
-                List<String> deleteFaildIdList = new ArrayList<String>();
-                for (int i = 0; i < adminApps.size(); i++) {
-                    //删除指定账号下的指定所有应用下的所有账号角色关联
-                    adminRoleCacheService.deleteByAdminIdAndAppCodes(entity.getAdminId(), adminApps.get(i).getAppCode(), deleteFaildIdList);
-                }
-                if (adminRoles != null && adminRoles.length > 0) {
-                    AdminRoleCacheVO[] adminRoleCacheVOS = new AdminRoleCacheVO[length];
-                    for (int i = 0; i < adminRoles.length; i++) {
-                        AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
-                        if (adminRoles[i] != null) {
-                            BeanUtils.copyProperties(adminRoleCacheVO, adminRoles[i]);
-                        }
-                        adminRoleCacheVOS[i] = adminRoleCacheVO;
+                AdminRoleCacheService adminRoleCacheService = AdminAuthCacheHelper.getAdminRoleCacheService();
+                if(adminRoleCacheService!=null) {
+                    //同步缓存
+                    List<String> deleteFaildIdList = new ArrayList<String>();
+                    for (int i = 0; i < adminApps.size(); i++) {
+                        //删除指定账号下的指定所有应用下的所有账号角色关联
+                        adminRoleCacheService.deleteByAdminIdAndAppCodes(entity.getAdminId(), adminApps.get(i).getAppCode(), deleteFaildIdList);
                     }
-                    adminRoleCacheService.saves(adminRoleCacheVOS);
+                    if (adminRoles != null && adminRoles.length > 0) {
+                        AdminRoleCacheVO[] adminRoleCacheVOS = new AdminRoleCacheVO[length];
+                        for (int i = 0; i < adminRoles.length; i++) {
+                            AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
+                            if (adminRoles[i] != null) {
+                                BeanUtils.copyProperties(adminRoleCacheVO, adminRoles[i]);
+                            }
+                            adminRoleCacheVOS[i] = adminRoleCacheVO;
+                        }
+                        adminRoleCacheService.saves(adminRoleCacheVOS);
+                    }
                 }
             }catch(Exception e)
             {

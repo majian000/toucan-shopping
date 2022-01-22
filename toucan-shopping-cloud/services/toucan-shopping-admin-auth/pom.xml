@@ -80,6 +80,11 @@
             <artifactId>toucan-shopping-admin-auth-controller</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>

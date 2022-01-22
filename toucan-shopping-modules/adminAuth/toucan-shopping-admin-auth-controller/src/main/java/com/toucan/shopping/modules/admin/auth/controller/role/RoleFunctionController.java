@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
+import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
@@ -44,7 +45,6 @@ public class RoleFunctionController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
-
     @Autowired
     private RoleService roleService;
 
@@ -53,9 +53,6 @@ public class RoleFunctionController {
 
     @Autowired
     private RoleFunctionService roleFunctionService;
-
-    @Autowired
-    private RoleFunctionCacheService roleFunctionCacheService;
 
 
 
@@ -137,21 +134,22 @@ public class RoleFunctionController {
             roleFunctionService.saves(roleFunctions);
 
             try{
-                //刷新到es缓存
-                List<String> deleteFaildIdList = new ArrayList<String>();
-                roleFunctionCacheService.deleteIndex();
-                if(roleFunctions!=null&&roleFunctions.length>0) {
-                    RoleFunctionCacheVO[]  roleFunctionCacheVOS = new  RoleFunctionCacheVO[roleFunctions.length];
-                    for(int i=0;i<roleFunctions.length;i++)
-                    {
-                        RoleFunction roleFunction = roleFunctions[i];
-                        RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
-                        if(roleFunction!=null) {
-                            BeanUtils.copyProperties(roleFunctionCacheVO,roleFunction);
+                RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
+                if(roleFunctionCacheService!=null) {
+                    //刷新到es缓存
+                    roleFunctionCacheService.deleteIndex();
+                    if (roleFunctions != null && roleFunctions.length > 0) {
+                        RoleFunctionCacheVO[] roleFunctionCacheVOS = new RoleFunctionCacheVO[roleFunctions.length];
+                        for (int i = 0; i < roleFunctions.length; i++) {
+                            RoleFunction roleFunction = roleFunctions[i];
+                            RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
+                            if (roleFunction != null) {
+                                BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
+                            }
+                            roleFunctionCacheVOS[i] = roleFunctionCacheVO;
                         }
-                        roleFunctionCacheVOS[i] = roleFunctionCacheVO;
+                        roleFunctionCacheService.saves(roleFunctionCacheVOS);
                     }
-                    roleFunctionCacheService.saves(roleFunctionCacheVOS);
                 }
 
             }catch(Exception e)

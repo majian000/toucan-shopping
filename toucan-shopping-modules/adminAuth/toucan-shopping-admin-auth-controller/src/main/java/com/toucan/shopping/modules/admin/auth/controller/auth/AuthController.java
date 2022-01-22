@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
+import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.*;
@@ -51,14 +52,6 @@ public class AuthController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    @Autowired
-    private AdminRoleCacheService adminRoleCacheService;
-
-    @Autowired
-    private FunctionCacheService functionCacheService;
-
-    @Autowired
-    private RoleFunctionCacheService roleFunctionCacheService;
 
     @Autowired
     private FunctionService functionService;
@@ -104,11 +97,16 @@ public class AuthController {
             List<AdminRole> adminRoles = null;
             //先查询缓存,为了缓解数据库的查询压力
             List<AdminRoleCacheVO> adminRoleCacheVOS = null;
+            AdminRoleCacheService adminRoleCacheService = AdminAuthCacheHelper.getAdminRoleCacheService();
+            FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+            RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
             try {
-                AdminRoleCacheVO queryAdminRoleCacheVO = new AdminRoleCacheVO();
-                BeanUtils.copyProperties(queryAdminRoleCacheVO,queryAdminRole);
-                //查询管理员角色关联
-                adminRoleCacheVOS = adminRoleCacheService.queryByEntity(queryAdminRoleCacheVO);
+                if(adminRoleCacheService!=null) {
+                    AdminRoleCacheVO queryAdminRoleCacheVO = new AdminRoleCacheVO();
+                    BeanUtils.copyProperties(queryAdminRoleCacheVO, queryAdminRole);
+                    //查询管理员角色关联
+                    adminRoleCacheVOS = adminRoleCacheService.queryByEntity(queryAdminRoleCacheVO);
+                }
             }catch(Exception e)
             {
                 cacheIsRead = false;
@@ -122,12 +120,14 @@ public class AuthController {
                 //查询这个账户下应用下的所有角色
                 adminRoles = adminRoleService.findListByEntity(queryAdminRole);
                 try {
-                    //同步缓存
-                    if (CollectionUtils.isNotEmpty(adminRoles)&&cacheIsRead) {
-                        for (AdminRole adminRole : adminRoles) {
-                            AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
-                            BeanUtils.copyProperties(adminRoleCacheVO,adminRole);
-                            adminRoleCacheService.save(adminRoleCacheVO);
+                    if(adminRoleCacheService!=null) {
+                        //同步缓存
+                        if (CollectionUtils.isNotEmpty(adminRoles) && cacheIsRead) {
+                            for (AdminRole adminRole : adminRoles) {
+                                AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
+                                BeanUtils.copyProperties(adminRoleCacheVO, adminRole);
+                                adminRoleCacheService.save(adminRoleCacheVO);
+                            }
                         }
                     }
                 }catch(Exception e)
@@ -153,21 +153,20 @@ public class AuthController {
                         List<Function> functionList = new ArrayList<Function>();
                         try {
                             if(cacheIsRead) {
-                                //查询功能项
-                                FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
-                                BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
-                                functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
-                                if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
-                                    List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
-                                    if(CollectionUtils.isNotEmpty(functionCacheList))
-                                    {
-                                        for(Function functioncache:functionCacheList)
-                                        {
-                                            //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
-                                            //例如/role/list这个接口也会把role/listPage查询出来
-                                            if(functioncache.getUrl().equals(query.getUrl()))
-                                            {
-                                                functionList.add(functioncache);
+                                if(functionCacheService!=null) {
+                                    //查询功能项
+                                    FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
+                                    BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
+                                    functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
+                                    if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
+                                        List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                                        if (CollectionUtils.isNotEmpty(functionCacheList)) {
+                                            for (Function functioncache : functionCacheList) {
+                                                //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
+                                                //例如/role/list这个接口也会把role/listPage查询出来
+                                                if (functioncache.getUrl().equals(query.getUrl())) {
+                                                    functionList.add(functioncache);
+                                                }
                                             }
                                         }
                                     }
@@ -188,10 +187,12 @@ public class AuthController {
                             for(Function function:functionList) {
                                 try {
                                     if(cacheIsRead) {
-                                        //同步到缓存
-                                        FunctionCacheVO functionCacheVO = new FunctionCacheVO();
-                                        BeanUtils.copyProperties(functionCacheVO, function);
-                                        functionCacheService.save(functionCacheVO);
+                                        if(functionCacheService!=null) {
+                                            //同步到缓存
+                                            FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                                            BeanUtils.copyProperties(functionCacheVO, function);
+                                            functionCacheService.save(functionCacheVO);
+                                        }
                                     }
                                 } catch (Exception e) {
                                     logger.warn(e.getMessage(), e);
@@ -212,11 +213,13 @@ public class AuthController {
                                 List<RoleFunctionCacheVO> roleFunctionCacheVOS = null;
                                 try {
                                     if(cacheIsRead) {
-                                        RoleFunctionCacheVO queryRoleFunctionCacheVO = new RoleFunctionCacheVO();
-                                        BeanUtils.copyProperties(queryRoleFunctionCacheVO, queryRoleFunction);
-                                        roleFunctionCacheVOS = roleFunctionCacheService.queryByEntity(queryRoleFunctionCacheVO);
-                                        if (CollectionUtils.isNotEmpty(roleFunctionCacheVOS)) {
-                                            count = roleFunctionCacheVOS.size();
+                                        if(roleFunctionCacheService!=null) {
+                                            RoleFunctionCacheVO queryRoleFunctionCacheVO = new RoleFunctionCacheVO();
+                                            BeanUtils.copyProperties(queryRoleFunctionCacheVO, queryRoleFunction);
+                                            roleFunctionCacheVOS = roleFunctionCacheService.queryByEntity(queryRoleFunctionCacheVO);
+                                            if (CollectionUtils.isNotEmpty(roleFunctionCacheVOS)) {
+                                                count = roleFunctionCacheVOS.size();
+                                            }
                                         }
                                     }
                                 }catch(Exception e)
@@ -325,11 +328,16 @@ public class AuthController {
             List<AdminRole> adminRoles = null;
             //先查询缓存,为了缓解数据库的查询压力
             List<AdminRoleCacheVO> adminRoleCacheVOS = null;
+            AdminRoleCacheService adminRoleCacheService = AdminAuthCacheHelper.getAdminRoleCacheService();
+            FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+            RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
             try {
-                AdminRoleCacheVO queryAdminRoleCacheVO = new AdminRoleCacheVO();
-                BeanUtils.copyProperties(queryAdminRoleCacheVO,queryAdminRole);
-                //查询管理员角色关联
-                adminRoleCacheVOS = adminRoleCacheService.queryByEntity(queryAdminRoleCacheVO);
+                if(adminRoleCacheService!=null) {
+                    AdminRoleCacheVO queryAdminRoleCacheVO = new AdminRoleCacheVO();
+                    BeanUtils.copyProperties(queryAdminRoleCacheVO, queryAdminRole);
+                    //查询管理员角色关联
+                    adminRoleCacheVOS = adminRoleCacheService.queryByEntity(queryAdminRoleCacheVO);
+                }
             }catch(Exception e)
             {
                 cacheIsRead = false;
@@ -343,12 +351,14 @@ public class AuthController {
                 //查询这个账户下应用下的所有角色
                 adminRoles = adminRoleService.findListByEntity(queryAdminRole);
                 try {
-                    //同步缓存
-                    if (CollectionUtils.isNotEmpty(adminRoles)&&cacheIsRead) {
-                        for (AdminRole adminRole : adminRoles) {
-                            AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
-                            BeanUtils.copyProperties(adminRoleCacheVO,adminRole);
-                            adminRoleCacheService.save(adminRoleCacheVO);
+                    if(adminRoleCacheService!=null) {
+                        //同步缓存
+                        if (CollectionUtils.isNotEmpty(adminRoles) && cacheIsRead) {
+                            for (AdminRole adminRole : adminRoles) {
+                                AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
+                                BeanUtils.copyProperties(adminRoleCacheVO, adminRole);
+                                adminRoleCacheService.save(adminRoleCacheVO);
+                            }
                         }
                     }
                 }catch(Exception e)
@@ -374,21 +384,20 @@ public class AuthController {
                         List<Function> functionList = new ArrayList<Function>();
                         try {
                             if(cacheIsRead) {
-                                //查询功能项
-                                FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
-                                BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
-                                functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
-                                if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
-                                    List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
-                                    if(CollectionUtils.isNotEmpty(functionCacheList))
-                                    {
-                                        for(Function functioncache:functionCacheList)
-                                        {
-                                            //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
-                                            //例如/role/list这个接口也会把role/listPage查询出来
-                                            if(functioncache.getUrl().equals(query.getUrl()))
-                                            {
-                                                functionList.add(functioncache);
+                                if(functionCacheService!=null) {
+                                    //查询功能项
+                                    FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
+                                    BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
+                                    functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
+                                    if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
+                                        List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                                        if (CollectionUtils.isNotEmpty(functionCacheList)) {
+                                            for (Function functioncache : functionCacheList) {
+                                                //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
+                                                //例如/role/list这个接口也会把role/listPage查询出来
+                                                if (functioncache.getUrl().equals(query.getUrl())) {
+                                                    functionList.add(functioncache);
+                                                }
                                             }
                                         }
                                     }
@@ -409,10 +418,12 @@ public class AuthController {
                             for(Function function:functionList) {
                                 try {
                                     if(cacheIsRead) {
-                                        //同步到缓存
-                                        FunctionCacheVO functionCacheVO = new FunctionCacheVO();
-                                        BeanUtils.copyProperties(functionCacheVO, function);
-                                        functionCacheService.save(functionCacheVO);
+                                        if(functionCacheService!=null) {
+                                            //同步到缓存
+                                            FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                                            BeanUtils.copyProperties(functionCacheVO, function);
+                                            functionCacheService.save(functionCacheVO);
+                                        }
                                     }
                                 } catch (Exception e) {
                                     logger.warn(e.getMessage(), e);
@@ -433,11 +444,13 @@ public class AuthController {
                                 List<RoleFunctionCacheVO> roleFunctionCacheVOS = null;
                                 try {
                                     if(cacheIsRead) {
-                                        RoleFunctionCacheVO queryRoleFunctionCacheVO = new RoleFunctionCacheVO();
-                                        BeanUtils.copyProperties(queryRoleFunctionCacheVO, queryRoleFunction);
-                                        roleFunctionCacheVOS = roleFunctionCacheService.queryByEntity(queryRoleFunctionCacheVO);
-                                        if (CollectionUtils.isNotEmpty(roleFunctionCacheVOS)) {
-                                            count = roleFunctionCacheVOS.size();
+                                        if(roleFunctionCacheService!=null) {
+                                            RoleFunctionCacheVO queryRoleFunctionCacheVO = new RoleFunctionCacheVO();
+                                            BeanUtils.copyProperties(queryRoleFunctionCacheVO, queryRoleFunction);
+                                            roleFunctionCacheVOS = roleFunctionCacheService.queryByEntity(queryRoleFunctionCacheVO);
+                                            if (CollectionUtils.isNotEmpty(roleFunctionCacheVOS)) {
+                                                count = roleFunctionCacheVOS.size();
+                                            }
                                         }
                                     }
                                 }catch(Exception e)

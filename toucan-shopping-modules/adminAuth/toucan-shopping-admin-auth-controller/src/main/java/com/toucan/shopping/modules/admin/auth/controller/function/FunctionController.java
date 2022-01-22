@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheServic
 import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.*;
+import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.*;
@@ -54,14 +55,6 @@ public class FunctionController {
     @Autowired
     private RoleFunctionService roleFunctionService;
 
-    @Autowired
-    private FunctionCacheService functionCacheService;
-
-    @Autowired
-    private RoleFunctionCacheService roleFunctionCacheService;
-
-    @Autowired
-    private AdminRoleCacheService adminRoleCacheService;
 
     /**
      * 添加功能项
@@ -102,10 +95,13 @@ public class FunctionController {
             resultObjectVO.setData(entity);
 
             try {
-                //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
-                FunctionCacheVO functionCacheVO = new FunctionCacheVO();
-                BeanUtils.copyProperties(functionCacheVO, entity);
-                functionCacheService.save(functionCacheVO);
+                FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+                if(functionCacheService!=null) {
+                    //同步es缓存,在这里要求缓存和数据库是一致的,如果缓存同步失败的话,数据库也会进行回滚
+                    FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                    BeanUtils.copyProperties(functionCacheVO, entity);
+                    functionCacheService.save(functionCacheVO);
+                }
             }catch(Exception e) {
                 resultObjectVO.setCode(ResultVO.SUCCESS);
                 resultObjectVO.setMsg("更新缓存出现异常");
@@ -255,10 +251,13 @@ public class FunctionController {
 
 
             try{
-                //同步es缓存
-                FunctionCacheVO functionCacheVO=new FunctionCacheVO();
-                BeanUtils.copyProperties(functionCacheVO,entity);
-                functionCacheService.update(functionCacheVO);
+                FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+                if(functionCacheService!=null) {
+                    //同步es缓存
+                    FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                    BeanUtils.copyProperties(functionCacheVO, entity);
+                    functionCacheService.update(functionCacheVO);
+                }
             }catch(Exception e) {
                 resultObjectVO.setCode(ResultVO.SUCCESS);
                 resultObjectVO.setMsg("更新缓存出现异常");
@@ -286,8 +285,11 @@ public class FunctionController {
 
 
                 try {
-                    List<String> deleteFaildIdList = new ArrayList<String>();
-                    roleFunctionCacheService.deleteByFunctionId(functions.get(0).getFunctionId(), deleteFaildIdList);
+                    RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
+                    if(roleFunctionCacheService!=null) {
+                        List<String> deleteFaildIdList = new ArrayList<String>();
+                        roleFunctionCacheService.deleteByFunctionId(functions.get(0).getFunctionId(), deleteFaildIdList);
+                    }
                 }catch(Exception e) {
                     resultObjectVO.setCode(ResultVO.SUCCESS);
                     resultObjectVO.setMsg("更新缓存出现异常");
@@ -601,11 +603,17 @@ public class FunctionController {
 
 
                 try {
+                    FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+                    RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
                     //刷新缓存
-                    functionCacheService.deleteById(String.valueOf(f.getId()));
-                    if (!CollectionUtils.isEmpty(roleFunction)) {
-                        List<String> deleteFaildIdList = new ArrayList<String>();
-                        roleFunctionCacheService.deleteByFunctionId(f.getFunctionId(), deleteFaildIdList);
+                    if(functionCacheService!=null) {
+                        functionCacheService.deleteById(String.valueOf(f.getId()));
+                        if (!CollectionUtils.isEmpty(roleFunction)) {
+                            List<String> deleteFaildIdList = new ArrayList<String>();
+                            if(roleFunctionCacheService!=null) {
+                                roleFunctionCacheService.deleteByFunctionId(f.getFunctionId(), deleteFaildIdList);
+                            }
+                        }
                     }
                 }catch(Exception e)
                 {
@@ -686,11 +694,17 @@ public class FunctionController {
 
 
                         try{
-                            //刷新缓存
-                            functionCacheService.deleteById(String.valueOf(f.getId()));
-                            if (!CollectionUtils.isEmpty(roleFunction)) {
-                                List<String> deleteFaildIdList = new ArrayList<String>();
-                                roleFunctionCacheService.deleteByFunctionId(f.getFunctionId(),deleteFaildIdList);
+                            FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+                            RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
+                            if(functionCacheService!=null) {
+                                //刷新缓存
+                                functionCacheService.deleteById(String.valueOf(f.getId()));
+                                if (!CollectionUtils.isEmpty(roleFunction)) {
+                                    List<String> deleteFaildIdList = new ArrayList<String>();
+                                    if(roleFunctionCacheService!=null) {
+                                        roleFunctionCacheService.deleteByFunctionId(f.getFunctionId(), deleteFaildIdList);
+                                    }
+                                }
                             }
                         }catch(Exception e)
                         {
@@ -817,11 +831,14 @@ public class FunctionController {
             queryAdminRoleCacheVO.setAppCode(query.getAppCode());
             List<AdminRole> adminRoles = null;
             List<AdminRoleCacheVO> adminRoleCacheVOS = null;
+            AdminRoleCacheService adminRoleCacheService = AdminAuthCacheHelper.getAdminRoleCacheService();
+            FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
             try {
-                adminRoleCacheVOS = adminRoleCacheService.queryByEntity(queryAdminRoleCacheVO);
-                if(!CollectionUtils.isEmpty(adminRoleCacheVOS))
-                {
-                    adminRoles = JSONObject.parseArray(JSONObject.toJSONString(adminRoleCacheVOS),AdminRole.class);
+                if(adminRoleCacheService!=null) {
+                    adminRoleCacheVOS = adminRoleCacheService.queryByEntity(queryAdminRoleCacheVO);
+                    if (!CollectionUtils.isEmpty(adminRoleCacheVOS)) {
+                        adminRoles = JSONObject.parseArray(JSONObject.toJSONString(adminRoleCacheVOS), AdminRole.class);
+                    }
                 }
             }catch(Exception e)
             {
@@ -833,10 +850,12 @@ public class FunctionController {
                 adminRoles = adminRoleService.listByAdminIdAndAppCode(query.getAdminId(), query.getAppCode());
                 try {
                     if (!CollectionUtils.isEmpty(adminRoles)&&cacheIsRead) {
-                        for (AdminRole adminRole : adminRoles) {
-                            AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
-                            BeanUtils.copyProperties(adminRoleCacheVO, adminRole);
-                            adminRoleCacheService.save(adminRoleCacheVO);
+                        if(adminRoleCacheService!=null) {
+                            for (AdminRole adminRole : adminRoles) {
+                                AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
+                                BeanUtils.copyProperties(adminRoleCacheVO, adminRole);
+                                adminRoleCacheService.save(adminRoleCacheVO);
+                            }
                         }
                     }
                 }catch(Exception e)
@@ -851,12 +870,14 @@ public class FunctionController {
                 List<FunctionCacheVO> functionCacheVOS = null;
                 try {
                     if(cacheIsRead) {
-                        //从缓存查询数据
-                        FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
-                        BeanUtils.copyProperties(queryFunctionCacheVO, query);
-                        functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
-                        if (!CollectionUtils.isEmpty(functionCacheVOS)) {
-                            functions = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                        if(functionCacheService!=null) {
+                            //从缓存查询数据
+                            FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
+                            BeanUtils.copyProperties(queryFunctionCacheVO, query);
+                            functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
+                            if (!CollectionUtils.isEmpty(functionCacheVOS)) {
+                                functions = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                            }
                         }
                     }
                 }catch(Exception e)
@@ -870,10 +891,12 @@ public class FunctionController {
                     try{ //同步到缓存
                         if(!CollectionUtils.isEmpty(functions)&&cacheIsRead)
                         {
-                            for (Function function : functions) {
-                                FunctionCacheVO functionCacheVO = new FunctionCacheVO();
-                                BeanUtils.copyProperties(functionCacheVO, function);
-                                functionCacheService.save(functionCacheVO);
+                            if(functionCacheService!=null) {
+                                for (Function function : functions) {
+                                    FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                                    BeanUtils.copyProperties(functionCacheVO, function);
+                                    functionCacheService.save(functionCacheVO);
+                                }
                             }
                         }
                     }catch(Exception e)
