@@ -465,6 +465,24 @@ public class AuthController {
                                     if(CollectionUtils.isNotEmpty(roleFunctions))
                                     {
                                         count = roleFunctions.size();
+
+                                        try{
+                                            //刷新缓存
+                                            if(roleFunctionCacheService!=null) {
+                                                RoleFunctionCacheVO[] roleFunctionCacheVOArray = new RoleFunctionCacheVO[count];
+                                                for (int p = 0; p < count; p++) {
+                                                    RoleFunction roleFunction = roleFunctions.get(p);
+                                                    RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
+                                                    if (roleFunction != null) {
+                                                        BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
+                                                    }
+                                                    roleFunctionCacheVOArray[i] = roleFunctionCacheVO;
+                                                }
+                                                roleFunctionCacheService.saves(roleFunctionCacheVOArray);
+                                            }
+                                        }catch(Exception e){
+                                            logger.warn(e.getMessage(),e);
+                                        }
                                     }
                                 }
                             }

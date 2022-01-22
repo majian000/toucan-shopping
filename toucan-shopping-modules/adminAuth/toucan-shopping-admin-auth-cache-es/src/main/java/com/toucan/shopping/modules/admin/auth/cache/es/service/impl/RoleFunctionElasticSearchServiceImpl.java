@@ -168,7 +168,7 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionCacheSe
         if(query.getRoleId()!=null) {
             boolQueryBuilder.must(QueryBuilders.termQuery("roleId", query.getRoleId()));
         }
-        if(query.getRoleId()!=null) {
+        if(query.getDeleteStatus()!=null) {
             boolQueryBuilder.must(QueryBuilders.termQuery("deleteStatus", query.getDeleteStatus()));
         }
         if(query.getAppCode()!=null)
