@@ -66,11 +66,12 @@ public class AttributeValueController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
-    public String listPage(HttpServletRequest request)
+    @RequestMapping(value = "/listPage/{attributeKeyId}",method = RequestMethod.GET)
+    public String listPage(HttpServletRequest request,@PathVariable Long attributeKeyId)
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/product/attribute/attributeValue/listPage",feignFunctionService);
+        request.setAttribute("attributeKeyId",attributeKeyId);
         return "pages/product/attribute/attributeValue/list.html";
     }
 

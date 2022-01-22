@@ -23,6 +23,8 @@
         <fieldset class="table-search-fieldset">
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                    <input type="hidden" name="attributeKeyId" id="attributeKeyId" th:value="${attributeKeyId}">
+
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">属性名</label>

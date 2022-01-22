@@ -388,7 +388,7 @@
                     maxmin:true,
                     btn: ["关闭" ],
                     area: ['80%', '80%'],
-                    content: "[[@{/product/attribute/attributeValue/listPage}]]"
+                    content: "[[@{/product/attribute/attributeValue/listPage/}]]"+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
