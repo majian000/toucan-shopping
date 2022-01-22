@@ -25,9 +25,9 @@ public class InitAdminAuthCacheHelper implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args)  {
         logger.info("初始化权限中台缓存服务.....");
-//        AdminAuthCacheHelper.setAdminRoleCacheService(SpringContextHolder.getBean(AdminRoleCacheService.class));
-//        AdminAuthCacheHelper.setFunctionCacheService(SpringContextHolder.getBean(FunctionCacheService.class));
-//        AdminAuthCacheHelper.setRoleFunctionCacheService(SpringContextHolder.getBean(RoleFunctionCacheService.class));
+        AdminAuthCacheHelper.setAdminRoleCacheService(SpringContextHolder.getBean(AdminRoleCacheService.class));
+        AdminAuthCacheHelper.setFunctionCacheService(SpringContextHolder.getBean(FunctionCacheService.class));
+        AdminAuthCacheHelper.setRoleFunctionCacheService(SpringContextHolder.getBean(RoleFunctionCacheService.class));
 
         logger.info("权限中台缓存服务 adminRoleCacheService : {}",AdminAuthCacheHelper.getAdminRoleCacheService());
         logger.info("权限中台缓存服务 functionCacheService : {}",AdminAuthCacheHelper.getFunctionCacheService());
