@@ -3,12 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
-import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
+import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -48,7 +48,7 @@ public class RoleFunctionToESCacheScheduler {
 
 
     @Autowired
-    private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
+    private RoleFunctionCacheService roleFunctionCacheService;
 
 
     public PageInfo queryPage(RoleFunctionPageInfo queryPageInfo) throws Exception
@@ -71,16 +71,16 @@ public class RoleFunctionToESCacheScheduler {
     public void rerun()
     {
         if(toucan.getAdminAuthScheduler().isLoopEsCache()) {
-            logger.info("缓存角色功能项关联信息到ElasticSearch 开始=====================");
+            logger.info("缓存角色功能项关联信息到Cache 开始=====================");
             try {
 
                 //删除索引
-                roleFunctionElasticSearchService.deleteIndex();
+                roleFunctionCacheService.deleteIndex();
 
 
                 //如果不存在索引就创建一个
-                while (!roleFunctionElasticSearchService.existsIndex()) {
-                    roleFunctionElasticSearchService.createIndex();
+                while (!roleFunctionCacheService.existsIndex()) {
+                    roleFunctionCacheService.createIndex();
                 }
 
 
@@ -100,12 +100,12 @@ public class RoleFunctionToESCacheScheduler {
 
                         logger.info("缓存角色-功能项关联列表 到Elasticsearch {}", roleFunctionListJson);
                         for (RoleFunctionVO roleFunctionVO : roleFunctionVOS) {
-                            List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = roleFunctionElasticSearchService.queryById(roleFunctionVO.getId());
+                            List<RoleFunctionCacheVO> roleFunctionCacheVOS = roleFunctionCacheService.queryById(roleFunctionVO.getId());
                             //如果缓存不存在角色功能项将缓存起来
-                            if (CollectionUtils.isEmpty(roleFunctionElasticSearchVOS)) {
-                                RoleFunctionElasticSearchVO roleFunctionElasticSearchVO = new RoleFunctionElasticSearchVO();
-                                BeanUtils.copyProperties(roleFunctionElasticSearchVO, roleFunctionVO);
-                                roleFunctionElasticSearchService.save(roleFunctionElasticSearchVO);
+                            if (CollectionUtils.isEmpty(roleFunctionCacheVOS)) {
+                                RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
+                                BeanUtils.copyProperties(roleFunctionCacheVO, roleFunctionVO);
+                                roleFunctionCacheService.save(roleFunctionCacheVO);
                             }
                         }
                     }
@@ -113,7 +113,7 @@ public class RoleFunctionToESCacheScheduler {
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
             }
-            logger.info("缓存角色功能项关联信息到ElasticSearch 结束=====================");
+            logger.info("缓存角色功能项关联信息到Cache 结束=====================");
         }
     }
 

@@ -1,10 +1,9 @@
-package com.toucan.shopping.modules.admin.auth.es.service.impl;
+package com.toucan.shopping.modules.admin.auth.cache.es.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.constant.RoleFunctionCacheElasticSearchConstant;
-import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
-import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -48,7 +47,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service("esRoleFunctionService")
-public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElasticSearchService {
+public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionCacheService {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -57,14 +56,14 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     private RestHighLevelClient restHighLevelClient;
 
     @Override
-    public void save(RoleFunctionElasticSearchVO esVO) throws Exception {
+    public void save(RoleFunctionCacheVO esVO) throws Exception {
         IndexRequest request = new IndexRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
         restHighLevelClient.index(request, RequestOptions.DEFAULT);
 
     }
 
     @Override
-    public void update(RoleFunctionElasticSearchVO esVO) throws Exception{
+    public void update(RoleFunctionCacheVO esVO) throws Exception{
         UpdateRequest request = new UpdateRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX,String.valueOf(esVO.getId()));
         XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
         updateBody.field("id",esVO.getId());
@@ -125,8 +124,8 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
 
 
     @Override
-    public List<RoleFunctionElasticSearchVO> queryById(Long id) throws Exception{
-        List<RoleFunctionElasticSearchVO> RoleFunctionElasticSearchVOS = new ArrayList<RoleFunctionElasticSearchVO>();
+    public List<RoleFunctionCacheVO> queryById(Long id) throws Exception{
+        List<RoleFunctionCacheVO> RoleFunctionCacheVOS = new ArrayList<RoleFunctionCacheVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
@@ -144,15 +143,15 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
             String sourceString = searchHit.getSourceAsString();
             if (StringUtils.isNotEmpty(sourceString)){
                 logger.info("UserElasticSearchService queryById {}", sourceString);
-                RoleFunctionElasticSearchVOS.add(JSONObject.parseObject(sourceString,RoleFunctionElasticSearchVO.class));
+                RoleFunctionCacheVOS.add(JSONObject.parseObject(sourceString,RoleFunctionCacheVO.class));
             }
         }
-        return RoleFunctionElasticSearchVOS;
+        return RoleFunctionCacheVOS;
     }
 
     @Override
-    public List<RoleFunctionElasticSearchVO> queryByEntity(RoleFunctionElasticSearchVO query) throws Exception {
-        List<RoleFunctionElasticSearchVO> roleFunctionElasticSearchVOS = new ArrayList<RoleFunctionElasticSearchVO>();
+    public List<RoleFunctionCacheVO> queryByEntity(RoleFunctionCacheVO query) throws Exception {
+        List<RoleFunctionCacheVO> roleFunctionCacheVOS = new ArrayList<RoleFunctionCacheVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
@@ -187,10 +186,10 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
             String sourceString = searchHit.getSourceAsString();
             if (StringUtils.isNotEmpty(sourceString)){
                 logger.info("UserElasticSearchService queryById {}", sourceString);
-                roleFunctionElasticSearchVOS.add(JSONObject.parseObject(sourceString,RoleFunctionElasticSearchVO.class));
+                roleFunctionCacheVOS.add(JSONObject.parseObject(sourceString,RoleFunctionCacheVO.class));
             }
         }
-        return roleFunctionElasticSearchVOS;
+        return roleFunctionCacheVOS;
     }
 
 
@@ -247,10 +246,10 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     }
 
     @Override
-    public void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS)  throws Exception{
-        for(RoleFunctionElasticSearchVO roleFunctionElasticSearchVO:roleFunctionElasticSearchVOS)
+    public void saves(RoleFunctionCacheVO[] roleFunctionCacheVOS)  throws Exception{
+        for(RoleFunctionCacheVO roleFunctionCacheVO:roleFunctionCacheVOS)
         {
-            save(roleFunctionElasticSearchVO);
+            save(roleFunctionCacheVO);
         }
     }
 
@@ -291,7 +290,6 @@ public class RoleFunctionElasticSearchServiceImpl implements RoleFunctionElastic
     }
 
 
-    @Override
     public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
         CountRequest countRequest=new CountRequest(RoleFunctionCacheElasticSearchConstant.ROLE_FUNCTION_INDEX);
         countRequest.source(searchSourceBuilder);

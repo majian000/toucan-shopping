@@ -90,7 +90,11 @@
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-es</artifactId>
+            <artifactId>toucan-shopping-admin-auth-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>

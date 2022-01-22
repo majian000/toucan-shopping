@@ -2,16 +2,14 @@ package com.toucan.shopping.modules.admin.auth.controller.admin;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
-import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
-import com.toucan.shopping.modules.admin.auth.service.AdminService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -23,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -48,7 +45,7 @@ public class AdminRoleController {
     private AdminAppService adminAppService;
 
     @Autowired
-    private AdminRoleElasticSearchService adminRoleElasticSearchService;
+    private AdminRoleCacheService adminRoleCacheService;
 
 
     /**
@@ -120,18 +117,18 @@ public class AdminRoleController {
                 List<String> deleteFaildIdList = new ArrayList<String>();
                 for (int i = 0; i < adminApps.size(); i++) {
                     //删除指定账号下的指定所有应用下的所有账号角色关联
-                    adminRoleElasticSearchService.deleteByAdminIdAndAppCodes(entity.getAdminId(), adminApps.get(i).getAppCode(), deleteFaildIdList);
+                    adminRoleCacheService.deleteByAdminIdAndAppCodes(entity.getAdminId(), adminApps.get(i).getAppCode(), deleteFaildIdList);
                 }
                 if (adminRoles != null && adminRoles.length > 0) {
-                    AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS = new AdminRoleElasticSearchVO[length];
+                    AdminRoleCacheVO[] adminRoleCacheVOS = new AdminRoleCacheVO[length];
                     for (int i = 0; i < adminRoles.length; i++) {
-                        AdminRoleElasticSearchVO adminRoleElasticSearchVO = new AdminRoleElasticSearchVO();
+                        AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
                         if (adminRoles[i] != null) {
-                            BeanUtils.copyProperties(adminRoleElasticSearchVO, adminRoles[i]);
+                            BeanUtils.copyProperties(adminRoleCacheVO, adminRoles[i]);
                         }
-                        adminRoleElasticSearchVOS[i] = adminRoleElasticSearchVO;
+                        adminRoleCacheVOS[i] = adminRoleCacheVO;
                     }
-                    adminRoleElasticSearchService.saves(adminRoleElasticSearchVOS);
+                    adminRoleCacheService.saves(adminRoleCacheVOS);
                 }
             }catch(Exception e)
             {

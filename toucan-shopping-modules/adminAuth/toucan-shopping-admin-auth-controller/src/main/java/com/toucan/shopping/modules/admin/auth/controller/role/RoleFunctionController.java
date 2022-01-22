@@ -3,18 +3,18 @@ package com.toucan.shopping.modules.admin.auth.controller.role;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.Role;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
-import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
@@ -55,7 +55,7 @@ public class RoleFunctionController {
     private RoleFunctionService roleFunctionService;
 
     @Autowired
-    private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
+    private RoleFunctionCacheService roleFunctionCacheService;
 
 
 
@@ -139,19 +139,19 @@ public class RoleFunctionController {
             try{
                 //刷新到es缓存
                 List<String> deleteFaildIdList = new ArrayList<String>();
-                roleFunctionElasticSearchService.deleteIndex();
+                roleFunctionCacheService.deleteIndex();
                 if(roleFunctions!=null&&roleFunctions.length>0) {
-                    RoleFunctionElasticSearchVO[]  roleFunctionElasticSearchVOS = new  RoleFunctionElasticSearchVO[roleFunctions.length];
+                    RoleFunctionCacheVO[]  roleFunctionCacheVOS = new  RoleFunctionCacheVO[roleFunctions.length];
                     for(int i=0;i<roleFunctions.length;i++)
                     {
                         RoleFunction roleFunction = roleFunctions[i];
-                        RoleFunctionElasticSearchVO roleFunctionElasticSearchVO = new RoleFunctionElasticSearchVO();
+                        RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
                         if(roleFunction!=null) {
-                            BeanUtils.copyProperties(roleFunctionElasticSearchVO,roleFunction);
+                            BeanUtils.copyProperties(roleFunctionCacheVO,roleFunction);
                         }
-                        roleFunctionElasticSearchVOS[i] = roleFunctionElasticSearchVO;
+                        roleFunctionCacheVOS[i] = roleFunctionCacheVO;
                     }
-                    roleFunctionElasticSearchService.saves(roleFunctionElasticSearchVOS);
+                    roleFunctionCacheService.saves(roleFunctionCacheVOS);
                 }
 
             }catch(Exception e)

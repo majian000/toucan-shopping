@@ -5,13 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
-import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
-import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
+import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
-import com.toucan.shopping.modules.admin.auth.vo.FunctionElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -50,7 +49,7 @@ public class FunctionToESCacheController {
 
 
     @Autowired
-    private FunctionElasticSearchService functionElasticSearchService;
+    private FunctionCacheService functionCacheService;
 
 
     public PageInfo queryPage(FunctionTreeInfo queryPageInfo) throws Exception
@@ -74,11 +73,11 @@ public class FunctionToESCacheController {
         try {
 
             //删除索引
-            functionElasticSearchService.deleteIndex();
+            functionCacheService.deleteIndex();
 
             //如果不存在索引就创建一个
-            while (!functionElasticSearchService.existsIndex()) {
-                functionElasticSearchService.createIndex();
+            while (!functionCacheService.existsIndex()) {
+                functionCacheService.createIndex();
             }
 
 
@@ -98,12 +97,12 @@ public class FunctionToESCacheController {
 
                     logger.info("缓存功能项关联列表 到Elasticsearch {}", functionListJson);
                     for (FunctionVO functionVO : functionVOS) {
-                        List<FunctionElasticSearchVO> functionElasticSearchVOS = functionElasticSearchService.queryById(functionVO.getId());
+                        List<FunctionCacheVO> functionCacheVOS = functionCacheService.queryById(functionVO.getId());
                         //如果缓存不存在功能项将缓存起来
-                        if (CollectionUtils.isEmpty(functionElasticSearchVOS)) {
-                            FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
-                            BeanUtils.copyProperties(functionElasticSearchVO, functionVO);
-                            functionElasticSearchService.save(functionElasticSearchVO);
+                        if (CollectionUtils.isEmpty(functionCacheVOS)) {
+                            FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                            BeanUtils.copyProperties(functionCacheVO, functionVO);
+                            functionCacheService.save(functionCacheVO);
                         }
                     }
                 }

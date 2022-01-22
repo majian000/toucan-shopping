@@ -1,16 +1,14 @@
-package com.toucan.shopping.modules.admin.auth.es.service.impl;
+package com.toucan.shopping.modules.admin.auth.cache.es.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.admin.auth.constant.AdminRoleCacheElasticSearchConstant;
+import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
+import com.toucan.shopping.modules.admin.auth.constant.FunctionCacheElasticSearchConstant;
 import com.toucan.shopping.modules.admin.auth.constant.RoleFunctionCacheElasticSearchConstant;
-import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
-import org.apache.commons.collections.CollectionUtils;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionCacheVO;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheRequest;
-import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -22,6 +20,7 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
@@ -36,20 +35,16 @@ import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-@Service("esAdminRoleService")
-public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearchService {
+@Service("esFunctionService")
+public class FunctionElasticSearchServiceImpl implements FunctionCacheService {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -58,19 +53,38 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
     private RestHighLevelClient restHighLevelClient;
 
     @Override
-    public void save(AdminRoleElasticSearchVO esVO) throws Exception{
-        IndexRequest request = new IndexRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
+    public void save(FunctionCacheVO esVO) throws Exception{
+        IndexRequest request = new IndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX).id(String.valueOf(esVO.getId())).source(JSONObject.toJSONString(esVO), XContentType.JSON);
         restHighLevelClient.index(request, RequestOptions.DEFAULT);
 
     }
 
+
     @Override
-    public void update(AdminRoleElasticSearchVO esVO) throws Exception {
-        UpdateRequest request = new UpdateRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX,String.valueOf(esVO.getId()));
+    public boolean deleteIndex() throws Exception {
+        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
+        deleteIndexRequest.indicesOptions(IndicesOptions.LENIENT_EXPAND_OPEN);
+        AcknowledgedResponse delete = restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
+        return delete.isAcknowledged();
+    }
+
+
+    @Override
+    public void update(FunctionCacheVO esVO) throws Exception {
+        UpdateRequest request = new UpdateRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX,String.valueOf(esVO.getId()));
         XContentBuilder updateBody = XContentFactory.jsonBuilder().startObject();
         updateBody.field("id",esVO.getId());
-        updateBody.field("adminId",esVO.getAdminId());
-        updateBody.field("roleId",esVO.getRoleId());
+        updateBody.field("functionId",esVO.getFunctionId());
+        updateBody.field("name",esVO.getName());
+        updateBody.field("url",esVO.getUrl());
+        updateBody.field("permission",esVO.getPermission());
+        updateBody.field("type",esVO.getType());
+        updateBody.field("functionText",esVO.getFunctionText());
+        updateBody.field("pid",esVO.getPid());
+        updateBody.field("enableStatus",esVO.getEnableStatus());
+        updateBody.field("icon",esVO.getIcon());
+        updateBody.field("remark",esVO.getRemark());
+        updateBody.field("functionSort",esVO.getFunctionSort());
         updateBody.field("appCode",esVO.getAppCode());
         updateBody.field("createAdminId",esVO.getCreateAdminId());
         updateBody.field("deleteStatus",esVO.getDeleteStatus());
@@ -93,7 +107,7 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
             Map<String, Set<AliasMetadata>> map = getAliasesResponse.getAliases();
             Set<String> indices = map.keySet();
             for (String key : indices) {
-                if(key.toLowerCase().equals(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX))
+                if(key.toLowerCase().equals(FunctionCacheElasticSearchConstant.FUNCTION_INDEX))
                 {
                     return true;
                 }
@@ -108,7 +122,7 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
     @Override
     public void createIndex() {
         try {
-            CreateIndexRequest request = new CreateIndexRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+            CreateIndexRequest request = new CreateIndexRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
             restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
         }catch(Exception e)
         {
@@ -118,11 +132,11 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
 
 
     @Override
-    public List<AdminRoleElasticSearchVO> queryById(Long id) throws Exception{
-        List<AdminRoleElasticSearchVO> AdminRoleElasticSearchVOS = new ArrayList<AdminRoleElasticSearchVO>();
+    public List<FunctionCacheVO> queryById(Long id) throws Exception{
+        List<FunctionCacheVO> functionCacheVOS = new ArrayList<FunctionCacheVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        searchRequest.indices(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.size(10);
@@ -137,18 +151,18 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
             String sourceString = searchHit.getSourceAsString();
             if (StringUtils.isNotEmpty(sourceString)){
                 logger.info("UserElasticSearchService queryById {}", sourceString);
-                AdminRoleElasticSearchVOS.add(JSONObject.parseObject(sourceString,AdminRoleElasticSearchVO.class));
+                functionCacheVOS.add(JSONObject.parseObject(sourceString,FunctionCacheVO.class));
             }
         }
-        return AdminRoleElasticSearchVOS;
+        return functionCacheVOS;
     }
 
     @Override
-    public List<AdminRoleElasticSearchVO> queryByEntity(AdminRoleElasticSearchVO query) throws Exception {
-        List<AdminRoleElasticSearchVO> AdminRoleElasticSearchVOS = new ArrayList<AdminRoleElasticSearchVO>();
+    public List<FunctionCacheVO> queryByEntity(FunctionCacheVO query) throws Exception {
+        List<FunctionCacheVO> functionCacheVOS = new ArrayList<FunctionCacheVO>();
         //创建请求对象
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        searchRequest.indices(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         //创建查询对象
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
@@ -156,13 +170,17 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
         if(query.getId()!=null) {
             boolQueryBuilder.must(QueryBuilders.termQuery("_id", query.getId()));
         }
-        if(query.getAdminId()!=null)
-        {
-            boolQueryBuilder.must(QueryBuilders.termQuery("adminId", query.getAdminId()));
+        if(query.getFunctionId()!=null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("functionId", query.getFunctionId()));
         }
-        if(query.getRoleId()!=null)
-        {
-            boolQueryBuilder.must(QueryBuilders.termQuery("roleId", query.getRoleId()));
+        if(query.getUrl()!=null) {
+            boolQueryBuilder.must(QueryBuilders.matchPhrasePrefixQuery("url", query.getUrl()));
+        }
+        if(query.getEnableStatus()!=null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("enableStatus", query.getEnableStatus()));
+        }
+        if(query.getPid()!=null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("pid", query.getPid()));
         }
         if(query.getAppCode()!=null)
         {
@@ -179,17 +197,17 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
             String sourceString = searchHit.getSourceAsString();
             if (StringUtils.isNotEmpty(sourceString)){
                 logger.info("UserElasticSearchService queryById {}", sourceString);
-                AdminRoleElasticSearchVOS.add(JSONObject.parseObject(sourceString,AdminRoleElasticSearchVO.class));
+                functionCacheVOS.add(JSONObject.parseObject(sourceString,FunctionCacheVO.class));
             }
         }
-        return AdminRoleElasticSearchVOS;
+        return functionCacheVOS;
     }
 
 
     @Override
     public boolean deleteById(String id) throws Exception {
         //创建请求对象
-        DeleteRequest deleteRequest = new DeleteRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        DeleteRequest deleteRequest = new DeleteRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         deleteRequest.id(id);
         DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
         if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
@@ -201,72 +219,12 @@ public class AdminRoleElasticSearchServiceImpl implements AdminRoleElasticSearch
         return false;
     }
 
-    @Override
-    public boolean deleteIndex() throws Exception {
-        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
-        deleteIndexRequest.indicesOptions(IndicesOptions.LENIENT_EXPAND_OPEN);
-        AcknowledgedResponse delete = restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
-        return delete.isAcknowledged();
-    }
-
-
-
-    @Override
-    public boolean deleteByAdminIdAndAppCodes(String adminId,String appCode,List<String> deleteFaildIdList) throws Exception {
-        List<AdminRoleElasticSearchVO> AdminRoleElasticSearchVOS = new ArrayList<AdminRoleElasticSearchVO>();
-        //创建请求对象
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
-        //创建查询对象
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        //设置查询条件
-        searchSourceBuilder.query(QueryBuilders.termQuery("adminId", adminId));
-        searchSourceBuilder.query(QueryBuilders.termQuery("appCode", appCode));
-        searchSourceBuilder.size(queryCount(searchSourceBuilder).intValue());
-        //设置查询条件到请求对象中
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest,  RequestOptions.DEFAULT);
-        SearchHits searchHits = searchResponse.getHits();
-        SearchHit[] searchHitsHits = searchHits.getHits();
-        for(SearchHit searchHit:searchHitsHits) {
-            DeleteRequest deleteRequest = new DeleteRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
-            deleteRequest.id(searchHit.getId());
-            DeleteResponse deleteResponse =restHighLevelClient.delete(deleteRequest,RequestOptions.DEFAULT);
-            if(RestStatus.OK.getStatus() == deleteResponse.status().getStatus())
-            {
-                //强制刷新
-                deleteResponse.forcedRefresh();
-            }else{
-                //保存删除失败ID
-                deleteFaildIdList.add(searchHit.getId());
-            }
-        }
-        //没有删除失败的ID
-        if(CollectionUtils.isEmpty(deleteFaildIdList))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS) throws Exception {
-
-        for(AdminRoleElasticSearchVO adminRoleElasticSearchVO:adminRoleElasticSearchVOS)
-        {
-            save(adminRoleElasticSearchVO);
-        }
-
-    }
-
-
-
-    @Override
     public Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception {
-        CountRequest countRequest=new CountRequest(AdminRoleCacheElasticSearchConstant.ADMIN_ROLE_INDEX);
+        CountRequest countRequest=new CountRequest(FunctionCacheElasticSearchConstant.FUNCTION_INDEX);
         countRequest.source(searchSourceBuilder);
         CountResponse response=restHighLevelClient.count(countRequest,RequestOptions.DEFAULT);
         return response.getCount();
     }
+
 
 }

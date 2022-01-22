@@ -1,9 +1,9 @@
 package com.toucan.shopping.cloud.admin.auth.app.config;
 
 
-import com.toucan.shopping.modules.admin.auth.es.service.AdminRoleElasticSearchService;
-import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
-import com.toucan.shopping.modules.admin.auth.es.service.RoleFunctionElasticSearchService;
+import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
+import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
+import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,13 @@ public class InitElasticSearchIndex {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private AdminRoleElasticSearchService adminRoleElasticSearchService;
+    private AdminRoleCacheService adminRoleCacheService;
 
     @Autowired
-    private RoleFunctionElasticSearchService roleFunctionElasticSearchService;
+    private RoleFunctionCacheService roleFunctionCacheService;
 
     @Autowired
-    private FunctionElasticSearchService functionElasticSearchService;
+    private FunctionCacheService functionCacheService;
 
     @PostConstruct
     public void initIndex()
@@ -36,9 +36,9 @@ public class InitElasticSearchIndex {
         logger.info(" 初始化elasticsearch索引........");
         //初始化账号角色索引
         try {
-            if (adminRoleElasticSearchService != null) {
-                if (!adminRoleElasticSearchService.existsIndex()) {
-                    adminRoleElasticSearchService.createIndex();
+            if (adminRoleCacheService != null) {
+                if (!adminRoleCacheService.existsIndex()) {
+                    adminRoleCacheService.createIndex();
                 }
             }
         }catch(Exception e)
@@ -48,9 +48,9 @@ public class InitElasticSearchIndex {
 
         //初始化角色功能项索引
         try {
-            if (roleFunctionElasticSearchService != null) {
-                if (!roleFunctionElasticSearchService.existsIndex()) {
-                    roleFunctionElasticSearchService.createIndex();
+            if (roleFunctionCacheService != null) {
+                if (!roleFunctionCacheService.existsIndex()) {
+                    roleFunctionCacheService.createIndex();
                 }
             }
         }catch(Exception e)
@@ -60,9 +60,9 @@ public class InitElasticSearchIndex {
 
         //初始化功能项索引
         try {
-            if (functionElasticSearchService != null) {
-                if (!functionElasticSearchService.existsIndex()) {
-                    functionElasticSearchService.createIndex();
+            if (functionCacheService != null) {
+                if (!functionCacheService.existsIndex()) {
+                    functionCacheService.createIndex();
                 }
             }
         }catch(Exception e)

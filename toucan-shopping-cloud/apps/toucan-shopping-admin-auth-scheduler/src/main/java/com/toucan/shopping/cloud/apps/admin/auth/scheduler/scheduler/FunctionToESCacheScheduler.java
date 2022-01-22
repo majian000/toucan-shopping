@@ -3,12 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
-import com.toucan.shopping.modules.admin.auth.es.service.FunctionElasticSearchService;
+import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
-import com.toucan.shopping.modules.admin.auth.vo.FunctionElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionElasticSearchVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -48,7 +48,7 @@ public class FunctionToESCacheScheduler {
 
 
     @Autowired
-    private FunctionElasticSearchService functionElasticSearchService;
+    private FunctionCacheService functionCacheService;
 
 
     public PageInfo queryPage(FunctionTreeInfo queryPageInfo) throws Exception
@@ -71,16 +71,16 @@ public class FunctionToESCacheScheduler {
     public void rerun()
     {
         if(toucan.getAdminAuthScheduler().isLoopEsCache()) {
-            logger.info("缓存功能项信息到ElasticSearch 开始=====================");
+            logger.info("缓存功能项信息到Cache 开始=====================");
             try {
 
                 //删除索引
-                functionElasticSearchService.deleteIndex();
+                functionCacheService.deleteIndex();
 
 
                 //如果不存在索引就创建一个
-                while (!functionElasticSearchService.existsIndex()) {
-                    functionElasticSearchService.createIndex();
+                while (!functionCacheService.existsIndex()) {
+                    functionCacheService.createIndex();
                 }
 
 
@@ -100,12 +100,12 @@ public class FunctionToESCacheScheduler {
 
                         logger.info("缓存功能项关联列表 到Elasticsearch {}", functionListJson);
                         for (FunctionVO functionVO : functionVOS) {
-                            List<FunctionElasticSearchVO> functionElasticSearchVOS = functionElasticSearchService.queryById(functionVO.getId());
+                            List<FunctionCacheVO> functionCacheVOS = functionCacheService.queryById(functionVO.getId());
                             //如果缓存不存在功能项将缓存起来
-                            if (CollectionUtils.isEmpty(functionElasticSearchVOS)) {
-                                FunctionElasticSearchVO functionElasticSearchVO = new FunctionElasticSearchVO();
-                                BeanUtils.copyProperties(functionElasticSearchVO, functionVO);
-                                functionElasticSearchService.save(functionElasticSearchVO);
+                            if (CollectionUtils.isEmpty(functionCacheVOS)) {
+                                FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                                BeanUtils.copyProperties(functionCacheVO, functionVO);
+                                functionCacheService.save(functionCacheVO);
                             }
                         }
                     }
@@ -113,7 +113,7 @@ public class FunctionToESCacheScheduler {
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
             }
-            logger.info("缓存功能项信息到ElasticSearch 结束=====================");
+            logger.info("缓存功能项信息到Cache 结束=====================");
         }
     }
 

@@ -1,24 +1,23 @@
-package com.toucan.shopping.modules.admin.auth.es.service;
+package com.toucan.shopping.modules.admin.auth.cache.service;
 
 
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionElasticSearchVO;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 
 import java.util.List;
 
-public interface RoleFunctionElasticSearchService {
+public interface RoleFunctionCacheService {
 
     /**
      * 保存对象
      * @param esVO
      */
-    void save(RoleFunctionElasticSearchVO esVO) throws Exception;
+    void save(RoleFunctionCacheVO esVO) throws Exception;
 
     /**
      * 更新对象
      * @param esVO
      */
-    void update(RoleFunctionElasticSearchVO esVO) throws Exception;
+    void update(RoleFunctionCacheVO esVO) throws Exception;
 
     /**
      * 是否存在索引
@@ -44,7 +43,7 @@ public interface RoleFunctionElasticSearchService {
      * @param id
      * @return
      */
-    List<RoleFunctionElasticSearchVO> queryById(Long id) throws Exception;
+    List<RoleFunctionCacheVO> queryById(Long id) throws Exception;
 
     /**
      * 根据对象查询
@@ -52,7 +51,7 @@ public interface RoleFunctionElasticSearchService {
      * @return
      * @throws Exception
      */
-    List<RoleFunctionElasticSearchVO> queryByEntity(RoleFunctionElasticSearchVO query) throws Exception;
+    List<RoleFunctionCacheVO> queryByEntity(RoleFunctionCacheVO query) throws Exception;
 
     /**
      * 根据ID删除
@@ -79,18 +78,11 @@ public interface RoleFunctionElasticSearchService {
 
     /**
      * 批量保存
-     * @param roleFunctionElasticSearchVOS
+     * @param roleFunctionCacheVOS
      * @return
      */
-    void saves(RoleFunctionElasticSearchVO[] roleFunctionElasticSearchVOS) throws Exception;
+    void saves(RoleFunctionCacheVO[] roleFunctionCacheVOS) throws Exception;
 
 
-    /**
-     * 查询记录总数量
-     * @param searchSourceBuilder
-     * @return
-     * @throws Exception
-     */
-    Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception;
 
 }

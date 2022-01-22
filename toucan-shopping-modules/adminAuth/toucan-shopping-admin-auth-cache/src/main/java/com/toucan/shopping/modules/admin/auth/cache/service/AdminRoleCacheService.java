@@ -1,24 +1,23 @@
-package com.toucan.shopping.modules.admin.auth.es.service;
+package com.toucan.shopping.modules.admin.auth.cache.service;
 
 
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleElasticSearchVO;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
 
 import java.util.List;
 
-public interface AdminRoleElasticSearchService {
+public interface AdminRoleCacheService {
 
     /**
      * 保存对象
      * @param esVO
      */
-    void save(AdminRoleElasticSearchVO esVO) throws Exception;
+    void save(AdminRoleCacheVO esVO) throws Exception;
 
     /**
      * 更新对象
      * @param esVO
      */
-    void update(AdminRoleElasticSearchVO esVO) throws Exception;
+    void update(AdminRoleCacheVO esVO) throws Exception;
 
     /**
      * 是否存在索引
@@ -37,7 +36,7 @@ public interface AdminRoleElasticSearchService {
      * @param id
      * @return
      */
-    List<AdminRoleElasticSearchVO> queryById(Long id) throws Exception;
+    List<AdminRoleCacheVO> queryById(Long id) throws Exception;
 
     /**
      * 根据对象查询
@@ -45,7 +44,7 @@ public interface AdminRoleElasticSearchService {
      * @return
      * @throws Exception
      */
-    List<AdminRoleElasticSearchVO> queryByEntity(AdminRoleElasticSearchVO query) throws Exception;
+    List<AdminRoleCacheVO> queryByEntity(AdminRoleCacheVO query) throws Exception;
 
     /**
      * 根据ID删除
@@ -71,17 +70,8 @@ public interface AdminRoleElasticSearchService {
 
     /**
      * 批量保存
-     * @param adminRoleElasticSearchVOS
+     * @param adminRoleCacheVOS
      * @return
      */
-    void saves(AdminRoleElasticSearchVO[] adminRoleElasticSearchVOS) throws Exception;
-
-
-    /**
-     * 查询记录总数量
-     * @param searchSourceBuilder
-     * @return
-     * @throws Exception
-     */
-    Long queryCount(SearchSourceBuilder searchSourceBuilder)  throws Exception;
+    void saves(AdminRoleCacheVO[] adminRoleCacheVOS) throws Exception;
 }
