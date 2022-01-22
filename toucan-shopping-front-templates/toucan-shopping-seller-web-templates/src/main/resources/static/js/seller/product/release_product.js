@@ -1,6 +1,34 @@
 $(function () {
 
 
+    $("#productMainPhotoFile").on("change", function(){
+        // Get a reference to the fileList
+        var files = !!this.files ? this.files : [];
+
+        // If no files were selected, or no FileReader support, return
+        if (!files.length || !window.FileReader) {
+            $("#productMainPhotoImg").attr("src","/static/lib/tupload/images/imgadd.png");
+            return;
+        }
+
+        // Only proceed if the selected file is an image
+        if (/^image/.test( files[0].type)){
+            // Create a new instance of the FileReader
+            var reader = new FileReader();
+
+            // Read the local file as a DataURL
+            reader.readAsDataURL(files[0]);
+
+            // When loaded, set image data as background of div
+            reader.onloadend = function(){
+                $("#productMainPhotoImg").attr("src",this.result);
+            }
+
+        }
+
+    });
+
+
     $.Tupload.init({
         title: "",
         fileNum: 6, // 上传文件数量

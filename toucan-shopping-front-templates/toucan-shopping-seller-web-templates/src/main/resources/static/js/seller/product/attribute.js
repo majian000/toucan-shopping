@@ -41,19 +41,20 @@ $(function () {
             //开始创建Table表
             if (bCheck == true) {
                 var RowsCount = 0;
-                $("#createTable").html("");
-                var table = $("<table id=\"process\" border=\"1\" cellpadding=\"1\" cellspacing=\"0\" style=\"width:100%;padding:5px;\"></table>");
-                table.appendTo($("#createTable"));
+                $("#tspSkuAttributeTable").html("");
+                var table = $("<table id=\"process\" border=\"1\" cellpadding=\"1\" cellspacing=\"0\" style=\"width:90%;text-align:center;\"></table>");
+                $("#tspSkuAttributeTable").html("销售规格");
+                table.appendTo($("#tspSkuAttributeTable"));
                 var thead = $("<thead></thead>");
                 thead.appendTo(table);
                 var trHead = $("<tr></tr>");
                 trHead.appendTo(thead);
                 //创建表头
                 $.each(arrayTile, function (index, item) {
-                    var td = $("<th>" + item + "</th>");
+                    var td = $("<th >" + item + "</th>");
                     td.appendTo(trHead);
                 });
-                var itemColumHead = $("<th  style=\"width:70px;\">价格</th><th style=\"width:70px;\">库存</th> ");
+                var itemColumHead = $("<th  style=\"width:70px;\">价格</th><th style=\"width:70px;\">库存</th> <th  style=\"width:70px;\">图片预览</th>");
                 itemColumHead.appendTo(trHead);
                 //var itemColumHead2 = $("<td >商家编码</td><td >商品条形码</td>");
                 //itemColumHead2.appendTo(trHead);
@@ -75,6 +76,8 @@ $(function () {
                         td1.appendTo(tr);
                         var td2 = $("<td ><input name=\"Txt_CountSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
                         td2.appendTo(tr);
+                        var td3 = $("<td ><input type='file' name='skuProductProview' /></td>");
+                        td3.appendTo(tr);
                         //var td3 = $("<td ><input name=\"Txt_NumberSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
                         //td3.appendTo(tr);
                         //var td4 = $("<td ><input name=\"Txt_SnSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
@@ -90,7 +93,7 @@ $(function () {
                 });
             } else{
                 //未全选中,清除表格
-                document.getElementById('createTable').innerHTML="";
+                document.getElementById('tspSkuAttributeTable').innerHTML="";
             }
         },//合并行
         hebingFunction: function () {
