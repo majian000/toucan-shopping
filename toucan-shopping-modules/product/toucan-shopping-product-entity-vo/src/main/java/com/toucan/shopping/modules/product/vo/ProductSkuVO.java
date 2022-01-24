@@ -17,6 +17,16 @@ import java.util.Date;
 public class ProductSkuVO  extends ProductSku {
 
     /**
+     * 商品所属分类
+     */
+    private Long categoryId;
+
+    /**
+     * 店铺内的所属分类
+     */
+    private Long shopCategoryId;
+
+    /**
      * 商品名称
      */
     private String productName;
@@ -65,6 +75,10 @@ public class ProductSkuVO  extends ProductSku {
      */
     private String httpMainPhoto;
 
+    /**
+     * 商品预览图
+     */
+    private MultipartFile[] previewPhotoFiles;
 
     /**
      * 品牌ID
