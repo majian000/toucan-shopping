@@ -12,7 +12,7 @@ $(function () {
                     var template=" <li class='featureBox'>\n" +
                         "                            <div class='box'>\n" +
                         "                                <div class='imgbg'>\n" +
-                        "                                    <a href='#'><img src='"+obj.httpPreviewImg+"' width='160' height='136' /></a>\n" +
+                        "                                    <a href='#'><img src='"+obj.httpMainPhoto+"' width='160' height='136' /></a>\n" +
                         "                                </div>\n" +
                         "                                <div class='name'>\n" +
                         "                                    <a href='#'>\n" +

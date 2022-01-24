@@ -167,9 +167,9 @@
 
                                     <div class="item"  >
                                         <div class="field" style="width:100%;text-align:left;padding-left:6%;" >
-                                            <span class="red">*</span>商品主图：<input type="file" name="productMainPhoto" id="productMainPhotoFile" />
+                                            <span class="red">*</span>商品主图：<input type="file" name="mainPreviewPhoto" id="mainPhotoFile" />
 
-                                            <img src="${basePath}/static/lib/tupload/images/imgadd.png" style="width:100px;height:100px;" id="productMainPhotoImg">
+                                            <img src="${basePath}/static/lib/tupload/images/imgadd.png" style="width:100px;height:100px;" id="mainPhotoImg">
                                         </div>
                                     </div>
 
@@ -190,7 +190,7 @@
                                         <div style="width:40%;float:left;">
                                             <div class="field" style="width:100%;text-align:center;" >
                                                 <span class="red">*</span>名称：
-                                                <input type="text" id="productName" name="name" class="releaseProductInputText" lay-verify="required|productName" style="width:200px;" tabindex="1"  />
+                                                <input type="text" id="productName" name="productName" class="releaseProductInputText" lay-verify="required|productName" style="width:200px;" tabindex="1"  />
                                             </div>
                                         </div>
 
@@ -208,7 +208,7 @@
                                         <div style="width:40%;float:left;">
                                             <div class="field" style="width:100%;text-align:center;" >
                                                 <span class="red">*</span>总数量：
-                                                <input type="text" id="count" name="count" class="releaseProductInputText" style="width:200px;" lay-verify="required|productCount"  tabindex="3"  />件
+                                                <input type="text" id="num" name="num" class="releaseProductInputText" style="width:200px;" lay-verify="required|productCount"  tabindex="3"  />件
                                             </div>
                                         </div>
 
@@ -317,15 +317,15 @@
                                         <div style="width:40%;float:left;">
                                             <div class="field" style="width:100%;text-align:center;" >
                                                 <span class="red">*</span>付款方式：
-                                                <input type="radio" class="radio" name="pay_method" id="pay_method_1" value="1" checked/> <label for="pay_method_1">一口价(普通交易模式)</label>
+                                                <input type="radio" class="radio" name="payMethod" id="pay_method_1" value="1" checked/> <label for="pay_method_1">一口价(普通交易模式)</label>
                                             </div>
                                         </div>
 
                                         <div style="width:45%;float:left;">
                                             <div class="field" style="text-align:center;" >
                                                 <span class="red">*</span>库存计数：
-                                                <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_1" value="1" checked/> <label for="buckle_inventory_method_1">买家拍下减库存</label>
-                                                <input type="radio" class="radio" name="buckle_inventory_method" id="buckle_inventory_method_2" value="2" checked/> <label for="buckle_inventory_method_2">买家付款减库存</label>
+                                                <input type="radio" class="radio" name="buckleInventoryMethod" id="buckle_inventory_method_1" value="1" checked/> <label for="buckle_inventory_method_1">买家拍下减库存</label>
+                                                <input type="radio" class="radio" name="buckleInventoryMethod" id="buckle_inventory_method_2" value="2" checked/> <label for="buckle_inventory_method_2">买家付款减库存</label>
                                             </div>
                                         </div>
 
@@ -337,7 +337,7 @@
                                         <div style="width:40%;float:left;">
                                             <div class="field" style="width:100%;text-align:center;" >
                                                 <span class="red">*</span>售后服务：
-                                                <input type="checkbox" class="checkbox" name="invoice" id="invoice_1" value="1" /> <label for="invoice_1">提供发票</label>
+                                                <input type="checkbox" class="checkbox" name="provideInvoice" id="invoice_1" value="1" /> <label for="invoice_1">提供发票</label>
                                                 <input type="checkbox" class="checkbox" name="changingOrRefunding" id="changingOrRefunding_1" value="1" /> <label for="changingOrRefunding_1">退换货承诺</label>
 
                                             </div>

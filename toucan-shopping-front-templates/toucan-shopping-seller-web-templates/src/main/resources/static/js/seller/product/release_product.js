@@ -1,13 +1,13 @@
 $(function () {
 
 
-    $("#productMainPhotoFile").on("change", function(){
+    $("#mainPhotoFile").on("change", function(){
         // Get a reference to the fileList
         var files = !!this.files ? this.files : [];
 
         // If no files were selected, or no FileReader support, return
         if (!files.length || !window.FileReader) {
-            $("#productMainPhotoImg").attr("src","/static/lib/tupload/images/imgadd.png");
+            $("#mainPhotoImg").attr("src","/static/lib/tupload/images/imgadd.png");
             return;
         }
 
@@ -21,7 +21,7 @@ $(function () {
 
             // When loaded, set image data as background of div
             reader.onloadend = function(){
-                $("#productMainPhotoImg").attr("src",this.result);
+                $("#mainPhotoImg").attr("src",this.result);
             }
 
         }

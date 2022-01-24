@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class ShopProductApiController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value = "/release",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO release(HttpServletRequest request){
+    public ResultObjectVO release(HttpServletRequest request, ProductSkuVO productSkuVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         return resultObjectVO;
     }
