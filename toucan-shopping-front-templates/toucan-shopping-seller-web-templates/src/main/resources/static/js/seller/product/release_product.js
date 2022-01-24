@@ -123,7 +123,8 @@ $("#ppfbtn").click(function() {
         url: basePath+'/api/shop/product/release',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
-        success: function (data) {
+        success: function (result) {
+            loading.hideLoading();
             if(result.code<=0)
             {
                 $("#vcode").val("");
