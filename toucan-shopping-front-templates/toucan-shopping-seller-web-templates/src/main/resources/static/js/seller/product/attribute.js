@@ -42,7 +42,7 @@ $(function () {
             if (bCheck == true) {
                 var RowsCount = 0;
                 $("#tspSkuAttributeTable").html("");
-                var table = $("<table id=\"process\" border=\"1\" cellpadding=\"1\" cellspacing=\"0\" style=\"width:90%;text-align:center;\"></table>");
+                var table = $("<table id=\"process\"  cellpadding=\"1\" cellspacing=\"0\"  class='skuTable' border='1' ></table>");
                 $("#tspSkuAttributeTable").html("销售规格");
                 table.appendTo($("#tspSkuAttributeTable"));
                 var thead = $("<thead></thead>");
@@ -54,7 +54,7 @@ $(function () {
                     var td = $("<th >" + item + "</th>");
                     td.appendTo(trHead);
                 });
-                var itemColumHead = $("<th  style=\"width:70px;\">价格</th><th style=\"width:70px;\">库存</th> <th  style=\"width:70px;\">图片预览</th>");
+                var itemColumHead = $("<th  style=\"width:70px;\"><span class='red'>*</span>价格</th><th style=\"width:70px;\"><span class='red'>*</span>库存</th> <th  style=\"width:70px;\"><span class='red'>*</span>图片预览</th>");
                 itemColumHead.appendTo(trHead);
                 //var itemColumHead2 = $("<td >商家编码</td><td >商品条形码</td>");
                 //itemColumHead2.appendTo(trHead);
