@@ -26,24 +26,39 @@
 
     </sql>
 
+    <sql id="queryListWhere">
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="idArray!=null ">
+            and t.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        <if test="attributeKeyIdList!=null and attributeKeyIdList.size>0">
+            and t.attribute_key_id in
+            <foreach item="item" index="index" collection="attributeKeyIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        and t.delete_status = 0
+    </sql>
+
 
     <select id="queryList" resultMap="attributeValueVOMap" parameterType="com.toucan.shopping.modules.product.vo.AttributeValueVO">
         select t.* from t_attribute_value t
         <where>
             1=1
 
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
+            <include refid="queryListWhere" />
 
-            <if test="idArray!=null ">
-                and t.id in
-                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
 
-            and t.delete_status = 0
 
         </where>
     </select>

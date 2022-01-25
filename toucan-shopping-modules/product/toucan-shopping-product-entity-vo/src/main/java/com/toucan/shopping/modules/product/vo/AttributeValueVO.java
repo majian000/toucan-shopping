@@ -4,6 +4,8 @@ import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.AttributeValue;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 属性值
  *
@@ -21,6 +23,8 @@ public class AttributeValueVO extends AttributeValue {
 
 
     private Long[] idArray; //主键列表
+
+    private List<Long> attributeKeyIdList; //属性键ID列表
 
 
 }
