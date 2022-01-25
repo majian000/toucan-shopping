@@ -115,9 +115,16 @@ $(function () {
 /**
  * 输入商品库存数量
  */
-function inputStock()
+function inputStock(o)
 {
-    alert(this.value);
+    var num=0;
+    $(".skuStockInput").each(function (i, n) {
+        var stockVal = $(this).val();
+        if(stockVal!=null&&stockVal!="") {
+            num += parseInt($(this).val());
+        }
+    });
+    $("#num").val(num);
 }
 
 $("#ppfbtn").click(function() {

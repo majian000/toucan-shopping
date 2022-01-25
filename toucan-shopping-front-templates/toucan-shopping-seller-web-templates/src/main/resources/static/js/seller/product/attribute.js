@@ -6,6 +6,18 @@
  *      2、 .rp_attr_kt      这个类作用是取到所有标题的值，赋给表格，如有改变JS也应相应改动
  *      3、 .rpai       这个类作用是取类型组数，有多少类型就添加相应的类名：如: rpai1、rpai2、rpai3 ...
  */
+
+function stockInputKeyUp(o)
+{
+    $(o).keyup(function(){
+        var c=$(this);
+        if(/[^\d]/.test(c.val())){//替换非数字字符
+            var temp_amount=c.val().replace(/[^\d]/g,'');
+            $(this).val(temp_amount);
+        }
+    });
+}
+
 $(function () {
     //SKU信息
     $(".rp_attr_div label").bind("change", function () {
@@ -74,7 +86,7 @@ $(function () {
                         });
                         var td1 = $("<td ><input name=\"price\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|money\"  placeholder='请输入价格'></td>");
                         td1.appendTo(tr);
-                        var td2 = $("<td ><input name=\"count\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock();' placeholder='请输入库存数量'></td>");
+                        var td2 = $("<td ><input name=\"count\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
                         td2.appendTo(tr);
                         var td3 = $("<td ><input type='file' name='skuProductProview' /></td>");
                         td3.appendTo(tr);
@@ -188,4 +200,4 @@ $(function () {
         }
     }
     return step;
-})
+});
