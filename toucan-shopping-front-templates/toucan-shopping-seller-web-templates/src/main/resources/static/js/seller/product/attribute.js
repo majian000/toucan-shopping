@@ -22,6 +22,8 @@ $(function () {
     //SKU信息
     $(".rp_attr_div label").bind("change", function () {
         step.Creat_Table();
+        //重新计算库存总数
+        inputStock();
     });
     var step = {
         //SKU信息组合
