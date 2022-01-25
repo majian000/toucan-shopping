@@ -28,6 +28,9 @@
         <if test="categoryId!=null">
             and t.category_id = #{categoryId}
         </if>
+
+        and t.delete_status = 0
+
     </sql>
 
 
@@ -71,7 +74,6 @@
     <select id="queryListPage" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.page.AttributeKeyPageInfo">
          select t.* from t_attribute_key t
         <where>
-            1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
         </where>
         order by t.id desc
@@ -90,7 +92,6 @@
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.AttributeKeyPageInfo">
           select count(*) from t_attribute_key t
             <where>
-                1=1 and t.delete_status = 0
 
                 <include refid="queryListPageWhere" />
             </where>

@@ -163,6 +163,7 @@ public class AttributeValueController {
             BeanUtils.copyProperties(entity,vo);
             entity.setId(idGenerator.id());
             entity.setCreateDate(new Date());
+            entity.setDeleteStatus((short)0);
             int row = attributeValueService.save(entity);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);

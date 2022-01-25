@@ -28,6 +28,7 @@
             and t.attribute_key_id = #{attributeKeyId}
         </if>
 
+        and t.delete_status=0
 
     </sql>
 
