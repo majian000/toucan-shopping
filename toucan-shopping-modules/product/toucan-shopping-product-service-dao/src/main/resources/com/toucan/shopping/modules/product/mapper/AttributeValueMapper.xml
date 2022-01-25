@@ -78,7 +78,6 @@
     <select id="queryListPage" resultMap="attributeValueVOMap" parameterType="com.toucan.shopping.modules.product.page.AttributeValuePageInfo">
          select t.* from t_attribute_value t
         <where>
-            1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
         </where>
         order by t.id desc
@@ -97,8 +96,6 @@
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.AttributeValuePageInfo">
           select count(*) from t_attribute_value t
             <where>
-                1=1 and t.delete_status = 0
-
                 <include refid="queryListPageWhere" />
             </where>
 
