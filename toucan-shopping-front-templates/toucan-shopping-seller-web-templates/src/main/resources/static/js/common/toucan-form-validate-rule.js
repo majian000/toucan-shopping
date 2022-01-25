@@ -19,6 +19,9 @@ var checkInput = {
     phone: [
         /^1(3|4|5|6|7|8|9)\d{9}$/, '请输入正确的电话号码'
     ],
+    money: [
+        /^(([1-9]\d*)(\.\d{1,2})?)$|(0\.0?([1-9]\d?))$/, '请输入正确的金额'
+    ],
     required: function(value) {
         if (value == "" || value == null) {
             return "必填项不能为空";

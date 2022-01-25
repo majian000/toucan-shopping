@@ -112,6 +112,14 @@ $(function () {
 });
 
 
+/**
+ * 输入商品库存数量
+ */
+function inputStock()
+{
+    alert(this.value);
+}
+
 $("#ppfbtn").click(function() {
 
     loading.showLoading({
