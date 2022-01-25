@@ -19,5 +19,10 @@ public class AttributeValue {
     private String createAdminId; //创建人ID
     private Date updateDate; //修改时间
     private String updateAdminId; //修改人ID
+    private String remark; //备注
+    /**
+     * 删除状态 0未删除 1已删除
+     */
+    private Short deleteStatus;
 
 }

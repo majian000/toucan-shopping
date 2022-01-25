@@ -22,6 +22,8 @@
 <span th:replace="common_page::common"></span>
 
 <div class="layui-form layuimini-form">
+
+    <input type="hidden" name="attributeKeyId" id="attributeKeyId" th:value="${attributeKeyId}">
     <div class="layui-form-item">
         <label class="layui-form-label required">属性值</label>
         <div class="layui-input-block">
@@ -50,16 +52,11 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form','tree','dtree','upload','laydate'], function () {
+    layui.use(['form'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
 
-        var tree = layui.tree;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {

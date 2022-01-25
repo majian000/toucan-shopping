@@ -29,13 +29,13 @@ public class AttributeValueServiceImpl implements AttributeValueService {
     }
 
     @Override
-    public int save(AttributeValue AttributeValue) {
-        return attributeValueMapper.insert(AttributeValue);
+    public int save(AttributeValue entity) {
+        return attributeValueMapper.insert(entity);
     }
 
     @Override
-    public int update(AttributeValue AttributeValue) {
-        return attributeValueMapper.update(AttributeValue);
+    public int update(AttributeValue entity) {
+        return attributeValueMapper.update(entity);
     }
 
     @Override

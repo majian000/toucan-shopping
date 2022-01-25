@@ -186,10 +186,10 @@ public class AttributeValueController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
+    @RequestMapping(value = "/addPage/{attributeKeyId}",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request,@PathVariable Long attributeKeyId)
     {
-
+        request.setAttribute("attributeKeyId",attributeKeyId);
         return "pages/product/attribute/attributeValue/add.html";
     }
 

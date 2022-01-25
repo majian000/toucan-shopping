@@ -63,8 +63,8 @@
     
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey"  keyProperty="id" >
-        insert into t_attribute_key(id,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{id},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_attribute_key(id,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status)
+        values(#{id},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus})
     </insert>
 
 

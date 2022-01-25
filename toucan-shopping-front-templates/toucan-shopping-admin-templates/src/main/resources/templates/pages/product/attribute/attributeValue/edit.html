@@ -51,16 +51,11 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form','tree','dtree','upload','laydate'], function () {
+    layui.use(['form'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
 
-        var tree = layui.tree;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
@@ -89,55 +84,6 @@
             return false;
         });
 
-        $("#selectCategoryId").click(function(){
-            loadding = layer.load();
-            index = layer.open({
-                title: '选择所属分类',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-
-                area: ['20%', '60%'],
-                content: "<div id='categoryTree'></div>",
-                success:function(layero){
-                    $.ajax({
-                        url:"[[@{/}]]product/attribute/attributeValue/query/category/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#categoryTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
-                                        $("#selectCategoryId").val(obj.data.title);
-                                        $("#categoryId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
-
-                }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-
-        })
 
 
     });

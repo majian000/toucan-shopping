@@ -27,6 +27,8 @@ public class AttributeValuePageInfo extends PageInfo<AttributeValueVO> {
 
     private Long categoryId; //所属类别
 
+    private String attributeValue;
+
 
     private Long[] idArray; //ID数组
 
