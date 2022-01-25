@@ -72,9 +72,9 @@ $(function () {
                             var td = $("<td>" + values + "</td>");
                             td.appendTo(tr);
                         });
-                        var td1 = $("<td ><input name=\"Txt_PriceSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
+                        var td1 = $("<td ><input name=\"price\" class=\"releaseProductInputText\" type=\"text\" value=\"\"></td>");
                         td1.appendTo(tr);
-                        var td2 = $("<td ><input name=\"Txt_CountSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
+                        var td2 = $("<td ><input name=\"count\" class=\"releaseProductInputText\" type=\"text\" value=\"\"></td>");
                         td2.appendTo(tr);
                         var td3 = $("<td ><input type='file' name='skuProductProview' /></td>");
                         td3.appendTo(tr);
