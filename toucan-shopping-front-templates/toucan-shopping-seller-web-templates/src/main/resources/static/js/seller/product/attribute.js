@@ -43,7 +43,7 @@ $(function () {
                 var RowsCount = 0;
                 $("#tspSkuAttributeTable").html("");
                 var table = $("<table id=\"process\"  cellpadding=\"1\" cellspacing=\"0\"  class='skuTable' border='1' ></table>");
-                $("#tspSkuAttributeTable").html("销售规格");
+                $("#tspSkuAttributeTable").html("<a>销售规格</a>");
                 table.appendTo($("#tspSkuAttributeTable"));
                 var thead = $("<thead></thead>");
                 thead.appendTo(table);
