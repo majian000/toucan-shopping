@@ -26,6 +26,10 @@ public class AttributeValue {
     private Long attributeKeyId;
     private String attributeValue; //属性值
     private Integer attributeSort; //排序
+    private Short attributeType; //属性类型 1:普通属性 2:颜色属性
+    private String attributeValueExtend1; //属性值扩展字段
+    private String attributeValueExtend2; //属性值扩展字段
+    private String attributeValueExtend3; //属性值扩展字段
 
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

@@ -5,6 +5,10 @@
     <resultMap id="attributeValueMap" type="com.toucan.shopping.modules.product.entity.AttributeValue" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="attribute_value" jdbcType="VARCHAR" property="attributeValue" />
+        <result column="attribute_type" jdbcType="INTEGER" property="attributeType" />
+        <result column="attribute_value_extend1" jdbcType="VARCHAR" property="attributeValueExtend1" />
+        <result column="attribute_value_extend2" jdbcType="VARCHAR" property="attributeValueExtend2" />
+        <result column="attribute_value_extend3" jdbcType="VARCHAR" property="attributeValueExtend3" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -71,8 +75,8 @@
     
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeValue"  keyProperty="id" >
-        insert into t_attribute_value(id,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status)
-        values(#{id},#{attributeValue},#{attributeKeyId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus})
+        insert into t_attribute_value(id,attribute_type,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status)
+        values(#{id},#{attributeType},#{attributeValueExtend1},#{attributeValueExtend2},#{attributeValueExtend3},#{attributeValue},#{attributeKeyId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus})
     </insert>
 
 
@@ -88,7 +92,9 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeValue">
-        update t_attribute_value set attribute_key_id=#{attributeKeyId},attribute_value=#{attributeValue},attribute_sort=#{attributeSort},remark=#{remark},
+        update t_attribute_value set attribute_type=#{attributeType},
+          attribute_value_extend1=#{attributeValueExtend1},attribute_value_extend2=#{attributeValueExtend2},attribute_value_extend3=#{attributeValueExtend3},
+          attribute_value=#{attributeValue},attribute_sort=#{attributeSort},remark=#{remark},
           update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>

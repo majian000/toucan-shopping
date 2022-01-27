@@ -24,10 +24,38 @@
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" id="id" th:value="${model.id}">
     <div class="layui-form-item">
+        <label class="layui-form-label required">属性类型</label>
+        <div class="layui-input-block">
+            <select id="attributeType"  name="attributeType"  lay-search="" lay-filter="attributeType">
+                <option  th:selected="${model.attributeType=='1'}" value="1"  >普通属性</option>
+                <option  th:selected="${model.attributeType=='2'}" value="2"  >颜色属性</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">属性值</label>
         <div class="layui-input-block">
             <input type="text" name="attributeValue" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入属性值" th:value="${model.attributeValue}" class="layui-input">
             <tip>填写属性值。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ">属性值扩展1</label>
+        <div class="layui-input-block">
+            <input type="text" name="attributeValueExtend1"  maxlength="100" lay-reqtext="不能为空" placeholder="属性值扩展1" th:value="${model.attributeValueExtend1}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">属性值扩展2</label>
+        <div class="layui-input-block">
+            <input type="text" name="attributeValueExtend2"  maxlength="100" lay-reqtext="不能为空" placeholder="填写属性值扩展2" th:value="${model.attributeValueExtend2}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">属性值扩展3</label>
+        <div class="layui-input-block">
+            <input type="text" name="attributeValueExtend3"  maxlength="100" lay-reqtext="不能为空" placeholder="填写属性值扩展3" th:value="${model.attributeValueExtend3}" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">

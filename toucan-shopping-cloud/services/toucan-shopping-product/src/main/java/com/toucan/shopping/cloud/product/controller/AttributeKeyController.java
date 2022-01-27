@@ -172,6 +172,7 @@ public class AttributeKeyController {
             BeanUtils.copyProperties(entity,vo);
             entity.setId(idGenerator.id());
             entity.setCreateDate(new Date());
+            entity.setDeleteStatus((short)0);
             int row = attributeKeyService.save(entity);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -189,6 +190,34 @@ public class AttributeKeyController {
         return resultObjectVO;
     }
 
+
+
+    @RequestMapping(value="/init",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO init(@RequestBody Long[] categoryIds)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        for(Long categoryId:categoryIds)
+        {
+            AttributeKey entity = new AttributeKey();
+            entity.setAttributeName("颜色");
+            entity.setCategoryId(categoryId);
+            entity.setDeleteStatus((short)0);
+            entity.setAttributeSort(999L);
+            entity.setId(idGenerator.id());
+            entity.setCreateDate(new Date());
+            int row = attributeKeyService.save(entity);
+            if(row<1)
+            {
+                throw new IllegalArgumentException("保存失败");
+            }
+
+
+
+
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 删除指定
