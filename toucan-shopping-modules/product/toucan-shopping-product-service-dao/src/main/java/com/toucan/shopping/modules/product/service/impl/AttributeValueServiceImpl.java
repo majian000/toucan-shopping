@@ -34,6 +34,11 @@ public class AttributeValueServiceImpl implements AttributeValueService {
     }
 
     @Override
+    public int saves(List<AttributeValue> attributeValues) {
+        return attributeValueMapper.inserts(attributeValues);
+    }
+
+    @Override
     public int update(AttributeValue entity) {
         return attributeValueMapper.update(entity);
     }
@@ -43,6 +48,10 @@ public class AttributeValueServiceImpl implements AttributeValueService {
         return attributeValueMapper.deleteById(id);
     }
 
+    @Override
+    public int deleteByAttributeKeyId(Long attributeKeyId) {
+        return attributeValueMapper.deleteByAttributeKeyId(attributeKeyId);
+    }
     @Override
     public List<AttributeValueVO> queryList(AttributeValueVO query) {
         return attributeValueMapper.queryList(query);

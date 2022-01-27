@@ -60,6 +60,27 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">显示状态</label>
+        <div class="layui-input-block" th:if="${model.showStatus eq 1}" >
+            <input type="radio" name="showStatus" value="1" title="显示" checked="">
+            <input type="radio" name="showStatus" value="0" title="隐藏">
+        </div>
+        <div class="layui-input-block" th:if="${model.showStatus eq 0}" >
+            <input type="radio" name="showStatus" value="1" title="显示" >
+            <input type="radio" name="showStatus" value="0" title="隐藏" checked="">
+        </div>
+
+        <div class="layui-input-block" th:if="${model.showStatus eq null}" >
+            <input type="radio" name="showStatus" value="1" title="显示" >
+            <input type="radio" name="showStatus" value="0" title="隐藏" checked="">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
             <input type="number" name="attributeSort"    placeholder="请输入排序" th:value="${model.attributeSort}"  class="layui-input" lay-verify="number">

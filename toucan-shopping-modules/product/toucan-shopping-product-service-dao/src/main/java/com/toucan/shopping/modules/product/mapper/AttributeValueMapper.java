@@ -16,6 +16,8 @@ public interface AttributeValueMapper {
 
     int insert(AttributeValue attributeValue);
 
+    int inserts(List<AttributeValue> entitys);
+
     /**
      * 查询列表页
      * @param pageInfo
@@ -40,4 +42,5 @@ public interface AttributeValueMapper {
 
     int deleteById(Long id);
 
+    int deleteByAttributeKeyId(Long attributeKeyId);
 }

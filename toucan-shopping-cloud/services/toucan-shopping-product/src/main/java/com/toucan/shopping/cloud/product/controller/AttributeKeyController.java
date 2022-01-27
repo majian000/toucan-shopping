@@ -7,8 +7,10 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
+import com.toucan.shopping.modules.product.entity.AttributeValue;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
+import com.toucan.shopping.modules.product.service.AttributeValueService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,6 +37,9 @@ public class AttributeKeyController {
 
     @Autowired
     private AttributeKeyService attributeKeyService;
+
+    @Autowired
+    private AttributeValueService attributeValueService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -191,6 +196,21 @@ public class AttributeKeyController {
     }
 
 
+    AttributeValue saveAttributeValue(Long keyId,String value,String extend1)
+    {
+        AttributeValue attributeValue = new AttributeValue();
+        attributeValue.setAttributeKeyId(keyId);
+        attributeValue.setId(idGenerator.id());
+        attributeValue.setCreateDate(new Date());
+        attributeValue.setDeleteStatus((short)0);
+        attributeValue.setAttributeValue(value);
+        attributeValue.setAttributeType((short)2);
+        attributeValue.setAttributeValueExtend1(extend1);
+        attributeValueService.save(attributeValue);
+
+        return attributeValue;
+    }
+
 
     @RequestMapping(value="/init",produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -212,7 +232,63 @@ public class AttributeKeyController {
                 throw new IllegalArgumentException("保存失败");
             }
 
-
+            List<AttributeValue> attributeValues = new ArrayList<AttributeValue>();
+            attributeValues.add(saveAttributeValue(entity.getId(),"乳白色","255, 251, 240"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"白色","255, 255, 255"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"米白色","238, 222, 176"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"浅灰色","228, 228, 228"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"深灰色","102, 102, 102"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"灰色","128, 128, 128"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"银色","192, 192, 192"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"黑色","0, 0, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"桔红色","255, 117, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"玫红色","223, 27, 118"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"粉红色","255, 182, 193"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"红色","255, 0, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"藕色","238, 208, 216"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"西瓜红","240, 86, 84"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"酒红色","153, 0, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"卡其色","195, 176, 145"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"姜黄色","255, 199, 115"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"明黄色","255, 255, 1"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"杏色","247, 238, 214"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"柠檬黄","255, 236, 67"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"桔色","255, 165, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"浅黄色","250, 255, 114"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"荧光黄","234, 255, 86"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"金色","255, 215, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"香槟色","240, 218, 171"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"黄色","255, 255, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"军绿色","93, 118, 42"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"墨绿色","5, 119, 72"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"浅绿色","152, 251, 152"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"绿色","0, 128, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"翠绿色","10, 163, 68"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"荧光绿","35, 250, 7"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"青色","0, 224, 158"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"天蓝色","68, 206, 246"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"孔雀蓝","0, 164, 197"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"宝蓝色","75, 92, 196"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"浅蓝色","210, 240, 244"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"深蓝色","4, 22, 144"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"湖蓝色","48, 223, 243"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"蓝色","0, 0, 254"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"藏青色","46, 78, 126"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"浅紫色","237, 224, 230"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"深紫色","67, 6, 83"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"紫红色","139, 0, 98"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"紫罗兰","183, 172, 228"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"紫色","128, 0, 128"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"咖啡色","96, 57, 18"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"巧克力色","210, 105, 30"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"栗色","96, 40, 30"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"浅棕色","179, 92, 68"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"深卡其布色","189, 183, 107"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"深棕色","124, 75, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"褐色","133, 91, 0"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"驼色","168, 132, 98"));
+            attributeValues.add(saveAttributeValue(entity.getId(),"花色",""));
+            attributeValues.add(saveAttributeValue(entity.getId(),"透明",""));
 
 
         }
@@ -250,6 +326,9 @@ public class AttributeKeyController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+
+            //删除属性值
+            attributeValueService.deleteByAttributeKeyId(entity.getId());
 
 
             resultObjectVO.setData(entity);
@@ -303,6 +382,8 @@ public class AttributeKeyController {
                         continue;
                     }
 
+                    //删除属性值
+                    attributeValueService.deleteByAttributeKeyId(attributeKey.getId());
                 }
             }
             resultObjectVO.setData(resultObjectVOList);

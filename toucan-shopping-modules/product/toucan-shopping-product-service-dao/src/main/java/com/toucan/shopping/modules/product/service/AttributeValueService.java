@@ -26,6 +26,12 @@ public interface AttributeValueService {
      */
     int save(AttributeValue attributeValue);
 
+    /**
+     * 保存实体
+     * @param attributeValues
+     * @return
+     */
+    int saves(List<AttributeValue> attributeValues);
 
     /**
      * 修改实体
@@ -40,5 +46,7 @@ public interface AttributeValueService {
 
 
     List<AttributeValueVO> queryList(AttributeValueVO query);
+
+    int deleteByAttributeKeyId(Long attributeKeyId);
 
 }

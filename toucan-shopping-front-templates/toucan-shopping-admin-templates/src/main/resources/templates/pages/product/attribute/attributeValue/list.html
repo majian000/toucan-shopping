@@ -109,8 +109,8 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'attributeValue',  title: '属性值'},
-                    {field: 'attributeType',  title: '属性类型',
+                    {field: 'attributeValue', width: 150, title: '属性值'},
+                    {field: 'attributeType',width: 150,   title: '属性类型',
                         templet: function (row) {
                             if(row.attributeType == null){
                                 return "";
@@ -123,14 +123,27 @@
                             }
                             return row.attributeType;
                         }},
-                    {field: 'attributeValueExtend1',  title: '属性值扩展1'},
-                    {field: 'attributeValueExtend2',  title: '属性值扩展2'},
-                    {field: 'attributeValueExtend3',  title: '属性值扩展3'},
-                    {field: 'attributeSort',  title: '排序'},
-                    {field: 'createAdminName', title: '创建人'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'attributeValueExtend1',width: 150,  title: '属性值扩展1'},
+                    {field: 'attributeValueExtend2',width: 150,   title: '属性值扩展2'},
+                    {field: 'attributeValueExtend3', width: 150,  title: '属性值扩展3'},
+                    {field: 'showStatus', width: 150,  title: '显示状态',
+                        templet: function (row) {
+                            if(row.showStatus == null){
+                                return "";
+                            }
+                            if(row.showStatus == "1"){
+                                return "显示";
+                            }
+                            if(row.showStatus == "0"){
+                                return "隐藏";
+                            }
+                            return row.showStatus;
+                        }},
+                    {field: 'attributeSort', width: 150, title: '排序'},
+                    {field: 'createAdminName',width: 150, title: '创建人'},
+                    {field: 'createDate', width: 150, title: '创建时间'},
+                    {field: 'updateAdminName', width: 150, title: '修改人'},
+                    {field: 'updateDate', width: 150, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#attributeValueTableBar', align: "center"}
                 ]
             ],
