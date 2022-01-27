@@ -10,10 +10,10 @@
     </parent>
 
 
-    <description>商城类别服务</description>
+    <description>商城公共服务</description>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.toucan.shopping.services</groupId>
-    <artifactId>toucan-shopping-category</artifactId>
+    <artifactId>toucan-shopping-common</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
