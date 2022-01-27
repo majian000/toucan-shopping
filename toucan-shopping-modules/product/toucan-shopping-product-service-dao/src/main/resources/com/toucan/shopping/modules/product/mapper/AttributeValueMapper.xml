@@ -39,6 +39,14 @@
             and t.attribute_value_extend3  like concat(#{attributeValueExtend3},'%')
         </if>
 
+        <if test="showStatus!=null and showStatus!=-1">
+            and t.show_status = #{showStatus}
+        </if>
+
+        <if test="attributeType!=null and attributeType!=-1">
+            and t.attribute_type = #{attributeType}
+        </if>
+
         <if test="attributeKeyId!=null">
             and t.attribute_key_id = #{attributeKeyId}
         </if>
