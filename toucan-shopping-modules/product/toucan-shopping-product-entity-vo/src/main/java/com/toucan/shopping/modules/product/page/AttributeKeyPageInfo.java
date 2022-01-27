@@ -23,6 +23,7 @@ public class AttributeKeyPageInfo extends PageInfo<AttributeKeyVO> {
 
 
     private String attributeName; //属性名
+    private Short showStatus; //显示状态 1显示 0隐藏
 
     private Long categoryId; //所属类别
 

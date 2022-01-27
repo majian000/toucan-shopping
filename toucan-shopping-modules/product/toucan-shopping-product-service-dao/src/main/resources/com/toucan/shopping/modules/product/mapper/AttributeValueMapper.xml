@@ -29,8 +29,22 @@
             and t.attribute_value  like concat(#{attributeValue},'%')
         </if>
 
+        <if test="attributeValueExtend1!=null and attributeValueExtend1!='' ">
+            and t.attribute_value_extend1  like concat(#{attributeValueExtend1},'%')
+        </if>
+        <if test="attributeValueExtend2!=null and attributeValueExtend2!='' ">
+            and t.attribute_value_extend2  like concat(#{attributeValueExtend2},'%')
+        </if>
+        <if test="attributeValueExtend3!=null and attributeValueExtend3!='' ">
+            and t.attribute_value_extend3  like concat(#{attributeValueExtend3},'%')
+        </if>
+
         <if test="attributeKeyId!=null">
             and t.attribute_key_id = #{attributeKeyId}
+        </if>
+
+        <if test="showStatus!=null and showStatus!=-1">
+            and t.show_status = #{showStatus}
         </if>
 
         and t.delete_status=0

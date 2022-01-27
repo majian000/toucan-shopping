@@ -30,6 +30,9 @@
             and t.category_id = #{categoryId}
         </if>
 
+        <if test="showStatus!=null and showStatus!=-1">
+            and t.show_status = #{showStatus}
+        </if>
         and t.delete_status = 0
 
     </sql>
