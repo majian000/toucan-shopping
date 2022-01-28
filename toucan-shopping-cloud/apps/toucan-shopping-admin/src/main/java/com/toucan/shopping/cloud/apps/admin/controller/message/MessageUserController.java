@@ -7,7 +7,6 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionServi
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageTypeService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
-import com.toucan.shopping.modules.area.page.BannerPageInfo;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;

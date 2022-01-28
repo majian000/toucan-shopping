@@ -54,14 +54,14 @@ ribbon:
   ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
   eager-load:
     enabled: true
-    clients: "toucan-shopping-category,\
-              toucan-shopping-order,\
+    clients: "toucan-shopping-order,\
               toucan-shopping-product,\
               toucan-shopping-admin-auth,\
               toucan-shopping-gateway,\
+              toucan-shopping-common-data,\
+              toucan-shopping-content,\
               toucan-shopping-column,\
               toucan-shopping-user,\
-              toucan-shopping-area,\
               toucan-shopping-stock"
 
 

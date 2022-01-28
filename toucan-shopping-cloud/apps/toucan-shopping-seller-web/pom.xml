@@ -133,19 +133,20 @@
             <groupId>com.toucan.shopping.cloud.seller</groupId>
             <artifactId>toucan-shopping-seller-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-area-api</artifactId>
+            <artifactId>toucan-shopping-common-data-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-content-api</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.category</groupId>
             <artifactId>toucan-shopping-category-entity-vo</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-category-api</artifactId>
         </dependency>
 
         <dependency>

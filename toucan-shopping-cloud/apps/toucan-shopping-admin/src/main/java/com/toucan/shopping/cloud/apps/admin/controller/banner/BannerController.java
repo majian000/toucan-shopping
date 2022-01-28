@@ -5,18 +5,18 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerAreaService;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerAreaService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.area.entity.Area;
-import com.toucan.shopping.modules.area.entity.Banner;
-import com.toucan.shopping.modules.area.entity.BannerArea;
-import com.toucan.shopping.modules.area.page.BannerPageInfo;
+import com.toucan.shopping.modules.content.entity.Banner;
+import com.toucan.shopping.modules.content.entity.BannerArea;
+import com.toucan.shopping.modules.content.page.BannerPageInfo;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
-import com.toucan.shopping.modules.area.vo.BannerAreaVO;
-import com.toucan.shopping.modules.area.vo.BannerVO;
+import com.toucan.shopping.modules.content.vo.BannerAreaVO;
+import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -442,26 +442,6 @@ public class BannerController extends UIController {
                             banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
                         }
 
-                        if(!CollectionUtils.isEmpty(banner.getAreas()))
-                        {
-                            StringBuilder areaNames = new StringBuilder();
-                            StringBuilder areaCodes = new StringBuilder();
-                            for(int i=0;i<banner.getAreas().size();i++)
-                            {
-                                Area area = banner.getAreas().get(i);
-                                if(area!=null) {
-                                    areaNames.append(area.getCity());
-                                    areaCodes.append(area.getCode());
-                                }
-                                if(i+1<banner.getAreas().size())
-                                {
-                                    areaNames.append(",");
-                                    areaCodes.append(",");
-                                }
-                            }
-                            banner.setAreaNames(areaNames.toString());
-                            banner.setAreaCodes(areaCodes.toString());
-                        }
 
                         request.setAttribute("model",banner);
                     }

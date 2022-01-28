@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.common.properties.modules;
 
 import com.toucan.shopping.modules.common.properties.modules.areaCache.AreaCache;
 import com.toucan.shopping.modules.common.properties.modules.categoryCache.CategoryCache;
+import com.toucan.shopping.modules.common.properties.modules.contentCache.ContentCache;
 import com.toucan.shopping.modules.common.properties.modules.log.Log;
 import com.toucan.shopping.modules.common.properties.modules.skylarkLock.SkylarkLock;
 import com.toucan.shopping.modules.common.properties.modules.toucanRedis.ToucanRedis;
@@ -20,6 +21,11 @@ public class Modules {
      * 地区缓存模块
      */
     private AreaCache areaCache;
+
+    /**
+     * 内容缓存模块
+     */
+    private ContentCache contentCache;
 
     /**
      * 类别缓存模块

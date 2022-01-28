@@ -18,14 +18,14 @@ ribbon:
   ServerListRefreshInterval: 3000 #3秒钟更新一次服务列表缓存
   eager-load:
     enabled: true
-    clients: "toucan-shopping-category,\
-              toucan-shopping-order,\
+    clients: "toucan-shopping-order,\
               toucan-shopping-product,\
               toucan-shopping-admin-auth,\
               toucan-shopping-column,\
+              toucan-shopping-common-data,\
+              toucan-shopping-content,\
               toucan-shopping-user,\
               toucan-shopping-seller,\
-              toucan-shopping-area,\
               toucan-shopping-message,\
               toucan-shopping-stock"
 
@@ -73,10 +73,10 @@ spring:
             - Path=/toucan-shopping-user-proxy/**
           filters:
             - StripPrefix=1
-        - id: toucan-shopping-category-proxy
-          uri: lb://toucan-shopping-category
+        - id: toucan-shopping-common-data-proxy
+          uri: lb://toucan-shopping-common-data
           predicates:
-            - Path=/toucan-shopping-category-proxy/**
+            - Path=/toucan-shopping-common-data-proxy/**
           filters:
             - StripPrefix=1
         - id: toucan-shopping-stock-proxy
@@ -85,10 +85,10 @@ spring:
             - Path=/toucan-shopping-stock-proxy/**
           filters:
             - StripPrefix=1
-        - id: toucan-shopping-area-proxy
-          uri: lb://toucan-shopping-area
+        - id: toucan-shopping-content-proxy
+          uri: lb://toucan-shopping-content
           predicates:
-            - Path=/toucan-shopping-area-proxy/**
+            - Path=/toucan-shopping-content-proxy/**
           filters:
             - StripPrefix=1
         - id: toucan-shopping-message-proxy

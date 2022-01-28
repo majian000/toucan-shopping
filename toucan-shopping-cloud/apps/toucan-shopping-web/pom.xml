@@ -102,10 +102,6 @@
             <artifactId>toucan-shopping-order-no</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-category-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
@@ -125,9 +121,15 @@
             <groupId>com.toucan.shopping.modules.area</groupId>
             <artifactId>toucan-shopping-area-entity-vo</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-area-api</artifactId>
+            <artifactId>toucan-shopping-common-data-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.api</groupId>
+            <artifactId>toucan-shopping-content-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
@@ -150,6 +152,11 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.area</groupId>
             <artifactId>toucan-shopping-area-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.content</groupId>
+            <artifactId>toucan-shopping-content-cache</artifactId>
         </dependency>
 
        <dependency>

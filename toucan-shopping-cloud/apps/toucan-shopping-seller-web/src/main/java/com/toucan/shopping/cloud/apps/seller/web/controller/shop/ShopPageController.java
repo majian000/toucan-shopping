@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop;
 
 import com.alibaba.fastjson.JSONArray;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
-import com.toucan.shopping.cloud.area.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserService;
 import com.toucan.shopping.modules.area.vo.AreaVO;

@@ -139,14 +139,20 @@
             <artifactId>toucan-shopping-cloud-admin-auth-controller</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-area-api</artifactId>
+            <artifactId>toucan-shopping-common-data-api</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-category-api</artifactId>
+            <artifactId>toucan-shopping-content-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.content</groupId>
+            <artifactId>toucan-shopping-content-entity-vo</artifactId>
         </dependency>
 
         <dependency>

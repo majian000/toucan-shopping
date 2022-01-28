@@ -124,10 +124,6 @@
             <artifactId>toucan-shopping-order-no</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.cloud.api</groupId>
-            <artifactId>toucan-shopping-category-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>

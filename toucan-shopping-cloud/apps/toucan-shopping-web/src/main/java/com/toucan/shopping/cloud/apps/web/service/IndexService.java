@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.apps.web.service;
 
-import com.toucan.shopping.modules.area.vo.BannerVO;
+import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 
 import java.util.List;

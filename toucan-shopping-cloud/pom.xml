@@ -43,22 +43,20 @@
         <module>services/toucan-shopping-product</module>
         <!--秒杀服务 -->
         <module>services/toucan-shopping-second-kill</module>
-        <!--类别服务 -->
-        <module>services/toucan-shopping-category</module>
         <!--库存服务 -->
         <module>services/toucan-shopping-stock</module>
-        <!--地区编码服务 -->
-        <module>services/toucan-shopping-area</module>
         <!-- 栏目服务 -->
         <module>services/toucan-shopping-column</module>
+        <!--公共数据服务 -->
+        <module>services/toucan-shopping-common-data</module>
+        <!--内容服务-->
+        <module>services/toucan-shopping-content</module>
 
 
         <!--商品服务API -->
         <module>api/toucan-shopping-product-api</module>
         <!--订单服务API -->
         <module>api/toucan-shopping-order-api</module>
-        <!--类别服务API -->
-        <module>api/toucan-shopping-category-api</module>
         <!--用户中心API -->
         <module>api/toucan-shopping-user-api</module>
         <!--管理权限中台API -->
@@ -66,11 +64,13 @@
         <!--库存API -->
         <module>api/toucan-shopping-stock-api</module>
         <!--地区编码API -->
-        <module>api/toucan-shopping-area-api</module>
+        <module>api/toucan-shopping-content-api</module>
         <!--商户服务API -->
         <module>api/toucan-shopping-seller-api</module>
         <!--消息服务API-->
         <module>api/toucan-shopping-message-api</module>
+        <!--公共数据服务API -->
+        <module>api/toucan-shopping-common-data-api</module>
 
 
 
@@ -227,12 +227,6 @@
 
 
 
-            <dependency>
-                <groupId>com.toucan.shopping.cloud.api</groupId>
-                <artifactId>toucan-shopping-category-api</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <scope>compile</scope>
-            </dependency>
 
             <dependency>
                 <groupId>com.toucan.shopping.cloud.api</groupId>
@@ -241,10 +235,16 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.api</groupId>
+                <artifactId>toucan-shopping-content-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
 
             <dependency>
                 <groupId>com.toucan.shopping.cloud.api</groupId>
-                <artifactId>toucan-shopping-area-api</artifactId>
+                <artifactId>toucan-shopping-common-data-api</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

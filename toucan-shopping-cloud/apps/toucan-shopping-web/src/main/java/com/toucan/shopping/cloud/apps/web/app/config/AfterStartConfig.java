@@ -2,7 +2,7 @@ package com.toucan.shopping.cloud.apps.web.app.config;
 
 
 import com.toucan.shopping.cloud.apps.web.redis.UserEditInfoRedisKey;
-import com.toucan.shopping.modules.area.constant.BannerRedisKey;
+import com.toucan.shopping.modules.content.constant.BannerRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
 import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
 import com.toucan.shopping.modules.common.context.ToucanApplicationContext;

@@ -2,13 +2,13 @@ package com.toucan.shopping.standard.apps.web.controller.page.index;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.area.entity.Banner;
-import com.toucan.shopping.modules.area.entity.BannerArea;
+import com.toucan.shopping.modules.content.entity.Banner;
+import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.area.service.AreaService;
-import com.toucan.shopping.modules.area.service.BannerAreaService;
-import com.toucan.shopping.modules.area.service.BannerService;
+import com.toucan.shopping.modules.content.service.BannerAreaService;
+import com.toucan.shopping.modules.content.service.BannerService;
 import com.toucan.shopping.modules.area.vo.AreaVO;
-import com.toucan.shopping.modules.area.vo.BannerVO;
+import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.category.service.CategoryService;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
