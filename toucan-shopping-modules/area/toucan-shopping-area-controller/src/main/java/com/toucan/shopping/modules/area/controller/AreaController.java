@@ -479,6 +479,70 @@ public class AreaController {
 
 
 
+    /**
+     * 根据编码查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/codes",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findByCodes(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AreaVO entity = JSONObject.parseObject(requestVo.getEntityJson(),AreaVO.class);
+            if(entity.getCodeArray()==null||entity.getCodeArray().length<=0)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到编码数组");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该功能项
+            List<Area> areas = areaService.queryList(entity);
+            if(CollectionUtils.isEmpty(areas))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("地区不存在!");
+                return resultObjectVO;
+            }
+            List<AreaVO> areaVOS = new ArrayList<AreaVO>();
+            for(Area area:areas)
+            {
+                AreaVO areaVO = new AreaVO();
+                BeanUtils.copyProperties(areaVO,area);
+                //逐个替换,最后会替换为这个节点的名称
+                if(StringUtils.isNotEmpty(areaVO.getProvince()))
+                {
+                    areaVO.setName(area.getProvince());
+                }
+                if(StringUtils.isNotEmpty(areaVO.getCity()))
+                {
+                    areaVO.setName(area.getCity());
+                }
+                if(StringUtils.isNotEmpty(areaVO.getArea()))
+                {
+                    areaVO.setName(area.getArea());
+                }
+                areaVOS.add(areaVO);
+            }
+            resultObjectVO.setData(areaVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 編輯

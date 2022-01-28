@@ -20,6 +20,15 @@ public interface FeignAreaService {
     ResultObjectVO queryAll(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
 
+
+    /**
+     * 根据编码查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/codes",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findByCodes(@RequestBody RequestJsonVO requestVo);
+
     /**
      * 查询树表格
      * @param signHeader

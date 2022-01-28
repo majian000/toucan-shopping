@@ -60,15 +60,6 @@ public class Banner  {
     private String startShowDateString;
     private String endShowDateString;
 
-    /**
-     * 关联所有市名称
-     */
-    private String areaNames;
-
-    /**
-     * 关联所有地区编码
-     */
-    private String areaCodes;
 
 
 

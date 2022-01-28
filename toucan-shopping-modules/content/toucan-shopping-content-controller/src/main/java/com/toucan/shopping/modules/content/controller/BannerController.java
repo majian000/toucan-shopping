@@ -272,6 +272,11 @@ public class BannerController {
                 return resultObjectVO;
             }
 
+            //查询出所有轮播图地区关联
+            BannerArea queryBannerArea = new BannerArea();
+            queryBannerArea.setBannerId(bannerVO.getId());
+            List<BannerArea> bannerAreaVOS = bannerAreaService.queryList(queryBannerArea);
+            banners.get(0).setBannerAreas(bannerAreaVOS);
             resultObjectVO.setData(banners);
 
         }catch(Exception e)

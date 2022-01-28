@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.controller.banner;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Joiner;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
@@ -38,10 +39,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -422,7 +420,7 @@ public class BannerController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
-            Banner banner = new Banner();
+            BannerVO banner = new BannerVO();
             banner.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, banner);
             ResultObjectVO resultObjectVO = feignBannerService.findById(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -442,6 +440,41 @@ public class BannerController extends UIController {
                             banner.setEndShowDateString(DateUtils.format(banner.getEndShowDate(), DateUtils.FORMATTER_SS.get()));
                         }
 
+                        if(!CollectionUtils.isEmpty(banner.getBannerAreas())) {
+                            String[] areaCodeArray = new String[banner.getBannerAreas().size()];
+                            for(int i=0;i<banner.getBannerAreas().size();i++)
+                            {
+                                areaCodeArray[i]= banner.getBannerAreas().get(i).getAreaCode();
+                            }
+                            AreaVO queryArea = new AreaVO();
+                            queryArea.setCodeArray(areaCodeArray);
+                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryArea);
+
+                            resultObjectVO = feignAreaService.findByCodes(requestJsonVO);
+                            if(resultObjectVO.isSuccess()) {
+                                List<AreaVO> areaVOS = resultObjectVO.formatDataList(AreaVO.class);
+                                //设置这个轮播图下关联的所有地区
+                                if(!CollectionUtils.isEmpty(areaVOS))
+                                {
+                                    int areaVoSize = areaVOS.size();
+                                    StringBuilder areaNamesBuilder= new StringBuilder();
+                                    StringBuilder areaCodesBuilder = new StringBuilder();
+                                    for(int i=0;i<areaVoSize;i++)
+                                    {
+                                        AreaVO areaVO = areaVOS.get(i);
+                                        areaNamesBuilder.append(areaVO.getName());
+                                        areaCodesBuilder.append(areaVO.getCode());
+
+                                        if(i+1<areaVoSize) {
+                                            areaNamesBuilder.append(",");
+                                            areaCodesBuilder.append(",");
+                                        }
+                                    }
+                                    banner.setAreaCodes(areaCodesBuilder.toString());
+                                    banner.setAreaNames(areaNamesBuilder.toString());
+                                }
+                            }
+                        }
 
                         request.setAttribute("model",banner);
                     }
