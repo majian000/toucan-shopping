@@ -68,6 +68,13 @@ public class IndexPageController {
     }
 
 
+    @RequestMapping("/preview/index")
+    public String previewIndex(HttpServletRequest request)
+    {
+        return "/htmls/preview/index";
+    }
+
+
     @RequestMapping("/dynamic/index")
     public String dynamicIndex(HttpServletRequest request)
     {
