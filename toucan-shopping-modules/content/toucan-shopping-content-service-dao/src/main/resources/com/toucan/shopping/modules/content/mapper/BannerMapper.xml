@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.area.mapper.BannerMapper">
+<mapper namespace="com.toucan.shopping.modules.content.mapper.BannerMapper">
 
-    <resultMap id="bannerMap" type="com.toucan.shopping.modules.area.entity.Banner" >
+    <resultMap id="bannerMap" type="com.toucan.shopping.modules.content.entity.Banner" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="title" jdbcType="VARCHAR" property="title" />
         <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
@@ -21,7 +21,7 @@
     </resultMap>
 
 
-    <resultMap id="bannerVOMap" type="com.toucan.shopping.modules.area.vo.BannerVO" extends="bannerMap" >
+    <resultMap id="bannerVOMap" type="com.toucan.shopping.modules.content.vo.BannerVO" extends="bannerMap" >
     </resultMap>
 
     <sql id="queryListPageWhere">
@@ -32,7 +32,7 @@
         </if>
     </sql>
 
-    <select id="queryList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
+    <select id="queryList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.content.vo.BannerVO">
         select ba.* from t_banner ba
         <where>
             1=1
@@ -61,7 +61,7 @@
     </select>
 
 
-    <select id="queryIndexList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.vo.BannerVO">
+    <select id="queryIndexList" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.content.vo.BannerVO">
         select ba.* from t_banner ba
         <where>
             1=1
@@ -73,7 +73,7 @@
         </where>
     </select>
 
-    <select id="queryListPage" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
+    <select id="queryListPage" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.content.page.BannerPageInfo">
          select t.* from t_banner t
         <where>
             1=1 and t.delete_status = 0
@@ -84,7 +84,7 @@
     </select>
 
 
-    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.area.page.BannerPageInfo">
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.content.page.BannerPageInfo">
           select count(*) from t_banner t
         <where>
             1=1 and t.delete_status = 0
@@ -95,12 +95,12 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Banner"  keyProperty="id" >
+    <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.Banner"  keyProperty="id" >
         insert into t_banner(id,title,img_path,click_path,position,banner_sort,start_show_date,end_show_date,show_status,remark,create_date,update_date,create_admin_id,update_admin_id)
         values(#{id},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{startShowDate},#{endShowDate},#{showStatus},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
-    <update id="update" parameterType="com.toucan.shopping.modules.area.entity.Banner">
+    <update id="update" parameterType="com.toucan.shopping.modules.content.entity.Banner">
         update t_banner set title=#{title},img_path=#{imgPath},position=#{position},banner_sort=#{bannerSort},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
           show_status=#{showStatus},remark=#{remark},update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
