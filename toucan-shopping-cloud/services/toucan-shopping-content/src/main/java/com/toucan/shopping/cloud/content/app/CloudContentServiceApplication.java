@@ -14,10 +14,10 @@ import org.springframework.context.annotation.ComponentScan;
 @MapperScan({"com.toucan.shopping.modules.content.mapper",
         "com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScan("com.toucan.shopping")
-public class CloudCommonDataServiceApplication {
+public class CloudContentServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CloudCommonDataServiceApplication.class, args);
+        SpringApplication.run(CloudContentServiceApplication.class, args);
     }
 
 }

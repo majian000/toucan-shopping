@@ -1,8 +1,6 @@
 package com.toucan.shopping.modules.area.mapper;
 
-import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.entity.SecondKillColumn;
-import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.area.vo.SecondKillColumnVO;
 import org.apache.ibatis.annotations.Mapper;
 

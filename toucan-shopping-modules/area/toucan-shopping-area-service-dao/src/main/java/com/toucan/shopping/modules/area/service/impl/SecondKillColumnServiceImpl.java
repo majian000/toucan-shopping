@@ -1,12 +1,8 @@
 package com.toucan.shopping.modules.area.service.impl;
 
-import com.toucan.shopping.modules.area.entity.Banner;
 import com.toucan.shopping.modules.area.entity.SecondKillColumn;
-import com.toucan.shopping.modules.area.mapper.BannerMapper;
 import com.toucan.shopping.modules.area.mapper.SecondKillColumnMapper;
-import com.toucan.shopping.modules.area.service.BannerService;
 import com.toucan.shopping.modules.area.service.SecondKillColumnService;
-import com.toucan.shopping.modules.area.vo.BannerVO;
 import com.toucan.shopping.modules.area.vo.SecondKillColumnVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

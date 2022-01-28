@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.area.cache.service;
 
+
 import com.toucan.shopping.modules.area.vo.AreaVO;
-import com.toucan.shopping.modules.area.vo.BannerVO;
 
 import java.util.List;
 
