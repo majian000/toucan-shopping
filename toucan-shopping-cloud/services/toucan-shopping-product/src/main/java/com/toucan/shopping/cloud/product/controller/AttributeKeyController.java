@@ -204,7 +204,6 @@ public class AttributeKeyController {
         attributeValue.setCreateDate(new Date());
         attributeValue.setDeleteStatus((short)0);
         attributeValue.setAttributeValue(value);
-        attributeValue.setAttributeType((short)2);
         attributeValue.setAttributeValueExtend1(extend1);
         attributeValueService.save(attributeValue);
 

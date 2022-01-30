@@ -131,6 +131,19 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
+                    {field: 'attributeType',width: 150,   title: '属性类型',
+                        templet: function (row) {
+                            if(row.attributeType == null){
+                                return "";
+                            }
+                            if(row.attributeType == "1"){
+                                return "普通属性";
+                            }
+                            if(row.attributeType == "2"){
+                                return "颜色属性";
+                            }
+                            return row.attributeType;
+                        }},
                     {field: 'attributeName',  title: '属性名'},
                     {field: 'categoryName',  title: '所属类别'},
                     {field: 'attributeSort',  title: '排序'},

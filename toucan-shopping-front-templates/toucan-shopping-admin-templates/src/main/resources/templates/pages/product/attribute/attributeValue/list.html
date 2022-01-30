@@ -149,19 +149,6 @@
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
                     {field: 'attributeValue', width: 150, title: '属性值'},
-                    {field: 'attributeType',width: 150,   title: '属性类型',
-                        templet: function (row) {
-                            if(row.attributeType == null){
-                                return "";
-                            }
-                            if(row.attributeType == "1"){
-                                return "普通属性";
-                            }
-                            if(row.attributeType == "2"){
-                                return "颜色属性";
-                            }
-                            return row.attributeType;
-                        }},
                     {field: 'attributeValueExtend1',width: 150,  title: '属性值扩展1'},
                     {field: 'attributeValueExtend2',width: 150,   title: '属性值扩展2'},
                     {field: 'attributeValueExtend3', width: 150,  title: '属性值扩展3'},
