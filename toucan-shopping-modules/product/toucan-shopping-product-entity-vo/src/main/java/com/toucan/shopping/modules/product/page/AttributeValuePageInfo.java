@@ -25,7 +25,6 @@ public class AttributeValuePageInfo extends PageInfo<AttributeValueVO> {
 
     private Long attributeKeyId; //属性名ID
     private Short showStatus; //显示状态 1显示 0隐藏
-    private Short attributeType; //属性类型 1:普通属性 2:颜色属性
     private String attributeValueExtend1; //属性值扩展字段
     private String attributeValueExtend2; //属性值扩展字段
     private String attributeValueExtend3; //属性值扩展字段
