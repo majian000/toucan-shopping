@@ -144,6 +144,9 @@
         <!--卖家Service和DAO -->
         <module>seller/toucan-shopping-seller-service-dao</module>
 
+        <!--颜色表实体和VO -->
+        <module>colorTable/toucan-shopping-color-table-entity-vo</module>
+
 
         <!-- 云雀分布式锁-->
         <module>skylark/toucan-shopping-skylark-lock</module>
@@ -460,6 +463,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.skylark</groupId>
                 <artifactId>toucan-shopping-skylark-lock</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.area</groupId>
+                <artifactId>toucan-shopping-color-table-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
