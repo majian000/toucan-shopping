@@ -45,6 +45,5 @@ public class ColorTable {
 
 
     private Long[] idArray; //ID数组
-    private String[] codeArray; //编码数组
 
 }
