@@ -49,9 +49,9 @@
         <where>
             1=1 and tud.delete_status = 0
 
-            <if test="array!=null  ">
+            <if test="userIdArray!=null and userIdArray.length>0 ">
                 and tud.user_main_id in
-                <foreach item="item" index="index" collection="array" open="("  close=")" separator=",">
+                <foreach item="item" index="index" collection="userIdArray" open="("  close=")" separator=",">
                     #{item}
                 </foreach>
             </if>

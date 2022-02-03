@@ -54,9 +54,9 @@
         <where>
             1=1 and tump.delete_status = 0
 
-            <if test="array!=null  ">
+            <if test="userMainIdArray!=null and userMainIdArray.length>0 ">
                 and tump.user_main_id in
-                <foreach item="item" index="index" collection="array" open="("  close=")" separator=",">
+                <foreach item="item" index="index" collection="userMainIdArray" open="("  close=")" separator=",">
                     #{item}
                 </foreach>
             </if>
@@ -71,9 +71,9 @@
         select tump.* from t_user_mobile_phone tump
         <where>
             1=1
-            <if test="array!=null  ">
+            <if test="userMainIdArray!=null and userMainIdArray.length>0  ">
                 and tump.user_main_id in
-                <foreach item="item" index="index" collection="array" open="("  close=")" separator=",">
+                <foreach item="item" index="index" collection="userMainIdArray" open="("  close=")" separator=",">
                     #{item}
                 </foreach>
             </if>

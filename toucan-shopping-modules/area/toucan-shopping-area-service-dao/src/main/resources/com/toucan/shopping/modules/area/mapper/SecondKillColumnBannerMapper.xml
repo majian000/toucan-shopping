@@ -33,7 +33,7 @@
                 and t.banner_id = #{bannerId}
             </if>
 
-            <if test="idArray!=null ">
+            <if test="idArray!=null and idArray.length>0 ">
                 and t.id in
                 <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
                     #{item}
