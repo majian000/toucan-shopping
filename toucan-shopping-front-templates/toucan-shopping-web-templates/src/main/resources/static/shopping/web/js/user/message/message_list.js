@@ -8,6 +8,12 @@ $(function () {
 
 function queryMessageList(cpage)
 {
+
+    loading.showLoading({
+        type:1,
+        tip:"查询中..."
+    });
+
     g_um_cpage = cpage;
     if(messageBasePath!="") {
         var totalPage = 1;
@@ -41,7 +47,7 @@ function queryMessageList(cpage)
                                 row += "<i class='redpoint'></i>";
                             }
                             row += "&nbsp;" + obj.title + "&nbsp;&nbsp;&nbsp;";
-                            row += "<a class='accordion-title-time'>" + obj.sendDateYearMonthDay + "</a>";
+                            row += "<a class='accordion-title-time'>" + obj.sendDate + "</a>";
                             row += "</span>";
                             row += "<span class='icon' aria-hidden='true'>展开</span>";
                             row += "</button>";
@@ -57,6 +63,7 @@ function queryMessageList(cpage)
             },
             complete:function()
             {
+                loading.hideLoading();
                 if(total<=0)
                 {
                     $(".pagination").html("<a style='font-size:20px;'>您暂时没有消息~</a>");

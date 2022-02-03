@@ -37,13 +37,13 @@ public class ContentCacheRedisConfig {
 
     @Bean
     @Qualifier("contentCacheRedisTemplate")
-    public RedisTemplate<String, Object> areaCacheRedisTemplate() {
+    public RedisTemplate<String, Object> contentCacheRedisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(areaCacheRedisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(this.jackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(this.contentJackson2JsonRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(this.jackson2JsonRedisSerializer());
+        redisTemplate.setHashValueSerializer(this.contentJackson2JsonRedisSerializer());
         return redisTemplate;
     }
 
@@ -53,7 +53,8 @@ public class ContentCacheRedisConfig {
      * @return
      */
     @Bean
-    public Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+    @Qualifier("contentJackson2JsonRedisSerializer")
+    public Jackson2JsonRedisSerializer<Object> contentJackson2JsonRedisSerializer() {
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);

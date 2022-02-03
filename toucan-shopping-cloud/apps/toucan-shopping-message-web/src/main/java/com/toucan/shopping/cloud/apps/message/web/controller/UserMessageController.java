@@ -8,7 +8,9 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +38,14 @@ public class UserMessageController {
     @UserAuth
     @RequestMapping("/list")
     @ResponseBody
-    public ResultObjectVO queryMyMessageList(HttpServletRequest request)
+    public ResultObjectVO queryMyMessageList(MessageUserPageInfo messageUserPageInfo,HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId = "-1";
         try {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            MessageUserVO messageUserVO=new MessageUserVO();
-            messageUserVO.setUserMainId(Long.parseLong(userMainId));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
+            messageUserPageInfo.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserPageInfo);
 
             resultObjectVO = feignMessageUserService.queryListPageByUserMianId(requestJsonVO);
         }catch(Exception e)
