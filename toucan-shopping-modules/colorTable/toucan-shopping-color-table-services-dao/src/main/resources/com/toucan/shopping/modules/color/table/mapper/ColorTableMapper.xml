@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.color.table.mapper.ColorTableMapper">
+
+    <resultMap id="colorTableMap" type="com.toucan.shopping.modules.color.table.entity.ColorTable" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="rgb_color" jdbcType="VARCHAR" property="rgbColor" />
+        <result column="red_color" jdbcType="VARCHAR" property="redColor" />
+        <result column="green_color" jdbcType="VARCHAR" property="greenColor" />
+        <result column="blue_color" jdbcType="VARCHAR" property="blueColor" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+
+
+
+    <resultMap id="colorTableVOMap" type="com.toucan.shopping.modules.color.table.vo.ColorTableVO" extends="colorTableMap" >
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="name!=null and name!='' ">
+            and t.name  like concat('%',#{name},'%')
+
+        </if>
+    </sql>
+
+    <select id="queryList" resultMap="colorTableVOMap" parameterType="com.toucan.shopping.modules.color.table.vo.ColorTableVO">
+        select t.* from t_color_table t
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+
+
+            <if test="name!=null and name!='' ">
+                and t.name = #{name}
+            </if>
+
+            <if test="idArray!=null and idArray.length>0 ">
+                and t.id in
+                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+
+
+    <select id="queryListPage" resultMap="colorTableVOMap" parameterType="com.toucan.shopping.modules.color.table.page.ColorTablePageInfo">
+        select t.* from t_color_table t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.color.table.page.ColorTablePageInfo">
+        select count(*) from t_color_table t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.color.table.entity.ColorTable"  keyProperty="id" >
+        insert into t_color_table(id,name,rgb_color,red_color,green_color,blue_color,delete_status,remark,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{name},#{rgbColor},#{redColor},#{greenColor},#{blueColor},#{deleteStatus},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+    </insert>
+
+    <update id="update" parameterType="com.toucan.shopping.modules.color.table.entity.ColorTable">
+        update t_color_table set name=#{name},rgb_color=#{rgbColor},red_color=#{redColor},green_color=#{greenColor},blue_color=#{blueColor},remark=#{remark},update_admin_id=#{updateAdminId},update_date=#{updateDate}
+          where id=#{id}
+    </update>
+
+
+    <update id="deleteById">
+        update t_color_table  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
+</mapper>
