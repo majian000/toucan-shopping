@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @MapperScan({"com.toucan.shopping.modules.area.mapper","com.toucan.shopping.modules.category.mapper",
-        "com.toucan.shopping.modules.common.persistence.mapper"})
+        "com.toucan.shopping.modules.color.table.mapper","com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScan("com.toucan.shopping")
 public class CloudCommonDataServiceApplication {
 

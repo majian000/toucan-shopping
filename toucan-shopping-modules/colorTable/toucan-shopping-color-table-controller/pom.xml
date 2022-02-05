@@ -12,27 +12,36 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <description>颜色表服务Service和DAO</description>
+    <description>颜色表服务和DAO</description>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.toucan.shopping.modules.colorTable</groupId>
-    <artifactId>toucan-shopping-color-table-services-dao</artifactId>
+    <artifactId>toucan-shopping-color-table-controller</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
     <dependencies>
         <dependency>
-            <groupId>com.toucan.shopping.modules.colorTable</groupId>
-            <artifactId>toucan-shopping-color-table-entity-vo</artifactId>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-lock-redis</artifactId>
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-common</artifactId>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-service-dao</artifactId>
         </dependency>
     </dependencies>
 

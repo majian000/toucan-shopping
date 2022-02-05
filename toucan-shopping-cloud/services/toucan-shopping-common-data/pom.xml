@@ -113,6 +113,18 @@
             <artifactId>toucan-shopping-area-controller</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-entity-vo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-service-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.modules.colorTable</groupId>
+            <artifactId>toucan-shopping-color-table-controller</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.category</groupId>

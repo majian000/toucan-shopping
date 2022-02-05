@@ -147,7 +147,9 @@
         <!--颜色表实体和VO -->
         <module>colorTable/toucan-shopping-color-table-entity-vo</module>
         <!-- 颜色表Service和DAO-->
-        <module>colorTable/toucan-shopping-color-table-services-dao</module>
+        <module>colorTable/toucan-shopping-color-table-service-dao</module>
+        <!-- 颜色表控制器-->
+        <module>colorTable/toucan-shopping-color-table-controller</module>
 
 
         <!-- 云雀分布式锁-->
@@ -478,7 +480,14 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.colorTable</groupId>
-                <artifactId>toucan-shopping-color-table-services-dao</artifactId>
+                <artifactId>toucan-shopping-color-table-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.colorTable</groupId>
+                <artifactId>toucan-shopping-color-table-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
