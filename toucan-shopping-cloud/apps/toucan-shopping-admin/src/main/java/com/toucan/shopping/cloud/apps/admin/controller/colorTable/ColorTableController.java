@@ -322,7 +322,6 @@ public class ColorTableController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-
         return "pages/colorTable/add.html";
     }
 

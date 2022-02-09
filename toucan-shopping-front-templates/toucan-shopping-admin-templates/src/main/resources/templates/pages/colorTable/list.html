@@ -105,7 +105,10 @@
                     {field: 'id',  title: '主键'},
                     {field: 'name',  title: '颜色名称'},
                     {field: 'rgbColor',  title: '颜色值(RGB)'},
-                    {field: 'rgbColor',  title: '颜色预览'},
+                    {field: 'rgbColor',  title: '颜色预览',
+                        templet: function (row) {
+                            return "<span style='background-color:"+row.rgbColor+";width:35px;height:35px;'></span>";
+                        }},
                     {field: 'createAdminName', title: '创建人'},
                     {field: 'createDate',  title: '创建时间'},
                     {field: 'updateAdminName',  title: '修改人'},
