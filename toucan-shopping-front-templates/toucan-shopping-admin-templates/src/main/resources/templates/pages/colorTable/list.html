@@ -45,9 +45,9 @@
             </div>
         </script>
 
-        <table class="layui-hide" id="bannerTable" lay-filter="bannerTableFilter"></table>
+        <table class="layui-hide" id="colorTableTable" lay-filter="colorTableTableFilter"></table>
 
-        <script type="text/html" id="bannerTableBar">
+        <script type="text/html" id="colorTableTableBar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
@@ -56,20 +56,10 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
-        var $ = layui.jquery,
-            form = layui.form,
-            table = layui.table;
-        var index;
-        var tree = layui.tree;
-        var loadding;
-        var dtree = layui.dtree;
-        var roleTree;
-        var roleTreeDataArray = new Array();
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -96,7 +86,7 @@
         }
 
         table.render({
-            elem: '#bannerTable',
+            elem: '#colorTableTable',
             url: "[[@{/}]]colorTable/list",
             method:'POST',
             where:getFormParam(),
@@ -113,41 +103,14 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'title',  title: '标题'},
-                    {field: 'httpImgPath', width: 80, title: '预览',
-                        templet: function (row) {
-                            return "<a href='"+row.httpImgPath+"' target='_blank'><img src='"+row.httpImgPath+"' width='30' height='30'  /></a>";
-                        }},
-                    {field: 'startShowDate',  title: '开始展示时间'},
-                    {field: 'endShowDate',  title: '结束展示时间'},
-                    {field: 'imgPath',  title: '图片路径'},
-                    {field: 'clickPath',  title: '点击路径'},
-                    {field: 'showStatus', title: '显示状态',
-                        templet: function (row) {
-                            if(row.showStatus == "0"){
-                                return "隐藏"
-                            }else
-                            if(row.showStatus == "1"){
-                                return "显示"
-                            }
-                            return row.showStatus;
-                        }},
-                    {field: 'position', title: '类型',
-                        templet: function (row) {
-                            if(row.position == "0"){
-                                return "首页顶部"
-                            }else
-                            if(row.position == "1"){
-                                return "栏目左侧"
-                            }
-                            return row.position;
-                        }},
-                    {field: 'bannerSort',  title: '排序'},
+                    {field: 'name',  title: '颜色名称'},
+                    {field: 'rgbColor',  title: '颜色值(RGB)'},
+                    {field: 'rgbColor',  title: '颜色预览'},
                     {field: 'createAdminName', title: '创建人'},
                     {field: 'createDate',  title: '创建时间'},
                     {field: 'updateAdminName',  title: '修改人'},
                     {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#bannerTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#colorTableTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -159,7 +122,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('bannerTable', {
+            table.reload('colorTableTable', {
                 page: {
                     curr: 1
                 }
@@ -175,10 +138,10 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(bannerTableFilter)', function (obj) {
+        table.on('toolbar(colorTableTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加轮播图',
+                    title: '添加颜色表',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -189,14 +152,14 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
+                var checkStatus = table.checkStatus('colorTableTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除数据?', function (index) {
+                layer.confirm('确定删除颜色表?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]colorTable/delete/ids",
                         contentType: "application/json; charset=utf-8",
@@ -206,66 +169,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event === 'flushIndexCache') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
-                    , data = checkStatus.data;
-                if(data==null||data.length<=0)
-                {
-                    layer.msg("请选择要操作的记录");
-                    return;
-                }
-                layer.confirm('确定刷新PC首页缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]colorTable/flush/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('bannerTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event === 'clearCacheToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('bannerTable')
-                    , data = checkStatus.data;
-                layer.confirm('确定清空PC首页缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]colorTable/clear/index/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:null,
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('colorTableTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -284,88 +188,19 @@
 
 
 
-
-        /**
-         * 拿到所有选中节点的ID
-         * @param data
-         * @param idArray
-         */
-        function getCheckdNodeId(data,idArray)
-        {
-            for(var i=0;i<data.length;i++)
-            {
-                roleTreeDataArray.push(data[i]);
-                if(data[i].state.checked==true)
-                {
-                    idArray.push(data[i].id);
-                }
-                if(data[i].children!=null&&data[i].children.length>0)
-                {
-                    getCheckdNodeId(data[i].children,idArray);
-                }
-            }
-        }
-
-
-        /**
-         * 拿到指定节点对象
-         */
-        function getNodeObject(nodeId)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-                if(roleTreeDataArray[i].id==nodeId)
-                {
-                    return roleTreeDataArray[i];
-                }
-            }
-            return null;
-        }
-
-
-        /**
-         * 拿到上级节点信息
-         */
-        function getParentNode(rolesArray,pid)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-
-                if(roleTreeDataArray[i].id==pid)
-                {
-                    var exists=false;
-                    //判断上级节点ID是否已经保存了
-                    for(var j=0;j<rolesArray.length;j++)
-                    {
-                        if(rolesArray[j].id==pid) {
-                            exists = true;
-                        }
-                    }
-                    //避免上级节点ID重复保存两份
-                    if(!exists)
-                    {
-                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
-                    }
-                    if(roleTreeDataArray[i].pid!=-1) {
-                        //找到这个节点的上级节点
-                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
-                    }
-                }
-            }
-        }
 
 
         //监听表格复选框选择
-        table.on('checkbox(bannerTableFilter)', function (obj) {
+        table.on('checkbox(colorTableTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(bannerTableFilter)', function (obj) {
+        table.on('tool(colorTableTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
                 var index = layer.open({
-                    title: '编辑数据',
+                    title: '编辑颜色表',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -377,7 +212,7 @@
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该数据?', function (index) {
+                layer.confirm('确定删除该颜色表?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]colorTable/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
@@ -386,7 +221,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('bannerTable', {
+                            table.reload('colorTableTable', {
                                 page: {
                                     curr: 1
                                 }
