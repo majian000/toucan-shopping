@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>com.toucan.shopping.modules.adminAuth</groupId>
-            <artifactId>toucan-shopping-admin-auth-cache-memory</artifactId>
+            <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
         </dependency>
     </dependencies>
 

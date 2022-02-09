@@ -92,6 +92,7 @@ public class ColorTableController {
             BeanUtils.copyProperties(colorTable,colorTableVO);
             colorTable.setId(entityId);
             colorTable.setCreateDate(new Date());
+            colorTable.setDeleteStatus((short)0);
             int row = colorTableService.save(colorTable);
             if (row <= 0) {
                 resultObjectVO.setCode(ResultVO.FAILD);

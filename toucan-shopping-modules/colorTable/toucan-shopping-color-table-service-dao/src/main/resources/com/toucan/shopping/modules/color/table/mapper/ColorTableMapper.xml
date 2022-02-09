@@ -26,7 +26,7 @@
     <sql id="queryListPageWhere">
 
         <if test="name!=null and name!='' ">
-            and t.name  like concat('%',#{name},'%')
+            and t.name  like concat(#{name},'%')
 
         </if>
     </sql>

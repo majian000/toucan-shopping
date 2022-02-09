@@ -14,6 +14,8 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.color.table.entity.ColorTable;
+import com.toucan.shopping.modules.color.table.page.ColorTablePageInfo;
 import com.toucan.shopping.modules.color.table.vo.ColorTableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -88,7 +90,7 @@ public class ColorTableController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, BannerPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, ColorTablePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

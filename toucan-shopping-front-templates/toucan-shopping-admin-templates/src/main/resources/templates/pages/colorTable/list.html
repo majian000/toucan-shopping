@@ -22,12 +22,12 @@
 
         <fieldset class="table-search-fieldset">
             <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                <form class="layui-form layui-form-pane" id="searchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">标题</label>
+                            <label class="layui-form-label">颜色名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="title" autocomplete="off" class="layui-input">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -56,9 +56,10 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form'], function () {
+    layui.use(['table','form'], function () {
         var form = layui.form,
             layer = layui.layer,
+            table = layui.table,
             $ = layui.$;
 
         $.fn.serializeJson=function(){
@@ -81,7 +82,7 @@
 
         function getFormParam()
         {
-            var formParam = $("#userSearchForm").serializeJson();
+            var formParam = $("#searchForm").serializeJson();
             return formParam;
         }
 
@@ -107,12 +108,13 @@
                     {field: 'rgbColor',  title: '颜色值(RGB)'},
                     {field: 'rgbColor',  title: '颜色预览',
                         templet: function (row) {
-                            return "<span style='background-color:"+row.rgbColor+";width:35px;height:35px;'></span>";
+                            return "<div style='background-color:"+row.rgbColor+";width:35px;height:35px;'></div>";
                         }},
                     {field: 'createAdminName', title: '创建人'},
                     {field: 'createDate',  title: '创建时间'},
                     {field: 'updateAdminName',  title: '修改人'},
                     {field: 'updateDate',  title: '修改时间'},
+                    {field: 'remark',  title: '备注'},
                     {title: '操作', minWidth: 300, toolbar: '#colorTableTableBar', align: "center"}
                 ]
             ],
