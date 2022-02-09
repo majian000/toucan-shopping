@@ -65,9 +65,9 @@ public class ColorTableController {
             return resultObjectVO;
         }
 
-        Long bannerId = -1L;
+        Long entityId = -1L;
         try {
-            bannerId = idGenerator.id();
+            entityId = idGenerator.id();
             ColorTableVO colorTableVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
             if(StringUtils.isEmpty(colorTableVO.getName()))
             {
@@ -90,7 +90,7 @@ public class ColorTableController {
 
             ColorTable colorTable = new ColorTable();
             BeanUtils.copyProperties(colorTable,colorTableVO);
-            colorTable.setId(bannerId);
+            colorTable.setId(entityId);
             colorTable.setCreateDate(new Date());
             int row = colorTableService.save(colorTable);
             if (row <= 0) {
@@ -105,8 +105,6 @@ public class ColorTableController {
             resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
 
-            //地区与颜色表有一条关联回滚数据
-            colorTableService.deleteById(bannerId);
         }
         return resultObjectVO;
     }
@@ -132,8 +130,8 @@ public class ColorTableController {
         }
 
         try {
-            ColorTableVO bannerVO = JSONObject.parseObject(requestVo.getEntityJson(),ColorTableVO.class);
-            if(bannerVO.getId()==null)
+            ColorTableVO entityVO = JSONObject.parseObject(requestVo.getEntityJson(),ColorTableVO.class);
+            if(entityVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到ID");
@@ -142,7 +140,7 @@ public class ColorTableController {
 
             //查询是否存在该对象
             ColorTableVO query=new ColorTableVO();
-            query.setId(bannerVO.getId());
+            query.setId(entityVO.getId());
             List<ColorTableVO> colorTableVOS = colorTableService.queryList(query);
             if(CollectionUtils.isEmpty(colorTableVOS))
             {
@@ -312,9 +310,9 @@ public class ColorTableController {
             return resultObjectVO;
         }
         try {
-            ColorTableVO bannerVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
-            List<ColorTableVO> bannerVOS = colorTableService.queryList(bannerVO);
-            resultObjectVO.setData(bannerVOS);
+            ColorTableVO entityVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
+            List<ColorTableVO> entityVOS = colorTableService.queryList(entityVO);
+            resultObjectVO.setData(entityVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -402,27 +400,26 @@ public class ColorTableController {
         }
 
         try {
-            List<ColorTable> banners = JSONObject.parseArray(requestVo.getEntityJson(),ColorTable.class);
-            if(CollectionUtils.isEmpty(banners))
+            List<ColorTable> entitys = JSONObject.parseArray(requestVo.getEntityJson(),ColorTable.class);
+            if(CollectionUtils.isEmpty(entitys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到ID");
                 return resultObjectVO;
             }
             List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
-            for(ColorTable banner:banners) {
-                if(banner.getId()!=null) {
+            for(ColorTable entity:entitys) {
+                if(entity.getId()!=null) {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
-                    appResultObjectVO.setData(banner);
+                    appResultObjectVO.setData(entity);
 
-                    int row = colorTableService.deleteById(banner.getId());
+                    int row = colorTableService.deleteById(entity.getId());
                     if (row < 1) {
-                        logger.warn("删除颜色表失败，id:{}",banner.getId());
+                        logger.warn("删除颜色表失败，id:{}",entity.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
                         resultObjectVO.setMsg("请重试!");
                         continue;
                     }
-                    //删除与地区关联
 
                 }
             }
