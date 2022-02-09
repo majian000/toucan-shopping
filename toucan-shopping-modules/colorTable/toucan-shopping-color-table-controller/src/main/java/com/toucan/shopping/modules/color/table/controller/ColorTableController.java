@@ -68,7 +68,7 @@ public class ColorTableController {
         Long entityId = -1L;
         try {
             entityId = idGenerator.id();
-            ColorTableVO colorTableVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
+            ColorTableVO colorTableVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),ColorTableVO.class);
             if(StringUtils.isEmpty(colorTableVO.getName()))
             {
                 logger.warn("名称不能为空: param:"+ JSONObject.toJSONString(requestJsonVO));
@@ -269,7 +269,7 @@ public class ColorTableController {
             return resultObjectVO;
         }
         try {
-            ColorTablePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTablePageInfo.class);
+            ColorTablePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(),ColorTablePageInfo.class);
             PageInfo<ColorTableVO> pageInfo =  colorTableService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
@@ -283,6 +283,106 @@ public class ColorTableController {
     }
 
 
+
+    void saveColorTable(Long id,String value,String extend1)
+    {
+        ColorTable colorTable = new ColorTable();
+        colorTable.setId(id);
+        colorTable.setName(value);
+        colorTable.setCreateDate(new Date());
+        colorTable.setDeleteStatus((short)0);
+        String[] rgbColors = extend1.split(",");
+        if(rgbColors!=null&&rgbColors.length==3) {
+            String rhex = Integer.toHexString(Integer.parseInt(rgbColors[0]));
+            String ghex = Integer.toHexString(Integer.parseInt(rgbColors[1]));
+            String bhex = Integer.toHexString(Integer.parseInt(rgbColors[2]));
+            if("0".equals(rhex))
+            {
+                rhex="00";
+            }
+            if("0".equals(ghex))
+            {
+                ghex="00";
+            }
+            if("0".equals(bhex))
+            {
+                bhex="00";
+            }
+            colorTable.setRgbColor("#" + rhex + ghex + bhex);
+            colorTable.setRedColor(rgbColors[0]);
+            colorTable.setGreenColor(rgbColors[1]);
+            colorTable.setBlueColor(rgbColors[2]);
+        }
+        colorTableService.save(colorTable);
+
+    }
+
+    @RequestMapping(value="/init",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO init()
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        saveColorTable(idGenerator.id(),"乳白色","255,251,240");
+        saveColorTable(idGenerator.id(),"白色","255,255,255");
+        saveColorTable(idGenerator.id(),"米白色","238,222,176");
+        saveColorTable(idGenerator.id(),"浅灰色","228,228,228");
+        saveColorTable(idGenerator.id(),"深灰色","102,102,102");
+        saveColorTable(idGenerator.id(),"灰色","128,128,128");
+        saveColorTable(idGenerator.id(),"银色","192,192,192");
+        saveColorTable(idGenerator.id(),"黑色","0,0,0");
+        saveColorTable(idGenerator.id(),"桔红色","255,117,0");
+        saveColorTable(idGenerator.id(),"玫红色","223,27,118");
+        saveColorTable(idGenerator.id(),"粉红色","255,182,193");
+        saveColorTable(idGenerator.id(),"红色","255,0,0");
+        saveColorTable(idGenerator.id(),"藕色","238,208,216");
+        saveColorTable(idGenerator.id(),"西瓜红","240,86,84");
+        saveColorTable(idGenerator.id(),"酒红色","153,0,0");
+        saveColorTable(idGenerator.id(),"卡其色","195,176,145");
+        saveColorTable(idGenerator.id(),"姜黄色","255,199,115");
+        saveColorTable(idGenerator.id(),"明黄色","255,255,1");
+        saveColorTable(idGenerator.id(),"杏色","247,238,214");
+        saveColorTable(idGenerator.id(),"柠檬黄","255,236,67");
+        saveColorTable(idGenerator.id(),"桔色","255,165,0");
+        saveColorTable(idGenerator.id(),"浅黄色","250,255,114");
+        saveColorTable(idGenerator.id(),"荧光黄","234,255,86");
+        saveColorTable(idGenerator.id(),"金色","255,215,0");
+        saveColorTable(idGenerator.id(),"香槟色","240,218,171");
+        saveColorTable(idGenerator.id(),"黄色","255,255,0");
+        saveColorTable(idGenerator.id(),"军绿色","93,118,42");
+        saveColorTable(idGenerator.id(),"墨绿色","5,119,72");
+        saveColorTable(idGenerator.id(),"浅绿色","152,251,152");
+        saveColorTable(idGenerator.id(),"绿色","0,128,0");
+        saveColorTable(idGenerator.id(),"翠绿色","10,163,68");
+        saveColorTable(idGenerator.id(),"荧光绿","35,250,7");
+        saveColorTable(idGenerator.id(),"青色","0,224,158");
+        saveColorTable(idGenerator.id(),"天蓝色","68,206,246");
+        saveColorTable(idGenerator.id(),"孔雀蓝","0,164,197");
+        saveColorTable(idGenerator.id(),"宝蓝色","75,92,196");
+        saveColorTable(idGenerator.id(),"浅蓝色","210,240,244");
+        saveColorTable(idGenerator.id(),"深蓝色","4,22,144");
+        saveColorTable(idGenerator.id(),"湖蓝色","48,223,243");
+        saveColorTable(idGenerator.id(),"蓝色","0,0,254");
+        saveColorTable(idGenerator.id(),"藏青色","46,78,126");
+        saveColorTable(idGenerator.id(),"浅紫色","237,224,230");
+        saveColorTable(idGenerator.id(),"深紫色","67,6,83");
+        saveColorTable(idGenerator.id(),"紫红色","139,0,98");
+        saveColorTable(idGenerator.id(),"紫罗兰","183,172,228");
+        saveColorTable(idGenerator.id(),"紫色","128,0,128");
+        saveColorTable(idGenerator.id(),"咖啡色","96,57,18");
+        saveColorTable(idGenerator.id(),"巧克力色","210,105,30");
+        saveColorTable(idGenerator.id(),"栗色","96,40,30");
+        saveColorTable(idGenerator.id(),"浅棕色","179,92,68");
+        saveColorTable(idGenerator.id(),"深卡其布色","189,183,107");
+        saveColorTable(idGenerator.id(),"深棕色","124,75,0");
+        saveColorTable(idGenerator.id(),"褐色","133,91,0");
+        saveColorTable(idGenerator.id(),"驼色","168,132,98");
+        saveColorTable(idGenerator.id(),"花色","");
+        saveColorTable(idGenerator.id(),"透明","");
+
+
+        return resultObjectVO;
+    }
 
 
     /**
@@ -310,7 +410,7 @@ public class ColorTableController {
             return resultObjectVO;
         }
         try {
-            ColorTableVO entityVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColorTableVO.class);
+            ColorTableVO entityVO = JSONObject.parseObject(requestJsonVO.getEntityJson(),ColorTableVO.class);
             List<ColorTableVO> entityVOS = colorTableService.queryList(entityVO);
             resultObjectVO.setData(entityVOS);
         }catch(Exception e)
