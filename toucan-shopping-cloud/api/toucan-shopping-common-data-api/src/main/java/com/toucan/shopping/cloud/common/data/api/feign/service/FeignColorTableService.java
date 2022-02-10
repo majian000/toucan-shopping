@@ -21,6 +21,13 @@ public interface FeignColorTableService {
     @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryList(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/names",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByNames(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**

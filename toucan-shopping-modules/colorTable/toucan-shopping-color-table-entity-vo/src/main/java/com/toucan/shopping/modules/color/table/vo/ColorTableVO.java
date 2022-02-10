@@ -15,6 +15,10 @@ import java.util.List;
 public class ColorTableVO extends ColorTable {
 
 
+    /**
+     * 名称集合
+     */
+    private List<String> nameList;
 
     /**
      * 创建人

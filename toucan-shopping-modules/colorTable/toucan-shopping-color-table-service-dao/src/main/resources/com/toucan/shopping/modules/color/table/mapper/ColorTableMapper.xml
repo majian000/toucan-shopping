@@ -52,6 +52,14 @@
                 </foreach>
             </if>
 
+
+            <if test="nameList!=null and nameList.size>0 ">
+                and t.name in
+                <foreach item="item" index="index" collection="nameList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
             and t.delete_status = 0
 
         </where>
