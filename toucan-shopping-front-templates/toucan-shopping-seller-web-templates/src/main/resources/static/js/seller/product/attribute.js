@@ -34,7 +34,6 @@ $(function () {
             var arrayTile = new Array();//标题组数
             var arrayInfor = new Array();//盛放每组选中的CheckBox值的对象
             var arrayColumn = new Array();//指定列，用来合并哪些列
-            var bCheck = true;//是否全选
             var columnIndex = 0;
             $.each(SKUObj, function (i, item){
                 arrayColumn.push(columnIndex);
@@ -46,14 +45,13 @@ $(function () {
                 $("." + itemName + " input[type=checkbox]:checked").each(function (){
                     order.push($(this).val());
                 });
-                arrayInfor.push(order);
-                if (order.join() == ""){
-                    bCheck = false;
+                if(order!=null&&order.length>0) {
+                    arrayInfor.push(order);
                 }
                 //var skuValue = SKUObj.find("li").eq(index).html();
             });
-            //开始创建Table表
-            if (bCheck == true) {
+            if(arrayInfor!=null&&arrayInfor.length>0) {
+                //开始创建Table表
                 var RowsCount = 0;
                 $("#tspSkuAttributeTable").html("");
                 var table = $("<table id=\"process\"  cellpadding=\"1\" cellspacing=\"0\"  class='skuTable' border='1' ></table>");
@@ -105,10 +103,11 @@ $(function () {
                     // 目前只有cols这么一个配置项, 用数组表示列的索引,从0开始
                     cols: arrayColumn
                 });
-            } else{
+            }else {
                 //未全选中,清除表格
                 document.getElementById('tspSkuAttributeTable').innerHTML="";
             }
+
         },//合并行
         hebingFunction: function () {
             $.fn.mergeCell = function (options) {
