@@ -26,5 +26,7 @@ public class AttributeValueVO extends AttributeValue {
 
     private List<Long> attributeKeyIdList; //属性键ID列表
 
+    private String rgbColor; //颜色值
+
 
 }
