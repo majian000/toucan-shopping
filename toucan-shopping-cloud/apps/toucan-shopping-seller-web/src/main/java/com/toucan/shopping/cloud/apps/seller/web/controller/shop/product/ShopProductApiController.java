@@ -136,7 +136,7 @@ public class ShopProductApiController extends BaseController {
     @UserAuth
     @RequestMapping(value = "/{categoryId}/attributes",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO attributes(@PathVariable Long categoryId){
+    public ResultObjectVO queryAttributesByCategoryId(@PathVariable Long categoryId){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(categoryId==null)
         {
