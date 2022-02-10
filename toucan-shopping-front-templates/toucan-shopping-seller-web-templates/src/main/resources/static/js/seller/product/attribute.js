@@ -18,6 +18,32 @@ function stockInputKeyUp(o)
     });
 }
 
+function initAttributes(categoryId)
+{
+
+    loading.showLoading({
+        type:1,
+        tip:"加载中..."
+    });
+    $.ajax({
+        type: "GET",
+        url: basePath+"/api/shop/product/"+categoryId+"/attributes",
+        contentType: "application/json;charset=utf-8",
+        data: null,
+        dataType: "json",
+        success: function (result) {
+
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
+function clearSkuTable()
+{
+    document.getElementById('tspSkuAttributeTable').innerHTML="";
+}
 $(function () {
     //SKU信息
     $(".rp_attr_div label").bind("change", function () {

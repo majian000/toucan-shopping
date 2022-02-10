@@ -9,6 +9,8 @@
 
 var expressP, expressC, expressD, expressArea, areaCont;
 var arrow = " <font>&gt;</font> ";
+var g_selectCategoryId="-1";
+var g_preSelectCategoryId="-1"; //上一次选择的分类ID
 
 /*初始化一级目录*/
 function intRootCategory() {
@@ -59,6 +61,7 @@ function selectCategoryLevel2(p,c) {
 		//加载品牌列表
 		$("#brandDiv").show();
 		initBrandListControl("selectBrandDiv","selectBrand",category_list[p].children[c].id);
+		g_selectCategoryId = category_list[p].children[c].id;
 		$("#releaseBtn").removeAttr("disabled");
 	}else{
 		$("#releaseBtn").attr("disabled","disabled");
@@ -77,6 +80,7 @@ function selectD(p,c,d) {
 	$("#brandDiv").show();
 	//加载品牌列表
 	initBrandListControl("selectBrandDiv","selectBrand",category_list[p].children[c].children[d].id);
+	g_selectCategoryId = category_list[p].children[c].children[d].id;
 }
 
 /*点击下一步*/
@@ -85,5 +89,10 @@ $("#releaseBtn").click(function() {
 	if (releaseS == false) {//未被禁用
 		$("#step1").hide();
 		$("#step2").show();
+		if(g_preSelectCategoryId!=g_selectCategoryId) {
+			g_preSelectCategoryId = g_selectCategoryId;
+			initAttributes(g_selectCategoryId);
+			clearSkuTable();
+		}
 	}
 });
