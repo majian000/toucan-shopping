@@ -50,4 +50,12 @@ public interface AttributeKeyService {
      */
     List<AttributeKeyVO> queryList(AttributeKeyVO query);
 
+
+    /**
+     * 根据查询对象查询列表
+     * @param query
+     * @return
+     */
+    List<AttributeKeyVO> queryListBySortDesc(AttributeKeyVO query);
+
 }

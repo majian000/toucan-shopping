@@ -68,7 +68,7 @@ public class AttributeKeyValueController {
                 return resultObjectVO;
             }
 
-            List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(queryAttributeKeyVO);
+            List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryListBySortDesc(queryAttributeKeyVO);
             //查询该分类下的所有键列表
             if(CollectionUtils.isNotEmpty(attributeKeyVOS))
             {
@@ -86,7 +86,7 @@ public class AttributeKeyValueController {
                 if(CollectionUtils.isNotEmpty(attributeKeyIdList)) {
                     AttributeValueVO queryAttributeValueVO = new AttributeValueVO();
                     queryAttributeValueVO.setAttributeKeyIdList(attributeKeyIdList);
-                    List<AttributeValueVO> attributeValueVOS = attributeValueService.queryList(queryAttributeValueVO);
+                    List<AttributeValueVO> attributeValueVOS = attributeValueService.queryListBySortDesc(queryAttributeValueVO);
                     if(CollectionUtils.isNotEmpty(attributeValueVOS))
                     {
                         for(AttributeValueVO attributeValueVO:attributeValueVOS)

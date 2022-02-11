@@ -57,5 +57,9 @@ public class AttributeValueServiceImpl implements AttributeValueService {
         return attributeValueMapper.queryList(query);
     }
 
+    @Override
+    public List<AttributeValueVO> queryListBySortDesc(AttributeValueVO query) {
+        return attributeValueMapper.queryListBySortDesc(query);
+    }
 
 }

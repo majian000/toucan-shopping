@@ -48,5 +48,9 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
         return attributeKeyMapper.queryList(query);
     }
 
+    @Override
+    public List<AttributeKeyVO> queryListBySortDesc(AttributeKeyVO query) {
+        return attributeKeyMapper.queryListBySortDesc(query);
+    }
 
 }

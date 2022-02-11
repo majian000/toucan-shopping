@@ -13,6 +13,7 @@ public interface AttributeValueMapper {
 
     List<AttributeValueVO> queryList(AttributeValueVO entity);
 
+    List<AttributeValueVO> queryListBySortDesc(AttributeValueVO entity);
 
     int insert(AttributeValue attributeValue);
 

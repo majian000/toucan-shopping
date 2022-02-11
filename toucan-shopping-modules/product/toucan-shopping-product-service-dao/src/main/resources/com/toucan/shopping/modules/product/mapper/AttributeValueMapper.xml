@@ -93,6 +93,17 @@
     </select>
 
 
+    <select id="queryListBySortDesc" resultMap="attributeValueVOMap" parameterType="com.toucan.shopping.modules.product.vo.AttributeValueVO">
+        select t.* from t_attribute_value t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+
+        </where>
+
+        order by t.attribute_sort desc
+    </select>
 
 
     <insert id="inserts"   >
