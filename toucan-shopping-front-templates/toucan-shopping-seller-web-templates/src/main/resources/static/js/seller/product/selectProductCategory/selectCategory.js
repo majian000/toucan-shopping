@@ -83,16 +83,22 @@ function selectD(p,c,d) {
 	g_selectCategoryId = category_list[p].children[c].children[d].id;
 }
 
+function showSetp2Page()
+{
+	$("#step1").hide();
+	$("#step2").show();
+}
+
 /*点击下一步*/
 $("#releaseBtn").click(function() {
 	var releaseS = $(this).prop("disabled");
 	if (releaseS == false) {//未被禁用
-		$("#step1").hide();
-		$("#step2").show();
 		if(g_preSelectCategoryId!=g_selectCategoryId) {
 			g_preSelectCategoryId = g_selectCategoryId;
-			initAttributes(g_selectCategoryId);
+			initAttributes(g_selectCategoryId,showSetp2Page);
 			clearSkuTable();
+		}else{
+			showSetp2Page();
 		}
 	}
 });
