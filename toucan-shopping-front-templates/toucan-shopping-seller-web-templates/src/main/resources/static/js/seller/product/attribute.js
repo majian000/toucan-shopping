@@ -32,7 +32,51 @@ function initAttributes(categoryId)
         data: null,
         dataType: "json",
         success: function (result) {
+            $(".rp_attr_div").html("");
 
+            if(result!=null&&result.data!=null&&result.data.length>0)
+            {
+                var attributesHtml="";
+                for(var i=0;i<result.data.length;i++)
+                {
+                    var attribute = result.data[i];
+                    var attributeHtmls="<div class='item' style='clear:both;text-align: left;' >";
+                    attributeHtmls+="<div style='padding-left: 6%;'>";
+                    attributeHtmls+=" <a>"+attribute.attributeName+"</a>";
+                    attributeHtmls+=" <input type='text' id='attributeValue_1' name='attributeValue' class='releaseProductInputText'  style='width:200px;' tabindex='5'  placeholder='请输入自定义值' />";
+                    attributeHtmls+="  <input type='button'  class='releaseProductButton' value='添加' attr-data='"+attribute.id+"'  />";
+                    attributeHtmls+=" </div> ";
+                    attributeHtmls+=" <div class='attributeList'> ";
+                    attributeHtmls+=" <ul class='rp_attr_kt' style='display:none'><li>"+attribute.attributeName+"</li></ul> ";
+                    attributeHtmls+=" <div class='field' style='width:100%'> ";
+                    attributeHtmls+=" <ul class='rpai"+i+"' style='float:left;margin-left: 20px;'>";
+                    if(attribute.values!=null&&attribute.values.length>0) {
+                        for(var j=0;j<attribute.values.length;j++) {
+                            var attributeValue = attribute.values[j];
+                            if(attribute.attributeType==2) {
+                                attributeHtmls += " <li class='rpai_li'><div style='background-color:"+attributeValue.rgbColor+";width:15px;height:15px;'></div><label><input  type='checkbox' class='chcBox_Width' value='" + attributeValue.attributeValue + "' />" + attributeValue.attributeValue + "</label></li>";
+                            }else{
+                                attributeHtmls += " <li class='rpai_li'><label><input  type='checkbox' class='chcBox_Width' value='" + attributeValue.attributeValue + "' />" + attributeValue.attributeValue + "</label></li>";
+                            }
+                        }
+                    }
+                    attributeHtmls+="</ul>";
+                    attributeHtmls+="<div class='clearfloat'></div>";
+                    attributeHtmls+="</div>";
+                    attributeHtmls+="</div>";
+                    attributeHtmls+="</div>";
+
+                    attributesHtml+=attributeHtmls;
+                }
+
+                //SKU表格
+                attributesHtml+="<div class='item' style='clear:both;text-align: left;' >";
+                attributesHtml+="<div class='sku_attribute_list' style='padding-left: 6%;'>";
+                attributesHtml+="<div id='tspSkuAttributeTable'></div>  ";
+                attributesHtml+="</div>";
+                attributesHtml+="</div>";
+                $(".rp_attr_div").html(attributesHtml);
+            }
         },
         complete:function(data,status){
             loading.hideLoading();
