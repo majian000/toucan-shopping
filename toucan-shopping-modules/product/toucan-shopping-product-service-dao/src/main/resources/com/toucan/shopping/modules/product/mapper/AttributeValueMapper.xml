@@ -67,6 +67,9 @@
             </foreach>
         </if>
 
+        <if test="showStatus!=null and showStatus!=-1">
+            and t.show_status = #{showStatus}
+        </if>
 
         <if test="attributeKeyIdList!=null and attributeKeyIdList.size>0">
             and t.attribute_key_id in

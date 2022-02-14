@@ -147,6 +147,7 @@ public class ShopProductApiController extends BaseController {
         try {
             AttributeKeyVO queryAttributeKeyVO = new AttributeKeyVO();
             queryAttributeKeyVO.setCategoryId(categoryId);
+            queryAttributeKeyVO.setShowStatus((short)1);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAttributeKeyVO);
             resultObjectVO = feignAttributeKeyValueService.findByCategoryId(requestJsonVO);
             if(resultObjectVO.isSuccess())

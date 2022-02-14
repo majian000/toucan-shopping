@@ -86,6 +86,7 @@ public class AttributeKeyValueController {
                 if(CollectionUtils.isNotEmpty(attributeKeyIdList)) {
                     AttributeValueVO queryAttributeValueVO = new AttributeValueVO();
                     queryAttributeValueVO.setAttributeKeyIdList(attributeKeyIdList);
+                    queryAttributeValueVO.setShowStatus((short)1);
                     List<AttributeValueVO> attributeValueVOS = attributeValueService.queryListBySortDesc(queryAttributeValueVO);
                     if(CollectionUtils.isNotEmpty(attributeValueVOS))
                     {

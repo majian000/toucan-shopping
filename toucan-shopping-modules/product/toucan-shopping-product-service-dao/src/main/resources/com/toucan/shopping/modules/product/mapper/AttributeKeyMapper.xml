@@ -43,34 +43,44 @@
 
     </sql>
 
+    <sql id="queryListWhere">
+
+        <if test="attributeName!=null and attributeName!='' ">
+            and t.attribute_name  like concat('%',#{attributeName},'%')
+
+        </if>
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="categoryId!=null">
+            and t.category_id = #{categoryId}
+        </if>
+
+        <if test="showStatus!=null and showStatus!=-1">
+            and t.show_status = #{showStatus}
+        </if>
+
+
+        <if test="idArray!=null and idArray.length>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
+
 
     <select id="queryList" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">
         select t.* from t_attribute_key t
         <where>
             1=1
 
-            <if test="attributeName!=null and attributeName!='' ">
-                and t.attribute_name  like concat('%',#{attributeName},'%')
-
-            </if>
-
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
-
-            <if test="categoryId!=null">
-                and t.category_id = #{categoryId}
-            </if>
-
-            <if test="idArray!=null and idArray.length>0 ">
-                and t.id in
-                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-
-            and t.delete_status = 0
-
+            <include refid="queryListWhere" />
         </where>
     </select>
 
@@ -80,27 +90,7 @@
         <where>
             1=1
 
-            <if test="attributeName!=null and attributeName!='' ">
-                and t.attribute_name  like concat('%',#{attributeName},'%')
-
-            </if>
-
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
-
-            <if test="categoryId!=null">
-                and t.category_id = #{categoryId}
-            </if>
-
-            <if test="idArray!=null and idArray.length>0 ">
-                and t.id in
-                <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-
-            and t.delete_status = 0
+            <include refid="queryListWhere" />
 
         </where>
         order by t.attribute_sort desc
