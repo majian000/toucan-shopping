@@ -7,6 +7,7 @@
  *      3、 .rpai       这个类作用是取类型组数，有多少类型就添加相应的类名：如: rpai1、rpai2、rpai3 ...
  */
 
+var g_sku_pos=0;
 function stockInputKeyUp(o)
 {
     $(o).keyup(function(){
@@ -15,6 +16,36 @@ function stockInputKeyUp(o)
             var temp_amount=c.val().replace(/[^\d]/g,'');
             $(this).val(temp_amount);
         }
+    });
+}
+
+function skuUploadPreview(pos)
+{
+    $("#skuProductProview"+pos).on("change", function(){
+        // Get a reference to the fileList
+        var files = !!this.files ? this.files : [];
+
+        // If no files were selected, or no FileReader support, return
+        if (!files.length || !window.FileReader) {
+            $("#skuPreview"+pos).attr("src","/static/lib/tupload/images/imgadd.png");
+            return;
+        }
+
+        // Only proceed if the selected file is an image
+        if (/^image/.test( files[0].type)){
+            // Create a new instance of the FileReader
+            var reader = new FileReader();
+
+            // Read the local file as a DataURL
+            reader.readAsDataURL(files[0]);
+
+            // When loaded, set image data as background of div
+            reader.onloadend = function(){
+                $("#skuPreview"+pos).attr("src",this.result);
+            }
+
+        }
+
     });
 }
 
@@ -59,7 +90,7 @@ var attributeControl = {
                 var td = $("<th >" + item + "</th>");
                 td.appendTo(trHead);
             });
-            var itemColumHead = $("<th  style=\"width:70px;\"><span class='red'>*</span>价格</th><th style=\"width:70px;\"><span class='red'>*</span>库存</th> <th  style=\"width:70px;\"><span class='red'>*</span>图片预览</th>");
+            var itemColumHead = $("<th  style=\"width:70px;\"><span class='red'>*</span>价格</th><th style=\"width:70px;\"><span class='red'>*</span>库存</th> <th  style=\"width:70px;\"><span class='red'>*</span>图片上传</th> <th  style=\"width:70px;\"><span class='red'>*</span>图片预览</th>");
             itemColumHead.appendTo(trHead);
             //var itemColumHead2 = $("<td >商家编码</td><td >商品条形码</td>");
             //itemColumHead2.appendTo(trHead);
@@ -68,6 +99,7 @@ var attributeControl = {
             ////生成组合
             var zuheDate = attributeControl.doExchange(arrayInfor);
             if (zuheDate.length > 0) {
+                g_sku_pos=0;
                 //创建行
                 $.each(zuheDate, function (index, item) {
                     var td_array = item.split(",");
@@ -81,8 +113,12 @@ var attributeControl = {
                     td1.appendTo(tr);
                     var td2 = $("<td ><input name=\"count\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
                     td2.appendTo(tr);
-                    var td3 = $("<td ><input type='file' name='skuProductProview' /></td>");
+                    var td3 = $("<td ><input type='file' name='skuProductProviews' id='skuProductProview"+g_sku_pos+"' /></td>");
                     td3.appendTo(tr);
+                    var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
+                    td4.appendTo(tr);
+
+                    g_sku_pos++;
                     //var td3 = $("<td ><input name=\"Txt_NumberSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
                     //td3.appendTo(tr);
                     //var td4 = $("<td ><input name=\"Txt_SnSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
@@ -259,6 +295,11 @@ function initAttributes(categoryId,callback)
                 attributeControl.Creat_Table();
                 //重新计算库存总数
                 inputStock();
+                //绑定图片预览事件
+                for(var i=0;i<g_sku_pos;i++)
+                {
+                    skuUploadPreview(i);
+                }
             });
 
             loading.hideLoading();
@@ -269,5 +310,5 @@ function initAttributes(categoryId,callback)
 
 function clearSkuTable()
 {
-    document.getElementById('tspSkuAttributeTable').innerHTML="";
+    $("#tspSkuAttributeTable").html("");
 }
