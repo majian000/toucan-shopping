@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductSpuApproveRecordMapper">
+
+    <resultMap id="shopProductApproveRecordMap" type="com.toucan.shopping.modules.product.entity.ShopProductSpuApproveRecord" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="approve_id" jdbcType="BIGINT" property="approveId" />
+        <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        
+    </resultMap>
+
+    <select id="queryAllList" resultMap="shopProductApproveRecordMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductSpuApproveRecord">
+        select * from t_shop_product_spu_approve_record t
+    </select>
+
+</mapper>
