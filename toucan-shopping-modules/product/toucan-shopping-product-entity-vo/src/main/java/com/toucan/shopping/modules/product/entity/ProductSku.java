@@ -13,8 +13,10 @@ import java.util.Date;
 @Data
 public class ProductSku {
     private Long id; //主键
-    private String attributes; //商品所有属性
-    private String productUuid; //SPU的UUID
+    private String name; //SKU名称(商品名称 + 属性值)
+    private String attributes; //这个SKU的属性
+    private String shopProductUuid; //SPU的UUID
+    private Long shopProductId; //SPU的ID
     private String uuid; //SKU的UUID
     private Double price; //价格
     private String remark; //备注
@@ -29,7 +31,12 @@ public class ProductSku {
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
+    private Long shopId; //店铺ID
+    private Long brankId; //品牌ID
+    private String registrationCertificateNo; //注册证号
+    private String itemNo; //货号
 
-    private Integer stockNum=0;
+    private Integer stockNum=0; //库存
+    private String productPreviewPath; //商品预览路径
 
 }

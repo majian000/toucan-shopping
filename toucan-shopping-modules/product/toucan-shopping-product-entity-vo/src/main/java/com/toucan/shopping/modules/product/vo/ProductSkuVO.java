@@ -16,10 +16,6 @@ import java.util.Date;
 @Data
 public class ProductSkuVO  extends ProductSku {
 
-    /**
-     * 商品名称
-     */
-    private String productName;
 
     /**
      * 商品主图
@@ -30,6 +26,7 @@ public class ProductSkuVO  extends ProductSku {
      * 商品主图(HTTP访问)
      */
     private String httpMainPhoto;
+
 
 
 

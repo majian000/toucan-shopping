@@ -16,7 +16,7 @@ $(function () {
                         "                                </div>\n" +
                         "                                <div class='name'>\n" +
                         "                                    <a href='#'>\n" +
-                        "                                        <h2>"+obj.productName+"</h2>\n" +
+                        "                                        <h2>"+obj.name+"</h2>\n" +
                         "                                        "+obj.desc+"\n" +
                         "                                    </a>\n" +
                         "                                </div>\n" +

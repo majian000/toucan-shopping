@@ -1,25 +1,20 @@
 package com.toucan.shopping.modules.product.entity;
 
-import com.toucan.shopping.modules.common.util.DateUtils;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
- * 商品
+ * 店铺维度的SPU与商品预览图关联
  *
  * @author majian
  */
 @Data
-public class ProductSpu {
+public class ShopProductSpuImg {
     private Long id; //主键
-    private Integer categoryId; //所属类别
-    private String uuid; //SPU UUID
-    private String name; //商品名称
-    private Short status; //是否上架 0:未上架 1:已上架
+    private Long shopProductId; //店铺维度的SPU的ID
+    private String filePath; //文件路径
+    private Short isMainPhoto; //是否是商品主图 0:否 1:是
     private Date createDate; //创建时间
     private String appCode; //所属应用
     private Long createUserId; //创建人ID

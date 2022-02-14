@@ -5,11 +5,17 @@
     <resultMap id="productSkuMap" type="com.toucan.shopping.modules.product.entity.ProductSku" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
-        <result column="product_uuid" jdbcType="VARCHAR" property="productUuid" />
+        <result column="shop_product_uuid" jdbcType="VARCHAR" property="shopProductUuid" />
+        <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
         <result column="price" jdbcType="DOUBLE" property="price" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="status" jdbcType="SMALLINT" property="status" />
+        <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="brank_id" jdbcType="BIGINT" property="brankId" />
+        <result column="registration_certificate_no" jdbcType="VARCHAR" property="registration_certificate_no" />
+        <result column="item_no" jdbcType="VARCHAR" property="itemNo" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
@@ -39,8 +45,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku"  >
-        insert into t_product_sku(product_id,attributes,price,product_uuid,uuid,remark,status,create_date,app_code,create_user_id)
-        values(#{productId},#{attributes},#{price},#{productUuid},#{uuid},#{remark},#{status},#{createDate},#{appCode},#{createUserId})
+        insert into t_product_sku(product_id,name,attributes,price,shop_product_uuid,shop_product_id,uuid,remark,status,create_date,app_code,create_user_id,shop_id,brank_id,registration_certificate_no,item_no)
+        values(#{productId},#{name},#{attributes},#{price},#{shopProductUuid},#{shopProductId},#{uuid},#{remark},#{status},#{createDate},#{appCode},#{createUserId},#{shopId},#{brankId},#{registrationCertificateNo},#{itemNo})
     </insert>
 
     <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">

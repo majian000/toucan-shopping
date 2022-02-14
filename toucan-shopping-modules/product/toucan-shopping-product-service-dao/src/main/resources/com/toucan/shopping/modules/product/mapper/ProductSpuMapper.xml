@@ -7,6 +7,7 @@
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+        <result column="status" jdbcType="SMALLINT" property="status" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
@@ -16,7 +17,7 @@
     </resultMap>
 
     <select id="queryAllList" resultMap="productMap" parameterType="com.toucan.shopping.modules.product.entity.ProductSpu">
-        select * from t_product_spu
+        select * from t_product_spu t
     </select>
 
 </mapper>
