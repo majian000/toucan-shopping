@@ -13,7 +13,6 @@ import lombok.ToString;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(callSuper = true)
 public class ShopProductSpuImgPageInfo extends PageInfo<ShopProductSpuImgVO> {
 

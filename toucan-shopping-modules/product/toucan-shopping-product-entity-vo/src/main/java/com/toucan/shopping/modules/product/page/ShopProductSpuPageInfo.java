@@ -14,13 +14,11 @@ import java.util.List;
  * 列表查询页对象
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class ShopProductSpuPageInfo extends PageInfo<ShopProductSpuVO> {
 
     // ===============查询条件===================
-
     //==============================================
 
 }

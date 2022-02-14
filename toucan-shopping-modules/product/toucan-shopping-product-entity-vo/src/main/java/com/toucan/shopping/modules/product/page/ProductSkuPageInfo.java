@@ -12,7 +12,6 @@ import lombok.ToString;
  * 列表查询页对象
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
 public class ProductSkuPageInfo extends PageInfo<ProductSkuVO> {
