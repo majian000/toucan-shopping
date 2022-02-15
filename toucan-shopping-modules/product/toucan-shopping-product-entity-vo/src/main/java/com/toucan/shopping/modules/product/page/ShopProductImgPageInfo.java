@@ -1,24 +1,21 @@
 package com.toucan.shopping.modules.product.page;
 
 import com.toucan.shopping.modules.common.page.PageInfo;
-import com.toucan.shopping.modules.product.vo.BrandVO;
-import com.toucan.shopping.modules.product.vo.ShopProductSpuVO;
-import lombok.AllArgsConstructor;
+import com.toucan.shopping.modules.product.vo.ShopProductImgVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.util.List;
 
 /**
  * 列表查询页对象
  */
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 @ToString(callSuper = true)
-public class ShopProductSpuPageInfo extends PageInfo<ShopProductSpuVO> {
+public class ShopProductImgPageInfo extends PageInfo<ShopProductImgVO> {
 
     // ===============查询条件===================
+
     //==============================================
 
 }

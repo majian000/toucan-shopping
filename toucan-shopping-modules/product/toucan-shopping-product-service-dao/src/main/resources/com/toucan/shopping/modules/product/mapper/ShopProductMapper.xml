@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductSpuMapper">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductMapper">
 
-    <resultMap id="shopProductMap" type="com.toucan.shopping.modules.product.entity.ShopProductSpu" >
+    <resultMap id="shopProductMap" type="com.toucan.shopping.modules.product.entity.ShopProduct" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
@@ -19,7 +19,7 @@
         
     </resultMap>
 
-    <select id="queryAllList" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductSpu">
+    <select id="queryAllList" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct">
         select * from t_shop_product_spu t
     </select>
 

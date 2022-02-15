@@ -10,7 +10,7 @@ import java.util.Date;
  * @author majian
  */
 @Data
-public class ShopProductSpuImg {
+public class ShopProductImg {
     private Long id; //主键
     private Long shopProductId; //店铺维度的SPU的ID
     private String filePath; //文件路径

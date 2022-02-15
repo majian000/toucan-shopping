@@ -1,11 +1,9 @@
 package com.toucan.shopping.modules.product.page;
 
 import com.toucan.shopping.modules.common.page.PageInfo;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.ShopProductSpuApproveRecordVO;
+import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -14,10 +12,9 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class ShopProductSpuApproveRecordPageInfo extends PageInfo<ShopProductSpuApproveRecordVO> {
+public class ShopProductPageInfo extends PageInfo<ShopProductVO> {
 
     // ===============查询条件===================
-
     //==============================================
 
 }

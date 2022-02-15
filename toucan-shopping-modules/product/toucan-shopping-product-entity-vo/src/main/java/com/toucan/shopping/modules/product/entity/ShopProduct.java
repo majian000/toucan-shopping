@@ -10,7 +10,7 @@ import java.util.Date;
  * @author majian
  */
 @Data
-public class ShopProductSpu {
+public class ShopProduct {
     private Long id; //主键
     private Integer categoryId; //所属类别
     private String uuid; //SPU UUID
@@ -24,6 +24,7 @@ public class ShopProductSpu {
     private String appCode; //所属应用
     private Long createUserId; //创建人ID
     private Integer deleteStatus; //删除状态 0未删除 1已删除
+    private String sellerNo; //卖家编码
 
 
 

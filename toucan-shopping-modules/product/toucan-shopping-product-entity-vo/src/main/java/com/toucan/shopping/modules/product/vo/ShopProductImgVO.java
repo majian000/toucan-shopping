@@ -1,9 +1,7 @@
 package com.toucan.shopping.modules.product.vo;
 
-import com.toucan.shopping.modules.product.entity.ShopProductSpuImg;
+import com.toucan.shopping.modules.product.entity.ShopProductImg;
 import lombok.Data;
-
-import java.util.Date;
 
 /**
  * 店铺维度的SPU与商品预览图关联
@@ -11,7 +9,7 @@ import java.util.Date;
  * @author majian
  */
 @Data
-public class ShopProductSpuImgVO extends ShopProductSpuImg {
+public class ShopProductImgVO extends ShopProductImg {
 
 
 

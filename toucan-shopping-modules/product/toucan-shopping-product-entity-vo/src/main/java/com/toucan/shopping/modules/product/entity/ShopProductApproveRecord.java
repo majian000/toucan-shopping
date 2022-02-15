@@ -12,7 +12,7 @@ import java.util.Date;
  * 店铺商品审核记录
  */
 @Data
-public class ShopProductSpuApproveRecord {
+public class ShopProductApproveRecord {
 
 
     /**
