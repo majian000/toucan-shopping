@@ -24,16 +24,6 @@
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" id="id" th:value="${model.id}">
     <input type="hidden" id="queryStatusHidden"  th:value="${model.queryStatus}">
-    <input type="hidden" id="isSpecificHidden"  th:value="${model.isSpecific}">
-    <div class="layui-form-item">
-        <label class="layui-form-label required">SKU特有属性</label>
-        <div class="layui-input-block">
-            <select id="isSpecific"  name="isSpecific" lay-search="" lay-filter="isSpecific">
-                <option value="1" >是</option>
-                <option value="0" selected>否</option>
-            </select>
-        </div>
-    </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">搜索状态</label>
         <div class="layui-input-block">
@@ -117,7 +107,6 @@
             $ = layui.$;
 
 
-        $('#isSpecific').find("option[value="+$("#isSpecificHidden").val()+"]").attr("selected",true);
         $('#queryStatus').find("option[value="+$("#queryStatusHidden").val()+"]").attr("selected",true);
         //重新渲染select
         form.render('select');

@@ -25,6 +25,16 @@
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">属性范围</label>
+                            <div class="layui-input-inline">
+                                <select id="attributeScope"  name="attributeScope" lay-search="" lay-filter="attributeScope">
+                                    <option value="-1" selected>全部</option>
+                                    <option value="1">全局属性</option>
+                                    <option value="2">SKU属性</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">属性类型</label>
                             <div class="layui-input-inline">
                                 <select id="attributeType"  name="attributeType" lay-search="" lay-filter="attributeType">
@@ -164,18 +174,18 @@
                             }
                             return row.attributeType;
                         }},
-                    {field: 'isSpecific',width: 150,   title: 'SKU特有属性',
+                    {field: 'attributeScope',width: 150,   title: '属性范围',
                         templet: function (row) {
-                            if(row.isSpecific == null){
+                            if(row.attributeScope == null){
                                 return "";
                             }
-                            if(row.isSpecific == "1"){
-                                return "是";
+                            if(row.attributeScope == "1"){
+                                return "全局属性";
                             }
-                            if(row.isSpecific == "0"){
-                                return "否";
+                            if(row.attributeScope == "2"){
+                                return "SKU属性";
                             }
-                            return row.isSpecific;
+                            return row.attributeScope;
                         }},
                     {field: 'queryStatus',width: 150,   title: '搜索状态',
                         templet: function (row) {

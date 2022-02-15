@@ -149,19 +149,6 @@
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
                     {field: 'attributeValue', width: 150, title: '属性值'},
-                    {field: 'isSpecific',width: 150,   title: 'SKU特有属性',
-                        templet: function (row) {
-                            if(row.isSpecific == null){
-                                return "";
-                            }
-                            if(row.isSpecific == "1"){
-                                return "是";
-                            }
-                            if(row.isSpecific == "0"){
-                                return "否";
-                            }
-                            return row.isSpecific;
-                        }},
                     {field: 'queryStatus',width: 150,   title: '搜索状态',
                         templet: function (row) {
                             if(row.queryStatus == null){

@@ -25,13 +25,13 @@
     <input type="hidden" name="id" id="id" th:value="${model.id}">
     <input type="hidden" id="attributeTypeHidden"  th:value="${model.attributeType}">
     <input type="hidden" id="queryStatusHidden"  th:value="${model.queryStatus}">
-    <input type="hidden" id="isSpecificHidden"  th:value="${model.isSpecific}">
+    <input type="hidden" id="attributeScopeHidden"  th:value="${model.attributeScope}">
     <div class="layui-form-item">
-        <label class="layui-form-label required">SKU特有属性</label>
+        <label class="layui-form-label required">特殊属性</label>
         <div class="layui-input-block">
-            <select id="isSpecific"  name="isSpecific" lay-search="" lay-filter="isSpecific">
-                <option value="1" >是</option>
-                <option value="0" selected>否</option>
+            <select id="attributeScope"  name="attributeScope" lay-search="" lay-filter="attributeScope">
+                <option value="1" selected>全局属性</option>
+                <option value="2" >SKU属性</option>
             </select>
         </div>
     </div>
@@ -117,7 +117,7 @@
 
 
         $('#attributeType').find("option[value="+$("#attributeTypeHidden").val()+"]").attr("selected",true);
-        $('#isSpecific').find("option[value="+$("#isSpecificHidden").val()+"]").attr("selected",true);
+        $('#attributeScope').find("option[value="+$("#attributeScopeHidden").val()+"]").attr("selected",true);
         $('#queryStatus').find("option[value="+$("#queryStatusHidden").val()+"]").attr("selected",true);
         //重新渲染select
         form.render('select');

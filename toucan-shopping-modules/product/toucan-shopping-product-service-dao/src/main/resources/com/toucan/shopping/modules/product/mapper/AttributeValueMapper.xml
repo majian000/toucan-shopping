@@ -10,7 +10,6 @@
         <result column="attribute_value_extend2" jdbcType="VARCHAR" property="attributeValueExtend2" />
         <result column="attribute_value_extend3" jdbcType="VARCHAR" property="attributeValueExtend3" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
-        <result column="is_specific" jdbcType="INTEGER" property="isSpecific" />
         <result column="query_status" jdbcType="INTEGER" property="queryStatus" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -53,9 +52,6 @@
             and t.show_status = #{showStatus}
         </if>
 
-        <if test="isSpecific!=null and isSpecific!=-1">
-            and t.is_specific = #{isSpecific}
-        </if>
         <if test="queryStatus!=null and queryStatus!=-1">
             and t.query_status = #{queryStatus}
         </if>
@@ -80,9 +76,6 @@
             and t.show_status = #{showStatus}
         </if>
 
-        <if test="isSpecific!=null and isSpecific!=-1">
-            and t.is_specific = #{isSpecific}
-        </if>
         <if test="queryStatus!=null and queryStatus!=-1">
             and t.query_status = #{queryStatus}
         </if>
@@ -126,18 +119,18 @@
 
 
     <insert id="inserts"   >
-        insert into t_attribute_value(id,query_status,is_specific,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
+        insert into t_attribute_value(id,query_status,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.queryStatus},#{entity.isSpecific},#{entity.attributeValueExtend1},#{entity.attributeValueExtend2},#{entity.attributeValueExtend3},#{entity.attributeValue},#{entity.attributeKeyId},#{entity.attributeSort},#{entity.remark},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId},#{entity.deleteStatus},#{entity.showStatus})
+            (#{entity.id},#{entity.queryStatus},#{entity.attributeValueExtend1},#{entity.attributeValueExtend2},#{entity.attributeValueExtend3},#{entity.attributeValue},#{entity.attributeKeyId},#{entity.attributeSort},#{entity.remark},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId},#{entity.deleteStatus},#{entity.showStatus})
         </foreach>
 
     </insert>
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeValue"  keyProperty="id" >
-        insert into t_attribute_value(id,query_status,is_specific,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
-        values(#{id},#{queryStatus},#{isSpecific},#{attributeValueExtend1},#{attributeValueExtend2},#{attributeValueExtend3},#{attributeValue},#{attributeKeyId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
+        insert into t_attribute_value(id,query_status,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
+        values(#{id},#{queryStatus},#{attributeValueExtend1},#{attributeValueExtend2},#{attributeValueExtend3},#{attributeValue},#{attributeKeyId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
     </insert>
 
 

@@ -29,7 +29,7 @@ public class AttributeKey {
     private String attributeName; //属性名
     private Long attributeSort; //排序
     private Short showStatus; //显示状态 1显示 0隐藏
-    private Short isSpecific; //是否是SKU特有属性 1:是 0:否
+    private Short attributeScope; //属性范围 1:全局属性 2:SKU属性
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

@@ -9,7 +9,7 @@
         <result column="attribute_type" jdbcType="INTEGER" property="attributeType" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
-        <result column="is_specific" jdbcType="INTEGER" property="isSpecific" />
+        <result column="attribute_scope" jdbcType="INTEGER" property="attributeScope" />
         <result column="query_status" jdbcType="INTEGER" property="queryStatus" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -64,8 +64,8 @@
             and t.show_status = #{showStatus}
         </if>
 
-        <if test="isSpecific!=null and isSpecific!=-1">
-            and t.is_specific = #{isSpecific}
+        <if test="attributeScope!=null and attributeScope!=-1">
+            and t.attribute_scope = #{attributeScope}
         </if>
         <if test="queryStatus!=null and queryStatus!=-1">
             and t.query_status = #{queryStatus}
@@ -106,8 +106,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey"  keyProperty="id" >
-        insert into t_attribute_key(id,query_status,is_specific,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
-        values(#{id},#{queryStatus},#{isSpecific},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
+        insert into t_attribute_key(id,query_status,attribute_scope,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
+        values(#{id},#{queryStatus},#{attributeScope},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
     </insert>
 
 
