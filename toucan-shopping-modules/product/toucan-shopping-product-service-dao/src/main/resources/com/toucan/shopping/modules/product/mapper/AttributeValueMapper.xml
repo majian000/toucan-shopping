@@ -148,7 +148,7 @@
     <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeValue">
         update t_attribute_value set attribute_value_extend1=#{attributeValueExtend1},attribute_value_extend2=#{attributeValueExtend2},attribute_value_extend3=#{attributeValueExtend3},
           attribute_value=#{attributeValue},attribute_sort=#{attributeSort},remark=#{remark},show_status=#{showStatus},
-          update_admin_id=#{updateAdminId},update_date=#{updateDate},query_status=#{queryStatus},is_specific=#{isSpecific}
+          update_admin_id=#{updateAdminId},update_date=#{updateDate},query_status=#{queryStatus}
           where id=#{id}
     </update>
 

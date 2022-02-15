@@ -28,6 +28,7 @@ public class AttributeValuePageInfo extends PageInfo<AttributeValueVO> {
     private String attributeValueExtend1; //属性值扩展字段
     private String attributeValueExtend2; //属性值扩展字段
     private String attributeValueExtend3; //属性值扩展字段
+    private Short queryStatus; //搜索状态 1可搜索 0不可搜索
 
     private Long categoryId; //所属类别
 
