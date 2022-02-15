@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 店铺维度的SPU (关联到平台维度的SPU)
+ * 店铺维度的商品 (关联到平台维度的SPU)
  *
  * @author majian
  */
@@ -25,9 +25,11 @@ public class ShopProduct {
     private Long createUserId; //创建人ID
     private Integer deleteStatus; //删除状态 0未删除 1已删除
     private String sellerNo; //卖家编码
-
-
-
+    private Short payMethod; //付款方式 1:一口价(普通交易模式)
+    private Short buckleInventoryMethod; //库存计数 1:买家拍下减库存 2:买家付款减库存
+    private Short giveInvoice; //1:提供发票 0:不提供
+    private Short changeOrReturn; //退换货承诺 1:承诺 0:不承诺
+    private String etractMethod; //提取方式(多选用,分割) 1:用物流配送
 
 
 }
