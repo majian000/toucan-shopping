@@ -30,6 +30,7 @@ public class AttributeValue {
     private String attributeValueExtend2; //属性值扩展字段
     private String attributeValueExtend3; //属性值扩展字段
     private Short showStatus; //显示状态 1显示 0隐藏
+    private Short queryStatus; //搜索状态 1可搜索 0不可搜索
 
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

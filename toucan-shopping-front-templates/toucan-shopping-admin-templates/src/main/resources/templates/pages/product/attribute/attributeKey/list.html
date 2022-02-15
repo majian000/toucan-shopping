@@ -35,6 +35,16 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">搜索状态</label>
+                            <div class="layui-input-inline">
+                                <select id="queryStatus"  name="queryStatus" lay-search="" lay-filter="queryStatus">
+                                    <option value="-1" selected>全部</option>
+                                    <option value="1">可被搜索</option>
+                                    <option value="0">不可搜索</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">属性名</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="attributeName" autocomplete="off" class="layui-input">
@@ -153,6 +163,19 @@
                                 return "颜色属性";
                             }
                             return row.attributeType;
+                        }},
+                    {field: 'queryStatus',width: 150,   title: '搜索状态',
+                        templet: function (row) {
+                            if(row.queryStatus == null){
+                                return "";
+                            }
+                            if(row.queryStatus == "1"){
+                                return "可被搜索";
+                            }
+                            if(row.queryStatus == "0"){
+                                return "不可搜索";
+                            }
+                            return row.queryStatus;
                         }},
                     {field: 'attributeName',  title: '属性名'},
                     {field: 'categoryName',  title: '所属类别'},

@@ -25,7 +25,7 @@ public class AttributeKey {
     private Long categoryId; //所属类别
 
     private Short attributeType; //属性类型 1:普通属性 2:颜色属性
-
+    private Short queryStatus; //搜索状态 1可搜索 0不可搜索
     private String attributeName; //属性名
     private Long attributeSort; //排序
     private Short showStatus; //显示状态 1显示 0隐藏

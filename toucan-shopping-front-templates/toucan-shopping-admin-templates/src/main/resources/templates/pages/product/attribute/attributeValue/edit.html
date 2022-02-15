@@ -23,7 +23,17 @@
 
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden" id="queryStatusHidden"  th:value="${model.queryStatus}">
 
+    <div class="layui-form-item">
+        <label class="layui-form-label required">搜索状态</label>
+        <div class="layui-input-block">
+            <select id="queryStatus"  name="queryStatus" lay-search="" lay-filter="queryStatus">
+                <option value="1" selected>可被搜索</option>
+                <option value="0">不可搜索</option>
+            </select>
+        </div>
+    </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">属性值</label>
         <div class="layui-input-block">
@@ -98,6 +108,9 @@
             $ = layui.$;
 
 
+        $('#queryStatus').find("option[value="+$("#queryStatusHidden").val()+"]").attr("selected",true);
+        //重新渲染select
+        form.render('select');
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {

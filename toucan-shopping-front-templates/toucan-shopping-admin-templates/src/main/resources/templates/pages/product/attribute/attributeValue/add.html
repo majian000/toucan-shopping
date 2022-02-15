@@ -26,6 +26,15 @@
     <input type="hidden" name="attributeKeyId" id="attributeKeyId" th:value="${attributeKeyId}">
 
     <div class="layui-form-item">
+        <label class="layui-form-label required">搜索状态</label>
+        <div class="layui-input-block">
+            <select id="queryStatus"  name="queryStatus" lay-search="" lay-filter="queryStatus">
+                <option value="1" selected>可被搜索</option>
+                <option value="0">不可搜索</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">属性值</label>
         <div class="layui-input-block">
             <input type="text" name="attributeValue" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入属性值" value="" class="layui-input">
