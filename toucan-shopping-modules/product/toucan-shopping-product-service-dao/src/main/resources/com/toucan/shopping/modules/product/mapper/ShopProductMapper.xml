@@ -5,6 +5,7 @@
     <resultMap id="shopProductMap" type="com.toucan.shopping.modules.product.entity.ShopProduct" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="shop_category_id" jdbcType="BIGINT" property="shopCategoryId" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
@@ -16,6 +17,14 @@
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="seller_no" jdbcType="VARCHAR" property="sellerNo" />
+        <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
+        <result column="buckle_inventory_method" jdbcType="SMALLINT" property="buckleInventoryMethod" />
+        <result column="give_invoice" jdbcType="SMALLINT" property="giveInvoice" />
+        <result column="change_or_return" jdbcType="SMALLINT" property="changeOrReturn" />
+        <result column="etract_method" jdbcType="VARCHAR" property="etractMethod" />
+        <result column="article_number" jdbcType="VARCHAR" property="articleNumber" />
+        <result column="brand_id" jdbcType="BIGINT" property="brandId" />
         
     </resultMap>
 

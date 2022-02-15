@@ -13,6 +13,7 @@ import java.util.Date;
 public class ShopProduct {
     private Long id; //主键
     private Integer categoryId; //所属类别
+    private Long shopCategoryId; //店铺内的所属分类
     private String uuid; //SPU UUID
     private String name; //商品名称
     private String attributes; //这个店铺的商品所有属性

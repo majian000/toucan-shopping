@@ -23,6 +23,15 @@
 
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
+        <label class="layui-form-label required">SKU特有属性</label>
+        <div class="layui-input-block">
+            <select id="isSpecific"  name="isSpecific" lay-search="" lay-filter="isSpecific">
+                <option value="1" >是</option>
+                <option value="0" selected>否</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">属性类型</label>
         <div class="layui-input-block">
             <select id="attributeType"  name="attributeType" lay-search="" lay-filter="attributeType">

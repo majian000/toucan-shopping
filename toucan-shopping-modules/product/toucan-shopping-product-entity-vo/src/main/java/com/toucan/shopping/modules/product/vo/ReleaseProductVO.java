@@ -12,15 +12,7 @@ import java.util.List;
 public class ReleaseProductVO extends ShopProductVO {
 
 
-    /**
-     * 商品所属分类
-     */
-    private Long categoryId;
 
-    /**
-     * 店铺内的所属分类
-     */
-    private Long shopCategoryId;
 
 
     /**

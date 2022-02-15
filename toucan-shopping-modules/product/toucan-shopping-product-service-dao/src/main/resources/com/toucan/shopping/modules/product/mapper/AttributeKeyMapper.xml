@@ -9,6 +9,8 @@
         <result column="attribute_type" jdbcType="INTEGER" property="attributeType" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="is_specific" jdbcType="INTEGER" property="isSpecific" />
+        <result column="query_status" jdbcType="INTEGER" property="queryStatus" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -62,6 +64,13 @@
             and t.show_status = #{showStatus}
         </if>
 
+        <if test="isSpecific!=null and isSpecific!=-1">
+            and t.is_specific = #{isSpecific}
+        </if>
+        <if test="queryStatus!=null and queryStatus!=-1">
+            and t.query_status = #{queryStatus}
+        </if>
+
 
         <if test="idArray!=null and idArray.length>0 ">
             and t.id in
@@ -97,8 +106,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey"  keyProperty="id" >
-        insert into t_attribute_key(id,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
-        values(#{id},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
+        insert into t_attribute_key(id,query_status,is_specific,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
+        values(#{id},#{queryStatus},#{isSpecific},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
     </insert>
 
 
@@ -115,7 +124,7 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey">
         update t_attribute_key set attribute_type=#{attributeType},attribute_name=#{attributeName},category_id=#{categoryId},attribute_sort=#{attributeSort},remark=#{remark},
-          update_admin_id=#{updateAdminId},update_date=#{updateDate},show_status=#{showStatus}
+          update_admin_id=#{updateAdminId},update_date=#{updateDate},show_status=#{showStatus},query_status=#{queryStatus},is_specific=#{isSpecific}
           where id=#{id}
     </update>
 
