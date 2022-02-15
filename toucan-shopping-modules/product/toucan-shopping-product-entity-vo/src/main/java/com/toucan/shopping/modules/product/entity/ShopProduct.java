@@ -30,6 +30,8 @@ public class ShopProduct {
     private Short giveInvoice; //1:提供发票 0:不提供
     private Short changeOrReturn; //退换货承诺 1:承诺 0:不承诺
     private String etractMethod; //提取方式(多选用,分割) 1:用物流配送
+    private String articleNumber; //货号
+    private Long brandId; //品牌ID
 
 
 }
