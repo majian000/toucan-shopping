@@ -57,6 +57,15 @@ $(function () {
     });
 
     $("#step2Next").bind( 'click' ,function(){
+        var mainPhotoFileObj = $("#mainPhotoFile").val();
+        if(mainPhotoFileObj==null||mainPhotoFileObj=="")
+        {
+            $.message({
+                message: "请上传商品主图",
+                type: 'error'
+            });
+            return ;
+        }
         var result = checkInputFunctionByContainerId("step2",2);
         if(result) {
             $("#step5").hide();

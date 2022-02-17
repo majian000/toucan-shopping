@@ -109,11 +109,11 @@ var attributeControl = {
                         var td = $("<td>" + values + "</td>");
                         td.appendTo(tr);
                     });
-                    var td1 = $("<td ><input name=\"price\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|money\"  placeholder='请输入价格'></td>");
+                    var td1 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].price\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|money\"  placeholder='请输入价格'></td>");
                     td1.appendTo(tr);
-                    var td2 = $("<td ><input name=\"count\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
+                    var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
                     td2.appendTo(tr);
-                    var td3 = $("<td ><input type='file' name='skuProductProviews' id='skuProductProview"+g_sku_pos+"' /></td>");
+                    var td3 = $("<td ><input type='file' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' /></td>");
                     td3.appendTo(tr);
                     var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
                     td4.appendTo(tr);
