@@ -35,6 +35,7 @@ function selectShopCategoryLevel1(p) {
 		$("#shop_category_sort1 li").eq(p).addClass("active").siblings("li").removeClass("active");
 		expressShopCategoryP = shop_category_list[p].name;
 		$("#selectedShopCategorySort").html(expressShopCategoryP);
+		$("#shopCategoryId").val(shop_category_list[p].id);
 	}
 }
 
@@ -48,6 +49,7 @@ function selectShopCategoryLevel2(p,c) {
 	}else{
 		$("#shop_category_sort2 li").eq(c).addClass("active").siblings("li").removeClass("active");
 		expressShopCategoryC = expressShopCategoryP + arrow + shop_category_list[p].children[c].name;
+		$("#shopCategoryId").val(shop_category_list[p].children[c].id);
 	}
 	$("#selectedShopCategorySort").html(expressShopCategoryC);
 }

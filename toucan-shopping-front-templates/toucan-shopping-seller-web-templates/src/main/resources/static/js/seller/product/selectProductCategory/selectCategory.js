@@ -63,6 +63,8 @@ function selectCategoryLevel2(p,c) {
 		initBrandListControl("selectBrandDiv","selectBrand",category_list[p].children[c].id);
 		g_selectCategoryId = category_list[p].children[c].id;
 		$("#releaseBtn").removeAttr("disabled");
+
+		$("#categoryId").val(g_selectCategoryId);
 	}else{
 		$("#releaseBtn").attr("disabled","disabled");
 		$("#brandDiv").hide();
@@ -81,6 +83,8 @@ function selectD(p,c,d) {
 	//加载品牌列表
 	initBrandListControl("selectBrandDiv","selectBrand",category_list[p].children[c].children[d].id);
 	g_selectCategoryId = category_list[p].children[c].children[d].id;
+
+	$("#categoryId").val(g_selectCategoryId);
 }
 
 function showSetp2Page()
