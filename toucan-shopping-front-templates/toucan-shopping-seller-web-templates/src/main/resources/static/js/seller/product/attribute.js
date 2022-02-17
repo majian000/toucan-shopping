@@ -113,7 +113,7 @@ var attributeControl = {
                     td1.appendTo(tr);
                     var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
                     td2.appendTo(tr);
-                    var td3 = $("<td ><input type='file' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' /></td>");
+                    var td3 = $("<td ><input type='file' class='skuTablePhotos' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' /></td>");
                     td3.appendTo(tr);
                     var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
                     td4.appendTo(tr);

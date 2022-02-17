@@ -67,6 +67,32 @@ $(function () {
             return ;
         }
         var result = checkInputFunctionByContainerId("step2",2);
+
+        var skuTablePhotos = $(".skuTablePhotos");
+        if(skuTablePhotos==null||skuTablePhotos.length<=0)
+        {
+            $.message({
+                message: "请选择商品属性",
+                type: 'error'
+            });
+            return ;
+        }
+        if(skuTablePhotos.length>0)
+        {
+            for(var i=0;i<skuTablePhotos.length;i++)
+            {
+                var skuTablePhoto = $(skuTablePhotos[i]).val();
+                if(skuTablePhoto==null||skuTablePhoto=="")
+                {
+                    $.message({
+                        message: "请上传销售规格中的商品图片",
+                        type: 'error'
+                    });
+                    return ;
+                }
+            }
+        }
+
         if(result) {
             $("#step5").hide();
             $("#step4").hide();
@@ -152,8 +178,11 @@ $("#ppfbtn").click(function() {
             if(result.code<=0)
             {
                 $("#vcode").val("");
-                $("#edit_info_msg").text(result.msg);
                 $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+                $.message({
+                    message: result.msg,
+                    type: 'error'
+                });
             }else{
                 window.location.href=basePath+"/page/user/info";
             }

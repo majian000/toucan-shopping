@@ -28,11 +28,6 @@ public class ReleaseProductVO extends ShopProductVO {
 
 
     /**
-     * 商品预览图
-     */
-    private MultipartFile[] previewPhotoFiles;
-
-    /**
      * 品牌ID
      */
     private BrandVO brand;
