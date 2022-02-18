@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 商品SKU VO
@@ -16,11 +17,21 @@ import java.util.Date;
 @Data
 public class ProductSkuVO  extends ProductSku {
 
+    /**
+     * 属性映射
+     */
+    private Map<String,String> attributeMap;
+
 
     /**
      * SKU商品主图
      */
     private MultipartFile mainPhotoFile;
+
+    /**
+     * SKU商品主图路径
+     */
+    private String mainPhotoFilePath;
 
     /**
      * 商品主图(HTTP访问)

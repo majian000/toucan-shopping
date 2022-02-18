@@ -11,5 +11,9 @@ import lombok.Data;
 @Data
 public class ShopProductVO extends ShopProduct {
 
+    /**
+     * 主图文件路径
+     */
+    private String mainPhotoFilePath;
 
 }

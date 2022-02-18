@@ -56,6 +56,7 @@ var attributeControl = {
         var SKUObj = $(".rp_attr_kt");
         //var skuCount = SKUObj.length;//
         var arrayTile = new Array();//标题组数
+        var arraySelectTitle = new Array(); //所选标题数组
         var arrayInfor = new Array();//盛放每组选中的CheckBox值的对象
         var arrayColumn = new Array();//指定列，用来合并哪些列
         var columnIndex = 0;
@@ -68,6 +69,18 @@ var attributeControl = {
             var order = new Array();
             $("." + itemName + " input[type=checkbox]:checked").each(function (){
                 order.push($(this).val());
+                var attributeName=$("." + itemName).attr("attr-group-name");
+                var isFind=false;
+                for(var sti=0;sti<arraySelectTitle.length;sti++)
+                {
+                    if(arraySelectTitle[sti]==attributeName)
+                    {
+                        isFind=true;
+                    }
+                }
+                if(!isFind) {
+                    arraySelectTitle.push(attributeName);
+                }
             });
             if(order!=null&&order.length>0) {
                 arrayInfor.push(order);
@@ -105,10 +118,18 @@ var attributeControl = {
                     var td_array = item.split(",");
                     var tr = $("<tr></tr>");
                     tr.appendTo(tbody);
+                    var sku_attribute_json="{";
                     $.each(td_array, function (i, values) {
                         var td = $("<td>" + values + "</td>");
                         td.appendTo(tr);
+
+                        sku_attribute_json+="'"+arrayTile[i]+"':'"+values+"'";
+                        if(i+1<td_array.length)
+                        {
+                            sku_attribute_json+=",";
+                        }
                     });
+                    sku_attribute_json+="}";
                     var td1 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].price\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|money\"  placeholder='请输入价格'></td>");
                     td1.appendTo(tr);
                     var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
@@ -117,6 +138,8 @@ var attributeControl = {
                     td3.appendTo(tr);
                     var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
                     td4.appendTo(tr);
+                    var td5 = $("<input type='hidden' name='productSkuVOList["+g_sku_pos+"].attributes' value=\""+sku_attribute_json+"\" />");
+                    td5.appendTo(tr);
 
                     g_sku_pos++;
                     //var td3 = $("<td ><input name=\"Txt_NumberSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
@@ -124,6 +147,7 @@ var attributeControl = {
                     //var td4 = $("<td ><input name=\"Txt_SnSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
                     //td4.appendTo(tr);
                 });
+
             }
             //结束创建Table表
             arrayColumn.pop();//删除数组中最后一项
@@ -136,6 +160,41 @@ var attributeControl = {
             //未全选中,清除表格
             document.getElementById('tspSkuAttributeTable').innerHTML="";
         }
+
+        //保存发布的这个商品的所有属性
+        var attribute_json="{";
+        //遍历所有列
+        $.each(arraySelectTitle, function (index, item) {
+            attribute_json+="'"+item+"':[";
+            var attributeValueArray = new Array();
+            //遍历所有行
+            for(var zdi2=0;zdi2<zuheDate.length;zdi2++)
+            {
+                var item2=zuheDate[zdi2];
+                var rowAttributeValue = item2.split(",");
+                var isFind=false;
+                for(var aa=0;aa<attributeValueArray.length;aa++)
+                {
+                    if(attributeValueArray[aa]==rowAttributeValue[index])
+                    {
+                        isFind=true;
+                    }
+                }
+                if(!isFind) {
+                    //保存这个行的指定列
+                    attributeValueArray.push(rowAttributeValue[index]);
+                }
+            }
+            attribute_json+="'"+attributeValueArray.join("','")+"'";
+            attribute_json+="]";
+
+            if(index+1<arraySelectTitle.length)
+            {
+                attribute_json+=",";
+            }
+        });
+        attribute_json+="}";
+        $("#attributes").val(attribute_json);
 
     },//合并行
     hebingFunction: function () {
@@ -221,7 +280,6 @@ var attributeControl = {
                     _count++;
                 }
             }
-            //console.log(newArray);
             return attributeControl.doExchange(newArray);
         }
         else {
@@ -258,9 +316,9 @@ function initAttributes(categoryId,callback)
                     attributeHtmls+="  <input type='button'  class='releaseProductButton' value='添加' attr-data='"+attribute.id+"'  />";
                     attributeHtmls+=" </div> ";
                     attributeHtmls+=" <div class='attributeList'> ";
-                    attributeHtmls+=" <ul class='rp_attr_kt' style='display:none'><li>"+attribute.attributeName+"</li></ul> ";
+                    attributeHtmls+=" <ul class='rp_attr_kt' style='display:none' ><li>"+attribute.attributeName+"</li></ul> ";
                     attributeHtmls+=" <div class='field' style='width:100%'> ";
-                    attributeHtmls+=" <ul class='rpai"+i+"' style='float:left;margin-left: 20px;'>";
+                    attributeHtmls+=" <ul class='rpai"+i+"' style='float:left;margin-left: 20px;' attr-group-name='"+attribute.attributeName+"'>";
                     if(attribute.values!=null&&attribute.values.length>0) {
                         for(var j=0;j<attribute.values.length;j++) {
                             var attributeValue = attribute.values[j];

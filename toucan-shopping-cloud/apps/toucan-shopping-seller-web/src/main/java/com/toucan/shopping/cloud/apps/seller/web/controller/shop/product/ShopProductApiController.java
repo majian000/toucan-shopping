@@ -1,10 +1,12 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignColorTableService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -31,8 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -63,6 +64,9 @@ public class ShopProductApiController extends BaseController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private FeignShopProductService feignShopProductService;
+
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
@@ -89,6 +93,34 @@ public class ShopProductApiController extends BaseController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,SKU列表不能为空!");
                 return resultObjectVO;
+            }
+
+            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
+                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+                    if(StringUtils.isEmpty(productSkuVO.getAttributes()))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU列表属性值不能为空!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+
+            //SKU属性表格式化成Map
+            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
+                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+                    productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
+                    String name = publishProductVO.getName();
+                    Set<String> keys = productSkuVO.getAttributeMap().keySet();
+                    Iterator keyIt = keys.iterator();
+                    while(keyIt.hasNext())
+                    {
+                        name+=" " +productSkuVO.getAttributeMap().get(keyIt.next());
+                    }
+
+                    productSkuVO.setName(name);
+                }
             }
 
             if(!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
@@ -119,7 +151,7 @@ public class ShopProductApiController extends BaseController {
                     if(productSkuVO.getMainPhotoFile()==null)
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("发布失败,SKU中的商品主图不能为空!");
+                        resultObjectVO.setMsg("发布失败,的商品主图不能为空!");
                         return resultObjectVO;
                     }
                     if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
@@ -130,6 +162,21 @@ public class ShopProductApiController extends BaseController {
                     }
                 }
             }
+
+            //上传商品主图
+            publishProductVO.setMainPhotoFilePath(imageUploadService.uploadFile(publishProductVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(publishProductVO.getMainPhotoFile().getOriginalFilename())));
+            publishProductVO.setMainPhotoFile(null);
+
+            //上传SKU表商品主图
+            for(ProductSkuVO productSkuVO:publishProductVO.getProductSkuVOList())
+            {
+                productSkuVO.setMainPhotoFilePath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
+                productSkuVO.setMainPhotoFilePath(null);
+            }
+
+            publishProductVO.setAppCode("10001001");
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),publishProductVO);
+            resultObjectVO = feignShopProductService.publish(requestJsonVO);
 
         }catch (Exception e)
         {

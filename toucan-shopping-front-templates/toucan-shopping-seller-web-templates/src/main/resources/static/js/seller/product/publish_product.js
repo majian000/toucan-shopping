@@ -170,7 +170,7 @@ $("#ppfbtn").click(function() {
     });
 
     $('#productReleaseForm').ajaxSubmit({
-        url: basePath+'/api/shop/product/release',
+        url: basePath+'/api/shop/product/publish',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
         success: function (result) {
