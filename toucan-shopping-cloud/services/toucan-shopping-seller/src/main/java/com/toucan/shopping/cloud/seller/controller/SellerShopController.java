@@ -829,6 +829,11 @@ public class SellerShopController {
                     resultObjectVO.setCode(ResultVO.FAILD);
                     resultObjectVO.setMsg("请稍后重试");
                 }
+
+                SellerShopVO sellerShopVO = new SellerShopVO();
+                BeanUtils.copyProperties(sellerShopVO,sellerShop);
+
+                flushRedisCache(sellerShopVO);
             }
 
             resultObjectVO.setData(entity);
