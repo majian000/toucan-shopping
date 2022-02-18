@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ShopProductService {
 
-    public List<ShopProduct> queryAllList(ShopProduct queryModel);
+    List<ShopProduct> queryAllList(ShopProduct queryModel);
 
+    int save(ShopProduct entity);
 }

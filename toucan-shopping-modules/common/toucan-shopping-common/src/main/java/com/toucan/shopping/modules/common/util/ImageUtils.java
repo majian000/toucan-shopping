@@ -64,19 +64,37 @@ public class ImageUtils {
             {
                 return true;
             }
-            if(".GIF".equals(fileExt))
-            {
-                return true;
-            }
-            if(".BMP".equals(fileExt))
-            {
-                return true;
-            }
         }
 
         return false;
     }
 
+
+    public static boolean isImage(String fileName,String[] extScope){
+        if(extScope==null||extScope.length<=0)
+        {
+            throw new IllegalArgumentException("扩展名范围不能为空");
+        }
+        if(StringUtils.isEmpty(fileName))
+        {
+            return false;
+        }
+        String fileUpperName = fileName.toUpperCase();
+        if(fileUpperName.indexOf(".")!=-1)
+        {
+            String fileExt = fileUpperName.substring(fileUpperName.lastIndexOf("."),fileUpperName.length());
+            for(String ext:extScope)
+            {
+                if(ext.equals(fileExt))
+                {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+    }
     public static String getImageExt(String fileName)
     {
         if(StringUtils.isEmpty(fileName))

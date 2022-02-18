@@ -1,6 +1,5 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
@@ -12,15 +11,16 @@ import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.color.table.vo.ColorTableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.ReleaseProductVO;
-import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
+import com.toucan.shopping.modules.product.vo.PublishProductVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -44,6 +44,7 @@ public class ShopProductApiController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private String[] imageExtScope = new String[]{".JPG",".JPEG",".PNG"};
     @Autowired
     private Toucan toucan;
 
@@ -59,13 +60,83 @@ public class ShopProductApiController extends BaseController {
     @Autowired
     private FeignColorTableService feignColorTableService;
 
-    private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
+    @Autowired
+    private ImageUploadService imageUploadService;
+
+
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping(value = "/release",method = RequestMethod.POST)
+    @RequestMapping(value = "/publish",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO release(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, ReleaseProductVO releaseProductVO){
+    public ResultObjectVO release(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, PublishProductVO publishProductVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            publishProductVO.setCreateUserId(Long.parseLong(userMainId));
+
+
+            //校验商品主图
+            if(publishProductVO.getMainPhotoFile()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,请上传商品主图!");
+                return resultObjectVO;
+            }
+
+            //校验SKU列表
+            if(CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,SKU列表不能为空!");
+                return resultObjectVO;
+            }
+
+            if(!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
+                return resultObjectVO;
+            }
+
+            //校验商品预览图
+            if(CollectionUtils.isNotEmpty(previewPhotoFiles)) {
+
+                for(MultipartFile multipartFile:previewPhotoFiles)
+                {
+                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品预览图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            //校验SKU主图
+            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
+                for(ProductSkuVO productSkuVO:publishProductVO.getProductSkuVOList())
+                {
+                    if(productSkuVO.getMainPhotoFile()==null)
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU中的商品主图不能为空!");
+                        return resultObjectVO;
+                    }
+                    if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("发布失败!");
+        }
         return resultObjectVO;
     }
 

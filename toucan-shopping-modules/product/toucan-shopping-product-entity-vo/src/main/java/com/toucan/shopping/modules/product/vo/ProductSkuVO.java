@@ -18,7 +18,7 @@ public class ProductSkuVO  extends ProductSku {
 
 
     /**
-     * 商品主图
+     * SKU商品主图
      */
     private MultipartFile mainPhotoFile;
 

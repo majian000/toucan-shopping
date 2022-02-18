@@ -12,10 +12,15 @@ import java.util.List;
 public class ShopProductServiceImpl implements ShopProductService {
 
     @Autowired
-    private ShopProductMapper shopProductSpuMapper;
+    private ShopProductMapper shopProductMapper;
 
     @Override
     public List<ShopProduct> queryAllList(ShopProduct queryModel) {
-        return shopProductSpuMapper.queryAllList(queryModel);
+        return shopProductMapper.queryAllList(queryModel);
+    }
+
+    @Override
+    public int save(ShopProduct entity) {
+        return shopProductMapper.insert(entity);
     }
 }

@@ -32,4 +32,12 @@
         select * from t_shop_product_spu t
     </select>
 
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct"  >
+        insert into t_shop_product(id,category_id,shop_category_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
+            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,give_invoice,change_or_return,etract_method,article_number,brand_id)
+        values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
+            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId})
+    </insert>
+
 </mapper>

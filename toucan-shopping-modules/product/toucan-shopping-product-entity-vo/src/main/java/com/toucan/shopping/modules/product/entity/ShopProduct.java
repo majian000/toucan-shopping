@@ -21,6 +21,7 @@ public class ShopProduct {
     private Long productId; //平台维度的SPU的ID
     private Short status; //是否上架 0:未上架 1:已上架
     private Long shopId; //店铺ID
+    private Short approveStatus; //1审核中 2审核通过 3审核驳回
     private Date createDate; //创建时间
     private String appCode; //所属应用
     private Long createUserId; //创建人ID

@@ -9,9 +9,13 @@ import java.util.List;
  * 发布商品VO
  */
 @Data
-public class ReleaseProductVO extends ShopProductVO {
+public class PublishProductVO extends ShopProductVO {
 
 
+    /**
+     * 商品主图
+     */
+    private MultipartFile mainPhotoFile;
 
 
 

@@ -44,7 +44,7 @@ public class ShopProductPageController extends BaseController {
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
-    @RequestMapping("/release")
+    @RequestMapping("/publish")
     public String release(HttpServletRequest request){
 
         try {
@@ -74,7 +74,7 @@ public class ShopProductPageController extends BaseController {
             logger.warn(e.getMessage(),e);
         }
 
-        return "product/release_product";
+        return "product/publish_product";
     }
 
 }
