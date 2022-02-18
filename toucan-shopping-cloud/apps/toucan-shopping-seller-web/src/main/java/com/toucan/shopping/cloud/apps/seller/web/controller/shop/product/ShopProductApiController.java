@@ -3,7 +3,10 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
+import com.toucan.shopping.cloud.apps.seller.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
+import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignColorTableService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
@@ -14,8 +17,7 @@ import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.color.table.vo.ColorTableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.ImageUtils;
-import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
+import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -24,6 +26,7 @@ import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.PublishProductVO;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,8 +38,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -73,14 +81,58 @@ public class ShopProductApiController extends BaseController {
     @Autowired
     private FeignSellerShopService feignSellerShopService;
 
+    @Autowired
+    private ToucanStringRedisService toucanStringRedisService;
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value = "/publish",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO release(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, PublishProductVO publishProductVO){
+    public ResultObjectVO publish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, PublishProductVO publishProductVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
+
+            if(StringUtils.isEmpty(publishProductVO.getVcode()))
+            {
+                resultObjectVO.setMsg("请输入验证码");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            String cookie = request.getHeader("Cookie");
+            if(StringUtils.isEmpty(cookie))
+            {
+                resultObjectVO.setMsg("请重新刷新验证码");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
+            if(StringUtils.isEmpty(clientVCodeId))
+            {
+                resultObjectVO.setMsg("验证码异常");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String vcodeRedisKey = ShopProductRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
+            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
+            if(vCodeObject==null)
+            {
+                resultObjectVO.setMsg("验证码过期请刷新");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            if(!StringUtils.equals(publishProductVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+            {
+                resultObjectVO.setMsg("验证码输入有误");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            //删除缓存中验证码
+            toucanStringRedisService.delete(vcodeRedisKey);
+
+
+
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             publishProductVO.setCreateUserId(Long.parseLong(userMainId));
 
@@ -280,6 +332,47 @@ public class ShopProductApiController extends BaseController {
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
+        }
+    }
+
+
+
+    @RequestMapping(value="/vcode", method = RequestMethod.GET)
+    public void verifyCode(HttpServletResponse response) {
+        OutputStream outputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            int w = 200, h = 80;
+            //生成4位验证码
+            String code = VerifyCodeUtil.generateVerifyCode(4);
+
+
+            //生成客户端验证码ID
+            String vcodeUuid = GlobalUUID.uuid();
+            String vcodeRedisKey = ShopProductRedisKey.getVerifyCodeKey(this.getAppCode(),vcodeUuid);
+            toucanStringRedisService.set(vcodeRedisKey,code);
+            toucanStringRedisService.expire(vcodeRedisKey,60, TimeUnit.SECONDS);
+
+            Cookie clientVCodeId = new Cookie("clientVCodeId",vcodeUuid);
+            clientVCodeId.setPath("/");
+            //60秒过期
+            clientVCodeId.setMaxAge(60);
+            response.addCookie(clientVCodeId);
+
+            VerifyCodeUtil.outputImage(w, h, outputStream, code);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(),e);
+        }finally{
+            if(outputStream!=null)
+            {
+                try {
+                    outputStream.flush();
+                    outputStream.close();
+                }catch(Exception e)
+                {
+                    logger.warn(e.getMessage(),e);
+                }
+            }
         }
     }
 

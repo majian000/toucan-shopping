@@ -16,4 +16,9 @@ public class ShopProductVO extends ShopProduct {
      */
     private String mainPhotoFilePath;
 
+    /**
+     * 验证码
+     */
+    private String vcode;
+
 }
