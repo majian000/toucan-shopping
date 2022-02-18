@@ -128,7 +128,7 @@ $(function () {
     });
 
     $("#step4Next").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/vcode?"+new Date().getTime());
         $("#step5").show();
         $("#step4").hide();
         $("#step3").hide();
@@ -178,7 +178,7 @@ $("#ppfbtn").click(function() {
             if(result.code<=0)
             {
                 $("#vcode").val("");
-                $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
+                $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/vcode?"+new Date().getTime());
                 $.message({
                     message: result.msg,
                     type: 'error'

@@ -139,7 +139,7 @@ public class ShopProductApiController extends BaseController {
             //查询这个用户下的店铺
             UserVO queryUserVO = new UserVO();
             queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),publishProductVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
             resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
             if(!resultObjectVO.isSuccess()) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
