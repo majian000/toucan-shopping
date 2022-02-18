@@ -184,7 +184,15 @@ $("#ppfbtn").click(function() {
                     type: 'error'
                 });
             }else{
-                window.location.href=basePath+"/page/user/info";
+                $.message({
+                    message: "发布成功",
+                    type: 'success',
+                    showClose:true,
+                    autoClose:false,
+                    onClose:function(){
+                        window.location.href=basePath+"/index";
+                    }
+                });
             }
         }
     });
