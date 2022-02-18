@@ -61,31 +61,33 @@ var attributeControl = {
         var arrayColumn = new Array();//指定列，用来合并哪些列
         var columnIndex = 0;
         $.each(SKUObj, function (i, item){
-            arrayColumn.push(columnIndex);
-            columnIndex++;
-            arrayTile.push(SKUObj.find("li").eq(i).html().replace("：", ""));
             var itemName = "rpai" + i;
-            //选中的CHeckBox取值
-            var order = new Array();
-            $("." + itemName + " input[type=checkbox]:checked").each(function (){
-                order.push($(this).val());
-                var attributeName=$("." + itemName).attr("attr-group-name");
-                var isFind=false;
-                for(var sti=0;sti<arraySelectTitle.length;sti++)
-                {
-                    if(arraySelectTitle[sti]==attributeName)
-                    {
-                        isFind=true;
+            //查询所有已选择属性的名称
+            var selectAttributeControls = $("." + itemName + " input[type=checkbox]:checked");
+            if(selectAttributeControls!=null&&selectAttributeControls.length>0) {
+                arrayColumn.push(columnIndex);
+                columnIndex++;
+                arrayTile.push(SKUObj.find("li").eq(i).html().replace("：", ""));
+                //选中的CHeckBox取值
+                var order = new Array();
+                $("." + itemName + " input[type=checkbox]:checked").each(function () {
+                    order.push($(this).val());
+                    var attributeName = $("." + itemName).attr("attr-group-name");
+                    var isFind = false;
+                    for (var sti = 0; sti < arraySelectTitle.length; sti++) {
+                        if (arraySelectTitle[sti] == attributeName) {
+                            isFind = true;
+                        }
                     }
+                    if (!isFind) {
+                        arraySelectTitle.push(attributeName);
+                    }
+                });
+                if (order != null && order.length > 0) {
+                    arrayInfor.push(order);
                 }
-                if(!isFind) {
-                    arraySelectTitle.push(attributeName);
-                }
-            });
-            if(order!=null&&order.length>0) {
-                arrayInfor.push(order);
+                //var skuValue = SKUObj.find("li").eq(index).html();
             }
-            //var skuValue = SKUObj.find("li").eq(index).html();
         });
         if(arrayInfor!=null&&arrayInfor.length>0) {
             //开始创建Table表
