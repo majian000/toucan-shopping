@@ -205,14 +205,14 @@ public class SellerShopController {
             if(shopJsonObject!=null)
             {
                 SellerShopVO sellerShopVO = JSONObject.parseObject(String.valueOf(shopJsonObject),SellerShopVO.class);
-                if(sellerShopVO!=null)
+                if(sellerShopVO!=null&&sellerShopVO.getEnableStatus()!=null&&sellerShopVO.getEnableStatus().intValue()==1)
                 {
                     resultObjectVO.setData(sellerShopVO);
                     return resultObjectVO;
                 }
 
             }
-
+            querySellerShop.setEnableStatus((short)1);
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
             if(!CollectionUtils.isEmpty(sellerShops)) {
                 SellerShop sellerShop = sellerShops.get(0);

@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignColorTableService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -23,6 +24,8 @@ import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.PublishProductVO;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -67,6 +70,9 @@ public class ShopProductApiController extends BaseController {
     @Autowired
     private FeignShopProductService feignShopProductService;
 
+    @Autowired
+    private FeignSellerShopService feignSellerShopService;
+
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
@@ -77,6 +83,23 @@ public class ShopProductApiController extends BaseController {
         try{
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             publishProductVO.setCreateUserId(Long.parseLong(userMainId));
+
+            //查询这个用户下的店铺
+            UserVO queryUserVO = new UserVO();
+            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),publishProductVO);
+            resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
+            if(!resultObjectVO.isSuccess()) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
+                return resultObjectVO;
+            }
+            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+            if (sellerShopVO == null) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
+                return resultObjectVO;
+            }
 
 
             //校验商品主图
@@ -93,6 +116,17 @@ public class ShopProductApiController extends BaseController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,SKU列表不能为空!");
                 return resultObjectVO;
+            }
+
+            //判断商品预览图数量
+            if(CollectionUtils.isNotEmpty(previewPhotoFiles))
+            {
+                if(previewPhotoFiles.size()>6)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("发布失败,商品预览图最大数量为6个!");
+                    return resultObjectVO;
+                }
             }
 
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
@@ -171,13 +205,14 @@ public class ShopProductApiController extends BaseController {
             for(ProductSkuVO productSkuVO:publishProductVO.getProductSkuVOList())
             {
                 productSkuVO.setMainPhotoFilePath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
-                productSkuVO.setMainPhotoFilePath(null);
+                productSkuVO.setMainPhotoFile(null);
             }
 
-            publishProductVO.setAppCode("10001001");
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),publishProductVO);
-            resultObjectVO = feignShopProductService.publish(requestJsonVO);
+            publishProductVO.setShopId(sellerShopVO.getId());
 
+            publishProductVO.setAppCode("10001001");
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
+            resultObjectVO = feignShopProductService.publish(requestJsonVO);
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

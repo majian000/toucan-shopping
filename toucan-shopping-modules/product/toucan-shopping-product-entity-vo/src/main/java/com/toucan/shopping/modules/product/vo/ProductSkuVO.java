@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.product.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class ProductSkuVO  extends ProductSku {
     /**
      * SKU商品主图
      */
+    @JSONField(serialize = false)
     private MultipartFile mainPhotoFile;
 
     /**
