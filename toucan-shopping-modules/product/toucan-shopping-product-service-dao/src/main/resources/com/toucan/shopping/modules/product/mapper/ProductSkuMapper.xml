@@ -24,6 +24,8 @@
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
         <result column="product_preview_path" jdbcType="VARCHAR" property="productPreviewPath" />
+        <result column="product_uuid" jdbcType="VARCHAR" property="productUuid" />
+        <result column="product_id" jdbcType="BIGINT" property="productId" />
 
     </resultMap>
 
