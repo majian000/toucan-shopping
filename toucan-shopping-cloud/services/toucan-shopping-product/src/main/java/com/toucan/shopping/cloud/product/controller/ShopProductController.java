@@ -10,15 +10,19 @@ import com.toucan.shopping.modules.product.entity.ShopProduct;
 import com.toucan.shopping.modules.product.redis.PublishProductRedisLockKey;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
 import com.toucan.shopping.modules.product.service.ShopProductService;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.PublishProductVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -82,15 +86,54 @@ public class ShopProductController {
             skylarkLock.lock(PublishProductRedisLockKey.getPublishProductLockKey(shopId), shopId);
 
             //保存店铺商品
-            publishProductVO.setId(idGenerator.id());
-            publishProductVO.setUuid(UUID.randomUUID().toString().replace("-",""));
-            publishProductVO.setCreateDate(new Date());
-            publishProductVO.setApproveStatus((short)1); //审核中
-            publishProductVO.setStatus((short)0);
-            shopProductService.save(publishProductVO);
+            if(CollectionUtils.isNotEmpty(publishProductVO.getProductSkuVOList())) {
+                publishProductVO.setId(idGenerator.id());
+                publishProductVO.setUuid(UUID.randomUUID().toString().replace("-", ""));
+                publishProductVO.setCreateDate(new Date());
+                publishProductVO.setApproveStatus((short) 1); //审核中
+                publishProductVO.setStatus((short) 0);
+                int ret = shopProductService.save(publishProductVO);
 
+                if(ret<=0)
+                {
+                    logger.warn("发布商品失败 原因:插入数据库影响行数返回小于等于0 {}",requestJsonVO.getEntityJson());
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("发布失败!");
+                }
+                List<ProductSku> productSkus = new LinkedList<>();
+                for(ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList())
+                {
+                    ProductSku productSku = new ProductSku();
+                    BeanUtils.copyProperties(productSku,productSkuVO);
 
+                    productSku.setId(idGenerator.id());
+                    productSku.setCreateUserId(publishProductVO.getCreateUserId());
+                    productSku.setCreateDate(new Date());
+                    productSku.setStatus((short) 0);
+                    productSku.setShopId(publishProductVO.getShopId()); //设置店铺ID
+                    productSku.setShopProductId(publishProductVO.getId()); //设置店铺发布的商品ID
+                    productSku.setShopProductUuid(publishProductVO.getProductUuid());
+                    productSku.setBrankId(publishProductVO.getBrandId()); //设置品牌ID
 
+                    productSkus.add(productSku);
+
+                }
+                ret = productSkuService.saves(productSkus);
+
+                if(ret!=productSkus.size())
+                {
+                    logger.warn("发布商品失败 原因:保存SKU影响返回行和保存数量不一致 {}",JSONObject.toJSONString(productSkus));
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("发布失败!");
+
+                    ret = shopProductService.deleteById(publishProductVO.getId());
+                    if(ret<=0)
+                    {
+                        //发送异常邮件,通知运营处理
+                        logger.warn("发布商品失败 回滚店铺商品表失败 id {}",publishProductVO.getId());
+                    }
+                }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -13,4 +13,5 @@ public interface ShopProductMapper {
 
     int insert(ShopProduct entity);
 
+    int deleteById(Long id);
 }

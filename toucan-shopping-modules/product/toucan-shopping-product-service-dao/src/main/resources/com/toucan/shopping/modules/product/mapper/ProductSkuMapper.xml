@@ -4,22 +4,27 @@
 
     <resultMap id="productSkuMap" type="com.toucan.shopping.modules.product.entity.ProductSku" >
         <id column="id" jdbcType="BIGINT"  property="id" />
-        <result column="attributes" jdbcType="VARCHAR" property="attributes" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
         <result column="shop_product_uuid" jdbcType="VARCHAR" property="shopProductUuid" />
         <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
+        <result column="attributes" jdbcType="VARCHAR" property="attributes" />
         <result column="price" jdbcType="DOUBLE" property="price" />
-        <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="status" jdbcType="SMALLINT" property="status" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
         <result column="brank_id" jdbcType="BIGINT" property="brankId" />
-        <result column="registration_certificate_no" jdbcType="VARCHAR" property="registration_certificate_no" />
+        <result column="registration_certificate_no" jdbcType="VARCHAR" property="registrationCertificateNo" />
         <result column="item_no" jdbcType="VARCHAR" property="itemNo" />
-        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
-        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
-        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
+        <result column="product_preview_path" jdbcType="VARCHAR" property="productPreviewPath" />
+
     </resultMap>
 
     <select id="queryList" resultMap="productSkuMap" parameterType="java.util.Map">
@@ -45,8 +50,22 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku"  >
-        insert into t_product_sku(product_id,name,attributes,price,shop_product_uuid,shop_product_id,uuid,remark,status,create_date,app_code,create_user_id,shop_id,brank_id,registration_certificate_no,item_no)
-        values(#{productId},#{name},#{attributes},#{price},#{shopProductUuid},#{shopProductId},#{uuid},#{remark},#{status},#{createDate},#{appCode},#{createUserId},#{shopId},#{brankId},#{registrationCertificateNo},#{itemNo})
+        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,registration_certificate_no,item_no,name,stock_num,product_preview_path)
+        values(#{id},#{uuid},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{registrationCertificateNo},#{itemNo},#{name},#{stockNum},#{productPreviewPath})
+    </insert>
+
+
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,
+          registration_certificate_no,item_no,name,stock_num,product_preview_path)
+
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.uuid},#{entity.shopProductUuid},#{entity.shopProductId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
+            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.registrationCertificateNo},#{entity.itemNo},
+            #{entity.name},#{entity.stockNum},#{entity.productPreviewPath})
+        </foreach>
+
     </insert>
 
     <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">

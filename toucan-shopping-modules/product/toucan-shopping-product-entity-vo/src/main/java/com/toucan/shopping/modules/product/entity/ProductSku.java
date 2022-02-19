@@ -23,6 +23,7 @@ public class ProductSku {
     private Short status; //是否上架 0:未上架 1:已上架
     private String appCode; //所属应用
     private Long createUserId; //创建人ID
+    private Long updateUserId; //创建人ID
 
     /**
      * 删除状态 0未删除 1已删除
@@ -31,12 +32,14 @@ public class ProductSku {
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate; //修改时间
     private Long shopId; //店铺ID
     private Long brankId; //品牌ID
     private String registrationCertificateNo; //注册证号
     private String itemNo; //货号
 
     private Integer stockNum=0; //库存
-    private String productPreviewPath; //商品预览路径
+    private String productPreviewPath; //商品主图路径
 
 }

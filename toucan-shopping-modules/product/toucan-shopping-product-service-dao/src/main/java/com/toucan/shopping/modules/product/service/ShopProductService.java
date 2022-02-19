@@ -10,4 +10,7 @@ public interface ShopProductService {
     List<ShopProduct> queryAllList(ShopProduct queryModel);
 
     int save(ShopProduct entity);
+
+    int deleteById(Long id);
+
 }

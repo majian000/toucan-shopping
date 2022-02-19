@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,13 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     @Override
     public int save(ProductSku productSku) {
         return productSkuMapper.insert(productSku);
+    }
+
+    @Override
+    public int saves(List<ProductSku> productSkus) {
+        if(CollectionUtils.isEmpty(productSkus))
+            throw new IllegalArgumentException("实体列表参数不能为空");
+        return productSkuMapper.inserts(productSkus);
     }
 
     @Override

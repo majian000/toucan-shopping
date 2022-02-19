@@ -125,7 +125,7 @@ var attributeControl = {
                         var td = $("<td>" + values + "</td>");
                         td.appendTo(tr);
 
-                        sku_attribute_json+="'"+arrayTile[i]+"':'"+values+"'";
+                        sku_attribute_json+="\""+arrayTile[i]+"\":\""+values+"\"";
                         if(i+1<td_array.length)
                         {
                             sku_attribute_json+=",";
@@ -140,8 +140,10 @@ var attributeControl = {
                     td3.appendTo(tr);
                     var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
                     td4.appendTo(tr);
-                    var td5 = $("<input type='hidden' name='productSkuVOList["+g_sku_pos+"].attributes' value=\""+sku_attribute_json+"\" />");
+                    var td5 = $("<input type='hidden' name='productSkuVOList["+g_sku_pos+"].attributes' id='productSkuVOList"+g_sku_pos+"_attributes'  />");
                     td5.appendTo(tr);
+
+                    $("#productSkuVOList"+g_sku_pos+"_attributes").val(sku_attribute_json);
 
                     g_sku_pos++;
                     //var td3 = $("<td ><input name=\"Txt_NumberSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
@@ -167,7 +169,7 @@ var attributeControl = {
         var attribute_json="{";
         //遍历所有列
         $.each(arraySelectTitle, function (index, item) {
-            attribute_json+="'"+item+"':[";
+            attribute_json+="\""+item+"\":[";
             var attributeValueArray = new Array();
             //遍历所有行
             for(var zdi2=0;zdi2<zuheDate.length;zdi2++)
@@ -187,7 +189,7 @@ var attributeControl = {
                     attributeValueArray.push(rowAttributeValue[index]);
                 }
             }
-            attribute_json+="'"+attributeValueArray.join("','")+"'";
+            attribute_json+="\""+attributeValueArray.join("\",\"")+"\"";
             attribute_json+="]";
 
             if(index+1<arraySelectTitle.length)

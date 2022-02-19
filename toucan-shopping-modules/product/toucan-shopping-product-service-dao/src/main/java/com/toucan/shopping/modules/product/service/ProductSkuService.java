@@ -19,6 +19,8 @@ public interface ProductSkuService {
      */
     int save(ProductSku productSku);
 
+    int saves(List<ProductSku> productSkus);
+
     ProductSku queryById(Long id);
 
 

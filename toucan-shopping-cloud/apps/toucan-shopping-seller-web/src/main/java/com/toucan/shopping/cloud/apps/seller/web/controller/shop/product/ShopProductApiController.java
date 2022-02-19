@@ -256,7 +256,7 @@ public class ShopProductApiController extends BaseController {
             //上传SKU表商品主图
             for(ProductSkuVO productSkuVO:publishProductVO.getProductSkuVOList())
             {
-                productSkuVO.setMainPhotoFilePath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
+                productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                 productSkuVO.setMainPhotoFile(null);
             }
 

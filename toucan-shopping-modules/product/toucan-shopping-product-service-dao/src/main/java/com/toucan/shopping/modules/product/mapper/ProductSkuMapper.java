@@ -16,6 +16,8 @@ public interface ProductSkuMapper {
 
     int insert(ProductSku productSku);
 
+    int inserts(List<ProductSku> entitys);
+
     ProductSku queryById(Long id);
 
     ProductSku queryByUuid(String uuid);

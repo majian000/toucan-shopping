@@ -13,6 +13,8 @@
         <result column="product_id" jdbcType="BIGINT" property="productId" />
         <result column="status" jdbcType="SMALLINT" property="status" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="approve_status" jdbcType="SMALLINT" property="approveStatus" />
+        <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
@@ -35,9 +37,14 @@
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct"  >
         insert into t_shop_product(id,category_id,shop_category_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
-            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,give_invoice,change_or_return,etract_method,article_number,brand_id)
+            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,approve_status,give_invoice,change_or_return,etract_method,article_number,brand_id)
         values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
-            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId})
+            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{approveStatus},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId})
     </insert>
+
+
+    <update id="deleteById">
+        update t_shop_product_spu  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
 
 </mapper>

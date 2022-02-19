@@ -30,10 +30,6 @@ public class ProductSkuVO  extends ProductSku {
     @JSONField(serialize = false)
     private MultipartFile mainPhotoFile;
 
-    /**
-     * SKU商品主图路径
-     */
-    private String mainPhotoFilePath;
 
     /**
      * 商品主图(HTTP访问)

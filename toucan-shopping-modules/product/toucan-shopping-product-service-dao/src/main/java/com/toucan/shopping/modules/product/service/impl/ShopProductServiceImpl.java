@@ -23,4 +23,9 @@ public class ShopProductServiceImpl implements ShopProductService {
     public int save(ShopProduct entity) {
         return shopProductMapper.insert(entity);
     }
+
+    @Override
+    public int deleteById(Long id) {
+        return shopProductMapper.deleteById(id);
+    }
 }
