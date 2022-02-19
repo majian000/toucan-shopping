@@ -205,15 +205,18 @@ $("#ppfbtn").click(function() {
                     type: 'error'
                 });
             }else{
-                $.message({
-                    message: "发布成功",
-                    type: 'success',
-                    showClose:true,
-                    autoClose:false,
-                    onClose:function(){
-                        window.location.href=basePath+"/index";
-                    }
-                });
+                // $.message({
+                //     message: "发布成功",
+                //     type: 'success',
+                //     showClose:true,
+                //     autoClose:false,
+                //     onClose:function(){
+                //         window.location.href=basePath+"/index";
+                //     }
+                // });
+
+
+                window.location.href=basePath+"/index";
             }
         }
     });
