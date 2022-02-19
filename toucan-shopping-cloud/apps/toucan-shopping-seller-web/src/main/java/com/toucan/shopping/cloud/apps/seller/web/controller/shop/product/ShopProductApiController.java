@@ -192,6 +192,7 @@ public class ShopProductApiController extends BaseController {
                 }
             }
 
+            publishProductVO.setAppCode("10001001");
 
             //SKU属性表格式化成Map
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
@@ -206,6 +207,7 @@ public class ShopProductApiController extends BaseController {
                     }
 
                     productSkuVO.setName(name);
+                    productSkuVO.setAppCode(publishProductVO.getAppCode());
                 }
             }
 
@@ -262,7 +264,6 @@ public class ShopProductApiController extends BaseController {
 
             publishProductVO.setShopId(sellerShopVO.getId());
 
-            publishProductVO.setAppCode("10001001");
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
             resultObjectVO = feignShopProductService.publish(requestJsonVO);
         }catch (Exception e)
