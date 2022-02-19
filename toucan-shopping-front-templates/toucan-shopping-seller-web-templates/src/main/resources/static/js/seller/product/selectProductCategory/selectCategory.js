@@ -60,7 +60,7 @@ function selectCategoryLevel2(p,c) {
 	{
 		//加载品牌列表
 		$("#brandDiv").show();
-		initBrandListControl("selectBrandDiv","selectBrand",category_list[p].children[c].id);
+		initBrandListControl("selectBrandDiv","brandId","selectBrand",category_list[p].children[c].id);
 		g_selectCategoryId = category_list[p].children[c].id;
 		$("#releaseBtn").removeAttr("disabled");
 
@@ -81,7 +81,7 @@ function selectD(p,c,d) {
 
 	$("#brandDiv").show();
 	//加载品牌列表
-	initBrandListControl("selectBrandDiv","selectBrand",category_list[p].children[c].children[d].id);
+	initBrandListControl("selectBrandDiv","brandId","selectBrand",category_list[p].children[c].children[d].id);
 	g_selectCategoryId = category_list[p].children[c].children[d].id;
 
 	$("#categoryId").val(g_selectCategoryId);

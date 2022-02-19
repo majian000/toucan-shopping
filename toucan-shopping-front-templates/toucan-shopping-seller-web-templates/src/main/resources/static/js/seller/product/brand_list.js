@@ -1,10 +1,10 @@
 
 
-function initBrandListControl(brandDiv,brandPageId,categoryId)
+function initBrandListControl(brandDiv,brandPageName,brandPageId,categoryId)
 {
     //定义数组，在服务端返回的数据也以该格式返回：Array[{Object},{...}]
     $("#"+brandDiv).empty();
-    $("#"+brandDiv).append("<input type=\"text\" id=\""+brandPageId+"\" >");
+    $("#"+brandDiv).append("<input type=\"text\" name=\""+brandPageName+"\" id=\""+brandPageId+"\" >");
 
     //初始化插件
     $('#'+brandPageId).selectPage({

@@ -112,7 +112,7 @@ public class ShopProductController {
                     productSku.setStatus((short) 0);
                     productSku.setShopId(publishProductVO.getShopId()); //设置店铺ID
                     productSku.setShopProductId(publishProductVO.getId()); //设置店铺发布的商品ID
-                    productSku.setShopProductUuid(publishProductVO.getProductUuid());
+                    productSku.setShopProductUuid(publishProductVO.getUuid());
                     productSku.setBrankId(publishProductVO.getBrandId()); //设置品牌ID
 
                     productSkus.add(productSku);

@@ -16,7 +16,7 @@ public class ProductSku {
     private String name; //SKU名称(商品名称 + 属性值)
     private String attributes; //这个SKU的属性
     private String shopProductUuid; //SPU的UUID
-    private Long shopProductId; //SPU的ID
+    private Long shopProductId; //这个店铺发布的商品的ID
     private String uuid; //SKU的UUID
     private Double price; //价格
     private String remark; //备注
