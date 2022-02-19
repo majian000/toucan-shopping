@@ -1,3 +1,23 @@
+
+
+function showSetp2Page()
+{
+
+    var brandId = $("#selectBrand").val();
+    if(brandId==null||brandId=="")
+    {
+        $.message({
+            message: "请选择品牌",
+            type: 'error'
+        });
+        return ;
+    }
+
+    $("#step1").hide();
+    $("#step2").show();
+}
+
+
 $(function () {
 
 
@@ -49,6 +69,7 @@ $(function () {
 
 
     $("#step2Back").bind( 'click' ,function(){
+
         $("#step5").hide();
         $("#step4").hide();
         $("#step3").hide();

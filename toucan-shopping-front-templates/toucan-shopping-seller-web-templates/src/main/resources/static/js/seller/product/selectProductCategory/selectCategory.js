@@ -87,11 +87,6 @@ function selectD(p,c,d) {
 	$("#categoryId").val(g_selectCategoryId);
 }
 
-function showSetp2Page()
-{
-	$("#step1").hide();
-	$("#step2").show();
-}
 
 /*点击下一步*/
 $("#releaseBtn").click(function() {
