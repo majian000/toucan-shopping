@@ -16,8 +16,6 @@ public class AttributeKeyVO extends AttributeKey {
 
     private String categoryName; //类别名称
 
-    private String categoryPath; //类别路径
-
     private String createAdminName; //创建人ID
     private String updateAdminName; //修改人ID
 

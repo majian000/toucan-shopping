@@ -7,7 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -19,9 +19,9 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
-import com.toucan.shopping.modules.product.entity.AttributeKey;
-import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
-import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
+import com.toucan.shopping.modules.product.entity.ShopProduct;
+import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
+import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class ShopProductController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, ShopProductPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -98,7 +98,7 @@ public class ShopProductController extends UIController {
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<AttributeKeyVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),AttributeKeyVO.class);
+                    List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ShopProductVO.class);
                     if(CollectionUtils.isNotEmpty(list))
                     {
                         Long[] categoryIds = new Long[list.size()];
@@ -112,13 +112,14 @@ public class ShopProductController extends UIController {
                             List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
                             if(CollectionUtils.isNotEmpty(categoryVOS))
                             {
-                                for(AttributeKeyVO attributeKeyVO:list)
+                                for(ShopProductVO shopProductVO:list)
                                 {
                                     for(CategoryVO categoryVO:categoryVOS)
                                     {
-                                        if(attributeKeyVO.getCategoryId().longValue()==categoryVO.getId().longValue())
+                                        if(shopProductVO.getCategoryId().longValue()==categoryVO.getId().longValue())
                                         {
-                                            attributeKeyVO.setCategoryName(categoryVO.getName());
+                                            shopProductVO.setCategoryName(categoryVO.getName());
+                                            shopProductVO.setCategoryPath(categoryVO.getNamePath());
                                             break;
                                         }
                                     }

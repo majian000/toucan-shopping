@@ -70,8 +70,6 @@
         var tree = layui.tree;
         var loadding;
         var dtree = layui.dtree;
-        var roleTree;
-        var roleTreeDataArray = new Array();
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -313,7 +311,7 @@
         table.on('toolbar(shopProductTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加属性名',
+                    title: '添加商品',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -332,7 +330,7 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除属性名?', function (index) {
+                layer.confirm('确定删除商品?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]product/shopProduct/delete/ids",
                         contentType: "application/json; charset=utf-8",
@@ -361,77 +359,6 @@
 
 
 
-
-        /**
-         * 拿到所有选中节点的ID
-         * @param data
-         * @param idArray
-         */
-        function getCheckdNodeId(data,idArray)
-        {
-            for(var i=0;i<data.length;i++)
-            {
-                roleTreeDataArray.push(data[i]);
-                if(data[i].state.checked==true)
-                {
-                    idArray.push(data[i].id);
-                }
-                if(data[i].children!=null&&data[i].children.length>0)
-                {
-                    getCheckdNodeId(data[i].children,idArray);
-                }
-            }
-        }
-
-
-        /**
-         * 拿到指定节点对象
-         */
-        function getNodeObject(nodeId)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-                if(roleTreeDataArray[i].id==nodeId)
-                {
-                    return roleTreeDataArray[i];
-                }
-            }
-            return null;
-        }
-
-
-        /**
-         * 拿到上级节点信息
-         */
-        function getParentNode(rolesArray,pid)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-
-                if(roleTreeDataArray[i].id==pid)
-                {
-                    var exists=false;
-                    //判断上级节点ID是否已经保存了
-                    for(var j=0;j<rolesArray.length;j++)
-                    {
-                        if(rolesArray[j].id==pid) {
-                            exists = true;
-                        }
-                    }
-                    //避免上级节点ID重复保存两份
-                    if(!exists)
-                    {
-                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
-                    }
-                    if(roleTreeDataArray[i].pid!=-1) {
-                        //找到这个节点的上级节点
-                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
-                    }
-                }
-            }
-        }
-
-
         //监听表格复选框选择
         table.on('checkbox(shopProductTableFilter)', function (obj) {
             console.log(obj)
@@ -442,7 +369,7 @@
             if (obj.event == 'edit') {
 
                 var index = layer.open({
-                    title: '编辑属性名',
+                    title: '编辑商品',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -455,7 +382,7 @@
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该属性名?', function (index) {
+                layer.confirm('确定删除该商品?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]product/shopProduct/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",

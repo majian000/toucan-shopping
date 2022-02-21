@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class ShopProductVO extends ShopProduct {
 
+    private String categoryName; //类别名称
+
+    private String categoryPath; //类别路径
+
     /**
      * 主图文件路径
      */

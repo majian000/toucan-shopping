@@ -528,7 +528,25 @@ public class CategoryController {
                 resultObjectVO.setMsg("不存在!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(categorys);
+
+            List<CategoryVO> categoryVOS = new ArrayList<CategoryVO>();
+            if(!CollectionUtils.isEmpty(categorys))
+            {
+                List<Long> parentIds = new LinkedList<Long>();
+                for(Category category:categorys)
+                {
+                    CategoryVO categoryVO = new CategoryVO();
+                    BeanUtils.copyProperties(categoryVO,category);
+                    categoryVO.setNamePath(categoryVO.getName());
+                    categoryVO.setParentIdPoint(categoryVO.getParentId());
+                    categoryVOS.add(categoryVO);
+                    if(categoryVO.getParentId()!=null&&categoryVO.getParentId().longValue()!=-1L) {
+                        parentIds.add(categoryVO.getParentId());
+                    }
+                }
+                categoryService.setNamePath(categoryVOS,parentIds);
+            }
+            resultObjectVO.setData(categoryVOS);
 
         }catch(Exception e)
         {
