@@ -373,7 +373,7 @@ public class AttributeKeyController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO queryTree(HttpServletRequest request)
+    public ResultObjectVO queryCategoryTree(HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

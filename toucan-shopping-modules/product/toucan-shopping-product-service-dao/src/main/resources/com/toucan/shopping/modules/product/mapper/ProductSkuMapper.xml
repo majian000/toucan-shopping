@@ -19,8 +19,6 @@
         <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
         <result column="brank_id" jdbcType="BIGINT" property="brankId" />
-        <result column="registration_certificate_no" jdbcType="VARCHAR" property="registrationCertificateNo" />
-        <result column="item_no" jdbcType="VARCHAR" property="itemNo" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
         <result column="product_preview_path" jdbcType="VARCHAR" property="productPreviewPath" />
@@ -52,20 +50,18 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku"  >
-        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,registration_certificate_no,item_no,name,stock_num,product_preview_path)
-        values(#{id},#{uuid},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{registrationCertificateNo},#{itemNo},#{name},#{stockNum},#{productPreviewPath})
+        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path)
+        values(#{id},#{uuid},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{stockNum},#{productPreviewPath})
     </insert>
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,
-          registration_certificate_no,item_no,name,stock_num,product_preview_path)
+        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.uuid},#{entity.shopProductUuid},#{entity.shopProductId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
-            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.registrationCertificateNo},#{entity.itemNo},
-            #{entity.name},#{entity.stockNum},#{entity.productPreviewPath})
+            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.stockNum},#{entity.productPreviewPath})
         </foreach>
 
     </insert>

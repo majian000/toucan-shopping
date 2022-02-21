@@ -36,8 +36,6 @@ public class ProductSku {
     private Date updateDate; //修改时间
     private Long shopId; //店铺ID
     private Long brankId; //品牌ID
-    private String registrationCertificateNo; //注册证号
-    private String itemNo; //货号
 
     private Integer stockNum=0; //库存
     private String productPreviewPath; //商品主图路径
