@@ -97,7 +97,7 @@
 
         table.render({
             elem: '#shopProductTable',
-            url: "[[@{/}]]product/shopProduct/list",
+            url: "[[@{/}]]product/shopProductApprove/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -113,6 +113,23 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键', width: 150},
+                    {field: 'approveStatus',width: 150,   title: '审核状态',
+                        templet: function (row) {
+                            if(row.approveStatus == null){
+                                return "";
+                            }
+                            if(row.approveStatus == "1"){
+                                return "审核中";
+                            }
+                            if(row.approveStatus == "2"){
+                                return "<a style='color:green'>审核通过</a>";
+                            }
+                            if(row.approveStatus == "3"){
+                                return "<a style='color:red'>审核驳回</a>";
+                            }
+                            return row.approveStatus;
+                        }
+                    },
                     {field: 'uuid',width: 150,  title: '店铺商品UUID'},
                     {field: 'categoryPath',width: 150,  title: '分类路径'},
                     {field: 'categoryName',width: 150,  title: '分类名称'},
@@ -139,23 +156,6 @@
                         }
                     },
                     {field: 'shopId',width: 150,  title: '店铺ID'},
-                    {field: 'approveStatus',width: 150,   title: '审核状态',
-                        templet: function (row) {
-                            if(row.approveStatus == null){
-                                return "";
-                            }
-                            if(row.approveStatus == "1"){
-                                return "审核中";
-                            }
-                            if(row.approveStatus == "2"){
-                                return "<a style='color:green'>审核通过</a>";
-                            }
-                            if(row.approveStatus == "3"){
-                                return "<a style='color:red'>审核驳回</a>";
-                            }
-                            return row.approveStatus;
-                        }
-                    },
                     {field: 'rejectText',width: 150,   title: '驳回原因'},
                     {field: 'sellerNo',width: 150,   title: '卖家编码'},
                     {field: 'articleNumber',width: 150, title: '货号'},
@@ -268,7 +268,7 @@
                 content: "<div id='categoryTree'></div>",
                 success:function(layero){
                     $.ajax({
-                        url:"[[@{/}]]product/shopProduct/query/category/tree",
+                        url:"[[@{/}]]product/shopProductApprove/query/category/tree",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
                         data:null,
@@ -319,7 +319,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/shopProduct/addPage}]]",
+                    content: "[[@{/product/shopProductApprove/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -334,7 +334,7 @@
                 }
                 layer.confirm('确定删除商品?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/shopProduct/delete/ids",
+                        url:"[[@{/}]]product/shopProductApprove/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -377,7 +377,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]product/shopProduct/editPage/'+data.id
+                    content: '[[@{/}]]product/shopProductApprove/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -386,7 +386,7 @@
             } else if (obj.event == 'delete') {
                 layer.confirm('确定删除该商品?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/shopProduct/delete/"+data.id,
+                        url:"[[@{/}]]product/shopProductApprove/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

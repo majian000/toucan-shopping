@@ -77,8 +77,8 @@
     </update>
 
 
-    <select id="queryListPage" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
-        select t.* from t_shop_product_spu t
+    <select id="queryListPage" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
+        select t.* from t_shop_product t
         <where>
             <include refid="queryListPageWhere" />
         </where>
@@ -88,7 +88,7 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
-        select count(*) from t_shop_product_spu t
+        select count(*) from t_shop_product t
         <where>
 
             <include refid="queryListPageWhere" />

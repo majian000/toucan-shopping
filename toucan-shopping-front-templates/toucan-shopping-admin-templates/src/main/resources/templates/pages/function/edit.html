@@ -179,7 +179,6 @@
 
 
         $("#selectPid").click(function(){
-            loadding = layer.load();
             index = layer.open({
                 title: '选择上级功能',
                 type: 1,
@@ -189,6 +188,7 @@
                 area: ['20%', '60%'],
                 content: "<div id='appFunctionTree'></div>",
                 success:function(layero){
+                    loadding = layer.load();
                     $.ajax({
                         url:"[[@{/}]]function/query/app/function/tree",
                         contentType: "application/json; charset=utf-8",
