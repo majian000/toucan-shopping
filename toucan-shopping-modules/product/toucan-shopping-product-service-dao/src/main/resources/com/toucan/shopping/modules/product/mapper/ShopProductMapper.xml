@@ -30,6 +30,35 @@
         
     </resultMap>
 
+
+    <sql id="queryListPageWhere">
+
+        <if test="categoryId!=null and categoryId!=-1">
+            and t.category_id = #{categoryId}
+        </if>
+
+        <if test="approveStatus!=null and approveStatus!=-1">
+            and t.approve_status = #{approveStatus}
+        </if>
+
+        <if test="shopId!=null and shopId!=-1">
+            and t.shop_id = #{shopId}
+        </if>
+
+        <if test="brandId!=null and brandId!=-1">
+            and t.brand_id = #{brandId}
+        </if>
+
+        <if test="name!=null and name!='' ">
+            and t.name  like concat(#{name},'%')
+        </if>
+
+
+        and t.delete_status = 0
+
+    </sql>
+
+
     <select id="queryAllList" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct">
         select * from t_shop_product_spu t
     </select>
@@ -46,5 +75,26 @@
     <update id="deleteById">
         update t_shop_product_spu  set delete_status=1 where id=#{id}  and delete_status=0
     </update>
+
+
+    <select id="queryListPage" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
+        select t.* from t_shop_product_spu t
+        <where>
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
+        select count(*) from t_shop_product_spu t
+        <where>
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
 
 </mapper>

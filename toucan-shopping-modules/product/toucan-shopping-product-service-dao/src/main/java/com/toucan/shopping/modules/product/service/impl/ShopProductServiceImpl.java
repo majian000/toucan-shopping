@@ -1,8 +1,11 @@
 package com.toucan.shopping.modules.product.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.ShopProduct;
 import com.toucan.shopping.modules.product.mapper.ShopProductMapper;
+import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.service.ShopProductService;
+import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +30,10 @@ public class ShopProductServiceImpl implements ShopProductService {
     @Override
     public int deleteById(Long id) {
         return shopProductMapper.deleteById(id);
+    }
+
+    @Override
+    public PageInfo<ShopProductVO> queryListPage(ShopProductPageInfo queryPageInfo) {
+        return null;
     }
 }

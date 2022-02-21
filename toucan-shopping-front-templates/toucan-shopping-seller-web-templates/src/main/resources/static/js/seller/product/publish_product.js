@@ -2,17 +2,6 @@
 
 function showSetp2Page()
 {
-
-    var brandId = $("#selectBrand").val();
-    if(brandId==null||brandId=="")
-    {
-        $.message({
-            message: "请选择品牌",
-            type: 'error'
-        });
-        return ;
-    }
-
     $("#step1").hide();
     $("#step2").show();
 }

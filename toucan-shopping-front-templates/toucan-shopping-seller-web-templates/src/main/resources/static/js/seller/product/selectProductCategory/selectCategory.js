@@ -92,6 +92,18 @@ function selectD(p,c,d) {
 $("#releaseBtn").click(function() {
 	var releaseS = $(this).prop("disabled");
 	if (releaseS == false) {//未被禁用
+
+
+		var brandId = $("#selectBrand").val();
+		if(brandId==null||brandId=="")
+		{
+			$.message({
+				message: "请选择品牌",
+				type: 'error'
+			});
+			return ;
+		}
+
 		if(g_preSelectCategoryId!=g_selectCategoryId) {
 			g_preSelectCategoryId = g_selectCategoryId;
 			initAttributes(g_selectCategoryId,showSetp2Page);

@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.ShopProduct;
+import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
+import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,4 +16,22 @@ public interface ShopProductMapper {
     int insert(ShopProduct entity);
 
     int deleteById(Long id);
+
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<ShopProductVO> queryListPage(ShopProductPageInfo pageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryListPageCount(ShopProductPageInfo pageInfo);
+
+
 }
