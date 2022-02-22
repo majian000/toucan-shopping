@@ -262,6 +262,16 @@ public class ShopProductApiController extends BaseController {
                 productSkuVO.setMainPhotoFile(null);
             }
 
+            //上传商品预览图
+            if(CollectionUtils.isNotEmpty(previewPhotoFiles))
+            {
+                publishProductVO.setPreviewPhotoPaths(new LinkedList<>());
+                for(MultipartFile multipartFile:previewPhotoFiles)
+                {
+                    publishProductVO.getPreviewPhotoPaths().add(imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename())));
+                }
+            }
+
             publishProductVO.setShopId(sellerShopVO.getId());
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);

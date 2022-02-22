@@ -18,9 +18,6 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     @Autowired
     private ProductSkuMapper productSkuMapper;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
     @Override
     public List<ProductSku> queryList(Map<String,Object> queryMap) {
         return productSkuMapper.queryList(queryMap);
@@ -49,5 +46,10 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     @Override
     public ProductSku queryByUuid(String uuid) {
         return productSkuMapper.queryByUuid(uuid);
+    }
+
+    @Override
+    public int deleteByShopProductId(Long shopProductId) {
+        return productSkuMapper.deleteByShopProductId(shopProductId);
     }
 }

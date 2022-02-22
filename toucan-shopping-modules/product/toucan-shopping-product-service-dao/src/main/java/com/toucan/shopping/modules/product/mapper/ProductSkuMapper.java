@@ -21,4 +21,8 @@ public interface ProductSkuMapper {
     ProductSku queryById(Long id);
 
     ProductSku queryByUuid(String uuid);
+
+
+    int deleteByShopProductId(Long shopProductId);
+
 }

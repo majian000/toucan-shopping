@@ -9,4 +9,7 @@ public interface ShopProductImgService {
 
     List<ShopProductImg> queryAllList(ShopProductImg queryModel);
 
+
+    int saves(List<ShopProductImg> entitys);
+
 }

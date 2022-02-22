@@ -79,4 +79,12 @@
     <select id="queryByUuid" resultMap="productSkuMap" parameterType="java.lang.String">
         select * from t_product_sku where uuid=#{uuid} and delete_status=0
     </select>
+
+
+
+    <update id="deleteByShopProductId">
+        update t_product_sku  set delete_status=1 where shop_product_id=#{shopProductId}  and delete_status=0
+    </update>
+
+
 </mapper>

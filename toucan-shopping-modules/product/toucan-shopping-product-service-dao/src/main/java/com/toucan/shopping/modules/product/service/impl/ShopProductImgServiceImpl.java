@@ -12,10 +12,15 @@ import java.util.List;
 public class ShopProductImgServiceImpl implements ShopProductImgService {
 
     @Autowired
-    private ShopProductImgMapper shopProductSpuImgMapper;
+    private ShopProductImgMapper shopProductImgMapper;
 
     @Override
     public List<ShopProductImg> queryAllList(ShopProductImg queryModel) {
-        return shopProductSpuImgMapper.queryAllList(queryModel);
+        return shopProductImgMapper.queryAllList(queryModel);
+    }
+
+    @Override
+    public int saves(List<ShopProductImg> entitys) {
+        return shopProductImgMapper.inserts(entitys);
     }
 }

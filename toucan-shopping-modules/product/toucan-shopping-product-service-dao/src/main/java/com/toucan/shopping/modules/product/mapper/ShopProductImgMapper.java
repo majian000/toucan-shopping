@@ -11,4 +11,6 @@ public interface ShopProductImgMapper {
 
     List<ShopProductImg> queryAllList(ShopProductImg queryModel);
 
+    int inserts(List<ShopProductImg> entitys);
+
 }

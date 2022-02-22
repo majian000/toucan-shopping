@@ -23,7 +23,10 @@ public interface ProductSkuService {
 
     ProductSku queryById(Long id);
 
-
     ProductSku queryByUuid(String uuid);
+
+
+    int deleteByShopProductId(Long shopProductId);
+
 
 }

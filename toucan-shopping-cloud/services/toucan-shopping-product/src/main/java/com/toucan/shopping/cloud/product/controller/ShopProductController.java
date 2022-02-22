@@ -8,9 +8,11 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.entity.ShopProduct;
+import com.toucan.shopping.modules.product.entity.ShopProductImg;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.redis.PublishProductRedisLockKey;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
+import com.toucan.shopping.modules.product.service.ShopProductImgService;
 import com.toucan.shopping.modules.product.service.ShopProductService;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.PublishProductVO;
@@ -49,6 +51,9 @@ public class ShopProductController {
 
     @Autowired
     private ShopProductService shopProductService;
+
+    @Autowired
+    private ShopProductImgService shopProductImgService;
 
 
 
@@ -101,7 +106,7 @@ public class ShopProductController {
                 {
                     logger.warn("发布商品失败 原因:插入数据库影响行数返回小于等于0 {}",requestJsonVO.getEntityJson());
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("发布失败!");
+                    resultObjectVO.setMsg("发布失败");
                 }
                 List<ProductSku> productSkus = new LinkedList<>();
                 for(ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList())
@@ -113,6 +118,7 @@ public class ShopProductController {
                     productSku.setCreateUserId(publishProductVO.getCreateUserId());
                     productSku.setCreateDate(new Date());
                     productSku.setStatus((short) 0);
+                    productSku.setAppCode(publishProductVO.getAppCode());
                     productSku.setShopId(publishProductVO.getShopId()); //设置店铺ID
                     productSku.setShopProductId(publishProductVO.getId()); //设置店铺发布的商品ID
                     productSku.setShopProductUuid(publishProductVO.getUuid());
@@ -127,7 +133,7 @@ public class ShopProductController {
                 {
                     logger.warn("发布商品失败 原因:保存SKU影响返回行和保存数量不一致 {}",JSONObject.toJSONString(productSkus));
                     resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("发布失败!");
+                    resultObjectVO.setMsg("发布失败");
 
                     ret = shopProductService.deleteById(publishProductVO.getId());
                     if(ret<=0)
@@ -136,12 +142,66 @@ public class ShopProductController {
                         logger.warn("发布商品失败 回滚店铺商品表失败 id {}",publishProductVO.getId());
                     }
                 }
+
+                //保存商品主图
+                List<ShopProductImg> shopProductImgs = new LinkedList<>();
+                ShopProductImg shopProductImg = new ShopProductImg();
+                shopProductImg.setId(idGenerator.id());
+                shopProductImg.setAppCode(publishProductVO.getAppCode());
+                shopProductImg.setCreateDate(new Date());
+                shopProductImg.setCreateUserId(publishProductVO.getCreateUserId());
+                shopProductImg.setDeleteStatus(0);
+                shopProductImg.setIsMainPhoto((short)1);
+                shopProductImg.setShopProductId(publishProductVO.getId());
+                shopProductImg.setFilePath(publishProductVO.getMainPhotoFilePath());
+                shopProductImgs.add(shopProductImg);
+
+                //保存预览图
+                if(CollectionUtils.isNotEmpty(publishProductVO.getPreviewPhotoPaths()))
+                {
+                    for(String pewviewPhotoPath:publishProductVO.getPreviewPhotoPaths()) {
+                        ShopProductImg productImg = new ShopProductImg();
+                        productImg.setId(idGenerator.id());
+                        productImg.setAppCode(publishProductVO.getAppCode());
+                        productImg.setCreateDate(new Date());
+                        productImg.setCreateUserId(publishProductVO.getCreateUserId());
+                        productImg.setDeleteStatus(0);
+                        productImg.setIsMainPhoto((short) 0);
+                        productImg.setShopProductId(publishProductVO.getId());
+                        productImg.setFilePath(pewviewPhotoPath);
+
+                        shopProductImgs.add(productImg);
+                    }
+                }
+
+                ret = shopProductImgService.saves(shopProductImgs);
+                if(ret!=shopProductImgs.size())
+                {
+                    logger.warn("发布商品失败 原因:商品图片影响返回行和保存数量不一致 {}",JSONObject.toJSONString(shopProductImgs));
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("发布失败");
+
+                    ret = shopProductService.deleteById(publishProductVO.getId());
+                    if(ret<=0)
+                    {
+                        //发送异常邮件,通知运营处理
+                        logger.warn("发布商品失败 回滚店铺商品表失败 id {}",publishProductVO.getId());
+                    }
+
+                    ret = productSkuService.deleteByShopProductId(publishProductVO.getId());
+                    if(ret!=productSkus.size())
+                    {
+                        logger.warn("发布商品失败 回滚店铺商品SKU失败 {}",JSONObject.toJSONString(productSkus));
+                    }
+
+                }
+
             }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("发布失败!");
+            resultObjectVO.setMsg("发布失败");
         }finally{
             skylarkLock.unLock(PublishProductRedisLockKey.getPublishProductLockKey(shopId), shopId);
         }
@@ -165,16 +225,16 @@ public class ShopProductController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
         {
-            logger.info("请求参数为空");
+            logger.warn("请求参数为空");
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
             return resultObjectVO;
         }
         if(requestJsonVO.getAppCode()==null)
         {
-            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
+            resultObjectVO.setMsg("没有找到应用编码!");
             return resultObjectVO;
         }
         try {
