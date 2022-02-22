@@ -149,6 +149,15 @@
     </insert>
 
 
+    <select id="queryListByIdList" resultMap="shopCategoryMap">
+        select * from t_shop_category t  where 1=1 and t.delete_status = 0
+        and t.id in
+        <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
 
     <select id="queryById" resultMap="shopCategoryMap" parameterType="java.lang.Long">
         select * from t_shop_category where id=#{categoryId} and delete_status=0

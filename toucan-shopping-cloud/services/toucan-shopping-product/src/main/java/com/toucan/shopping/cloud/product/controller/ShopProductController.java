@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.product.service.ShopProductImgService;
 import com.toucan.shopping.modules.product.service.ShopProductService;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.PublishProductVO;
+import com.toucan.shopping.modules.product.vo.ShopProductImgVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
@@ -240,6 +241,42 @@ public class ShopProductController {
         try {
             ShopProductPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductPageInfo.class);
             PageInfo<ShopProductVO> pageInfo =  shopProductService.queryListPage(queryPageInfo);
+
+            if(pageInfo.getTotal()!=null&&pageInfo.getTotal().longValue()>0)
+            {
+                List<Long> shopProductIdList = new LinkedList<>();
+                for(ShopProductVO shopProductVO : pageInfo.getList())
+                {
+                    shopProductVO.setPreviewPhotoPaths(new LinkedList<>());
+
+                    shopProductIdList.add(shopProductVO.getId());
+                }
+                ShopProductImgVO shopProductImgVO = new ShopProductImgVO();
+                shopProductImgVO.setShopProductIdList(shopProductIdList);
+                List<ShopProductImg> shopProductImgs = shopProductImgService.queryList(shopProductImgVO);
+                if(CollectionUtils.isNotEmpty(shopProductImgs))
+                {
+                    for(ShopProductImg shopProductImg:shopProductImgs)
+                    {
+                        for(ShopProductVO shopProductVO:pageInfo.getList()) {
+                            if (shopProductImg.getShopProductId() != null &&
+                                    shopProductImg.getShopProductId().longValue()==shopProductVO.getId().longValue())
+                            {
+                                //如果是商品主图
+                                if(shopProductImg.getIsMainPhoto().intValue()==1)
+                                {
+                                    shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
+                                }else{
+                                    shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
+                                }
+                                break;
+                            }
+
+                        }
+                    }
+                }
+            }
+
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {

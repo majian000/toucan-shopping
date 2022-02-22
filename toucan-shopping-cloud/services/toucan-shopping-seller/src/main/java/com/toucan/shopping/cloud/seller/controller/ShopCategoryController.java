@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -1596,14 +1597,33 @@ public class ShopCategoryController {
             //查询是否存在该功能项
             ShopCategoryVO query=new ShopCategoryVO();
             query.setIdArray(entity.getIdArray());
-            List<ShopCategory> ShopCategorys = shopCategoryService.queryList(query);
-            if(CollectionUtils.isEmpty(ShopCategorys))
+            List<ShopCategory> shopCategorys = shopCategoryService.queryList(query);
+            if(CollectionUtils.isEmpty(shopCategorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在!");
+                resultObjectVO.setMsg("店铺分类为空!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(ShopCategorys);
+
+            List<ShopCategoryVO> shopCategoryVOS = new ArrayList<ShopCategoryVO>();
+            if(!CollectionUtils.isEmpty(shopCategorys))
+            {
+                List<Long> parentIds = new LinkedList<Long>();
+                for(ShopCategory shopCategory:shopCategorys)
+                {
+                    ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+                    BeanUtils.copyProperties(shopCategoryVO,shopCategory);
+                    shopCategoryVO.setNamePath(shopCategoryVO.getName());
+                    shopCategoryVO.setParentIdPoint(shopCategoryVO.getParentId());
+                    shopCategoryVOS.add(shopCategoryVO);
+                    if(shopCategoryVO.getParentId()!=null&&shopCategoryVO.getParentId().longValue()!=-1L) {
+                        parentIds.add(shopCategoryVO.getParentId());
+                    }
+                }
+                shopCategoryService.setNamePath(shopCategoryVOS,parentIds);
+            }
+            resultObjectVO.setData(shopCategoryVOS);
+
 
         }catch(Exception e)
         {

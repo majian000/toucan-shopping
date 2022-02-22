@@ -45,6 +45,10 @@ public interface ShopCategoryMapper {
 
     Long queryCount(ShopCategory shopCategory);
 
+
+
+    List<ShopCategory> queryListByIdList(List<Long> ids);
+
     /**
      * 查询表格树
      * @param queryTreeInfo

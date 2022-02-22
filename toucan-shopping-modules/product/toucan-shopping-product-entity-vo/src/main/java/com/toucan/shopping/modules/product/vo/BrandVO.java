@@ -32,4 +32,10 @@ public class BrandVO extends Brand {
     private String categoryNamePath;
 
 
+    /**
+     *  ID列表
+     */
+    private List<Long> idList;
+
+
 }

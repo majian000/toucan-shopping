@@ -30,10 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -471,6 +468,54 @@ public class BrandController {
 
 
     /**
+     * 根据ID集合查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/idList",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findByIdList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            BrandVO query = JSONObject.parseObject(requestVo.getEntityJson(),BrandVO.class);
+            if(query.getIdList()==null||query.getIdList().size()<=0)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID集合");
+                return resultObjectVO;
+            }
+
+
+            List<Brand> brands = brandService.queryList(query);
+            if(CollectionUtils.isEmpty(brands))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌列表为空");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(brands);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
      * 根据ID删除
      * @param requestJsonVO
      * @return
@@ -689,7 +734,7 @@ public class BrandController {
                 logger.info("遍历到{} 总数{}",i,size);
                 Map row=rows.get(i);
                 try {
-                    Brand brand = new Brand();
+                    BrandVO brand = new BrandVO();
                     brand.setCreateAdminId(-1L);
                     brand.setCreateDate(new Date());
                     String text = String.valueOf(row.get("text"));
@@ -717,7 +762,9 @@ public class BrandController {
                         brandService.save(brand);
                     }else {
                         brandId =brands.get(0).getId();
-                        brand = brands.get(0);
+                        Brand brand1 = brands.get(0);
+                        brand = new BrandVO();
+                        BeanUtils.copyProperties(brand,brand1);
                     }
 
                     BrandCategory brandCategory = new BrandCategory();

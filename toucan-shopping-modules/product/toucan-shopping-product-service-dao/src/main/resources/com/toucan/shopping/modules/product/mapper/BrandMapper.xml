@@ -46,7 +46,7 @@
 
 
 
-    <select id="queryList" resultMap="brandMap" parameterType="com.toucan.shopping.modules.product.entity.Brand">
+    <select id="queryList" resultMap="brandMap" parameterType="com.toucan.shopping.modules.product.vo.BrandVO">
         select t.* from t_brand t
         <where>
             1=1
@@ -62,6 +62,14 @@
             <if test="englishName!=null and englishName!='' ">
                 and t.english_name=#{englishName}
             </if>
+
+            <if test="idList!=null and idList.size>0 ">
+                and t.id in
+                <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
 
             and t.delete_status = 0
 
@@ -111,7 +119,7 @@
 
     <select id="queryByIdList" resultMap="brandMap">
         select * from t_brand t
-        where 1=1
+        where 1=1 and t.delete_status = 0
         and t.id in
         <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
             #{item}

@@ -143,6 +143,39 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
 
 
 
+    @Override
+    public void setNamePath(List<ShopCategoryVO> shopCategoryVOS,List<Long> parentIdList) {
+        if(CollectionUtils.isNotEmpty(parentIdList))
+        {
+            //查询出所有上级节点
+            List<ShopCategory> parentCategorys = shopCategoryMapper.queryListByIdList(parentIdList);
+            parentIdList.clear();
+            if(CollectionUtils.isNotEmpty(parentCategorys))
+            {
+                for(ShopCategory parentCategory:parentCategorys)
+                {
+                    for(ShopCategoryVO shopCategoryVO:shopCategoryVOS)
+                    {
+                        if(parentCategory.getId().longValue()==shopCategoryVO.getParentIdPoint().longValue())
+                        {
+                            shopCategoryVO.setNamePath(parentCategory.getName()+"》"+shopCategoryVO.getNamePath());
+                            //移动上级ID指针
+                            shopCategoryVO.setParentIdPoint(parentCategory.getParentId());
+                        }
+                    }
+                    if(parentCategory.getParentId()!=null&&parentCategory.getParentId().longValue()!=-1L)
+                    {
+                        parentIdList.add(parentCategory.getParentId());
+                    }
+                }
+            }
+            if(CollectionUtils.isNotEmpty(parentIdList))
+            {
+                setNamePath(shopCategoryVOS,parentIdList);
+            }
+        }
+    }
+
 
 
     public void setChildren(List<ShopCategory> shopCategorys, ShopCategoryTreeVO currentNode) throws InvocationTargetException, IllegalAccessException {

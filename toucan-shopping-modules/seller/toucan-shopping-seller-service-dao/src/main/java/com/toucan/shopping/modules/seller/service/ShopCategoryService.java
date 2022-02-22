@@ -100,4 +100,12 @@ public interface ShopCategoryService {
     void queryChildren(List<ShopCategory> children, ShopCategory query);
 
 
+
+    /**
+     * 设置分类名称路径
+     * @param categoryVOS
+     */
+    void setNamePath(List<ShopCategoryVO> categoryVOS,List<Long> parentIdList);
+
+
 }

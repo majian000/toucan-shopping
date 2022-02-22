@@ -130,17 +130,24 @@
                             return row.approveStatus;
                         }
                     },
-                    {field: 'uuid',width: 150,  title: '店铺商品UUID'},
-                    {field: 'categoryPath',width: 150,  title: '分类路径'},
+                    {field: 'uuid',width: 300,  title: '店铺商品UUID'},
+                    {field: 'categoryPath',width: 350,  title: '分类路径'},
                     {field: 'categoryName',width: 150,  title: '分类名称'},
-                    {field: 'brandName',width: 150,  title: '品牌名称'},
+                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
+                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
                     {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
                     {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
                     {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
                     {field: 'productId',width: 150,  title: '平台商品ID'},
-                    {field: 'name',width: 150,  title: '商品名称'},
+                    {field: 'name',width: 400,  title: '商品名称'},
+                    {field: 'httpMainPhotoFilePath', width: 150, title: '商品主图',
+                        templet: function (row) {
+                            if(row.httpMainPhotoFilePath!=null) {
+                                return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
                     {field: 'attributes',width: 150,  title: '属性列表'},
-                    {field: 'uuid',width: 150,  title: 'SPU的UUID'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){
@@ -155,7 +162,7 @@
                             return row.status;
                         }
                     },
-                    {field: 'shopId',width: 150,  title: '店铺ID'},
+                    {field: 'shopId',width: 300,  title: '店铺ID'},
                     {field: 'rejectText',width: 150,   title: '驳回原因'},
                     {field: 'sellerNo',width: 150,   title: '卖家编码'},
                     {field: 'articleNumber',width: 150, title: '货号'},
@@ -223,9 +230,9 @@
                             return etractMethodText;
                         }
                     },
-                    {field: 'createUserId', title: '店铺掌柜ID'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
+                    {field: 'createDate', width: 150, title: '创建时间'},
+                    {field: 'updateDate', width: 150, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#shopProductTableBar', align: "center"}
                 ]
             ],

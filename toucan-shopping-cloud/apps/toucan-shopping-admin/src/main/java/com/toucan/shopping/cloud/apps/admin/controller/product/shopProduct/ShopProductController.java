@@ -18,6 +18,7 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.entity.ShopProduct;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
@@ -64,6 +65,9 @@ public class ShopProductController extends UIController {
 
     @Autowired
     private FeignAdminService feignAdminService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
 
@@ -124,6 +128,15 @@ public class ShopProductController extends UIController {
                                         }
                                     }
                                 }
+                            }
+                        }
+
+
+                        for(ShopProductVO shopProductVO:list)
+                        {
+
+                            if(shopProductVO.getMainPhotoFilePath()!=null) {
+                                shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVO.getMainPhotoFilePath());
                             }
                         }
 

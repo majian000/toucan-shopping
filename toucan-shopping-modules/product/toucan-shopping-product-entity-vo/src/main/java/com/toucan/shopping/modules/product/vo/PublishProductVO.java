@@ -19,12 +19,6 @@ public class PublishProductVO extends ShopProductVO {
     @JSONField(serialize = false)
     private MultipartFile mainPhotoFile;
 
-    /**
-     * 商品预览图路径
-     */
-    private List<String> previewPhotoPaths;
-
-
 
     /**
      * 单价

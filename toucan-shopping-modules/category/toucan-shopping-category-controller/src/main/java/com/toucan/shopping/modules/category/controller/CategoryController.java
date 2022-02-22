@@ -511,7 +511,7 @@ public class CategoryController {
 
         try {
             CategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),CategoryVO.class);
-            if(entity.getIdArray()==null)
+            if(entity.getIdArray()==null||entity.getIdArray().length<=0)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到ID数组");
@@ -525,7 +525,7 @@ public class CategoryController {
             if(CollectionUtils.isEmpty(categorys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在!");
+                resultObjectVO.setMsg("分类列表为空");
                 return resultObjectVO;
             }
 

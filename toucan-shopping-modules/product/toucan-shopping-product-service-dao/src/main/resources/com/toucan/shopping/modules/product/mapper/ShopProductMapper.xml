@@ -30,6 +30,9 @@
         
     </resultMap>
 
+    <resultMap id="shopProductVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductVO" extends="shopProductMap" >
+    </resultMap>
+
 
     <sql id="queryListPageWhere">
 
@@ -77,7 +80,7 @@
     </update>
 
 
-    <select id="queryListPage" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
+    <select id="queryListPage" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
         select t.* from t_shop_product t
         <where>
             <include refid="queryListPageWhere" />

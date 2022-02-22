@@ -33,7 +33,7 @@ public interface BrandMapper {
 
     List<Brand> queryAllList(Brand queryModel);
 
-    List<Brand> queryList(Brand queryModel);
+    List<Brand> queryList(BrandVO queryModel);
 
     int insert(Brand entity);
 
