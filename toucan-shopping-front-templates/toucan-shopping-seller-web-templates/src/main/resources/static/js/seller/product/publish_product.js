@@ -1,4 +1,5 @@
 
+var g_goApproveSecond=5;
 
 function showSetp2Page()
 {
@@ -172,6 +173,26 @@ function inputStock(o)
     $("#num").val(num);
 }
 
+
+function goApprovePage(msg)
+{
+    if(g_goApproveSecond<=0)
+    {
+        window.location.href=basePath+"/index";
+    }else
+    {
+        $("#publish_msg_c").show();
+        $("#publish_msg").text(msg+","+g_goApproveSecond+"秒后跳转到商品审核列表");
+        $("#publish_msg").css("color","green");
+
+    }
+    g_goApproveSecond--;
+    setTimeout(function () {
+        goApprovePage(msg);
+    }, 1000);
+
+}
+
 $("#ppfbtn").click(function() {
 
     loading.showLoading({
@@ -204,8 +225,9 @@ $("#ppfbtn").click(function() {
                 //     }
                 // });
 
+                $("#ppfbtn").unbind();
+                goApprovePage(result.msg);
 
-                window.location.href=basePath+"/index";
             }
         }
     });

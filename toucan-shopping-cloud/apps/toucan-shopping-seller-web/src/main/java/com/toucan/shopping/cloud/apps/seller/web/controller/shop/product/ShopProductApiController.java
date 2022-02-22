@@ -266,6 +266,10 @@ public class ShopProductApiController extends BaseController {
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
             resultObjectVO = feignShopProductService.publish(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                resultObjectVO.setMsg("发布成功");
+            }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

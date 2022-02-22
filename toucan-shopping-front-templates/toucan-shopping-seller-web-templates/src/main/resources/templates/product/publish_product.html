@@ -171,7 +171,7 @@
 
 
 
-                                    <div class="item" style="clear:both">
+                                    <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn">
                                             <input type="button" id="releaseBtn" class="button" value="下一步，完善商品信息" disabled="disabled"  />
                                         </span>
@@ -258,7 +258,7 @@
 
                                     </div>
 
-                                    <div class="item" style="clear:both">
+                                    <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn" style="margin-right:10px;">
                                             <input type="button" id="step2Back" class="button" value="上一步，调整商品分类"  />
                                         </span>
@@ -306,7 +306,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="item" style="clear:both">
+                                    <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn" style="margin-right:10px;">
                                             <input type="button" id="step3Back" class="button" value="上一步，调整商品信息"  />
                                         </span>
@@ -334,7 +334,7 @@
 
                                     </div>
 
-                                    <div class="item" style="clear:both">
+                                    <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn" style="margin-right:10px;">
                                             <input type="button" id="step4Back" class="button" value="上一步，调整支付信息"  />
                                         </span>
@@ -358,20 +358,18 @@
                                     <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
                                     <input type="hidden" id="shopCategoryId"  name="shopCategoryId"/>
 
-                                    <div class="item">
-                                        <span class="label"><span class="red">*</span>验证码：</span>
-                                        <div class="fl">
-                                            <input type="text" id="vcode" name="vcode" class="text text-1" autocomplete="off" MaxLength="4" tabindex="6" />
+
+                                    <div class="item" >
+                                        <div class="field" style="width:100%;text-align:center;" >
+                                            <span class="red">*</span>验证码：
+                                            <input type="text" id="vcode" name="vcode" class="releaseProductInputText" autocomplete="off" MaxLength="4" tabindex="6" />
                                             <label class="img"><img id="refreshCaptcha"  src="${basePath}/api/shop/product/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:40px;"/>
                                             </label>
                                             <label>&nbsp;看不清？点击验证码图片更换</label>
-                                            <label id="vcode_succeed" class="blank invisible"></label>
-                                            <span class="clear"></span>
-                                            <label id="vcode_error"></label>
                                         </div>
-                                    </div><!--item end-->
+                                    </div>
 
-                                    <div class="item" style="clear:both">
+                                    <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn" style="margin-right:10px;">
                                             <input type="button" id="step5Back" class="button" value="上一步，调整物流信息"  />
                                         </span>
@@ -383,9 +381,8 @@
                                 </div>
                             </div>
 
-                            <div class="item">
-                                <span class="label">&nbsp;</span>
-                                <a id="edit_info_msg" style="color:#ff4e00;"></a>
+                            <div class="item" id="publish_msg_c" style="display:none;text-align: center;margin-top: 40px;margin-bottom: 40px;">
+                                <a id="publish_msg" style="color:green;font-size: 15px;"></a>
                             </div>
                         </div>
                     </form>

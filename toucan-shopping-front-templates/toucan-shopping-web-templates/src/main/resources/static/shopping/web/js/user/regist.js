@@ -36,7 +36,6 @@ function getvcode()
 
 function goLoginPage(msg)
 {
-    window.console.log(g_goLoginSecond);
     if(g_goLoginSecond<=0)
     {
         window.location.href=basePath+"/page/user/login";
