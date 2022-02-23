@@ -12,7 +12,7 @@
     </springProfile>
 
     <springProfile name="prod">
-        <property name="log.path" value="log/prod/toucan_shopping/toucan_shopping_admin" />
+        <property name="log.path" value="/log/prod/toucan_shopping/toucan_shopping_admin" />
     </springProfile>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

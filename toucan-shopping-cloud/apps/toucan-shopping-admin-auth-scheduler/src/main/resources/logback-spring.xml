@@ -8,7 +8,7 @@
     </springProfile>
 
     <springProfile name="test">
-        <property name="log.path" value="log/test/toucan_shopping/toucan_shopping_admin_auth_scheduler" />
+        <property name="log.path" value="/log/test/toucan_shopping/toucan_shopping_admin_auth_scheduler" />
     </springProfile>
 
 
