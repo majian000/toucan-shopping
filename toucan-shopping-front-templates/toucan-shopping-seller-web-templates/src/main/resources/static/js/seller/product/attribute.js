@@ -310,7 +310,7 @@ function initAttributes(categoryId,callback)
 {
 
     loading.showLoading({
-        type:1,
+        type:6,
         tip:"加载中..."
     });
     $.ajax({

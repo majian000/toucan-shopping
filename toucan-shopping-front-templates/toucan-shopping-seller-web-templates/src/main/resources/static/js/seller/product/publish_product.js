@@ -196,7 +196,7 @@ function goApprovePage(msg)
 $("#ppfbtn").click(function() {
 
     loading.showLoading({
-        type:1,
+        type:6,
         tip:"发布中..."
     });
 
@@ -225,7 +225,6 @@ $("#ppfbtn").click(function() {
                 //     }
                 // });
 
-                $("#ppfbtn").unbind();
                 goApprovePage(result.msg);
 
             }
