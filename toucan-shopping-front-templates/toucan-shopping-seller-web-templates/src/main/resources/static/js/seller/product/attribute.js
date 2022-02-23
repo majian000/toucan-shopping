@@ -49,6 +49,21 @@ function skuUploadPreview(pos)
     });
 }
 
+function bindAttLabelEvent()
+{
+    //SKU信息
+    $(".rp_attr_div label").bind("change", function () {
+        attributeControl.Creat_Table();
+        //重新计算库存总数
+        inputStock();
+        //绑定图片预览事件
+        for(var i=0;i<g_sku_pos;i++)
+        {
+            skuUploadPreview(i);
+        }
+    });
+}
+
 var attributeControl = {
     //SKU信息组合
     Creat_Table: function () {
@@ -316,13 +331,13 @@ function initAttributes(categoryId,callback)
                     var attributeHtmls="<div class='item' style='clear:both;text-align: left;' >";
                     attributeHtmls+="<div style='padding-left: 6%;'>";
                     attributeHtmls+=" <a>"+attribute.attributeName+"</a>";
-                    attributeHtmls+=" <input type='text' id='attributeValue_1' name='attributeValue' class='releaseProductInputText'  style='width:200px;' tabindex='5'  placeholder='请输入自定义值' />";
-                    attributeHtmls+="  <input type='button'  class='releaseProductButton' value='添加' attr-data='"+attribute.id+"'  />";
+                    attributeHtmls+=" <input type='text' id='attributeInput_"+attribute.id+"' name='attributeValue' class='releaseProductInputText'  style='width:200px;' tabindex='5'  placeholder='请输入自定义值' />";
+                    attributeHtmls+="  <input type='button'  class='releaseProductButton attributeTableAddBtn' value='添加' attr-data='"+attribute.id+"'   />";
                     attributeHtmls+=" </div> ";
                     attributeHtmls+=" <div class='attributeList'> ";
                     attributeHtmls+=" <ul class='rp_attr_kt' style='display:none' ><li>"+attribute.attributeName+"</li></ul> ";
                     attributeHtmls+=" <div class='field' style='width:100%'> ";
-                    attributeHtmls+=" <ul class='rpai"+i+"' style='float:left;margin-left: 20px;' attr-group-name='"+attribute.attributeName+"'>";
+                    attributeHtmls+=" <ul class='rpai"+i+"' id='rpai"+attribute.id+"' style='float:left;margin-left: 20px;' attr-group-name='"+attribute.attributeName+"'>";
                     if(attribute.values!=null&&attribute.values.length>0) {
                         for(var j=0;j<attribute.values.length;j++) {
                             var attributeValue = attribute.values[j];
@@ -349,20 +364,43 @@ function initAttributes(categoryId,callback)
                 attributesHtml+="</div>";
                 attributesHtml+="</div>";
                 $(".rp_attr_div").html(attributesHtml);
+
+                //SKU信息
+                $(".attributeTableAddBtn").bind("click", function () {
+                    var attId = $(this).attr("attr-data");
+                    var attVal = $("#attributeInput_"+attId).val();
+                    if(attVal!=null)
+                    {
+                        attVal = attVal.replace(/(^\s*)|(\s*$)/g, "");
+                    }
+                    var isFind = false;
+                    $("#rpai"+attId).find('li').each(function() {
+                        var attLiText = $(this).text();
+                        if(attLiText!=null) {
+                            attLiText = attLiText.replace(/(^\s*)|(\s*$)/g, "");
+                        }
+
+                        if(attLiText==attVal)
+                        {
+                            isFind=true;
+                        }
+                    });
+
+                    if(!isFind) {
+                        $("#rpai" + attId).append("<li class='rpai_li'><label><input  type='checkbox' class='chcBox_Width' value='" + attVal + "' />" + attVal + "</label></li>");
+                        bindAttLabelEvent();
+                        $("#attributeInput_"+attId).val("");
+                    }else{
+                        $.message({
+                            message: "已存在该属性",
+                            type: 'error'
+                        });
+                    }
+                });
             }
         },
         complete:function(data,status){
-            //SKU信息
-            $(".rp_attr_div label").bind("change", function () {
-                attributeControl.Creat_Table();
-                //重新计算库存总数
-                inputStock();
-                //绑定图片预览事件
-                for(var i=0;i<g_sku_pos;i++)
-                {
-                    skuUploadPreview(i);
-                }
-            });
+            bindAttLabelEvent();
 
             loading.hideLoading();
             callback();
