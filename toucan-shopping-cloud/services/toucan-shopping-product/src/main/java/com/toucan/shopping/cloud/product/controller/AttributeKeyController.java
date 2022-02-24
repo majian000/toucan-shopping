@@ -148,7 +148,15 @@ public class AttributeKeyController {
             }
 
             List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(query);
-            if(!org.springframework.util.CollectionUtils.isEmpty(attributeKeyVOS))
+
+            AttributeKeyVO rootTreeVO = new AttributeKeyVO();
+            rootTreeVO.setTitle("根属性");
+            rootTreeVO.setParentId(-1L);
+            rootTreeVO.setPid(-1L);
+            rootTreeVO.setId(-1L);
+            rootTreeVO.setText("根属性");
+
+            if(!CollectionUtils.isEmpty(attributeKeyVOS))
             {
                 List<AttributeKeyVO> attributeKeyTreeVOS = new ArrayList<AttributeKeyVO>();
                 for(AttributeKeyVO attributeKeyVO : attributeKeyVOS)
@@ -168,19 +176,12 @@ public class AttributeKeyController {
                     }
                 }
 
-                AttributeKeyVO rootTreeVO = new AttributeKeyVO();
-                rootTreeVO.setTitle("根属性");
-                rootTreeVO.setParentId(-1L);
-                rootTreeVO.setPid(-1L);
-                rootTreeVO.setId(-1L);
-                rootTreeVO.setText("根属性");
                 rootTreeVO.setChildren(attributeKeyTreeVOS);
-                List<AttributeKeyVO> rootAttributeKeyTreeVOS = new ArrayList<AttributeKeyVO>();
-                rootAttributeKeyTreeVOS.add(rootTreeVO);
-                resultObjectVO.setData(rootAttributeKeyTreeVOS);
-
             }
 
+            List<AttributeKeyVO> rootAttributeKeyTreeVOS = new ArrayList<AttributeKeyVO>();
+            rootAttributeKeyTreeVOS.add(rootTreeVO);
+            resultObjectVO.setData(rootAttributeKeyTreeVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

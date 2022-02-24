@@ -573,6 +573,13 @@ public class CategoryController {
             CategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
 
             List<Category> categoryList = categoryService.queryList(query);
+
+            CategoryTreeVO rootTreeVO = new CategoryTreeVO();
+            rootTreeVO.setTitle("商城分类");
+            rootTreeVO.setParentId(-1L);
+            rootTreeVO.setPid(-1L);
+            rootTreeVO.setId(-1L);
+            rootTreeVO.setText("商城分类");
             if(!CollectionUtils.isEmpty(categoryList))
             {
                 List<CategoryTreeVO> categoryTreeVOS = new ArrayList<CategoryTreeVO>();
@@ -592,20 +599,12 @@ public class CategoryController {
                         categoryService.setChildren(categoryList,treeVO);
                     }
                 }
-
-                CategoryTreeVO rootTreeVO = new CategoryTreeVO();
-                rootTreeVO.setTitle("商城分类");
-                rootTreeVO.setParentId(-1L);
-                rootTreeVO.setPid(-1L);
-                rootTreeVO.setId(-1L);
-                rootTreeVO.setText("商城分类");
                 rootTreeVO.setChildren(categoryTreeVOS);
-                List<CategoryVO> rootCategoryTreeVOS = new ArrayList<CategoryVO>();
-                rootCategoryTreeVOS.add(rootTreeVO);
-                resultObjectVO.setData(rootCategoryTreeVOS);
-
             }
 
+            List<CategoryVO> rootCategoryTreeVOS = new ArrayList<CategoryVO>();
+            rootCategoryTreeVOS.add(rootTreeVO);
+            resultObjectVO.setData(rootCategoryTreeVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
