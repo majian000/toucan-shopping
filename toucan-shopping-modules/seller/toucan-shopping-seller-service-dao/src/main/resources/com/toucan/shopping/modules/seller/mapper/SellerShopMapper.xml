@@ -120,6 +120,28 @@
 
 
 
+    <select id="queryList" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.vo.SellerShopVO">
+        select t.* from t_seller_shop t
+        <where>
+            1=1
+
+            <if test="id!=null  ">
+                and t.id=#{id}
+            </if>
+
+            <if test="idList!=null and idList.size>0 ">
+                and t.id in
+                <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+
     <select id="queryListPage" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.page.SellerShopPageInfo">
         select t.* from t_seller_shop t
         <where>

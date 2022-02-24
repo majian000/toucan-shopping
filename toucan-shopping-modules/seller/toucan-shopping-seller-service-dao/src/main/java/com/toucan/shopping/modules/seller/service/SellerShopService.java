@@ -4,6 +4,7 @@ package com.toucan.shopping.modules.seller.service;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 
 import java.util.List;
 
@@ -49,6 +50,9 @@ public interface SellerShopService {
     List<SellerShop> findListByEntity(SellerShop query);
 
     List<SellerShop> findEnabledByUserMainId(Long userMainId);
+
+
+    List<SellerShop> queryList(SellerShopVO queryModel);
 
     /**
      * 查询列表页

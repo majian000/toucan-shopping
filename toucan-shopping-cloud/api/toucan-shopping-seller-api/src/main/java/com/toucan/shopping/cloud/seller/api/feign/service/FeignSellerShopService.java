@@ -38,6 +38,13 @@ public interface FeignSellerShopService {
     ResultObjectVO findByUser(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 根据ID集合查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/idList",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findByIdList(@RequestBody RequestJsonVO requestVo);
 
 
     /**

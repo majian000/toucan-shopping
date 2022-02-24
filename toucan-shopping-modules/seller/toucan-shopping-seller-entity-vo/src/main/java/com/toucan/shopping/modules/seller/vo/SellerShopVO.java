@@ -54,4 +54,10 @@ public class SellerShopVO extends SellerShop {
     private String createAdminName; //创建人姓名
     private String updateAdminName; //修改人姓名
 
+
+    /**
+     *  ID列表
+     */
+    private List<Long> idList;
+
 }

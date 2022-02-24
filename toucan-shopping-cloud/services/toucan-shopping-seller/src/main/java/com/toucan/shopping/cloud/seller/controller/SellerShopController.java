@@ -286,6 +286,53 @@ public class SellerShopController {
     }
 
 
+
+    /**
+     * 根据ID集合查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/idList",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findByIdList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            SellerShopVO query = JSONObject.parseObject(requestVo.getEntityJson(),SellerShopVO.class);
+            if(query.getIdList()==null||query.getIdList().size()<=0)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID集合");
+                return resultObjectVO;
+            }
+
+            List<SellerShop> entitys = sellerShopService.queryList(query);
+            if(CollectionUtils.isEmpty(entitys))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺列表为空");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(entitys);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 刷新到缓存
      * @param sellerShop

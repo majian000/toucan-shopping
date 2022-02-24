@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.mapper.SellerShopMapper;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.service.SellerShopService;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,10 @@ public class SellerShopServiceImpl implements SellerShopService {
         return sellerShopMapper.findEnabledByUserMainId(userMainId);
     }
 
+    @Override
+    public List<SellerShop> queryList(SellerShopVO queryModel) {
+        return null;
+    }
 
 
     @Override
