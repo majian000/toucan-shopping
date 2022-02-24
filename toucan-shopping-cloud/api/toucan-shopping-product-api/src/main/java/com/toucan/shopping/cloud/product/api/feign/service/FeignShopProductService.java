@@ -33,4 +33,14 @@ public interface FeignShopProductService {
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
 
+
+
+    /**
+     * 根据ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryByShopProductId(@RequestBody RequestJsonVO requestJsonVO);
+
 }

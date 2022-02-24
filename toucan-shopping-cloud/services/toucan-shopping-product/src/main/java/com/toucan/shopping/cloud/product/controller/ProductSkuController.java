@@ -49,7 +49,7 @@ public class ProductSkuController {
         params.put("appCode",requestJsonVO.getAppCode());
 
         ResultListVO<ProductSku> resultListVO = new ResultListVO<>();
-        resultListVO.setData(productSkuService.queryList(params));
+//        resultListVO.setData(productSkuService.queryList(params));
         return resultListVO;
     }
 

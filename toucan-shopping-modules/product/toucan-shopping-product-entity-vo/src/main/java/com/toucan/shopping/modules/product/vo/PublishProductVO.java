@@ -37,10 +37,6 @@ public class PublishProductVO extends ShopProductVO {
      */
     private BrandVO brand;
 
-    /**
-     * SKU列表
-     */
-    private List<ProductSkuVO> productSkuVOList;
 
 
 

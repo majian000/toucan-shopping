@@ -27,24 +27,36 @@
 
     </resultMap>
 
-    <select id="queryList" resultMap="productSkuMap" parameterType="java.util.Map">
-        select sps.* from t_product_sku sps
+    <resultMap id="productSkuVOMap" type="com.toucan.shopping.modules.product.vo.ProductSkuVO" extends="productSkuMap">
+
+    </resultMap>
+
+    <select id="queryList" resultMap="productSkuVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSkuVO">
+        select t.* from t_product_sku t
         <where>
             1=1
 
             <if test="id!=null">
-                and sps.id = #{id}
+                and t.id = #{id}
             </if>
 
             <if test="status!=null">
-                 and sps.status = #{status}
+                 and t.status = #{status}
+            </if>
+
+            <if test="shopProductId!=null">
+                and t.shop_product_id = #{shopProductId}
+            </if>
+
+            <if test="shopProductUuid!=null">
+                and t.shop_product_uuid = #{shopProductUuid}
             </if>
 
             <if test="appCode!=null">
-                and sps.app_code = #{appCode}
+                and t.app_code = #{appCode}
             </if>
 
-            and sps.delete_status = 0
+            and t.delete_status = 0
 
         </where>
     </select>

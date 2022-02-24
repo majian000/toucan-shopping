@@ -54,6 +54,21 @@ public class FeignShopProductServiceFallbackFactory implements FallbackFactory<F
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryByShopProductId(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignBrandService queryByShopProductId faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
         };
     }
 }

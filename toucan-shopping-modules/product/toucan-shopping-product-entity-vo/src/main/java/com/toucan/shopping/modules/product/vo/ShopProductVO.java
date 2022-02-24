@@ -41,6 +41,11 @@ public class ShopProductVO extends ShopProduct {
     private String httpMainPhotoFilePath;
 
     /**
+     * SKU列表
+     */
+    private List<ProductSkuVO> productSkuVOList;
+
+    /**
      * 验证码
      */
     private String vcode;

@@ -33,5 +33,6 @@ public interface ShopProductMapper {
      */
     Long queryListPageCount(ShopProductPageInfo pageInfo);
 
+    List<ShopProductVO> queryList(ShopProductVO shopProductVO);
 
 }

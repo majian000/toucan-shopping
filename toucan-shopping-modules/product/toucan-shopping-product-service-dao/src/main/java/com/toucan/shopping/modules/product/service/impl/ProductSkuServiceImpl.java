@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.product.service.impl;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.mapper.ProductSkuMapper;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     private ProductSkuMapper productSkuMapper;
 
     @Override
-    public List<ProductSku> queryList(Map<String,Object> queryMap) {
-        return productSkuMapper.queryList(queryMap);
+    public List<ProductSkuVO> queryList(ProductSkuVO productSkuVO) {
+        return productSkuMapper.queryList(productSkuVO);
     }
 
 

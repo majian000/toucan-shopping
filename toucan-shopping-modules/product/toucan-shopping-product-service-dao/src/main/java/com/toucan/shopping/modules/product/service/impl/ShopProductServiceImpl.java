@@ -40,4 +40,9 @@ public class ShopProductServiceImpl implements ShopProductService {
         pageInfo.setTotal(shopProductMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public List<ShopProductVO> queryList(ShopProductVO shopProductVO) {
+        return shopProductMapper.queryList(shopProductVO);
+    }
 }

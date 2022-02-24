@@ -24,4 +24,6 @@ public interface ShopProductService {
      */
     PageInfo<ShopProductVO> queryListPage(ShopProductPageInfo queryPageInfo);
 
+    List<ShopProductVO> queryList(ShopProductVO shopProductVO);
+
 }

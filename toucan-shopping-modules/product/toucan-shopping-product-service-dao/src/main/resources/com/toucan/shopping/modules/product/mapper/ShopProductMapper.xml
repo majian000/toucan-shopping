@@ -100,4 +100,20 @@
     </select>
 
 
+
+    <select id="queryList" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductVO">
+        select t.* from t_shop_product t
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
 </mapper>

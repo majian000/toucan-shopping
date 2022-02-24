@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Map;
 @Mapper
 public interface ProductSkuMapper {
 
-    List<ProductSku> queryList(Map<String,Object> queryMap);
+    List<ProductSkuVO> queryList(ProductSkuVO productSkuVO);
 
     ProductSku queryBySkuIdForUpdate(Long skuId);
 

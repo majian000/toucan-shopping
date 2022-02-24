@@ -3,13 +3,14 @@ package com.toucan.shopping.modules.product.service;
 
 
 import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ProductSkuService {
 
-    List<ProductSku> queryList(Map<String,Object> queryMap);
+    List<ProductSkuVO> queryList(ProductSkuVO productSkuVO);
 
 
     /**
