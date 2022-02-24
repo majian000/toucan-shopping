@@ -68,7 +68,7 @@ public class SellerShopServiceImpl implements SellerShopService {
 
     @Override
     public List<SellerShop> queryList(SellerShopVO queryModel) {
-        return null;
+        return sellerShopMapper.queryList(queryModel);
     }
 
 
