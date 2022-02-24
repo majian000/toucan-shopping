@@ -321,7 +321,7 @@ public class ShopProductController {
         }
         try {
             ShopProductVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
-            if(shopProductVO==null||shopProductVO.getId()==null)
+            if(shopProductVO==null||shopProductVO.getId()==null||shopProductVO.getId().longValue()==-1)
             {
                 logger.warn("没有找到ID: param:"+ JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultVO.FAILD);

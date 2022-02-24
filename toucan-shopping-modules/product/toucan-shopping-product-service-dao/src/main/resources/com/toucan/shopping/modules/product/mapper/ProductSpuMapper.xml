@@ -9,14 +9,56 @@
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
         <result column="status" jdbcType="SMALLINT" property="status" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
-        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="create_admin_id" jdbcType="BIGINT" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="BIGINT" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="attributes" jdbcType="VARCHAR" property="attributes" />
         
     </resultMap>
 
+
+
+    <resultMap id="productVOMap" type="com.toucan.shopping.modules.product.vo.ProductSpuVO" extends="productMap">
+
+    </resultMap>
+
+
     <select id="queryAllList" resultMap="productMap" parameterType="com.toucan.shopping.modules.product.entity.ProductSpu">
         select * from t_product_spu t
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSpu" >
+        insert into t_product_spu(id,uuid,category_id,name,app_code,create_date,create_admin_id,status,attributes)
+        values(#{id},#{uuid},#{categoryId},#{name},#{appCode},#{createDate},#{createAdminId},#{status},#{attributes})
+    </insert>
+
+    <select id="queryList" resultMap="productVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSpuVO">
+        select t.* from t_product_spu t
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+
+            <if test="status!=null">
+                and t.status = #{status}
+            </if>
+
+            <if test="name!=null">
+                and t.name = #{name}
+            </if>
+
+            <if test="appCode!=null">
+                and t.app_code = #{appCode}
+            </if>
+
+            and t.delete_status = 0
+
+        </where>
     </select>
 
 </mapper>

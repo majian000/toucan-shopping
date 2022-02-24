@@ -21,9 +21,12 @@ public class ProductSpu {
     private String name; //商品名称
     private Short status; //是否上架 0:未上架 1:已上架
     private Date createDate; //创建时间
+    private Date updateDate; //创建时间
     private String appCode; //所属应用
-    private Long createUserId; //创建人ID
+    private Long createAdminId; //创建人ID
+    private Long updateAdminId; //创建人ID
     private Integer deleteStatus; //删除状态 0未删除 1已删除
+    private String attributes; //这个SPU的属性
 
 
 
