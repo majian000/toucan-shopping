@@ -20,4 +20,7 @@ public interface ShopProductImgMapper {
     List<ShopProductImg> queryByIdList(List<Long> ids);
 
 
+    int deleteByShopProductId(Long shopProductId);
+
+
 }

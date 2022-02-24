@@ -63,7 +63,7 @@
 
 
     <select id="queryAllList" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct">
-        select * from t_shop_product_spu t
+        select * from t_shop_product t
     </select>
 
 
@@ -76,7 +76,7 @@
 
 
     <update id="deleteById">
-        update t_shop_product_spu  set delete_status=1 where id=#{id}  and delete_status=0
+        update t_shop_product  set delete_status=1 where id=#{id}  and delete_status=0
     </update>
 
 

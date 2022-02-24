@@ -18,4 +18,7 @@ public interface ShopProductImgService {
 
     List<ShopProductImg> queryByIdList(List<Long> ids);
 
+
+    int deleteByShopProductId(Long shopProductId);
+
 }

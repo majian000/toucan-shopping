@@ -130,7 +130,7 @@ public class ShopProductController {
                 }
                 ret = productSkuService.saves(productSkus);
 
-                if(ret!=productSkus.size())
+                if(ret<publishProductVO.getProductSkuVOList().size())
                 {
                     logger.warn("发布商品失败 原因:保存SKU影响返回行和保存数量不一致 {}",JSONObject.toJSONString(productSkus));
                     resultObjectVO.setCode(ResultVO.FAILD);
@@ -142,57 +142,62 @@ public class ShopProductController {
                         //发送异常邮件,通知运营处理
                         logger.warn("发布商品失败 回滚店铺商品表失败 id {}",publishProductVO.getId());
                     }
-                }
+                }else {
 
-                //保存商品主图
-                List<ShopProductImg> shopProductImgs = new LinkedList<>();
-                ShopProductImg shopProductImg = new ShopProductImg();
-                shopProductImg.setId(idGenerator.id());
-                shopProductImg.setAppCode(publishProductVO.getAppCode());
-                shopProductImg.setCreateDate(new Date());
-                shopProductImg.setCreateUserId(publishProductVO.getCreateUserId());
-                shopProductImg.setDeleteStatus(0);
-                shopProductImg.setIsMainPhoto((short)1);
-                shopProductImg.setShopProductId(publishProductVO.getId());
-                shopProductImg.setFilePath(publishProductVO.getMainPhotoFilePath());
-                shopProductImgs.add(shopProductImg);
+                    //保存商品主图
+                    List<ShopProductImg> shopProductImgs = new LinkedList<>();
+                    ShopProductImg shopProductImg = new ShopProductImg();
+                    shopProductImg.setId(idGenerator.id());
+                    shopProductImg.setAppCode(publishProductVO.getAppCode());
+                    shopProductImg.setCreateDate(new Date());
+                    shopProductImg.setCreateUserId(publishProductVO.getCreateUserId());
+                    shopProductImg.setDeleteStatus(0);
+                    shopProductImg.setIsMainPhoto((short) 1);
+                    shopProductImg.setShopProductId(publishProductVO.getId());
+                    shopProductImg.setFilePath(publishProductVO.getMainPhotoFilePath());
+                    shopProductImgs.add(shopProductImg);
 
-                //保存预览图
-                if(CollectionUtils.isNotEmpty(publishProductVO.getPreviewPhotoPaths()))
-                {
-                    for(String pewviewPhotoPath:publishProductVO.getPreviewPhotoPaths()) {
-                        ShopProductImg productImg = new ShopProductImg();
-                        productImg.setId(idGenerator.id());
-                        productImg.setAppCode(publishProductVO.getAppCode());
-                        productImg.setCreateDate(new Date());
-                        productImg.setCreateUserId(publishProductVO.getCreateUserId());
-                        productImg.setDeleteStatus(0);
-                        productImg.setIsMainPhoto((short) 0);
-                        productImg.setShopProductId(publishProductVO.getId());
-                        productImg.setFilePath(pewviewPhotoPath);
+                    //保存预览图
+                    if (CollectionUtils.isNotEmpty(publishProductVO.getPreviewPhotoPaths())) {
+                        for (String pewviewPhotoPath : publishProductVO.getPreviewPhotoPaths()) {
+                            ShopProductImg productImg = new ShopProductImg();
+                            productImg.setId(idGenerator.id());
+                            productImg.setAppCode(publishProductVO.getAppCode());
+                            productImg.setCreateDate(new Date());
+                            productImg.setCreateUserId(publishProductVO.getCreateUserId());
+                            productImg.setDeleteStatus(0);
+                            productImg.setIsMainPhoto((short) 0);
+                            productImg.setShopProductId(publishProductVO.getId());
+                            productImg.setFilePath(pewviewPhotoPath);
 
-                        shopProductImgs.add(productImg);
-                    }
-                }
+                            shopProductImgs.add(productImg);
+                        }
 
-                ret = shopProductImgService.saves(shopProductImgs);
-                if(ret!=shopProductImgs.size())
-                {
-                    logger.warn("发布商品失败 原因:商品图片影响返回行和保存数量不一致 {}",JSONObject.toJSONString(shopProductImgs));
-                    resultObjectVO.setCode(ResultVO.FAILD);
-                    resultObjectVO.setMsg("发布失败");
+                        ret = shopProductImgService.saves(shopProductImgs);
+                        if (ret <= publishProductVO.getPreviewPhotoPaths().size()) {
+                            logger.warn("发布商品失败 原因:商品图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
+                            resultObjectVO.setCode(ResultVO.FAILD);
+                            resultObjectVO.setMsg("发布失败");
 
-                    ret = shopProductService.deleteById(publishProductVO.getId());
-                    if(ret<=0)
-                    {
-                        //发送异常邮件,通知运营处理
-                        logger.warn("发布商品失败 回滚店铺商品表失败 id {}",publishProductVO.getId());
-                    }
+                            ret = shopProductService.deleteById(publishProductVO.getId());
+                            if (ret <= 0) {
+                                //发送异常邮件,通知运营处理
+                                logger.warn("发布商品失败 回滚店铺商品表失败 id {}", publishProductVO.getId());
+                            }
 
-                    ret = productSkuService.deleteByShopProductId(publishProductVO.getId());
-                    if(ret!=productSkus.size())
-                    {
-                        logger.warn("发布商品失败 回滚店铺商品SKU失败 {}",JSONObject.toJSONString(productSkus));
+                            ret = productSkuService.deleteByShopProductId(publishProductVO.getId());
+                            if (ret<publishProductVO.getProductSkuVOList().size()) {
+                                logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
+                            }
+
+                            //TODO:删除服务器中图片资源
+                            ret = shopProductImgService.deleteByShopProductId(publishProductVO.getId());
+                            if (ret<publishProductVO.getPreviewPhotoPaths().size()) {
+                                logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
+                            }
+
+                        }
+
                     }
 
                 }

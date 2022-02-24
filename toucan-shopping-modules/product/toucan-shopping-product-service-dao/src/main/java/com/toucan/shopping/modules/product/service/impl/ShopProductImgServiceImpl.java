@@ -39,4 +39,9 @@ public class ShopProductImgServiceImpl implements ShopProductImgService {
         }
         return shopProductImgMapper.queryByIdList(ids);
     }
+
+    @Override
+    public int deleteByShopProductId(Long shopProductId) {
+        return shopProductImgMapper.deleteByShopProductId(shopProductId);
+    }
 }

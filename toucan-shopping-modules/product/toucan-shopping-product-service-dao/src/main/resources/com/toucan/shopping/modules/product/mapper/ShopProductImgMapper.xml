@@ -70,5 +70,10 @@
     </select>
 
 
+    <update id="deleteByShopProductId">
+        update t_shop_product_img  set delete_status=1 where shop_product_id=#{shopProductId}  and delete_status=0
+    </update>
+
+
 
 </mapper>
