@@ -137,7 +137,6 @@
         });
 
         $("#selectCategoryId").click(function(){
-            loadding = layer.load();
             index = layer.open({
                 title: '选择所属分类',
                 type: 1,
@@ -147,6 +146,8 @@
                 area: ['20%', '60%'],
                 content: "<div id='categoryTree'></div>",
                 success:function(layero){
+
+                    loadding = layer.load();
                     $.ajax({
                         url:"[[@{/}]]product/attribute/attributeKey/query/category/tree",
                         contentType: "application/json; charset=utf-8",
@@ -201,7 +202,6 @@
                 layer.msg("不能选择根分类");
                 return ;
             }
-            loadding = layer.load();
             index = layer.open({
                 title: '选择上级节点',
                 type: 1,
@@ -211,6 +211,8 @@
                 area: ['20%', '60%'],
                 content: "<div id='attributeKeyTree'></div>",
                 success:function(layero){
+
+                    loadding = layer.load();
                     $.ajax({
                         url:"[[@{/}]]product/attribute/attributeKey/query/tree/category/id",
                         contentType: "application/json; charset=utf-8",
