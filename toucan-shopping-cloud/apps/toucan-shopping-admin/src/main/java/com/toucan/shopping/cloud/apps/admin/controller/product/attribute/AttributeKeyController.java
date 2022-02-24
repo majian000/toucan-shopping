@@ -75,28 +75,24 @@ public class AttributeKeyController extends UIController {
     }
 
 
-
     /**
      * 查询列表
-     * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    public ResultObjectVO queryListByPid(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
     {
-        TableVO tableVO = new TableVO();
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignAttributeKeyService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            resultObjectVO = feignAttributeKeyService.queryTreeTableByPid(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
                 {
-                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
-                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<AttributeKeyVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),AttributeKeyVO.class);
+                    List<AttributeKeyVO> list = resultObjectVO.formatDataList(AttributeKeyVO.class);
                     if(CollectionUtils.isNotEmpty(list))
                     {
                         Long[] categoryIds = new Long[list.size()];
@@ -167,19 +163,18 @@ public class AttributeKeyController extends UIController {
                         }
 
                     }
-                    if(tableVO.getCount()>0) {
-                        tableVO.setData((List)list);
-                    }
                 }
             }
+            return resultObjectVO;
         }catch(Exception e)
         {
-            tableVO.setMsg("请重试");
-            tableVO.setCode(TableVO.FAILD);
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
-        return tableVO;
+        return resultObjectVO;
     }
+
 
 
 
@@ -392,6 +387,24 @@ public class AttributeKeyController extends UIController {
 
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryTreeByCategoryId(HttpServletRequest request,@RequestBody AttributeKeyVO attributeKeyVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,attributeKeyVO);
+            resultObjectVO = feignAttributeKeyService.queryTreeByCategoryId(requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

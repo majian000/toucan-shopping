@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="attribute_name" jdbcType="VARCHAR" property="attributeName" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
         <result column="attribute_type" jdbcType="INTEGER" property="attributeType" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
@@ -31,6 +32,10 @@
 
         <if test="categoryId!=null">
             and t.category_id = #{categoryId}
+        </if>
+
+        <if test="parentId!=null">
+            and t.parent_id = #{parentId}
         </if>
 
         <if test="showStatus!=null and showStatus!=-1">
@@ -62,6 +67,10 @@
 
         <if test="id!=null">
             and t.id = #{id}
+        </if>
+
+        <if test="parentId!=null">
+            and t.parent_id = #{parentId}
         </if>
 
         <if test="categoryId!=null">
@@ -114,8 +123,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey"  keyProperty="id" >
-        insert into t_attribute_key(id,query_status,attribute_scope,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
-        values(#{id},#{queryStatus},#{attributeScope},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
+        insert into t_attribute_key(id,query_status,attribute_scope,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status,parent_id)
+        values(#{id},#{queryStatus},#{attributeScope},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus},#{parentId})
     </insert>
 
 
@@ -128,11 +137,18 @@
         limit #{start},#{limit}
     </select>
 
+    <select id="queryById" resultMap="attributeKeyVOMap" parameterType="java.lang.Long">
+        select t.*  from t_attribute_key t where id =#{id}  and delete_status = 0  limit 0,1
+    </select>
 
+
+    <select id="queryListByParentId" resultMap="attributeKeyVOMap" parameterType="java.lang.Long">
+        select t.*  from t_attribute_key t where parent_id =#{parentId} and delete_status = 0
+    </select>
 
     <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey">
         update t_attribute_key set attribute_type=#{attributeType},attribute_name=#{attributeName},category_id=#{categoryId},attribute_sort=#{attributeSort},remark=#{remark},
-          update_admin_id=#{updateAdminId},update_date=#{updateDate},show_status=#{showStatus},query_status=#{queryStatus},attribute_scope=#{attributeScope}
+          update_admin_id=#{updateAdminId},update_date=#{updateDate},show_status=#{showStatus},query_status=#{queryStatus},attribute_scope=#{attributeScope},parent_id=#{parentId}
           where id=#{id}
     </update>
 
@@ -146,6 +162,15 @@
 
     </select>
 
+
+    <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">
+        select count(*) from t_attribute_key t
+        <where>
+            1=1
+            <include refid="queryListWhere" />
+
+        </where>
+    </select>
 
 
     <update id="deleteById">

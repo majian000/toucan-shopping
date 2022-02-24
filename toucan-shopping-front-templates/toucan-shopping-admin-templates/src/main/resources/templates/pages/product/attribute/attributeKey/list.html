@@ -10,19 +10,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
-    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+
+    <span th:replace="common_page::common"></span>
 </head>
 <body>
-
-<span th:replace="common_page::common"></span>
 
 <div class="layuimini-container">
     <div class="layuimini-main">
 
         <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                <form class="layui-form layui-form-pane" id="categorySearchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">属性范围</label>
@@ -77,9 +76,9 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
-                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                         </div>
                     </div>
                 </form>
@@ -89,35 +88,37 @@
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
-
             </div>
         </script>
 
-        <table class="layui-hide" id="attributeKeyTable" lay-filter="attributeKeyTableFilter"></table>
+        <table class="layui-hide" id="attributeKeyTreeTable" lay-filter="attributeKeyTreeTableFilter"></table>
 
-        <script type="text/html" id="attributeKeyTableBar">
+        <!-- 操作列 -->
+        <script type="text/html" id="attributeKeyTreeTableToolbar">
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
-<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script th:src="@{/js/lay-config.js?v=1.0.4}" charset="utf-8"></script>
+<script th:src="@{/js/common/selectApp.js}" charset="utf-8"></script>
+
 <script>
+
+
     layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+        base: basePath+'/lib/layui_ext/treeTable/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
+        treeTable: 'treeTable' //定义该组件模块名
+    }).use(['form', 'table', 'treeTable','tree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
-        var index;
-        var tree = layui.tree;
+        var treetable = layui.treeTable;
         var loadding;
-        var dtree = layui.dtree;
-        var roleTree;
-        var roleTreeDataArray = new Array();
+        var treetableHandler;
+        var tree = layui.tree;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -137,118 +138,16 @@
             return serializeObj;
         };
 
-        function getFormParam()
+        function getFormParam(row)
         {
-            var formParam = $("#userSearchForm").serializeJson();
+            var formParam = $("#categorySearchForm").serializeJson();
+            if(row!=null) {
+                formParam.parentId = row.id;
+            }else{
+                formParam.parentId=-1;
+            }
             return formParam;
         }
-
-        table.render({
-            elem: '#attributeKeyTable',
-            url: "[[@{/}]]product/attribute/attributeKey/list",
-            method:'POST',
-            where:getFormParam(),
-            toolbar: '#toolbarDemo',
-            defaultToolbar: ['filter',  {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
-            done:function(res, curr, count)
-            {
-            },
-            cols: [
-                [
-                    {type: "checkbox", width: 50},
-                    {field: 'id',  title: '主键'},
-                    {field: 'attributeType',width: 150,   title: '属性类型',
-                        templet: function (row) {
-                            if(row.attributeType == null){
-                                return "";
-                            }
-                            if(row.attributeType == "1"){
-                                return "普通属性";
-                            }
-                            if(row.attributeType == "2"){
-                                return "颜色属性";
-                            }
-                            return row.attributeType;
-                        }},
-                    {field: 'attributeScope',width: 150,   title: '属性范围',
-                        templet: function (row) {
-                            if(row.attributeScope == null){
-                                return "";
-                            }
-                            if(row.attributeScope == "1"){
-                                return "全局属性";
-                            }
-                            if(row.attributeScope == "2"){
-                                return "SKU属性";
-                            }
-                            return row.attributeScope;
-                        }},
-                    {field: 'queryStatus',width: 150,   title: '搜索状态',
-                        templet: function (row) {
-                            if(row.queryStatus == null){
-                                return "";
-                            }
-                            if(row.queryStatus == "1"){
-                                return "可被搜索";
-                            }
-                            if(row.queryStatus == "0"){
-                                return "不可搜索";
-                            }
-                            return row.queryStatus;
-                        }},
-                    {field: 'attributeName',  title: '属性名'},
-                    {field: 'categoryName',  title: '所属类别'},
-                    {field: 'attributeSort',  title: '排序'},
-                    {field: 'showStatus', width: 150,  title: '显示状态',
-                        templet: function (row) {
-                            if(row.showStatus == null){
-                                return "";
-                            }
-                            if(row.showStatus == "1"){
-                                return "显示";
-                            }
-                            if(row.showStatus == "0"){
-                                return "隐藏";
-                            }
-                            return row.showStatus;
-                        }},
-                    {field: 'createAdminName', title: '创建人'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
-                ]
-            ],
-            limits: [15,30,100,200],
-            limit: 15,
-            page: true,
-            skin: 'line'
-        });
-
-        // 监听搜索操作
-        form.on('submit(data-search-btn)', function (data) {
-            //执行搜索重载
-            table.reload('attributeKeyTable', {
-                page: {
-                    curr: 1
-                }
-                , where: data.field
-            }, 'data');
-
-            return false;
-        });
-
-
-        $("#data-reset-btn").click(function(){
-            $("#categoryId").val("");
-            $("#userSearchForm")[0].reset();
-            layui.form.render();
-        });
-
 
         $("#selectCategoryId").click(function(){
             loadding = layer.load();
@@ -300,11 +199,116 @@
 
         });
 
+        function loadTreeTable()
+        {
+            loadding = layer.load();
+            treetableHandler = treetable.render({
+                elem: '#attributeKeyTreeTable',
+                tree: {
+                    iconIndex: 2
+                },
+                toolbar: '#toolbarDemo',
+                page: false,
+                cols: [
+                    [
+                        {type: "checkbox", width: 50},
+                        {field: 'id',  title: '主键'},
+                        {field: 'attributeType',width: 150,   title: '属性类型',
+                            templet: function (row) {
+                                if(row.attributeType == null){
+                                    return "";
+                                }
+                                if(row.attributeType == "1"){
+                                    return "普通属性";
+                                }
+                                if(row.attributeType == "2"){
+                                    return "颜色属性";
+                                }
+                                return row.attributeType;
+                            }},
+                        {field: 'attributeScope',width: 150,   title: '属性范围',
+                            templet: function (row) {
+                                if(row.attributeScope == null){
+                                    return "";
+                                }
+                                if(row.attributeScope == "1"){
+                                    return "全局属性";
+                                }
+                                if(row.attributeScope == "2"){
+                                    return "SKU属性";
+                                }
+                                return row.attributeScope;
+                            }},
+                        {field: 'queryStatus',width: 150,   title: '搜索状态',
+                            templet: function (row) {
+                                if(row.queryStatus == null){
+                                    return "";
+                                }
+                                if(row.queryStatus == "1"){
+                                    return "可被搜索";
+                                }
+                                if(row.queryStatus == "0"){
+                                    return "不可搜索";
+                                }
+                                return row.queryStatus;
+                            }},
+                        {field: 'attributeName',  title: '属性名'},
+                        {field: 'categoryName',  title: '所属类别'},
+                        {field: 'attributeSort',  title: '排序'},
+                        {field: 'showStatus', width: 150,  title: '显示状态',
+                            templet: function (row) {
+                                if(row.showStatus == null){
+                                    return "";
+                                }
+                                if(row.showStatus == "1"){
+                                    return "显示";
+                                }
+                                if(row.showStatus == "0"){
+                                    return "隐藏";
+                                }
+                                return row.showStatus;
+                            }},
+                        {field: 'createAdminName', title: '创建人'},
+                        {field: 'createDate',  title: '创建时间'},
+                        {field: 'updateAdminName',  title: '修改人'},
+                        {field: 'updateDate',  title: '修改时间'},
+                        {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
+                    ]
+                ],
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]product/attribute/attributeKey/tree/table/by/pid",
+                        type:'GET',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
+                }
+            });
+
+        }
+
+        loadTreeTable();
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+
+            loadTreeTable();
+
+            return false;
+        });
 
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(attributeKeyTableFilter)', function (obj) {
+        treetable.on('toolbar(attributeKeyTreeTable)', function (obj) {
+
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加属性名',
@@ -313,14 +317,13 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/attribute/attributeKey/addPage}]]",
+                    content: "[[@{/product/attribute/attributeKey/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('attributeKeyTable')
-                    , data = checkStatus.data;
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var data = treetableHandler.checkStatus();
                 if(data==null||data.length<=0)
                 {
                     layer.msg("请选择要操作的记录");
@@ -336,12 +339,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
+                            loadTreeTable();
 
                         },
                         complete:function(data)
@@ -353,85 +351,12 @@
             }
         });
 
-
-
-
-        /**
-         * 拿到所有选中节点的ID
-         * @param data
-         * @param idArray
-         */
-        function getCheckdNodeId(data,idArray)
-        {
-            for(var i=0;i<data.length;i++)
-            {
-                roleTreeDataArray.push(data[i]);
-                if(data[i].state.checked==true)
-                {
-                    idArray.push(data[i].id);
-                }
-                if(data[i].children!=null&&data[i].children.length>0)
-                {
-                    getCheckdNodeId(data[i].children,idArray);
-                }
-            }
-        }
-
-
-        /**
-         * 拿到指定节点对象
-         */
-        function getNodeObject(nodeId)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-                if(roleTreeDataArray[i].id==nodeId)
-                {
-                    return roleTreeDataArray[i];
-                }
-            }
-            return null;
-        }
-
-
-        /**
-         * 拿到上级节点信息
-         */
-        function getParentNode(rolesArray,pid)
-        {
-            for(var i=0;i<roleTreeDataArray.length;i++)
-            {
-
-                if(roleTreeDataArray[i].id==pid)
-                {
-                    var exists=false;
-                    //判断上级节点ID是否已经保存了
-                    for(var j=0;j<rolesArray.length;j++)
-                    {
-                        if(rolesArray[j].id==pid) {
-                            exists = true;
-                        }
-                    }
-                    //避免上级节点ID重复保存两份
-                    if(!exists)
-                    {
-                        rolesArray.push({roleId:roleTreeDataArray[i].roleId,appCode:roleTreeDataArray[i].appCode})
-                    }
-                    if(roleTreeDataArray[i].pid!=-1) {
-                        //找到这个节点的上级节点
-                        getParentNode(rolesArray, roleTreeDataArray[i].pid);
-                    }
-                }
-            }
-        }
-
-
         //监听表格复选框选择
-        table.on('checkbox(attributeKeyTableFilter)', function (obj) {
+        treetable.on('checkbox(attributeKeyTreeTable)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(attributeKeyTableFilter)', function (obj) {
+        treetable.on('tool(attributeKeyTreeTable)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 

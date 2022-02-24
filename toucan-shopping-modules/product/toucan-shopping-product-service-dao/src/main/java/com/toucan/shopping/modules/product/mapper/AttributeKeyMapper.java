@@ -17,6 +17,12 @@ public interface AttributeKeyMapper {
 
     int insert(AttributeKey attributeKey);
 
+    AttributeKeyVO queryById(Long id);
+
+
+    List<AttributeKeyVO> queryListByParentId(Long parentId);
+
+
     /**
      * 查询列表页
      * @param pageInfo
@@ -40,5 +46,7 @@ public interface AttributeKeyMapper {
     int update(AttributeKey attributeKey);
 
     int deleteById(Long id);
+
+    Long queryCount(AttributeKeyVO attributeKeyVO);
 
 }

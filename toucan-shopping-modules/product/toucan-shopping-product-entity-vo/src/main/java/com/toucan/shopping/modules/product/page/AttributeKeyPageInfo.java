@@ -21,6 +21,7 @@ public class AttributeKeyPageInfo extends PageInfo<AttributeKeyVO> {
 
     private Integer id;
 
+    private Long parentId; //上级属性名
 
     private String attributeName; //属性名
     private Short showStatus; //显示状态 1显示 0隐藏

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -47,40 +48,145 @@ public class AttributeKeyController {
 
 
     /**
-     * 查询列表
+     * 查询树表格
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
-    {
+    public ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
         {
-            logger.info("请求参数为空");
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
+            resultObjectVO.setMsg("没有找到实体对象");
             return resultObjectVO;
         }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到对象!");
-            return resultObjectVO;
-        }
+
         try {
             AttributeKeyPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyPageInfo.class);
-            PageInfo<AttributeKeyVO> pageInfo =  attributeKeyService.queryListPage(queryPageInfo);
-            resultObjectVO.setData(pageInfo);
+
+            List<AttributeKeyVO> attributeVOS = new ArrayList<AttributeKeyVO>();
+            boolean queryCriteria=false;
+            //按指定条件查询
+            if(StringUtils.isNotEmpty(queryPageInfo.getAttributeName())
+                    ||(queryPageInfo.getAttributeScope()!=null&&queryPageInfo.getAttributeScope().intValue()!=-1)
+                    ||(queryPageInfo.getAttributeType()!=null&&queryPageInfo.getAttributeType().intValue()!=-1)
+                    ||(queryPageInfo.getQueryStatus()!=null&&queryPageInfo.getQueryStatus().intValue()!=-1)
+                    ||(queryPageInfo.getCategoryId()!=null&&queryPageInfo.getCategoryId().intValue()!=-1)
+                    ||(queryPageInfo.getShowStatus()!=null&&queryPageInfo.getShowStatus().intValue()!=-1))
+            {
+                queryCriteria = true;
+                AttributeKeyVO queryAttributeKey = new AttributeKeyVO();
+                BeanUtils.copyProperties(queryAttributeKey,queryPageInfo);
+                List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(queryAttributeKey);
+                for (int i = 0; i < attributeKeyVOS.size(); i++) {
+                    attributeVOS.add(attributeKeyVOS.get(i));
+                }
+            }else {
+                //查询当前节点下的所有子节点
+                AttributeKeyVO queryAttributeKey = new AttributeKeyVO();
+                if(queryPageInfo.getParentId()!=null) {
+                    queryAttributeKey.setParentId(queryPageInfo.getParentId());
+                }else{
+                    queryAttributeKey.setParentId(-1L);
+                }
+                List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(queryAttributeKey);
+                for (int i = 0; i < attributeKeyVOS.size(); i++) {
+                    AttributeKeyVO attributeKeyVO = attributeKeyVOS.get(i);
+
+                    queryAttributeKey = new AttributeKeyVO();
+                    queryAttributeKey.setParentId(attributeKeyVO.getId());
+                    Long childCount = attributeKeyService.queryCount(queryAttributeKey);
+                    if (childCount > 0) {
+                        attributeKeyVO.setHaveChild(true);
+                    }
+                    attributeVOS.add(attributeKeyVO);
+                }
+            }
+
+            //将查询的这个节点设置为顶级节点
+            if(queryCriteria) {
+                if(!CollectionUtils.isEmpty(attributeVOS)) {
+                    for (AttributeKey attributeKey : attributeVOS) {
+                        attributeKey.setParentId(-1L);
+                    }
+                }
+            }
+
+            resultObjectVO.setData(attributeVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeByCategoryId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AttributeKeyVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyVO.class);
+            if(query.getCategoryId()==null||query.getCategoryId()==-1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到分类ID或不支持查询顶级分类");
+                return resultObjectVO;
+
+            }
+
+            List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(query);
+            if(!org.springframework.util.CollectionUtils.isEmpty(attributeKeyVOS))
+            {
+                List<AttributeKeyVO> attributeKeyTreeVOS = new ArrayList<AttributeKeyVO>();
+                for(AttributeKeyVO attributeKeyVO : attributeKeyVOS)
+                {
+                    if(attributeKeyVO.getParentId().longValue()==-1) {
+                        AttributeKeyVO treeVO = new AttributeKeyVO();
+                        BeanUtils.copyProperties(treeVO, attributeKeyVO);
+
+                        treeVO.setTitle(attributeKeyVO.getAttributeName());
+                        treeVO.setText(attributeKeyVO.getAttributeName());
+                        treeVO.setPid(attributeKeyVO.getParentId());
+
+                        attributeKeyTreeVOS.add(treeVO);
+
+                        treeVO.setChildren(new ArrayList<AttributeKeyVO>());
+                        attributeKeyService.setChildren(attributeKeyVOS,treeVO);
+                    }
+                }
+
+                AttributeKeyVO rootTreeVO = new AttributeKeyVO();
+                rootTreeVO.setTitle("根属性");
+                rootTreeVO.setParentId(-1L);
+                rootTreeVO.setPid(-1L);
+                rootTreeVO.setId(-1L);
+                rootTreeVO.setText("根属性");
+                rootTreeVO.setChildren(attributeKeyTreeVOS);
+                List<AttributeKeyVO> rootAttributeKeyTreeVOS = new ArrayList<AttributeKeyVO>();
+                rootAttributeKeyTreeVOS.add(rootTreeVO);
+                resultObjectVO.setData(rootAttributeKeyTreeVOS);
+
+            }
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败!");
+            resultObjectVO.setMsg("请稍后重试");
         }
-
         return resultObjectVO;
     }
 
@@ -122,6 +228,13 @@ public class AttributeKeyController {
                 return resultObjectVO;
             }
 
+            AttributeKeyVO parentAttributeKeyVO= attributeKeyService.queryById(attributeKeyVOS.get(0).getParentId());
+            if(parentAttributeKeyVO!=null)
+            {
+                attributeKeyVOS.get(0).setParentName(parentAttributeKeyVO.getAttributeName());
+            }else{
+                attributeKeyVOS.get(0).setParentName("根节点");
+            }
             resultObjectVO.setData(attributeKeyVOS);
 
         }catch(Exception e)
@@ -327,6 +440,21 @@ public class AttributeKeyController {
             //删除属性值
             attributeValueService.deleteByAttributeKeyId(entity.getId());
 
+            List<AttributeKeyVO> childList = new LinkedList<>();
+            attributeKeyService.queryChildList(childList,entity.getId());
+            if(CollectionUtils.isNotEmpty(childList))
+            {
+                for(AttributeKeyVO attributeKeyVO:childList)
+                {
+                    //删除属性名
+                    attributeKeyService.deleteById(attributeKeyVO.getId());
+                    //删除属性值
+                    attributeValueService.deleteByAttributeKeyId(attributeKeyVO.getId());
+                }
+
+            }
+
+
 
             resultObjectVO.setData(entity);
 
@@ -381,6 +509,23 @@ public class AttributeKeyController {
 
                     //删除属性值
                     attributeValueService.deleteByAttributeKeyId(attributeKey.getId());
+
+
+                    List<AttributeKeyVO> childList = new LinkedList<>();
+                    attributeKeyService.queryChildList(childList,attributeKey.getId());
+                    if(CollectionUtils.isNotEmpty(childList))
+                    {
+                        for(AttributeKeyVO attributeKeyVO:childList)
+                        {
+                            //删除属性名
+                            attributeKeyService.deleteById(attributeKeyVO.getId());
+                            //删除属性值
+                            attributeValueService.deleteByAttributeKeyId(attributeKeyVO.getId());
+                        }
+
+                    }
+
+
                 }
             }
             resultObjectVO.setData(resultObjectVOList);

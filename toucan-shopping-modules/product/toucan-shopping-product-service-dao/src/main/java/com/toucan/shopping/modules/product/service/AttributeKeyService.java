@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface AttributeKeyService {
@@ -50,6 +51,18 @@ public interface AttributeKeyService {
      */
     List<AttributeKeyVO> queryList(AttributeKeyVO query);
 
+    /**
+     * 查询所有子节点
+     * @return
+     */
+    void queryChildList(List<AttributeKeyVO> allChildList,Long parentId);
+
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    AttributeKeyVO queryById(Long id);
 
     /**
      * 根据查询对象查询列表
@@ -57,5 +70,18 @@ public interface AttributeKeyService {
      * @return
      */
     List<AttributeKeyVO> queryListBySortDesc(AttributeKeyVO query);
+
+
+    Long queryCount(AttributeKeyVO attributeKeyVO);
+
+
+
+
+    /**
+     * 从一个集合中找到所有子节点并设置上
+     * @param attributeKeyVOS
+     * @param currentNode
+     */
+    void setChildren(List<AttributeKeyVO> attributeKeyVOS, AttributeKeyVO currentNode) throws InvocationTargetException, IllegalAccessException ;
 
 }

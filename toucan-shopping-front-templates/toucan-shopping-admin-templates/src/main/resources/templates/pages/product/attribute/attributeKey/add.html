@@ -64,6 +64,13 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label required">上级节点</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="parentId" id="parentId">
+            <input type="text" readonly  id="selectParentId" lay-verify="required"  placeholder="请选择所属上级" value="" class="layui-input" >
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
             <input type="number" name="attributeSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
@@ -179,6 +186,69 @@
 
         });
 
+
+
+
+        $("#selectParentId").click(function(){
+            var categoryId = $("#categoryId").val();
+            if(categoryId==null)
+            {
+                layer.msg("请选择分类");
+                return ;
+            }
+            if(categoryId=="-1")
+            {
+                layer.msg("不能选择根分类");
+                return ;
+            }
+            loadding = layer.load();
+            index = layer.open({
+                title: '选择上级节点',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['20%', '60%'],
+                content: "<div id='attributeKeyTree'></div>",
+                success:function(layero){
+                    $.ajax({
+                        url:"[[@{/}]]product/attribute/attributeKey/query/tree/category/id",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:{categoryId:categoryId},
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#attributeKeyTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        if(obj.data.id==-1)
+                                        {
+                                            layer.msg("不能选择根节点");
+                                            return;
+                                        }
+                                        $("#selectParentId").val(obj.data.title);
+                                        $("#parentId").val(obj.data.id);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
 
     });
 </script>

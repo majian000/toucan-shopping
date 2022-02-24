@@ -22,20 +22,6 @@ public class FeignAttributeKeyServiceFallbackFactory implements FallbackFactory<
     public FeignAttributeKeyService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
         return new FeignAttributeKeyService(){
-            @Override
-            public ResultObjectVO queryListPage(String signHeader, RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请重试");
-                    return resultObjectVO;
-                }
-                logger.warn("FeignAttributeKeyService queryListPage faild  params{}",JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-                return resultObjectVO;
-            }
 
             @Override
             public ResultObjectVO save(String signHeader, RequestJsonVO requestVo) {
@@ -83,6 +69,21 @@ public class FeignAttributeKeyServiceFallbackFactory implements FallbackFactory<
             }
 
             @Override
+            public ResultObjectVO queryTreeTableByPid(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAttributeKeyService queryTreeTableByPid faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO deleteById(String signHeader, RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
@@ -107,6 +108,21 @@ public class FeignAttributeKeyServiceFallbackFactory implements FallbackFactory<
                     return resultObjectVO;
                 }
                 logger.warn("FeignAttributeKeyService deleteByIds faild  params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO queryTreeByCategoryId(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAttributeKeyService queryTreeByCategoryId faild  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

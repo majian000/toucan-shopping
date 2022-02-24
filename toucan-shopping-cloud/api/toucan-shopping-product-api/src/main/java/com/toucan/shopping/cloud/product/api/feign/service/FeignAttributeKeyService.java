@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignAttributeKeyService {
 
 
-    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryListPage(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -45,6 +43,13 @@ public interface FeignAttributeKeyService {
     ResultObjectVO findById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询树表格
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/table/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryTreeTableByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 
     /**
@@ -67,5 +72,13 @@ public interface FeignAttributeKeyService {
     ResultObjectVO deleteByIds(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestVo);
 
 
+
+    /**
+     * 查询树
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.POST)
+    ResultObjectVO queryTreeByCategoryId(@RequestBody RequestJsonVO requestJsonVO);
 
 }
