@@ -126,6 +126,7 @@ public class AttributeKeyController extends UIController {
                                         if(attributeKeyVO.getCategoryId().longValue()==categoryVO.getId().longValue())
                                         {
                                             attributeKeyVO.setCategoryName(categoryVO.getName());
+                                            attributeKeyVO.setCategoryPath(categoryVO.getNamePath());
                                             break;
                                         }
                                     }
