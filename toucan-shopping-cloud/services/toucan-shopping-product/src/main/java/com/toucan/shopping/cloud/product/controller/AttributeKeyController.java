@@ -108,8 +108,8 @@ public class AttributeKeyController {
             //将查询的这个节点设置为顶级节点
             if(queryCriteria) {
                 if(!CollectionUtils.isEmpty(attributeVOS)) {
-                    for (AttributeKey attributeKey : attributeVOS) {
-                        attributeKey.setParentId(-1L);
+                    for (AttributeKeyVO attributeKeyVO : attributeVOS) {
+                        attributeKeyVO.setParentId(-1L);
                     }
                 }
             }

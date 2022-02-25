@@ -26,7 +26,7 @@
     <input type="hidden" id="attributeTypeHidden"  th:value="${model.attributeType}">
     <input type="hidden" id="queryStatusHidden"  th:value="${model.queryStatus}">
     <div class="layui-form-item">
-        <label class="layui-form-label required">特殊属性</label>
+        <label class="layui-form-label required">属性类型</label>
         <div class="layui-input-block">
             <select id="attributeType"  name="attributeType" lay-search="" lay-filter="attributeType">
                 <option value="1" selected>全局属性</option>
@@ -38,8 +38,8 @@
         <label class="layui-form-label required">搜索状态</label>
         <div class="layui-input-block">
             <select id="queryStatus"  name="queryStatus" lay-search="" lay-filter="queryStatus">
-                <option value="1" selected>可被搜索</option>
-                <option value="0">不可搜索</option>
+                <option value="0" selected>不可搜索</option>
+                <option value="1" >可被搜索</option>
             </select>
         </div>
     </div>
