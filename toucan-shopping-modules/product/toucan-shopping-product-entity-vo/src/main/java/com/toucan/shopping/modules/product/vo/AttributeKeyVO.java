@@ -28,6 +28,8 @@ public class AttributeKeyVO extends AttributeKey {
 
     private Long[] idArray; //主键列表
 
+    private List<Long> idList; //主键集合
+
     private String parentName; //上级节点名称
 
     /**

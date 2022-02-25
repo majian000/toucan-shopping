@@ -75,6 +75,58 @@ public class AttributeKeyController {
         try {
             AttributeKeyPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyPageInfo.class);
             PageInfo<AttributeKeyVO> pageInfo =  attributeKeyService.queryListPage(queryPageInfo);
+            if(CollectionUtils.isNotEmpty(pageInfo.getList()))
+            {
+                List<Long> parentIdList =new LinkedList<>();
+                boolean parentIdExists=false;
+                for(AttributeKeyVO attributeKeyVO:pageInfo.getList())
+                {
+                    //设置上级节点ID
+                    parentIdExists=false;
+                    for(Long parentId:parentIdList)
+                    {
+                        if(attributeKeyVO.getParentId()!=null&&parentId!=null
+                                &&parentId.longValue()==attributeKeyVO.getParentId().longValue())
+                        {
+                            parentIdExists=true;
+                            break;
+                        }
+                    }
+                    if(!parentIdExists&&attributeKeyVO.getParentId()!=null&&attributeKeyVO.getParentId().longValue()!=-1)
+                    {
+                        parentIdList.add(attributeKeyVO.getParentId());
+                    }
+                }
+                for(AttributeKeyVO attributeKeyVO:pageInfo.getList())
+                {
+                    if(attributeKeyVO.getParentId()!=null&&attributeKeyVO.getParentId().longValue()==-1)
+                    {
+                        attributeKeyVO.setParentName("根节点");
+                    }
+                }
+                if(CollectionUtils.isNotEmpty(parentIdList)) {
+                    AttributeKeyVO queryParentAttributeKeyVO = new AttributeKeyVO();
+                    queryParentAttributeKeyVO.setIdList(parentIdList);
+                    List<AttributeKeyVO> parentList = attributeKeyService.queryList(queryParentAttributeKeyVO);
+                    if(CollectionUtils.isNotEmpty(parentList))
+                    {
+                        for(AttributeKeyVO attributeKeyVO:pageInfo.getList()) {
+                            if(attributeKeyVO.getParentId()!=null
+                                    &&attributeKeyVO.getParentId().longValue()!=-1) {
+                                for (AttributeKeyVO parent : parentList) {
+                                    if (attributeKeyVO.getParentId() != null
+                                            && attributeKeyVO.getParentId().longValue() == parent.getId().longValue()) {
+                                        attributeKeyVO.setParentName(parent.getAttributeName());
+                                        break;
+                                    }
+                                }
+                            }else{
+                                attributeKeyVO.setParentName("根节点");
+                            }
+                        }
+                    }
+                }
+            }
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {

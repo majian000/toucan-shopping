@@ -116,7 +116,7 @@ public class AttributeKeyController extends UIController {
                         resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(),requestJsonVO);
                         if(resultObjectVO.isSuccess())
                         {
-                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
+                            List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                             if(CollectionUtils.isNotEmpty(categoryVOS))
                             {
                                 for(AttributeKeyVO attributeKeyVO:list)
@@ -420,6 +420,7 @@ public class AttributeKeyController extends UIController {
                                         if(attributeKeyVO.getCategoryId().longValue()==categoryVO.getId().longValue())
                                         {
                                             attributeKeyVO.setCategoryName(categoryVO.getName());
+                                            attributeKeyVO.setCategoryPath(categoryVO.getNamePath());
                                             break;
                                         }
                                     }
