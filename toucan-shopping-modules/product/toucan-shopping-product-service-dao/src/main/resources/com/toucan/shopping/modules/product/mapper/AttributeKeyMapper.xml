@@ -10,7 +10,6 @@
         <result column="attribute_type" jdbcType="INTEGER" property="attributeType" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
-        <result column="attribute_scope" jdbcType="INTEGER" property="attributeScope" />
         <result column="query_status" jdbcType="INTEGER" property="queryStatus" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -46,9 +45,6 @@
             and t.attribute_type = #{attributeType}
         </if>
 
-        <if test="attributeScope!=null and attributeScope!=-1">
-            and t.attribute_scope = #{attributeScope}
-        </if>
         <if test="queryStatus!=null and queryStatus!=-1">
             and t.query_status = #{queryStatus}
         </if>
@@ -81,9 +77,6 @@
             and t.show_status = #{showStatus}
         </if>
 
-        <if test="attributeScope!=null and attributeScope!=-1">
-            and t.attribute_scope = #{attributeScope}
-        </if>
         <if test="queryStatus!=null and queryStatus!=-1">
             and t.query_status = #{queryStatus}
         </if>
@@ -123,8 +116,8 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey"  keyProperty="id" >
-        insert into t_attribute_key(id,query_status,attribute_scope,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status,parent_id)
-        values(#{id},#{queryStatus},#{attributeScope},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus},#{parentId})
+        insert into t_attribute_key(id,query_status,attribute_type,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status,parent_id)
+        values(#{id},#{queryStatus},#{attributeType},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus},#{parentId})
     </insert>
 
 
@@ -148,7 +141,7 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey">
         update t_attribute_key set attribute_type=#{attributeType},attribute_name=#{attributeName},category_id=#{categoryId},attribute_sort=#{attributeSort},remark=#{remark},
-          update_admin_id=#{updateAdminId},update_date=#{updateDate},show_status=#{showStatus},query_status=#{queryStatus},attribute_scope=#{attributeScope},parent_id=#{parentId}
+          update_admin_id=#{updateAdminId},update_date=#{updateDate},show_status=#{showStatus},query_status=#{queryStatus},parent_id=#{parentId}
           where id=#{id}
     </update>
 

@@ -290,65 +290,6 @@ public class ShopProductApiController extends BaseController {
     }
 
 
-    /**
-     * 设置颜色表
-     * @param attributeKeyVOS
-     */
-    void setColorTable(List<AttributeKeyVO> attributeKeyVOS)
-    {
-        try {
-            if(CollectionUtils.isNotEmpty(attributeKeyVOS))
-            {
-                List<String> colorNameList = new LinkedList<>();
-                for(AttributeKeyVO attributeKeyVO:attributeKeyVOS) {
-                    //如果是颜色属性,遍历出所有颜色值,再查询颜色表
-                    if(attributeKeyVO.getAttributeType()!=null&&attributeKeyVO.getAttributeType().intValue()==2)
-                    {
-                        List<AttributeValueVO> attributeValueVOS = attributeKeyVO.getValues();
-                        if(CollectionUtils.isNotEmpty(attributeValueVOS)) {
-
-                            for(AttributeValueVO attributeValueVO:attributeValueVOS) {
-                                colorNameList.add(attributeValueVO.getAttributeValue());
-                            }
-                        }
-                    }
-                }
-
-                //查询颜色表
-                if (CollectionUtils.isNotEmpty(colorNameList)) {
-                    ColorTableVO queryColorTableVO = new ColorTableVO();
-                    queryColorTableVO.setNameList(colorNameList);
-                    RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryColorTableVO);
-                    ResultObjectVO queryColorTableResultObject = feignColorTableService.queryListByNames(requestJsonVO);
-                    if (queryColorTableResultObject.isSuccess()) {
-                        List<ColorTableVO> colorTableVOS = queryColorTableResultObject.formatDataList(ColorTableVO.class);
-                        if (CollectionUtils.isNotEmpty(colorTableVOS)) {
-                            for (AttributeKeyVO attributeKeyVO : attributeKeyVOS) {
-                                //如果是颜色属性,遍历出所有颜色值,再查询颜色表
-                                if (attributeKeyVO.getAttributeType() != null && attributeKeyVO.getAttributeType().intValue() == 2) {
-                                    List<AttributeValueVO> attributeValueVOS = attributeKeyVO.getValues();
-                                    if (CollectionUtils.isNotEmpty(attributeValueVOS)) {
-                                        for (AttributeValueVO attributeValueVO : attributeValueVOS) {
-                                            for (ColorTableVO colorTableVO : colorTableVOS) {
-                                                if (StringUtils.isNotEmpty(colorTableVO.getName()) && colorTableVO.getName().equals(attributeValueVO.getAttributeValue())) {
-                                                    //设置颜色值
-                                                    attributeValueVO.setRgbColor(colorTableVO.getRgbColor());
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
-    }
 
 
 
@@ -407,16 +348,9 @@ public class ShopProductApiController extends BaseController {
             AttributeKeyVO queryAttributeKeyVO = new AttributeKeyVO();
             queryAttributeKeyVO.setCategoryId(categoryId);
             queryAttributeKeyVO.setShowStatus((short)1);
-            queryAttributeKeyVO.setAttributeScope((short)2); //查询SKU属性
+            queryAttributeKeyVO.setAttributeType((short)2); //查询SKU属性
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAttributeKeyVO);
             resultObjectVO = feignAttributeKeyValueService.findByCategoryId(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<AttributeKeyVO> attributeKeyVOS = resultObjectVO.formatDataList(AttributeKeyVO.class);
-                setColorTable(attributeKeyVOS);
-
-                resultObjectVO.setData(attributeKeyVOS);
-            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

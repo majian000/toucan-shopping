@@ -26,20 +26,10 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">属性范围</label>
                             <div class="layui-input-inline">
-                                <select id="attributeScope"  name="attributeScope" lay-search="" lay-filter="attributeScope">
-                                    <option value="-1" selected>全部</option>
-                                    <option value="1">全局属性</option>
-                                    <option value="2">SKU属性</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">属性类型</label>
-                            <div class="layui-input-inline">
                                 <select id="attributeType"  name="attributeType" lay-search="" lay-filter="attributeType">
                                     <option value="-1" selected>全部</option>
-                                    <option value="1">普通属性</option>
-                                    <option value="2">颜色属性</option>
+                                    <option value="1">全局属性</option>
+                                    <option value="2">销售属性</option>
                                 </select>
                             </div>
                         </div>
@@ -215,31 +205,18 @@
                     [
                         {type: "checkbox", width: 50},
                         {field: 'id',  title: '主键'},
-                        {field: 'attributeType',width: 150,   title: '属性类型',
+                        {field: 'attributeType',width: 150,   title: '属性范围',
                             templet: function (row) {
                                 if(row.attributeType == null){
                                     return "";
                                 }
                                 if(row.attributeType == "1"){
-                                    return "普通属性";
-                                }
-                                if(row.attributeType == "2"){
-                                    return "颜色属性";
-                                }
-                                return row.attributeType;
-                            }},
-                        {field: 'attributeScope',width: 150,   title: '属性范围',
-                            templet: function (row) {
-                                if(row.attributeScope == null){
-                                    return "";
-                                }
-                                if(row.attributeScope == "1"){
                                     return "全局属性";
                                 }
-                                if(row.attributeScope == "2"){
-                                    return "SKU属性";
+                                if(row.attributeType == "2"){
+                                    return "销售属性";
                                 }
-                                return row.attributeScope;
+                                return row.attributeType;
                             }},
                         {field: 'queryStatus',width: 150,   title: '搜索状态',
                             templet: function (row) {
@@ -325,7 +302,7 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
                 var data = treetableHandler.checkStatus();
                 if(data==null||data.length<=0)
                 {
@@ -377,7 +354,7 @@
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该属性名?', function (index) {
+                layer.confirm("确定删除"+data.attributeName+"?", function (index) {
                     $.ajax({
                         url:"[[@{/}]]product/attribute/attributeKey/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
