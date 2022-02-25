@@ -242,11 +242,6 @@
                                     elem: '#attributeKeyTree'  //绑定元素
                                     ,data: data.data,
                                     click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
                                         $("#selectParentId").val(obj.data.title);
                                         $("#parentId").val(obj.data.id);
                                         layer.close(index);
