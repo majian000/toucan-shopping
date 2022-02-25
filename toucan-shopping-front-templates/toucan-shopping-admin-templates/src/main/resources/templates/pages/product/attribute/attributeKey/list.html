@@ -385,12 +385,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
+                            loadTreeTable();
 
                         },
                         complete:function(data)
