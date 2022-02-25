@@ -366,6 +366,112 @@ public class AttributeKeyController extends UIController {
 
 
 
+    /**
+     * 查询列表
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO list(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            ResultObjectVO resultObjectVO = feignAttributeKeyService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
+                    List<AttributeKeyVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),AttributeKeyVO.class);
+                    if(CollectionUtils.isNotEmpty(list))
+                    {
+                        Long[] categoryIds = new Long[list.size()];
+                        List<String> adminIdList = new ArrayList<String>();
+                        for(int i=0;i<list.size();i++)
+                        {
+                            AttributeKeyVO attributeKeyVO = list.get(i);
+                            categoryIds[i] = attributeKeyVO.getCategoryId();
+                            if(attributeKeyVO.getCreateAdminId()!=null) {
+                                adminIdList.add(attributeKeyVO.getCreateAdminId());
+                            }
+                            if(attributeKeyVO.getUpdateAdminId()!=null)
+                            {
+                                adminIdList.add(attributeKeyVO.getUpdateAdminId());
+                            }
+                        }
+                        //查询类别名称
+                        CategoryVO queryCategoryVO = new CategoryVO();
+                        queryCategoryVO.setIdArray(categoryIds);
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
+                        resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
+                            if(CollectionUtils.isNotEmpty(categoryVOS))
+                            {
+                                for(AttributeKeyVO attributeKeyVO:list)
+                                {
+                                    for(CategoryVO categoryVO:categoryVOS)
+                                    {
+                                        if(attributeKeyVO.getCategoryId().longValue()==categoryVO.getId().longValue())
+                                        {
+                                            attributeKeyVO.setCategoryName(categoryVO.getName());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //查询创建人和修改人
+                        String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+                        adminIdList.toArray(createOrUpdateAdminIds);
+                        AdminVO queryAdminVO = new AdminVO();
+                        queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+                        resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
+                            if(CollectionUtils.isNotEmpty(adminVOS))
+                            {
+                                for(AttributeKeyVO attributeKeyVO:list)
+                                {
+                                    for(AdminVO adminVO:adminVOS)
+                                    {
+                                        if(attributeKeyVO.getCreateAdminId()!=null&&attributeKeyVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                                        {
+                                            attributeKeyVO.setCreateAdminName(adminVO.getUsername());
+                                        }
+                                        if(attributeKeyVO.getUpdateAdminId()!=null&&attributeKeyVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                                        {
+                                            attributeKeyVO.setUpdateAdminName(adminVO.getUsername());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData((List)list);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
+
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/category/tree",method = RequestMethod.GET)
     @ResponseBody

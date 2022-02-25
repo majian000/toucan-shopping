@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignAttributeKeyService {
 
 
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListPage(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
+
+
 
 
     /**

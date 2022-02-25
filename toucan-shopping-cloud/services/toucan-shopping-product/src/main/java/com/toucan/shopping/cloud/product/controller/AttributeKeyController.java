@@ -47,6 +47,46 @@ public class AttributeKeyController {
 
 
 
+
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到对象: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到对象!");
+            return resultObjectVO;
+        }
+        try {
+            AttributeKeyPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), AttributeKeyPageInfo.class);
+            PageInfo<AttributeKeyVO> pageInfo =  attributeKeyService.queryListPage(queryPageInfo);
+            resultObjectVO.setData(pageInfo);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
     /**
      * 查询树表格
      * @param requestJsonVO
