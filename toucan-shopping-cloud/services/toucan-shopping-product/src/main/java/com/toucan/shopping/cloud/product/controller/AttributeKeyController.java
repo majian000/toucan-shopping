@@ -229,12 +229,17 @@ public class AttributeKeyController {
                 return resultObjectVO;
             }
 
-            AttributeKeyVO parentAttributeKeyVO= attributeKeyService.queryById(attributeKeyVOS.get(0).getParentId());
-            if(parentAttributeKeyVO!=null)
+            attributeKeyVO = attributeKeyVOS.get(0);
+            if(attributeKeyVO.getParentId()==-1)
             {
-                attributeKeyVOS.get(0).setParentName(parentAttributeKeyVO.getAttributeName());
+                attributeKeyVO.setParentName("根节点");
+                attributeKeyVO.setParentId(-1L);
             }else{
-                attributeKeyVOS.get(0).setParentName("根节点");
+                AttributeKeyVO parentAttributeKeyVO= attributeKeyService.queryById(attributeKeyVO.getParentId());
+                if(parentAttributeKeyVO!=null)
+                {
+                    attributeKeyVO.setParentName(parentAttributeKeyVO.getAttributeName());
+                }
             }
             resultObjectVO.setData(attributeKeyVOS);
 

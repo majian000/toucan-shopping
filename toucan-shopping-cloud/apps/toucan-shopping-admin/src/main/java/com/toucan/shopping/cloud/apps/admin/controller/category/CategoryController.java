@@ -281,7 +281,7 @@ public class CategoryController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO queryListByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo)
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, CategoryTreeInfo categoryTreeInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

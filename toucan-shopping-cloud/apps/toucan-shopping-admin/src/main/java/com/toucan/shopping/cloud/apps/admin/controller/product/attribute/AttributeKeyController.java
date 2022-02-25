@@ -161,7 +161,7 @@ public class AttributeKeyController extends UIController {
                                 }
                             }
                         }
-
+                        resultObjectVO.setData(list);
                     }
                 }
             }

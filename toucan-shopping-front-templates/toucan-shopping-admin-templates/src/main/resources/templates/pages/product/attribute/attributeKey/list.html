@@ -98,6 +98,8 @@
             <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
         </script>
 
+
+
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
@@ -272,7 +274,7 @@
                         {field: 'createDate',  title: '创建时间'},
                         {field: 'updateAdminName',  title: '修改人'},
                         {field: 'updateDate',  title: '修改时间'},
-                        {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
+                        {templet: '#attributeKeyTreeTableToolbar', width: 200, align: 'center', title: '操作'}
                     ]
                 ],
                 reqData: function (selectRow, callback) {
