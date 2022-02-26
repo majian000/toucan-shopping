@@ -45,56 +45,15 @@ spring:
                             classpath:/config/apps/shopping/messageWeb,\
                             classpath:/config/apps/shopping/admin"
 
-        test:  #测试环境配置
-          search-locations: "classpath:/config,\
-                            classpath:/config/base/gateway,\
-                            classpath:/config/base/eureka,\
-                            classpath:/config/services/order,\
-                            classpath:/config/services/product,\
-                            classpath:/config/services/secondKill,\
-                            classpath:/config/services/commonData,\
-                            classpath:/config/services/content,\
-                            classpath:/config/services/column,\
-                            classpath:/config/services/stock,\
-                            classpath:/config/services/user,\
-                            classpath:/config/services/message,\
-                            classpath:/config/services/adminAuth,\
-                            classpath:/config/services/seller,\
-                            classpath:/config/apps/shopping/web,\
-                            classpath:/config/apps/shopping/adminAuth,\
-                            classpath:/config/apps/scheduler/shopping,\
-                            classpath:/config/apps/scheduler/user,\
-                            classpath:/config/apps/scheduler/adminAuth,\
-                            classpath:/config/apps/shopping/sellerWeb,\
-                            classpath:/config/apps/shopping/messageWeb,\
-                            classpath:/config/apps/shopping/admin"
-
-        prod:  #生产配置
-          search-locations: "classpath:/config,\
-                              classpath:/config/base/gateway,\
-                              classpath:/config/base/eureka,\
-                              classpath:/config/services/order,\
-                              classpath:/config/services/product,\
-                              classpath:/config/services/secondKill,\
-                              classpath:/config/services/commonData,\
-                              classpath:/config/services/content,\
-                              classpath:/config/services/column,\
-                              classpath:/config/services/stock,\
-                              classpath:/config/services/user,\
-                              classpath:/config/services/message,\
-                              classpath:/config/services/adminAuth,\
-                              classpath:/config/services/seller,\
-                              classpath:/config/apps/shopping/web,\
-                              classpath:/config/apps/shopping/adminAuth,\
-                              classpath:/config/apps/scheduler/shopping,\
-                              classpath:/config/apps/scheduler/user,\
-                              classpath:/config/apps/scheduler/adminAuth,\
-                              classpath:/config/apps/shopping/sellerWeb,\
-                              classpath:/config/apps/shopping/messageWeb,\
-                              classpath:/config/apps/shopping/admin"
 
   profiles:
     active: native
+
+toucan:
+  config:
+    server:
+      log:
+        path: C:/log/dev/toucan_shopping/toucan_shopping_config_server
 
 #security:
 #  basic:
