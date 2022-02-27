@@ -376,58 +376,21 @@
 
         table.on('tool(shopProductTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'edit') {
+            if (obj.event == 'approve') {
 
                 var index = layer.open({
-                    title: '编辑商品',
+                    title: '审核商品',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]product/shopProductApprove/editPage/'+data.id
+                    content: '[[@{/}]]product/shopProductApprove/approvePage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
                 return false;
-            } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该商品?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]product/shopProductApprove/delete/"+data.id,
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('shopProductTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event == 'valueList') { //属性值管理
-                var index = layer.open({
-                    title: 'SKU管理',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    btn: ["关闭" ],
-                    area: ['80%', '80%'],
-                    content: "[[@{/product/productSku/listPage/}]]"+data.id
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
             }
         });
 
