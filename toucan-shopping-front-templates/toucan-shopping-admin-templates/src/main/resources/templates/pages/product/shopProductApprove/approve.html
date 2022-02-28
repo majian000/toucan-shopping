@@ -147,8 +147,8 @@
                             </div>
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >提取方式</label>
-                                <div class="layui-input-block " >
-                                    <a th:if="${model.etractMethod eq 1}">使用物流配送</a>
+                                <div class="layui-input-block "  style="padding-top:7px;" >
+                                    <a th:if="${#strings.contains(model.etractMethod,'1')}">使用物流配送</a>
                                 </div>
                             </div>
                         </div>
