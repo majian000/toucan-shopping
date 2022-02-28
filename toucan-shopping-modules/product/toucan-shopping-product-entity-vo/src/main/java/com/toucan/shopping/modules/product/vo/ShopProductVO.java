@@ -30,6 +30,12 @@ public class ShopProductVO extends ShopProduct {
      */
     private List<String> previewPhotoPaths;
 
+
+    /**
+     * 商品预览图路径
+     */
+    private List<String> httpPreviewPhotoPaths;
+
     /**
      * 主图文件路径
      */

@@ -96,6 +96,126 @@ public class ShopProductApproveController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
+            ShopProductVO shopProductVO = new ShopProductVO();
+            shopProductVO.setId(id);;
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
+            ResultObjectVO resultObjectVO = feignShopProductService.queryByShopProductId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ShopProductVO> list = resultObjectVO.formatDataList(ShopProductVO.class);
+                if(CollectionUtils.isNotEmpty(list)) {
+                    if(CollectionUtils.isNotEmpty(list))
+                    {
+                        Long[] categoryIds = new Long[list.size()];
+                        Long[] shopCategoryIds = new Long[list.size()];
+                        List<Long> brandIdList = new LinkedList<>();
+                        List<Long> shopIdList =new LinkedList<>();
+
+                        boolean brandExists=false;
+                        boolean shopCategoryExists=false;
+                        boolean shopExists=false;
+                        for(int i=0;i<list.size();i++)
+                        {
+                            ShopProductVO shopProductVOTmp = list.get(i);
+                            categoryIds[i] = shopProductVOTmp.getCategoryId();
+
+                            //设置品牌ID
+                            brandExists=false;
+                            for(Long brandId:brandIdList)
+                            {
+                                if(shopProductVOTmp.getBrandId()!=null&&brandId!=null
+                                        &&brandId.longValue()==shopProductVOTmp.getBrandId().longValue())
+                                {
+                                    brandExists=true;
+                                    break;
+                                }
+
+                            }
+                            if(!brandExists) {
+                                if(shopProductVOTmp.getBrandId()!=null) {
+                                    brandIdList.add(shopProductVOTmp.getBrandId());
+                                }
+                            }
+
+
+                            //设置店铺分类ID
+                            shopCategoryExists=false;
+                            for(int sci=0;sci<shopCategoryIds.length;sci++)
+                            {
+                                Long shopCategoryId = shopCategoryIds[sci];
+                                if(shopProductVOTmp.getShopCategoryId()!=null&&shopCategoryId!=null
+                                        &&shopCategoryId.longValue()==shopProductVOTmp.getShopCategoryId().longValue())
+                                {
+                                    shopCategoryExists=true;
+                                    break;
+                                }
+
+                            }
+                            if(!shopCategoryExists) {
+                                if(shopProductVOTmp.getShopCategoryId()!=null) {
+                                    shopCategoryIds[i] = shopProductVOTmp.getShopCategoryId();
+                                }
+                            }
+
+
+
+                            //设置店铺ID
+                            shopExists=false;
+                            for(Long shopId:shopIdList)
+                            {
+                                if(shopProductVOTmp.getShopId()!=null&&shopId!=null
+                                        &&shopId.longValue()==shopProductVOTmp.getShopId().longValue())
+                                {
+                                    shopExists=true;
+                                    break;
+                                }
+
+                            }
+                            if(!shopExists) {
+                                if(shopProductVOTmp.getShopId()!=null) {
+                                    shopIdList.add(shopProductVOTmp.getShopId());
+                                }
+                            }
+
+                        }
+
+
+                        //查询类别名称
+                        this.queryCategory(list,categoryIds);
+
+
+                        //查询店铺类别名称
+                        this.queryShopCategory(list,shopCategoryIds);
+
+                        //查询品牌名称
+                        this.queryBrand(list,brandIdList);
+
+                        //查询店铺名称
+                        this.queryShop(list,shopIdList);
+
+
+
+                        for(ShopProductVO shopProductVOTmp:list)
+                        {
+                            if(shopProductVOTmp.getMainPhotoFilePath()!=null) {
+                                shopProductVOTmp.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVOTmp.getMainPhotoFilePath());
+                            }
+
+                            if(CollectionUtils.isNotEmpty(shopProductVOTmp.getPreviewPhotoPaths())) {
+                                shopProductVOTmp.setHttpPreviewPhotoPaths(new LinkedList<>());
+                                for(String previewPhotoPath:shopProductVOTmp.getPreviewPhotoPaths())
+                                {
+                                    shopProductVOTmp.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
+                                }
+                            }
+                        }
+
+                    }
+                    request.setAttribute("model", list.get(0));
+                }else{
+                    request.setAttribute("model", new ShopProductVO());
+                }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

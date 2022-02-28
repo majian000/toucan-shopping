@@ -22,39 +22,163 @@
 <span th:replace="common_page::common"></span>
 
 <div class="layuimini-container" style="height:100%">
-    <div class="layuimini-main" >
-        <div class="layui-tab layui-tab-brief">
-            <ul class="layui-tab-title">
-                <li class="layui-this">商品信息</li>
-                <li>商品图片</li>
-                <li>商品规格</li>
-            </ul>
+    <div class="layui-form layuimini-form">
+        <div class="layuimini-main" >
+            <div class="layui-tab layui-tab-brief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">商品信息</li>
+                    <li>商品图片</li>
+                    <li>商品规格</li>
+                </ul>
 
-            <div class="layui-tab-content">
-                <div class="layui-tab-item layui-show">
-                    111111
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >商品名称</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.name}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >店铺商品UUID</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.uuid}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >分类路径</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.categoryPath}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >分类名称</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.categoryName}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >品牌中文名称</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.brandChineseName}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >品牌英文名称</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.brandEnglishName}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >店铺内分类路径</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.shopCategoryPath}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >店铺内分类名称</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.shopCategoryName}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >店铺ID</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.shopId}"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >店铺名称</label>
+                            <div class="layui-input-block">
+                                <input type="text"  th:value="${model.shopName}"  class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品主图</label>
+                            <div class="layui-input-block">
+                                <img th:src="${model.httpMainPhotoFilePath}" th:width="240" th:height="220">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品预览</label>
+                            <div class="layui-input-block">
+                                <div class="layui-carousel" id="productPhotos">
+                                    <div carousel-item>
+                                        <div th:each="httpPreviewPhotoPath : ${model.httpPreviewPhotoPaths}">
+                                            <img src="${httpPreviewPhotoPath}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">222222222</div>
                 </div>
-                <div class="layui-tab-item">111111111</div>
-                <div class="layui-tab-item">222222222</div>
             </div>
         </div>
-    </div>
-
-    <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">审核通过</button>
-            <button class="layui-btn layui-btn-danger" lay-submit lay-filter="saveBtn">审核驳回</button>
+        <div class="layui-form-item" >
+            <label class="layui-form-label required " >关联SPU</label>
+            <div class="layui-input-block">
+                <input type="text" lay-verify="required"  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="passBtn">审核通过</button>
+                <button class="layui-btn layui-btn-danger" lay-submit lay-filter="rejectBtn">审核驳回</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form','element'], function () {
-        var $ = layui.jquery
-            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+    layui.use(['form','element','carousel'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+        var carousel = layui.carousel;
 
+        //建造实例化
+        carousel.render({
+            elem: '#productPhotos',
+            width: '100%', //设置背景容器的宽度
+            arrow: 'always', //始终显示箭头,不会消失
+            //anim: 'updown' //切换动画方式:anim
+            //indicator:'outside',
+            indicator: 'outside'	//这个属性：小圆点在外面
+        });
 
+        //监听提交
+        form.on('submit(passBtn)', function (data) {
+
+            $.ajax({
+                url:"[[@{/product/shopProductApprove/pass}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:{id:form.field.id},
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                }
+            });
+            return false;
+        });
     });
 </script>
 </body>
