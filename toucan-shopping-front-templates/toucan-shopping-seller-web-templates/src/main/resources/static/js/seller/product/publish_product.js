@@ -1,5 +1,5 @@
 
-var g_goApproveSecond=5;
+var g_goApproveSecond=3;
 
 function showSetp2Page()
 {

@@ -51,6 +51,7 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
      */
     private String name;
 
+    private Integer enabledStatus; //启用状态 0禁用 1启用(审核通过后启用)
     /**
      * selectPage查询条件
      */

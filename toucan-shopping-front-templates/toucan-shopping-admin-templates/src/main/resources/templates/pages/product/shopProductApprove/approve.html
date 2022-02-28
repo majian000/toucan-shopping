@@ -23,84 +23,138 @@
 
 <div class="layuimini-container" style="height:100%">
     <div class="layui-form layuimini-form">
+        <input type="hidden" name="id" id="id" th:value="${model.id}">
         <div class="layuimini-main" >
             <div class="layui-tab layui-tab-brief">
                 <ul class="layui-tab-title">
                     <li class="layui-this">商品信息</li>
-                    <li>商品图片</li>
+                    <li>商品预览</li>
                     <li>商品规格</li>
                 </ul>
 
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >商品名称</label>
+                            <label class="layui-form-label " >店铺商品ID</label>
                             <div class="layui-input-block">
-                                <input type="text"  th:value="${model.name}"  class="layui-input">
+                                <input type="text"  th:value="${model.id}"  class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品主图</label>
+                            <div class="layui-input-block">
+                                <img th:src="${model.httpMainPhotoFilePath}" th:width="450" th:height="450">
                             </div>
                         </div>
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >店铺商品UUID</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.uuid}"  class="layui-input">
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >商品名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.name}"  class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline" style="width:40%">
+
+                                <label class="layui-form-label " >分类名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.categoryName}"  class="layui-input">
+                                </div>
                             </div>
                         </div>
+
                         <div class="layui-form-item" >
                             <label class="layui-form-label " >分类路径</label>
-                            <div class="layui-input-block">
+                            <div class="layui-input-block" >
                                 <input type="text"  th:value="${model.categoryPath}"  class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >分类名称</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.categoryName}"  class="layui-input">
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label "  >品牌中文名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.brandChineseName}"  class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >品牌英文名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.brandEnglishName}"  class="layui-input">
+                                </div>
                             </div>
                         </div>
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >品牌中文名称</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.brandChineseName}"  class="layui-input">
+
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >店铺内分类路径</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.shopCategoryPath}"  class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >店铺内分类名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.shopCategoryName}"  class="layui-input">
+                                </div>
                             </div>
                         </div>
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >品牌英文名称</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.brandEnglishName}"  class="layui-input">
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >店铺ID</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.shopId}"  class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >店铺名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text"  th:value="${model.shopName}"  class="layui-input">
+                                </div>
                             </div>
                         </div>
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >店铺内分类路径</label>
+                            <label class="layui-form-label " >商家编码</label>
                             <div class="layui-input-block">
-                                <input type="text"  th:value="${model.shopCategoryPath}"  class="layui-input">
+                                <input type="text"  th:value="${model.sellerNo}"  class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >店铺内分类名称</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.shopCategoryName}"  class="layui-input">
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >付款方式</label>
+                                <div class="layui-input-block " th:if="${model.payMethod eq 1}">
+                                    <input type="text"  value="一口价(普通交易模式)"  class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >库存计数</label>
+                                <div class="layui-input-block " th:if="${model.buckleInventoryMethod eq 1}">
+                                    <input type="text"  value="买家拍下减库存"  class="layui-input">
+                                </div>
+                                <div class="layui-input-block " th:if="${model.buckleInventoryMethod eq 2}">
+                                    <input type="text"  value="买家付款减库存"  class="layui-input">
+                                </div>
                             </div>
                         </div>
                         <div class="layui-form-item" >
-                            <label class="layui-form-label " >店铺ID</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.shopId}"  class="layui-input">
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >售后服务</label>
+                                <div class="layui-input-block "  style="padding-top:7px;" >
+                                    <a th:if="${model.giveInvoice eq 1}">提供发票</a>
+                                    <a th:if="${model.changeOrReturn eq 1}">退换货承诺</a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="layui-form-item" >
-                            <label class="layui-form-label " >店铺名称</label>
-                            <div class="layui-input-block">
-                                <input type="text"  th:value="${model.shopName}"  class="layui-input">
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >提取方式</label>
+                                <div class="layui-input-block " >
+                                    <a th:if="${model.etractMethod eq 1}">使用物流配送</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="layui-tab-item">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">商品主图</label>
-                            <div class="layui-input-block">
-                                <img th:src="${model.httpMainPhotoFilePath}" th:width="240" th:height="220">
-                            </div>
-                        </div>
+
 
                         <div class="layui-form-item">
                             <label class="layui-form-label">商品预览</label>
@@ -108,7 +162,7 @@
                                 <div class="layui-carousel" id="productPhotos">
                                     <div carousel-item>
                                         <div th:each="httpPreviewPhotoPath : ${model.httpPreviewPhotoPaths}">
-                                            <img src="${httpPreviewPhotoPath}" />
+                                            <img th:src="${httpPreviewPhotoPath}" th:width="450" th:height="450" />
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +199,8 @@
         //建造实例化
         carousel.render({
             elem: '#productPhotos',
-            width: '100%', //设置背景容器的宽度
+            width: '450px', //设置背景容器的宽度
+            height: '450px', //设置背景容器的高度
             arrow: 'always', //始终显示箭头,不会消失
             //anim: 'updown' //切换动画方式:anim
             //indicator:'outside',

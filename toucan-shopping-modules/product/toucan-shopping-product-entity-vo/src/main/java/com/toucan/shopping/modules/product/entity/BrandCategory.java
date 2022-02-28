@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.product.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,11 +15,24 @@ import java.util.Date;
  */
 @Data
 public class BrandCategory {
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
+
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long brandId; //品牌ID
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long categoryId; //分类ID
+
     private Date createDate; //创建时间
+
     private Integer deleteStatus; //删除状态 0未删除 1已删除
+
     private Integer brandSort; //排序
 
 }

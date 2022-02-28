@@ -73,6 +73,7 @@ public class BrandApiController {
             if(StringUtils.isNotEmpty(pageInfo.getQ_word())) {
                 pageInfo.setName(pageInfo.getQ_word());
             }
+            pageInfo.setEnabledStatus(1);
             pageInfo.setLimit(pageInfo.getPageSize());
             pageInfo.setPage(pageInfo.getPageNumber());
             selectPageTableVO.getValues().getGridResult().setPageNumber(pageInfo.getPageNumber());

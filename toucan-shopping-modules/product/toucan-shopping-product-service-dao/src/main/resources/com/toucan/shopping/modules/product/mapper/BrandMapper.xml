@@ -33,8 +33,13 @@
         </if>
 
         <if test="categoryId!=null and categoryId!='' ">
-            and t.category_id_cache like concat(#{categoryId},'%')
+            and t.category_id_cache like concat('%',#{categoryId},'%')
         </if>
+
+        <if test="enabledStatus!=null ">
+            and t.enabled_status = #{enabledStatus}
+        </if>
+
 
     </sql>
 
