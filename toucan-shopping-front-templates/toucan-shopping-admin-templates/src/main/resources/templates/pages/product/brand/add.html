@@ -39,37 +39,53 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">品牌名(英文)</label>
+        <label class="layui-form-label ">品牌名(英文)</label>
         <div class="layui-input-block">
-            <input type="text" name="englishName" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入品牌名(英文)" value="" class="layui-input">
+            <input type="text" name="englishName"  maxlength="255" lay-reqtext="不能为空" placeholder="请输入品牌名(英文)" value="" class="layui-input">
             <tip>填写品牌名(英文)。</tip>
         </div>
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label required">商标注册号</label>
+        <label class="layui-form-label">LOGO</label>
         <div class="layui-input-block">
-            <input type="text" name="registNumber1" lay-verify="required" maxlength="200" lay-reqtext="不能为空" placeholder="请输入商标注册号" value="" class="layui-input">
+            <button type="button" class="layui-btn" id="uploadLogoPath">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <input type="hidden" id="logoPath" name="logoPath"  >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">LOGO预览</label>
+        <div class="layui-input-block">
+            <img  id="previewLogoPath" th:width="240" th:height="220">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label ">商标注册号</label>
+        <div class="layui-input-block">
+            <input type="text" name="registNumber1"  maxlength="200" lay-reqtext="不能为空" placeholder="请输入商标注册号" value="" class="layui-input">
             <tip>填写商标注册号。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">商标注册号</label>
+        <label class="layui-form-label ">商标注册号</label>
         <div class="layui-input-block">
-            <input type="text" name="registNumber2" lay-verify="required" maxlength="200" lay-reqtext="不能为空" placeholder="请输入商标注册号" value="" class="layui-input">
+            <input type="text" name="registNumber2"  maxlength="200" lay-reqtext="不能为空" placeholder="请输入商标注册号" value="" class="layui-input">
             <tip>填写商标注册号。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">发源地</label>
+        <label class="layui-form-label ">发源地</label>
         <div class="layui-input-block">
-            <input type="text" name="seminary" lay-verify="required" maxlength="200" lay-reqtext="不能为空" placeholder="请输入发源地" value="" class="layui-input">
+            <input type="text" name="seminary"  maxlength="200" lay-reqtext="不能为空" placeholder="请输入发源地" value="" class="layui-input">
             <tip>填写发源地。</tip>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">品牌所有人</label>
+        <label class="layui-form-label ">品牌所有人</label>
         <div class="layui-input-block">
-            <input type="text" name="ownerName" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入所有人" value="" class="layui-input">
+            <input type="text" name="ownerName"  maxlength="100" lay-reqtext="不能为空" placeholder="请输入所有人" value="" class="layui-input">
             <tip>填写所有人。</tip>
         </div>
     </div>
@@ -110,6 +126,25 @@
 
         var tree = layui.tree;
         var dtree = layui.dtree;
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadLogoPath' //绑定元素
+            ,url: '/product/brand/upload/logo' //上传接口
+            ,data:{brandId:-1}
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewLogoPath").attr("src",res.data.httpLogoPath);
+                $("#logoPath").val(res.data.logoPath);
+            }
+            ,error: function(){
+                layer.msg("上传LOGO异常");
+            }
+        });
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {

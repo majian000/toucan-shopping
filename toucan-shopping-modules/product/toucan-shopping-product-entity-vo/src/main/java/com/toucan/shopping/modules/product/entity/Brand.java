@@ -27,6 +27,7 @@ public class Brand {
     private String seminary; //发源地 (仅在trademarkAreaType值为2时不为空)
     private String ownerName; //所有人姓名
     private String categoryIdCache; //关联的类别ID(用于快速检索)
+    private String logoPath; //LOGO路径
 
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

@@ -20,6 +20,7 @@ import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.entity.Brand;
@@ -35,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -70,6 +72,8 @@ public class BrandController extends UIController {
     @Autowired
     private FeignBrandCategoryService feignBrandCategoryService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -193,6 +197,62 @@ public class BrandController extends UIController {
 
 
 
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping("/upload/logo")
+    @ResponseBody
+    public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file, @RequestParam("id")Long brandId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String fileName = file.getOriginalFilename();
+            String fileExt = ".jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+            }
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("头像上传失败");
+            }
+            BrandVO brandVO = new BrandVO();
+            if(brandId!=null&&brandId.longValue()!=-1) { //给修改功能和注册功能使用,注册功能没有用户ID
+                brandVO.setId(brandId);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), brandVO);
+                ResultObjectVO brandResultVO = feignBrandService.findById(requestJsonVO.sign(), requestJsonVO);
+                if (brandResultVO.isSuccess()) {
+                    brandVO = brandResultVO.formatData(BrandVO.class);
+                    brandVO.setLogoPath(groupPath);
+
+                    //设置预览头像
+                    if (brandVO.getLogoPath() != null) {
+                        brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix() + brandVO.getLogoPath());
+                    }
+                    resultObjectVO.setData(brandVO);
+                }
+            }else{
+                brandVO.setLogoPath(groupPath);
+
+                //设置预览头像
+                if (brandVO.getLogoPath() != null) {
+                    brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix() + brandVO.getLogoPath());
+                }
+                resultObjectVO.setData(brandVO);
+            }
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(1);
+            resultObjectVO.setMsg("LOGO上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
 
 
 

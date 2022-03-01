@@ -140,6 +140,13 @@
                         }},
                     {field: 'chineseName', width:150, title: '品牌名(中文)'},
                     {field: 'englishName', width:150, title: '品牌名(英文)'},
+                    {field: 'httpLogoPath', width: 150, title: 'LOGO',
+                        templet: function (row) {
+                            if(row.httpLogoPath!=null) {
+                                return "<a href='" + row.httpLogoPath + "' target='_blank'><img src='" + row.httpLogoPath + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }},
                     {field: 'registNumber1', width:150, title: '商标注册号'},
                     {field: 'registNumber2',width:150,  title: '商标注册号'},
                     {field: 'seminary',  width:150,title: '发源地'},

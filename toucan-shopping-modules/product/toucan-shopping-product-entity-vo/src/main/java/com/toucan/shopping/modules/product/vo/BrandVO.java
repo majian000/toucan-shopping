@@ -37,5 +37,9 @@ public class BrandVO extends Brand {
      */
     private List<Long> idList;
 
+    /**
+     * logo外部访问地址
+     */
+    private String httpLogoPath;
 
 }
