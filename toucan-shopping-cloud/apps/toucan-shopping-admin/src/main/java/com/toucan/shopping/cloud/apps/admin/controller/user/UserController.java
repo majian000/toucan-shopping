@@ -1154,6 +1154,10 @@ public class UserController extends UIController {
         resultObjectVO.setCode(0);
         try{
             String fileName = file.getOriginalFilename();
+            if(!ImageUtils.isStaticImage(fileName))
+            {
+                throw new RuntimeException("请上传图片格式(.jpg|.jpeg|.png)");
+            }
             String fileExt = ".jpg";
             if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
             {

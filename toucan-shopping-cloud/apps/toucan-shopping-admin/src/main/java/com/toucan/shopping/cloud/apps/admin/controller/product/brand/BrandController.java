@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -208,6 +209,10 @@ public class BrandController extends UIController {
         resultObjectVO.setCode(0);
         try{
             String fileName = file.getOriginalFilename();
+            if(!ImageUtils.isStaticImage(fileName))
+            {
+                throw new RuntimeException("请上传图片格式(.jpg|.jpeg|.png)");
+            }
             String fileExt = ".jpg";
             if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
             {
@@ -218,7 +223,7 @@ public class BrandController extends UIController {
 
             if(StringUtils.isEmpty(groupPath))
             {
-                throw new RuntimeException("头像上传失败");
+                throw new RuntimeException("LOGO上传失败");
             }
             BrandVO brandVO = new BrandVO();
             if(brandId!=null&&brandId.longValue()!=-1) { //给修改功能和注册功能使用,注册功能没有用户ID

@@ -95,7 +95,7 @@ public class UserHeadSculptureApproveApiController extends BaseController {
 
             if (!ImageUtils.isStaticImage(headSculptureFile.getOriginalFilename())) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD - 4);
-                resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png|bmp)");
+                resultObjectVO.setMsg("请上传图片格式(.jpg|.jpeg|.png)");
                 return resultObjectVO;
             }
 
