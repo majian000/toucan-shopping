@@ -201,11 +201,20 @@ public class ShopProductApiController extends BaseController {
                     String name = publishProductVO.getName();
                     Set<String> keys = productSkuVO.getAttributeMap().keySet();
                     Iterator keyIt = keys.iterator();
+                    int pos = 0;
+                    StringBuilder attributeValueGroup = new StringBuilder();
                     while(keyIt.hasNext())
                     {
-                        name+=" " +productSkuVO.getAttributeMap().get(keyIt.next());
+                        if(pos!=0)
+                        {
+                            attributeValueGroup.append("_");
+                        }
+                        String value = productSkuVO.getAttributeMap().get(keyIt.next());
+                        name+=" " +value;
+                        attributeValueGroup.append(value);
+                        pos++;
                     }
-
+                    productSkuVO.setAttributeValueGroup(attributeValueGroup.toString());
                     productSkuVO.setName(name);
                     productSkuVO.setAppCode(publishProductVO.getAppCode());
                 }

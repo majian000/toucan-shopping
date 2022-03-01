@@ -331,7 +331,7 @@ function initAttributes(categoryId,callback)
                     var attributeHtmls="<div class='item' style='clear:both;text-align: left;' >";
                     attributeHtmls+="<div style='padding-left: 6%;'>";
                     attributeHtmls+=" <a>"+attribute.attributeName+"</a>";
-                    attributeHtmls+=" <input type='text' id='attributeInput_"+attribute.id+"' name='attributeValue' class='releaseProductInputText'  style='width:200px;' tabindex='5'  placeholder='请输入自定义值' />";
+                    attributeHtmls+=" <input type='text' id='attributeInput_"+attribute.id+"' name='attributeValue' class='releaseProductInputText'  style='width:200px;' tabindex='5'  maxlength='25' placeholder='请输入自定义值' />";
                     attributeHtmls+="  <input type='button'  class='releaseProductButton attributeTableAddBtn' value='添加' attr-data='"+attribute.id+"'   />";
                     attributeHtmls+=" </div> ";
                     attributeHtmls+=" <div class='attributeList'> ";
@@ -372,6 +372,15 @@ function initAttributes(categoryId,callback)
                     if(attVal!=null)
                     {
                         attVal = attVal.replace(/(^\s*)|(\s*$)/g, "");
+                    }
+                    var attributeValueRegex = /^[\u0391-\uFFE5a-zA-Z0-9\【\】\(\)\（\）\s]{1,25}$/;
+                    if(!attributeValueRegex.test(attVal))
+                    {
+                        $.message({
+                            message: "必须由1-25位的组成,不能包含特殊符号",
+                            type: 'error'
+                        });
+                        return;
                     }
                     var isFind = false;
                     $("#rpai"+attId).find('li').each(function() {

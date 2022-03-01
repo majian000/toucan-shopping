@@ -23,6 +23,8 @@ public class ProductSku {
 
     private String attributes; //这个SKU的属性
 
+    private String attributeValueGroup; //这个SKU的属性值组合,多个用_分割
+
     private String shopProductUuid; //店铺SPU的UUID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)

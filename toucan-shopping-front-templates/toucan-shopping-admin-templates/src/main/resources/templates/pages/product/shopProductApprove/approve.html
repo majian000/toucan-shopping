@@ -29,6 +29,8 @@
                 <ul class="layui-tab-title">
                     <li class="layui-this">商品信息</li>
                     <li>商品预览</li>
+                    <li>支付信息</li>
+                    <li>物流信息</li>
                     <li>商品规格</li>
                 </ul>
 
@@ -120,6 +122,25 @@
                                 <input type="text"  th:value="${model.sellerNo}"  class="layui-input">
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-tab-item">
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品预览</label>
+                            <div class="layui-input-block">
+                                <div class="layui-carousel" id="productPhotos">
+                                    <div carousel-item>
+                                        <div th:each="httpPreviewPhotoPath : ${model.httpPreviewPhotoPaths}">
+                                            <img th:src="${httpPreviewPhotoPath}" th:width="450" th:height="450" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+
                         <div class="layui-form-item" >
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >付款方式</label>
@@ -145,31 +166,20 @@
                                     <a th:if="${model.changeOrReturn eq 1}">退换货承诺</a>
                                 </div>
                             </div>
-                            <div class="layui-inline" style="width:40%">
-                                <label class="layui-form-label " >提取方式</label>
-                                <div class="layui-input-block "  style="padding-top:7px;" >
-                                    <a th:if="${#strings.contains(model.etractMethod,'1')}">使用物流配送</a>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+
+                        <div class="layui-inline" style="width:40%">
+                            <label class="layui-form-label " >提取方式</label>
+                            <div class="layui-input-block "  style="padding-top:7px;" >
+                                <a th:if="${#strings.contains(model.etractMethod,'1')}">使用物流配送</a>
                             </div>
                         </div>
                     </div>
                     <div class="layui-tab-item">
 
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">商品预览</label>
-                            <div class="layui-input-block">
-                                <div class="layui-carousel" id="productPhotos">
-                                    <div carousel-item>
-                                        <div th:each="httpPreviewPhotoPath : ${model.httpPreviewPhotoPaths}">
-                                            <img th:src="${httpPreviewPhotoPath}" th:width="450" th:height="450" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div class="layui-tab-item">222222222</div>
                 </div>
             </div>
         </div>
