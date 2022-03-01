@@ -138,6 +138,21 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SKU预览</label>
+                            <div class="layui-input-block">
+                                <div class="layui-carousel" id="productSkuPhotos">
+                                    <div carousel-item>
+                                        <div th:each="httpSkuPreviewPhotoPath : ${model.httpSkuPreviewPhotoPaths}">
+                                            <img th:src="${httpSkuPreviewPhotoPath}" th:width="450" th:height="450" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="layui-tab-item">
 
@@ -179,6 +194,7 @@
                     </div>
                     <div class="layui-tab-item">
 
+                        <table class="layui-hide" id="productSkuTable" ></table>
                     </div>
                 </div>
             </div>
@@ -200,11 +216,14 @@
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form','element','carousel'], function () {
+    layui.use(['form','element', 'table','carousel'], function () {
         var $ = layui.jquery,
             form = layui.form,
+            table = layui.table,
             element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
         var carousel = layui.carousel;
+
+        var shopProductId = $("#id").val();
 
         //建造实例化
         carousel.render({
@@ -216,6 +235,19 @@
             //indicator:'outside',
             indicator: 'outside'	//这个属性：小圆点在外面
         });
+
+
+        //建造实例化
+        carousel.render({
+            elem: '#productSkuPhotos',
+            width: '450px', //设置背景容器的宽度
+            height: '450px', //设置背景容器的高度
+            arrow: 'always', //始终显示箭头,不会消失
+            //anim: 'updown' //切换动画方式:anim
+            //indicator:'outside',
+            indicator: 'outside'	//这个属性：小圆点在外面
+        });
+
 
         //监听提交
         form.on('submit(passBtn)', function (data) {
@@ -244,6 +276,40 @@
             });
             return false;
         });
+
+
+
+        table.render({
+            elem: '#productSkuTable',
+            url: "[[@{/}]]product/shopProductApprove/query/product/sku/list",
+            method:'POST',
+            where:{shopProductId:shopProductId},
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {field: 'id',  title: '主键', width: 150},
+                    {field: 'name', width: 150, title: '名称'},
+                    {field: 'price', width: 150, title: '单价'},
+                    {field: 'attributes', width: 150, title: '属性'},
+                    {field: 'stockNum', width: 150, title: '库存数量'},
+                    {field: 'httpMainPhoto', width: 150, title: '预览图',
+                        templet: function (row) {
+                            if(row.httpMainPhoto!=null) {
+                                return "<a href='" + row.httpMainPhoto + "' target='_blank'><img src='" + row.httpMainPhoto + "' width='30' height='30'  /></a>";
+                            }
+                            return "";
+                        }}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+        
+        
     });
 </script>
 </body>

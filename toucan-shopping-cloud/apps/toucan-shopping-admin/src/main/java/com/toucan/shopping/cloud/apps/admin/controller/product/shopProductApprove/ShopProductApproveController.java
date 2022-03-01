@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionServi
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
@@ -20,12 +21,15 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandVO;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +81,9 @@ public class ShopProductApproveController extends UIController {
 
     @Autowired
     private FeignSellerShopService feignSellerShopService;
+
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
 
 
 
@@ -204,6 +211,17 @@ public class ShopProductApproveController extends UIController {
                             for(String previewPhotoPath:shopProductVOTmp.getPreviewPhotoPaths())
                             {
                                 shopProductVOTmp.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
+                            }
+                        }
+
+                        if(CollectionUtils.isNotEmpty(shopProductVOTmp.getProductSkuVOList()))
+                        {
+                            shopProductVOTmp.setHttpSkuPreviewPhotoPaths(new LinkedList<>());
+                            for(ProductSkuVO productSkuVO:shopProductVOTmp.getProductSkuVOList())
+                            {
+                                if(StringUtils.isNotEmpty(productSkuVO.getProductPreviewPath())) {
+                                    shopProductVOTmp.getHttpSkuPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
+                                }
                             }
                         }
                     }
@@ -504,6 +522,56 @@ public class ShopProductApproveController extends UIController {
 
 
 
+    /**
+     * 查询SKU列表
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO queryProductSkuList(HttpServletRequest request, ProductSkuPageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            if(pageInfo.getShopProductId()==null)
+            {
+                tableVO.setCode(TableVO.FAILD);
+                tableVO.setMsg("商品ID不能为空");
+                return tableVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            ResultObjectVO resultObjectVO = feignProductSkuService.queryListPage(requestJsonVO);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
+                    List<ProductSkuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ProductSkuVO.class);
+                    if(CollectionUtils.isNotEmpty(list))
+                    {
+                        for(ProductSkuVO productSkuVO:list)
+                        {
+                            if(productSkuVO.getProductPreviewPath()!=null) {
+                                productSkuVO.setHttpMainPhoto(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
+                            }
+                        }
+
+                    }
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData((List)list);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
 
 
 
