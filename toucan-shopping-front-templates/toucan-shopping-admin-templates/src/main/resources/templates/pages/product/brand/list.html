@@ -12,6 +12,13 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+    </style>
 </head>
 <body>
 
@@ -121,7 +128,7 @@
                 [
                     {type: "checkbox", width: 100},
                     {field: 'id',width: 170,  title: '主键'},
-                    {field: 'categoryNamePathList', width:150, title: '所属类目',
+                    {field: 'categoryNamePathList', width:650, title: '所属类目',
                         templet: function (row) {
                             return row.categoryNamePathList.join("、");
                         }},
@@ -140,7 +147,7 @@
                         }},
                     {field: 'chineseName', width:150, title: '品牌名(中文)'},
                     {field: 'englishName', width:150, title: '品牌名(英文)'},
-                    {field: 'httpLogoPath',  title: 'LOGO',
+                    {field: 'httpLogoPath', width:150, title: 'LOGO',
                         templet: function (row) {
                             if(row.httpLogoPath!=null) {
                                 return "<a href='" + row.httpLogoPath + "' target='_blank'><img src='" + row.httpLogoPath + "' width='100' height='100'  /></a>";

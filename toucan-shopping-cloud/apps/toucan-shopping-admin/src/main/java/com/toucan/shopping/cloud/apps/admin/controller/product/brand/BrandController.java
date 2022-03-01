@@ -124,6 +124,12 @@ public class BrandController extends UIController {
                                     }
                                 }
                             }
+
+                            if(StringUtils.isNotEmpty(brandVO.getLogoPath()))
+                            {
+                                brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix()+brandVO.getLogoPath());
+                            }
+
                         }
                         requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categories);
                         resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO);
@@ -347,6 +353,11 @@ public class BrandController extends UIController {
                                 }
                                 brandVO.setCategoryNamePath(categoryNamePath.toString());
                             }
+                        }
+
+                        if(StringUtils.isNotEmpty(brandVO.getLogoPath()))
+                        {
+                            brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix()+brandVO.getLogoPath());
                         }
 
                         request.setAttribute("model",brandVO);

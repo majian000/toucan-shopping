@@ -115,16 +115,17 @@ public class BrandController {
                 return resultObjectVO;
             }
 
-            queryBrand = new BrandVO();
-            queryBrand.setEnglishName(brandVo.getEnglishName());
-            queryBrand.setDeleteStatus(0);
+            if(StringUtils.isNotEmpty(brandVo.getEnglishName())) {
+                queryBrand = new BrandVO();
+                queryBrand.setEnglishName(brandVo.getEnglishName());
+                queryBrand.setDeleteStatus(0);
 
-            brandList = brandService.queryList(queryBrand);
-            if(!CollectionUtils.isEmpty(brandList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg(brandVo.getEnglishName()+"名称已存在!");
-                return resultObjectVO;
+                brandList = brandService.queryList(queryBrand);
+                if (!CollectionUtils.isEmpty(brandList)) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg(brandVo.getEnglishName() + "名称已存在!");
+                    return resultObjectVO;
+                }
             }
 
             Brand entity = new Brand();
