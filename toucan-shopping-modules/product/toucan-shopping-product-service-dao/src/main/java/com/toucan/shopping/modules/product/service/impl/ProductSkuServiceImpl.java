@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.product.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.mapper.ProductSkuMapper;
+import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,14 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
 
+    @Override
+    public PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<ProductSkuVO> pageInfo = new PageInfo();
+        pageInfo.setList(productSkuMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(productSkuMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
+    }
 
     @Transactional
     @Override

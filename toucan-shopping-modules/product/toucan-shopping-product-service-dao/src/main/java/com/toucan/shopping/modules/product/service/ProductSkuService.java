@@ -2,7 +2,9 @@ package com.toucan.shopping.modules.product.service;
 
 
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 
 import java.util.List;
@@ -12,6 +14,14 @@ public interface ProductSkuService {
 
     List<ProductSkuVO> queryList(ProductSkuVO productSkuVO);
 
+
+
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo);
 
     /**
      * 保存sku

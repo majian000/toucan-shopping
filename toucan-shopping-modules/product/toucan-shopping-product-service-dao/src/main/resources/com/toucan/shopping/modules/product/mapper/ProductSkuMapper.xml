@@ -32,6 +32,20 @@
 
     </resultMap>
 
+
+    <sql id="queryListPageWhere">
+
+        <if test="shopProductId!=null and shopProductId!=-1">
+            and t.shop_product_id = #{shopProductId}
+        </if>
+
+
+
+        and t.delete_status = 0
+
+    </sql>
+
+
     <select id="queryList" resultMap="productSkuVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSkuVO">
         select t.* from t_product_sku t
         <where>
@@ -78,6 +92,28 @@
         </foreach>
 
     </insert>
+
+
+
+    <select id="queryListPage" resultMap="productSkuVOMap" parameterType="com.toucan.shopping.modules.product.page.ProductSkuPageInfo">
+        select t.* from t_product_sku t
+        <where>
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ProductSkuPageInfo">
+        select count(*) from t_product_sku t
+        <where>
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
 
     <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">
         select * from t_product_sku where id=#{skuId} for update

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.product.mapper;
 
 import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -25,5 +26,21 @@ public interface ProductSkuMapper {
 
 
     int deleteByShopProductId(Long shopProductId);
+
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<ProductSkuVO> queryListPage(ProductSkuPageInfo pageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryListPageCount(ProductSkuPageInfo pageInfo);
 
 }
