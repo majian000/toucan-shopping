@@ -202,7 +202,7 @@ public class BrandController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping("/upload/logo")
     @ResponseBody
-    public ResultObjectVO  uploadHeadSculpture(@RequestParam("file") MultipartFile file, @RequestParam("id")Long brandId)
+    public ResultObjectVO  uploadLogo(@RequestParam("file") MultipartFile file, @RequestParam("id")Long brandId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setCode(0);
