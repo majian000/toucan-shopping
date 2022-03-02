@@ -14,15 +14,14 @@
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
     <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
 
-    <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
-    <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
-    <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
-
 
     <style>
         .layui-table-cell {
             height: auto !important;
             white-space: normal;
+        }
+        .ztree *{
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
         }
     </style>
 
@@ -31,14 +30,24 @@
 
 <span th:replace="common_page::common"></span>
 
-<div class="layuimini-container">
-    <div class="layuimini-main">
+<div class="layui-layout">
+    <div class="layui-side ">
 
-        <div class="layui-layout layui-layout-admin">
-            <div class="layui-side ">
-                <ul id="categoryTree" class="ztree"></ul>
+        <div class="layuimini-container" style="height:90%">
+            <div class="layuimini-main">
+                <div class="layui-card">
+                    <div class="layui-card-header">分类树</div>
+                    <div class="layui-card-body" >
+                        <ul id="categoryTree" class="ztree"></ul>
+                    </div>
+                </div>
             </div>
-            <div class="layui-body">
+        </div>
+    </div>
+    <div class="layui-body">
+
+        <div class="layuimini-container">
+            <div class="layuimini-main">
 
                 <fieldset class="table-search-fieldset">
                     <div style="margin: 10px 10px 10px 10px">
@@ -68,9 +77,9 @@
                 </script>
             </div>
         </div>
-
     </div>
 </div>
+
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
@@ -78,13 +87,14 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
+    }).use(['form', 'table','tree','dtree','jquery'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
         var index;
         var tree = layui.tree;
         var loadding;
+        var loaddingTree;
         var dtree = layui.dtree;
 
         $.fn.serializeJson=function(){
@@ -147,6 +157,14 @@
                             return row.approveStatus;
                         }
                     },
+                    {field: 'name',width: 400,  title: '商品名称'},
+                    {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
+                        templet: function (row) {
+                            if(row.httpMainPhotoFilePath!=null) {
+                                return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
                     {field: 'uuid',width: 300,  title: '店铺商品UUID'},
                     {field: 'categoryPath',width: 350,  title: '分类路径'},
                     {field: 'categoryName',width: 150,  title: '分类名称'},
@@ -156,14 +174,6 @@
                     {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
                     {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
                     {field: 'productId',width: 150,  title: '平台商品ID'},
-                    {field: 'name',width: 400,  title: '商品名称'},
-                    {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
-                        templet: function (row) {
-                            if(row.httpMainPhotoFilePath!=null) {
-                                return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
                     {field: 'attributes',width: 150,  title: '属性列表'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
@@ -280,80 +290,61 @@
             layui.form.render();
         });
 
+
         var setting = {
             async: {
                 enable: true,
-                url: getUrl
+                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
+                autoParam:["id", "pid", "name"],
+                dataFilter: filter
             },
-            check: {
-                enable: false
-            },
-            data: {
-                simpleData: {
-                    enable: true
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -1
                 }
             },
-            view: {
-                expandSpeed: ""
+            view:{
+                showIcon: false
             },
             callback: {
-                beforeExpand: beforeExpand,
-                onAsyncSuccess: onAsyncSuccess,
-                onAsyncError: onAsyncError
+                onClick: categoryTreeClick
             }
         };
 
+        function categoryTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+            alert(treeNode.id);
+        };
 
-        var zNodes =[
-            {name:"根节点", id:"1", count:500, times:1, isParent:true}
-        ];
+        initCategoryTree();
 
-        var  className = "dark", perTime = 100;
-        function getUrl(treeId, treeNode) {
-            return "[[@{/}]]product/shopProductApprove/query/category/tree/pid/" + treeNode.id;
+        function filter(treeId, parentNode, data) {
+            return data.data;
         }
-        function beforeExpand(treeId, treeNode) {
-            if (!treeNode.isAjaxing) {
-                treeNode.times = 1;
-                ajaxGetNodes(treeNode, "refresh");
-                return true;
-            } else {
-                alert("zTree 正在下载数据中，请稍后展开节点。。。");
-                return false;
-            }
-        }
-        function onAsyncSuccess(event, treeId, treeNode, msg) {
-            if (!msg || msg.length == 0) {
-                return;
-            }
-            var zTree = $.fn.zTree.getZTreeObj("categoryTree"),
-                totalCount = treeNode.count;
-            if (treeNode.children.length < totalCount) {
-                setTimeout(function() {ajaxGetNodes(treeNode);}, perTime);
-            } else {
-                treeNode.icon = "";
-                zTree.updateNode(treeNode);
-                zTree.selectNode(treeNode.children[0]);
-                className = (className === "dark" ? "":"dark");
-            }
-        }
-        function onAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
-            var zTree = $.fn.zTree.getZTreeObj("categoryTree");
-            alert("异步获取数据出现异常。");
-            treeNode.icon = "";
-            zTree.updateNode(treeNode);
-        }
-        function ajaxGetNodes(treeNode, reloadType) {
-            var zTree = $.fn.zTree.getZTreeObj("categoryTree");
-            if (reloadType == "refresh") {
-                treeNode.icon = "[[@{/}]]static/lib/zTree/css/zTreeStyle/img/loading.gif";
-                zTree.updateNode(treeNode);
-            }
-            zTree.reAsyncChildNodes(treeNode, reloadType, true);
+        //初始化树
+        function initCategoryTree(){
+
+            loaddingTree = layer.load();
+            $.ajax({
+                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
+                type:"POST",
+                dataType: "json",
+                success: function(data){
+                    var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                    layer.close(loaddingTree);
+                }
+            });
         }
 
-
-        $.fn.zTree.init($("#categoryTree"), setting, zNodes);
 
         /**
          * toolbar监听事件
@@ -436,6 +427,10 @@
 
     });
 </script>
+
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 
 </body>
 </html>
