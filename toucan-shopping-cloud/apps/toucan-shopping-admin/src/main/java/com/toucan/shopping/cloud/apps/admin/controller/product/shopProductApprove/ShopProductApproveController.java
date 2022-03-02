@@ -596,6 +596,26 @@ public class ShopProductApproveController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/category/tree/pid/{parentId}",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryCategoryTree(HttpServletRequest request,@PathVariable Long parentId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            CategoryVO query = new CategoryVO();
+            query.setParentId(parentId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            resultObjectVO = feignCategoryService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }
