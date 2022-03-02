@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+
+
+
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+    </style>
+
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <div class="layui-layout layui-layout-admin">
+            <div class="layui-side ">
+                <div id='categoryTree'></div>
+            </div>
+            <div class="layui-body">
+
+                <fieldset class="table-search-fieldset">
+                    <div style="margin: 10px 10px 10px 10px">
+                        <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                            <input type="hidden" id="categoryId" name="categoryId">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+
+                <script type="text/html" id="toolbarDemo">
+                    <div class="layui-btn-container">
+                        <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                    </div>
+                </script>
+
+                <table class="layui-hide" id="productSpuTable" lay-filter="productSpuTableFilter"></table>
+
+                <script type="text/html" id="productSpuTableBar">
+                    <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                </script>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form', 'table','tree','dtree'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        var dtree = layui.dtree;
+
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#userSearchForm").serializeJson();
+            return formParam;
+        }
+
+        table.render({
+            elem: '#productSpuTable',
+            url: "[[@{/}]]product/productSpu/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "checkbox", width: 50},
+                    {field: 'id',  title: '主键', width: 150},
+                    {field: 'approveStatus',width: 150,   title: '审核状态',
+                        templet: function (row) {
+                            if(row.approveStatus == null){
+                                return "";
+                            }
+                            if(row.approveStatus == "1"){
+                                return "审核中";
+                            }
+                            if(row.approveStatus == "2"){
+                                return "<a style='color:green'>审核通过</a>";
+                            }
+                            if(row.approveStatus == "3"){
+                                return "<a style='color:red'>审核驳回</a>";
+                            }
+                            return row.approveStatus;
+                        }
+                    },
+                    {field: 'uuid',width: 300,  title: '店铺商品UUID'},
+                    {field: 'categoryPath',width: 350,  title: '分类路径'},
+                    {field: 'categoryName',width: 150,  title: '分类名称'},
+                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
+                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
+                    {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
+                    {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
+                    {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
+                    {field: 'productId',width: 150,  title: '平台商品ID'},
+                    {field: 'name',width: 400,  title: '商品名称'},
+                    {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
+                        templet: function (row) {
+                            if(row.httpMainPhotoFilePath!=null) {
+                                return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'attributes',width: 150,  title: '属性列表'},
+                    {field: 'status',width: 150,   title: '上架状态',
+                        templet: function (row) {
+                            if(row.status == null){
+                                return "";
+                            }
+                            if(row.status == "0"){
+                                return "未上架";
+                            }
+                            if(row.status == "1"){
+                                return "已上架";
+                            }
+                            return row.status;
+                        }
+                    },
+                    {field: 'shopId',width: 300,  title: '店铺ID'},
+                    {field: 'shopName',width: 300,  title: '店铺名称'},
+                    {field: 'rejectText',width: 150,   title: '驳回原因'},
+                    {field: 'sellerNo',width: 150,   title: '卖家编码'},
+                    {field: 'articleNumber',width: 150, title: '货号'},
+                    {field: 'payMethod',width: 150,   title: '付款方式',
+                        templet: function (row) {
+                            if(row.payMethod == null){
+                                return "";
+                            }
+                            if(row.payMethod == "1"){
+                                return "一口价(普通交易模式)";
+                            }
+                            return row.payMethod;
+                        }
+                    },
+                    {field: 'buckleInventoryMethod',width: 150,   title: '库存计数',
+                        templet: function (row) {
+                            if(row.buckleInventoryMethod == null){
+                                return "";
+                            }
+                            if(row.buckleInventoryMethod == "1"){
+                                return "买家拍下减库存";
+                            }
+                            if(row.buckleInventoryMethod == "2"){
+                                return "买家付款减库存";
+                            }
+                            return row.buckleInventoryMethod;
+                        }
+                    },
+                    {field: 'giveInvoice',width: 150,   title: '开发票',
+                        templet: function (row) {
+                            if(row.giveInvoice == null){
+                                return "";
+                            }
+                            if(row.giveInvoice == "1"){
+                                return "支持";
+                            }
+                            if(row.giveInvoice == "0"){
+                                return "不支持";
+                            }
+                            return row.giveInvoice;
+                        }
+                    },
+                    {field: 'changeOrReturn',width: 150,   title: '退换货承诺',
+                        templet: function (row) {
+                            if(row.changeOrReturn == null){
+                                return "";
+                            }
+                            if(row.changeOrReturn == "1"){
+                                return "承诺";
+                            }
+                            if(row.changeOrReturn == "0"){
+                                return "不承诺";
+                            }
+                            return row.changeOrReturn;
+                        }
+                    },
+                    {field: 'etractMethod',width: 150,   title: '提取方式',
+                        templet: function (row) {
+                            var etractMethodText = "";
+                            if(row.etractMethod!=null) {
+                                if (row.etractMethod.indexOf("1") != -1) {
+                                    etractMethodText += "用物流配送"
+                                }
+                            }
+                            return etractMethodText;
+                        }
+                    },
+                    {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
+                    {field: 'createDate', width: 150, title: '创建时间'},
+                    {field: 'updateDate', width: 150, title: '修改时间'},
+                    {title: '操作', minWidth: 300, toolbar: '#productSpuTableBar', align: "center"}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('productSpuTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+        $("#data-reset-btn").click(function(){
+            $("#categoryId").val("");
+            $("#userSearchForm")[0].reset();
+            layui.form.render();
+        });
+
+
+        $.ajax({
+            url:"[[@{/}]]product/productSpu/query/category/tree",
+            contentType: "application/json; charset=utf-8",
+            type:'GET',
+            data:null,
+            success:function(data){
+                if(data.code==1)
+                {
+                    //渲染
+                    var inst1 = tree.render({
+                        elem: '#categoryTree'  //绑定元素
+                        ,data: data.data,
+                        click: function(obj){
+                            $("#categoryId").val(obj.data.id);
+                        }
+                    });
+                }
+            },
+            complete:function()
+            {
+            }
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(productSpuTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加商品',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: "[[@{/product/productSpu/addPage}]]",
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
+                var checkStatus = table.checkStatus('productSpuTable')
+                    , data = checkStatus.data;
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定删除商品?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/productSpu/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('productSpuTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+
+
+        //监听表格复选框选择
+        table.on('checkbox(productSpuTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(productSpuTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'approve') {
+
+                var index = layer.open({
+                    title: '审核商品',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]product/productSpu/approvePage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

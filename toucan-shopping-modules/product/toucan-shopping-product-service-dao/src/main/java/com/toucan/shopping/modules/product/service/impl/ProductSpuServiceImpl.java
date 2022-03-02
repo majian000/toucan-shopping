@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.product.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.ProductSpu;
 import com.toucan.shopping.modules.product.mapper.ProductSpuMapper;
+import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.service.ProductSpuService;
 import com.toucan.shopping.modules.product.vo.ProductSpuVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +30,14 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     @Override
     public List<ProductSpuVO> queryList(ProductSpuVO query) {
         return productSpuMapper.queryList(query);
+    }
+
+    @Override
+    public PageInfo<ProductSpuVO> queryListPage(ProductSpuPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<ProductSpuVO> pageInfo = new PageInfo();
+        pageInfo.setList(productSpuMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(productSpuMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
     }
 }

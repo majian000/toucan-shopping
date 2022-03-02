@@ -18,6 +18,20 @@
         
     </resultMap>
 
+    <resultMap id="productSpuVOMap" type="com.toucan.shopping.modules.product.vo.ProductSpuVO" extends="productMap">
+
+    </resultMap>
+
+
+    <sql id="queryListPageWhere">
+
+        <if test="id!=null and id!=-1">
+            and t.id = #{id}
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
 
 
     <resultMap id="productVOMap" type="com.toucan.shopping.modules.product.vo.ProductSpuVO" extends="productMap">
@@ -60,5 +74,27 @@
 
         </where>
     </select>
+
+
+
+    <select id="queryListPage" resultMap="productSpuVOMap" parameterType="com.toucan.shopping.modules.product.page.ProductSpuPageInfo">
+        select t.* from t_product_spu t
+        <where>
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ProductSpuPageInfo">
+        select count(*) from t_product_spu t
+        <where>
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
 
 </mapper>
