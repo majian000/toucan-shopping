@@ -263,12 +263,24 @@ public class ShopProductApiController extends BaseController {
             //上传商品主图
             publishProductVO.setMainPhotoFilePath(imageUploadService.uploadFile(publishProductVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(publishProductVO.getMainPhotoFile().getOriginalFilename())));
             publishProductVO.setMainPhotoFile(null);
+            if(StringUtils.isEmpty(publishProductVO.getMainPhotoFilePath()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,商品主图上传失败!");
+                return resultObjectVO;
+            }
 
             //上传SKU表商品主图
             for(ProductSkuVO productSkuVO:publishProductVO.getProductSkuVOList())
             {
                 productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                 productSkuVO.setMainPhotoFile(null);
+                if(StringUtils.isEmpty(productSkuVO.getProductPreviewPath()))
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("发布失败,商品主图上传失败!");
+                    return resultObjectVO;
+                }
             }
 
             //上传商品预览图
@@ -277,7 +289,14 @@ public class ShopProductApiController extends BaseController {
                 publishProductVO.setPreviewPhotoPaths(new LinkedList<>());
                 for(MultipartFile multipartFile:previewPhotoFiles)
                 {
-                    publishProductVO.getPreviewPhotoPaths().add(imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename())));
+                    String productPreviewPath = imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename()));
+                    if(StringUtils.isEmpty(productPreviewPath))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品预览图上传失败!");
+                        return resultObjectVO;
+                    }
+                    publishProductVO.getPreviewPhotoPaths().add(productPreviewPath);
                 }
             }
 
