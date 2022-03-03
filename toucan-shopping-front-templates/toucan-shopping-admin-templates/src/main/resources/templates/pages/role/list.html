@@ -392,6 +392,7 @@
                         for (var j = 0; j < functionsArray.length; j++) {
                             functionsArray[j]={functionId:functionsArray[j].functionId};
                         }
+                        //TODO:使用ztree重构这里,传节点对象的时候 将节点对象是否是半选状态也传过去 (后台根据半选状态 选择是否查询子节点进行关联)
                         $.ajax({
                             url: "[[@{/}]]role/connect/functions",
                             contentType: "application/json; charset=utf-8",
