@@ -404,112 +404,114 @@ public class ShopProductApproveController extends UIController {
             if(resultObjectVO.isSuccess()) {
                 if(resultObjectVO.getData()!=null) {
                     List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
-                    List<Long> categoryIdList = new LinkedList<>();
-                    for(CategoryVO cv:categoryVOS)
-                    {
-                        categoryIdList.add(cv.getId());
+                    if(CollectionUtils.isNotEmpty(categoryVOS)) {
+                        List<Long> categoryIdList = new LinkedList<>();
+                        for (CategoryVO cv : categoryVOS) {
+                            categoryIdList.add(cv.getId());
+                        }
+                        categoryIdList.add(pageInfo.getCategoryId());
+                        pageInfo.setCategoryIdList(categoryIdList);
+                        pageInfo.setCategoryId(null);
                     }
-                    pageInfo.setCategoryIdList(categoryIdList);
-                    pageInfo.setCategoryId(null);
-                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-                    resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
-                    if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
-                        if (resultObjectVO.getData() != null) {
-                            Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
-                            tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
-                            List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductVO.class);
-                            if (CollectionUtils.isNotEmpty(list)) {
-                                Long[] categoryIds = new Long[list.size()];
-                                Long[] shopCategoryIds = new Long[list.size()];
-                                List<Long> brandIdList = new LinkedList<>();
-                                List<Long> shopIdList = new LinkedList<>();
+                }
+            }
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
+            resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+            if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
+                if (resultObjectVO.getData() != null) {
+                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
+                    List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductVO.class);
+                    if (CollectionUtils.isNotEmpty(list)) {
+                        Long[] categoryIds = new Long[list.size()];
+                        Long[] shopCategoryIds = new Long[list.size()];
+                        List<Long> brandIdList = new LinkedList<>();
+                        List<Long> shopIdList = new LinkedList<>();
 
-                                boolean brandExists = false;
-                                boolean shopCategoryExists = false;
-                                boolean shopExists = false;
-                                for (int i = 0; i < list.size(); i++) {
-                                    ShopProductVO shopProductVO = list.get(i);
-                                    categoryIds[i] = shopProductVO.getCategoryId();
+                        boolean brandExists = false;
+                        boolean shopCategoryExists = false;
+                        boolean shopExists = false;
+                        for (int i = 0; i < list.size(); i++) {
+                            ShopProductVO shopProductVO = list.get(i);
+                            categoryIds[i] = shopProductVO.getCategoryId();
 
-                                    //设置品牌ID
-                                    brandExists = false;
-                                    for (Long brandId : brandIdList) {
-                                        if (shopProductVO.getBrandId() != null && brandId != null
-                                                && brandId.longValue() == shopProductVO.getBrandId().longValue()) {
-                                            brandExists = true;
-                                            break;
-                                        }
-
-                                    }
-                                    if (!brandExists) {
-                                        if (shopProductVO.getBrandId() != null) {
-                                            brandIdList.add(shopProductVO.getBrandId());
-                                        }
-                                    }
-
-
-                                    //设置店铺分类ID
-                                    shopCategoryExists = false;
-                                    for (int sci = 0; sci < shopCategoryIds.length; sci++) {
-                                        Long shopCategoryId = shopCategoryIds[sci];
-                                        if (shopProductVO.getShopCategoryId() != null && shopCategoryId != null
-                                                && shopCategoryId.longValue() == shopProductVO.getShopCategoryId().longValue()) {
-                                            shopCategoryExists = true;
-                                            break;
-                                        }
-
-                                    }
-                                    if (!shopCategoryExists) {
-                                        if (shopProductVO.getShopCategoryId() != null) {
-                                            shopCategoryIds[i] = shopProductVO.getShopCategoryId();
-                                        }
-                                    }
-
-
-                                    //设置店铺ID
-                                    shopExists = false;
-                                    for (Long shopId : shopIdList) {
-                                        if (shopProductVO.getShopId() != null && shopId != null
-                                                && shopId.longValue() == shopProductVO.getShopId().longValue()) {
-                                            shopExists = true;
-                                            break;
-                                        }
-
-                                    }
-                                    if (!shopExists) {
-                                        if (shopProductVO.getShopId() != null) {
-                                            shopIdList.add(shopProductVO.getShopId());
-                                        }
-                                    }
-
-                                }
-
-
-                                //查询类别名称
-                                this.queryCategory(list, categoryIds);
-
-
-                                //查询店铺类别名称
-                                this.queryShopCategory(list, shopCategoryIds);
-
-                                //查询品牌名称
-                                this.queryBrand(list, brandIdList);
-
-                                //查询店铺名称
-                                this.queryShop(list, shopIdList);
-
-
-                                for (ShopProductVO shopProductVO : list) {
-                                    if (shopProductVO.getMainPhotoFilePath() != null) {
-                                        shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductVO.getMainPhotoFilePath());
-                                    }
+                            //设置品牌ID
+                            brandExists = false;
+                            for (Long brandId : brandIdList) {
+                                if (shopProductVO.getBrandId() != null && brandId != null
+                                        && brandId.longValue() == shopProductVO.getBrandId().longValue()) {
+                                    brandExists = true;
+                                    break;
                                 }
 
                             }
-                            if (tableVO.getCount() > 0) {
-                                tableVO.setData((List) list);
+                            if (!brandExists) {
+                                if (shopProductVO.getBrandId() != null) {
+                                    brandIdList.add(shopProductVO.getBrandId());
+                                }
+                            }
+
+
+                            //设置店铺分类ID
+                            shopCategoryExists = false;
+                            for (int sci = 0; sci < shopCategoryIds.length; sci++) {
+                                Long shopCategoryId = shopCategoryIds[sci];
+                                if (shopProductVO.getShopCategoryId() != null && shopCategoryId != null
+                                        && shopCategoryId.longValue() == shopProductVO.getShopCategoryId().longValue()) {
+                                    shopCategoryExists = true;
+                                    break;
+                                }
+
+                            }
+                            if (!shopCategoryExists) {
+                                if (shopProductVO.getShopCategoryId() != null) {
+                                    shopCategoryIds[i] = shopProductVO.getShopCategoryId();
+                                }
+                            }
+
+
+                            //设置店铺ID
+                            shopExists = false;
+                            for (Long shopId : shopIdList) {
+                                if (shopProductVO.getShopId() != null && shopId != null
+                                        && shopId.longValue() == shopProductVO.getShopId().longValue()) {
+                                    shopExists = true;
+                                    break;
+                                }
+
+                            }
+                            if (!shopExists) {
+                                if (shopProductVO.getShopId() != null) {
+                                    shopIdList.add(shopProductVO.getShopId());
+                                }
+                            }
+
+                        }
+
+
+                        //查询类别名称
+                        this.queryCategory(list, categoryIds);
+
+
+                        //查询店铺类别名称
+                        this.queryShopCategory(list, shopCategoryIds);
+
+                        //查询品牌名称
+                        this.queryBrand(list, brandIdList);
+
+                        //查询店铺名称
+                        this.queryShop(list, shopIdList);
+
+
+                        for (ShopProductVO shopProductVO : list) {
+                            if (shopProductVO.getMainPhotoFilePath() != null) {
+                                shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductVO.getMainPhotoFilePath());
                             }
                         }
+
+                    }
+                    if (tableVO.getCount() > 0) {
+                        tableVO.setData((List) list);
                     }
                 }
             }

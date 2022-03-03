@@ -60,6 +60,10 @@
             and t.id = #{id}
         </if>
 
+        <if test="uuid!=null and uuid!='' ">
+            and t.uuid = #{uuid}
+        </if>
+
         <if test="categoryIdList!=null and categoryIdList.size>0 ">
             and t.category_id in
             <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
