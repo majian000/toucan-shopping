@@ -56,6 +56,17 @@
             and t.name  like concat(#{name},'%')
         </if>
 
+        <if test="id!=null and id!=-1">
+            and t.id = #{id}
+        </if>
+
+        <if test="categoryIdList!=null and categoryIdList.size>0 ">
+            and t.category_id in
+            <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
 
         and t.delete_status = 0
 

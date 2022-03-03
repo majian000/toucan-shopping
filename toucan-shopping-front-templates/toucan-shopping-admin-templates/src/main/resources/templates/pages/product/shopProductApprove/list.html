@@ -54,8 +54,44 @@
                         <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                             <input type="hidden" id="categoryId" name="categoryId">
                             <div class="layui-form-item">
+
                                 <div class="layui-inline">
-                                    <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                    <label class="layui-form-label">店铺商品ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="id" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">店铺商品UUID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="uuid" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">商品名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">店铺ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">审核状态</label>
+                                    <div class="layui-input-inline">
+                                        <select id="approveStatus"  name="approveStatus" lay-search="" lay-filter="approveStatus">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="1" >审核中</option>
+                                            <option value="2" >审核通过</option>
+                                            <option value="3" >审核驳回</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="submit" id="queryButton" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                                     <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                                 </div>
                             </div>
@@ -316,8 +352,9 @@
 
         function categoryTreeClick(event, treeId, treeNode) {
             // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
-            alert(treeNode.id);
-        };
+            $("#categoryId").val(treeNode.id);
+            $("#queryButton").click();
+        }
 
         initCategoryTree();
 
