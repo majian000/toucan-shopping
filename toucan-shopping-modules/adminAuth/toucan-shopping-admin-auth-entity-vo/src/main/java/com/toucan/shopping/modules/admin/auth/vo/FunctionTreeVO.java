@@ -74,4 +74,9 @@ public class FunctionTreeVO extends Function {
      */
     private boolean checked;
 
+    /**
+     * 是否是半勾选 true:该节点半勾选 false:自动计算勾选
+     */
+    private boolean halfCheck;
+
 }
