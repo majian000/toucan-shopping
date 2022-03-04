@@ -15,10 +15,7 @@ import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
-import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
-import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
-import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
+import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -233,9 +230,23 @@ public class RoleFunctionController {
             //当前角色的所有关联项
             List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
             //当前节点的子节点
-            List<FunctionTreeVO> functionTreeVOS = functionService.queryOneLevelChildrenById(query.getFunctionParentId());
+            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenById(query.getFunctionParentId());
 
+            List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
+            for(FunctionVO functionVO:functionVOS)
+            {
+                FunctionTreeVO functionTreeVO = new FunctionTreeVO();
+                BeanUtils.copyProperties(functionTreeVO,functionVO);
+                functionTreeVOS.add(functionTreeVO);
+            }
 
+            //设置当前节点的半选状态
+            for(FunctionTreeVO functionTreeVO:functionTreeVOS)
+            {
+                roleFunctionService.setHalfCheck(functionTreeVO,roleFunctions);
+            }
+
+            resultObjectVO.setData(functionTreeVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

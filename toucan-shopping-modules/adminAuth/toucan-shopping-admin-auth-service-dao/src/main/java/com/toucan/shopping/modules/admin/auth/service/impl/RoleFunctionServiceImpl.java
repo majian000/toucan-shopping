@@ -10,6 +10,7 @@ import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,6 +33,42 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     @Override
     public List<RoleFunction> findListByEntity(RoleFunction entity) {
         return roleFunctionMapper.findListByEntity(entity);
+    }
+
+    @Override
+    public void setHalfCheck(FunctionTreeVO functionTreeVO, List<RoleFunction> roleFunctions) {
+        List<FunctionVO> functionTreeVOS = new LinkedList<>();
+        //查询所有子节点
+        functionService.queryChildren(functionTreeVOS,functionTreeVO);
+        boolean isAllMatch = true; //是否全部关联上了
+        boolean isChildFind = false; //这个子节点是否找到
+        for(FunctionVO functionTreeChild:functionTreeVOS)
+        {
+            isChildFind = false;
+            for(RoleFunction roleFunction:roleFunctions)
+            {
+                if(functionTreeChild.getFunctionId().equals(roleFunction.getFunctionId()))
+                {
+                    isChildFind = true;
+                    break;
+                }
+            }
+            //如果这个子节点没有找到
+            if(!isChildFind)
+            {
+                isAllMatch = false;
+                break;
+            }
+        }
+
+        if(isAllMatch)
+        {
+            //全选
+            functionTreeVO.setHalfCheck(false);
+        }else{
+            //半选
+            functionTreeVO.setHalfCheck(true);
+        }
     }
 
     @Override

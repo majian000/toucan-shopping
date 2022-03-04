@@ -22,6 +22,11 @@ public interface RoleFunctionService {
     List<RoleFunction> findListByEntity(RoleFunction roleFunction);
 
     /**
+     * 设置半勾选状态
+     */
+    void setHalfCheck(FunctionTreeVO functionTreeVO,List<RoleFunction> roleFunctions);
+
+    /**
      * 保存角色功能项关联
      * @param roleFunction
      * @return
