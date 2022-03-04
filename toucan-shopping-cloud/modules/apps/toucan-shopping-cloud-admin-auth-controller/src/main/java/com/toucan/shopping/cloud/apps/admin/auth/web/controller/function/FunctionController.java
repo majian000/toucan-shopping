@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
@@ -378,47 +379,19 @@ public class FunctionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/role/function/tree",method = RequestMethod.POST)
+    @RequestMapping(value = "/query/role/function/tree/{roleId}",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request, String appCode, String roleId)
+    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request, String appCode,@PathVariable String roleId,@RequestParam Long functionParentId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             //查询权限树
-            App query = new App();
-            query.setCode(appCode);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-            resultObjectVO = feignFunctionService.queryFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<FunctionTreeVO> functionTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), FunctionTreeVO.class);
+            RoleFunctionVO roleFunctionVO = new RoleFunctionVO();
+            roleFunctionVO.setFunctionParentId(functionParentId);
+            roleFunctionVO.setRoleId(roleId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),roleFunctionVO);
+            resultObjectVO = feignRoleFunctionService.queryFunctionTreeByRoleIdAndParentId(requestJsonVO);
 
-                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
-                AtomicLong id = new AtomicLong();
-                RoleFunction queryRoleFunction = new RoleFunction();
-                queryRoleFunction.setRoleId(roleId);
-                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryRoleFunction);
-                resultObjectVO = feignRoleFunctionService.queryRoleFunctionList(SignUtil.sign(requestJsonVO),requestJsonVO);
-                if(resultObjectVO.isSuccess())
-                {
-                    List<RoleFunction> roleFunctions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), RoleFunction.class);
-                    if(!CollectionUtils.isEmpty(roleFunctions)) {
-                        for(FunctionTreeVO functionTreeVO:functionTreeVOList) {
-                            functionTreeVO.setId(id.incrementAndGet());
-                            functionTreeVO.setNodeId(functionTreeVO.getId());
-                            functionTreeVO.setText(functionTreeVO.getTitle());
-                            for(RoleFunction roleFunction:roleFunctions) {
-                                if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId())) {
-                                    //设置节点被选中
-                                    functionTreeVO.getState().setChecked(true);
-                                }
-                            }
-                            setTreeNodeSelect(id,functionTreeVO,functionTreeVO.getChildren(), roleFunctions);
-                        }
-                    }
-                }
-                resultObjectVO.setData(functionTreeVOList);
-            }
             return resultObjectVO;
         }catch(Exception e)
         {

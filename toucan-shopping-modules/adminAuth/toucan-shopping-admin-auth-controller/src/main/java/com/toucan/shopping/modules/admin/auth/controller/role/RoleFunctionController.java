@@ -222,15 +222,15 @@ public class RoleFunctionController {
                 throw new IllegalArgumentException("roleId为空");
             }
 
-            if(query.getFunctionParentId()==null)
+            if(query.getPid()==null)
             {
-                throw new IllegalArgumentException("functionParentId为空");
+                throw new IllegalArgumentException("pid为空");
             }
 
             //当前角色的所有关联项
             List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
             //当前节点的子节点
-            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenById(query.getFunctionParentId());
+            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenById(query.getPid());
 
             List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
             for(FunctionVO functionVO:functionVOS)

@@ -16,7 +16,7 @@ public class RoleFunctionVO extends RoleFunction {
     /**
      * 功能项父节点ID
      */
-    private Long functionParentId;
+    private Long pid;
 
     /**
      * 权限列表
