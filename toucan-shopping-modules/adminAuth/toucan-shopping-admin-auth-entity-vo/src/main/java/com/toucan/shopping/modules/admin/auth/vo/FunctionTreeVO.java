@@ -72,11 +72,21 @@ public class FunctionTreeVO extends Function {
     /**
      * 是否支持checkbox
      */
-    private boolean checked;
+    private Boolean checked = false;
+
+    /**
+     * 是否支持展开
+     */
+    private Boolean open = true;
+
+    /**
+     * 是否是父节点
+     */
+    private Boolean isParent=true;
 
     /**
      * 是否是半勾选 true:该节点半勾选 false:自动计算勾选
      */
-    private boolean halfCheck;
+    private Boolean halfCheck;
 
 }

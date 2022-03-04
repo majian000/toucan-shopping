@@ -756,7 +756,25 @@ public class CategoryController {
         }
         try {
             CategoryVO queryCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
-            resultObjectVO.setData(categoryService.queryList(queryCategory));
+            List<Category> categories = categoryService.queryList(queryCategory);
+            List<CategoryTreeVO> categoryTreeVOS = new LinkedList<>();
+            if(!CollectionUtils.isEmpty(categories))
+            {
+                for(Category category:categories) {
+                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                    BeanUtils.copyProperties(categoryTreeVO,category);
+                    Long categoryChildCount = categoryService.findCountByParentId(categoryTreeVO.getId());
+                    if(categoryChildCount!=null&&categoryChildCount.longValue()>0)
+                    {
+                        categoryTreeVO.setIsParent(true);
+                    }else{
+                        categoryTreeVO.setIsParent(false);
+                    }
+                    categoryTreeVOS.add(categoryTreeVO);
+                }
+
+            }
+            resultObjectVO.setData(categoryTreeVOS);
 
         }catch(Exception e)
         {

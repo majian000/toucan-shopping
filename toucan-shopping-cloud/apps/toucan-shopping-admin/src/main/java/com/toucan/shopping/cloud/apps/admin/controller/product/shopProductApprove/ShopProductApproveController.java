@@ -621,8 +621,8 @@ public class ShopProductApproveController extends UIController {
                     List<CategoryTreeVO> categoryVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
                     for(CategoryTreeVO categoryTreeVO:categoryVOS)
                     {
-                        categoryTreeVO.setIsParent(true);
                         categoryTreeVO.setOpen(false);
+                        categoryTreeVO.setIcon(null);
                     }
                     resultObjectVO.setData(categoryVOS);
                 }

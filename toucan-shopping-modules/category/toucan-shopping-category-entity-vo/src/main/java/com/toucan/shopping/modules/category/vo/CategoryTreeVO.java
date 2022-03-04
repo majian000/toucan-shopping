@@ -78,7 +78,7 @@ public class CategoryTreeVO extends CategoryVO {
     /**
      * 是否是父节点
      */
-    private Boolean isParent=true;
+    private Boolean isParent;
 
 
 }

@@ -243,7 +243,7 @@ public class RoleFunctionController {
             //设置当前节点的半选状态
             for(FunctionTreeVO functionTreeVO:functionTreeVOS)
             {
-                roleFunctionService.setHalfCheck(functionTreeVO,roleFunctions);
+                roleFunctionService.setHalfCheckAndIsParent(functionTreeVO,roleFunctions);
             }
 
             resultObjectVO.setData(functionTreeVOS);

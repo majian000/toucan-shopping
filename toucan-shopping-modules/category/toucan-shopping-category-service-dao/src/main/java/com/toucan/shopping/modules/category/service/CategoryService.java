@@ -41,6 +41,7 @@ public interface CategoryService {
 
     List<Category> findByParentId(Long parentId);
 
+    Long findCountByParentId(Long parentId);
 
     Long queryCount(Category category);
 

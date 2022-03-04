@@ -36,12 +36,32 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     }
 
     @Override
-    public void setHalfCheck(FunctionTreeVO functionTreeVO, List<RoleFunction> roleFunctions) {
+    public void setHalfCheckAndIsParent(FunctionTreeVO functionTreeVO, List<RoleFunction> roleFunctions) {
         List<FunctionVO> functionTreeVOS = new LinkedList<>();
         //查询所有子节点
         functionService.queryChildren(functionTreeVOS,functionTreeVO);
+
+        //设置父节点状态
+        if(!CollectionUtils.isEmpty(functionTreeVOS))
+        {
+            functionTreeVO.setIsParent(true);
+        }else{
+            functionTreeVO.setIsParent(false);
+        }
+
+        //设置选中状态
+        for(RoleFunction roleFunction:roleFunctions)
+        {
+            if(roleFunction.getFunctionId().equals(functionTreeVO.getFunctionId()))
+            {
+                functionTreeVO.setChecked(true);
+                break;
+            }
+        }
+
+
         boolean isAllMatch = true; //是否全部关联上了
-        boolean isChildFind = false; //这个子节点是否找到
+        boolean isChildFind; //这个子节点是否找到
         for(FunctionVO functionTreeChild:functionTreeVOS)
         {
             isChildFind = false;
@@ -127,7 +147,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                 if(selectFunction.getPid()!=null&&selectFunction.getPid().longValue()==-1L)
                 {
                     //如果这个根节点被全选,直接查询所有子节点
-                    if(selectFunction.isHalfCheck())
+                    if(selectFunction.getHalfCheck())
                     {
                         functionService.queryChildren(functionTreeVOS,selectFunction);
                         //将这个全选节点增加节点集合中
@@ -140,7 +160,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
             for(FunctionTreeVO selectFunction:selectFunctions)
             {
                 //如果是半选
-                if(!selectFunction.isHalfCheck())
+                if(!selectFunction.getHalfCheck())
                 {
                     //将这个半选节点加到节点集合中
                     functionTreeVOS.add(selectFunction);
@@ -151,7 +171,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                         if(selectFunctionChild.getPid().longValue() == selectFunction.getId().longValue())
                         {
                             //如果这个子节点是全选
-                            if(selectFunctionChild.isHalfCheck()) {
+                            if(selectFunctionChild.getHalfCheck()) {
                                 //将这个子节点的所有子节点放到集合中
                                 functionService.queryChildren(functionTreeVOS, selectFunctionChild);
                             }

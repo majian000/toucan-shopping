@@ -381,17 +381,17 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/role/function/tree/{appCode}/{roleId}",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request,@PathVariable String appCode,@PathVariable String roleId,@RequestParam String pid)
+    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request,@PathVariable String appCode,@PathVariable String roleId,@RequestParam String id)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(StringUtils.isEmpty(pid))
+            if(StringUtils.isEmpty(id))
             {
-                pid="-1";
+                id="-1";
             }
             //查询权限树
             RoleFunctionVO roleFunctionVO = new RoleFunctionVO();
-            roleFunctionVO.setPid(Long.parseLong(pid));
+            roleFunctionVO.setPid(Long.parseLong(id));
             roleFunctionVO.setRoleId(roleId);
             roleFunctionVO.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),roleFunctionVO);

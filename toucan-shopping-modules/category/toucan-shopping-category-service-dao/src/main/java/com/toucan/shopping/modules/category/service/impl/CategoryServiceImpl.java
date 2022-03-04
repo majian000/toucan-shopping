@@ -80,6 +80,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Long findCountByParentId(Long parentId) {
+        return categoryMapper.findCountByParentId(parentId);
+    }
+
+    @Override
     public Long queryCount(Category category) {
         return categoryMapper.queryCount(category);
     }
