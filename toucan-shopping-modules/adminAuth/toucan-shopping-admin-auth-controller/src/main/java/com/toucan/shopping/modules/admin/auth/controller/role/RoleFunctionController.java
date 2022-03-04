@@ -230,7 +230,7 @@ public class RoleFunctionController {
             //当前角色的所有关联项
             List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
             //当前节点的子节点
-            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenById(query.getPid());
+            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenByIdAndAppCode(query.getPid(),query.getAppCode());
 
             List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
             for(FunctionVO functionVO:functionVOS)

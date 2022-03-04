@@ -282,6 +282,9 @@
         }
 
 
+        function filter(treeId, parentNode, data) {
+            return data.data;
+        }
 
         //监听表格复选框选择
         table.on('checkbox(roleTableFilter)', function (obj) {
@@ -339,14 +342,14 @@
 
                     area: ['20%', '60%'],
                     btn: ['确定'],
-                    content: "<ul id=\"categoryTree\" class=\"ztree\"></ul>",
+                    content: "<ul id=\"permissionTree\" class=\"ztree\"></ul>",
                     success:function(layero){
                         loadding = layer.load();
 
                         var setting = {
                             async: {
                                 enable: true,
-                                url:"[[@{/}]]function/query/role/function/tree/"+roleId,
+                                url:"[[@{/}]]function/query/role/function/tree/10001002/"+roleId,
                                 autoParam:["id", "pid", "name"],
                                 dataFilter: filter
                             },
@@ -364,18 +367,18 @@
                         };
 
                         $.ajax({
-                            url:"[[@{/}]]function/query/role/function/tree/"+roleId,
+                            url:"[[@{/}]]function/query/role/function/tree/10001002/"+roleId,
                             type:"POST",
                             dataType: "json",
                             success: function(data){
-                                var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                                var zTreeObj = $.fn.zTree.init($("#permissionTree"),setting, data.data);
                             },
                             error: function(){
 
                             },
                             complete:function()
                             {
-                                layer.close(loaddingTree);
+                                layer.close(loadding);
                             }
                         });
 

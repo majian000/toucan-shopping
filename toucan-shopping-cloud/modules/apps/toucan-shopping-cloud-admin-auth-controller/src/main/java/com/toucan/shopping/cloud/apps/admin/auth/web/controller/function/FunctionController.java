@@ -379,19 +379,34 @@ public class FunctionController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/role/function/tree/{roleId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/query/role/function/tree/{appCode}/{roleId}",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request, String appCode,@PathVariable String roleId,@RequestParam Long functionParentId)
+    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request,@PathVariable String appCode,@PathVariable String roleId,@RequestParam String pid)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            if(StringUtils.isEmpty(pid))
+            {
+                pid="-1";
+            }
             //查询权限树
             RoleFunctionVO roleFunctionVO = new RoleFunctionVO();
-            roleFunctionVO.setPid(functionParentId);
+            roleFunctionVO.setPid(Long.parseLong(pid));
             roleFunctionVO.setRoleId(roleId);
+            roleFunctionVO.setAppCode(appCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),roleFunctionVO);
             resultObjectVO = feignRoleFunctionService.queryFunctionTreeByRoleIdAndParentId(requestJsonVO);
-
+            if(resultObjectVO.isSuccess())
+            {
+                List<FunctionTreeVO> fucntionTreeVOS = resultObjectVO.formatDataList(FunctionTreeVO.class);
+                if(!CollectionUtils.isEmpty(fucntionTreeVOS))
+                {
+                    for(FunctionTreeVO functionTreeVO:fucntionTreeVOS)
+                    {
+                        functionTreeVO.setUrl(null);
+                    }
+                }
+            }
             return resultObjectVO;
         }catch(Exception e)
         {

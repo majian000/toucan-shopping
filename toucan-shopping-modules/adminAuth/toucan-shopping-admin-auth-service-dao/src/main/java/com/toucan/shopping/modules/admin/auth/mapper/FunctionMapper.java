@@ -68,6 +68,8 @@ public interface FunctionMapper {
 
     List<FunctionVO> findListByPid(Long pid);
 
+    List<FunctionVO> findListByPidAndAppCode(Long pid,String appCode);
+
     List<FunctionVO> findById(Long id);
 
     List<Function> findTreeTableByPageInfo(FunctionTreeInfo functionTreeInfo);
