@@ -380,7 +380,7 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/role/function/tree",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryFunctionTree(HttpServletRequest request,String appCode,String roleId)
+    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request, String appCode, String roleId)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {

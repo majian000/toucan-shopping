@@ -13,6 +13,10 @@ import java.util.List;
 @Data
 public class RoleFunctionVO extends RoleFunction {
 
+    /**
+     * 功能项父节点ID
+     */
+    private Long functionParentId;
 
     /**
      * 权限列表

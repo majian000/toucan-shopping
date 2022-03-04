@@ -96,6 +96,11 @@ public interface FunctionService {
     List queryOneLevelChildren(Function query);
 
     /**
+     * 查询当前节点下一级子节点
+     * @param Id
+     */
+    List queryOneLevelChildrenById(Long Id);
+    /**
      * 查询树表格
      * @param functionTreeInfo
      * @return

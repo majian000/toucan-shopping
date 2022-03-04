@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RolePageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
+import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
@@ -56,6 +57,8 @@ public class RoleFunctionController {
     @Autowired
     private RoleFunctionService roleFunctionService;
 
+    @Autowired
+    private FunctionService functionService;
 
 
 
@@ -210,14 +213,35 @@ public class RoleFunctionController {
 
 
 
-    @RequestMapping(value="/queryReleaseFunctions",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/function/tree/by/roleId/parentId",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryReleaseFunctions(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO queryFunctionTreeByRoleIdAndParentId(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        RoleFunctionVO roleFunctionVO = requestVo.formatEntity(RoleFunctionVO.class);
-        List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
-        roleFunctionService.queryReleaseFunctionList(roleFunctionVO,functionTreeVOS);
-        resultObjectVO.setData(functionTreeVOS);
+        try {
+            RoleFunctionVO query = requestVo.formatEntity(RoleFunctionVO.class);
+
+            if(StringUtils.isEmpty(query.getRoleId()))
+            {
+                throw new IllegalArgumentException("roleId为空");
+            }
+
+            if(query.getFunctionParentId()==null)
+            {
+                throw new IllegalArgumentException("functionParentId为空");
+            }
+
+            //当前角色的所有关联项
+            List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(query);
+            //当前节点的子节点
+            List<FunctionTreeVO> functionTreeVOS = functionService.queryOneLevelChildrenById(query.getFunctionParentId());
+
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
         return resultObjectVO;
     }
 

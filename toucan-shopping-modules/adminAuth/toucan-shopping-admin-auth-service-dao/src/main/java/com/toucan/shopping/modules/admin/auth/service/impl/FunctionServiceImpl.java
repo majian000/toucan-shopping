@@ -152,6 +152,13 @@ public class FunctionServiceImpl implements FunctionService {
     public List queryOneLevelChildren(Function query) {
         return functionMapper.findListByPid(query.getId());
     }
+
+
+    @Override
+    public List queryOneLevelChildrenById(Long Id) {
+        return functionMapper.findListByPid(Id);
+    }
+
     /**
      * 查询上级节点
      * @param retNodes 返回的所有节点

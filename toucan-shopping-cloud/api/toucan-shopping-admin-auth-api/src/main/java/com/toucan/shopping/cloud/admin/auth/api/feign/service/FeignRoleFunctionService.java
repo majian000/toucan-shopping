@@ -30,5 +30,12 @@ public interface FeignRoleFunctionService {
     ResultObjectVO list(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 根据角色ID和功能项父节点ID查询,并设置节点状态
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/query/function/tree/by/roleId/parentId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryFunctionTreeByRoleIdAndParentId(@RequestBody RequestJsonVO requestVo);
 
 }
