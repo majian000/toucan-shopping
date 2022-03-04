@@ -387,7 +387,7 @@ public class FunctionController extends UIController {
         try {
             //查询权限树
             RoleFunctionVO roleFunctionVO = new RoleFunctionVO();
-            roleFunctionVO.setFunctionParentId(functionParentId);
+            roleFunctionVO.setPid(functionParentId);
             roleFunctionVO.setRoleId(roleId);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),roleFunctionVO);
             resultObjectVO = feignRoleFunctionService.queryFunctionTreeByRoleIdAndParentId(requestJsonVO);
