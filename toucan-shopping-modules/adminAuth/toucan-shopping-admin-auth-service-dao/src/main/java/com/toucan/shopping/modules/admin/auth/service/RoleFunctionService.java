@@ -3,8 +3,11 @@ package com.toucan.shopping.modules.admin.auth.service;
 
 
 
+import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
@@ -79,5 +82,11 @@ public interface RoleFunctionService {
     PageInfo<RoleFunction> queryListPage(RoleFunctionPageInfo queryPageInfo);
 
 
+    /**
+     * 查询到这个角色最终要关联的所有功能项
+     * @param roleFunctionVO
+     * @return
+     */
+    void queryReleaseFunctionList(RoleFunctionVO roleFunctionVO, List<FunctionTreeVO> functionTreeVOS);
 
 }

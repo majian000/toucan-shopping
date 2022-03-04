@@ -15,6 +15,7 @@ import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
 import com.toucan.shopping.modules.admin.auth.service.RoleFunctionService;
 import com.toucan.shopping.modules.admin.auth.service.RoleService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionCacheVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -203,6 +205,19 @@ public class RoleFunctionController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }
+        return resultObjectVO;
+    }
+
+
+
+    @RequestMapping(value="/queryReleaseFunctions",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryReleaseFunctions(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        RoleFunctionVO roleFunctionVO = requestVo.formatEntity(RoleFunctionVO.class);
+        List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
+        roleFunctionService.queryReleaseFunctionList(roleFunctionVO,functionTreeVOS);
+        resultObjectVO.setData(functionTreeVOS);
         return resultObjectVO;
     }
 

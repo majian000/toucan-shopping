@@ -139,7 +139,7 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
-    public void queryChildren(List<Function> children, Function query) {
+    public void queryChildren(List children, Function query) {
         List<FunctionVO> functions = functionMapper.findListByPid(query.getId());
         children.addAll(functions);
         for(Function function:functions)
@@ -148,6 +148,10 @@ public class FunctionServiceImpl implements FunctionService {
         }
     }
 
+    @Override
+    public List queryOneLevelChildren(Function query) {
+        return functionMapper.findListByPid(query.getId());
+    }
     /**
      * 查询上级节点
      * @param retNodes 返回的所有节点

@@ -87,8 +87,13 @@ public interface FunctionService {
      * @param children
      * @param query
      */
-    void queryChildren(List<Function> children,Function query);
+    void queryChildren(List children,Function query);
 
+    /**
+     * 查询当前节点下一级子节点
+     * @param query
+     */
+    List queryOneLevelChildren(Function query);
 
     /**
      * 查询树表格

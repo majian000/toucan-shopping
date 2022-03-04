@@ -17,7 +17,7 @@ public class RoleFunctionVO extends RoleFunction {
     /**
      * 权限列表
      */
-    private List<Function> functions;
+    private List<FunctionTreeVO> functions;
 
 
 }
