@@ -83,10 +83,10 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
 
         if(isAllMatch)
         {
-            //全选
+            //全选样式
             functionTreeVO.setHalfCheck(false);
         }else{
-            //半选
+            //半选样式
             functionTreeVO.setHalfCheck(true);
         }
     }
@@ -147,7 +147,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                 if(selectFunction.getPid()!=null&&selectFunction.getPid().longValue()==-1L)
                 {
                     //如果这个根节点被全选,直接查询所有子节点
-                    if(selectFunction.getHalfCheck())
+                    if(!selectFunction.getHalfCheck())
                     {
                         functionService.queryChildren(functionTreeVOS,selectFunction);
                         //将这个全选节点增加节点集合中
@@ -160,7 +160,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
             for(FunctionTreeVO selectFunction:selectFunctions)
             {
                 //如果是半选
-                if(!selectFunction.getHalfCheck())
+                if(selectFunction.getHalfCheck())
                 {
                     //将这个半选节点加到节点集合中
                     functionTreeVOS.add(selectFunction);
@@ -170,8 +170,10 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                     {
                         if(selectFunctionChild.getPid().longValue() == selectFunction.getId().longValue())
                         {
+                            //将这个子节点加到节点集合中
+                            functionTreeVOS.add(selectFunctionChild);
                             //如果这个子节点是全选
-                            if(selectFunctionChild.getHalfCheck()) {
+                            if(!selectFunctionChild.getHalfCheck()) {
                                 //将这个子节点的所有子节点放到集合中
                                 functionService.queryChildren(functionTreeVOS, selectFunctionChild);
                             }

@@ -117,49 +117,52 @@ public class RoleFunctionController {
             {
                 throw new IllegalArgumentException("functions为空");
             }
-            roleFunctionService.deleteByRoleId(entity.getRoleId());
-            RoleFunction[] roleFunctions= new RoleFunction[entity.getFunctions().size()];
-            int pos = 0;
-            for(Function function:entity.getFunctions())
-            {
-                RoleFunction roleFunction = new RoleFunction();
-                roleFunction.setRoleId(entity.getRoleId());
-                roleFunction.setFunctionId(function.getFunctionId());
-                roleFunction.setAppCode(entity.getAppCode());
-                roleFunction.setCreateAdminId(entity.getCreateAdminId());
-                roleFunction.setCreateDate(new Date());
-                roleFunction.setDeleteStatus((short)0);
+            List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
+            roleFunctionService.queryReleaseFunctionList(entity,functionTreeVOS);
+            if(!CollectionUtils.isEmpty(functionTreeVOS)) {
+                roleFunctionService.deleteByRoleId(entity.getRoleId());
 
-                roleFunctions[pos] = roleFunction;
-                pos ++;
-            }
-            roleFunctionService.saves(roleFunctions);
+                RoleFunction[] roleFunctions = new RoleFunction[functionTreeVOS.size()];
+                int pos = 0;
+                for (Function function : functionTreeVOS) {
+                    RoleFunction roleFunction = new RoleFunction();
+                    roleFunction.setRoleId(entity.getRoleId());
+                    roleFunction.setFunctionId(function.getFunctionId());
+                    roleFunction.setAppCode(entity.getAppCode());
+                    roleFunction.setCreateAdminId(entity.getCreateAdminId());
+                    roleFunction.setCreateDate(new Date());
+                    roleFunction.setDeleteStatus((short) 0);
 
-            try{
-                RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
-                if(roleFunctionCacheService!=null) {
-                    //先清空所有缓存,让权限校验的时候第一次从缓存中没有找到之后初始化,在某种意义上降低数据不一致性的风险
-                    roleFunctionCacheService.deleteIndex();
-                    //刷新到es缓存
-                    if (roleFunctions != null && roleFunctions.length > 0) {
-                        RoleFunctionCacheVO[] roleFunctionCacheVOS = new RoleFunctionCacheVO[roleFunctions.length];
-                        for (int i = 0; i < roleFunctions.length; i++) {
-                            RoleFunction roleFunction = roleFunctions[i];
-                            RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
-                            if (roleFunction != null) {
-                                BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
-                            }
-                            roleFunctionCacheVOS[i] = roleFunctionCacheVO;
-                        }
-                        roleFunctionCacheService.saves(roleFunctionCacheVOS);
-                    }
+                    roleFunctions[pos] = roleFunction;
+                    pos++;
                 }
+                roleFunctionService.saves(roleFunctions);
 
-            }catch(Exception e)
-            {
-                resultObjectVO.setCode(ResultVO.SUCCESS);
-                resultObjectVO.setMsg("更新缓存出现异常");
-                logger.warn(e.getMessage(),e);
+                try {
+                    RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
+                    if (roleFunctionCacheService != null) {
+                        //先清空所有缓存,让权限校验的时候第一次从缓存中没有找到之后初始化,在某种意义上降低数据不一致性的风险
+                        roleFunctionCacheService.deleteIndex();
+                        //刷新到es缓存
+                        if (roleFunctions != null && roleFunctions.length > 0) {
+                            RoleFunctionCacheVO[] roleFunctionCacheVOS = new RoleFunctionCacheVO[roleFunctions.length];
+                            for (int i = 0; i < roleFunctions.length; i++) {
+                                RoleFunction roleFunction = roleFunctions[i];
+                                RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
+                                if (roleFunction != null) {
+                                    BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
+                                }
+                                roleFunctionCacheVOS[i] = roleFunctionCacheVO;
+                            }
+                            roleFunctionCacheService.saves(roleFunctionCacheVOS);
+                        }
+                    }
+
+                } catch (Exception e) {
+                    resultObjectVO.setCode(ResultVO.SUCCESS);
+                    resultObjectVO.setMsg("更新缓存出现异常");
+                    logger.warn(e.getMessage(), e);
+                }
             }
 
         }catch(Exception e)

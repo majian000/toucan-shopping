@@ -85,7 +85,7 @@ public class FunctionTreeVO extends Function {
     private Boolean isParent=true;
 
     /**
-     * 是否是半勾选 true:该节点半勾选 false:自动计算勾选
+     * 是否是半勾选 true:该节点半勾选 false:自动计算勾选(全选)
      */
     private Boolean halfCheck;
 
