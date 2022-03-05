@@ -139,6 +139,8 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     @Override
     public void queryReleaseFunctionList(RoleFunctionVO roleFunctionVO, List<FunctionTreeVO> functionTreeVOS) {
         List<FunctionTreeVO> selectFunctions = roleFunctionVO.getFunctions();
+        //查询所有角色关联的功能项
+        List<RoleFunction> roleFunctions = roleFunctionMapper.queryListByRoleId(roleFunctionVO.getRoleId());
         if(CollectionUtils.isNotEmpty(selectFunctions))
         {
             //先判断根节点是否被全选
@@ -149,13 +151,14 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                     //如果这个根节点被全选,直接查询所有子节点
                     if(!selectFunction.getHalfCheck())
                     {
-                        functionService.queryChildren(functionTreeVOS,selectFunction);
+                        functionService.queryFunctionTreeChildren(functionTreeVOS,selectFunction);
                         //将这个全选节点增加节点集合中
                         functionTreeVOS.add(selectFunction);
                     }
                 }
             }
 
+            boolean isFindChild = false;
             //找出没有被全选的节点(半选)
             for(FunctionTreeVO selectFunction:selectFunctions)
             {
@@ -168,14 +171,37 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                     //先查询出这次选择的所有子节点
                     for(FunctionTreeVO selectFunctionChild:selectFunctions)
                     {
+                        isFindChild = false;
                         if(selectFunctionChild.getPid().longValue() == selectFunction.getId().longValue())
                         {
+                            isFindChild = true;
                             //将这个子节点加到节点集合中
                             functionTreeVOS.add(selectFunctionChild);
                             //如果这个子节点是全选
                             if(!selectFunctionChild.getHalfCheck()) {
                                 //将这个子节点的所有子节点放到集合中
-                                functionService.queryChildren(functionTreeVOS, selectFunctionChild);
+                                functionService.queryFunctionTreeChildren(functionTreeVOS, selectFunctionChild);
+                            }
+                        }
+                    }
+
+                    //这个半选节点没有被展开过,就读取数据库中旧的节点关联信息
+                    if(!isFindChild)
+                    {
+                        Function queryFunction = new Function();
+                        queryFunction.setId(selectFunction.getId());
+                        List<FunctionTreeVO> functionChildList = new LinkedList<>();
+                        //查询这个功能项的所有子节点,然后和角色关联的子节点进行对比,如果相等的话这次保存把旧的关联继续保存
+                        functionService.queryFunctionTreeChildren(functionChildList,queryFunction);
+                        for(FunctionTreeVO functionTreeVO:functionChildList)
+                        {
+                            for(RoleFunction roleFunction:roleFunctions)
+                            {
+                                if(functionTreeVO.getFunctionId().equals(roleFunction.getFunctionId()))
+                                {
+                                    functionTreeVOS.add(functionTreeVO);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -183,6 +209,11 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                 }
             }
         }
+    }
+
+    @Override
+    public List<RoleFunction> queryListByRoleId(String roleId) {
+        return roleFunctionMapper.queryListByRoleId(roleId);
     }
 
 

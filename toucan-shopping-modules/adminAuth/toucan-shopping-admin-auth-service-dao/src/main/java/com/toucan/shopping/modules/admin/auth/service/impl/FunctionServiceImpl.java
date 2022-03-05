@@ -148,6 +148,17 @@ public class FunctionServiceImpl implements FunctionService {
         }
     }
 
+
+    @Override
+    public void queryFunctionTreeChildren(List<FunctionTreeVO> children, Function query) {
+        List<FunctionTreeVO> functions = functionMapper.findFunctionTreeListByPid(query.getId());
+        children.addAll(functions);
+        for(Function function:functions)
+        {
+            queryFunctionTreeChildren(children,function);
+        }
+    }
+
     @Override
     public List queryOneLevelChildren(Function query) {
         return functionMapper.findListByPid(query.getId());

@@ -277,13 +277,8 @@
                     pushTree.halfCheck=true;
                 }
             }else{
-                //如果没有展开这个节点,这时候缓存没有这个节点信息,就判断节点的checked来确定是否是全选
-                if(selectNode.checked)
-                {
-                    pushTree.halfCheck = false;
-                }else {
-                    pushTree.halfCheck = true;
-                }
+                //如果没有展开这个节点,这时候缓存没有这个节点信息,就读取返回的的选中状态
+                pushTree.halfCheck = selectNode.halfCheck;
             }
             pushTreeDataArray.push(pushTree);
 

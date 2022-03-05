@@ -40,4 +40,7 @@ public interface RoleFunctionMapper {
      * @return
      */
     Long queryListPageCount(RoleFunctionPageInfo queryPageInfo);
+
+
+    List<RoleFunction> queryListByRoleId(String roleId);
 }

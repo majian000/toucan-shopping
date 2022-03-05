@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.mapper;
 
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -67,6 +68,9 @@ public interface FunctionMapper {
     List<FunctionVO> queryListByAppCode(String appCode);
 
     List<FunctionVO> findListByPid(Long pid);
+
+
+    List<FunctionTreeVO> findFunctionTreeListByPid(Long pid);
 
     List<FunctionVO> findListByPidAndAppCode(Long pid,String appCode);
 

@@ -151,4 +151,9 @@
 
 
 
+    <select id="queryListByRoleId" resultMap="roleFunctionMap" parameterType="java.lang.String">
+        select * from t_sa_role_function t where role_id = #{roleId} and delete_status=0
+    </select>
+
+
 </mapper>

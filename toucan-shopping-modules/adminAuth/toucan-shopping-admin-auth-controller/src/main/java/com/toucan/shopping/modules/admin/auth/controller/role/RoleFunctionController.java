@@ -29,10 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 角色功能项管理
@@ -119,6 +117,14 @@ public class RoleFunctionController {
             }
             List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
             roleFunctionService.queryReleaseFunctionList(entity,functionTreeVOS);
+
+            //去重
+            List<FunctionTreeVO> uniqueList = functionTreeVOS.stream().collect(
+                    Collectors.collectingAndThen(
+                            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(FunctionTreeVO::getId))), ArrayList::new)
+            );
+            functionTreeVOS.clear();
+            functionTreeVOS = uniqueList;
             if(!CollectionUtils.isEmpty(functionTreeVOS)) {
                 roleFunctionService.deleteByRoleId(entity.getRoleId());
 

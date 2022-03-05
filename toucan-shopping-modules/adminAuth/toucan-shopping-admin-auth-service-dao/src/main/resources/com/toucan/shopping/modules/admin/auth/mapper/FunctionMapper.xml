@@ -29,6 +29,10 @@
         <result column="update_admin_username" jdbcType="VARCHAR" property="updateAdminUsername" />
     </resultMap>
 
+    <resultMap id="functionTreeVOMap" type="com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO" extends="functionVOMap">
+
+    </resultMap>
+
     <sql id="queryListPageWhere">
 
         <if test="name!=null and name!=''">
@@ -181,6 +185,11 @@
 
 
     <select id="findListByPid" resultMap="functionVOMap" parameterType="java.lang.Long">
+        select * from t_sa_function t where  1=1 and t.pid = #{pid} and t.delete_status = 0
+    </select>
+
+
+    <select id="findFunctionTreeListByPid" resultMap="functionTreeVOMap" parameterType="java.lang.Long">
         select * from t_sa_function t where  1=1 and t.pid = #{pid} and t.delete_status = 0
     </select>
 

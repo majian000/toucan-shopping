@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionTreeVO;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
@@ -93,5 +94,13 @@ public interface RoleFunctionService {
      * @return
      */
     void queryReleaseFunctionList(RoleFunctionVO roleFunctionVO, List<FunctionTreeVO> functionTreeVOS);
+
+
+    /**
+     * 根据角色ID查询所有关联
+     * @param roleId
+     * @return
+     */
+    List<RoleFunction> queryListByRoleId(String roleId);
 
 }
