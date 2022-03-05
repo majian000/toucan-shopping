@@ -297,6 +297,11 @@
         table.on('checkbox(roleTableFilter)', function (obj) {
         });
 
+        function zTreeOnCheck(event, treeId, treeNode) {
+            treeNode.halfCheck=false;
+            zTreeObj.updateNode(treeNode);
+        };
+
         table.on('tool(roleTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
@@ -378,6 +383,9 @@
                                     pIdKey:'pid',
                                     rootPId: -1
                                 }
+                            },
+                            callback: {
+                                 onCheck: zTreeOnCheck
                             },
                             view:{
                                 showIcon: true
