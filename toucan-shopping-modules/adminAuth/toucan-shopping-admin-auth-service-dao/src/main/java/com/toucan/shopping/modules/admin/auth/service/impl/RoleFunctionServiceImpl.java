@@ -158,7 +158,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                 }
             }
 
-            boolean isFindChild = false;
+            boolean isFindChild;
             //找出没有被全选的节点(半选)
             for(FunctionTreeVO selectFunction:selectFunctions)
             {
@@ -168,10 +168,10 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
                     //将这个半选节点加到节点集合中
                     functionTreeVOS.add(selectFunction);
 
+                    isFindChild = false;
                     //先查询出这次选择的所有子节点
                     for(FunctionTreeVO selectFunctionChild:selectFunctions)
                     {
-                        isFindChild = false;
                         if(selectFunctionChild.getPid().longValue() == selectFunction.getId().longValue())
                         {
                             isFindChild = true;
