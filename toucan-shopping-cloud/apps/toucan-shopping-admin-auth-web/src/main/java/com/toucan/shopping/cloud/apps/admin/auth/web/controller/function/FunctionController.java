@@ -467,6 +467,7 @@ public class FunctionController extends UIController {
                         functionTreeVO.setUrl(null);
                     }
                 }
+                resultObjectVO.setData(fucntionTreeVOS);
             }
             return resultObjectVO;
         }catch(Exception e)
