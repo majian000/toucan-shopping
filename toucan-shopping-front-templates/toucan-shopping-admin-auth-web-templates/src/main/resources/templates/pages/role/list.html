@@ -13,6 +13,7 @@
     <link rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.css}" >
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
 
 </head>
 <body>
@@ -84,8 +85,10 @@
         var tree = layui.tree;
         var loadding;
         var dtree = layui.dtree;
-        var permissionTree;
-        var permissionTreeDataArray = new Array();
+        var zTreeObj;
+        var allTreeDataArray = new Array();
+        var pushTreeDataArray = new Array();
+        var savePermissionLoadding;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -131,23 +134,24 @@
             },
             cols: [
                 [
-                {type: "checkbox", width: 50},
-                {field: 'name', width: 180, title: '角色名称'},
-                {field: 'appCode', width: 180, title: '应用编码'},
-                {field: 'appName', width: 180, title: '所属应用'},
-                {field: 'createAdminUsername', width: 180, title: '创建人'},
-                {field: 'createDate', width: 180, title: '创建时间'},
-                {field: 'updateAdminUsername', width: 180, title: '修改人'},
-                {field: 'updateDate', width: 180, title: '修改时间'},
-                {field: 'enableStatus', width: 80, title: '状态',
-                    templet: function (row) {
-                    if(row.enableStatus == "1"){
-                        return "启用"
-                    }
-                    return "禁用"
-                }},
-                {title: '操作', minWidth: 150, toolbar: '#roleTableBar', align: "center"}
-            ]
+                    {type: "checkbox", width: 50},
+                    {field: 'roleId', width: 180, title: '角色ID'},
+                    {field: 'name', width: 180, title: '角色名称'},
+                    {field: 'appCode', width: 180, title: '应用编码'},
+                    {field: 'appName', width: 180, title: '所属应用'},
+                    {field: 'createAdminUsername', width: 180, title: '创建人'},
+                    {field: 'createDate', width: 180, title: '创建时间'},
+                    {field: 'updateAdminUsername', width: 180, title: '修改人'},
+                    {field: 'updateDate', width: 180, title: '修改时间'},
+                    {field: 'enableStatus', width: 80, title: '状态',
+                        templet: function (row) {
+                            if(row.enableStatus == "1"){
+                                return "启用"
+                            }
+                            return "禁用"
+                        }},
+                    {title: '操作', minWidth: 150, toolbar: '#roleTableBar', align: "center"}
+                ]
             ],
             limits: [15,30,100,200],
             limit: 15,
@@ -220,79 +224,93 @@
             }
         });
 
+
         /**
-         * 拿到所有选中节点的ID
-         * @param data
-         * @param idArray
+         * 拿到这次选择的所有子节点(所有层级)
+         * @param currentNode
+         * @param childNodes
+         * @param selectNodes
          */
-        function getCheckdNodeId(data,idArray)
+        function querySelectNodeChildArray(currentNode,childNodes,selectNodes)
         {
-            for(var i=0;i<data.length;i++)
+            for(var i=0;i<selectNodes.length;i++)
             {
-                permissionTreeDataArray.push(data[i]);
-                if(data[i].state.checked==true)
+                var node = selectNodes[i];
+                if(node.pid==currentNode.id)
                 {
-                    idArray.push(data[i].id);
+                    childNodes.push(node);
+                    //纵向递归
+                    querySelectNodeChildArray(node,childNodes,selectNodes);
                 }
-                if(data[i].children!=null&&data[i].children.length>0)
+            }
+        }
+        /**
+         * 拿到这次选择的所有子节点(所有层级)
+         * @param currentNode
+         * @param childNodes
+         * @param treeDateCache
+         */
+        function querySelectCacheNodeChildArray(currentNode,childCacheNodes,treeDateCache)
+        {
+            for(var i=0;i<treeDateCache.length;i++)
+            {
+                var node = treeDateCache[i];
+                if(node.pid==currentNode.id)
                 {
-                    getCheckdNodeId(data[i].children,idArray);
+                    childCacheNodes.push(node);
+                    //纵向递归
+                    querySelectCacheNodeChildArray(node,childCacheNodes,treeDateCache);
                 }
             }
         }
 
-
-        /**
-         * 拿到指定节点对象
-         */
-        function getNodeObject(nodeId)
+        //重新设置半选和全选状态
+        function setHalfCheck(selectNode,selectNodes)
         {
-            for(var i=0;i<permissionTreeDataArray.length;i++)
+            var pushTree={id:selectNode.id,pid:selectNode.pid,functionId:selectNode.functionId,halfCheck:false,name:selectNode.name};
+            var childNodes = new Array();
+            var childCacheNodes = new Array();
+            //拿到这次选择的所有子节点(所有层级)
+            querySelectNodeChildArray(selectNode,childNodes,selectNodes);
+
+            //查询出缓存中的所有子节点(所有层级)
+            querySelectCacheNodeChildArray(selectNode,childCacheNodes,allTreeDataArray);
+
+
+            if(childNodes.length>0||childCacheNodes.length>0)
             {
-                if(permissionTreeDataArray[i].id==nodeId)
+                //子节点全选
+                if(childNodes.length==childCacheNodes.length)
                 {
-                    return permissionTreeDataArray[i];
+                    pushTree.halfCheck=false;
+                }else{
+                    pushTree.halfCheck=true;
                 }
+            }else{
+                //如果没有展开这个节点,这时候缓存没有这个节点信息,就读取返回的的选中状态
+                pushTree.halfCheck = selectNode.halfCheck;
             }
-            return null;
+            pushTreeDataArray.push(pushTree);
+
         }
 
-
-        /**
-         * 拿到上级节点信息
-         */
-        function getParentNode(functionsArray,pid)
-        {
-            for(var i=0;i<permissionTreeDataArray.length;i++)
-            {
-
-                if(permissionTreeDataArray[i].id==pid)
-                {
-                    var exists=false;
-                    //判断上级节点ID是否已经保存了
-                    for(var j=0;j<functionsArray.length;j++)
-                    {
-                        if(functionsArray[j].id==pid) {
-                            exists = true;
-                        }
-                    }
-                    //避免上级节点ID重复保存两份
-                    if(!exists)
-                    {
-                        functionsArray.push({id:permissionTreeDataArray[i].id,functionId:permissionTreeDataArray[i].functionId})
-                    }
-                    if(permissionTreeDataArray[i].pid!=-1) {
-                        //找到这个节点的上级节点
-                        getParentNode(functionsArray, permissionTreeDataArray[i].pid);
-                    }
+        function filter(treeId, parentNode, data) {
+            if(data.data!=null&&data.data.length>0) {
+                for (var i = 0; i < data.data.length; i++) {
+                    allTreeDataArray.push(data.data[i]);
                 }
             }
+            return data.data;
         }
 
         //监听表格复选框选择
         table.on('checkbox(roleTableFilter)', function (obj) {
-            console.log(obj)
         });
+
+        function zTreeOnCheck(event, treeId, treeNode) {
+            treeNode.halfCheck=false;
+            zTreeObj.updateNode(treeNode);
+        };
 
         table.on('tool(roleTableFilter)', function (obj) {
             var data = obj.data;
@@ -336,6 +354,8 @@
                     });
                 });
             } else if (obj.event === 'permission') {
+                var roleId = data.roleId;
+                var appCode= data.appCode;
                 index = layer.open({
                     title: '选择权限',
                     type: 1,
@@ -344,38 +364,59 @@
 
                     area: ['20%', '60%'],
                     btn: ['确定'],
-                    content: "<ul id='permissionTree' class='dtree' data-id='0' ></ul>",
+                    content: "<ul id=\"permissionTree\" style='height:90%' class=\"ztree\"></ul>",
                     success:function(layero){
+                        //清空节点缓存
+                        if(allTreeDataArray.length>0) {
+                            allTreeDataArray.splice(0, allTreeDataArray.length);
+                        }
+                        //清空要保存的节点数组
+                        if(pushTreeDataArray.length>0)
+                        {
+                            pushTreeDataArray.splice(0, pushTreeDataArray.length);
+                        }
                         loadding = layer.load();
-                        $.ajax({
-                            url:"[[@{/}]]function/query/role/function/tree",
-                            type:'POST',
-                            data:{appCode:data.appCode,roleId:data.roleId},
-                            success:function(data){
-                                if(data.code==1)
-                                {
-                                    //已选择节点
-                                    var idArray = new Array();
-                                    permissionTreeDataArray = new Array();
-                                    getCheckdNodeId(data.data,idArray);
-                                    permissionTree = dtree.render({
-                                        elem: "#permissionTree",//html中的id值
-                                        data:data.data,
-                                        width:'100%',
-                                        checkbarType: "no-all",
-                                        checkbar: true,  //开启复选框
-                                        checkbarData: "choose",// 记录选中（默认）， "change"：记录变更， "all"：记录全部， "halfChoose"："记录选中和半选（V2.5.0新增）"
-                                        done: function (res, $ul, first) {
-                                            if (first) {
-                                                if(idArray!=null&&idArray.length>0) {
-                                                    dtree.chooseDataInit("permissionTree", idArray); //"001001,001002"被选中的子节点id
-                                                    dtree.initNoAllCheck("permissionTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
-                                                }
-                                            }
 
-                                        }
-                                    });
+                        var setting = {
+                            async: {
+                                enable: true,
+                                url:"[[@{/}]]function/query/role/function/tree/"+appCode+"/"+roleId,
+                                autoParam:["id", "pid", "name"],
+                                dataFilter: filter
+                            },
+                            check: {
+                                enable: true
+                            },
+                            data:{
+                                simpleData:{
+                                    enable: true,
+                                    idKey:'id',
+                                    pIdKey:'pid',
+                                    rootPId: -1
                                 }
+                            },
+                            callback: {
+                                onCheck: zTreeOnCheck
+                            },
+                            view:{
+                                showIcon: true
+                            }
+                        };
+
+                        $.ajax({
+                            url:"[[@{/}]]function/query/role/function/tree/"+appCode+"/"+roleId,
+                            type:"POST",
+                            dataType: "json",
+                            success: function(data){
+                                if(data.data!=null) {
+                                    for (var i = 0; i < data.data.length; i++) {
+                                        allTreeDataArray.push(data.data[i]);
+                                    }
+                                }
+                                zTreeObj = $.fn.zTree.init($("#permissionTree"),setting, data.data);
+                            },
+                            error: function(){
+
                             },
                             complete:function()
                             {
@@ -383,34 +424,45 @@
                             }
                         });
 
+
                     },
                     yes: function(index, layero){
-                        var selectNodes = permissionTree.getCheckbarNodesParam("permissionTree");
-                        if(selectNodes==null||selectNodes.length<=0)
+                        var checkedNodes = zTreeObj.getCheckedNodes();
+                        if(checkedNodes==null||checkedNodes.length<=0)
                         {
                             layer.msg("请选择权限");
                             return false;
                         }
-                        var functionsArray =  new Array();
-                        for (var i = 0; i < selectNodes.length; i++) {
-                            var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                            functionsArray.push({id:selectNodeObject.id,functionId:selectNodeObject.functionId});
-                            getParentNode(functionsArray,selectNodeObject.pid);
+
+                        savePermissionLoadding = layer.load();
+
+                        //清空要保存的节点数组
+                        if(pushTreeDataArray.length>0)
+                        {
+                            pushTreeDataArray.splice(0, pushTreeDataArray.length);
                         }
-                        for (var j = 0; j < functionsArray.length; j++) {
-                            functionsArray[j]={functionId:functionsArray[j].functionId};
+
+                        for(var i=0;i<checkedNodes.length;i++)
+                        {
+                            //设置半选 全选状态
+                            setHalfCheck(checkedNodes[i],checkedNodes);
                         }
+
                         $.ajax({
                             url: "[[@{/}]]role/connect/functions",
                             contentType: "application/json; charset=utf-8",
                             type: 'POST',
-                            data: JSON.stringify({functions:functionsArray,roleId: data.roleId, appCode: data.appCode}),
+                            data: JSON.stringify({functions:pushTreeDataArray,roleId: data.roleId, appCode: data.appCode}),
                             success: function (data) {
                                 if (data.code == 0) {
                                     layer.msg(data.msg);
                                     return false;
                                 }
                                 layer.close(index);
+                            },
+                            complete:function()
+                            {
+                                layer.close(savePermissionLoadding);
                             }
                         });
                     }
@@ -425,6 +477,11 @@
 
     });
 </script>
+
+
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
@@ -427,6 +428,55 @@ public class FunctionController extends UIController {
         return resultObjectVO;
     }
 
+
+
+
+
+    /**
+     * 返回指定角色下的功能树
+     * @param request
+     * @param appCode
+     * @param roleId
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/role/function/tree/{appCode}/{roleId}",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryRoleFunctionTree(HttpServletRequest request,@PathVariable String appCode,@PathVariable String roleId,@RequestParam String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                id="-1";
+            }
+            //查询权限树
+            RoleFunctionVO roleFunctionVO = new RoleFunctionVO();
+            roleFunctionVO.setPid(Long.parseLong(id));
+            roleFunctionVO.setRoleId(roleId);
+            roleFunctionVO.setAppCode(appCode);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),roleFunctionVO);
+            resultObjectVO = feignRoleFunctionService.queryFunctionTreeByRoleIdAndParentId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<FunctionTreeVO> fucntionTreeVOS = resultObjectVO.formatDataList(FunctionTreeVO.class);
+                if(!CollectionUtils.isEmpty(fucntionTreeVOS))
+                {
+                    for(FunctionTreeVO functionTreeVO:fucntionTreeVOS)
+                    {
+                        functionTreeVO.setUrl(null);
+                    }
+                }
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }
 
