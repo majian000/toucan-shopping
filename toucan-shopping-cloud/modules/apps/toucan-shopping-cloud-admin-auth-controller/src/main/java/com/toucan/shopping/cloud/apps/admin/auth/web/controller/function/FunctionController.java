@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.App;
@@ -331,14 +332,33 @@ public class FunctionController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request)
+    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request,FunctionTreeVO functionTreeVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            App query = new App();
-            query.setCode(toucan.getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignFunctionService.queryAppFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            //默认查询根节点
+            if(functionTreeVO.getId()==null)
+            {
+                App query = new App();
+                query.setCode(toucan.getAppCode());
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+                resultObjectVO = feignAppService.findByCode(appCode,requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    App rootNode = resultObjectVO.formatData(App.class);
+                    AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                    appFunctionTreeVO.setId(-1L);
+                    appFunctionTreeVO.setAppCode(rootNode.getCode());
+                    appFunctionTreeVO.setTitle(rootNode.getName());
+                    appFunctionTreeVO.setEnableStatus((short)1);
+                    resultObjectVO.setData(appFunctionTreeVO);
+                }
+            }else{
+                functionTreeVO.setParentId(functionTreeVO.getId());
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,functionTreeVO);
+                return feignFunctionService.queryAppFunctionTreeByPid(requestJsonVO);
+            }
+
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");

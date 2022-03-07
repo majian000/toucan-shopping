@@ -147,6 +147,21 @@ public class FeignFunctionServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
+            public ResultObjectVO queryAppFunctionTreeByPid(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignFunctionService.queryAppFunctionTreeByPid faild sign {}  params {}", JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试!");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO queryFunctionTree(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)

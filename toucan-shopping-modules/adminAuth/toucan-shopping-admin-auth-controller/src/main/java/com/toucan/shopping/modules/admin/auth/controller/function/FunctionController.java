@@ -164,6 +164,30 @@ public class FunctionController {
 
 
 
+
+    /**
+     * 查询应用权限列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/app/function/tree/pid",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAppFunctionTreeByPid(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            FunctionTreeVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionTreeVO.class);
+            resultObjectVO.setData(functionService.queryOneLevelChildrenByIdAndAppCode(query.getParentId(),query.getAppCode()));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 查询指定用户和应用的权限树
      * @param requestJsonVO

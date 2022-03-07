@@ -92,6 +92,15 @@ public interface FeignFunctionService {
     ResultObjectVO queryAppFunctionTree(@RequestHeader("toucan-sign-header") String signHeader, @RequestBody RequestJsonVO requestJsonVO);
 
 
+
+    /**
+     * 查询应用权限列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value = "/query/app/function/tree/pid",method = RequestMethod.POST)
+    ResultObjectVO queryAppFunctionTreeByPid(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 查询指定用户和应用的权限树
      * @param requestJsonVO
