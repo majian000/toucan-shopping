@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -177,7 +178,22 @@ public class FunctionController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             FunctionTreeVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), FunctionTreeVO.class);
-            resultObjectVO.setData(functionService.queryOneLevelChildrenByIdAndAppCode(query.getParentId(),query.getAppCode()));
+            List<FunctionVO> functionVOS = functionService.queryOneLevelChildrenByIdAndAppCode(query.getParentId(),query.getAppCode());
+            List<FunctionTreeVO> functionTreeVOS = new LinkedList<>();
+            for(FunctionVO functionVO:functionVOS)
+            {
+                FunctionTreeVO functionTreeVO = new FunctionTreeVO();
+                BeanUtils.copyProperties(functionTreeVO,functionVO);
+                Long childrenCount = functionService.queryOneLevelChildrenCountByIdAndAppCode(functionVO.getId(),functionVO.getAppCode());
+                if(childrenCount!=null&&childrenCount.longValue()>0)
+                {
+                    functionTreeVO.setIsParent(true);
+                }else{
+                    functionTreeVO.setIsParent(false);
+                }
+                functionTreeVOS.add(functionTreeVO);
+            }
+            resultObjectVO.setData(functionTreeVOS);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -330,7 +331,7 @@ public class FunctionController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/app/function/tree")
     @ResponseBody
     public ResultObjectVO queryAppFunctionTree(HttpServletRequest request,FunctionTreeVO functionTreeVO)
     {
@@ -351,9 +352,13 @@ public class FunctionController extends UIController {
                     appFunctionTreeVO.setPid(-2L);
                     appFunctionTreeVO.setParentId(-2L);
                     appFunctionTreeVO.setAppCode(rootNode.getCode());
-                    appFunctionTreeVO.setTitle(rootNode.getName());
+                    appFunctionTreeVO.setTitle(toucan.getAppCode()+" "+rootNode.getName());
+                    appFunctionTreeVO.setName(toucan.getAppCode()+" "+rootNode.getName());
                     appFunctionTreeVO.setEnableStatus((short)1);
-                    resultObjectVO.setData(appFunctionTreeVO);
+                    appFunctionTreeVO.setIsParent(true);
+                    List<AppFunctionTreeVO> appFunctionTreeVOS = new LinkedList<>();
+                    appFunctionTreeVOS.add(appFunctionTreeVO);
+                    resultObjectVO.setData(appFunctionTreeVOS);
                 }
             }else{
                 functionTreeVO.setParentId(functionTreeVO.getId());

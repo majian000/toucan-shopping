@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.App;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -328,15 +330,63 @@ public class FunctionController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/app/function/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/app/function/tree")
     @ResponseBody
-    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request)
+    public ResultObjectVO queryAppFunctionTree(HttpServletRequest request,FunctionTreeVO functionTreeVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            App query = new App();
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
-            return feignFunctionService.queryAppFunctionTree(SignUtil.sign(requestJsonVO),requestJsonVO);
+            //默认查询根节点
+            if(functionTreeVO.getId()==null)
+            {
+                App query = new App();
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+                resultObjectVO = feignAppService.list(appCode,requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<App> rootNodes = resultObjectVO.formatDataList(App.class);
+                    List<AppFunctionTreeVO> appFunctionTreeVOS = new LinkedList<>();
+                    for(App rootNode:rootNodes) {
+
+                        AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                        appFunctionTreeVO.setId(Long.parseLong(rootNode.getCode()));
+                        appFunctionTreeVO.setPid(-2L);
+                        appFunctionTreeVO.setParentId(-2L);
+                        appFunctionTreeVO.setAppCode(rootNode.getCode());
+                        appFunctionTreeVO.setTitle(rootNode.getCode() + " " + rootNode.getName());
+                        appFunctionTreeVO.setName(rootNode.getCode() + " " + rootNode.getName());
+                        appFunctionTreeVO.setEnableStatus((short) 1);
+                        appFunctionTreeVO.setIsParent(true);
+                        appFunctionTreeVO.setIsAppNode(true); //是应用节点
+                        appFunctionTreeVOS.add(appFunctionTreeVO);
+                    }
+                    resultObjectVO.setData(appFunctionTreeVOS);
+                }
+            }else{
+                //如果展开的是应用下面的第一级节点
+                if(functionTreeVO.getIsAppNode()!=null&&functionTreeVO.getIsAppNode().booleanValue()==true)
+                {
+                    functionTreeVO.setParentId(-1L);
+                }else { //就查询这个节点下的子节点(当前选择节点深度大于1)
+                    functionTreeVO.setParentId(functionTreeVO.getId());
+                }
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,functionTreeVO);
+                resultObjectVO = feignFunctionService.queryAppFunctionTreeByPid(requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    List<FunctionTreeVO> functionTreeVOS = resultObjectVO.formatDataList(FunctionTreeVO.class);
+                    for(FunctionTreeVO tree:functionTreeVOS)
+                    {
+                        //手动设置第一级节点的父节点ID为应用编码
+                        if(String.valueOf(functionTreeVO.getId()).equals(functionTreeVO.getAppCode()))
+                        {
+                            tree.setParentId(functionTreeVO.getId());
+                        }
+                        tree.setIsAppNode(false);
+                    }
+                    resultObjectVO.setData(functionTreeVOS);
+                }
+            }
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请求失败");

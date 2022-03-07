@@ -55,4 +55,20 @@ public class AppFunctionTreeVO extends Function {
     private Long parentId;
 
 
+    /**
+     * 是否是父节点
+     */
+    private Boolean isParent=true;
+
+    /**
+     * 是否展开
+     */
+    private Boolean open = false;
+
+    /**
+     * 是否是应用节点
+     */
+    private Boolean isAppNode = false;
+
+
 }

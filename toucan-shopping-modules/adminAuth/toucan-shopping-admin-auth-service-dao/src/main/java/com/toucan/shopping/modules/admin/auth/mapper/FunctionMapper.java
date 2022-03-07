@@ -74,6 +74,8 @@ public interface FunctionMapper {
 
     List<FunctionVO> findListByPidAndAppCode(Long pid,String appCode);
 
+    Long queryOneLevelChildrenCountByIdAndAppCode(Long pid,String appCode);
+
     List<FunctionVO> findById(Long id);
 
     List<Function> findTreeTableByPageInfo(FunctionTreeInfo functionTreeInfo);

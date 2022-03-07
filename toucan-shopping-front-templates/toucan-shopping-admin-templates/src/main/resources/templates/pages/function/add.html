@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
     <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
     <style>
         body {
@@ -94,8 +96,9 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form','layer','tree'], function () {
+    layui.use(['form','layer','tree','jquery'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
@@ -155,6 +158,17 @@
         };
 
 
+        function filter(treeId, parentNode, data) {
+            var dataArray = data.data;
+            if(dataArray!=null&&dataArray.length>0)
+            {
+                for(var i=0;i<dataArray.length;i++)
+                {
+                    dataArray[i].url=null;
+                }
+            }
+            return dataArray;
+        }
         function functionTreeClick(event, treeId, treeNode) {
             // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
 
@@ -172,7 +186,7 @@
                 maxmin:true,
 
                 area: ['20%', '60%'],
-                content: "<div id='appFunctionTree'></div>",
+                content: "<ul id=\"appFunctionTree\" style='height:90%' class=\"ztree\"></ul>",
                 success:function(layero){
                     loadding = layer.load();
 
@@ -198,7 +212,7 @@
                 layer.full(index);
             });
 
-        })
+        });
     });
 </script>
 

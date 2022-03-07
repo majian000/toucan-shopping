@@ -89,4 +89,10 @@ public class FunctionTreeVO extends Function {
      */
     private Boolean halfCheck;
 
+
+    /**
+     * 是否是应用节点
+     */
+    private Boolean isAppNode = false;
+
 }

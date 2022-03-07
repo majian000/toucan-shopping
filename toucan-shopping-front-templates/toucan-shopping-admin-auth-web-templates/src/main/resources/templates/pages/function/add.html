@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
     <style>
         body {
             background-color: #ffffff;
@@ -93,8 +94,9 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form','layer','tree'], function () {
+    layui.use(['form','layer','tree','jquery'], function () {
         var form = layui.form,
             layer = layui.layer,
             $ = layui.$;
@@ -129,8 +131,58 @@
         });
 
 
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]function/query/app/function/tree",
+                autoParam:["id", "pid", "name","appCode","isAppNode"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -2
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: functionTreeClick
+            }
+        };
+
+
+        function filter(treeId, parentNode, data) {
+            var dataArray = data.data;
+            if(dataArray!=null&&dataArray.length>0)
+            {
+                for(var i=0;i<dataArray.length;i++)
+                {
+                    dataArray[i].url=null;
+                }
+            }
+            return dataArray;
+        }
+        function functionTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+
+            $("#selectPid").val(treeNode.name);
+            if(treeNode.isAppNode)
+            {
+                $("#pid").val("-1");
+            }else {
+                $("#pid").val(treeNode.id);
+            }
+            $("#appCode").val(treeNode.appCode);
+            layer.close(index);
+        }
+
+
+
         $("#selectPid").click(function(){
-            loadding = layer.load();
             index = layer.open({
                 title: '选择上级功能',
                 type: 1,
@@ -138,33 +190,19 @@
                 maxmin:true,
 
                 area: ['20%', '60%'],
-                content: "<div id='appFunctionTree'></div>",
+                content: "<ul id=\"appFunctionTree\" style='height:90%' class=\"ztree\"></ul>",
                 success:function(layero){
+                    loadding = layer.load();
+
                     $.ajax({
                         url:"[[@{/}]]function/query/app/function/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                for(var i=0;i<data.data.length;i++)
-                                {
-                                    var node = data.data[i];
-                                    node.title=node.appCode+" "+node.title;
-                                }
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#appFunctionTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        $("#selectPid").val(obj.data.title);
-                                        $("#pid").val(obj.data.id);
-                                        $("#appCode").val(obj.data.appCode);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
+                        type:"POST",
+                        dataType: "json",
+                        success: function(data){
+                            var zTreeObj = $.fn.zTree.init($("#appFunctionTree"),setting, data.data);
+                        },
+                        error: function(){
+
                         },
                         complete:function()
                         {
@@ -178,8 +216,15 @@
                 layer.full(index);
             });
 
-        })
+        });
     });
 </script>
+
+
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
+
+
 </body>
 </html>

@@ -198,6 +198,9 @@
         select * from t_sa_function t where  1=1 and t.pid = #{pid} and t.app_code=#{appCode} and t.delete_status = 0 order by t.function_sort desc
     </select>
 
+    <select id="queryOneLevelChildrenCountByIdAndAppCode" resultType="java.lang.Long" >
+        select count(*) from t_sa_function t where  1=1 and t.pid = #{pid} and t.app_code=#{appCode} and t.delete_status = 0
+    </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.admin.auth.entity.Function" useGeneratedKeys="true" keyProperty="id" >
         insert into t_sa_function(pid,function_text,type,name,icon,url,permission,function_id,function_sort,remark,app_code,create_admin_id,enable_status,create_date,delete_status)
