@@ -348,6 +348,8 @@ public class FunctionController extends UIController {
                     App rootNode = resultObjectVO.formatData(App.class);
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                     appFunctionTreeVO.setId(-1L);
+                    appFunctionTreeVO.setPid(-2L);
+                    appFunctionTreeVO.setParentId(-2L);
                     appFunctionTreeVO.setAppCode(rootNode.getCode());
                     appFunctionTreeVO.setTitle(rootNode.getName());
                     appFunctionTreeVO.setEnableStatus((short)1);
@@ -355,6 +357,7 @@ public class FunctionController extends UIController {
                 }
             }else{
                 functionTreeVO.setParentId(functionTreeVO.getId());
+                functionTreeVO.setAppCode(toucan.getAppCode());
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,functionTreeVO);
                 return feignFunctionService.queryAppFunctionTreeByPid(requestJsonVO);
             }

@@ -49,5 +49,10 @@ public class AppFunctionTreeVO extends Function {
      */
     private Boolean haveChild = false;
 
+    /**
+     * 父节点ID
+     */
+    private Long parentId;
+
 
 }
