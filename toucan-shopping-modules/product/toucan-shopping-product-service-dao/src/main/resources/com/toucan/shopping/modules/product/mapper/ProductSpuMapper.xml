@@ -4,7 +4,7 @@
 
     <resultMap id="productMap" type="com.toucan.shopping.modules.product.entity.ProductSpu" >
         <id column="id" jdbcType="BIGINT"  property="id" />
-        <result column="category_id_list" jdbcType="VARCHAR" property="categoryIdList" />
+        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
         <result column="status" jdbcType="SMALLINT" property="status" />
@@ -45,8 +45,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSpu" >
-        insert into t_product_spu(id,uuid,category_id_list,name,app_code,create_date,create_admin_id,status,attributes)
-        values(#{id},#{uuid},#{categoryIdList},#{name},#{appCode},#{createDate},#{createAdminId},#{status},#{attributes})
+        insert into t_product_spu(id,uuid,category_id,name,app_code,create_date,create_admin_id,status,attributes)
+        values(#{id},#{uuid},#{categoryId},#{name},#{appCode},#{createDate},#{createAdminId},#{status},#{attributes})
     </insert>
 
     <select id="queryList" resultMap="productVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSpuVO">

@@ -74,7 +74,7 @@ public class ProductSpuController {
         try {
             logger.info("保存商品SPU {} ",requestJsonVO.getEntityJson());
             ProductSpuVO productSpuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSpuVO.class);
-            if(productSpuVO.getCategoryIdList()==null) {
+            if(productSpuVO.getCategoryId()==null) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("分类ID不能为空!");
                 return resultObjectVO;

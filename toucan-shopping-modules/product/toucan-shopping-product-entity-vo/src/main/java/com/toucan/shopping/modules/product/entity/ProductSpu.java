@@ -25,7 +25,9 @@ public class ProductSpu {
     private Long id; //主键
 
 
-    private String categoryIdList; //所属类别
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Integer categoryId; //所属类别
 
     private String uuid; //SPU UUID
 
