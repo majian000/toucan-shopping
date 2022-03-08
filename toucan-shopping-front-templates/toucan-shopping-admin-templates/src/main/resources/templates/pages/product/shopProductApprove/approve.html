@@ -208,7 +208,8 @@
         <div class="layui-form-item" >
             <label class="layui-form-label required " >关联SPU</label>
             <div class="layui-input-block">
-                <input type="text" lay-verify="required"  class="layui-input">
+                <input type="text" id="productId" name="productId" lay-verify="required"  class="layui-input">
+                <input type="hidden" id="productUuid" name="productUuid">
             </div>
         </div>
         <div class="layui-form-item">
@@ -255,6 +256,21 @@
             indicator: 'outside'	//这个属性：小圆点在外面
         });
 
+        $("#productId").click(function(){
+            var index = layer.open({
+                title: 'SPU列表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: "[[@{/product/shopProductApprove/spuListPage}]]"
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
 
         //监听提交
         form.on('submit(passBtn)', function (data) {

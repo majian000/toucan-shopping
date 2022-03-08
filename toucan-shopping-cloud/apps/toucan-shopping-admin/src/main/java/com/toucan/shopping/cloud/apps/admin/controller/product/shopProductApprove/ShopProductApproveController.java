@@ -97,6 +97,16 @@ public class ShopProductApproveController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/spuListPage",method = RequestMethod.GET)
+    public String spuListPage(HttpServletRequest request)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/product/shopProductApprove/spuListPage",feignFunctionService);
+        return "pages/product/shopProductApprove/spu_list.html";
+    }
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/approvePage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
@@ -382,6 +392,81 @@ public class ShopProductApproveController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
+    }
+
+
+
+    /**
+     * 查询列表
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/productSpu/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO productSpuList(HttpServletRequest request, ShopProductPageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            ResultObjectVO resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
+                    List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ShopProductVO.class);
+                    if(CollectionUtils.isNotEmpty(list))
+                    {
+                        Long[] categoryIds = new Long[list.size()];
+                        //查询类别名称
+                        CategoryVO queryCategoryVO = new CategoryVO();
+                        queryCategoryVO.setIdArray(categoryIds);
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
+                        resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(),requestJsonVO);
+                        if(resultObjectVO.isSuccess())
+                        {
+                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
+                            if(CollectionUtils.isNotEmpty(categoryVOS))
+                            {
+                                for(ShopProductVO shopProductVO:list)
+                                {
+                                    for(CategoryVO categoryVO:categoryVOS)
+                                    {
+                                        if(shopProductVO.getCategoryId().longValue()==categoryVO.getId().longValue())
+                                        {
+                                            shopProductVO.setCategoryName(categoryVO.getName());
+                                            shopProductVO.setCategoryPath(categoryVO.getNamePath());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
+                        for(ShopProductVO shopProductVO:list)
+                        {
+
+                            if(shopProductVO.getMainPhotoFilePath()!=null) {
+                                shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVO.getMainPhotoFilePath());
+                            }
+                        }
+
+                    }
+                    if(tableVO.getCount()>0) {
+                        tableVO.setData((List)list);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
     }
 
     /**

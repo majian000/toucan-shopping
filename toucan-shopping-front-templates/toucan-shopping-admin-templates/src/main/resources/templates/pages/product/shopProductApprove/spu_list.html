@@ -89,9 +89,9 @@
                     </div>
                 </script>
 
-                <table class="layui-hide" id="productSpuTable" lay-filter="productSpuTableFilter"></table>
+                <table class="layui-hide" id="shopProductApproveTable" lay-filter="shopProductApproveTableFilter"></table>
 
-                <script type="text/html" id="productSpuTableBar">
+                <script type="text/html" id="shopProductApproveTableBar">
                     <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
                 </script>
             </div>
@@ -142,8 +142,8 @@
 
 
         table.render({
-            elem: '#productSpuTable',
-            url: "[[@{/}]]product/productSpu/list",
+            elem: '#shopProductApproveTable',
+            url: "[[@{/}]]product/shopProductApprove/productSpu/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -182,7 +182,7 @@
                     },
                     {field: 'createDate', width: 150, title: '创建时间'},
                     {field: 'updateDate', width: 150, title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#productSpuTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#shopProductApproveTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],
@@ -194,7 +194,7 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             //执行搜索重载
-            table.reload('productSpuTable', {
+            table.reload('shopProductApproveTable', {
                 page: {
                     curr: 1
                 }
@@ -215,7 +215,7 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]product/productSpu/query/category/tree/pid",
+                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
                 autoParam:["id", "pid", "name"],
                 dataFilter: filter
             },
@@ -251,7 +251,7 @@
 
             loaddingTree = layer.load();
             $.ajax({
-                url:"[[@{/}]]product/productSpu/query/category/tree/pid",
+                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
                 type:"POST",
                 dataType: "json",
                 success: function(data){
@@ -270,7 +270,7 @@
         /**
          * toolbar监听事件
          */
-        table.on('toolbar(productSpuTableFilter)', function (obj) {
+        table.on('toolbar(shopProductApproveTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加商品',
@@ -279,13 +279,13 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/productSpu/addPage}]]"
+                    content: "[[@{/product/shopProductApprove/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('productSpuTable')
+                var checkStatus = table.checkStatus('shopProductApproveTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -294,7 +294,7 @@
                 }
                 layer.confirm('确定删除商品?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/productSpu/delete/ids",
+                        url:"[[@{/}]]product/shopProductApprove/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -302,7 +302,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('productSpuTable', {
+                            table.reload('shopProductApproveTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -322,11 +322,11 @@
 
 
         //监听表格复选框选择
-        table.on('checkbox(productSpuTableFilter)', function (obj) {
+        table.on('checkbox(shopProductApproveTableFilter)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(productSpuTableFilter)', function (obj) {
+        table.on('tool(shopProductApproveTableFilter)', function (obj) {
             var data = obj.data;
             if(obj.event=="openDetailDialogEvent")
             {
