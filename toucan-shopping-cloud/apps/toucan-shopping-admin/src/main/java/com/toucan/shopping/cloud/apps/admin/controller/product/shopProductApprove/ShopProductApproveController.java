@@ -402,9 +402,9 @@ public class ShopProductApproveController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/productSpu/list",method = RequestMethod.POST)
+    @RequestMapping(value = "/query/product/spu/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO productSpuList(HttpServletRequest request, ShopProductPageInfo pageInfo)
+    public TableVO queryProductSpuList(HttpServletRequest request, ShopProductPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
