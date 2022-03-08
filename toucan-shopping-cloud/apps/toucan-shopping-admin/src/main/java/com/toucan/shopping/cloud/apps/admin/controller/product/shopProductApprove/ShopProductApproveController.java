@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
@@ -23,6 +24,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
+import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
@@ -82,6 +84,9 @@ public class ShopProductApproveController extends UIController {
 
     @Autowired
     private FeignProductSkuService feignProductSkuService;
+
+    @Autowired
+    private FeignProductSpuService feignProductSpuService;
 
 
 
@@ -404,12 +409,12 @@ public class ShopProductApproveController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/product/spu/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO queryProductSpuList(HttpServletRequest request, ShopProductPageInfo pageInfo)
+    public TableVO queryProductSpuList(HttpServletRequest request, ProductSpuPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignProductSpuService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -419,40 +424,7 @@ public class ShopProductApproveController extends UIController {
                     List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ShopProductVO.class);
                     if(CollectionUtils.isNotEmpty(list))
                     {
-                        Long[] categoryIds = new Long[list.size()];
-                        //查询类别名称
-                        CategoryVO queryCategoryVO = new CategoryVO();
-                        queryCategoryVO.setIdArray(categoryIds);
-                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryCategoryVO);
-                        resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(),requestJsonVO);
-                        if(resultObjectVO.isSuccess())
-                        {
-                            List<CategoryVO> categoryVOS = (List<CategoryVO>)resultObjectVO.formatDataList(CategoryVO.class);
-                            if(CollectionUtils.isNotEmpty(categoryVOS))
-                            {
-                                for(ShopProductVO shopProductVO:list)
-                                {
-                                    for(CategoryVO categoryVO:categoryVOS)
-                                    {
-                                        if(shopProductVO.getCategoryId().longValue()==categoryVO.getId().longValue())
-                                        {
-                                            shopProductVO.setCategoryName(categoryVO.getName());
-                                            shopProductVO.setCategoryPath(categoryVO.getNamePath());
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
 
-
-                        for(ShopProductVO shopProductVO:list)
-                        {
-
-                            if(shopProductVO.getMainPhotoFilePath()!=null) {
-                                shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVO.getMainPhotoFilePath());
-                            }
-                        }
 
                     }
                     if(tableVO.getCount()>0) {
