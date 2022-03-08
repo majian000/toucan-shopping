@@ -45,4 +45,11 @@ public class MD5Util {
 
         return builder.toString();
     }
+
+    public static void main(String[] args) throws Exception
+    {
+        System.out.println(MD5Util.md5("测试商品11111"));
+        System.out.println(MD5Util.md5("测试商品11111"));
+        System.out.println(MD5Util.md5("测试商品2222"));
+    }
 }

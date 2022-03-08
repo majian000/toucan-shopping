@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -69,11 +70,11 @@ public class ProductSpuController {
             return resultObjectVO;
         }
 
-        String categoryId="-1";
+        String lockKey="-1";
         try {
             logger.info("保存商品SPU {} ",requestJsonVO.getEntityJson());
             ProductSpuVO productSpuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSpuVO.class);
-            if(productSpuVO.getCategoryId()==null) {
+            if(productSpuVO.getCategoryIdList()==null) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("分类ID不能为空!");
                 return resultObjectVO;
@@ -84,8 +85,8 @@ public class ProductSpuController {
                 resultObjectVO.setMsg("SPU名称不能为空!");
                 return resultObjectVO;
             }
-            categoryId = String.valueOf(productSpuVO.getCategoryId());
-            skylarkLock.lock(ProductSpuRedisLockKey.getSaveProductSpuLockKey(categoryId), categoryId);
+            lockKey = MD5Util.md5(productSpuVO.getName());
+            skylarkLock.lock(ProductSpuRedisLockKey.getSaveProductSpuLockKey(lockKey), lockKey);
 
             ProductSpuVO queryProductSpu = new ProductSpuVO();
             queryProductSpu.setName(productSpuVO.getName());
@@ -117,7 +118,7 @@ public class ProductSpuController {
             logger.warn(e.getMessage(),e);
 
         }finally{
-            skylarkLock.unLock(ProductSpuRedisLockKey.getSaveProductSpuLockKey(categoryId), categoryId);
+            skylarkLock.unLock(ProductSpuRedisLockKey.getSaveProductSpuLockKey(lockKey), lockKey);
         }
         return resultObjectVO;
     }
