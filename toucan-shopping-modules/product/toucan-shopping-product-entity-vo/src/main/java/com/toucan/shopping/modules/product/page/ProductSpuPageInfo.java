@@ -21,6 +21,16 @@ public class ProductSpuPageInfo extends PageInfo<ProductSpuVO> {
 
     private Long id;
 
+    /**
+     * 品牌ID
+     */
+    private Long brandId;
+
+    /**
+     * 分类ID
+     */
+    private Long categoryId;
+
     //==============================================
 
 }

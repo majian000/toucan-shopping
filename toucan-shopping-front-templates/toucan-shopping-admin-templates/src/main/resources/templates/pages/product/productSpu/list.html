@@ -16,10 +16,6 @@
 
 
     <style>
-        .layui-table-cell {
-            height: auto !important;
-            white-space: normal;
-        }
         .ztree *{
             font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
         }
@@ -143,7 +139,7 @@
 
         table.render({
             elem: '#productSpuTable',
-            url: "[[@{/}]]product/productSpu/list",
+            url: "[[@{/}]]productSpu/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -215,7 +211,7 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]product/productSpu/query/category/tree/pid",
+                url:"[[@{/}]]productSpu/query/category/tree/pid",
                 autoParam:["id", "pid", "name"],
                 dataFilter: filter
             },
@@ -251,7 +247,7 @@
 
             loaddingTree = layer.load();
             $.ajax({
-                url:"[[@{/}]]product/productSpu/query/category/tree/pid",
+                url:"[[@{/}]]productSpu/query/category/tree/pid",
                 type:"POST",
                 dataType: "json",
                 success: function(data){
@@ -267,6 +263,8 @@
             });
         }
 
+
+
         /**
          * toolbar监听事件
          */
@@ -279,13 +277,13 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/productSpu/addPage}]]"
+                    content: "[[@{/productSpu/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('productSpuTable')
+                var checkStatus = table.checkStatus('brandTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -294,7 +292,7 @@
                 }
                 layer.confirm('确定删除商品?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/productSpu/delete/ids",
+                        url:"[[@{/}]]productSpu/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -302,7 +300,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('productSpuTable', {
+                            table.reload('brandTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -318,8 +316,6 @@
                 });
             }
         });
-
-
 
         //监听表格复选框选择
         table.on('checkbox(productSpuTableFilter)', function (obj) {
