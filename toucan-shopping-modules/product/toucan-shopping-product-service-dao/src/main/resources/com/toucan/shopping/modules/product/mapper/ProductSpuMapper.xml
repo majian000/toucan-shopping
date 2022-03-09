@@ -15,6 +15,7 @@
         <result column="update_admin_id" jdbcType="BIGINT" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="attributes" jdbcType="VARCHAR" property="attributes" />
+        <result column="brand_id" jdbcType="BIGINT" property="brandId" />
         
     </resultMap>
 
@@ -29,6 +30,9 @@
             and t.id = #{id}
         </if>
 
+        <if test="brandId!=null and brandId!=-1">
+            and t.brand_id = #{brandId}
+        </if>
         and t.delete_status = 0
 
     </sql>
@@ -45,8 +49,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSpu" >
-        insert into t_product_spu(id,uuid,category_id,name,app_code,create_date,create_admin_id,status,attributes)
-        values(#{id},#{uuid},#{categoryId},#{name},#{appCode},#{createDate},#{createAdminId},#{status},#{attributes})
+        insert into t_product_spu(id,uuid,category_id,name,app_code,create_date,create_admin_id,status,attributes,brand_id)
+        values(#{id},#{uuid},#{categoryId},#{name},#{appCode},#{createDate},#{createAdminId},#{status},#{attributes},#{brandId})
     </insert>
 
     <select id="queryList" resultMap="productVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSpuVO">

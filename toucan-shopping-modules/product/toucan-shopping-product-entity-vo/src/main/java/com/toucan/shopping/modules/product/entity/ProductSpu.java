@@ -59,6 +59,9 @@ public class ProductSpu {
 
     private String attributes; //这个SPU的属性
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long brandId; //品牌ID
 
 
 
