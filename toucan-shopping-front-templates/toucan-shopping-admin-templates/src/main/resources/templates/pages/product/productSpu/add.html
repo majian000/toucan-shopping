@@ -46,6 +46,20 @@
                         </div>
 
                         <div class="layui-form-item">
+                            <label class="layui-form-label required">所属分类</label>
+                            <div class="layui-input-block">
+                                <input type="hidden" name="categoryId" id="categoryId"  >
+                                <input type="text" readonly  id="selectCategory" lay-verify="required"  placeholder="请选择所属分类"  class="layui-input" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">所属品牌</label>
+                            <div class="layui-input-block">
+                                <input type="hidden" name="brandId" id="brandId"  >
+                                <input type="text" readonly  id="selectBrand" lay-verify="required"  placeholder="请选择所属品牌"  class="layui-input" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label">状态</label>
                             <div class="layui-input-block" >
                                 <select name="status"  lay-search="">
