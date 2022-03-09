@@ -33,6 +33,11 @@
         <if test="brandId!=null and brandId!=-1">
             and t.brand_id = #{brandId}
         </if>
+
+        <if test="categoryId!=null and categoryId!=-1">
+            and t.category_id = #{categoryId}
+        </if>
+
         and t.delete_status = 0
 
     </sql>
