@@ -154,6 +154,7 @@ public class ProductSpuController extends UIController {
     }
 
 
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
     @ResponseBody

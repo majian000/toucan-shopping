@@ -49,7 +49,7 @@
                             <label class="layui-form-label required">所属分类</label>
                             <div class="layui-input-block">
                                 <input type="hidden" name="categoryId" id="categoryId"  >
-                                <input type="text" readonly  id="selectCategory" lay-verify="required"  placeholder="请选择所属分类"  class="layui-input" >
+                                <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择所属分类"  class="layui-input" >
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -71,6 +71,39 @@
                     </div>
                     <div class="layui-tab-item">
 
+                        <div class="layui-form-item">
+                            <label class="layui-form-label ">公共属性</label>
+                            <div class="layui-input-block">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label "></label>
+                            <div class="layui-input-block">
+
+                                <script type="text/html" id="toolbarDemo">
+                                    <div class="layui-btn-container">
+                                    </div>
+                                </script>
+                                <table class="layui-hide" id="attributeTable" lay-filter="attributeTableFilter"></table>
+                                <script type="text/html" id="attributeTableBar">
+                                </script>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label ">属性预览</label>
+                            <div class="layui-input-block">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label "></label>
+                            <div class="layui-input-block">
+
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -123,6 +156,78 @@
         });
 
 
+
+        table.render({
+            elem: '#attributeTable',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [
+                [
+                    {field: 'parentPath',width: 350,  title: '上级属性路径'},
+                    {field: 'attributeName', width: 350, title: '属性名'},
+                    {field: 'attributeValue',width: 350,  title: '属性值'},
+                    {title: '操作', minWidth: 300, toolbar: '#attributeTableBar', align: "center"}
+                ]
+            ],
+            page: false,
+            skin: 'line'
+        });
+
+
+        $("#selectCategoryId").click(function(){
+            index = layer.open({
+                title: '选择所属分类',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['20%', '60%'],
+                content: "<div id='categoryTree'></div>",
+                success:function(layero){
+
+                    loadding = layer.load();
+                    $.ajax({
+                        url:"[[@{/}]]productSpu/query/category/tree",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:null,
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#categoryTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        if(obj.data.id==-1)
+                                        {
+                                            layer.msg("不能选择根节点");
+                                            return;
+                                        }
+                                        $("#selectCategoryId").val(obj.data.title);
+                                        $("#categoryId").val(obj.data.id);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
 
 
     });
