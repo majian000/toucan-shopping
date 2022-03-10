@@ -83,10 +83,16 @@
 
                                 <script type="text/html" id="toolbarDemo">
                                     <div class="layui-btn-container">
+                                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加属性 </button>
                                     </div>
                                 </script>
                                 <table class="layui-hide" id="attributeTable" lay-filter="attributeTableFilter"></table>
                                 <script type="text/html" id="attributeTableBar">
+                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveTop">置顶</a> &nbsp;&nbsp;
+                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveUp">上移</a> &nbsp;&nbsp;
+                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveDown">下移</a> &nbsp;&nbsp;
+                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveBottom">置底</a> &nbsp;&nbsp;
+                                    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
                                 </script>
                             </div>
                         </div>
