@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -20,6 +21,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
+import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSpuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +71,9 @@ public class ProductSpuController extends UIController {
     @Autowired
     private FeignProductSpuService feignProductSpuService;
 
+    @Autowired
+    private FeignBrandService feignBrandService;
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -91,7 +97,46 @@ public class ProductSpuController extends UIController {
     }
 
 
-
+    /**
+     * 查询品牌
+     * @param list
+     * @param brandIdList
+     */
+    void queryBrand(List<ProductSpuVO> list,List<Long> brandIdList)
+    {
+        try {
+            BrandVO queryBrandVO = new BrandVO();
+            queryBrandVO.setIdList(brandIdList);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
+            ResultObjectVO resultObjectVO = feignBrandService.findByIdList(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
+                if(CollectionUtils.isNotEmpty(brandVOS))
+                {
+                    for(ProductSpuVO productSpuVO:list)
+                    {
+                        for(BrandVO brandVO:brandVOS)
+                        {
+                            if(productSpuVO.getBrandId()!=null&&productSpuVO.getBrandId().longValue()==brandVO.getId().longValue())
+                            {
+                                productSpuVO.setBrandChineseName(brandVO.getChineseName());
+                                productSpuVO.setBrandEnglishName(brandVO.getEnglishName());
+                                productSpuVO.setBrandLogo(brandVO.getLogoPath());
+                                if(brandVO.getLogoPath()!=null) {
+                                    productSpuVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
 
 
     /**
@@ -116,6 +161,34 @@ public class ProductSpuController extends UIController {
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
                     List<ProductSpuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ProductSpuVO.class);
                     if(tableVO.getCount()>0) {
+                        boolean brandExists=false;
+                        List<Long> brandIdList = new LinkedList<>();
+                        for(int i=0;i<list.size();i++)
+                        {
+                            ProductSpuVO productSpuVO = list.get(i);
+
+                            //设置品牌ID
+                            brandExists=false;
+                            for(Long brandId:brandIdList)
+                            {
+                                if(productSpuVO.getBrandId()!=null&&brandId!=null
+                                        &&brandId.longValue()==productSpuVO.getBrandId().longValue())
+                                {
+                                    brandExists=true;
+                                    break;
+                                }
+
+                            }
+                            if(!brandExists) {
+                                if(productSpuVO.getBrandId()!=null) {
+                                    brandIdList.add(productSpuVO.getBrandId());
+                                }
+                            }
+                        }
+
+                        //查询品牌名称
+                        this.queryBrand(list, brandIdList);
+
                         tableVO.setData((List)list);
                     }
                 }

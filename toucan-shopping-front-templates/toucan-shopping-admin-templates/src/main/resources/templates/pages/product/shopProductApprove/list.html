@@ -210,13 +210,20 @@
                     {field: 'uuid',width: 300,  title: '店铺商品UUID'},
                     {field: 'categoryPath',width: 350,  title: '分类路径'},
                     {field: 'categoryName',width: 150,  title: '分类名称'},
+                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
+                        templet: function (row) {
+                            if(row.brandHttpLogo!=null) {
+                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
                     {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
                     {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
                     {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
                     {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
                     {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
                     {field: 'productId',width: 150,  title: '平台商品ID'},
-                    {field: 'attributes',width: 150,  title: '属性列表'},
+                    {field: 'attributes',width: 550,  title: '属性列表'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){

@@ -19,6 +19,12 @@
         .ztree *{
             font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
         }
+
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+
     </style>
 
 </head>
@@ -163,9 +169,10 @@
                     {field: 'categoryId',width: 350,  title: '分类ID'},
                     {field: 'categoryName',width: 350,  title: '分类名称'},
                     {field: 'brandId',width: 350,  title: '品牌ID'},
-                    {field: 'brandName',width: 350,  title: '品牌名称'},
+                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
+                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
                     {field: 'brandLogo',width: 350,  title: '品牌LOGO'},
-                    {field: 'attributes',width: 150,  title: '属性列表'},
+                    {field: 'attributes',width: 550,  title: '属性列表'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){

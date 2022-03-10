@@ -13,4 +13,10 @@ import java.util.Date;
 @Data
 public class ProductSpuVO extends ProductSpu {
 
+    private String brandChineseName; //品牌中文名称
+    private String brandEnglishName; //品牌英文名称
+    private String brandLogo; //品牌logo
+    private String brandHttpLogo; //品牌LOGO地址
+
+
 }

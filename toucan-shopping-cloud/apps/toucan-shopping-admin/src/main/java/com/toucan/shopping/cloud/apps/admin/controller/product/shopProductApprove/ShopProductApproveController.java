@@ -350,6 +350,10 @@ public class ShopProductApproveController extends UIController {
                             {
                                 shopProductVO.setBrandChineseName(brandVO.getChineseName());
                                 shopProductVO.setBrandEnglishName(brandVO.getEnglishName());
+                                shopProductVO.setBrandLogo(brandVO.getLogoPath());
+                                if(brandVO.getLogoPath()!=null) {
+                                    shopProductVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
+                                }
                                 break;
                             }
                         }
