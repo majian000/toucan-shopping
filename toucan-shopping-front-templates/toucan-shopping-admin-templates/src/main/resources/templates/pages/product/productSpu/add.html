@@ -128,11 +128,13 @@
     layui.use(['form','element', 'table','carousel'], function () {
         var $ = layui.jquery,
             form = layui.form,
-            table = layui.table,
+            attributeTable = layui.table,
             element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
         var carousel = layui.carousel;
         var carouselsku = layui.carousel;
+        var attributeDataArray = new Array();
 
+        attributeDataArray.push({parentPath:"主体",attributeName:"型号",attributeValue:"12X"});
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
@@ -163,9 +165,11 @@
 
 
 
-        table.render({
+        attributeTable.render({
             elem: '#attributeTable',
             toolbar: '#toolbarDemo',
+            data:attributeDataArray,
+            loading: true,
             defaultToolbar: ['filter',  {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
@@ -174,14 +178,41 @@
             cols: [
                 [
                     {field: 'parentPath',width: 350,  title: '上级属性路径'},
-                    {field: 'attributeName', width: 350, title: '属性名'},
-                    {field: 'attributeValue',width: 350,  title: '属性值'},
-                    {title: '操作', minWidth: 300, toolbar: '#attributeTableBar', align: "center"}
+                    {field: 'attributeName', width: 350,edit: 'text', title: '属性名'},
+                    {field: 'attributeValue',width: 350, edit: 'text', title: '属性值'},
+                    {title: '操作', minWidth: 400, toolbar: '#attributeTableBar', align: "center"}
                 ]
             ],
             page: false,
             skin: 'line'
         });
+
+
+        //重新加载
+        // attributeTable.reload({
+        //     data : attributeDataArray
+        // });
+
+        /**
+         * toolbar监听事件
+         */
+        attributeTable.on('toolbar(attributeTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加属性',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['80%', '80%'],
+                    content: "[[@{/productSpu/addAttributePage}]]"
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
+        });
+
 
 
         $("#selectCategoryId").click(function(){
