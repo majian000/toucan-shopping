@@ -46,14 +46,14 @@
                         </div>
 
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">所属分类</label>
+                            <label class="layui-form-label required">所属分类<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
                             <div class="layui-input-block">
                                 <input type="hidden" name="categoryId" id="categoryId"  >
                                 <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择所属分类"  class="layui-input" >
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">所属品牌</label>
+                            <label class="layui-form-label required">所属品牌<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
                             <div class="layui-input-block">
                                 <input type="hidden" name="brandId" id="brandId"  >
                                 <input type="text" readonly  id="selectBrand" lay-verify="required"  placeholder="请选择所属品牌"  class="layui-input" >
@@ -125,12 +125,13 @@
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
-    layui.use(['form','element', 'table','carousel'], function () {
+    layui.use(['form','element', 'table','carousel','tree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             attributeTable = layui.table,
             element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
         var carousel = layui.carousel;
+        var tree = layui.tree;
         var carouselsku = layui.carousel;
         var attributeDataArray = new Array();
 
