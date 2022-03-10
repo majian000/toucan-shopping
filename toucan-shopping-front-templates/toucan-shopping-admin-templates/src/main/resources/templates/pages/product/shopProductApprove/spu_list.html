@@ -165,10 +165,18 @@
                         }},
                     {field: 'uuid',width: 300,  title: '商品UUID'},
                     {field: 'categoryId',width: 350,  title: '分类ID'},
+                    {field: 'categoryName',width: 350,  title: '分类名称'},
                     {field: 'brandId',width: 350,  title: '品牌ID'},
-                    {field: 'brandName',width: 350,  title: '品牌名称'},
-                    {field: 'brandLogo',width: 350,  title: '品牌LOGO'},
-                    {field: 'attributes',width: 150,  title: '属性列表'},
+                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
+                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
+                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
+                        templet: function (row) {
+                            if(row.brandHttpLogo!=null) {
+                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'attributes',width: 550,  title: '属性列表'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){
@@ -185,7 +193,7 @@
                     },
                     {field: 'createDate', width: 150, title: '创建时间'},
                     {field: 'updateDate', width: 150, title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#shopProductApproveTableBar', align: "center"}
+                    {title: '操作', minWidth: 300, toolbar: '#productSpuTableBar', align: "center"}
                 ]
             ],
             limits: [15,30,100,200],

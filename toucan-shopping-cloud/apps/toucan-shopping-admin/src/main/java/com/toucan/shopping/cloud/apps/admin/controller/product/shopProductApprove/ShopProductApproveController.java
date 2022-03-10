@@ -28,6 +28,7 @@ import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.product.vo.ProductSpuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
@@ -405,6 +406,51 @@ public class ShopProductApproveController extends UIController {
 
 
 
+
+
+    /**
+     * 查询品牌
+     * @param list
+     * @param brandIdList
+     */
+    void queryBrandForProductSpu(List<ProductSpuVO> list, List<Long> brandIdList)
+    {
+        try {
+            BrandVO queryBrandVO = new BrandVO();
+            queryBrandVO.setIdList(brandIdList);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryBrandVO);
+            ResultObjectVO resultObjectVO = feignBrandService.findByIdList(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
+                if(CollectionUtils.isNotEmpty(brandVOS))
+                {
+                    for(ProductSpuVO productSpuVO:list)
+                    {
+                        for(BrandVO brandVO:brandVOS)
+                        {
+                            if(productSpuVO.getBrandId()!=null&&productSpuVO.getBrandId().longValue()==brandVO.getId().longValue())
+                            {
+                                productSpuVO.setBrandChineseName(brandVO.getChineseName());
+                                productSpuVO.setBrandEnglishName(brandVO.getEnglishName());
+                                productSpuVO.setBrandLogo(brandVO.getLogoPath());
+                                if(brandVO.getLogoPath()!=null) {
+                                    productSpuVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
+
+
     /**
      * 查询列表
      * @param pageInfo
@@ -425,13 +471,36 @@ public class ShopProductApproveController extends UIController {
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ShopProductVO.class);
-                    if(CollectionUtils.isNotEmpty(list))
-                    {
-
-
-                    }
+                    List<ProductSpuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ProductSpuVO.class);
                     if(tableVO.getCount()>0) {
+                        boolean brandExists=false;
+                        List<Long> brandIdList = new LinkedList<>();
+                        for(int i=0;i<list.size();i++)
+                        {
+                            ProductSpuVO productSpuVO = list.get(i);
+
+                            //设置品牌ID
+                            brandExists=false;
+                            for(Long brandId:brandIdList)
+                            {
+                                if(productSpuVO.getBrandId()!=null&&brandId!=null
+                                        &&brandId.longValue()==productSpuVO.getBrandId().longValue())
+                                {
+                                    brandExists=true;
+                                    break;
+                                }
+
+                            }
+                            if(!brandExists) {
+                                if(productSpuVO.getBrandId()!=null) {
+                                    brandIdList.add(productSpuVO.getBrandId());
+                                }
+                            }
+                        }
+
+                        //查询品牌名称
+                        this.queryBrandForProductSpu(list, brandIdList);
+
                         tableVO.setData((List)list);
                     }
                 }

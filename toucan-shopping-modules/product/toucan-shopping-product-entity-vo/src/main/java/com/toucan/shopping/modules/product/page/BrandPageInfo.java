@@ -31,7 +31,7 @@ public class BrandPageInfo extends PageInfo<BrandVO> {
      */
     private Integer pageNumber = 1;
 
-    private Integer id;
+    private Long id;
 
     private Long categoryId;
 

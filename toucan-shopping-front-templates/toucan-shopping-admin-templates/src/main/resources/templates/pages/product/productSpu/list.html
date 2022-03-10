@@ -171,7 +171,13 @@
                     {field: 'brandId',width: 350,  title: '品牌ID'},
                     {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
                     {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
-                    {field: 'brandLogo',width: 350,  title: '品牌LOGO'},
+                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
+                        templet: function (row) {
+                            if(row.brandHttpLogo!=null) {
+                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
                     {field: 'attributes',width: 550,  title: '属性列表'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {

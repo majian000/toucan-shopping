@@ -41,6 +41,10 @@
             and t.enabled_status = #{enabledStatus}
         </if>
 
+        <if test="id!=null ">
+            and t.id = #{id}
+        </if>
+
 
     </sql>
 
