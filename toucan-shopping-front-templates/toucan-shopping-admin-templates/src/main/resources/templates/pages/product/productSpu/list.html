@@ -166,8 +166,8 @@
                             return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
                         }},
                     {field: 'uuid',width: 300,  title: '商品UUID'},
-                    {field: 'categoryId',width: 350,  title: '分类ID'},
-                    {field: 'categoryName',width: 350,  title: '分类名称'},
+                    {field: 'categoryPath',width: 350,  title: '分类路径'},
+                    {field: 'categoryName',width: 150,  title: '分类名称'},
                     {field: 'brandId',width: 350,  title: '品牌ID'},
                     {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
                     {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
@@ -288,7 +288,7 @@
         table.on('toolbar(productSpuTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加商品',
+                    title: '添加平台商品',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -307,7 +307,7 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除商品?', function (index) {
+                layer.confirm('确定删除平台商品?', function (index) {
                     $.ajax({
                         url:"[[@{/}]]productSpu/delete/ids",
                         contentType: "application/json; charset=utf-8",
