@@ -73,7 +73,7 @@ public class ProductSpuController {
         String lockKey="-1";
         try {
             logger.info("保存商品SPU {} ",requestJsonVO.getEntityJson());
-            ProductSpuVO productSpuVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSpuVO.class);
+            ProductSpuVO productSpuVO = requestJsonVO.formatEntity(ProductSpuVO.class);
             if(productSpuVO.getCategoryId()==null) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("分类ID不能为空!");
@@ -144,7 +144,7 @@ public class ProductSpuController {
         }
 
         try {
-            ProductSpu entity = JSONObject.parseObject(requestVo.getEntityJson(),ProductSpu.class);
+            ProductSpu entity = requestVo.formatEntity(ProductSpu.class);
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
