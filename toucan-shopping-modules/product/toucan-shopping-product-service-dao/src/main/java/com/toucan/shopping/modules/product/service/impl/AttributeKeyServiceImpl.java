@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.product.service.impl;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.product.entity.AttributeKey;
 import com.toucan.shopping.modules.product.mapper.AttributeKeyMapper;
+import com.toucan.shopping.modules.product.mapper.AttributeValueMapper;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
@@ -22,6 +23,9 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
     @Autowired
     private AttributeKeyMapper attributeKeyMapper;
 
+    @Autowired
+    private AttributeValueMapper attributeValueMapper;
+
 
     @Override
     public PageInfo<AttributeKeyVO> queryListPage(AttributeKeyPageInfo queryPageInfo) {
@@ -31,6 +35,17 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
         pageInfo.setTotal(attributeKeyMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+
+    @Override
+    public PageInfo<AttributeKeyVO> queryListPageBySortDesc(AttributeKeyPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<AttributeKeyVO> pageInfo = new PageInfo();
+        pageInfo.setList(attributeKeyMapper.queryListPageBySortDesc(queryPageInfo));
+        pageInfo.setTotal(attributeKeyMapper.queryListPageBySortDescCount(queryPageInfo));
+        return pageInfo;
+    }
+
 
     @Override
     public int save(AttributeKey attributeKey) {
@@ -97,6 +112,21 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
 
                 //查找当前节点的子节点
                 setChildren(attributeKeyVOS,treeVO);
+            }
+        }
+    }
+
+    @Override
+    public void setChildNodeAndChildNodeValue(AttributeKeyVO currentNode) {
+        List<AttributeKeyVO> children = attributeKeyMapper.queryListByParentId(currentNode.getId());
+        if(CollectionUtils.isNotEmpty(children))
+        {
+            currentNode.setChildren(children);
+            for(AttributeKeyVO child:children)
+            {
+                child.setValues(attributeValueMapper.queryListByAttributeKeyIdSortDesc(child.getId()));
+
+                setChildNodeAndChildNodeValue(child);
             }
         }
     }

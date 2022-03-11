@@ -52,6 +52,12 @@ public class AttributeValueServiceImpl implements AttributeValueService {
     public int deleteByAttributeKeyId(Long attributeKeyId) {
         return attributeValueMapper.deleteByAttributeKeyId(attributeKeyId);
     }
+
+    @Override
+    public List<AttributeValueVO> queryListByAttributeKeyIdSortDesc(Long attributeKeyId) {
+        return attributeValueMapper.queryListByAttributeKeyIdSortDesc(attributeKeyId);
+    }
+
     @Override
     public List<AttributeValueVO> queryList(AttributeValueVO query) {
         return attributeValueMapper.queryList(query);

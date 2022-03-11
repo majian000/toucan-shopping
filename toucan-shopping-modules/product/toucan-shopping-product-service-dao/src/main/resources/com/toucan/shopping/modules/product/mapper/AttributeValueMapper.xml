@@ -118,6 +118,18 @@
     </select>
 
 
+
+    <select id="queryListByAttributeKeyIdSortDesc" resultMap="attributeValueVOMap" parameterType="java.lang.Long">
+        select t.* from t_attribute_value t
+        <where>
+            1=1 and t.delete_status=0 and t.attribute_key_id = #{attributeKeyId}
+        </where>
+
+        order by t.attribute_sort desc
+    </select>
+
+
+
     <insert id="inserts"   >
         insert into t_attribute_value(id,query_status,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
         values

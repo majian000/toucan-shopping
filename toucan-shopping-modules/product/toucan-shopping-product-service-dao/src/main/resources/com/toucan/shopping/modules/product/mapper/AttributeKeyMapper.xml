@@ -167,6 +167,27 @@
     </select>
 
 
+
+    <select id="queryListPageBySortDesc" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.page.AttributeKeyPageInfo">
+        select t.* from t_attribute_key t
+        <where>
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.attribute_sort desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageBySortDescCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.AttributeKeyPageInfo">
+        select count(*) from t_attribute_key t
+        <where>
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
     <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">
         select count(*) from t_attribute_key t
         <where>

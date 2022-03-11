@@ -19,6 +19,13 @@ public interface AttributeKeyService {
     PageInfo<AttributeKeyVO> queryListPage(AttributeKeyPageInfo queryPageInfo);
 
 
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<AttributeKeyVO> queryListPageBySortDesc(AttributeKeyPageInfo queryPageInfo);
+
 
     /**
      * 保存实体
@@ -75,13 +82,17 @@ public interface AttributeKeyService {
     Long queryCount(AttributeKeyVO attributeKeyVO);
 
 
-
-
     /**
      * 从一个集合中找到所有子节点并设置上
      * @param attributeKeyVOS
      * @param currentNode
      */
     void setChildren(List<AttributeKeyVO> attributeKeyVOS, AttributeKeyVO currentNode) throws InvocationTargetException, IllegalAccessException ;
+
+    /**
+     * 设置该节点的所有子节点和所有子节点的值
+     * @param currentNode
+     */
+    void setChildNodeAndChildNodeValue(AttributeKeyVO currentNode) ;
 
 }

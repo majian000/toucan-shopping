@@ -1,11 +1,14 @@
 package com.toucan.shopping.cloud.product.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.entity.AttributeKey;
+import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.service.AttributeKeyService;
 import com.toucan.shopping.modules.product.service.AttributeValueService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
@@ -16,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,8 +43,9 @@ public class AttributeKeyValueController {
     @Autowired
     private AttributeValueService attributeValueService;
 
-
-
+    private SimplePropertyPreFilter attributeKeyPropertyFilter =  new SimplePropertyPreFilter(AttributeKeyVO.class, "id","attributeName","children","sort","values");
+    private SimplePropertyPreFilter attributeValueSimplePropertyFilter =  new SimplePropertyPreFilter(AttributeValueVO.class, "id","attributeValue","attributeValue");
+    private SimplePropertyPreFilter[] simplePropertyPreFilters ={attributeKeyPropertyFilter,attributeValueSimplePropertyFilter};
 
 
     /**
@@ -72,7 +77,7 @@ public class AttributeKeyValueController {
             //查询该分类下的所有键列表
             if(CollectionUtils.isNotEmpty(attributeKeyVOS))
             {
-                //一个分类下不会有太多的属性key,所以这里用in查询
+                //一个分类下不会有太多的销售属性key,所以这里用in查询
                 List<Long> attributeKeyIdList = new LinkedList<>();
 
                 for(AttributeKeyVO attributeKeyVO:attributeKeyVOS)
@@ -120,6 +125,62 @@ public class AttributeKeyValueController {
 
 
 
+
+    /**
+     * 根据分类ID查询属性树
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/tree/category/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findTreeByCategoryId(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AttributeKeyPageInfo attributeKeyPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AttributeKeyPageInfo.class);
+
+            if(attributeKeyPageInfo.getCategoryId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到分类ID");
+                return resultObjectVO;
+            }
+
+            if(attributeKeyPageInfo.getParentId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到上级节点ID");
+                return resultObjectVO;
+            }
+            PageInfo<AttributeKeyVO> attributeKeyPage = attributeKeyService.queryListPageBySortDesc(attributeKeyPageInfo);
+            if(attributeKeyPage.getTotal()!=null&&attributeKeyPage.getTotal().longValue()>0)
+            {
+                List<AttributeKeyVO> attributeKeyVOS = attributeKeyPage.getList();
+                for(AttributeKeyVO attributeKeyVO:attributeKeyVOS)
+                {
+                    //设置当前节点属性值
+                    attributeKeyVO.setValues(attributeValueService.queryListByAttributeKeyIdSortDesc(attributeKeyVO.getId()));
+                    attributeKeyService.setChildNodeAndChildNodeValue(attributeKeyVO);
+                }
+                attributeKeyPage.setList(attributeKeyVOS);
+            }
+            resultObjectVO.setData(JSONObject.toJSONString(attributeKeyPage,simplePropertyPreFilters));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

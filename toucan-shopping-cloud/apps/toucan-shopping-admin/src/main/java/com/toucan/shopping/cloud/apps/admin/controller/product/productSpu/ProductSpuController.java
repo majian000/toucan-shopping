@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
@@ -19,10 +20,12 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
+import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSpuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
@@ -74,6 +77,9 @@ public class ProductSpuController extends UIController {
 
     @Autowired
     private FeignBrandService feignBrandService;
+
+    @Autowired
+    private FeignAttributeKeyValueService feignAttributeKeyValueService;
 
 
 
@@ -359,6 +365,37 @@ public class ProductSpuController extends UIController {
         }
         return tableVO;
     }
+
+
+
+
+
+
+    @RequestMapping(value = "/{categoryId}/attributes",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultObjectVO queryAttributesByCategoryId(@PathVariable Long categoryId){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(categoryId==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到分类ID");
+            return resultObjectVO;
+        }
+        try {
+
+            AttributeKeyVO queryAttributeKeyVO = new AttributeKeyVO();
+            queryAttributeKeyVO.setCategoryId(categoryId);
+            queryAttributeKeyVO.setAttributeType((short)1); //查询全局属性
+            queryAttributeKeyVO.setParentId(-1L); //从根节点开始查询
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAttributeKeyVO);
+            resultObjectVO = feignAttributeKeyValueService.findByCategoryId(requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
 }
 

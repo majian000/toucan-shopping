@@ -44,4 +44,6 @@ public interface AttributeValueMapper {
     int deleteById(Long id);
 
     int deleteByAttributeKeyId(Long attributeKeyId);
+
+    List<AttributeValueVO> queryListByAttributeKeyIdSortDesc(Long attributeKeyId);
 }

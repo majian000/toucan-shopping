@@ -52,4 +52,6 @@ public interface AttributeValueService {
 
     int deleteByAttributeKeyId(Long attributeKeyId);
 
+    List<AttributeValueVO> queryListByAttributeKeyIdSortDesc(Long attributeKeyId);
+
 }

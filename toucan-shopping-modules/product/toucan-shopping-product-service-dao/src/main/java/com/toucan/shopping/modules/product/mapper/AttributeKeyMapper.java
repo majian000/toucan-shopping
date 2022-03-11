@@ -37,6 +37,20 @@ public interface AttributeKeyMapper {
      */
     Long queryListPageCount(AttributeKeyPageInfo pageInfo);
 
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<AttributeKeyVO> queryListPageBySortDesc(AttributeKeyPageInfo pageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryListPageBySortDescCount(AttributeKeyPageInfo pageInfo);
+
 
     /**
      * 修改
