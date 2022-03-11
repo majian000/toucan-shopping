@@ -18,6 +18,8 @@ public interface ProductSpuMapper {
     List<ProductSpuVO> queryList(ProductSpuVO query);
 
 
+    int deleteById(Long id);
+
 
     /**
      * 查询列表页

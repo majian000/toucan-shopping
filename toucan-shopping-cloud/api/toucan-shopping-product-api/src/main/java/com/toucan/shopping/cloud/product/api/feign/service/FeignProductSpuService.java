@@ -26,6 +26,13 @@ public interface FeignProductSpuService {
 
 
 
+    /**
+     * 删除指定
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
 
 
     /**

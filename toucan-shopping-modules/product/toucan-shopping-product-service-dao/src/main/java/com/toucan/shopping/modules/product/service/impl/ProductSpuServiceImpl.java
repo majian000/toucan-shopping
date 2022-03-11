@@ -33,6 +33,11 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     }
 
     @Override
+    public int deleteById(Long id) {
+        return productSpuMapper.deleteById(id);
+    }
+
+    @Override
     public PageInfo<ProductSpuVO> queryListPage(ProductSpuPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<ProductSpuVO> pageInfo = new PageInfo();

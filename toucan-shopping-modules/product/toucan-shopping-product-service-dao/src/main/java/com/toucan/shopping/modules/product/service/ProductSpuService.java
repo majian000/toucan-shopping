@@ -19,6 +19,13 @@ public interface ProductSpuService {
 
 
     /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
+    /**
      * 查询列表页
      * @param queryPageInfo
      * @return

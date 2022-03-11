@@ -75,6 +75,10 @@
                 and t.name = #{name}
             </if>
 
+            <if test="categoryId!=null">
+                and t.category_id = #{categoryId}
+            </if>
+
             <if test="appCode!=null">
                 and t.app_code = #{appCode}
             </if>
@@ -104,6 +108,11 @@
         </where>
 
     </select>
+
+
+    <update id="deleteById">
+        update t_product_spu  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
 
 
 </mapper>
