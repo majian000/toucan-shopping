@@ -58,6 +58,7 @@ toucan:
       email:
         enabled: true
         title: ——内容服务——异常邮件
+        ignore-exception-list[0]: javax.mail.MessagingException
         protocol: smtp
         smtp: #smtp服务器配置
           host: smtp.163.com #SMTP服务器
