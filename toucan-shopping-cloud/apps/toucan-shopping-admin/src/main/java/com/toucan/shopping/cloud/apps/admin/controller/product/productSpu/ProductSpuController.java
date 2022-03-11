@@ -11,6 +11,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.category.entity.Category;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -20,22 +21,22 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandVO;
 import com.toucan.shopping.modules.product.vo.ProductSpuVO;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +97,15 @@ public class ProductSpuController extends UIController {
         return "pages/product/productSpu/add.html";
     }
 
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/selectBrandPage/{categoryId}",method = RequestMethod.GET)
+    public String selectBrandPage(HttpServletRequest request, @PathVariable Long categoryId)
+    {
+        request.setAttribute("categoryId",categoryId);
+        return "pages/product/productSpu/brand_list.html";
+    }
 
     /**
      * 查询品牌
@@ -269,6 +279,86 @@ public class ProductSpuController extends UIController {
 
 
 
+
+    /**
+     * 查询品牌列表
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/brand/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO list(HttpServletRequest request, BrandPageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            ResultObjectVO resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
+                    List<BrandVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),BrandVO.class);
+                    if(tableVO.getCount()>0) {
+                        List<Category> categories = new ArrayList<Category>();
+                        for(BrandVO brandVO:list)
+                        {
+                            brandVO.setCategoryNamePathList(new LinkedList<>());
+                            String[] categoryIdArray = brandVO.getCategoryIdCacheArray();
+                            if(categoryIdArray!=null&&categoryIdArray.length>0) {
+                                for(String categoryId:categoryIdArray) {
+                                    if(categoryId!=null) {
+                                        Category category = new Category();
+                                        category.setId(Long.parseLong(categoryId));
+                                        categories.add(category);
+                                    }
+                                }
+                            }
+
+                            if(StringUtils.isNotEmpty(brandVO.getLogoPath()))
+                            {
+                                brandVO.setHttpLogoPath(imageUploadService.getImageHttpPrefix()+brandVO.getLogoPath());
+                            }
+
+                        }
+                        requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categories);
+                        resultObjectVO = feignCategoryService.queryByIdList(requestJsonVO);
+                        if(resultObjectVO.isSuccess()) {
+                            List<CategoryVO> categoryList = resultObjectVO.formatDataList(CategoryVO.class);
+                            if(CollectionUtils.isNotEmpty(categoryList))
+                            {
+                                for(CategoryVO categoryVO:categoryList)
+                                {
+                                    for(BrandVO brandVO:list)
+                                    {
+                                        String[] categoryIdArray = brandVO.getCategoryIdCacheArray();
+                                        if(categoryIdArray!=null&&categoryIdArray.length>0) {
+                                            for(String categoryId:categoryIdArray)
+                                            {
+                                                if(String.valueOf(categoryVO.getId()).equals(categoryId))
+                                                {
+                                                    brandVO.getCategoryNamePathList().add(categoryVO.getNamePath());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        tableVO.setData((List)list);
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            tableVO.setMsg("请重试");
+            tableVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return tableVO;
+    }
 
 }
 

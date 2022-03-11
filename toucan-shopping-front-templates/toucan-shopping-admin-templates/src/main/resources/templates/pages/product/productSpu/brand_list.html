@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+    </style>
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" id="brandSearchForm" action="">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">品牌ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="id" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">品牌名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+            </div>
+        </script>
+
+        <table class="layui-hide" id="brandTable" lay-filter="brandTableFilter"></table>
+
+        <script type="text/html" id="brandTableBar">
+        </script>
+
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form', 'table','tree','dtree'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+        var index;
+        var tree = layui.tree;
+        var loadding;
+        var dtree = layui.dtree;
+        var roleTree;
+        var roleTreeDataArray = new Array();
+        var selectBrand;
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
+        function getFormParam()
+        {
+            var formParam = $("#brandSearchForm").serializeJson();
+            return formParam;
+        }
+
+
+        function getSelectBrand()
+        {
+            return selectBrand;
+        }
+
+        table.render({
+            elem: '#brandTable',
+            url: "[[@{/}]]productSpu/brand/list",
+            method:'POST',
+            where:getFormParam(),
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter',  {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            done:function(res, curr, count)
+            {
+            },
+            cols: [
+                [
+                    {type: "radio", width: 100,event:'onClickBrandEvent'},
+                    {field: 'id',width: 170,  title: '主键'},
+                    {field: 'categoryNamePathList', width:650, title: '所属类目',
+                        templet: function (row) {
+                            return row.categoryNamePathList.join("、");
+                        }},
+                    {field: 'trademarkAreaType', width:150, title: '商标注册地区',
+                        templet: function (row) {
+                            if(row.trademarkAreaType == null){
+                                return "";
+                            }
+                            if(row.trademarkAreaType == "1"){
+                                return "中国大陆地区";
+                            }
+                            if(row.trademarkAreaType == "2"){
+                                return "香港、澳门特别行政区，台湾省和境外国家";
+                            }
+                            return row.trademarkAreaType;
+                        }},
+                    {field: 'chineseName', width:150, title: '品牌名(中文)'},
+                    {field: 'englishName', width:150, title: '品牌名(英文)'},
+                    {field: 'httpLogoPath', width:150, title: 'LOGO',
+                        templet: function (row) {
+                            if(row.httpLogoPath!=null) {
+                                return "<a href='" + row.httpLogoPath + "' target='_blank'><img src='" + row.httpLogoPath + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'registNumber1', width:150, title: '商标注册号'},
+                    {field: 'registNumber2',width:150,  title: '商标注册号'},
+                    {field: 'seminary',  width:150,title: '发源地'},
+                    {field: 'ownerName', width:150, title: '品牌所有人'},
+                    {field: 'enabledStatus', width:150, title: '状态',
+                        templet: function (row) {
+                            if(row.enabledStatus == null){
+                                return "";
+                            }
+                            if(row.enabledStatus == 1){
+                                return "有效";
+                            }
+                            if(row.enabledStatus == 0){
+                                return "无效";
+                            }
+                            return row.enabledStatus;
+                        }},
+                    {field: 'createDate',width:180,  title: '创建时间'}
+                ]
+            ],
+            limits: [15,30,100,200],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('brandTable', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+
+        $("#data-reset-btn").click(function(){
+            $("#brandSearchForm")[0].reset();
+            layui.form.render();
+        });
+
+
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(brandTableFilter)', function (obj) {
+        });
+
+
+
+        //监听表格复选框选择
+        table.on('checkbox(brandTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(brandTableFilter)', function (obj) {
+            if(obj.event=="onClickBrandEvent")
+            {
+                selectBrand.brandId = obj.data.id;
+                selectBrand.brandName = (obj.data.chineseName!=null?obj.data.chineseName:"")+" "+(obj.data.englishName!=null?obj.data.englishName:"");
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

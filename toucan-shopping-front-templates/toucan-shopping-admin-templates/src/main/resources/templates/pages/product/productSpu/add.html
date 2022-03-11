@@ -219,7 +219,7 @@
 
 
         $("#selectCategoryId").click(function(){
-            index = layer.open({
+            var index = layer.open({
                 title: '选择所属分类',
                 type: 1,
                 shade: 0.2,
@@ -268,6 +268,52 @@
             });
 
         });
+
+
+        /**
+         * 设置品牌
+         * @param brandId
+         * @param brandName
+         */
+        function setBrand(brandId,brandName)
+        {
+            $("#selectBrand").val(brandName);
+            $("#brandId").val(brandId);
+        }
+
+
+        $("#selectBrand").click(function(){
+            var categoryName = $("#selectCategoryId").val();
+            var categoryId = $("#categoryId").val();
+            if(categoryId==null)
+            {
+                layer.msg("请选选择分类");
+                return;
+            }
+            var index = layer.open({
+                title: categoryName+'的品牌列表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
+                yes: function (index) {
+                    var brandObject = window["layui-layer-iframe" + index].getSelectBrand();
+                    setBrand(brandObject.brandId,brandObject.brandName);
+                    layer.close(index);
+                },
+                area: ['80%', '80%'],
+                content: "[[@{/productSpu/selectBrandPage/}]]"+categoryId,
+                zIndex: layer.zIndex,
+                success: function(layero){
+                    layer.setTop(layero);
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
 
 
     });
