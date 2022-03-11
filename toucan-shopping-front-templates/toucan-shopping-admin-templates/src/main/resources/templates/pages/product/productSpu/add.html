@@ -80,20 +80,32 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label "></label>
                             <div class="layui-input-block">
-
-                                <script type="text/html" id="toolbarDemo">
-                                    <div class="layui-btn-container">
-                                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加属性 </button>
+                                <div class="layui-form-item" >
+                                    <label class="layui-form-label">主体</label>
+                                    <div class="layui-input-block">
+                                        <div class="layui-form-item" >
+                                            <label class="layui-form-label">品牌</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" name="like[write]" title="华为（HUAWEI）">
+                                                <input type="checkbox" name="like[write]" title="小米">
+                                                <input type="checkbox" name="like[write]" title="苹果">
+                                                <input type="checkbox" name="like[write]" title="OPPO">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item" >
+                                            <label class="layui-form-label">首销日期</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" name="like[write]" title="以官网信息为准">
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item" >
+                                            <label class="layui-form-label">上市年份</label>
+                                            <div class="layui-input-block">
+                                                <input type="checkbox" name="2020" title="2020年">
+                                            </div>
+                                        </div>
                                     </div>
-                                </script>
-                                <table class="layui-hide" id="attributeTable" lay-filter="attributeTableFilter"></table>
-                                <script type="text/html" id="attributeTableBar">
-                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveTop">置顶</a> &nbsp;&nbsp;
-                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveUp">上移</a> &nbsp;&nbsp;
-                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveDown">下移</a> &nbsp;&nbsp;
-                                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="moveBottom">置底</a> &nbsp;&nbsp;
-                                    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
-                                </script>
+                                </div>
                             </div>
                         </div>
 
@@ -133,9 +145,7 @@
         var carousel = layui.carousel;
         var tree = layui.tree;
         var carouselsku = layui.carousel;
-        var attributeDataArray = new Array();
 
-        attributeDataArray.push({id:"1111",parentPath:"主体",attributeName:"型号",attributeValue:"12X"});
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
@@ -166,55 +176,9 @@
 
 
 
-        attributeTable.render({
-            elem: '#attributeTable',
-            toolbar: '#toolbarDemo',
-            data:attributeDataArray,
-            height:550,
-            loading: true,
-            defaultToolbar: ['filter',  {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
-            cols: [
-                [
-                    {field: 'id', hide:true, title: '属性值ID'},
-                    {field: 'parentPath',width: 350,  title: '上级属性路径'},
-                    {field: 'attributeName', width: 350,edit: 'text', title: '属性名'},
-                    {field: 'attributeValue',width: 350, edit: 'text', title: '属性值'},
-                    {title: '操作', minWidth: 400, toolbar: '#attributeTableBar', align: "center"}
-                ]
-            ],
-            page: false,
-            skin: 'line'
         });
 
 
-        //重新加载
-        // attributeTable.reload({
-        //     data : attributeDataArray
-        // });
-
-        /**
-         * toolbar监听事件
-         */
-        attributeTable.on('toolbar(attributeTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '添加属性',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['80%', '80%'],
-                    content: "[[@{/productSpu/addAttributePage}]]"
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            }
-        });
 
 
 
