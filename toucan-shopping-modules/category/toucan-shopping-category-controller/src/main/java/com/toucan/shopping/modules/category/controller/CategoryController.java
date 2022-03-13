@@ -592,6 +592,7 @@ public class CategoryController {
                         treeVO.setTitle(category.getName());
                         treeVO.setText(category.getName());
                         treeVO.setPid(category.getParentId());
+                        treeVO.setPath(category.getName());
 
                         categoryTreeVOS.add(treeVO);
 

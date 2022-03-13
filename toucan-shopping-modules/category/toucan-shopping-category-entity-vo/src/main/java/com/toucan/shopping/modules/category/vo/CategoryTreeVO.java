@@ -80,5 +80,10 @@ public class CategoryTreeVO extends CategoryVO {
      */
     private Boolean isParent;
 
+    /**
+     * 分类路径
+     */
+    private String path;
+
 
 }

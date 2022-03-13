@@ -137,6 +137,9 @@ public class CategoryServiceImpl implements CategoryService {
                 categoryTreeVO.setText(category.getName());
                 categoryTreeVO.setPid(category.getParentId());
                 categoryTreeVO.setChildren(new ArrayList<CategoryTreeVO>());
+                if(currentNode.getPath()!=null) {
+                    categoryTreeVO.setPath(currentNode.getPath() +"》"+category.getName());
+                }
 
                 currentNode.getChildren().add(categoryTreeVO);
 

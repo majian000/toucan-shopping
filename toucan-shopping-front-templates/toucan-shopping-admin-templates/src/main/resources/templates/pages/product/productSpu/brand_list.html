@@ -68,6 +68,15 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
+
+    var selectBrand={brandId:-1,brandName:""};
+
+
+    function getSelectBrand()
+    {
+        return selectBrand;
+    }
+
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
@@ -82,7 +91,6 @@
         var dtree = layui.dtree;
         var roleTree;
         var roleTreeDataArray = new Array();
-        var selectBrand;
         $.fn.serializeJson=function(){
             var serializeObj={};
             var array=this.serializeArray();
@@ -108,10 +116,6 @@
         }
 
 
-        function getSelectBrand()
-        {
-            return selectBrand;
-        }
 
         table.render({
             elem: '#brandTable',
