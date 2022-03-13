@@ -20,6 +20,17 @@ public interface FeignAttributeKeyValueService {
      * @return
      */
     @RequestMapping(value="/find/category/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO findByCategoryId(@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findByCategoryId(@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 根据分类ID查询属性树
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/query/attribute/tree/page",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryAttributeTreePage(@RequestBody RequestJsonVO requestVo);
+
+
 
 }

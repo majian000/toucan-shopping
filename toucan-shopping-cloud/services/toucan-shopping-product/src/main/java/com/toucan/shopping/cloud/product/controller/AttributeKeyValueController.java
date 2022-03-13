@@ -131,9 +131,9 @@ public class AttributeKeyValueController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/tree/category/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/query/attribute/tree/page",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO findTreeByCategoryId(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO queryAttributeTreePage(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {

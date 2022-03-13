@@ -36,6 +36,22 @@ public class FeignAttributeKeyValueServiceFallbackFactory implements FallbackFac
                 resultObjectVO.setMsg("查询属性列表失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryAttributeTreePage(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignAttributeKeyValueService queryAttributeTreePage faild  params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询属性列表失败");
+                return resultObjectVO;
+            }
+
         };
     }
 }

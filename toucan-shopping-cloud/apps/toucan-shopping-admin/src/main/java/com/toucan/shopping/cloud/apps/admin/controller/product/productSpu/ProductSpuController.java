@@ -23,6 +23,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
@@ -371,11 +372,11 @@ public class ProductSpuController extends UIController {
 
 
 
-    @RequestMapping(value = "/{categoryId}/attributes",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/common/attributes",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO queryAttributesByCategoryId(@PathVariable Long categoryId){
+    public ResultObjectVO queryAttributesByCategoryId(AttributeKeyPageInfo attributeKeyPageInfo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(categoryId==null)
+        if(attributeKeyPageInfo.getCategoryId()==null)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("没有找到分类ID");
@@ -383,12 +384,10 @@ public class ProductSpuController extends UIController {
         }
         try {
 
-            AttributeKeyVO queryAttributeKeyVO = new AttributeKeyVO();
-            queryAttributeKeyVO.setCategoryId(categoryId);
-            queryAttributeKeyVO.setAttributeType((short)1); //查询全局属性
-            queryAttributeKeyVO.setParentId(-1L); //从根节点开始查询
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAttributeKeyVO);
-            resultObjectVO = feignAttributeKeyValueService.findByCategoryId(requestJsonVO);
+            attributeKeyPageInfo.setAttributeType((short)1); //查询全局属性
+            attributeKeyPageInfo.setParentId(-1L); //从根节点开始查询
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), attributeKeyPageInfo);
+            resultObjectVO = feignAttributeKeyValueService.queryAttributeTreePage(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
