@@ -27,13 +27,14 @@
 
 <span th:replace="common_page::common"></span>
 
+
 <div class="layuimini-container" style="height:100%">
     <div class="layui-form layuimini-form">
         <div class="layuimini-main" >
-            <div class="layui-tab layui-tab-brief">
+            <div class="layui-tab layui-tab-brief" lay-filter="productTab">
                 <ul class="layui-tab-title">
-                    <li class="layui-this">商品信息</li>
-                    <li>公共属性</li>
+                    <li class="layui-this" lay-id="productInfoTab" >商品信息</li>
+                    <li lay-id="commonAttributeTab" id="commonAttributeTab">公共属性</li>
                 </ul>
 
                 <div class="layui-tab-content">
@@ -46,10 +47,10 @@
                         </div>
 
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">所属分类<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
+                            <label class="layui-form-label required">商品分类<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
                             <div class="layui-input-block">
                                 <input type="hidden" name="categoryId" id="categoryId"  >
-                                <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择所属分类"  class="layui-input" >
+                                <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择商品分类"  class="layui-input" >
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -206,6 +207,7 @@
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
+
     layui.use(['form','element', 'table','carousel','tree','flow'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -215,6 +217,23 @@
         var tree = layui.tree;
         var carouselsku = layui.carousel;
         var flow = layui.flow;
+
+        element.on('tab(productTab)', function(){
+
+            var layId = this.getAttribute("lay-id");
+
+            if(layId!=null&&layId=="commonAttributeTab") {
+                var categoryName = $("#selectCategoryId").val();
+                var categoryId = $("#categoryId").val();
+                if (categoryId == null || categoryId == "") {
+                    layer.msg("请先选择商品分类");
+                    layui.element.tabChange('productTab', "productInfoTab");
+                    return;
+                }
+            }
+        });
+
+
 
         flow.load({
             elem: '#commonAttributeList' //流加载容器
@@ -323,9 +342,9 @@
         $("#selectBrand").click(function(){
             var categoryName = $("#selectCategoryId").val();
             var categoryId = $("#categoryId").val();
-            if(categoryId==null)
+            if(categoryId==null||categoryId=="")
             {
-                layer.msg("请选选择分类");
+                layer.msg("请先选择商品分类");
                 return;
             }
             var index = layer.open({
