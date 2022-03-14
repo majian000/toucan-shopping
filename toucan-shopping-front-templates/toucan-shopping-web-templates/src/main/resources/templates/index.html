@@ -110,27 +110,24 @@
 
         <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/sliderMe/meSlider.css" />
         <div class="banner">
-            <div class="top_slide_wrap">
+            <div id="slider" class="tslider">
+                <button type="button" class="preBtn" id="preBtn">
+                    &lt;
+                </button>
+                <button type="button" class="nextBtn" id="nextBtn">
+                    &gt;
+                </button>
 
-                <div id="slider" class="tslider">
-                    <button type="button" class="preBtn" id="preBtn">
-                        &lt;
-                    </button>
-                    <button type="button" class="nextBtn" id="nextBtn">
-                        &gt;
-                    </button>
-
-                    <ul class="pointer">
-                        <li data-index="1" class="current">
-                        </li>
-                        <li data-index="2" class="">
-                        </li>
-                        <li data-index="3" class="">
-                        </li>
-                        <li data-index="4" class="">
-                        </li>
-                    </ul>
-                </div>
+                <ul class="pointer">
+                    <li data-index="1" class="current">
+                    </li>
+                    <li data-index="2" class="">
+                    </li>
+                    <li data-index="3" class="">
+                    </li>
+                    <li data-index="4" class="">
+                    </li>
+                </ul>
             </div>
         </div>
         <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>

@@ -98,7 +98,7 @@
 .tslider {
     width: 740px;
     height: 401px;
-    margin: 40px auto 0;
+    margin: 0px auto 0;
     overflow: hidden;
     position: relative
 }
@@ -115,7 +115,7 @@
     height: 15px;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #000000
+    background-color: #f6f6f6
 }
 .tslider .pointer>li:not(:last-child) {
     margin-right: 10px
