@@ -372,9 +372,9 @@ public class ProductSpuController extends UIController {
 
 
 
-    @RequestMapping(value = "/query/common/attributes",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/attribute/tree/page",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryAttributesByCategoryId(AttributeKeyPageInfo attributeKeyPageInfo){
+    public ResultObjectVO queryAttributeTreePage(@RequestBody AttributeKeyPageInfo attributeKeyPageInfo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(attributeKeyPageInfo.getCategoryId()==null)
         {
