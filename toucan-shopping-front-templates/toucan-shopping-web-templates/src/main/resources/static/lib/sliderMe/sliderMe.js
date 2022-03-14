@@ -33,7 +33,7 @@
             content.push("<ul class='sliderUl'>");
             pointer.push("<ul class='pointer'>");
             for (var i = 0; i < len; i++) {
-                content.push("<li class='sliderLi'><a href='"+imgArr[i].href+"'><img class='block' src=" + imgArr[i].src + "></a></li>")
+                content.push("<li class='sliderLi'><a href='"+imgArr[i].href+"' target='_blank'><img class='block' src=" + imgArr[i].src + "></a></li>")
                 if ((current - 1) !== i) {
                     pointer.push("<li data-index=" + (i + 1) + "></li>");
                 } else {
