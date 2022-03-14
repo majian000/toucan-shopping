@@ -118,31 +118,13 @@
                     &gt;
                 </button>
 
-                <ul class="pointer">
-                    <li data-index="1" class="current">
-                    </li>
-                    <li data-index="2" class="">
-                    </li>
-                    <li data-index="3" class="">
-                    </li>
-                    <li data-index="4" class="">
-                    </li>
+                <ul class="pointer" id="defaultBannerPointer">
+
                 </ul>
             </div>
         </div>
         <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
-        <script type="text/javascript">
-
-            var bannerArray = new Array();
-
-            $('#slider').sliders({
-                imgArr: [{src:basePath+'/static/images/fre_b1.jpg',href:'#'}, {src:basePath+'/static/images/fre_6.jpg',href:'#'},
-                    {src:basePath+'/static/images/fre_b2.jpg',href:'#'}, {src:basePath+'/static/images/de2.jpg',href:'#'}],
-                autoLoop: true,
-                current: 1,
-                time: 3000,
-                vWidth: 740
-            });
+        <script type="text/javascript" src="${basePath}/static/js/index/banner.js">
         </script>
         <!--End Banner End-->
         <div class="inews">

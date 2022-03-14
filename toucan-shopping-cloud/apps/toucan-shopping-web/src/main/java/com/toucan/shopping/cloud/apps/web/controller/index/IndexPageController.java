@@ -82,7 +82,7 @@ public class IndexPageController {
 //        queryAreaTree(request);
 
         //查询轮播图
-        request.setAttribute("banners",indexService.queryBanners());
+//        request.setAttribute("banners",indexService.queryBanners());
 
         //查询类别列表
         request.setAttribute("categorys", indexService.queryCategorys());

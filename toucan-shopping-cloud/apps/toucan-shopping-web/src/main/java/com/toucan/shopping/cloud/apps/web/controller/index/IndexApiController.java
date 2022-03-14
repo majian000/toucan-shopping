@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.apps.web.controller.index;
 
+import com.toucan.shopping.cloud.apps.web.service.IndexService;
 import com.toucan.shopping.cloud.apps.web.vo.index.HotProductVo;
 import com.toucan.shopping.cloud.apps.web.vo.index.LikeProductVo;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,9 @@ import java.util.List;
 public class IndexApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private IndexService indexService;
 
 
     @Autowired
@@ -143,4 +148,12 @@ public class IndexApiController {
     }
 
 
+
+    @RequestMapping("/banners")
+    @ResponseBody
+    public ResultObjectVO dynamicIndex(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setData(indexService.queryBanners());
+        return resultObjectVO;
+    }
 }
