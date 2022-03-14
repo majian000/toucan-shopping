@@ -107,29 +107,41 @@
 <div class="i_bg bg_color">
     <div class="i_ban_bg">
         <!--Begin Banner Begin-->
+
+        <link type="text/css" rel="stylesheet" href="${basePath}/static/lib/sliderMe/meSlider.css" />
         <div class="banner">
             <div class="top_slide_wrap">
-                <ul class="slide_box bxslider">
 
-                    <#if banners??>
-                        <#list banners as banner>
-                        <li><img src="${banner.httpImgPath!}" width="740" height="401" onclick="javascript:window.open('${banner.clickPath!}')" /></li>
-                        </#list>
-                    </#if>
+                <div id="slider" class="tslider">
+                    <button type="button" class="preBtn" id="preBtn">
+                        &lt;
+                    </button>
+                    <button type="button" class="nextBtn" id="nextBtn">
+                        &gt;
+                    </button>
 
-                </ul>
-                <div class="op_btns clearfix">
-                    <a href="#" class="op_btn op_prev"><span></span></a>
-                    <a href="#" class="op_btn op_next"><span></span></a>
+                    <ul class="pointer">
+                        <li data-index="1" class="current">
+                        </li>
+                        <li data-index="2" class="">
+                        </li>
+                        <li data-index="3" class="">
+                        </li>
+                        <li data-index="4" class="">
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="${basePath}/static/js/jquery.bxslider_e88acd1b.js"></script>
+        <script type="text/javascript" src="${basePath}/static/lib/sliderMe/sliderMe.js"></script>
         <script type="text/javascript">
-            //var jq = jQuery.noConflict();
-            $(".bxslider").bxSlider({
-                auto:true,
-                prevSelector:jq(".top_slide_wrap .op_prev")[0],nextSelector:jq(".top_slide_wrap .op_next")[0]
+            $('#slider').sliders({
+                imgArr: [{src:basePath+'/static/images/fre_b1.jpg',href:'#'}, {src:basePath+'/static/images/fre_6.jpg',href:'#'},
+                    {src:basePath+'/static/images/fre_b2.jpg',href:'#'}, {src:basePath+'/static/images/de2.jpg',href:'#'}],
+                autoLoop: true,
+                current: 1,
+                time: 3000,
+                vWidth: 740
             });
         </script>
         <!--End Banner End-->
