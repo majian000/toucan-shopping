@@ -231,15 +231,24 @@
             attHtml+="<div class=\"layui-input-block\">";
             if(attribute.values!=null&&attribute.values.length>0)
             {
-                attHtml+=" <div class=\"layui-form-item\" style=\"clear:none;\" >";
-                attHtml+=" <div class=\"layui-input-block\" style=\"margin-left:0px;\">";
+                if(attribute.children!=null&&attribute.children.length>0) {
+                    attHtml += " <div class=\"layui-form-item\" style=\"clear:none;\" >";
+                    attHtml += " <div class=\"layui-input-block\" style=\"margin-left:0px;\">";
+                }else{
+                    attHtml += " <div class=\"layui-input-block\"  >";
+                }
                 for(var vi=0;vi<attribute.values.length;vi++)
                 {
                     var attributeValue = attribute.values[i];
                     attHtml+="<input type=\"checkbox\"  title=\""+attributeValue.attributeValue+"\">";
                 }
-                attHtml+="</div>";
-                attHtml+="</div>";
+
+                if(attribute.children!=null&&attribute.children.length>0) {
+                    attHtml += "</div>";
+                    attHtml += "</div>";
+                }else{
+                    attHtml += "</div>";
+                }
             }
             if(attribute.children!=null&&attribute.children.length>0){
                 for(var ci=0;ci<attribute.children.length;ci++)
