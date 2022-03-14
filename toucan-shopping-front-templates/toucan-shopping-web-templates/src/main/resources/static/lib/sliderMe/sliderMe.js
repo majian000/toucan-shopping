@@ -74,7 +74,7 @@
                 } else if (current === len) {
                     me.options.current = len - 2;
                 } else {
-                    me.options.current = 0;
+                    me.options.current = current-2;
                 }
                 setTimeout(function () {
                     me.loop();

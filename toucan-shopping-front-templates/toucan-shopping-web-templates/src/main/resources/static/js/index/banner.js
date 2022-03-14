@@ -24,7 +24,7 @@ $(function(){
                         bannerArray.push({src:banner.httpImgPath,href:banner.clickPath});
                     }
                 }
-                jq("#defaultBannerPointer").append(pointerHtml);
+                // jq("#defaultBannerPointer").append(pointerHtml);
                 jq('#slider').sliders({
                     imgArr: bannerArray,
                     autoLoop: true,
