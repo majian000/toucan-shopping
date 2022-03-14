@@ -1,4 +1,4 @@
-;(function ($, window, document, undefined) {
+;(function (jq, window, document, undefined) {
     'use strict';
 
     function Sliders(element, options) {
@@ -54,7 +54,7 @@
             });
             me.element.on('click', '.pointer li', function () {
                 clearInterval(me.timer);
-                var index = parseInt($(this).data('index'));
+                var index = parseInt(jq(this).data('index'));
                 me.goPage(index);
             });
             me.element.on('click', '#preBtn', function () {
@@ -140,7 +140,7 @@
             pointerLi.eq(index - 1).addClass("current");
         }
     };
-    $.fn.sliders = function (options) {
-        return new Sliders($(this), options);
+    jq.fn.sliders = function (options) {
+        return new Sliders(jq(this), options);
     }
 })(jQuery, window, document);

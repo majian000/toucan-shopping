@@ -182,6 +182,7 @@
         var flow = layui.flow;
         var loaddingAttributeTree;
         var attributeTotal,attributePage=1,attributeLimit=10;
+        var gloablCategoryId;
 
         element.on('tab(productTab)', function(){
 
@@ -197,30 +198,38 @@
                     return;
                 }
 
-                loaddingAttributeTree = layer.load();
+                if(gloablCategoryId!=categoryId)
+                {
+                    $("#commonAttributeList").html("");
+                    form.render();
 
-                $.ajax({
-                    url:"[[@{/query/attribute/tree/page}]]",
-                    contentType: "application/json; charset=utf-8",
-                    type:'POST',
-                    data:{categoryId:categoryId},
-                    success:function(data){
-                        if(data.code==0) {
-                            layer.msg(data.msg);
-                            return false;
+                    loaddingAttributeTree = layer.load();
+
+                    $.ajax({
+                        url:"[[@{/productSpu/query/attribute/tree/page}]]",
+                        contentType: "application/json; charset=utf-8",
+                        type:'POST',
+                        data:JSON.stringify({categoryId:categoryId}),
+                        success:function(data){
+                            if(data.code==0) {
+                                layer.msg(data.msg);
+                                return false;
+                            }
+
+
+                            if(data.data!=null) {
+                                drawCommonAttributeControl(JSON.parse(data.data));
+                            }
+
+                        },
+                        complete:function()
+                        {
+                            layer.close(loaddingAttributeTree);
                         }
+                    });
+                }
 
-
-                        if(data.data!=null) {
-                            drawCommonAttributeControl(eval(data.data));
-                        }
-
-                    },
-                    complete:function()
-                    {
-                        layer.close(loaddingAttributeTree);
-                    }
-                });
+                gloablCategoryId = categoryId;
             }
         });
 
@@ -234,19 +243,15 @@
                 if(attribute.children!=null&&attribute.children.length>0) {
                     attHtml += " <div class=\"layui-form-item\" style=\"clear:none;\" >";
                     attHtml += " <div class=\"layui-input-block\" style=\"margin-left:0px;\">";
-                }else{
-                    attHtml += " <div class=\"layui-input-block\"  >";
                 }
                 for(var vi=0;vi<attribute.values.length;vi++)
                 {
-                    var attributeValue = attribute.values[i];
+                    var attributeValue = attribute.values[vi];
                     attHtml+="<input type=\"checkbox\"  title=\""+attributeValue.attributeValue+"\">";
                 }
 
                 if(attribute.children!=null&&attribute.children.length>0) {
                     attHtml += "</div>";
-                    attHtml += "</div>";
-                }else{
                     attHtml += "</div>";
                 }
             }
@@ -260,6 +265,7 @@
             attHtml+="</div>";
             attHtml+="</div>";
 
+            return attHtml;
         }
 
         //绘制公共属性控件
@@ -275,6 +281,7 @@
                 }
 
                 $("#commonAttributeList").append(attributeHtmls);
+                form.render();
             }
         }
 

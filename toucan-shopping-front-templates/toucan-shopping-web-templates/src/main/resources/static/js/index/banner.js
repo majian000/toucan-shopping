@@ -24,9 +24,9 @@ $(function(){
                         bannerArray.push({src:banner.httpImgPath,href:banner.clickPath});
                     }
                 }
-                $("#defaultBannerPointer").append(pointerHtml);
-                $('#slider').sliders({
-                    imgArr: [bannerArray],
+                jq("#defaultBannerPointer").append(pointerHtml);
+                jq('#slider').sliders({
+                    imgArr: bannerArray,
                     autoLoop: true,
                     current: 1,
                     time: 3000,
