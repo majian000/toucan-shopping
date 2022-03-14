@@ -97,25 +97,25 @@
 
 .tslider {
     width: 740px;
-    height: 370px;
+    height: 401px;
     margin: 40px auto 0;
     overflow: hidden;
     position: relative
 }
 .tslider .pointer {
     position: absolute;
-    bottom: 10px;
+    bottom: 30px;
     width: 100%;
     z-index: 4;
     text-align: center
 }
 .tslider .pointer>li {
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #fff
+    background-color: #000000
 }
 .tslider .pointer>li:not(:last-child) {
     margin-right: 10px
