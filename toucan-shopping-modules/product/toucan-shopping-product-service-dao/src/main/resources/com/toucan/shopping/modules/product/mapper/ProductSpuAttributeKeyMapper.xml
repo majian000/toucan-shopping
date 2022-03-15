@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ProductSpuAttributeKeyMapper">
+
+    <resultMap id="productSpuAttributeKeyMap" type="com.toucan.shopping.modules.product.entity.ProductSpuAttributeKey" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="attribute_name" jdbcType="VARCHAR" property="attributeName" />
+        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="attribute_key_id" jdbcType="BIGINT" property="attributeKeyId" />
+        <result column="product_spu_id" jdbcType="BIGINT" property="productSpuId" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="attribute_type" jdbcType="INTEGER" property="attributeType" />
+        <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
+        <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="query_status" jdbcType="INTEGER" property="queryStatus" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+
+    <resultMap id="productSpuAttributeKeyVOMap" type="com.toucan.shopping.modules.product.vo.ProductSpuAttributeKeyVO" extends="productSpuAttributeKeyMap" >
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSpuAttributeKey"  keyProperty="id" >
+        insert into t_product_spu_attribute_key(id,attribute_key_id,product_spu_id,query_status,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status,parent_id)
+        values(#{id},#{attributeKeyId},#{productSpuId},#{queryStatus},#{attributeName},#{categoryId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus},#{parentId})
+    </insert>
+
+
+
+</mapper>

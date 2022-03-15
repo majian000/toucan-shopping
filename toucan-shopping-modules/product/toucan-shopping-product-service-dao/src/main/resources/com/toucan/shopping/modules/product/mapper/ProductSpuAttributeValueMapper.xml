@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ProductSpuAttributeValueMapper">
+
+    <resultMap id="productSpuAttributeValueMap" type="com.toucan.shopping.modules.product.entity.ProductSpuAttributeValue" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="product_spu_attribute_key_id" jdbcType="BIGINT" property="productSpuAttributeKeyId" />
+        <result column="attribute_key_id" jdbcType="BIGINT" property="attributeKeyId" />
+        <result column="attribute_value_id" jdbcType="BIGINT" property="attributeValueId" />
+        <result column="product_spu_id" jdbcType="BIGINT" property="productSpuId" />
+        <result column="attribute_value" jdbcType="VARCHAR" property="attributeValue" />
+        <result column="show_status" jdbcType="INTEGER" property="showStatus" />
+        <result column="attribute_value_extend1" jdbcType="VARCHAR" property="attributeValueExtend1" />
+        <result column="attribute_value_extend2" jdbcType="VARCHAR" property="attributeValueExtend2" />
+        <result column="attribute_value_extend3" jdbcType="VARCHAR" property="attributeValueExtend3" />
+        <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
+        <result column="query_status" jdbcType="INTEGER" property="queryStatus" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    </resultMap>
+
+
+    <resultMap id="productSpuAttributeValueVOMap" type="com.toucan.shopping.modules.product.vo.ProductSpuAttributeValueVO" extends="productSpuAttributeValueMap" >
+    </resultMap>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSpuAttributeValue"  keyProperty="id" >
+        insert into t_attribute_value(id,product_spu_attribute_key_id,attribute_key_id,product_spu_id,query_status,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
+        values(#{id},#{productSpuAttributeKeyId},#{attributeKeyId},#{productSpuId},#{queryStatus},#{attributeValueExtend1},#{attributeValueExtend2},#{attributeValueExtend3},#{attributeValue},#{attributeKeyId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
+    </insert>
+
+</mapper>

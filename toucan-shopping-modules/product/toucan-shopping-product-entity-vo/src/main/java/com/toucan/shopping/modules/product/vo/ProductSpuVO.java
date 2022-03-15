@@ -18,5 +18,7 @@ public class ProductSpuVO extends ProductSpu {
     private String brandLogo; //品牌logo
     private String brandHttpLogo; //品牌LOGO地址
 
+    private String attributes; //这个SPU的属性
+
 
 }

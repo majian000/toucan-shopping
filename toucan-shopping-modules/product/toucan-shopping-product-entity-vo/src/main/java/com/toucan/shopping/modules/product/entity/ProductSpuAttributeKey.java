@@ -3,23 +3,17 @@ package com.toucan.shopping.modules.product.entity;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.toucan.shopping.modules.common.util.DateUtils;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
- * 商品
- *
+ * 平台商品公共属性名(属性的快照)
  * @author majian
  */
 @Data
-public class ProductSpu {
-
+public class ProductSpuAttributeKey {
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
@@ -27,42 +21,50 @@ public class ProductSpu {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Integer categoryId; //所属类别
+    private Long categoryId; //所属类别
 
-    private String uuid; //SPU UUID
+    private Short queryStatus; //搜索状态 1可搜索 0不可搜索
 
-    private String name; //商品名称
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long attributeKeyId; //属性名ID
 
-    private Short status; //是否上架 0:未上架 1:已上架
+    private String attributeName; //属性名
+    private Long attributeSort; //排序
+    private Short showStatus; //显示状态 1显示 0隐藏
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate; //创建时间
+    private String createAdminId; //创建人ID
+    private String updateAdminId; //修改人ID
+
+
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate; //创建时间
 
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date updateDate; //创建时间
 
-    private String appCode; //所属应用
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long parentId; //上级属性名主键
+
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 删除状态 0未删除 1已删除
+     */
+    private Short deleteStatus;
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long createAdminId; //创建人ID
-
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long updateAdminId; //创建人ID
-
-    private Integer deleteStatus; //删除状态 0未删除 1已删除
-
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long brandId; //品牌ID
-
-
+    private Long productSpuId; //平台商品SPU ID
 
 
 }
