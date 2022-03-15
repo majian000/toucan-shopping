@@ -48,7 +48,7 @@ public class ProductSpuAttributeKey {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long parentId; //上级属性名主键
+    private Long parentAttributeKeyId; //上级属性名主键
 
 
     /**
