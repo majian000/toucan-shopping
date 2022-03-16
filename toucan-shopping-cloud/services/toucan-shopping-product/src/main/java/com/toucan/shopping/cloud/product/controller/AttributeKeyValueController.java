@@ -43,8 +43,8 @@ public class AttributeKeyValueController {
     @Autowired
     private AttributeValueService attributeValueService;
 
-    private SimplePropertyPreFilter attributeKeyPropertyFilter =  new SimplePropertyPreFilter(AttributeKeyVO.class, "id","attributeName","children","sort","values");
-    private SimplePropertyPreFilter attributeValueSimplePropertyFilter =  new SimplePropertyPreFilter(AttributeValueVO.class, "id","attributeValue","attributeValue");
+    private SimplePropertyPreFilter attributeKeyPropertyFilter =  new SimplePropertyPreFilter(AttributeKeyVO.class, "id","attributeName","parentId","children","sort","values");
+    private SimplePropertyPreFilter attributeValueSimplePropertyFilter =  new SimplePropertyPreFilter(AttributeValueVO.class, "id","attributeValue","parentId","attributeValue");
     private SimplePropertyPreFilter[] simplePropertyPreFilters ={attributeKeyPropertyFilter,attributeValueSimplePropertyFilter};
 
 

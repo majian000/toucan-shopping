@@ -137,7 +137,7 @@
                     <div class="layui-tab-item" style="height:90%">
 
                         <div class="layui-form-item">
-                            <label class="layui-form-label "></label>
+                            <label class="layui-form-label ">公共属性</label>
                             <div class="layui-input-block" id="commonAttributeList">
 
                                     <!--<div class="layui-form-item" >-->
@@ -203,7 +203,7 @@
                                     <!--</div>-->
 
                             </div>
-                            <div class="layui-flow-more"><a href="javascript:;"><cite>加载更多</cite></a></div>
+                            <div class="layui-flow-more" id="attributeLoadMoreDiv" style="display: none"><a href="javascript:;" id="attributeLoadMore"><cite>加载更多</cite></a></div>
                         </div>
 
 
@@ -315,8 +315,51 @@
         var carouselsku = layui.carousel;
         var flow = layui.flow;
         var loaddingAttributeTree;
-        var attributeTotal,attributePage=1,attributeLimit=10;
+        var attributeTotal,attributePageTotal=1,attributeLimit=10,attributeCurrentPage=1;
         var gloablCategoryId;
+
+        function loadCommonTreePage(categoryId)
+        {
+
+            loaddingAttributeTree = layer.load();
+
+            $.ajax({
+                url:"[[@{/productSpu/query/attribute/tree/page}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify({categoryId:categoryId,limit:attributeLimit,page:attributeCurrentPage}),
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+
+
+                    if(data.data!=null) {
+                        var treePage = JSON.parse(data.data);
+                        if(treePage.total<attributeLimit)
+                        {
+                            attributePageTotal=1;
+                        }else {
+                            attributePageTotal = treePage.total % attributeLimit ==  0 ? (treePage.total / attributeLimit) : (treePage.total / attributeLimit) + 1;
+                        }
+                        if(attributeCurrentPage<attributePageTotal)
+                        {
+                            $("#attributeLoadMoreDiv").show();
+                        }else{
+                            $("#attributeLoadMoreDiv").show();
+                            $("#attributeLoadMoreDiv").html(" ");
+                        }
+                        drawCommonAttributeControl(treePage);
+                    }
+
+                },
+                complete:function()
+                {
+                    layer.close(loaddingAttributeTree);
+                }
+            });
+        }
 
         element.on('tab(productTab)', function(){
 
@@ -337,30 +380,7 @@
                     $("#commonAttributeList").html("");
                     form.render();
 
-                    loaddingAttributeTree = layer.load();
-
-                    $.ajax({
-                        url:"[[@{/productSpu/query/attribute/tree/page}]]",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:JSON.stringify({categoryId:categoryId}),
-                        success:function(data){
-                            if(data.code==0) {
-                                layer.msg(data.msg);
-                                return false;
-                            }
-
-
-                            if(data.data!=null) {
-                                drawCommonAttributeControl(JSON.parse(data.data));
-                            }
-
-                        },
-                        complete:function()
-                        {
-                            layer.close(loaddingAttributeTree);
-                        }
-                    });
+                    loadCommonTreePage(categoryId);
                 }
 
                 gloablCategoryId = categoryId;
@@ -370,7 +390,7 @@
         function getAttributeHtml(attribute)
         {
             var attHtml = "<div class=\"layui-form-item\" >";
-            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parent_id+"\" attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
+            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parentId+"\" attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
             attHtml+="<div class=\"layui-input-block\">";
             if(attribute.values!=null&&attribute.values.length>0)
             {
@@ -381,7 +401,7 @@
                 for(var vi=0;vi<attribute.values.length;vi++)
                 {
                     var attributeValue = attribute.values[vi];
-                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-key-id=\""+attributeValue.attributeKeyId+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
+                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
                 }
 
                 if(attribute.children!=null&&attribute.children.length>0) {
@@ -479,7 +499,7 @@
                         {
                             if(j>0)
                             {
-                                attributeValues+="   ";
+                                attributeValues+="；";
                             }
                             var attributeValueObject = attributeValueArray[j];
                             attributeValues+=attributeValueObject.attributeValue;
@@ -524,7 +544,7 @@
                             {
                                 if(j>0)
                                 {
-                                    attributeValues+="   ";
+                                    attributeValues+="；";
                                 }
                                 var attributeValueObject = attributeValueArray[j];
                                 attributeValues+=attributeValueObject.attributeValue;
@@ -734,6 +754,10 @@
         });
 
 
+        $("#attributeLoadMore").click(function(){
+            attributeCurrentPage++;
+            loadCommonTreePage(gloablCategoryId);
+        });
 
 
         $("#selectCategoryId").click(function(){
