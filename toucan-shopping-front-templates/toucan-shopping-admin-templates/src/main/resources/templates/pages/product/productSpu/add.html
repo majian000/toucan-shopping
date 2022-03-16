@@ -20,6 +20,70 @@
             white-space: normal;
         }
     </style>
+    <style>
+
+        .Ptable {
+            margin: 10px 0;
+        }
+        .Ptable-item {
+            padding: 12px 0;
+            line-height: 220%;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .Ptable-item-child {
+            padding: 12px 0;
+            line-height: 220%;
+            color: #999;
+            font-size: 12px;
+        }
+        .Ptable dl {
+            margin-left: 110px;
+        }
+        .Ptable-item:after {
+            content: "";
+            height: 0;
+            visibility: hidden;
+            display: block;
+            clear: both;
+        }
+        .Ptable-item h3 {
+            font-weight: 400;
+            width: 110px;
+            text-align: right;
+            float: left;
+            font-size: 12px;
+        }
+        .Ptable-item dt {
+            width: 160px;
+            float: left;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .Ptable-item dd {
+            margin-left: 210px;
+        }
+
+        .Ptable-item-dl {
+            display: block;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+        }
+        .clearfix:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+        .Ptable-item, .p-parameter {
+            border-bottom: 1px solid #eee;
+        }
+    </style>
 
 
 </head>
@@ -145,7 +209,77 @@
 
                         <div class="layui-form-item">
                             <label class="layui-form-label ">属性预览</label>
-                            <div class="layui-input-block">
+                            <div class="layui-input-block" id="commonAttributeTablePreview">
+
+                                <!--
+
+
+                                    <div class="Ptable">
+                                        <div class="Ptable-item">
+                                            <h3>基本信息</h3>
+                                            <dl style="Ptable-item-dl">
+                                                <dl class="clearfix" style="margin:0;">
+                                                    <dt>机身材质01</dt>
+                                                    <dt>机身材质01</dt>
+                                                </dl>
+                                            </dl>
+                                            <dl style="Ptable-item-dl">
+                                                <dl class="clearfix" style="margin:0">
+                                                <dt>机身材质</dt><dd>玻璃</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身长度</dt><dd>152.67mm</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身厚度</dt><dd>8.16mm</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身宽度</dt><dd>69.85mm</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身重量</dt><dd>180g</dd>
+                                                </dl>
+                                          </dl>
+                                      </div>
+
+                                          <div class="Ptable-item">
+                                                <h3>数据接口</h3>
+                                                <dl style="Ptable-item-dl">
+                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>数据传输接口</dt><dd>WIFI；蓝牙</dd>
+                                                    </dl>
+                                                    <dl class="clearfix" style="margin:0">
+                                                         <dt>NFC/NFC模式</dt><dd>其他</dd>
+                                                    </dl>
+                                                    <dl class="clearfix" style="margin:0">
+                                                        <dt>充电接口类型</dt><dd>Type-C</dd>
+                                                    </dl>
+                                                    <dl class="clearfix" style="margin:0">
+
+                                                          <div class="Ptable-item-child">
+                                                                <dl style="Ptable-item-dl">
+                                                                  <dl class="clearfix" style="margin:0">
+                                                                      <dt>数据传输接口</dt><dd>WIFI；蓝牙</dd>
+                                                                    </dl>
+                                                                    <dl class="clearfix" style="margin:0">
+                                                                         <dt>NFC/NFC模式</dt><dd>其他</dd>
+                                                                    </dl>
+                                                                    <dl class="clearfix" style="margin:0">
+                                                                        <dt>充电接口类型</dt><dd>Type-C</dd>
+                                                                    </dl>
+                                                                    <dl class="clearfix" style="margin:0">
+                                                                         <dt>耳机接口类型</dt><dd>Type-C</dd>
+                                                                    </dl>
+                                                             </dl>
+                                                          </div>
+                                                    </dl>
+                                             </dl>
+                                          </div>
+                                    </div>
+
+
+                                -->
+
                             </div>
                         </div>
 
@@ -236,7 +370,7 @@
         function getAttributeHtml(attribute)
         {
             var attHtml = "<div class=\"layui-form-item\" >";
-            attHtml+=" <label class=\"layui-form-label\">"+attribute.attributeName+"</label>";
+            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parent_id+"\" attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
             attHtml+="<div class=\"layui-input-block\">";
             if(attribute.values!=null&&attribute.values.length>0)
             {
@@ -247,7 +381,7 @@
                 for(var vi=0;vi<attribute.values.length;vi++)
                 {
                     var attributeValue = attribute.values[vi];
-                    attHtml+="<input type=\"checkbox\"  title=\""+attributeValue.attributeValue+"\">";
+                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-key-id=\""+attributeValue.attributeKeyId+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
                 }
 
                 if(attribute.children!=null&&attribute.children.length>0) {
@@ -316,6 +450,288 @@
         });
 
 
+
+
+
+        var selectAttributeArray = new Array();
+
+
+        function genAttributeKeyChildHtml(attributeKeyId)
+        {
+            var attributeKeyChildHtml="";
+            //查询出所有子节点
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                //属性名对象
+                if(attributeKV.type==1)
+                {
+                    if(attributeKV.parentAttributeKeyId==attributeKeyId)
+                    {
+                        attributeKeyChildHtml+="<div class=\"Ptable-item-child\">";
+                        attributeKeyChildHtml+="  <dl style=\"Ptable-item-dl\">";
+                        attributeKeyChildHtml+="    <dl class=\"clearfix\" style=\"margin:0\">";
+                        attributeKeyChildHtml+="      <dt>"+attributeKV.attributeName+"</dt>";
+                        //查询属性值列表
+                        var attributeValueArray = getAttributeValues(attributeKV.attributeKeyId);
+                        var attributeValues="";
+                        for(var j=0;j<attributeValueArray.length;j++)
+                        {
+                            if(j>0)
+                            {
+                                attributeValues+="   ";
+                            }
+                            var attributeValueObject = attributeValueArray[j];
+                            attributeValues+=attributeValueObject.attributeValue;
+                        }
+                        attributeKeyChildHtml+="       <dd>"+attributeValues+"</dd>";
+                        attributeKeyChildHtml+="    </dl>";
+
+                        attributeKeyChildHtml+="<dl class=\"clearfix\" style=\"margin:0\">"
+                        attributeKeyChildHtml+=genAttributeKeyChildHtml(attributeKV.attributeKeyId);
+                        attributeKeyChildHtml+="</dl>";
+
+                        attributeKeyChildHtml+="  </dl>";
+                        attributeKeyChildHtml+="</div>";
+                    }
+                }
+            }
+            return attributeKeyChildHtml;
+        }
+
+        function drawAttributeTable()
+        {
+            var attributeTable="<div class=\"Ptable\">";
+            //查询出所有根节点
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                //属性名对象
+                if(attributeKV.type==1)
+                {
+                    if(attributeKV.parentAttributeKeyId=="-1")
+                    {
+                        attributeTable+="<div class=\"Ptable-item\">";
+                        attributeTable+="  <h3>"+attributeKV.attributeName+"</h3>";
+                        //查询属性值列表
+                        var attributeValueArray = getAttributeValues(attributeKV.attributeKeyId);
+                        attributeTable+="   <dl style=\"Ptable-item-dl\">";
+                        if(attributeValueArray.length>0)
+                        {
+                            attributeTable+="    <dl class=\"clearfix\" style=\"margin:0\">";
+                            var attributeValues="";
+                            for(var j=0;j<attributeValueArray.length;j++)
+                            {
+                                if(j>0)
+                                {
+                                    attributeValues+="   ";
+                                }
+                                var attributeValueObject = attributeValueArray[j];
+                                attributeValues+=attributeValueObject.attributeValue;
+                            }
+                            attributeTable+="       <dd style=\"margin-left: 20px;\">"+attributeValues+"</dd>";
+                            attributeTable+="     </dl>";
+                        }
+                        attributeTable+="	</dl>";
+                        attributeTable+="<dl class=\"clearfix\" style=\"margin:0\">"
+                        attributeTable+=genAttributeKeyChildHtml(attributeKV.attributeKeyId);
+                        attributeTable+="</dl>";
+                        attributeTable+="</div>";
+                    }
+                }
+            }
+            attributeTable+="</div>";
+
+            $("#commonAttributeTablePreview").html(attributeTable);
+        }
+
+
+        function getAttributeValues(attributeKeyId)
+        {
+            var attributeValueArray = new Array();
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                if(attributeKV.type==2)
+                {
+                    if(attributeKV.attributeKeyId==attributeKeyId)
+                    {
+                        attributeValueArray.push(attributeKV);
+                    }
+                }
+            }
+            return attributeValueArray;
+
+        }
+
+        function pushParentAttributeKey(attributeKeyId)
+        {
+            var attributeKeyObject = $("#attributeKey"+attributeKeyId);
+            var attributeKey = {attributeName:"",type:-1,attributeKeyId:"",parentAttributeKeyId:""};
+            attributeKey.attributeName = attributeKeyObject.attr("attribute-key");
+            attributeKey.type=1; //属性名对象
+            attributeKey.attributeKeyId = attributeKeyObject.attr("attribute-key-id");
+            attributeKey.parentAttributeKeyId = attributeKeyObject.attr("parent-attribute-key-id");
+
+            if(!existsAttribute(attributeKey))
+            {
+                selectAttributeArray.push(attributeKey);
+            }
+            if(attributeKey.parentAttributeKeyId!="-1")
+            {
+                pushParentAttributeKey(attributeKey.parentAttributeKeyId);
+            }
+        }
+
+
+
+        /**
+         * 添加属性值
+         */
+        function pushCommonAttributeValue(attributeKeyId,attributeValueId,attributeValue)
+        {
+            var attributeValueObject={attributeValue:"",type:-1,attributeKeyId:""};
+            attributeValueObject.attributeValue = attributeValue;
+            attributeValueObject.type=2; //属性值对象
+            attributeValueObject.attributeKeyId = $("#attributeKey"+attributeKeyId).attr("attribute-key-id");
+            attributeValueObject.attributeValueId = attributeValueId;
+            if(!existsAttribute(attributeValueObject))
+            {
+                selectAttributeArray.push(attributeValueObject);
+            }
+            pushParentAttributeKey(attributeValueObject.attributeKeyId);
+        }
+
+
+
+        /**
+         * 判断节点是否存在已选数组中
+         */
+        function existsAttribute(attributeKeyValue)
+        {
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                //属性名对象
+                if(attributeKeyValue.type==1)
+                {
+                    if(attributeKeyValue.type ==attributeKV.type && attributeKeyValue.attributeKeyId == attributeKV.attributeKeyId)
+                    {
+                        return true;
+                    }
+                }else if(attributeKeyValue.type==2) //属性值对象
+                {
+                    if(attributeKeyValue.type ==attributeKV.type && attributeKeyValue.attributeValueId == attributeKV.attributeValueId)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        /**
+         * 删除属性值
+         */
+        function removeCommonAttribute(attributeKeyId,attributeValueId,attributeValue)
+        {
+            if(selectAttributeArray!=null&&selectAttributeArray.length>0)
+            {
+                for(var i=0;i<selectAttributeArray.length;i++)
+                {
+                    var attributeKV = selectAttributeArray[i];
+                    if(attributeKV.type==2) //属性值对象
+                    {
+                        if(attributeValueId == attributeKV.attributeValueId)
+                        {
+                            //删除这个属性值
+                            selectAttributeArray.splice(i,1);
+                            //删除属性名(只有在这个属性名下的属性值为空的情况下)
+                            deleteAttributeKey(attributeKeyId);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * 删除属性名(只有在这个属性名下的属性值为空的情况下)
+         */
+        function deleteAttributeKey(attributeKeyId)
+        {
+            if(attributeKeyId!=null&&attributeKeyId!="-1")
+            {
+                var attributeValueCount = queryAttributeValueCount(attributeKeyId);
+                //这个属性名没有任何属性值了,就删除这个属性名
+                if(attributeValueCount<=0)
+                {
+                    for(var i=0;i<selectAttributeArray.length;i++)
+                    {
+                        var attributeKV = selectAttributeArray[i];
+                        if(attributeKV.type==1)
+                        {
+                            if(attributeKeyId == attributeKV.attributeKeyId)
+                            {
+                                //删除这个属性名
+                                selectAttributeArray.splice(i,1);
+                                //递归删除上级节点属性名
+                                deleteAttributeKey($("#attributeKey"+attributeKeyId).attr("parent-attribute-key-id"));
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+        /**
+         * 查询指定属性名下子节点包含多少属性值
+         */
+        function queryAttributeValueCount(attributeKeyId)
+        {
+            var count = 0 ;
+            if(selectAttributeArray!=null&&selectAttributeArray.length>0)
+            {
+                for(var i=0;i<selectAttributeArray.length;i++)
+                {
+                    var attributeKV = selectAttributeArray[i];
+                    if(attributeKV.type==2)
+                    {
+                        if(attributeKeyId == attributeKV.attributeKeyId)
+                        {
+                            count++;
+                        }
+                    }else if(attributeKV.type==1)
+                    {
+                        if(attributeKeyId == attributeKV.parentAttributeKeyId)
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+
+        }
+
+
+        form.on('checkbox(cmmonAttrChkBoxFilter)', function (data) {
+            if( data.elem.checked){　　　　　　//判断当前多选框是选中还是取消选中
+                var value = data.value;   //获取选中的value值
+                pushCommonAttributeValue(data.elem.getAttribute("attribute-key-id"),data.elem.getAttribute("attribute-value-id"),data.elem.getAttribute("attribute-value"));
+
+                //console.log("selected");
+            }else{
+                //console.log("un selected");
+                removeCommonAttribute(data.elem.getAttribute("attribute-key-id"),data.elem.getAttribute("attribute-value-id"),data.elem.getAttribute("attribute-value"));
+            }
+            drawAttributeTable();
+        });
 
 
 
