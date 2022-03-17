@@ -93,4 +93,10 @@ public interface CategoryService {
     void setNamePath(List<CategoryVO> categoryVOS,List<Long> parentIdList);
 
 
+    /**
+     * 设置分类名称路径
+     * @param categoryTreeVO
+     */
+    void setPath(CategoryTreeVO categoryTreeVO);
+
 }

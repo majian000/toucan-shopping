@@ -10,6 +10,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryServ
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -206,10 +207,32 @@ public class AttributeKeyController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
+    @RequestMapping(value = "/addPage/{categoryId}",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request,@PathVariable Long categoryId)
     {
-
+        if(categoryId!=null&&categoryId!=-1)
+        {
+            try {
+                CategoryVO queryCategoryVO = new CategoryVO();
+                queryCategoryVO.setId(categoryId);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO.getSign(),requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
+                    request.setAttribute("categoryId",categoryVO.getId());
+//                    request.setAttribute("categoryName",categoryVO.get);
+                }else{
+                    request.setAttribute("categoryId",-1);
+                    request.setAttribute("categoryName","");
+                }
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+                request.setAttribute("categoryId",-1);
+                request.setAttribute("categoryName","");
+            }
+        }
         return "pages/product/attribute/attributeKey/add.html";
     }
 
@@ -515,6 +538,51 @@ public class AttributeKeyController extends UIController {
         }
         return resultObjectVO;
     }
+
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/query/category/tree/pid",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryCategoryTreeByParentId(@RequestParam Long id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(id==null)
+            {
+                id=-1L;
+            }
+            CategoryVO query = new CategoryVO();
+            query.setParentId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
+            resultObjectVO = feignCategoryService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    List<CategoryTreeVO> categoryVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
+                    for(CategoryTreeVO categoryTreeVO:categoryVOS)
+                    {
+                        categoryTreeVO.setOpen(false);
+                        categoryTreeVO.setIcon(null);
+                    }
+                    resultObjectVO.setData(categoryVOS);
+                }
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
 
 
 }

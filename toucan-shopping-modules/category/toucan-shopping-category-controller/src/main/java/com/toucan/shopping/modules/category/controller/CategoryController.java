@@ -272,8 +272,18 @@ public class CategoryController {
             return resultObjectVO;
         }
         try {
-            Category Category = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
-            resultObjectVO.setData(categoryService.queryById(Category.getId()));
+            Category queryCategory = JSONObject.parseObject(requestJsonVO.getEntityJson(), Category.class);
+            Category category = categoryService.queryById(queryCategory.getId());
+            CategoryTreeVO categoryTreeVO = null;
+            if(category!=null)
+            {
+                categoryTreeVO = new CategoryTreeVO();
+                BeanUtils.copyProperties(categoryTreeVO,category);
+                Long parentId = categoryTreeVO.getParentId();
+                categoryService.setPath(categoryTreeVO);
+                categoryTreeVO.setParentId(parentId);
+            }
+            resultObjectVO.setData(categoryTreeVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
