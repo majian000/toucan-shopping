@@ -226,13 +226,14 @@ public class AttributeKeyController extends UIController {
                     request.setAttribute("categoryId","");
                     request.setAttribute("categoryName","");
                 }
+                return "pages/product/attribute/attributeKey/add.html";
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
-                request.setAttribute("categoryId","");
-                request.setAttribute("categoryName","");
             }
         }
+        request.setAttribute("categoryId","");
+        request.setAttribute("categoryName","");
         return "pages/product/attribute/attributeKey/add.html";
     }
 
