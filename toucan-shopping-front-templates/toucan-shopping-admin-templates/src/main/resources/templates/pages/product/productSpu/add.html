@@ -113,8 +113,8 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">商品分类<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
                             <div class="layui-input-block">
-                                <input type="hidden" name="categoryId" id="categoryId"  >
-                                <input type="text" readonly  id="selectCategoryId" lay-verify="required"  placeholder="请选择商品分类"  class="layui-input" >
+                                <input type="hidden" name="categoryId" id="categoryId"  th:value="${categoryId}" >
+                                <input type="text" readonly  id="selectCategoryId" th:value="${categoryName}"  lay-verify="required"  placeholder="请选择商品分类"  class="layui-input" >
                             </div>
                         </div>
                         <div class="layui-form-item">

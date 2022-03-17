@@ -54,7 +54,7 @@
                 <fieldset class="table-search-fieldset">
                     <div style="margin: 10px 10px 10px 10px">
                         <form class="layui-form layui-form-pane" id="userSearchForm" action="">
-                            <input type="hidden" id="categoryId" name="categoryId">
+                            <input type="hidden" id="categoryId" name="categoryId" value="-1">
                             <div class="layui-form-item">
 
                                 <div class="layui-inline">
@@ -287,6 +287,7 @@
          */
         table.on('toolbar(productSpuTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
+                var categoryId = $("#categoryId").val();
                 var index = layer.open({
                     title: '添加平台商品',
                     type: 2,
@@ -294,7 +295,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/productSpu/addPage}]]",
+                    content: "[[@{/productSpu/addPage/}]]"+categoryId
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

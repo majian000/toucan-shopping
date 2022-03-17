@@ -98,9 +98,34 @@ public class ProductSpuController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/addPage",method = RequestMethod.GET)
-    public String addPage(HttpServletRequest request)
+    @RequestMapping(value = "/addPage/{categoryId}",method = RequestMethod.GET)
+    public String addPage(HttpServletRequest request,@PathVariable Long categoryId)
     {
+
+        if(categoryId!=null&&categoryId!=-1)
+        {
+            try {
+                CategoryVO queryCategoryVO = new CategoryVO();
+                queryCategoryVO.setId(categoryId);
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO.getSign(),requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
+                    request.setAttribute("categoryId",categoryTreeVO.getId());
+                    request.setAttribute("categoryName",categoryTreeVO.getPath());
+                }else{
+                    request.setAttribute("categoryId","");
+                    request.setAttribute("categoryName","");
+                }
+                return "pages/product/productSpu/add.html";
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
+        }
+        request.setAttribute("categoryId","");
+        request.setAttribute("categoryName","");
         return "pages/product/productSpu/add.html";
     }
 
