@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.product.entity.ProductSpu;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 商品
@@ -20,5 +21,7 @@ public class ProductSpuVO extends ProductSpu {
 
     private String attributes; //这个SPU的属性
 
+    private List<ProductSpuAttributeKeyVO> attributeKeys; //所有属性名
+    private List<ProductSpuAttributeValueVO> attributeValues; //所有属性值
 
 }
