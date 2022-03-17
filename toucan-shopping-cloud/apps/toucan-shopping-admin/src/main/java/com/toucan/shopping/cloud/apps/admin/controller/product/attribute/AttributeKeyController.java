@@ -219,17 +219,17 @@ public class AttributeKeyController extends UIController {
                 ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO.getSign(),requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
-                    CategoryVO categoryVO = resultObjectVO.formatData(CategoryVO.class);
-                    request.setAttribute("categoryId",categoryVO.getId());
-//                    request.setAttribute("categoryName",categoryVO.get);
+                    CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
+                    request.setAttribute("categoryId",categoryTreeVO.getId());
+                    request.setAttribute("categoryName",categoryTreeVO.getPath());
                 }else{
-                    request.setAttribute("categoryId",-1);
+                    request.setAttribute("categoryId","");
                     request.setAttribute("categoryName","");
                 }
             }catch(Exception e)
             {
                 logger.warn(e.getMessage(),e);
-                request.setAttribute("categoryId",-1);
+                request.setAttribute("categoryId","");
                 request.setAttribute("categoryName","");
             }
         }
