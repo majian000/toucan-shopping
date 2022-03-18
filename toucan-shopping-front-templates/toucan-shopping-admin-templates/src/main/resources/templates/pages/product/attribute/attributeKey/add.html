@@ -11,7 +11,6 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
-    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
     <style>
         body {
             background-color: #ffffff;
@@ -48,32 +47,29 @@
             <tip>填写属性名。</tip>
         </div>
     </div>
-    <div class="layui-form-item"  style="position:relative">
+    <div class="layui-form-item">
         <label class="layui-form-label required">所属分类</label>
         <div class="layui-input-block">
             <input type="hidden" name="categoryId" id="categoryId" th:value="${categoryId}">
             <input type="text" readonly  id="selectCategoryId" th:value="${categoryName}" lay-verify="required"  placeholder="请选择所属分类" value="" class="layui-input" >
         </div>
-        <span id="menuContent"    style="display:none; position: absolute;">
-            <ul id="treeDemo" class="ztree" style="margin-top:0; width:160px;"></ul>
-        </span>
     </div>
-    <div class="layui-form-item"  style="position:relative">
+    <div class="layui-form-item">
         <label class="layui-form-label required">上级节点</label>
-        <div class="layui-input-block" style="position:relative">
+        <div class="layui-input-block">
             <input type="hidden" name="parentId" id="parentId">
             <input type="text" readonly  id="selectParentId" lay-verify="required"  placeholder="请选择所属上级" value="" class="layui-input" >
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
-        <div class="layui-input-block" style="position:relative">
+        <div class="layui-input-block">
             <input type="number" name="attributeSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">显示状态</label>
-        <div class="layui-input-block" style="position:relative">
+        <div class="layui-input-block">
             <input type="radio" name="showStatus" value="1" title="显示" checked="">
             <input type="radio" name="showStatus" value="0" title="隐藏">
         </div>
@@ -92,7 +88,6 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
-<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
@@ -104,82 +99,6 @@
             $ = layui.$;
 
         var tree = layui.tree;
-
-
-
-        var setting = {
-            view: {
-                dblClickExpand: false
-            },
-            data: {
-                simpleData: {
-                    enable: true
-                }
-            },
-            callback: {
-                beforeClick: beforeClick,
-                onClick: onClick
-            }
-        };
-
-        var zNodes =[
-            {id:1, pId:0, name:"北京"},
-            {id:2, pId:0, name:"天津"},
-            {id:3, pId:0, name:"上海"},
-            {id:6, pId:0, name:"重庆"},
-            {id:4, pId:0, name:"河北省", open:true},
-            {id:41, pId:4, name:"石家庄"},
-            {id:42, pId:4, name:"保定"},
-            {id:43, pId:4, name:"邯郸"},
-            {id:44, pId:4, name:"承德"},
-            {id:5, pId:0, name:"广东省", open:true},
-            {id:51, pId:5, name:"广州"},
-            {id:52, pId:5, name:"深圳"},
-            {id:53, pId:5, name:"东莞"},
-            {id:54, pId:5, name:"佛山"},
-            {id:6, pId:0, name:"福建省", open:true},
-            {id:61, pId:6, name:"福州"},
-            {id:62, pId:6, name:"厦门"},
-            {id:63, pId:6, name:"泉州"},
-            {id:64, pId:6, name:"三明"}
-        ];
-
-        function beforeClick(treeId, treeNode) {
-            var check = (treeNode && !treeNode.isParent);
-            if (!check) alert("只能选择城市...");
-            return check;
-        }
-
-        function onClick(e, treeId, treeNode) {
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
-                nodes = zTree.getSelectedNodes(),
-                v = "";
-            nodes.sort(function compare(a,b){return a.id-b.id;});
-            for (var i=0, l=nodes.length; i<l; i++) {
-                v += nodes[i].name + ",";
-            }
-            if (v.length > 0 ) v = v.substring(0, v.length-1);
-            var cityObj = $("#selectCategoryId");
-            cityObj.attr("value", v);
-        }
-
-        function showMenu() {
-            var cityObj = $("#selectCategoryId");
-            var cityOffset = $("#selectCategoryId").offset();
-            $("#menuContent").css({left:cityOffset.left + "px"}).slideDown("fast");
-            $("body").bind("mousedown", onBodyDown);
-        }
-        function hideMenu() {
-            $("#menuContent").fadeOut("fast");
-            $("body").unbind("mousedown", onBodyDown);
-        }
-        function onBodyDown(event) {
-            if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0)) {
-                hideMenu();
-            }
-        }
-
-        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
@@ -209,54 +128,53 @@
         });
 
         $("#selectCategoryId").click(function(){
-            showMenu();
-            // index = layer.open({
-            //     title: '选择所属分类',
-            //     type: 1,
-            //     shade: 0.2,
-            //     maxmin:true,
-            //
-            //     area: ['20%', '60%'],
-            //     content: "<div id='categoryTree'></div>",
-            //     success:function(layero){
-            //
-            //         loadding = layer.load();
-            //         $.ajax({
-            //             url:"[[@{/}]]product/attribute/attributeKey/query/category/tree",
-            //             contentType: "application/json; charset=utf-8",
-            //             type:'GET',
-            //             data:null,
-            //             success:function(data){
-            //                 if(data.code==1)
-            //                 {
-            //                     //渲染
-            //                     var inst1 = tree.render({
-            //                         elem: '#categoryTree'  //绑定元素
-            //                         ,data: data.data,
-            //                         click: function(obj){
-            //                             if(obj.data.id==-1)
-            //                             {
-            //                                 layer.msg("不能选择根节点");
-            //                                 return;
-            //                             }
-            //                             $("#selectCategoryId").val(obj.data.title);
-            //                             $("#categoryId").val(obj.data.id);
-            //                             layer.close(index);
-            //                         }
-            //                     });
-            //                 }
-            //             },
-            //             complete:function()
-            //             {
-            //                 layer.close(loadding);
-            //             }
-            //         });
-            //
-            //     }
-            // });
-            // $(window).on("resize", function () {
-            //     layer.full(index);
-            // });
+            index = layer.open({
+                title: '选择所属分类',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['20%', '60%'],
+                content: "<div id='categoryTree'></div>",
+                success:function(layero){
+
+                    loadding = layer.load();
+                    $.ajax({
+                        url:"[[@{/}]]product/attribute/attributeKey/query/category/tree",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:null,
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#categoryTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        if(obj.data.id==-1)
+                                        {
+                                            layer.msg("不能选择根节点");
+                                            return;
+                                        }
+                                        $("#selectCategoryId").val(obj.data.title);
+                                        $("#categoryId").val(obj.data.id);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
 
         });
 
@@ -322,10 +240,5 @@
 
     });
 </script>
-
-<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
-<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
-<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
-
 </body>
 </html>
