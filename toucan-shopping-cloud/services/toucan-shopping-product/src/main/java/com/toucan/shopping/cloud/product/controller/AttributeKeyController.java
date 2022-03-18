@@ -392,6 +392,17 @@ public class AttributeKeyController {
                 return resultObjectVO;
             }
 
+            AttributeKeyVO query = new AttributeKeyVO();
+            query.setAttributeName(vo.getAttributeName());
+            query.setCategoryId(vo.getCategoryId());
+            query.setParentId(vo.getParentId());
+            if(attributeKeyService.exists(query)>0)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("属性名已经存在!");
+                return resultObjectVO;
+            }
+
             AttributeKey entity = new AttributeKey();
             BeanUtils.copyProperties(entity,vo);
             entity.setId(idGenerator.id());

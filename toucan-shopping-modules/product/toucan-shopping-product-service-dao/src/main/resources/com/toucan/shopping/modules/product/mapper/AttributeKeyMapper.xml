@@ -115,6 +115,27 @@
     </select>
 
 
+    <select id="exists" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">
+        select count(*) from t_attribute_key t
+        <where>
+            1=1
+            <if test="attributeName!=null ">
+                and t.attribute_name = #{attributeName}
+
+            </if>
+
+            <if test="parentId!=null">
+                and t.parent_id = #{parentId}
+            </if>
+
+            <if test="categoryId!=null">
+                and t.category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
+
+
     <select id="queryListBySortDesc" resultMap="attributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.vo.AttributeKeyVO">
         select t.* from t_attribute_key t
         <where>

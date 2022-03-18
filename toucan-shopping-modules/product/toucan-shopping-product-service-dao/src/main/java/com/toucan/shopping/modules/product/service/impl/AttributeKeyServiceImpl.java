@@ -46,6 +46,11 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
         return pageInfo;
     }
 
+    @Override
+    public Long exists(AttributeKeyVO entity) {
+        return attributeKeyMapper.exists(entity);
+    }
+
 
     @Override
     public int save(AttributeKey attributeKey) {

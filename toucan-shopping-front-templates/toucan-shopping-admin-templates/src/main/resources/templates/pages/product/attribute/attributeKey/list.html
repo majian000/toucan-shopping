@@ -187,7 +187,9 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '主键'},
+                    {field: 'id', width: 200, title: '主键'},
+                    {field: 'path',width: 350,  title: '属性路径'},
+                    {field: 'attributeName',width: 350,  title: '属性名'},
                     {field: 'attributeType',width: 150,   title: '属性类型',
                         templet: function (row) {
                             if(row.attributeType == null){
@@ -214,8 +216,6 @@
                             }
                             return row.queryStatus;
                         }},
-                    {field: 'path',width: 350,  title: '属性路径'},
-                    {field: 'attributeName',width: 350,  title: '属性名'},
                     {field: 'parentId', width: 350, title: '上级属性名ID'},
                     {field: 'parentName',width: 350,  title: '上级属性名'},
                     {field: 'categoryName',width: 350,  title: '所属分类'},
@@ -234,10 +234,10 @@
                             }
                             return row.showStatus;
                         }},
-                    {field: 'createAdminName', title: '创建人'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'createAdminName',width: 150,  title: '创建人'},
+                    {field: 'createDate',width: 200,  title: '创建时间'},
+                    {field: 'updateAdminName', width: 150,  title: '修改人'},
+                    {field: 'updateDate', width: 200, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
                 ]
             ],

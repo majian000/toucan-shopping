@@ -13,6 +13,9 @@ public interface AttributeKeyMapper {
 
     List<AttributeKeyVO> queryList(AttributeKeyVO entity);
 
+
+    Long exists(AttributeKeyVO entity);
+
     List<AttributeKeyVO> queryListBySortDesc(AttributeKeyVO entity);
 
     int insert(AttributeKey attributeKey);

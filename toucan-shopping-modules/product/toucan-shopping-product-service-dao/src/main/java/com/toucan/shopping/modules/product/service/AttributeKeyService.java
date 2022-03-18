@@ -26,6 +26,13 @@ public interface AttributeKeyService {
      */
     PageInfo<AttributeKeyVO> queryListPageBySortDesc(AttributeKeyPageInfo queryPageInfo);
 
+    /**
+     * 是否存在该属性名
+     * @param entity
+     * @return
+     */
+    Long exists(AttributeKeyVO entity);
+
 
     /**
      * 保存实体
