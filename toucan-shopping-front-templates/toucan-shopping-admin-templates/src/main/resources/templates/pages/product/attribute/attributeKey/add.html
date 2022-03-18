@@ -51,14 +51,14 @@
         <label class="layui-form-label required">所属分类</label>
         <div class="layui-input-block">
             <input type="hidden" name="categoryId" id="categoryId" th:value="${categoryId}">
-            <input type="text" readonly  id="selectCategoryId" th:value="${categoryName}" lay-verify="required"  placeholder="请选择所属分类" value="" class="layui-input" >
+            <input type="text" id="selectCategoryId" lay-filter="selectCategoryId"  th:value="${categoryName}"   placeholder="请选择所属分类"  class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">上级节点</label>
         <div class="layui-input-block">
             <input type="hidden" name="parentId" id="parentId">
-            <input type="text" readonly  id="selectParentId" lay-verify="required"  placeholder="请选择所属上级" value="" class="layui-input" >
+            <input type="text" readonly  id="selectParentId" lay-verify="required"  placeholder="请选择所属上级节点" value="" class="layui-input" >
         </div>
     </div>
     <div class="layui-form-item">
@@ -90,15 +90,21 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script>
     layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+        base: basePath+'/lib/layui_ext/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form','tree','dtree','upload','laydate'], function () {
+        dtree: 'dtree/dtree', //定义该组件模块名
+        treeSelect: 'treeSelect/treeSelect'
+    }).use(['form','treeSelect','tree','dtree','upload','laydate'], function () {
         var form = layui.form,
+            treeSelect= layui.treeSelect,
             layer = layui.layer,
             $ = layui.$;
 
         var tree = layui.tree;
+
+        var defaultCategoryId = $("#categoryId").val();
+        var defaultSelectCategoryId = $("#selectCategoryId").val();
+
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
@@ -127,58 +133,50 @@
             return false;
         });
 
-        $("#selectCategoryId").click(function(){
-            index = layer.open({
-                title: '选择所属分类',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
 
-                area: ['20%', '60%'],
-                content: "<div id='categoryTree'></div>",
-                success:function(layero){
 
-                    loadding = layer.load();
-                    $.ajax({
-                        url:"[[@{/}]]product/attribute/attributeKey/query/category/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#categoryTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
-                                        $("#selectCategoryId").val(obj.data.title);
-                                        $("#categoryId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
-
+        treeSelect.render({
+            // 选择器
+            elem: '#selectCategoryId',
+            // 数据
+            data: "[[@{/}]]product/attribute/attributeKey/query/category/tree",
+            // 异步加载方式：get/post，默认get
+            type: 'get',
+            // 占位符
+            placeholder: '请选择所属分类',
+            // 是否开启搜索功能：true/false，默认false
+            search: false,
+            style: {
+                folder: {
+                    enable: false
+                },
+                line: {
+                    enable: true
                 }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
+            },
+            // 点击回调
+            click: function(d){
+                // console.log(d);
 
+                $("#selectCategoryId").val(d.current.name);
+                $("#categoryId").val(d.current.data.id);
+            },
+            // 加载完成后的回调函数
+            success: function (d) {
+                $("#categoryId").val(defaultCategoryId);
+                $("#selectCategoryId").val(defaultSelectCategoryId);
+                // console.log(d);
+//                选中节点，根据id筛选
+//                treeSelect.checkNode('tree', 3);
+
+//                获取zTree对象，可以调用zTree方法
+//                var treeObj = treeSelect.zTree('tree');
+//                console.log(treeObj);
+
+//                刷新树结构
+//                treeSelect.refresh('tree');
+            }
         });
-
-
 
 
         $("#selectParentId").click(function(){
