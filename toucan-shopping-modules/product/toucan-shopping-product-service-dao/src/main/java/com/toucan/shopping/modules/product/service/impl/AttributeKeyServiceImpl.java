@@ -131,5 +131,18 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
         }
     }
 
+    @Override
+    public void setPath(AttributeKeyVO attributeKeyVO) {
+        if(attributeKeyVO.getParentId()!=null&&attributeKeyVO.getParentId().longValue()!=-1)
+        {
+            AttributeKey parentEntity = this.queryById(attributeKeyVO.getParentId());
+            if(parentEntity!=null) {
+                attributeKeyVO.setPath(parentEntity.getAttributeName()+"》"+attributeKeyVO.getAttributeName());
+                attributeKeyVO.setParentId(parentEntity.getParentId());
+                this.setPath(attributeKeyVO);
+            }
+        }
+    }
+
 
 }

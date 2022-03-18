@@ -79,6 +79,14 @@ public class AttributeKeyController {
             {
                 List<Long> parentIdList =new LinkedList<>();
                 boolean parentIdExists=false;
+                //设置属性路径
+                for(AttributeKeyVO attributeKeyVO:pageInfo.getList())
+                {
+                    Long parentId = attributeKeyVO.getParentId();
+                    attributeKeyService.setPath(attributeKeyVO);
+                    attributeKeyVO.setParentId(parentId);
+                }
+
                 for(AttributeKeyVO attributeKeyVO:pageInfo.getList())
                 {
                     //设置上级节点ID

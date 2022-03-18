@@ -94,4 +94,9 @@ public class AttributeKeyVO extends AttributeKey {
      */
     private Boolean haveChild = false;
 
+    /**
+     * 属性路径
+     */
+    private String path;
+
 }

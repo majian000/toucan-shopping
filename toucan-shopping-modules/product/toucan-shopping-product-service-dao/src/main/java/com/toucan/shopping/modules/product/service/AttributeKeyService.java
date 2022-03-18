@@ -95,4 +95,11 @@ public interface AttributeKeyService {
      */
     void setChildNodeAndChildNodeValue(AttributeKeyVO currentNode) ;
 
+
+    /**
+     * 设置分类名称路径
+     * @param categoryTreeVO
+     */
+    void setPath(AttributeKeyVO categoryTreeVO);
+
 }

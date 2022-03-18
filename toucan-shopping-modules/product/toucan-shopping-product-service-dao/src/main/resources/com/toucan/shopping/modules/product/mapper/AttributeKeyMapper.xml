@@ -29,7 +29,7 @@
             and t.attribute_name  like concat('%',#{attributeName},'%')
         </if>
 
-        <if test="categoryId!=null">
+        <if test="categoryId!=null and categoryId!=-1">
             and t.category_id = #{categoryId}
         </if>
 
