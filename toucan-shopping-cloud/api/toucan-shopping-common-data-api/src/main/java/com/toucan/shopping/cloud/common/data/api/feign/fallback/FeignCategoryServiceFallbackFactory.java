@@ -38,7 +38,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
             }
 
             @Override
-            public ResultObjectVO queryById(String signHeader,RequestJsonVO requestJsonVO) {
+            public ResultObjectVO queryById(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)
                 {
@@ -46,7 +46,7 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                     resultObjectVO.setMsg("请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignCategoryService.queryById faild header:{} params:{}",signHeader,JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignCategoryService.queryById faild  params:{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;

@@ -216,7 +216,7 @@ public class AttributeKeyController extends UIController {
                 CategoryVO queryCategoryVO = new CategoryVO();
                 queryCategoryVO.setId(categoryId);
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
-                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO.getSign(),requestJsonVO);
+                ResultObjectVO resultObjectVO = feignCategoryService.queryById(requestJsonVO);
                 if(resultObjectVO.isSuccess())
                 {
                     CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
