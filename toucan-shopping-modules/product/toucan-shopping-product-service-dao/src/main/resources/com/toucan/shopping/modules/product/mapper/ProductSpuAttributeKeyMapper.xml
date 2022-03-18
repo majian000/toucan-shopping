@@ -33,4 +33,21 @@
 
 
 
+
+    <insert id="inserts"   >
+        insert into t_product_spu_attribute_key(id,attribute_key_id,product_spu_id,query_status,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status,parent_attribute_key_id)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.attributeKeyId},#{entity.productSpuId},#{entity.queryStatus},#{entity.attributeName},#{entity.categoryId},#{entity.attributeSort},#{entity.remark},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId},#{entity.deleteStatus},#{entity.showStatus},#{entity.parentAttributeKeyId})
+        </foreach>
+
+    </insert>
+
+
+    <update id="deleteByProductSpuId">
+        update t_product_spu_attribute_key  set delete_status=1 where product_spu_id=#{productSpuId}  and delete_status=0
+    </update>
+
+
+
 </mapper>

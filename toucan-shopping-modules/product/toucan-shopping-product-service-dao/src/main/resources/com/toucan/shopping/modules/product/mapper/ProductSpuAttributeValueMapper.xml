@@ -34,4 +34,20 @@
         values(#{id},#{productSpuAttributeKeyId},#{attributeKeyId},#{productSpuId},#{queryStatus},#{attributeValueExtend1},#{attributeValueExtend2},#{attributeValueExtend3},#{attributeValue},#{attributeKeyId},#{attributeSort},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{deleteStatus},#{showStatus})
     </insert>
 
+
+    <insert id="inserts"   >
+        insert into t_attribute_value(id,product_spu_attribute_key_id,attribute_key_id,product_spu_id,query_status,attribute_value_extend1,attribute_value_extend2,attribute_value_extend3,attribute_value,attribute_key_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.productSpuAttributeKeyId},#{entity.attributeKeyId},#{entity.productSpuId},#{entity.queryStatus},#{entity.attributeValueExtend1},#{entity.attributeValueExtend2},#{entity.attributeValueExtend3},#{entity.attributeValue},#{entity.attributeKeyId},#{entity.attributeSort},#{entity.remark},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId},#{entity.deleteStatus},#{entity.showStatus})
+        </foreach>
+
+    </insert>
+
+
+    <update id="deleteByProductSpuId">
+        update t_attribute_value  set delete_status=1 where product_spu_id=#{productSpuId}  and delete_status=0
+    </update>
+
+
 </mapper>

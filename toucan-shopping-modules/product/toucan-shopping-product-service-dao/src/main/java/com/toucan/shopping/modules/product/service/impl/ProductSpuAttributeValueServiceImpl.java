@@ -27,5 +27,15 @@ public class ProductSpuAttributeValueServiceImpl implements ProductSpuAttributeV
         return attributeValueMapper.insert(entity);
     }
 
+    @Override
+    public int saves(List<ProductSpuAttributeValue> entitys) {
+        return attributeValueMapper.inserts(entitys);
+    }
+
+    @Override
+    public int deleteByProductSpuId(Long productSpuId) {
+        return attributeValueMapper.deleteByProductSpuId(productSpuId);
+    }
+
 
 }

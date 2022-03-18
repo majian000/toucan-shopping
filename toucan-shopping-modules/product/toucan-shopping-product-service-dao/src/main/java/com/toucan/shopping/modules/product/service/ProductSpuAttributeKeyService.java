@@ -21,4 +21,22 @@ public interface ProductSpuAttributeKeyService {
     int save(ProductSpuAttributeKey entity);
 
 
+    /**
+     * 保存实体
+     * @param entitys
+     * @return
+     */
+    int saves(List<ProductSpuAttributeKey> entitys);
+
+
+    /**
+     * 根据ID删除
+     * @param productSpuId
+     * @return
+     */
+    int deleteByProductSpuId(Long productSpuId);
+
+
+
+
 }

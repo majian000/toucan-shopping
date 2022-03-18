@@ -11,20 +11,26 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.entity.ProductSpu;
+import com.toucan.shopping.modules.product.entity.ProductSpuAttributeKey;
+import com.toucan.shopping.modules.product.entity.ProductSpuAttributeValue;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.redis.ProductSpuRedisLockKey;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
+import com.toucan.shopping.modules.product.service.ProductSpuAttributeKeyService;
+import com.toucan.shopping.modules.product.service.ProductSpuAttributeValueService;
 import com.toucan.shopping.modules.product.service.ProductSpuService;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
+import com.toucan.shopping.modules.product.vo.ProductSpuAttributeKeyVO;
+import com.toucan.shopping.modules.product.vo.ProductSpuAttributeValueVO;
 import com.toucan.shopping.modules.product.vo.ProductSpuVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -37,6 +43,12 @@ public class ProductSpuController {
 
     @Autowired
     private ProductSpuService productSpuService;
+
+    @Autowired
+    private ProductSpuAttributeKeyService productSpuAttributeKeyService;
+
+    @Autowired
+    private ProductSpuAttributeValueService productSpuAttributeValueService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -110,8 +122,70 @@ public class ProductSpuController {
                 logger.warn("保存SPU失败 原因:插入数据库影响行数返回小于等于0 {}",requestJsonVO.getEntityJson());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("保存SPU失败");
-            }
+            }else {
 
+                //保存属性名
+                if (!CollectionUtils.isEmpty(productSpuVO.getAttributeKeys())) {
+                    List<ProductSpuAttributeKeyVO> productSpuAttributeKeyVOList = productSpuVO.getAttributeKeys();
+                    List<ProductSpuAttributeKey> productSpuAttributeKeys = new ArrayList();
+                    for (ProductSpuAttributeKeyVO productSpuAttributeKeyVO : productSpuAttributeKeyVOList) {
+                        ProductSpuAttributeKey productSpuAttributeKey = new ProductSpuAttributeKey();
+                        BeanUtils.copyProperties(productSpuAttributeKey, productSpuAttributeKeyVO);
+                        productSpuAttributeKey.setProductSpuId(productSpu.getId());
+                        productSpuAttributeKey.setId(idGenerator.id());
+                        productSpuAttributeKeys.add(productSpuAttributeKey);
+                    }
+
+                    ret = productSpuAttributeKeyService.saves(productSpuAttributeKeys);
+                    if (ret != productSpuAttributeKeys.size()) {
+                        logger.warn("保存SPU失败 原因:保存商品属性名失败 {} 返回数 {} 应成功数", requestJsonVO.getEntityJson(),ret,productSpuAttributeKeys.size());
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("保存SPU失败");
+
+                        //删除属性名
+                        int deleteRet = productSpuAttributeKeyService.deleteByProductSpuId(productSpu.getId());
+                        logger.warn("删除属性名 返回值 {}  商品ID {} ", deleteRet,productSpu.getId());
+
+                        //删除商品SPU
+                        logger.warn("删除商品SPU SPU ID {}", productSpu.getId());
+                        deleteRet = productSpuService.deleteById(productSpu.getId());
+                        logger.warn("删除商品SPU 返回值 {}  商品ID {} ", deleteRet,productSpu.getId());
+                    }
+                }
+
+                //保存属性值
+                if (!CollectionUtils.isEmpty(productSpuVO.getAttributeValues())) {
+                    List<ProductSpuAttributeValueVO> productSpuAttributeValueVOS = productSpuVO.getAttributeValues();
+                    List<ProductSpuAttributeValue> productSpuAttributeValues = new ArrayList<ProductSpuAttributeValue>();
+                    for(ProductSpuAttributeValueVO productSpuAttributeValueVO:productSpuAttributeValueVOS)
+                    {
+                        ProductSpuAttributeValue productSpuAttributeValue = new ProductSpuAttributeValue();
+                        BeanUtils.copyProperties(productSpuAttributeValueVO,productSpuAttributeValueVO);
+                        productSpuAttributeValue.setProductSpuId(productSpu.getId());
+                        productSpuAttributeValue.setId(idGenerator.id());
+                        productSpuAttributeValues.add(productSpuAttributeValue);
+                    }
+                    ret = productSpuAttributeValueService.saves(productSpuAttributeValues);
+                    if (ret != productSpuAttributeValues.size()) {
+                        logger.warn("保存SPU失败 原因:保存商品属性值失败 {} 返回数 {} 应成功数", requestJsonVO.getEntityJson(),ret,productSpuAttributeValues.size());
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("保存SPU失败");
+
+                        //删除属性名
+                        int deleteRet = productSpuAttributeKeyService.deleteByProductSpuId(productSpu.getId());
+                        logger.warn("删除属性名 返回值 {}  商品ID {} ", deleteRet,productSpu.getId());
+
+                        //删除属性值
+                        deleteRet = productSpuAttributeKeyService.deleteByProductSpuId(productSpu.getId());
+                        logger.warn("删除属性值 返回值 {}  商品ID {} ", deleteRet,productSpu.getId());
+
+                        //删除商品SPU
+                        deleteRet = productSpuService.deleteById(productSpu.getId());
+                        logger.warn("删除商品SPU 返回值 {}  商品ID {} ", deleteRet,productSpu.getId());
+
+                    }
+                }
+            }
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);

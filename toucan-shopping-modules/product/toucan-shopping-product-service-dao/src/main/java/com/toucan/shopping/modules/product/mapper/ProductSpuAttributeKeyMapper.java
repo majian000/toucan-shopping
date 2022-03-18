@@ -15,5 +15,8 @@ public interface ProductSpuAttributeKeyMapper {
 
     int insert(ProductSpuAttributeKey attributeKey);
 
+    int inserts(List<ProductSpuAttributeKey> entitys);
+
+    int deleteByProductSpuId(Long productSpuId);
 
 }
