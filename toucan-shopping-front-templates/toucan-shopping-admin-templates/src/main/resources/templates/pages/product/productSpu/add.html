@@ -459,6 +459,11 @@
                 }
             }
 
+            if(formJson.attributeKeys.length<=0||formJson.attributeValues.length<=0)
+            {
+                layer.msg("请选择商品属性");
+                return;
+            }
             $.ajax({
                 url:"[[@{/productSpu/save}]]",
                 contentType: "application/json; charset=utf-8",
