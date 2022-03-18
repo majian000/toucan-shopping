@@ -317,6 +317,7 @@
         var loaddingAttributeTree;
         var attributeTotal,attributePageTotal=1,attributeLimit=10,attributeCurrentPage=1;
         var gloablCategoryId;
+        var selectAttributeArray = new Array();
 
         function loadCommonTreePage(categoryId)
         {
@@ -444,12 +445,25 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+            var formJson = JSON.stringify(data.field);
+            formJson.attributeKeys = new Array();
+            formJson.attributeValues=new Array();
+            //保存属性名和属性值
+            for(var i = 0;i<selectAttributeArray.length;i++)
+            {
+                var selectAttribute = selectAttributeArray[i];
+                if(selectAttribute.type==1) {
+                    formJson.attributeKeys.push(selectAttribute);
+                }else if(selectAttribute.type==2) {
+                    formJson.attributeValues.push(selectAttribute);
+                }
+            }
 
             $.ajax({
                 url:"[[@{/productSpu/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
-                data:{id:form.field.id},
+                data:formJson,
                 success:function(data){
                     if(data.code==0) {
                         layer.msg(data.msg);
@@ -474,7 +488,6 @@
 
 
 
-        var selectAttributeArray = new Array();
 
 
         function genAttributeKeyChildHtml(attributeKeyId)
