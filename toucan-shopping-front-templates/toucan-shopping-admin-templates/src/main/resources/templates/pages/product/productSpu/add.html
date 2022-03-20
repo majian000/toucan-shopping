@@ -392,7 +392,7 @@
         function getAttributeHtml(attribute)
         {
             var attHtml = "<div class=\"layui-form-item\" >";
-            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parentId+"\" attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
+            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-category-id=\""+attribute.categoryId+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parentId+"\" attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
             attHtml+="<div class=\"layui-input-block\">";
             if(attribute.values!=null&&attribute.values.length>0)
             {
@@ -403,7 +403,7 @@
                 for(var vi=0;vi<attribute.values.length;vi++)
                 {
                     var attributeValue = attribute.values[vi];
-                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
+                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\"  attribute-value=\""+attributeValue.attributeValue+"\" attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
                 }
 
                 if(attribute.children!=null&&attribute.children.length>0) {
@@ -445,7 +445,8 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var formJson = JSON.stringify(data.field);
+            var formJson = data.field;
+
             formJson.attributeKeys = new Array();
             formJson.attributeValues=new Array();
             //保存属性名和属性值
@@ -468,7 +469,7 @@
                 url:"[[@{/productSpu/save}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
-                data:formJson,
+                data:JSON.stringify(formJson),
                 success:function(data){
                     if(data.code==0) {
                         layer.msg(data.msg);
@@ -611,6 +612,7 @@
             attributeKey.type=1; //属性名对象
             attributeKey.attributeKeyId = attributeKeyObject.attr("attribute-key-id");
             attributeKey.parentAttributeKeyId = attributeKeyObject.attr("parent-attribute-key-id");
+            attributeKey.categoryId = attributeKeyObject.attr("attribute-category-id");
 
             if(!existsAttribute(attributeKey))
             {

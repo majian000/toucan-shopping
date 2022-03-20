@@ -139,6 +139,30 @@ public class ProductSpuController extends UIController {
         return "pages/product/productSpu/brand_list.html";
     }
 
+
+    /**
+     * 保存
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO save(@RequestBody ProductSpuVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignProductSpuService.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("保存失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
     /**
      * 查询品牌
      * @param list

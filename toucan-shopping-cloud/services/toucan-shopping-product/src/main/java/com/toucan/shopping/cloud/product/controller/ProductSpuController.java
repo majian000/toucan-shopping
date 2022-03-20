@@ -83,6 +83,7 @@ public class ProductSpuController {
         }
 
         String lockKey="-1";
+        Long productSpuId = idGenerator.id();
         try {
             logger.info("保存商品SPU {} ",requestJsonVO.getEntityJson());
             ProductSpuVO productSpuVO = requestJsonVO.formatEntity(ProductSpuVO.class);
@@ -113,8 +114,9 @@ public class ProductSpuController {
 
             ProductSpu productSpu = new ProductSpu();
             BeanUtils.copyProperties(productSpu,productSpuVO);
-            productSpu.setId(idGenerator.id());
+            productSpu.setId(productSpuId);
             productSpu.setUuid(UUID.randomUUID().toString().replace("-", ""));
+            productSpu.setCreateDate(new Date());
             int ret = productSpuService.save(productSpu);
 
             if(ret<=0)
@@ -124,15 +126,16 @@ public class ProductSpuController {
                 resultObjectVO.setMsg("保存SPU失败");
             }else {
 
+                List<ProductSpuAttributeKey> productSpuAttributeKeys = new ArrayList();
                 //保存属性名
                 if (!CollectionUtils.isEmpty(productSpuVO.getAttributeKeys())) {
                     List<ProductSpuAttributeKeyVO> productSpuAttributeKeyVOList = productSpuVO.getAttributeKeys();
-                    List<ProductSpuAttributeKey> productSpuAttributeKeys = new ArrayList();
                     for (ProductSpuAttributeKeyVO productSpuAttributeKeyVO : productSpuAttributeKeyVOList) {
                         ProductSpuAttributeKey productSpuAttributeKey = new ProductSpuAttributeKey();
                         BeanUtils.copyProperties(productSpuAttributeKey, productSpuAttributeKeyVO);
                         productSpuAttributeKey.setProductSpuId(productSpu.getId());
                         productSpuAttributeKey.setId(idGenerator.id());
+                        productSpuAttributeKey.setCreateDate(new Date());
                         productSpuAttributeKeys.add(productSpuAttributeKey);
                     }
 
@@ -162,7 +165,16 @@ public class ProductSpuController {
                         ProductSpuAttributeValue productSpuAttributeValue = new ProductSpuAttributeValue();
                         BeanUtils.copyProperties(productSpuAttributeValueVO,productSpuAttributeValueVO);
                         productSpuAttributeValue.setProductSpuId(productSpu.getId());
+                        for(ProductSpuAttributeKey productSpuAttributeKey:productSpuAttributeKeys)
+                        {
+                            if(productSpuAttributeKey.getAttributeKeyId().longValue()==productSpuAttributeValueVO.getAttributeKeyId().longValue())
+                            {
+                                productSpuAttributeValue.setProductSpuAttributeKeyId(productSpuAttributeKey.getId());
+                                break;
+                            }
+                        }
                         productSpuAttributeValue.setId(idGenerator.id());
+                        productSpuAttributeValue.setCreateDate(new Date());
                         productSpuAttributeValues.add(productSpuAttributeValue);
                     }
                     ret = productSpuAttributeValueService.saves(productSpuAttributeValues);
@@ -188,9 +200,21 @@ public class ProductSpuController {
             }
         }catch(Exception e)
         {
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("保存SPU失败");
+
+            //删除属性名
+            int deleteRet = productSpuAttributeKeyService.deleteByProductSpuId(productSpuId);
+            logger.warn("删除属性名 返回值 {}  商品ID {} ", deleteRet,productSpuId);
+
+            //删除属性值
+            deleteRet = productSpuAttributeKeyService.deleteByProductSpuId(productSpuId);
+            logger.warn("删除属性值 返回值 {}  商品ID {} ", deleteRet,productSpuId);
+
+            //删除商品SPU
+            deleteRet = productSpuService.deleteById(productSpuId);
+            logger.warn("删除商品SPU 返回值 {}  商品ID {} ", deleteRet,productSpuId);
 
         }finally{
             skylarkLock.unLock(ProductSpuRedisLockKey.getSaveProductSpuLockKey(lockKey), lockKey);

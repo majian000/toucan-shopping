@@ -27,7 +27,7 @@ public class ProductSpu {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Integer categoryId; //所属类别
+    private Long categoryId; //所属类别
 
     private String uuid; //SPU UUID
 
