@@ -25,7 +25,7 @@ public class AttributeValue {
 
     private Long attributeKeyId;
     private String attributeValue; //属性值
-    private Integer attributeSort; //排序
+    private Long attributeSort; //排序
     private String attributeValueExtend1; //属性值扩展字段
     private String attributeValueExtend2; //属性值扩展字段
     private String attributeValueExtend3; //属性值扩展字段
