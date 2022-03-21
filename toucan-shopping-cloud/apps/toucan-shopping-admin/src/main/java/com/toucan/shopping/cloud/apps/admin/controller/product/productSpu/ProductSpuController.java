@@ -150,43 +150,6 @@ public class ProductSpuController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            if(CollectionUtils.isNotEmpty(entity.getAttributeKeys()))
-            {
-                ProductSpuAttributeKeyVO brandAttributeKey = new ProductSpuAttributeKeyVO();
-                brandAttributeKey.setCategoryId(entity.getCategoryId());
-                brandAttributeKey.setAttributeKeyId(-1L);
-                brandAttributeKey.setAttributeName("品牌");
-                brandAttributeKey.setShowStatus((short)1);
-                brandAttributeKey.setAttributeSort(9999L);
-                entity.getAttributeKeys().add(brandAttributeKey);
-            }
-            if(CollectionUtils.isNotEmpty(entity.getAttributeValues()))
-            {
-                BrandVO brandVO = new BrandVO();
-                brandVO.setId(entity.getBrandId());
-                RequestJsonVO requestBrandJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), brandVO);
-                ResultObjectVO brandResultVO = feignBrandService.findById(requestBrandJsonVO.sign(), requestBrandJsonVO);
-                if (brandResultVO.isSuccess()) {
-                    brandVO = brandResultVO.formatData(BrandVO.class);
-                    ProductSpuAttributeValueVO brandAttributeValue = new ProductSpuAttributeValueVO();
-                    brandAttributeValue.setAttributeKeyId(-1L);
-                    String brandName = "";
-                    if(brandVO.getChineseName()!=null)
-                    {
-                        brandName+=brandVO.getChineseName()+" ";
-                    }
-                    if(brandVO.getEnglishName()!=null)
-                    {
-                        brandName+=brandVO.getEnglishName()+" ";
-
-                    }
-
-                    brandAttributeValue.setAttributeValue(brandName);
-                    brandAttributeValue.setShowStatus((short)1);
-                    brandAttributeValue.setAttributeSort(9999L);
-                    entity.getAttributeValues().add(brandAttributeValue);
-                }
-            }
             resultObjectVO = feignProductSpuService.save(requestJsonVO);
         }catch(Exception e)
         {
