@@ -171,6 +171,12 @@
         select t.*  from t_attribute_key t where parent_id =#{parentId} and delete_status = 0
     </select>
 
+
+
+    <select id="queryListByParentIdBySortDesc" resultMap="attributeKeyVOMap" parameterType="java.lang.Long">
+        select t.*  from t_attribute_key t where parent_id =#{parentId} and delete_status = 0 order by attribute_sort desc
+    </select>
+
     <update id="update" parameterType="com.toucan.shopping.modules.product.entity.AttributeKey">
         update t_attribute_key set attribute_type=#{attributeType},attribute_name=#{attributeName},category_id=#{categoryId},attribute_sort=#{attributeSort},remark=#{remark},
           update_admin_id=#{updateAdminId},update_date=#{updateDate},show_status=#{showStatus},query_status=#{queryStatus},parent_id=#{parentId}

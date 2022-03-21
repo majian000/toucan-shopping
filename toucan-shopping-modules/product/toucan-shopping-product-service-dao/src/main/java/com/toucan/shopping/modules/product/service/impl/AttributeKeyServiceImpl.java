@@ -123,7 +123,7 @@ public class AttributeKeyServiceImpl implements AttributeKeyService {
 
     @Override
     public void setChildNodeAndChildNodeValue(AttributeKeyVO currentNode) {
-        List<AttributeKeyVO> children = attributeKeyMapper.queryListByParentId(currentNode.getId());
+        List<AttributeKeyVO> children = attributeKeyMapper.queryListByParentIdBySortDesc(currentNode.getId());
         if(CollectionUtils.isNotEmpty(children))
         {
             currentNode.setChildren(children);

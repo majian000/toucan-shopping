@@ -25,6 +25,8 @@ public interface AttributeKeyMapper {
 
     List<AttributeKeyVO> queryListByParentId(Long parentId);
 
+    List<AttributeKeyVO> queryListByParentIdBySortDesc(Long parentId);
+
 
     /**
      * 查询列表页
