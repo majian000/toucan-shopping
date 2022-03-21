@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<toucan-code>
+<convert-codes>
+
+
+    <convert-proxy-code standard-dest="toucan-shopping/toucan-shopping-standard/proxy/toucan-shopping-standard-admin-auth-proxy/src/main/java/com/toucan/shopping/standard/admin/auth/proxy/service"
+                  cloud-src="toucan-shopping/toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-controller/src/main/java/com/toucan/shopping/modules/admin/auth/controller" >
 
 
 
+    </convert-proxy-code>
 
-</toucan-code>
+
+</convert-codes>
