@@ -2,12 +2,15 @@
 <convert-codes>
 
 
-    <convert-proxy-code standard-dest="toucan-shopping/toucan-shopping-standard/proxy/toucan-shopping-standard-admin-auth-proxy/src/main/java/com/toucan/shopping/standard/admin/auth/proxy/service"
-                  cloud-src="toucan-shopping/toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-controller/src/main/java/com/toucan/shopping/modules/admin/auth/controller" >
+    <controller-proxy-code standard-dest="toucan-shopping/toucan-shopping-standard/proxy/toucan-shopping-standard-admin-auth-proxy/src/main/java/com/toucan/shopping/standard/admin/auth/proxy/service"
+                  cloud-src="toucan-shopping/toucan-shopping-modules/adminAuth/toucan-shopping-admin-auth-controller/src/main/java/com/toucan/shopping/modules/admin/auth/controller"
+                    method-name-regex="\w+\s+\w+\(.*\)(\s+\{|\{)"
+    >
 
 
 
-    </convert-proxy-code>
+
+    </controller-proxy-code>
 
 
 </convert-codes>
