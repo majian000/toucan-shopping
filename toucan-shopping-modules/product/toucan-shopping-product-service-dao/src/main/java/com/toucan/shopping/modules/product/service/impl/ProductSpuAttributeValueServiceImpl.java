@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.product.page.AttributeValuePageInfo;
 import com.toucan.shopping.modules.product.service.AttributeValueService;
 import com.toucan.shopping.modules.product.service.ProductSpuAttributeValueService;
 import com.toucan.shopping.modules.product.vo.AttributeValueVO;
+import com.toucan.shopping.modules.product.vo.ProductSpuAttributeValueVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,11 @@ public class ProductSpuAttributeValueServiceImpl implements ProductSpuAttributeV
     @Override
     public int deleteByProductSpuId(Long productSpuId) {
         return attributeValueMapper.deleteByProductSpuId(productSpuId);
+    }
+
+    @Override
+    public List<ProductSpuAttributeValueVO> queryListBySortDesc(ProductSpuAttributeValueVO query) {
+        return attributeValueMapper.queryListBySortDesc(query);
     }
 
 

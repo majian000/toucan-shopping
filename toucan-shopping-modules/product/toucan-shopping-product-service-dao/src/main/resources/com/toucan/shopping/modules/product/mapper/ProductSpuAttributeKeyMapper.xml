@@ -9,7 +9,6 @@
         <result column="attribute_key_id" jdbcType="BIGINT" property="attributeKeyId" />
         <result column="product_spu_id" jdbcType="BIGINT" property="productSpuId" />
         <result column="parent_attribute_key_id" jdbcType="BIGINT" property="parentAttributeKeyId" />
-        <result column="attribute_type" jdbcType="INTEGER" property="attributeType" />
         <result column="attribute_sort" jdbcType="BIGINT" property="attributeSort" />
         <result column="show_status" jdbcType="INTEGER" property="showStatus" />
         <result column="query_status" jdbcType="INTEGER" property="queryStatus" />
@@ -25,6 +24,56 @@
     <resultMap id="productSpuAttributeKeyVOMap" type="com.toucan.shopping.modules.product.vo.ProductSpuAttributeKeyVO" extends="productSpuAttributeKeyMap" >
     </resultMap>
 
+
+    <sql id="queryListWhere">
+
+        <if test="attributeName!=null and attributeName!='' ">
+            and t.attribute_name  like concat('%',#{attributeName},'%')
+
+        </if>
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="parentId!=null">
+            and t.parent_id = #{parentId}
+        </if>
+
+        <if test="categoryId!=null">
+            and t.category_id = #{categoryId}
+        </if>
+
+        <if test="showStatus!=null and showStatus!=-1">
+            and t.show_status = #{showStatus}
+        </if>
+
+        <if test="queryStatus!=null and queryStatus!=-1">
+            and t.query_status = #{queryStatus}
+        </if>
+
+        <if test="attributeType!=null and attributeType!=-1">
+            and t.attribute_type = #{attributeType}
+        </if>
+
+        <if test="idArray!=null and idArray.length>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        <if test="idList!=null and idList.size>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSpuAttributeKey"  keyProperty="id" >
         insert into t_product_spu_attribute_key(id,attribute_key_id,product_spu_id,query_status,attribute_name,category_id,attribute_sort,remark,create_date,update_date,create_admin_id,update_admin_id,delete_status,show_status,parent_attribute_key_id)
@@ -48,6 +97,18 @@
         update t_product_spu_attribute_key  set delete_status=1 where product_spu_id=#{productSpuId}  and delete_status=0
     </update>
 
+
+
+    <select id="queryListBySortDesc" resultMap="productSpuAttributeKeyVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSpuAttributeKeyVO">
+        select t.* from t_product_spu_attribute_key t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+
+        </where>
+        order by t.attribute_sort desc
+    </select>
 
 
 </mapper>

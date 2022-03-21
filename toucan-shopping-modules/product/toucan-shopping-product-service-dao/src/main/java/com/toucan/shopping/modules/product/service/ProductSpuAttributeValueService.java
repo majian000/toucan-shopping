@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.product.entity.AttributeValue;
 import com.toucan.shopping.modules.product.entity.ProductSpuAttributeValue;
 import com.toucan.shopping.modules.product.page.AttributeValuePageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeValueVO;
+import com.toucan.shopping.modules.product.vo.ProductSpuAttributeValueVO;
 
 import java.util.List;
 
@@ -35,4 +36,5 @@ public interface ProductSpuAttributeValueService {
      */
     int deleteByProductSpuId(Long productSpuId);
 
+    List<ProductSpuAttributeValueVO> queryListBySortDesc(ProductSpuAttributeValueVO query);
 }

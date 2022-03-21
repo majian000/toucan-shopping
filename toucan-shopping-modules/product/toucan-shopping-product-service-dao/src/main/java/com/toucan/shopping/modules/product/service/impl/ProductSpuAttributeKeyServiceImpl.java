@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.product.service.impl;
 import com.toucan.shopping.modules.product.entity.ProductSpuAttributeKey;
 import com.toucan.shopping.modules.product.mapper.ProductSpuAttributeKeyMapper;
 import com.toucan.shopping.modules.product.service.ProductSpuAttributeKeyService;
+import com.toucan.shopping.modules.product.vo.ProductSpuAttributeKeyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,11 @@ public class ProductSpuAttributeKeyServiceImpl implements ProductSpuAttributeKey
     @Override
     public int saves(List<ProductSpuAttributeKey> entitys) {
         return productSpuAttributeKeyMapper.inserts(entitys);
+    }
+
+    @Override
+    public List<ProductSpuAttributeKeyVO> queryListBySortDesc(ProductSpuAttributeKeyVO query) {
+        return productSpuAttributeKeyMapper.queryListBySortDesc(query);
     }
 
     @Override
