@@ -43,6 +43,11 @@
         <!--  =================================前端模板 =================================-->
         <module>toucan-shopping-front-templates</module>
 
+
+
+        <!--  =================================工具包 =================================-->
+        <module>tools/cloud-to-standard-code-converter</module>
+
     </modules>
 
 
