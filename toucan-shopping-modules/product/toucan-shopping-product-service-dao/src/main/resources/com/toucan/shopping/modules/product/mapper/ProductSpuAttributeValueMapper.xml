@@ -45,6 +45,10 @@
             and t.show_status = #{showStatus}
         </if>
 
+        <if test="productSpuId!=null">
+            and t.product_spu_id = #{productSpuId}
+        </if>
+
         <if test="queryStatus!=null and queryStatus!=-1">
             and t.query_status = #{queryStatus}
         </if>

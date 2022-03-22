@@ -44,6 +44,11 @@
             and t.category_id = #{categoryId}
         </if>
 
+
+        <if test="productSpuId!=null">
+            and t.product_spu_id = #{productSpuId}
+        </if>
+
         <if test="showStatus!=null and showStatus!=-1">
             and t.show_status = #{showStatus}
         </if>

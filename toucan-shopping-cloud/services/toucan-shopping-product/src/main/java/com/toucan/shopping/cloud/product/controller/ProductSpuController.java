@@ -273,6 +273,68 @@ public class ProductSpuController {
 
 
 
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSpuVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ProductSpuVO.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存
+            ProductSpuVO query=new ProductSpuVO();
+            query.setId(entity.getId());
+            List<ProductSpuVO> entityList = productSpuService.queryList(query);
+            if(CollectionUtils.isEmpty(entityList))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("对象不存在!");
+                return resultObjectVO;
+            }
+
+            ProductSpuVO productSpuVO = entityList.get(0);
+
+            ProductSpuAttributeKeyVO queryProductSpuAttributeKey = new ProductSpuAttributeKeyVO();
+            queryProductSpuAttributeKey.setProductSpuId(entity.getId());
+            productSpuVO.setAttributeKeys(productSpuAttributeKeyService.queryListBySortDesc(queryProductSpuAttributeKey));
+
+            ProductSpuAttributeValueVO queryProductSpuAttributeValue = new ProductSpuAttributeValueVO();
+            queryProductSpuAttributeValue.setProductSpuId(entity.getId());
+            productSpuVO.setAttributeValues(productSpuAttributeValueService.queryListBySortDesc(queryProductSpuAttributeValue));
+
+            resultObjectVO.setData(productSpuVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
 
     /**
      * 批量删除
