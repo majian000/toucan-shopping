@@ -28,6 +28,11 @@ public class ProductSpuServiceImpl implements ProductSpuService {
     }
 
     @Override
+    public int update(ProductSpuVO entity) {
+        return productSpuMapper.update(entity);
+    }
+
+    @Override
     public List<ProductSpuVO> queryList(ProductSpuVO query) {
         return productSpuMapper.queryList(query);
     }

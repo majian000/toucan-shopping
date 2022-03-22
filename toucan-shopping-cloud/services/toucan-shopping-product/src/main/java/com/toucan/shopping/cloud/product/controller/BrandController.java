@@ -288,7 +288,7 @@ public class BrandController {
 
 
     /**
-     * 更新类别
+     * 更新
      * @param requestJsonVO
      * @return
      */

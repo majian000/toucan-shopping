@@ -98,6 +98,12 @@ public class ProductSpuController {
                 resultObjectVO.setMsg("SPU名称不能为空!");
                 return resultObjectVO;
             }
+            if(productSpuVO.getBrandId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌ID不能为空!");
+                return resultObjectVO;
+            }
             lockKey = MD5Util.md5(productSpuVO.getName());
             skylarkLock.lock(ProductSpuRedisLockKey.getSaveProductSpuLockKey(lockKey), lockKey);
 
@@ -221,6 +227,93 @@ public class ProductSpuController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+
+    /**
+     * 更新
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改失败,请稍后重试");
+            return resultObjectVO;
+        }
+
+        try {
+            ProductSpuVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ProductSpuVO.class);
+
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空");
+                return resultObjectVO;
+            }
+
+            if(entity.getCategoryId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("分类ID不能为空");
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(entity.getName()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("SPU名称不能为空");
+                return resultObjectVO;
+            }
+            if(entity.getBrandId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("品牌ID不能为空");
+                return resultObjectVO;
+            }
+
+
+
+            List<ProductSpuVO> entityList = null;
+
+            ProductSpuVO queryProductSpu = new ProductSpuVO();
+            queryProductSpu.setName(entity.getName());
+            queryProductSpu.setDeleteStatus(0);
+            entityList = productSpuService.queryList(queryProductSpu);
+            if (!CollectionUtils.isEmpty(entityList)) {
+                if (entity.getId().longValue() != entityList.get(0).getId().longValue()) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg(entity.getName() + "名称已存在");
+                    return resultObjectVO;
+                }
+            }
+
+            entity.setUpdateDate(new Date());
+            int row = productSpuService.update(entity);
+            if (row != 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改SPU失败");
+                return resultObjectVO;
+            }
+
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改SPU失败");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
 
 
 

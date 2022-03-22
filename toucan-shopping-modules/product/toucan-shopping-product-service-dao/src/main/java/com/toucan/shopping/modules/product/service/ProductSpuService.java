@@ -15,6 +15,9 @@ public interface ProductSpuService {
 
     int save(ProductSpu entity);
 
+
+    int update(ProductSpuVO entity);
+
     List<ProductSpuVO> queryList(ProductSpuVO query);
 
 

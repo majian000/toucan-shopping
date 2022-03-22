@@ -57,6 +57,13 @@
         values(#{id},#{uuid},#{categoryId},#{name},#{appCode},#{createDate},#{createAdminId},#{status},#{brandId})
     </insert>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.product.vo.ProductSpuVO">
+        update t_product_spu set category_id=#{categoryId} , name=#{name} ,
+            app_code=#{appCode} ,status=#{status} , brand_id=#{brandId} , update_date=#{updateDate} , update_admin_id=#{updateAdminId}
+          where id = #{id} and delete_status=0
+    </update>
+
+
     <select id="queryList" resultMap="productVOMap" parameterType="com.toucan.shopping.modules.product.vo.ProductSpuVO">
         select t.* from t_product_spu t
         <where>

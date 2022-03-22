@@ -20,6 +20,7 @@ public interface ProductSpuMapper {
 
     int deleteById(Long id);
 
+    int update(ProductSpuVO entity);
 
     /**
      * 查询列表页

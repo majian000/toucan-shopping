@@ -96,6 +96,7 @@
     <div class="layui-form layuimini-form">
         <div class="layuimini-main" >
             <input type="hidden" name="id" id="id" th:value="${model.id}">
+            <input type="hidden" id="attributeKeyValueJson" th:value="${model.attributeKeyValuesJson}">
             <div class="layui-tab layui-tab-brief" lay-filter="productTab">
                 <ul class="layui-tab-title">
                     <li class="layui-this" lay-id="productInfoTab" >商品信息</li>
@@ -319,6 +320,7 @@
         var attributeTotal,attributePageTotal=1,attributeLimit=10,attributeCurrentPage=1;
         var gloablCategoryId;
         var selectAttributeArray = new Array();
+        var selectAttributeKeyValueArray = JSON.parse($("#attributeKeyValueJson").val());
 
         function loadCommonTreePage(categoryId)
         {
