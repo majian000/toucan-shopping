@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+    </style>
+    <style>
+
+        .Ptable {
+            margin: 10px 0;
+        }
+        .Ptable-item {
+            padding: 12px 0;
+            line-height: 220%;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .Ptable-item-child {
+            padding: 12px 0;
+            line-height: 220%;
+            color: #999;
+            font-size: 12px;
+        }
+        .Ptable dl {
+            margin-left: 110px;
+        }
+        .Ptable-item:after {
+            content: "";
+            height: 0;
+            visibility: hidden;
+            display: block;
+            clear: both;
+        }
+        .Ptable-item h3 {
+            font-weight: 400;
+            width: 110px;
+            text-align: right;
+            float: left;
+            font-size: 12px;
+        }
+        .Ptable-item dt {
+            width: 160px;
+            float: left;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .Ptable-item dd {
+            margin-left: 210px;
+        }
+
+        .Ptable-item-dl {
+            display: block;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+        }
+        .clearfix:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+        .Ptable-item, .p-parameter {
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+
+<div class="layuimini-container" style="height:100%">
+    <div class="layui-form layuimini-form">
+        <div class="layuimini-main" >
+            <input type="hidden" name="id" id="id" th:value="${model.id}">
+            <div class="layui-tab layui-tab-brief" lay-filter="productTab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" lay-id="productInfoTab" >商品信息</li>
+                    <li lay-id="commonAttributeTab" id="commonAttributeTab">公共属性</li>
+                </ul>
+
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required ">商品名称<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" lay-verify="required" maxlength="100" lay-reqtext="不能为空" th:value="${model.name}"  placeholder="请输入商品名称" value="" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">商品分类<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
+                            <div class="layui-input-block">
+                                <input type="hidden" name="categoryId" id="categoryId"  th:value="${model.categoryId}" >
+                                <input type="text" readonly  id="selectCategoryId" th:value="${model.categoryName}"  lay-verify="required"  placeholder="请选择商品分类"  class="layui-input" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">所属品牌<a style="color:red;position: absolute;font-weight: bold;line-height: 1.8em;">*</a></label>
+                            <div class="layui-input-block">
+                                <input type="hidden" name="brandId" id="brandId"  th:value="${model.brandId}" >
+                                <input type="text" readonly  id="selectBrand" th:value="${model.brandName}"   lay-verify="required"  placeholder="请选择所属品牌"  class="layui-input" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block" >
+                                <select name="status"  lay-search="">
+                                    <option value="1" >有效</option>
+                                    <option value="0">无效</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item" style="height:90%">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label ">公共属性</label>
+                            <div class="layui-input-block" id="commonAttributeList">
+
+                                    <!--<div class="layui-form-item" >-->
+                                        <!--<label class="layui-form-label">主体01</label>-->
+                                        <!--<div class="layui-input-block">-->
+                                            <!--<div class="layui-form-item" style="clear:none;" >-->
+                                                <!--<div class="layui-input-block" style="margin-left:0px;">-->
+                                                    <!--<input type="checkbox" name="like[write]" title="主体值01">-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+
+                                            <!--<div class="layui-form-item" >-->
+                                                <!--<label class="layui-form-label">主体02</label>-->
+                                                <!--<div class="layui-input-block">-->
+                                                    <!--<div class="layui-form-item" style="clear:none;" >-->
+                                                        <!--<div class="layui-input-block" style="margin-left:0px;">-->
+                                                            <!--<input type="checkbox" name="like[write]" title="主体值01">-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="layui-form-item" >-->
+                                                        <!--<label class="layui-form-label">品牌</label>-->
+                                                        <!--<div class="layui-input-block">-->
+                                                            <!--<input type="checkbox" name="like[write]" title="华为（HUAWEI）">-->
+                                                            <!--<input type="checkbox" name="like[write]" title="小米">-->
+                                                            <!--<input type="checkbox" name="like[write]" title="苹果">-->
+                                                            <!--<input type="checkbox" name="like[write]" title="OPPO">-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="layui-form-item" >-->
+                                                        <!--<label class="layui-form-label">首销日期</label>-->
+                                                        <!--<div class="layui-input-block">-->
+                                                            <!--<input type="checkbox" name="like[write]" title="以官网信息为准">-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="layui-form-item" >-->
+                                                        <!--<label class="layui-form-label">上市年份</label>-->
+                                                        <!--<div class="layui-input-block">-->
+                                                            <!--<input type="checkbox" name="2020" title="2020年">-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="layui-form-item" >-->
+                                        <!--<label class="layui-form-label">基本信息</label>-->
+                                        <!--<div class="layui-input-block">-->
+                                            <!--<div class="layui-form-item" >-->
+                                                <!--<label class="layui-form-label">机身材质</label>-->
+                                                <!--<div class="layui-input-block">-->
+                                                    <!--<input type="checkbox" name="2020" title="以官网信息为准">-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="layui-form-item" >-->
+                                        <!--<label class="layui-form-label">包装清单</label>-->
+                                        <!--<div class="layui-input-block">-->
+                                            <!--<input type="checkbox" name="2020" title="暂无">-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                            </div>
+                            <div class="layui-flow-more" id="attributeLoadMoreDiv" style="display: none"><a href="javascript:;" id="attributeLoadMore"><cite>加载更多</cite></a></div>
+                        </div>
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label ">属性预览</label>
+                            <div class="layui-input-block" id="commonAttributeTablePreview">
+
+                                <!--
+
+
+                                    <div class="Ptable">
+                                        <div class="Ptable-item">
+                                            <h3>基本信息</h3>
+                                            <dl style="Ptable-item-dl">
+                                                <dl class="clearfix" style="margin:0;">
+                                                    <dt>机身材质01</dt>
+                                                    <dt>机身材质01</dt>
+                                                </dl>
+                                            </dl>
+                                            <dl style="Ptable-item-dl">
+                                                <dl class="clearfix" style="margin:0">
+                                                <dt>机身材质</dt><dd>玻璃</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身长度</dt><dd>152.67mm</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身厚度</dt><dd>8.16mm</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身宽度</dt><dd>69.85mm</dd>
+                                                </dl>
+                                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>机身重量</dt><dd>180g</dd>
+                                                </dl>
+                                          </dl>
+                                      </div>
+
+                                          <div class="Ptable-item">
+                                                <h3>数据接口</h3>
+                                                <dl style="Ptable-item-dl">
+                                                  <dl class="clearfix" style="margin:0">
+                                                      <dt>数据传输接口</dt><dd>WIFI；蓝牙</dd>
+                                                    </dl>
+                                                    <dl class="clearfix" style="margin:0">
+                                                         <dt>NFC/NFC模式</dt><dd>其他</dd>
+                                                    </dl>
+                                                    <dl class="clearfix" style="margin:0">
+                                                        <dt>充电接口类型</dt><dd>Type-C</dd>
+                                                    </dl>
+                                                    <dl class="clearfix" style="margin:0">
+
+                                                          <div class="Ptable-item-child">
+                                                                <dl style="Ptable-item-dl">
+                                                                  <dl class="clearfix" style="margin:0">
+                                                                      <dt>数据传输接口</dt><dd>WIFI；蓝牙</dd>
+                                                                    </dl>
+                                                                    <dl class="clearfix" style="margin:0">
+                                                                         <dt>NFC/NFC模式</dt><dd>其他</dd>
+                                                                    </dl>
+                                                                    <dl class="clearfix" style="margin:0">
+                                                                        <dt>充电接口类型</dt><dd>Type-C</dd>
+                                                                    </dl>
+                                                                    <dl class="clearfix" style="margin:0">
+                                                                         <dt>耳机接口类型</dt><dd>Type-C</dd>
+                                                                    </dl>
+                                                             </dl>
+                                                          </div>
+                                                    </dl>
+                                             </dl>
+                                          </div>
+                                    </div>
+
+
+                                -->
+
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label "></label>
+                            <div class="layui-input-block">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+
+    layui.use(['form','element', 'table','carousel','tree','flow'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            attributeTable = layui.table,
+            element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+        var carousel = layui.carousel;
+        var tree = layui.tree;
+        var carouselsku = layui.carousel;
+        var flow = layui.flow;
+        var loaddingAttributeTree;
+        var attributeTotal,attributePageTotal=1,attributeLimit=10,attributeCurrentPage=1;
+        var gloablCategoryId;
+        var selectAttributeArray = new Array();
+
+        function loadCommonTreePage(categoryId)
+        {
+
+            loaddingAttributeTree = layer.load();
+
+            $.ajax({
+                url:"[[@{/productSpu/query/attribute/tree/page}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify({categoryId:categoryId,limit:attributeLimit,page:attributeCurrentPage}),
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+
+
+                    if(data.data!=null) {
+                        var treePage = JSON.parse(data.data);
+                        if(treePage.total<attributeLimit)
+                        {
+                            attributePageTotal=1;
+                        }else {
+                            attributePageTotal = treePage.total % attributeLimit ==  0 ? (treePage.total / attributeLimit) : (treePage.total / attributeLimit) + 1;
+                        }
+                        if(attributeCurrentPage<attributePageTotal)
+                        {
+                            $("#attributeLoadMoreDiv").show();
+                        }else{
+                            $("#attributeLoadMoreDiv").show();
+                            $("#attributeLoadMoreDiv").html(" ");
+                        }
+                        drawCommonAttributeControl(treePage);
+                    }
+
+                },
+                complete:function()
+                {
+                    layer.close(loaddingAttributeTree);
+                }
+            });
+        }
+
+        element.on('tab(productTab)', function(){
+
+            var layId = this.getAttribute("lay-id");
+
+            //公共属性
+            if(layId!=null&&layId=="commonAttributeTab") {
+                var categoryName = $("#selectCategoryId").val();
+                var categoryId = $("#categoryId").val();
+                if (categoryId == null || categoryId == "") {
+                    layer.msg("请先选择商品分类");
+                    layui.element.tabChange('productTab', "productInfoTab");
+                    return;
+                }
+
+                if(gloablCategoryId!=categoryId)
+                {
+                    $("#commonAttributeList").html("");
+                    $("#commonAttributeTablePreview").html("");
+                    form.render();
+
+                    loadCommonTreePage(categoryId);
+                }
+
+                gloablCategoryId = categoryId;
+            }
+        });
+
+        function getAttributeHtml(attribute)
+        {
+            var attHtml = "<div class=\"layui-form-item\" >";
+            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-category-id=\""+attribute.categoryId+"\" attribute-sort=\""+attribute.attributeSort+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parentId+"\" attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
+            attHtml+="<div class=\"layui-input-block\">";
+            if(attribute.values!=null&&attribute.values.length>0)
+            {
+                if(attribute.children!=null&&attribute.children.length>0) {
+                    attHtml += " <div class=\"layui-form-item\" style=\"clear:none;\" >";
+                    attHtml += " <div class=\"layui-input-block\" style=\"margin-left:0px;\">";
+                }
+                for(var vi=0;vi<attribute.values.length;vi++)
+                {
+                    var attributeValue = attribute.values[vi];
+                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\"  attribute-sort=\""+attributeValue.attributeSort+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
+                }
+
+                if(attribute.children!=null&&attribute.children.length>0) {
+                    attHtml += "</div>";
+                    attHtml += "</div>";
+                }
+            }
+            if(attribute.children!=null&&attribute.children.length>0){
+                for(var ci=0;ci<attribute.children.length;ci++)
+                {
+                    var attributeChild = attribute.children[ci];
+                    attHtml+=getAttributeHtml(attributeChild);
+                }
+            }
+            attHtml+="</div>";
+            attHtml+="</div>";
+
+            return attHtml;
+        }
+
+        //绘制公共属性控件
+        function drawCommonAttributeControl(data)
+        {
+            if(data.total>0)
+            {
+                var attributeHtmls = "";
+                attributeTotal = data.total;
+                for(var i=0;i<data.list.length;i++)
+                {
+                    attributeHtmls+=getAttributeHtml(data.list[i]);
+                }
+
+                $("#commonAttributeList").append(attributeHtmls);
+                form.render();
+            }
+        }
+
+
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var formJson = data.field;
+
+            formJson.attributeKeys = new Array();
+            formJson.attributeValues=new Array();
+            //保存属性名和属性值
+            for(var i = 0;i<selectAttributeArray.length;i++)
+            {
+                var selectAttribute = selectAttributeArray[i];
+                if(selectAttribute.type==1) {
+                    formJson.attributeKeys.push(selectAttribute);
+                }else if(selectAttribute.type==2) {
+                    formJson.attributeValues.push(selectAttribute);
+                }
+            }
+
+            if(formJson.attributeKeys.length<=0||formJson.attributeValues.length<=0)
+            {
+                layer.msg("请选择商品属性");
+                return;
+            }
+            $.ajax({
+                url:"[[@{/productSpu/save}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(formJson),
+                success:function(data){
+                    if(data.code==0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                }
+            });
+            return false;
+        });
+
+
+
+
+
+
+
+        function genAttributeKeyChildHtml(attributeKeyId)
+        {
+            var attributeKeyChildHtml="";
+            //查询出所有子节点
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                //属性名对象
+                if(attributeKV.type==1)
+                {
+                    if(attributeKV.parentAttributeKeyId==attributeKeyId)
+                    {
+                        attributeKeyChildHtml+="<div class=\"Ptable-item-child\">";
+                        attributeKeyChildHtml+="  <dl style=\"Ptable-item-dl\">";
+                        attributeKeyChildHtml+="    <dl class=\"clearfix\" style=\"margin:0\">";
+                        attributeKeyChildHtml+="      <dt>"+attributeKV.attributeName+"</dt>";
+                        //查询属性值列表
+                        var attributeValueArray = getAttributeValues(attributeKV.attributeKeyId);
+                        var attributeValues="";
+                        for(var j=0;j<attributeValueArray.length;j++)
+                        {
+                            if(j>0)
+                            {
+                                attributeValues+="；";
+                            }
+                            var attributeValueObject = attributeValueArray[j];
+                            attributeValues+=attributeValueObject.attributeValue;
+                        }
+                        attributeKeyChildHtml+="       <dd>"+attributeValues+"</dd>";
+                        attributeKeyChildHtml+="    </dl>";
+
+                        attributeKeyChildHtml+="<dl class=\"clearfix\" style=\"margin:0\">"
+                        attributeKeyChildHtml+=genAttributeKeyChildHtml(attributeKV.attributeKeyId);
+                        attributeKeyChildHtml+="</dl>";
+
+                        attributeKeyChildHtml+="  </dl>";
+                        attributeKeyChildHtml+="</div>";
+                    }
+                }
+            }
+            return attributeKeyChildHtml;
+        }
+
+        function attributeSort(a, b) {
+            return b.attributeSort - a.attributeSort
+        }
+
+        function drawAttributeTable()
+        {
+            selectAttributeArray.sort(attributeSort);
+            var attributeTable="<div class=\"Ptable\">";
+            //查询出所有根节点
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                //属性名对象
+                if(attributeKV.type==1)
+                {
+                    if(attributeKV.parentAttributeKeyId=="-1")
+                    {
+                        attributeTable+="<div class=\"Ptable-item\">";
+                        attributeTable+="  <h3>"+attributeKV.attributeName+"</h3>";
+                        //查询属性值列表
+                        var attributeValueArray = getAttributeValues(attributeKV.attributeKeyId);
+                        attributeTable+="   <dl style=\"Ptable-item-dl\">";
+                        if(attributeValueArray.length>0)
+                        {
+                            attributeTable+="    <dl class=\"clearfix\" style=\"margin:0\">";
+                            var attributeValues="";
+                            for(var j=0;j<attributeValueArray.length;j++)
+                            {
+                                if(j>0)
+                                {
+                                    attributeValues+="；";
+                                }
+                                var attributeValueObject = attributeValueArray[j];
+                                attributeValues+=attributeValueObject.attributeValue;
+                            }
+                            attributeTable+="       <dd style=\"margin-left: 20px;\">"+attributeValues+"</dd>";
+                            attributeTable+="     </dl>";
+                        }
+                        attributeTable+="	</dl>";
+                        attributeTable+="<dl class=\"clearfix\" style=\"margin:0\">"
+                        attributeTable+=genAttributeKeyChildHtml(attributeKV.attributeKeyId);
+                        attributeTable+="</dl>";
+                        attributeTable+="</div>";
+                    }
+                }
+            }
+            attributeTable+="</div>";
+
+            $("#commonAttributeTablePreview").html(attributeTable);
+        }
+
+
+        function getAttributeValues(attributeKeyId)
+        {
+            var attributeValueArray = new Array();
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                if(attributeKV.type==2)
+                {
+                    if(attributeKV.attributeKeyId==attributeKeyId)
+                    {
+                        attributeValueArray.push(attributeKV);
+                    }
+                }
+            }
+            return attributeValueArray;
+
+        }
+
+        function pushParentAttributeKey(attributeKeyId)
+        {
+            var attributeKeyObject = $("#attributeKey"+attributeKeyId);
+            var attributeKey = {attributeName:"",type:-1,attributeKeyId:"",parentAttributeKeyId:""};
+            attributeKey.attributeName = attributeKeyObject.attr("attribute-key");
+            attributeKey.type=1; //属性名对象
+            attributeKey.attributeKeyId = attributeKeyObject.attr("attribute-key-id");
+            attributeKey.parentAttributeKeyId = attributeKeyObject.attr("parent-attribute-key-id");
+            attributeKey.categoryId = attributeKeyObject.attr("attribute-category-id");
+            attributeKey.attributeSort = attributeKeyObject.attr("attribute-sort");
+
+            if(!existsAttribute(attributeKey))
+            {
+                selectAttributeArray.push(attributeKey);
+            }
+            if(attributeKey.parentAttributeKeyId!="-1")
+            {
+                pushParentAttributeKey(attributeKey.parentAttributeKeyId);
+            }
+        }
+
+
+
+        /**
+         * 添加属性值
+         */
+        function pushCommonAttributeValue(attributeKeyId,attributeValueId,attributeValue,attributeSort)
+        {
+            var attributeValueObject={attributeValue:"",type:-1,attributeKeyId:""};
+            attributeValueObject.attributeValue = attributeValue;
+            attributeValueObject.type=2; //属性值对象
+            attributeValueObject.attributeKeyId = $("#attributeKey"+attributeKeyId).attr("attribute-key-id");
+            attributeValueObject.attributeValueId = attributeValueId;
+            attributeValueObject.attributeSort = attributeSort;
+            if(!existsAttribute(attributeValueObject))
+            {
+                selectAttributeArray.push(attributeValueObject);
+            }
+            pushParentAttributeKey(attributeValueObject.attributeKeyId);
+        }
+
+
+
+        /**
+         * 判断节点是否存在已选数组中
+         */
+        function existsAttribute(attributeKeyValue)
+        {
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                //属性名对象
+                if(attributeKeyValue.type==1)
+                {
+                    if(attributeKeyValue.type ==attributeKV.type && attributeKeyValue.attributeKeyId == attributeKV.attributeKeyId)
+                    {
+                        return true;
+                    }
+                }else if(attributeKeyValue.type==2) //属性值对象
+                {
+                    if(attributeKeyValue.type ==attributeKV.type && attributeKeyValue.attributeValueId == attributeKV.attributeValueId)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        /**
+         * 删除属性值
+         */
+        function removeCommonAttribute(attributeKeyId,attributeValueId,attributeValue)
+        {
+            if(selectAttributeArray!=null&&selectAttributeArray.length>0)
+            {
+                for(var i=0;i<selectAttributeArray.length;i++)
+                {
+                    var attributeKV = selectAttributeArray[i];
+                    if(attributeKV.type==2) //属性值对象
+                    {
+                        if(attributeValueId == attributeKV.attributeValueId)
+                        {
+                            //删除这个属性值
+                            selectAttributeArray.splice(i,1);
+                            //删除属性名(只有在这个属性名下的属性值为空的情况下)
+                            deleteAttributeKey(attributeKeyId);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * 删除属性名(只有在这个属性名下的属性值为空的情况下)
+         */
+        function deleteAttributeKey(attributeKeyId)
+        {
+            if(attributeKeyId!=null&&attributeKeyId!="-1")
+            {
+                var attributeValueCount = queryAttributeValueCount(attributeKeyId);
+                //这个属性名没有任何属性值了,就删除这个属性名
+                if(attributeValueCount<=0)
+                {
+                    for(var i=0;i<selectAttributeArray.length;i++)
+                    {
+                        var attributeKV = selectAttributeArray[i];
+                        if(attributeKV.type==1)
+                        {
+                            if(attributeKeyId == attributeKV.attributeKeyId)
+                            {
+                                //删除这个属性名
+                                selectAttributeArray.splice(i,1);
+                                //递归删除上级节点属性名
+                                deleteAttributeKey($("#attributeKey"+attributeKeyId).attr("parent-attribute-key-id"));
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+        /**
+         * 查询指定属性名下子节点包含多少属性值
+         */
+        function queryAttributeValueCount(attributeKeyId)
+        {
+            var count = 0 ;
+            if(selectAttributeArray!=null&&selectAttributeArray.length>0)
+            {
+                for(var i=0;i<selectAttributeArray.length;i++)
+                {
+                    var attributeKV = selectAttributeArray[i];
+                    if(attributeKV.type==2)
+                    {
+                        if(attributeKeyId == attributeKV.attributeKeyId)
+                        {
+                            count++;
+                        }
+                    }else if(attributeKV.type==1)
+                    {
+                        if(attributeKeyId == attributeKV.parentAttributeKeyId)
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+
+        }
+
+
+        form.on('checkbox(cmmonAttrChkBoxFilter)', function (data) {
+            var attributeValueObject = data.elem;
+            var attributeKeyId = attributeValueObject.getAttribute("attribute-key-id");
+            var attributeValueId = attributeValueObject.getAttribute("attribute-value-id");
+            var attributeValue = attributeValueObject.getAttribute("attribute-value");
+            if( data.elem.checked){　　　　　　//判断当前多选框是选中还是取消选中
+                var value = data.value;   //获取选中的value值
+                var attributeSort = attributeValueObject.getAttribute("attribute-sort");
+                pushCommonAttributeValue(attributeKeyId,attributeValueId,attributeValue,attributeSort);
+
+                //console.log("selected");
+            }else{
+                //console.log("un selected");
+                removeCommonAttribute(attributeKeyId,attributeValueId,attributeValue);
+            }
+            drawAttributeTable();
+        });
+
+
+        $("#attributeLoadMore").click(function(){
+            attributeCurrentPage++;
+            loadCommonTreePage(gloablCategoryId);
+        });
+
+
+        $("#selectCategoryId").click(function(){
+            var index = layer.open({
+                title: '选择所属分类',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['20%', '60%'],
+                content: "<div id='categoryTree'></div>",
+                success:function(layero){
+
+                    loadding = layer.load();
+                    $.ajax({
+                        url:"[[@{/}]]productSpu/query/category/tree",
+                        contentType: "application/json; charset=utf-8",
+                        type:'GET',
+                        data:null,
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //渲染
+                                var inst1 = tree.render({
+                                    elem: '#categoryTree'  //绑定元素
+                                    ,data: data.data,
+                                    click: function(obj){
+                                        if(obj.data.id==-1)
+                                        {
+                                            layer.msg("不能选择根节点");
+                                            return;
+                                        }
+                                        $("#selectCategoryId").val(obj.data.path);
+                                        $("#categoryId").val(obj.data.id);
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
+
+        /**
+         * 设置品牌
+         * @param brandId
+         * @param brandName
+         */
+        function setBrand(brandId,brandName)
+        {
+            $("#selectBrand").val(brandName);
+            $("#brandId").val(brandId);
+        }
+
+
+        $("#selectBrand").click(function(){
+            var categoryName = $("#selectCategoryId").val();
+            var categoryId = $("#categoryId").val();
+            if(categoryId==null||categoryId=="")
+            {
+                layer.msg("请先选择商品分类");
+                return;
+            }
+            var index = layer.open({
+                title: categoryName+'的品牌列表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
+                yes: function (index) {
+                    var brandObject = window["layui-layer-iframe" + index].getSelectBrand();
+                    setBrand(brandObject.brandId,brandObject.brandName);
+                    layer.close(index);
+                },
+                area: ['80%', '80%'],
+                content: "[[@{/productSpu/selectBrandPage/}]]"+categoryId,
+                zIndex: layer.zIndex,
+                success: function(layero){
+                    layer.setTop(layero);
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
+
+
+    });
+</script>
+</body>
+</html>

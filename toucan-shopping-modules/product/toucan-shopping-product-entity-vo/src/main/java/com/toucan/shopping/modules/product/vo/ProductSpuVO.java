@@ -21,6 +21,10 @@ public class ProductSpuVO extends ProductSpu {
 
     private String attributes; //这个SPU的属性
 
+    private String categoryName; //分类名称
+
+    private String brandName; //品牌名称
+
     private List<ProductSpuAttributeKeyVO> attributeKeys; //所有属性名
     private List<ProductSpuAttributeValueVO> attributeValues; //所有属性值
 

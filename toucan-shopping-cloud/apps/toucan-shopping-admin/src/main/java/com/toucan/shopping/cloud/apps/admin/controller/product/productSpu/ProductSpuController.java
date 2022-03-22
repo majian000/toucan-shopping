@@ -514,5 +514,67 @@ public class ProductSpuController extends UIController {
 
 
 
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
+    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        try {
+            ProductSpuVO queryProductSpu = new ProductSpuVO();
+            queryProductSpu.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryProductSpu);
+            ResultObjectVO resultObjectVO = feignProductSpuService.findById(requestJsonVO);
+            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    ProductSpuVO productSpuVO = resultObjectVO.formatData(ProductSpuVO.class);
+
+                    //查询分类
+                    CategoryVO queryCategory = new CategoryVO();
+                    queryCategory.setId(productSpuVO.getCategoryId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryCategory);
+                    resultObjectVO = feignCategoryService.queryById(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
+                        if(categoryTreeVO!=null) {
+                            productSpuVO.setCategoryName(categoryTreeVO.getPath());
+                        }
+                    }
+
+                    //查询品牌
+                    BrandVO queryBrand = new BrandVO();
+                    queryBrand.setId(productSpuVO.getBrandId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrand);
+                    resultObjectVO = feignBrandService.findById(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        BrandVO brandVO = resultObjectVO.formatData(BrandVO.class);
+                        String brandName = "";
+                        if(StringUtils.isNotEmpty(brandVO.getChineseName()))
+                        {
+                            brandName+=brandVO.getChineseName();
+                        }
+                        if(StringUtils.isNotEmpty(brandVO.getEnglishName()))
+                        {
+                            brandName+=" "+brandVO.getEnglishName();
+                        }
+                        productSpuVO.setBrandName(brandName);
+
+                    }
+
+                    request.setAttribute("model",productSpuVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return "pages/product/productSpu/edit.html";
+    }
+
+
+
+
 }
 
