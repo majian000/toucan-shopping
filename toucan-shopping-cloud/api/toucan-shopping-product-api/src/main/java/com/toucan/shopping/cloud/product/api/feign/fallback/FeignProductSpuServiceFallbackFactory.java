@@ -68,6 +68,21 @@ public class FeignProductSpuServiceFallbackFactory implements FallbackFactory<Fe
                 resultObjectVO.setMsg("请求失败,请重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO deleteByIds(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignProductSpuService deleteByIds faild params {} ",requestVo.getEntityJson());
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败,请重试!");
+                return resultObjectVO;
+            }
         };
     }
 }

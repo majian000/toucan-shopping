@@ -42,4 +42,14 @@ public interface FeignProductSpuService {
      */
     @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 批量删除
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo);
 }

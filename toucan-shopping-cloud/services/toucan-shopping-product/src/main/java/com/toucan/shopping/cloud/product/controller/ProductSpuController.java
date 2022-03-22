@@ -273,6 +273,66 @@ public class ProductSpuController {
 
 
 
+
+    /**
+     * 批量删除
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/ids",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByIds(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            List<ProductSpuVO> productSpuVOS = JSONObject.parseArray(requestVo.getEntityJson(),ProductSpuVO.class);
+            if(CollectionUtils.isEmpty(productSpuVOS))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找ID");
+                return resultObjectVO;
+            }
+            List<ResultObjectVO> resultObjectVOList = new ArrayList<ResultObjectVO>();
+            for(ProductSpuVO productSpuVO:productSpuVOS) {
+                if(productSpuVO.getId()!=null) {
+                    int row = productSpuService.deleteById(productSpuVO.getId());
+                    if (row < 1) {
+                        logger.warn("删除商品SPU失败 {} ",JSONObject.toJSONString(productSpuVO));
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("请重试!");
+
+                        ResultObjectVO resultObjectRowVO = new ResultObjectVO();
+                        resultObjectRowVO.setCode(ResultVO.FAILD);
+                        resultObjectRowVO.setMsg("请重试!");
+                        resultObjectRowVO.setData(productSpuVO.getId());
+                        resultObjectVOList.add(resultObjectRowVO);
+
+                        continue;
+                    }
+                }
+            }
+            resultObjectVO.setData(resultObjectVOList);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
     /**
      * 查询列表
      * @param requestJsonVO
