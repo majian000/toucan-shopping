@@ -318,6 +318,7 @@
         var attributeTotal,attributePageTotal=1,attributeLimit=10,attributeCurrentPage=1;
         var gloablCategoryId;
         var selectAttributeArray = new Array();
+        var loadding;
 
         function loadCommonTreePage(categoryId)
         {
@@ -465,6 +466,7 @@
                 layer.msg("请选择商品属性");
                 return;
             }
+            loadding = layer.load();
             $.ajax({
                 url:"[[@{/productSpu/save}]]",
                 contentType: "application/json; charset=utf-8",
@@ -485,6 +487,10 @@
                         parent.layer.close(iframeIndex);
 
                     });
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
                 }
             });
             return false;

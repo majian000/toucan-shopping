@@ -12,49 +12,113 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
+
+
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            white-space: normal;
+        }
+        .ztree *{
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+        }
+    </style>
+
 </head>
 <body>
 
 <span th:replace="common_page::common"></span>
 
-<div class="layuimini-container">
-    <div class="layuimini-main">
+<div class="layui-layout">
+    <div class="layui-side ">
 
-        <fieldset class="table-search-fieldset">
-            <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" id="userSearchForm" action="">
-                    <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">所属分类</label>
-                            <div class="layui-input-inline">
-                                <input type="hidden" name="categoryId" id="categoryId">
-                                <input type="text" readonly  id="selectCategoryId"  class="layui-input" >
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
-                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
-                        </div>
+        <div class="layuimini-container" style="height:90%">
+            <div class="layuimini-main">
+                <div class="layui-card">
+                    <div class="layui-card-header">分类树</div>
+                    <div class="layui-card-body" >
+                        <ul id="categoryTree" class="ztree"></ul>
                     </div>
-                </form>
+                </div>
             </div>
-        </fieldset>
+        </div>
+    </div>
+    <div class="layui-body">
 
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container">
-                <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+        <div class="layuimini-container">
+            <div class="layuimini-main">
 
+                <fieldset class="table-search-fieldset">
+                    <div style="margin: 10px 10px 10px 10px">
+                        <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                            <input type="hidden" id="categoryId" name="categoryId">
+                            <div class="layui-form-item">
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">店铺商品ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="id" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width:140px;">店铺商品UUID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="uuid" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">商品名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">店铺ID</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="shopId" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">审核状态</label>
+                                    <div class="layui-input-inline">
+                                        <select id="approveStatus"  name="approveStatus" lay-search="" lay-filter="approveStatus">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="1" >审核中</option>
+                                            <option value="2" >审核通过</option>
+                                            <option value="3" >审核驳回</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button type="submit" id="queryButton" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </fieldset>
+
+                <script type="text/html" id="toolbarDemo">
+                    <div class="layui-btn-container">
+                        <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
+
+                    </div>
+                </script>
+
+                <table class="layui-hide" id="shopProductTable" lay-filter="shopProductTableFilter"></table>
+
+                <script type="text/html" id="shopProductTableBar">
+                    <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
+                </script>
             </div>
-        </script>
-
-        <table class="layui-hide" id="shopProductTable" lay-filter="shopProductTableFilter"></table>
-
-        <script type="text/html" id="shopProductTableBar">
-            <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
-        </script>
-
+        </div>
     </div>
 </div>
+
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
@@ -62,13 +126,14 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
+    }).use(['form', 'table','tree','dtree','jquery'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
         var index;
         var tree = layui.tree;
         var loadding;
+        var loaddingTree;
         var dtree = layui.dtree;
 
         $.fn.serializeJson=function(){
@@ -95,9 +160,10 @@
             return formParam;
         }
 
+
         table.render({
             elem: '#shopProductTable',
-            url: "[[@{/}]]product/shopProduct/list",
+            url: "[[@{/}]]product/shopProductApprove/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -112,33 +178,7 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '主键', width: 150},
-                    {field: 'uuid',width: 150,  title: '店铺商品UUID'},
-                    {field: 'categoryPath',width: 150,  title: '分类路径'},
-                    {field: 'categoryName',width: 150,  title: '分类名称'},
-                    {field: 'brandName',width: 150,  title: '品牌名称'},
-                    {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
-                    {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
-                    {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
-                    {field: 'productId',width: 150,  title: '平台商品ID'},
-                    {field: 'name',width: 150,  title: '商品名称'},
-                    {field: 'attributes',width: 150,  title: '属性列表'},
-                    {field: 'uuid',width: 150,  title: 'SPU的UUID'},
-                    {field: 'status',width: 150,   title: '上架状态',
-                        templet: function (row) {
-                            if(row.status == null){
-                                return "";
-                            }
-                            if(row.status == "0"){
-                                return "未上架";
-                            }
-                            if(row.status == "1"){
-                                return "已上架";
-                            }
-                            return row.status;
-                        }
-                    },
-                    {field: 'shopId',width: 150,  title: '店铺ID'},
+                    {field: 'id',  title: '商品ID', width: 150},
                     {field: 'approveStatus',width: 150,   title: '审核状态',
                         templet: function (row) {
                             if(row.approveStatus == null){
@@ -156,6 +196,50 @@
                             return row.approveStatus;
                         }
                     },
+                    {field: 'name',width: 400,  title: '商品名称',event:'openApproveDialogDevent',
+                        templet: function (row) {
+                            return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
+                        }},
+                    {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
+                        templet: function (row) {
+                            if(row.httpMainPhotoFilePath!=null) {
+                                return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'uuid',width: 300,  title: '店铺商品UUID'},
+                    {field: 'categoryPath',width: 350,  title: '分类路径'},
+                    {field: 'categoryName',width: 150,  title: '分类名称'},
+                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
+                        templet: function (row) {
+                            if(row.brandHttpLogo!=null) {
+                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
+                            }
+                            return "";
+                        }},
+                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
+                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
+                    {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
+                    {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
+                    {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
+                    {field: 'productId',width: 150,  title: '平台商品ID'},
+                    {field: 'attributes',width: 550,  title: '属性列表'},
+                    {field: 'status',width: 150,   title: '上架状态',
+                        templet: function (row) {
+                            if(row.status == null){
+                                return "";
+                            }
+                            if(row.status == "0"){
+                                return "未上架";
+                            }
+                            if(row.status == "1"){
+                                return "已上架";
+                            }
+                            return row.status;
+                        }
+                    },
+                    {field: 'shopId',width: 300,  title: '店铺ID'},
+                    {field: 'shopName',width: 300,  title: '店铺名称'},
                     {field: 'rejectText',width: 150,   title: '驳回原因'},
                     {field: 'sellerNo',width: 150,   title: '卖家编码'},
                     {field: 'articleNumber',width: 150, title: '货号'},
@@ -223,9 +307,9 @@
                             return etractMethodText;
                         }
                     },
-                    {field: 'createUserId', title: '店铺掌柜ID'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
+                    {field: 'createDate', width: 150, title: '创建时间'},
+                    {field: 'updateDate', width: 150, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#shopProductTableBar', align: "center"}
                 ]
             ],
@@ -256,56 +340,60 @@
         });
 
 
-        $("#selectCategoryId").click(function(){
-            loadding = layer.load();
-            index = layer.open({
-                title: '选择所属分类',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
+                autoParam:["id", "pid", "name"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -1
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: categoryTreeClick
+            }
+        };
 
-                area: ['20%', '60%'],
-                content: "<div id='categoryTree'></div>",
-                success:function(layero){
-                    $.ajax({
-                        url:"[[@{/}]]product/shopProduct/query/category/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#categoryTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
-                                        $("#selectCategoryId").val(obj.data.title);
-                                        $("#categoryId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
+        function categoryTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+            $("#categoryId").val(treeNode.id);
+            $("#queryButton").click();
+        }
 
+        initCategoryTree();
+
+        function filter(treeId, parentNode, data) {
+            return data.data;
+        }
+        //初始化树
+        function initCategoryTree(){
+
+            loaddingTree = layer.load();
+            $.ajax({
+                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
+                type:"POST",
+                dataType: "json",
+                success: function(data){
+                    var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                    layer.close(loaddingTree);
                 }
             });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-
-        });
-
+        }
 
         /**
          * toolbar监听事件
@@ -319,7 +407,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/shopProduct/addPage}]]",
+                    content: "[[@{/product/shopProductApprove/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -334,7 +422,7 @@
                 }
                 layer.confirm('确定删除商品?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/shopProduct/delete/ids",
+                        url:"[[@{/}]]product/shopProductApprove/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -368,63 +456,38 @@
 
         table.on('tool(shopProductTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'edit') {
-
-                var index = layer.open({
-                    title: '编辑商品',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: '[[@{/}]]product/shopProduct/editPage/'+data.id
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该商品?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]product/shopProduct/delete/"+data.id,
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('shopProductTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }else if (obj.event == 'valueList') { //属性值管理
-                var index = layer.open({
-                    title: 'SKU管理',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    btn: ["关闭" ],
-                    area: ['80%', '80%'],
-                    content: "[[@{/product/productSku/listPage/}]]"+data.id
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
+            if (obj.event == 'approve') {
+                openApproveDialog(data.id);
+            }else if(obj.event=="openApproveDialogDevent")
+            {
+                openApproveDialog(data.id);
             }
         });
 
+        function openApproveDialog(id)
+        {
+            var index = layer.open({
+                title: '审核商品',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]product/shopProductApprove/approvePage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
+
     });
 </script>
+
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 
 </body>
 </html>

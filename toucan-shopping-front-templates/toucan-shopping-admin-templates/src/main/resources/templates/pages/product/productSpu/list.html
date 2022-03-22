@@ -301,7 +301,7 @@
                     layer.full(index);
                 });
             } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('brandTable')
+                var checkStatus = table.checkStatus('productSpuTable')
                     , data = checkStatus.data;
                 if(data==null||data.length<=0)
                 {
@@ -318,7 +318,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('brandTable', {
+                            table.reload('productSpuTable', {
                                 page: {
                                     curr: 1
                                 }
@@ -345,6 +345,30 @@
             if(obj.event=="openDetailDialogEvent")
             {
                 // openApproveDialog(data.id);
+            }else if (obj.event == 'delete') {
+                layer.confirm("确定删除"+data.name+"?", function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]productSpu/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('productSpuTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
             }
         });
 
