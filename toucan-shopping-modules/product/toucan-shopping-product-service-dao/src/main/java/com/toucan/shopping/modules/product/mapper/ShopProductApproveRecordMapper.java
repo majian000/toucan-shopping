@@ -11,4 +11,5 @@ public interface ShopProductApproveRecordMapper {
 
     List<ShopProductApproveRecord> queryAllList(ShopProductApproveRecord queryModel);
 
+    int insert(ShopProductApproveRecord entity);
 }

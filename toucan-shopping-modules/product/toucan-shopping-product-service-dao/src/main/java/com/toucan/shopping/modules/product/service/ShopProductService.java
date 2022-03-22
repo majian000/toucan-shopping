@@ -16,6 +16,10 @@ public interface ShopProductService {
 
     int deleteById(Long id);
 
+    ShopProductVO findById(Long id);
+
+    int updateApproveStatus(Long id,Integer approveStatus);
+
 
     /**
      * 查询列表页

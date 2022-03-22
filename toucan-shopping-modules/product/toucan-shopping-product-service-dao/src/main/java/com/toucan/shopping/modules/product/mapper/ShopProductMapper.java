@@ -17,6 +17,7 @@ public interface ShopProductMapper {
 
     int deleteById(Long id);
 
+    int updateApproveStatus(Long id, Integer approveStatus);
 
 
     /**
@@ -34,5 +35,7 @@ public interface ShopProductMapper {
     Long queryListPageCount(ShopProductPageInfo pageInfo);
 
     List<ShopProductVO> queryList(ShopProductVO shopProductVO);
+
+    ShopProductVO findById(Long id);
 
 }

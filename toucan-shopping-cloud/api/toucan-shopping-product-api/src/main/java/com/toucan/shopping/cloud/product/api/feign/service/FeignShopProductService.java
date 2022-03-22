@@ -43,4 +43,13 @@ public interface FeignShopProductService {
     @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByShopProductId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 审核驳回
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/reject",produces = "application/json;charset=UTF-8")
+    ResultObjectVO reject(@RequestBody RequestJsonVO requestJsonVO);
+
 }

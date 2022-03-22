@@ -105,6 +105,20 @@
     </select>
 
 
+    <select id="findById" resultMap="shopProductVOMap" parameterType="java.lang.Long">
+        select t.* from t_shop_product t
+        where t.id = #{id} and delete_status=0
+        limit 1
+    </select>
+
+
+    <update id="updateApproveStatus">
+        update t_shop_product  set approve_status=#{approveStatus} where id=#{id}  and delete_status=0
+    </update>
+
+
+
+
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
         select count(*) from t_shop_product t
         <where>

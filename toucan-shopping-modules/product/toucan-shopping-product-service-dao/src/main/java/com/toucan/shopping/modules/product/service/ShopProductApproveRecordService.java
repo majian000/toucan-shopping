@@ -9,4 +9,6 @@ public interface ShopProductApproveRecordService {
 
     List<ShopProductApproveRecord> queryAllList(ShopProductApproveRecord queryModel);
 
+
+    int save(ShopProductApproveRecord entity);
 }

@@ -26,10 +26,7 @@ import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
-import com.toucan.shopping.modules.product.vo.BrandVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.ProductSpuVO;
-import com.toucan.shopping.modules.product.vo.ShopProductVO;
+import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -763,6 +760,41 @@ public class ShopProductApproveController extends UIController {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 审核驳回
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/reject",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO reject(HttpServletRequest request, @RequestBody ShopProductApproveRecordVO shopProductApproveRecordVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(shopProductApproveRecordVO.getApproveId()==null)
+            {
+                resultObjectVO.setMsg("审核ID不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductApproveRecordVO);
+            resultObjectVO = feignShopProductService.reject(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                //发送商品审核驳回消息
+
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setMsg("审核失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
         }
         return resultObjectVO;
     }

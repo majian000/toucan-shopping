@@ -17,4 +17,11 @@
         select * from t_shop_product_spu_approve_record t
     </select>
 
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApproveRecord" >
+        insert into t_shop_product_spu_approve_record(id,approve_id,approve_status,reject_text,create_date,create_admin_id,delete_status)
+        values(#{id},#{approveId},#{approveStatus},#{rejectText},#{createDate},#{createAdminId},#{deleteStatus})
+    </insert>
+
+
 </mapper>

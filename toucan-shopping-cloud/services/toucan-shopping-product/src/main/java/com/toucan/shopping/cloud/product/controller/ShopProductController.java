@@ -6,18 +6,18 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.entity.ShopProduct;
+import com.toucan.shopping.modules.product.entity.ShopProductApproveRecord;
 import com.toucan.shopping.modules.product.entity.ShopProductImg;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.redis.PublishProductRedisLockKey;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
+import com.toucan.shopping.modules.product.service.ShopProductApproveRecordService;
 import com.toucan.shopping.modules.product.service.ShopProductImgService;
 import com.toucan.shopping.modules.product.service.ShopProductService;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.PublishProductVO;
-import com.toucan.shopping.modules.product.vo.ShopProductImgVO;
-import com.toucan.shopping.modules.product.vo.ShopProductVO;
+import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -56,6 +56,8 @@ public class ShopProductController {
     @Autowired
     private ShopProductImgService shopProductImgService;
 
+    @Autowired
+    private ShopProductApproveRecordService shopProductApproveRecordService;
 
 
     /**
@@ -367,6 +369,57 @@ public class ShopProductController {
         }
 
         return resultObjectVO;
+    }
+
+
+
+    /**
+     * 审核驳回
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/reject",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO reject(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            ShopProductApproveRecordVO shopProductApproveRecordVO = requestJsonVO.formatEntity(ShopProductApproveRecordVO.class);
+            if(shopProductApproveRecordVO.getApproveId()==null)
+            {
+                resultObjectVO.setMsg("审核ID不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            logger.info("驳回店铺商品 {} ",requestJsonVO.getEntityJson());
+            int ret = shopProductService.updateApproveStatus(shopProductApproveRecordVO.getApproveId(),ProductConstant.REJECT);
+            if(ret<1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("驳回失败");
+                return resultObjectVO;
+            }
+            ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
+            BeanUtils.copyProperties(shopProductApproveRecord,shopProductApproveRecordVO);
+            shopProductApproveRecord.setCreateDate(new Date());
+            shopProductApproveRecord.setId(idGenerator.id());
+            ret = shopProductApproveRecordService.save(shopProductApproveRecord);
+            if(ret<1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("保存驳回记录失败");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败");
+        }
+
+        return resultObjectVO;
+
     }
 
 }

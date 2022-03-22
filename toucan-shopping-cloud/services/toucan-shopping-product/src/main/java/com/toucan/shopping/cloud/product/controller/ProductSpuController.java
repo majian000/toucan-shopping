@@ -23,6 +23,7 @@ import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.ProductSpuAttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.ProductSpuAttributeValueVO;
 import com.toucan.shopping.modules.product.vo.ProductSpuVO;
+import com.toucan.shopping.modules.product.vo.ShopProductApproveRecordVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -525,6 +526,8 @@ public class ProductSpuController {
 
         return resultObjectVO;
     }
+
+
 
 
 

@@ -18,4 +18,9 @@ public class ShopProductApproveRecordServiceImpl implements ShopProductApproveRe
     public List<ShopProductApproveRecord> queryAllList(ShopProductApproveRecord queryModel) {
         return shopProductSpuApproveRecordMapper.queryAllList(queryModel);
     }
+
+    @Override
+    public int save(ShopProductApproveRecord entity) {
+        return shopProductSpuApproveRecordMapper.insert(entity);
+    }
 }

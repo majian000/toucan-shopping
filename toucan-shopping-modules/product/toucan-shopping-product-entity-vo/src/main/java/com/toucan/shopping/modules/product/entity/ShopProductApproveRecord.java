@@ -24,7 +24,7 @@ public class ShopProductApproveRecord {
 
 
     /**
-     * 审核ID
+     * 审核ID 店铺商品表ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
