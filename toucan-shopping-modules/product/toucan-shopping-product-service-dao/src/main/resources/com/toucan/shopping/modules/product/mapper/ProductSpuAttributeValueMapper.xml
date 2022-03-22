@@ -34,12 +34,6 @@
             and t.id = #{id}
         </if>
 
-        <if test="idArray!=null and idArray.length>0 ">
-            and t.id in
-            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
 
         <if test="showStatus!=null and showStatus!=-1">
             and t.show_status = #{showStatus}
@@ -53,12 +47,6 @@
             and t.query_status = #{queryStatus}
         </if>
 
-        <if test="attributeKeyIdList!=null and attributeKeyIdList.size>0">
-            and t.attribute_key_id in
-            <foreach item="item" index="index" collection="attributeKeyIdList" open="("  close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
 
 
         and t.delete_status = 0

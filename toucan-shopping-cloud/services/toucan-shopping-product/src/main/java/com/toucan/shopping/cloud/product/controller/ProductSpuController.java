@@ -143,6 +143,7 @@ public class ProductSpuController {
                         productSpuAttributeKey.setProductSpuId(productSpu.getId());
                         productSpuAttributeKey.setId(idGenerator.id());
                         productSpuAttributeKey.setCreateDate(new Date());
+                        productSpuAttributeKey.setDeleteStatus((short)0);
                         productSpuAttributeKeys.add(productSpuAttributeKey);
                     }
 
@@ -182,6 +183,7 @@ public class ProductSpuController {
                         }
                         productSpuAttributeValue.setId(idGenerator.id());
                         productSpuAttributeValue.setCreateDate(new Date());
+                        productSpuAttributeValue.setDeleteStatus((short)0);
                         productSpuAttributeValues.add(productSpuAttributeValue);
                     }
                     ret = productSpuAttributeValueService.saves(productSpuAttributeValues);
@@ -280,7 +282,7 @@ public class ProductSpuController {
                 return resultObjectVO;
             }
 
-
+            logger.info("修改平台商品 {} ",requestJsonVO.getEntityJson());
 
             List<ProductSpuVO> entityList = null;
 
@@ -302,6 +304,49 @@ public class ProductSpuController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("修改SPU失败");
                 return resultObjectVO;
+            }
+
+            List<ProductSpuAttributeKey> productSpuAttributeKeys = new ArrayList();
+            //保存属性名
+            if (!CollectionUtils.isEmpty(entity.getAttributeKeys())) {
+                List<ProductSpuAttributeKeyVO> productSpuAttributeKeyVOList = entity.getAttributeKeys();
+                for (ProductSpuAttributeKeyVO productSpuAttributeKeyVO : productSpuAttributeKeyVOList) {
+                    ProductSpuAttributeKey productSpuAttributeKey = new ProductSpuAttributeKey();
+                    BeanUtils.copyProperties(productSpuAttributeKey, productSpuAttributeKeyVO);
+                    productSpuAttributeKey.setProductSpuId(entity.getId());
+                    productSpuAttributeKey.setId(idGenerator.id());
+                    productSpuAttributeKey.setCreateDate(new Date());
+                    productSpuAttributeKey.setDeleteStatus((short)0);
+                    productSpuAttributeKeys.add(productSpuAttributeKey);
+                }
+
+                productSpuAttributeKeyService.saves(productSpuAttributeKeys);
+
+            }
+
+            //保存属性值
+            if (!CollectionUtils.isEmpty(entity.getAttributeValues())) {
+                List<ProductSpuAttributeValueVO> productSpuAttributeValueVOS = entity.getAttributeValues();
+                List<ProductSpuAttributeValue> productSpuAttributeValues = new ArrayList<ProductSpuAttributeValue>();
+                for(ProductSpuAttributeValueVO productSpuAttributeValueVO:productSpuAttributeValueVOS)
+                {
+                    ProductSpuAttributeValue productSpuAttributeValue = new ProductSpuAttributeValue();
+                    BeanUtils.copyProperties(productSpuAttributeValueVO,productSpuAttributeValueVO);
+                    productSpuAttributeValue.setProductSpuId(entity.getId());
+                    for(ProductSpuAttributeKey productSpuAttributeKey:productSpuAttributeKeys)
+                    {
+                        if(productSpuAttributeKey.getAttributeKeyId().longValue()==productSpuAttributeValueVO.getAttributeKeyId().longValue())
+                        {
+                            productSpuAttributeValue.setProductSpuAttributeKeyId(productSpuAttributeKey.getId());
+                            break;
+                        }
+                    }
+                    productSpuAttributeValue.setId(idGenerator.id());
+                    productSpuAttributeValue.setCreateDate(new Date());
+                    productSpuAttributeValue.setDeleteStatus((short)0);
+                    productSpuAttributeValues.add(productSpuAttributeValue);
+                }
+                productSpuAttributeValueService.saves(productSpuAttributeValues);
             }
 
 

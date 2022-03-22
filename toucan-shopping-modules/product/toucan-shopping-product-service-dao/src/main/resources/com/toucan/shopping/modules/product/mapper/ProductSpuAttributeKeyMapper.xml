@@ -36,8 +36,8 @@
             and t.id = #{id}
         </if>
 
-        <if test="parentId!=null">
-            and t.parent_id = #{parentId}
+        <if test="parentAttributeKeyId!=null">
+            and t.parent_attribute_key_id = #{parentAttributeKeyId}
         </if>
 
         <if test="categoryId!=null">
@@ -57,24 +57,7 @@
             and t.query_status = #{queryStatus}
         </if>
 
-        <if test="attributeType!=null and attributeType!=-1">
-            and t.attribute_type = #{attributeType}
-        </if>
 
-        <if test="idArray!=null and idArray.length>0 ">
-            and t.id in
-            <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-
-
-        <if test="idList!=null and idList.size>0 ">
-            and t.id in
-            <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
 
         and t.delete_status = 0
 

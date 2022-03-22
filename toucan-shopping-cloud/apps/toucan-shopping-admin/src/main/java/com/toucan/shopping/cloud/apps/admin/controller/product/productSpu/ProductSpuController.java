@@ -534,7 +534,7 @@ public class ProductSpuController extends UIController {
                     queryCategory.setId(productSpuVO.getCategoryId());
                     requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryCategory);
                     resultObjectVO = feignCategoryService.queryById(requestJsonVO);
-                    if(resultObjectVO.isSuccess())
+                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
                     {
                         CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
                         if(categoryTreeVO!=null) {
@@ -547,9 +547,10 @@ public class ProductSpuController extends UIController {
                     queryBrand.setId(productSpuVO.getBrandId());
                     requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryBrand);
                     resultObjectVO = feignBrandService.findById(requestJsonVO.sign(),requestJsonVO);
-                    if(resultObjectVO.isSuccess())
+                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
                     {
-                        BrandVO brandVO = resultObjectVO.formatData(BrandVO.class);
+                        List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
+                        BrandVO brandVO = brandVOS.get(0);
                         String brandName = "";
                         if(StringUtils.isNotEmpty(brandVO.getChineseName()))
                         {
@@ -565,8 +566,12 @@ public class ProductSpuController extends UIController {
 
                     //将属性名和属性值转换成字符串
                     List<Object> attributeKeyValues = new ArrayList<Object>();
-                    attributeKeyValues.addAll(queryProductSpu.getAttributeKeys());
-                    attributeKeyValues.addAll(queryProductSpu.getAttributeValues());
+                    if(queryProductSpu.getAttributeKeys()!=null) {
+                        attributeKeyValues.addAll(queryProductSpu.getAttributeKeys());
+                    }
+                    if(queryProductSpu.getAttributeValues()!=null) {
+                        attributeKeyValues.addAll(queryProductSpu.getAttributeValues());
+                    }
                     productSpuVO.setAttributeKeyValuesJson(JSONArray.toJSONString(attributeKeyValues));
 
                     request.setAttribute("model",productSpuVO);

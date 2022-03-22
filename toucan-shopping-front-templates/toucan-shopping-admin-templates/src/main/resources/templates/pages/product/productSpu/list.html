@@ -344,7 +344,7 @@
             var data = obj.data;
             if(obj.event=="openDetailDialogEvent")
             {
-                // openApproveDialog(data.id);
+                openEditDialog(data.id);
             }else if (obj.event == 'delete') {
                 layer.confirm("确定删除"+data.name+"?", function (index) {
                     $.ajax({
@@ -371,6 +371,25 @@
                 });
             }
         });
+
+        function openEditDialog(id)
+        {
+            var index = layer.open({
+                title: '修改平台商品',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]productSpu/editPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
+
 
 
     });
