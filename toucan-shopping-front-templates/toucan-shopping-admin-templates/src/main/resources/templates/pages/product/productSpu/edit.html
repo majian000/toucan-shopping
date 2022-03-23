@@ -385,6 +385,7 @@
                     $("#commonAttributeList").html("");
                     $("#commonAttributeTablePreview").html("");
                     form.render();
+                    selectAttributeArray = new Array();
 
                     loadCommonTreePage(categoryId);
                 }
@@ -532,6 +533,7 @@
                             }
                             var attributeValueObject = attributeValueArray[j];
                             attributeValues+=attributeValueObject.attributeValue;
+                            attributeValues+="&nbsp;<a style=\"color:red\" href=\"#\" class=\"deleteAttributeValue\" >[删除]</a>";
                         }
                         attributeKeyChildHtml+="       <dd>"+attributeValues+"</dd>";
                         attributeKeyChildHtml+="    </dl>";
@@ -582,12 +584,13 @@
                                 }
                                 var attributeValueObject = attributeValueArray[j];
                                 attributeValues+=attributeValueObject.attributeValue;
+                                attributeValues+="&nbsp;<a style=\"color:red\" href=\"#\" class=\"deleteAttributeValue\" attribute-key-id=\""+attributeValueObject.attributeKeyId+"\" attribute-value-id=\""+attributeValueObject.attributeValueId+"\">[删除]</a>";
                             }
                             attributeTable+="       <dd style=\"margin-left: 20px;\">"+attributeValues+"</dd>";
                             attributeTable+="     </dl>";
                         }
                         attributeTable+="	</dl>";
-                        attributeTable+="<dl class=\"clearfix\" style=\"margin:0\">"
+                        attributeTable+="<dl class=\"clearfix\" style=\"margin:0\">";
                         attributeTable+=genAttributeKeyChildHtml(attributeKV.attributeKeyId);
                         attributeTable+="</dl>";
                         attributeTable+="</div>";
@@ -794,6 +797,18 @@
             }
             drawAttributeTable();
         });
+
+
+
+        $(".deleteAttributeValue").click(function(){
+            var deleteAttributeValueObject = this;
+            var attributeKeyId = deleteAttributeValueObject.getAttribute("attribute-key-id");
+            var attributeValueId = deleteAttributeValueObject.getAttribute("attribute-value-id");
+            var attributeValue = deleteAttributeValueObject.getAttribute("attribute-value");
+            removeCommonAttribute(attributeKeyId,attributeValueId,attributeValue);
+
+        });
+
 
 
         $("#attributeLoadMore").click(function(){
