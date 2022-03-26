@@ -386,6 +386,12 @@
                     $("#commonAttributeTablePreview").html("");
                     form.render();
                     selectAttributeArray = new Array();
+                    alert(selectAttributeKeyValueArray);
+                    if(selectAttributeKeyValueArray!=null)
+                    {
+                        selectAttributeArray = selectAttributeKeyValueArray;
+                        drawAttributeTable();
+                    }
 
                     loadCommonTreePage(categoryId);
                 }
