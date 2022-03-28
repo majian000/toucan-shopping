@@ -31,6 +31,11 @@ public class ProductSpuPageInfo extends PageInfo<ProductSpuVO> {
      */
     private Long categoryId;
 
+    /**
+     * 是否上架 -1全部 0:未上架 1:已上架
+     */
+    private Integer status;
+
     //==============================================
 
 }

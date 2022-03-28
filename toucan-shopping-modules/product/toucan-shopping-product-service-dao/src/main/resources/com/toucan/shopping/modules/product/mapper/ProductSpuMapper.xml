@@ -37,6 +37,9 @@
             and t.category_id = #{categoryId}
         </if>
 
+        <if test="status!=null and status!=-1">
+            and t.status = #{status}
+        </if>
         and t.delete_status = 0
 
     </sql>

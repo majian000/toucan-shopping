@@ -127,11 +127,17 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">状态</label>
-                            <div class="layui-input-block" >
+                            <label class="layui-form-label">上架状态</label>
+                            <div class="layui-input-block"  th:if="${model.status eq 1}" >
                                 <select name="status"  lay-search="">
-                                    <option value="1" >有效</option>
-                                    <option value="0">无效</option>
+                                    <option value="1" selected >已上架</option>
+                                    <option value="0">未上架</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-block"  th:if="${model.status eq 0}" >
+                                <select name="status"  lay-search="">
+                                    <option value="1" >已上架</option>
+                                    <option value="0" selected>未上架</option>
                                 </select>
                             </div>
                         </div>

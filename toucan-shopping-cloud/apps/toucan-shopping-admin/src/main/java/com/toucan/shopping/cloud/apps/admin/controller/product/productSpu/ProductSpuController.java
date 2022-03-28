@@ -25,6 +25,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.AttributeKeyPageInfo;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
+import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -235,7 +236,7 @@ public class ProductSpuController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, ShopProductPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, ProductSpuPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -366,7 +367,7 @@ public class ProductSpuController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/brand/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, BrandPageInfo pageInfo)
+    public TableVO brandList(HttpServletRequest request, BrandPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {

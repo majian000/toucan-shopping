@@ -76,6 +76,16 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
+                                    <label class="layui-form-label">上架状态</label>
+                                    <div class="layui-input-inline">
+                                        <select name="status"  lay-search="">
+                                            <option value="-1" >全部</option>
+                                            <option value="1" >已上架</option>
+                                            <option value="0">未上架</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
                                     <button type="submit" id="queryButton" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                                     <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                                 </div>
@@ -369,6 +379,9 @@
                         }
                     });
                 });
+            }else if(obj.event=="edit")
+            {
+                openEditDialog(data.id);
             }
         });
 
