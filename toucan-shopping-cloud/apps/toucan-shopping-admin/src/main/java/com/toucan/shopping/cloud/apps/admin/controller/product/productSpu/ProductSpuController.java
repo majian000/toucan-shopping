@@ -228,6 +228,41 @@ public class ProductSpuController extends UIController {
     }
 
 
+
+    /**
+     * 查询类别信息
+     * @param list
+     * @param categoryIds
+     */
+    void queryCategory(List<ProductSpuVO> list,Long[] categoryIds)
+    {
+        try {
+            //查询类别名称
+            CategoryVO queryCategoryVO = new CategoryVO();
+            queryCategoryVO.setIdArray(categoryIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                    for (ProductSpuVO productSpuVO : list) {
+                        for (CategoryVO categoryVO : categoryVOS) {
+                            if (productSpuVO.getCategoryId() != null && productSpuVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
+                                productSpuVO.setCategoryName(categoryVO.getName());
+                                productSpuVO.setCategoryPath(categoryVO.getNamePath());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
+
     /**
      * 查询列表
      * @param pageInfo
@@ -240,8 +275,31 @@ public class ProductSpuController extends UIController {
     {
         TableVO tableVO = new TableVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignProductSpuService.queryListPage(requestJsonVO);
+            RequestJsonVO requestJsonVO = null;
+            ResultObjectVO resultObjectVO = null;
+            if(pageInfo.getCategoryId()!=null&&pageInfo.getCategoryId().longValue()!=-1) {
+                //查询分类以及子分类
+                CategoryVO categoryVO = new CategoryVO();
+                categoryVO.setId(pageInfo.getCategoryId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
+                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    if (resultObjectVO.getData() != null) {
+                        List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                        if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                            List<Long> categoryIdList = new LinkedList<>();
+                            for (CategoryVO cv : categoryVOS) {
+                                categoryIdList.add(cv.getId());
+                            }
+                            categoryIdList.add(pageInfo.getCategoryId());
+                            pageInfo.setCategoryIdList(categoryIdList);
+                            pageInfo.setCategoryId(null);
+                        }
+                    }
+                }
+            }
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            resultObjectVO = feignProductSpuService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -251,7 +309,9 @@ public class ProductSpuController extends UIController {
                     List<ProductSpuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ProductSpuVO.class);
                     if(tableVO.getCount()>0) {
                         boolean brandExists=false;
+                        boolean shopCategoryExists = false;
                         List<Long> brandIdList = new LinkedList<>();
+                        Long[] categoryIds = new Long[list.size()];
                         for(int i=0;i<list.size();i++)
                         {
                             ProductSpuVO productSpuVO = list.get(i);
@@ -273,10 +333,32 @@ public class ProductSpuController extends UIController {
                                     brandIdList.add(productSpuVO.getBrandId());
                                 }
                             }
+
+                            //设置店铺分类ID
+                            shopCategoryExists = false;
+                            for (int sci = 0; sci < categoryIds.length; sci++) {
+                                Long shopCategoryId = categoryIds[sci];
+                                if (productSpuVO.getCategoryId() != null && shopCategoryId != null
+                                        && shopCategoryId.longValue() == productSpuVO.getCategoryId().longValue()) {
+                                    shopCategoryExists = true;
+                                    break;
+                                }
+
+                            }
+                            if (!shopCategoryExists) {
+                                if (productSpuVO.getCategoryId() != null) {
+                                    categoryIds[i] = productSpuVO.getCategoryId();
+                                }
+                            }
+
                         }
 
                         //查询品牌名称
                         this.queryBrand(list, brandIdList);
+
+
+                        //查询类别名称
+                        this.queryCategory(list, categoryIds);
 
                         tableVO.setData((List)list);
                     }

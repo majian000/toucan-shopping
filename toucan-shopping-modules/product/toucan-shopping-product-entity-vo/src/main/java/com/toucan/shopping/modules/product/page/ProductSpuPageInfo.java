@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 列表查询页对象
  */
@@ -35,6 +37,9 @@ public class ProductSpuPageInfo extends PageInfo<ProductSpuVO> {
      * 是否上架 -1全部 0:未上架 1:已上架
      */
     private Integer status;
+
+
+    private List<Long> categoryIdList; //分类ID列表
 
     //==============================================
 
