@@ -565,14 +565,7 @@ public class ProductSpuController extends UIController {
                     }
 
                     //将属性名和属性值转换成字符串
-                    List<Object> attributeKeyValues = new ArrayList<Object>();
-                    if(productSpuVO.getAttributeKeys()!=null) {
-                        attributeKeyValues.addAll(productSpuVO.getAttributeKeys());
-                    }
-                    if(productSpuVO.getAttributeValues()!=null) {
-                        attributeKeyValues.addAll(productSpuVO.getAttributeValues());
-                    }
-                    productSpuVO.setAttributeKeyValuesJson(JSONArray.toJSONString(attributeKeyValues));
+                    productSpuVO.setAttributeKeyValuesJson(JSONArray.toJSONString(productSpuVO.getAttributeKeyValues()));
 
                     request.setAttribute("model",productSpuVO);
                 }

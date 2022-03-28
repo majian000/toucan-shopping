@@ -318,10 +318,12 @@
         var flow = layui.flow;
         var loaddingAttributeTree;
         var attributeTotal,attributePageTotal=1,attributeLimit=10,attributeCurrentPage=1;
-        var gloablCategoryId;
-        var selectAttributeArray = new Array();
-        var selectAttributeKeyValueArray = JSON.parse($("#attributeKeyValueJson").val());
+        var gloablCategoryId = $("#categoryId").val();
+        var selectAttributeArray = JSON.parse($("#attributeKeyValueJson").val());
         var loadding;
+        var clickOtherCategory =false;
+
+
 
         function loadCommonTreePage(categoryId)
         {
@@ -386,16 +388,16 @@
                     $("#commonAttributeTablePreview").html("");
                     form.render();
                     selectAttributeArray = new Array();
-                    alert(selectAttributeKeyValueArray);
-                    if(selectAttributeKeyValueArray!=null)
-                    {
-                        selectAttributeArray = selectAttributeKeyValueArray;
-                        drawAttributeTable();
-                    }
-
                     loadCommonTreePage(categoryId);
                 }
-
+                //首次加载
+                if(!clickOtherCategory) {
+                    $("#commonAttributeList").html("");
+                    $("#commonAttributeTablePreview").html("");
+                    form.render();
+                    loadCommonTreePage(categoryId);
+                    drawAttributeTable();
+                }
                 gloablCategoryId = categoryId;
             }
         });
@@ -539,7 +541,7 @@
                             }
                             var attributeValueObject = attributeValueArray[j];
                             attributeValues+=attributeValueObject.attributeValue;
-                            attributeValues+="&nbsp;<a style=\"color:red\" href=\"#\" class=\"deleteAttributeValue\" >[删除]</a>";
+                            attributeValues+="&nbsp;<a style=\"color:red\" href=\"#\" class=\"deleteAttributeValue\" attribute-key-id=\""+attributeValueObject.attributeKeyId+"\" attribute-value-id=\""+attributeValueObject.attributeValueId+"\">[删除]</a>";
                         }
                         attributeKeyChildHtml+="       <dd>"+attributeValues+"</dd>";
                         attributeKeyChildHtml+="    </dl>";
@@ -604,6 +606,8 @@
                 }
             }
             attributeTable+="</div>";
+
+            console.log(selectAttributeArray);
 
             $("#commonAttributeTablePreview").html(attributeTable);
         }
@@ -894,6 +898,10 @@
             {
                 layer.msg("请先选择商品分类");
                 return;
+            }
+            if(gloablCategoryId!=categoryId)
+            {
+                clickOtherCategory = true; //点击了其他分类
             }
             var index = layer.open({
                 title: categoryName+'的品牌列表',

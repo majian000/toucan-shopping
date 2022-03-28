@@ -13,5 +13,4 @@ public class ProductSpuAttributeKeyVO extends ProductSpuAttributeKey {
 
 
 
-
 }

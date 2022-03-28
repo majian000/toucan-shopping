@@ -20,10 +20,7 @@ import com.toucan.shopping.modules.product.service.ProductSpuAttributeKeyService
 import com.toucan.shopping.modules.product.service.ProductSpuAttributeValueService;
 import com.toucan.shopping.modules.product.service.ProductSpuService;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
-import com.toucan.shopping.modules.product.vo.ProductSpuAttributeKeyVO;
-import com.toucan.shopping.modules.product.vo.ProductSpuAttributeValueVO;
-import com.toucan.shopping.modules.product.vo.ProductSpuVO;
-import com.toucan.shopping.modules.product.vo.ShopProductApproveRecordVO;
+import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -171,7 +168,7 @@ public class ProductSpuController {
                     for(ProductSpuAttributeValueVO productSpuAttributeValueVO:productSpuAttributeValueVOS)
                     {
                         ProductSpuAttributeValue productSpuAttributeValue = new ProductSpuAttributeValue();
-                        BeanUtils.copyProperties(productSpuAttributeValueVO,productSpuAttributeValueVO);
+                        BeanUtils.copyProperties(productSpuAttributeValue,productSpuAttributeValueVO);
                         productSpuAttributeValue.setProductSpuId(productSpu.getId());
                         for(ProductSpuAttributeKey productSpuAttributeKey:productSpuAttributeKeys)
                         {
@@ -331,7 +328,7 @@ public class ProductSpuController {
                 for(ProductSpuAttributeValueVO productSpuAttributeValueVO:productSpuAttributeValueVOS)
                 {
                     ProductSpuAttributeValue productSpuAttributeValue = new ProductSpuAttributeValue();
-                    BeanUtils.copyProperties(productSpuAttributeValueVO,productSpuAttributeValueVO);
+                    BeanUtils.copyProperties(productSpuAttributeValue,productSpuAttributeValueVO);
                     productSpuAttributeValue.setProductSpuId(entity.getId());
                     for(ProductSpuAttributeKey productSpuAttributeKey:productSpuAttributeKeys)
                     {
@@ -449,14 +446,31 @@ public class ProductSpuController {
             }
 
             ProductSpuVO productSpuVO = entityList.get(0);
+            List<ProductSpuAttributeKeyValueVO> attributeValueVOS = new LinkedList<>();
 
             ProductSpuAttributeKeyVO queryProductSpuAttributeKey = new ProductSpuAttributeKeyVO();
             queryProductSpuAttributeKey.setProductSpuId(entity.getId());
-            productSpuVO.setAttributeKeys(productSpuAttributeKeyService.queryListBySortDesc(queryProductSpuAttributeKey));
+            List<ProductSpuAttributeKeyVO> productSpuAttributeKeyVOS = productSpuAttributeKeyService.queryListBySortDesc(queryProductSpuAttributeKey);
+            for(ProductSpuAttributeKeyVO productSpuAttributeKeyVO:productSpuAttributeKeyVOS) {
+                ProductSpuAttributeKeyValueVO productSpuAttributeKeyValueVO = new ProductSpuAttributeKeyValueVO();
+                BeanUtils.copyProperties(productSpuAttributeKeyValueVO,productSpuAttributeKeyVO);
+                productSpuAttributeKeyValueVO.setType(1);
+                attributeValueVOS.add(productSpuAttributeKeyValueVO);
+            }
 
             ProductSpuAttributeValueVO queryProductSpuAttributeValue = new ProductSpuAttributeValueVO();
             queryProductSpuAttributeValue.setProductSpuId(entity.getId());
-            productSpuVO.setAttributeValues(productSpuAttributeValueService.queryListBySortDesc(queryProductSpuAttributeValue));
+            List<ProductSpuAttributeValueVO> productSpuAttributeValueVOS = productSpuAttributeValueService.queryListBySortDesc(queryProductSpuAttributeValue);
+            for(ProductSpuAttributeValueVO productSpuAttributeValueVO:productSpuAttributeValueVOS)
+            {
+                ProductSpuAttributeKeyValueVO productSpuAttributeKeyValueVO = new ProductSpuAttributeKeyValueVO();
+                productSpuAttributeValueVO.setAttributeValueId(productSpuAttributeValueVO.getId());
+                BeanUtils.copyProperties(productSpuAttributeKeyValueVO,productSpuAttributeValueVO);
+                productSpuAttributeKeyValueVO.setType(2);
+                attributeValueVOS.add(productSpuAttributeKeyValueVO);
+            }
+
+            productSpuVO.setAttributeKeyValues(attributeValueVOS);
 
             resultObjectVO.setData(productSpuVO);
 
