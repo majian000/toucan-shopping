@@ -394,7 +394,7 @@
         function getAttributeHtml(attribute)
         {
             var attHtml = "<div class=\"layui-form-item\" >";
-            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-category-id=\""+attribute.categoryId+"\" attribute-sort=\""+attribute.attributeSort+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parentId+"\" attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
+            attHtml+=" <label class=\"layui-form-label\" id=\"attributeKey"+attribute.id+"\" attribute-category-id=\""+attribute.categoryId+"\" attribute-sort=\""+attribute.attributeSort+"\" attribute-key-id=\""+attribute.id+"\" parent-attribute-key-id=\""+attribute.parentId+"\" attribute-query-status=\""+attribute.queryStatus+"\" attribute-show-status=\""+attribute.showStatus+"\"  attribute-key=\""+attribute.attributeName+"\">"+attribute.attributeName+"</label>";
             attHtml+="<div class=\"layui-input-block\">";
             if(attribute.values!=null&&attribute.values.length>0)
             {
@@ -405,7 +405,7 @@
                 for(var vi=0;vi<attribute.values.length;vi++)
                 {
                     var attributeValue = attribute.values[vi];
-                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\"  attribute-sort=\""+attributeValue.attributeSort+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
+                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\"  attribute-sort=\""+attributeValue.attributeSort+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-query-status=\""+attributeValue.queryStatus+"\" attribute-show-status=\""+attributeValue.showStatus+"\"  attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
                 }
 
                 if(attribute.children!=null&&attribute.children.length>0) {
@@ -626,6 +626,8 @@
             attributeKey.parentAttributeKeyId = attributeKeyObject.attr("parent-attribute-key-id");
             attributeKey.categoryId = attributeKeyObject.attr("attribute-category-id");
             attributeKey.attributeSort = attributeKeyObject.attr("attribute-sort");
+            attributeKey.showStatus = attributeKeyObject.attr("attribute-show-status");
+            attributeKey.queryStatus = attributeKeyObject.attr("attribute-query-status");
 
             if(!existsAttribute(attributeKey))
             {
@@ -642,7 +644,7 @@
         /**
          * 添加属性值
          */
-        function pushCommonAttributeValue(attributeKeyId,attributeValueId,attributeValue,attributeSort)
+        function pushCommonAttributeValue(attributeKeyId,attributeValueId,attributeValue,attributeSort,queryStatus,showStatus)
         {
             var attributeValueObject={attributeValue:"",type:-1,attributeKeyId:""};
             attributeValueObject.attributeValue = attributeValue;
@@ -650,6 +652,8 @@
             attributeValueObject.attributeKeyId = $("#attributeKey"+attributeKeyId).attr("attribute-key-id");
             attributeValueObject.attributeValueId = attributeValueId;
             attributeValueObject.attributeSort = attributeSort;
+            attributeValueObject.queryStatus = queryStatus;
+            attributeValueObject.showStatus = showStatus;
             if(!existsAttribute(attributeValueObject))
             {
                 selectAttributeArray.push(attributeValueObject);
@@ -780,10 +784,12 @@
             var attributeKeyId = attributeValueObject.getAttribute("attribute-key-id");
             var attributeValueId = attributeValueObject.getAttribute("attribute-value-id");
             var attributeValue = attributeValueObject.getAttribute("attribute-value");
+            var queryStatus = attributeValueObject.getAttribute("attribute-query-status");
+            var showStatus = attributeValueObject.getAttribute("attribute-show-status");
             if( data.elem.checked){　　　　　　//判断当前多选框是选中还是取消选中
                 var value = data.value;   //获取选中的value值
                 var attributeSort = attributeValueObject.getAttribute("attribute-sort");
-                pushCommonAttributeValue(attributeKeyId,attributeValueId,attributeValue,attributeSort);
+                pushCommonAttributeValue(attributeKeyId,attributeValueId,attributeValue,attributeSort,queryStatus,showStatus);
 
                 //console.log("selected");
             }else{
