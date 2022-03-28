@@ -358,6 +358,29 @@
                             $("#attributeLoadMoreDiv").html(" ");
                         }
                         drawCommonAttributeControl(treePage);
+
+
+                        //首次加载
+                        if(!clickOtherCategory) {
+                            //设置checkbox回显选中
+                            if(selectAttributeArray!=null&&selectAttributeArray.length>0)
+                            {
+                                for(var i=0;i<selectAttributeArray.length;i++)
+                                {
+                                    var attributeKV = selectAttributeArray[i];
+                                    if(attributeKV.type==2)
+                                    {
+                                        var attributeValueId = attributeKV.attributeValueId;
+
+                                        //可能存在商品属性被删除情况
+                                        if($('#attributeCheckBox'+attributeValueId)!=null) {
+                                            $('#attributeCheckBox' + attributeValueId).prop("checked", true);
+                                        }
+                                    }
+                                }
+                                form.render();
+                            }
+                        }
                     }
 
                 },
@@ -417,7 +440,7 @@
                 for(var vi=0;vi<attribute.values.length;vi++)
                 {
                     var attributeValue = attribute.values[vi];
-                    attHtml+="<input type=\"checkbox\"  attribute-value-id=\""+attributeValue.id+"\"  attribute-sort=\""+attributeValue.attributeSort+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-query-status=\""+attributeValue.queryStatus+"\" attribute-show-status=\""+attributeValue.showStatus+"\"  attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
+                    attHtml+="<input type=\"checkbox\" id=\"attributeCheckBox"+attributeValue.id+"\"  attribute-value-id=\""+attributeValue.id+"\"  attribute-sort=\""+attributeValue.attributeSort+"\" attribute-value=\""+attributeValue.attributeValue+"\" attribute-query-status=\""+attributeValue.queryStatus+"\" attribute-show-status=\""+attributeValue.showStatus+"\"  attribute-key-id=\""+attribute.id+"\"  lay-filter=\"cmmonAttrChkBoxFilter\" title=\""+attributeValue.attributeValue+"\">";
                 }
 
                 if(attribute.children!=null&&attribute.children.length>0) {
@@ -542,7 +565,7 @@
                             }
                             var attributeValueObject = attributeValueArray[j];
                             attributeValues+=attributeValueObject.attributeValue;
-                            attributeValues+="&nbsp;<a style=\"color:red\" href=\"#\" class=\"deleteAttributeValue\" attribute-key-id=\""+attributeValueObject.attributeKeyId+"\" attribute-value-id=\""+attributeValueObject.attributeValueId+"\">[删除]</a>";
+                            attributeValues+="&nbsp;<a style=\"color:red\"  class=\"deleteAttributeValue\" attribute-value=\""+attributeValueObject.attributeValue+"\" attribute-key-id=\""+attributeValueObject.attributeKeyId+"\" attribute-value-id=\""+attributeValueObject.attributeValueId+"\">[删除]</a>";
                         }
                         attributeKeyChildHtml+="       <dd>"+attributeValues+"</dd>";
                         attributeKeyChildHtml+="    </dl>";
@@ -593,7 +616,7 @@
                                 }
                                 var attributeValueObject = attributeValueArray[j];
                                 attributeValues+=attributeValueObject.attributeValue;
-                                attributeValues+="&nbsp;<a style=\"color:red\" href=\"#\" class=\"deleteAttributeValue\" attribute-key-id=\""+attributeValueObject.attributeKeyId+"\" attribute-value-id=\""+attributeValueObject.attributeValueId+"\">[删除]</a>";
+                                attributeValues+="&nbsp;<a style=\"color:red\"  class=\"deleteAttributeValue\" attribute-value=\""+attributeValueObject.attributeValue+"\" attribute-key-id=\""+attributeValueObject.attributeKeyId+"\" attribute-value-id=\""+attributeValueObject.attributeValueId+"\">[删除]</a>";
                             }
                             attributeTable+="       <dd style=\"margin-left: 20px;\">"+attributeValues+"</dd>";
                             attributeTable+="     </dl>";
@@ -610,6 +633,8 @@
 
 
             $("#commonAttributeTablePreview").html(attributeTable);
+
+            bindDeleteEvent();
         }
 
 
@@ -813,15 +838,21 @@
         });
 
 
+        function bindDeleteEvent() {
 
-        $(".deleteAttributeValue").click(function(){
-            var deleteAttributeValueObject = this;
-            var attributeKeyId = deleteAttributeValueObject.getAttribute("attribute-key-id");
-            var attributeValueId = deleteAttributeValueObject.getAttribute("attribute-value-id");
-            var attributeValue = deleteAttributeValueObject.getAttribute("attribute-value");
-            removeCommonAttribute(attributeKeyId,attributeValueId,attributeValue);
+            $(".deleteAttributeValue").click(function () {
+                var attributeObject = this;
+                var attributeValue = attributeObject.getAttribute("attribute-value");
+                layer.confirm("确定删除" + attributeValue + "?", function (index) {
+                    var attributeKeyId = attributeObject.getAttribute("attribute-key-id");
+                    var attributeValueId = attributeObject.getAttribute("attribute-value-id");
+                    removeCommonAttribute(attributeKeyId, attributeValueId, attributeValue);
+                    drawAttributeTable();
+                    layer.close(index);
+                });
 
-        });
+            });
+        }
 
 
 
