@@ -464,7 +464,6 @@ public class ProductSpuController {
             for(ProductSpuAttributeValueVO productSpuAttributeValueVO:productSpuAttributeValueVOS)
             {
                 ProductSpuAttributeKeyValueVO productSpuAttributeKeyValueVO = new ProductSpuAttributeKeyValueVO();
-                productSpuAttributeValueVO.setAttributeValueId(productSpuAttributeValueVO.getId());
                 BeanUtils.copyProperties(productSpuAttributeKeyValueVO,productSpuAttributeValueVO);
                 productSpuAttributeKeyValueVO.setType(2);
                 attributeValueVOS.add(productSpuAttributeKeyValueVO);
