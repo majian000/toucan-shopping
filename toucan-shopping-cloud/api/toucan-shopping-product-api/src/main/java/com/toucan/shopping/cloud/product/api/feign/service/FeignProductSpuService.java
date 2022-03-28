@@ -27,6 +27,15 @@ public interface FeignProductSpuService {
 
 
     /**
+     * 更新
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
      * 删除指定
      * @param requestVo
      * @return

@@ -303,6 +303,9 @@ public class ProductSpuController {
                 return resultObjectVO;
             }
 
+            //清空属性名
+            productSpuAttributeKeyService.deleteByProductSpuId(entity.getId());
+
             List<ProductSpuAttributeKey> productSpuAttributeKeys = new ArrayList();
             //保存属性名
             if (!CollectionUtils.isEmpty(entity.getAttributeKeys())) {
@@ -320,6 +323,9 @@ public class ProductSpuController {
                 productSpuAttributeKeyService.saves(productSpuAttributeKeys);
 
             }
+
+            //清空属性值
+            productSpuAttributeValueService.deleteByProductSpuId(entity.getId());
 
             //保存属性值
             if (!CollectionUtils.isEmpty(entity.getAttributeValues())) {
@@ -448,6 +454,7 @@ public class ProductSpuController {
             ProductSpuVO productSpuVO = entityList.get(0);
             List<ProductSpuAttributeKeyValueVO> attributeValueVOS = new LinkedList<>();
 
+            //查询属性名
             ProductSpuAttributeKeyVO queryProductSpuAttributeKey = new ProductSpuAttributeKeyVO();
             queryProductSpuAttributeKey.setProductSpuId(entity.getId());
             List<ProductSpuAttributeKeyVO> productSpuAttributeKeyVOS = productSpuAttributeKeyService.queryListBySortDesc(queryProductSpuAttributeKey);
@@ -458,6 +465,7 @@ public class ProductSpuController {
                 attributeValueVOS.add(productSpuAttributeKeyValueVO);
             }
 
+            //查询属性值
             ProductSpuAttributeValueVO queryProductSpuAttributeValue = new ProductSpuAttributeValueVO();
             queryProductSpuAttributeValue.setProductSpuId(entity.getId());
             List<ProductSpuAttributeValueVO> productSpuAttributeValueVOS = productSpuAttributeValueService.queryListBySortDesc(queryProductSpuAttributeValue);

@@ -322,7 +322,31 @@
         var selectAttributeArray = JSON.parse($("#attributeKeyValueJson").val());
         var loadding;
         var clickOtherCategory =false;
+        var defaultLoadAttributeControl = false;
 
+
+        //设置选中状态
+        function setAttributeCheckbox()
+        {
+            //设置checkbox回显选中
+            if(selectAttributeArray!=null&&selectAttributeArray.length>0)
+            {
+                for(var i=0;i<selectAttributeArray.length;i++)
+                {
+                    var attributeKV = selectAttributeArray[i];
+                    if(attributeKV.type==2)
+                    {
+                        var attributeValueId = attributeKV.attributeValueId;
+
+                        //可能存在商品属性被删除情况
+                        if($('#attributeCheckBox'+attributeValueId)!=null) {
+                            $('#attributeCheckBox' + attributeValueId).prop("checked", true);
+                        }
+                    }
+                }
+                form.render();
+            }
+        }
 
 
         function loadCommonTreePage(categoryId)
@@ -343,6 +367,7 @@
 
 
                     if(data.data!=null) {
+                        defaultLoadAttributeControl = true;
                         var treePage = JSON.parse(data.data);
                         if(treePage.total<attributeLimit)
                         {
@@ -362,24 +387,7 @@
 
                         //首次加载
                         if(!clickOtherCategory) {
-                            //设置checkbox回显选中
-                            if(selectAttributeArray!=null&&selectAttributeArray.length>0)
-                            {
-                                for(var i=0;i<selectAttributeArray.length;i++)
-                                {
-                                    var attributeKV = selectAttributeArray[i];
-                                    if(attributeKV.type==2)
-                                    {
-                                        var attributeValueId = attributeKV.attributeValueId;
-
-                                        //可能存在商品属性被删除情况
-                                        if($('#attributeCheckBox'+attributeValueId)!=null) {
-                                            $('#attributeCheckBox' + attributeValueId).prop("checked", true);
-                                        }
-                                    }
-                                }
-                                form.render();
-                            }
+                            setAttributeCheckbox();
                         }
                     }
 
@@ -415,10 +423,12 @@
                 }
                 //首次加载
                 if(!clickOtherCategory) {
-                    $("#commonAttributeList").html("");
-                    $("#commonAttributeTablePreview").html("");
-                    form.render();
-                    loadCommonTreePage(categoryId);
+                    if(!defaultLoadAttributeControl) {
+                        $("#commonAttributeList").html("");
+                        $("#commonAttributeTablePreview").html("");
+                        form.render();
+                        loadCommonTreePage(categoryId);
+                    }
                     drawAttributeTable();
                 }
                 gloablCategoryId = categoryId;
@@ -504,7 +514,7 @@
             }
             loadding = layer.load();
             $.ajax({
-                url:"[[@{/productSpu/save}]]",
+                url:"[[@{/productSpu/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(formJson),
@@ -848,6 +858,11 @@
                     var attributeValueId = attributeObject.getAttribute("attribute-value-id");
                     removeCommonAttribute(attributeKeyId, attributeValueId, attributeValue);
                     drawAttributeTable();
+                    //取消勾选
+                    if($('#attributeCheckBox'+attributeValueId)!=null) {
+                        $('#attributeCheckBox' + attributeValueId).prop("checked", false);
+                    }
+                    form.render();
                     layer.close(index);
                 });
 

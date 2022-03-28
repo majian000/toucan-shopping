@@ -160,6 +160,31 @@ public class ProductSpuController extends UIController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody ProductSpuVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignProductSpuService.update(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("修改失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 查询品牌
      * @param list
