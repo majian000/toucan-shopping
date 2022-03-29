@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
+import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
@@ -16,13 +17,19 @@ import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryServi
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.category.vo.CategoryTreeVO;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
+import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
+import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
+import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.message.vo.MessageVO;
+import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
@@ -39,9 +46,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 店铺商品管理
@@ -87,6 +92,14 @@ public class ShopProductApproveController extends UIController {
     private FeignProductSpuService feignProductSpuService;
 
 
+    @Autowired
+    private EventPublishService eventPublishService;
+
+    @Autowired
+    private FeignMessageUserService feignMessageUserService;
+
+    @Autowired
+    private IdGenerator idGenerator;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
@@ -111,7 +124,7 @@ public class ShopProductApproveController extends UIController {
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/approvePage/{id}",method = RequestMethod.GET)
-    public String editPage(HttpServletRequest request,@PathVariable Long id)
+    public String approvePage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
             ShopProductVO shopProductVO = new ShopProductVO();
@@ -511,6 +524,30 @@ public class ShopProductApproveController extends UIController {
         return tableVO;
     }
 
+
+
+
+
+    EventPublish saveEventPublish(MessageVO messageVO)
+    {
+        String globalTransactionId = UUID.randomUUID().toString().replace("-","");
+
+        EventPublish eventPublish = new EventPublish();
+        eventPublish.setCreateDate(new Date());
+        eventPublish.setId(idGenerator.id());
+        eventPublish.setRemark(messageVO.getTitle());
+        eventPublish.setTransactionId(globalTransactionId);
+        eventPublish.setPayload(JSONObject.toJSONString(messageVO));
+        eventPublish.setStatus((short)0); //待发送
+        eventPublish.setType(EventPublishTypeEnum.USER_TRUESCULPTURE_MESSAGE.getCode());
+        if(eventPublishService.insert(eventPublish)>0) {
+            return eventPublish;
+        }
+        return null;
+    }
+
+
+
     /**
      * 查询列表
      * @param pageInfo
@@ -791,6 +828,35 @@ public class ShopProductApproveController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 //发送商品审核驳回消息
+                if(resultObjectVO.isSuccess())
+                {
+                    SellerShopVO querySellerShopVO = new SellerShopVO();
+                    querySellerShopVO.setId(shopProductApproveRecordVO.getShopId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShopVO);
+                    resultObjectVO = feignSellerShopService.findById(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess()) {
+                        SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                        if(sellerShopVO!=null&&sellerShopVO.getUserMainId()!=null) {
+                            //发送消息
+                            MessageVO messageVO = new MessageVO("商品审核消息", shopProductApproveRecordVO.getRejectText(), ProductConstant.MESSAGE_CONTENT_TYPE_1, sellerShopVO.getUserMainId());
+                            messageVO.setMessageTypeCode(ProductConstant.PRODUCT_APPROVE_MESSAGE_CODE);
+
+                            //保存消息发布事件
+                            EventPublish eventPublish = saveEventPublish(messageVO);
+                            if (eventPublish == null) {
+                                logger.warn("消息发布事件保存失败 payload {} ", JSONObject.toJSONString(messageVO));
+                            }
+
+                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, messageVO);
+                            resultObjectVO = feignMessageUserService.send(requestJsonVO);
+                            if (resultObjectVO.isSuccess()) {
+                                //设置消息为已发送
+                                eventPublish.setStatus((short) 1);
+                                eventPublishService.updateStatus(eventPublish);
+                            }
+                        }
+                    }
+                }
 
             }
             return resultObjectVO;

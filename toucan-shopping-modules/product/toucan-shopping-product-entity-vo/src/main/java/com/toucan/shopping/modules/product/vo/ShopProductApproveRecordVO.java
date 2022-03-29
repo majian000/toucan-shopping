@@ -9,8 +9,7 @@ import lombok.Data;
 @Data
 public class ShopProductApproveRecordVO extends ShopProductApproveRecord {
 
-
-
+    private Long shopId; //所属店铺ID
 
 
 }

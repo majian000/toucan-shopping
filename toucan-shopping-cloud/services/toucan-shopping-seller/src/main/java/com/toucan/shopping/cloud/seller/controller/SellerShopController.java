@@ -263,7 +263,7 @@ public class SellerShopController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该功能项
+            //查询是否存在
             SellerShop query=new SellerShop();
             query.setId(entity.getId());
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(query);
