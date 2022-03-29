@@ -6,7 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="code" jdbcType="VARCHAR" property="code" />
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="appCode" jdbcType="VARCHAR" property="app_code" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
@@ -26,6 +26,9 @@
             and t.code =#{code}
         </if>
 
+        <if test="appCode!=null and appCode!='-1' ">
+            and t.app_code =#{appCode}
+        </if>
     </sql>
 
 
@@ -55,7 +58,7 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.message.entity.MessageType">
-        update t_message_type set  name=#{name},code=#{code},
+        update t_message_type set  name=#{name},code=#{code},app_code=#{appCode},
         update_date=#{updateDate}
           where id = #{id}
     </update>

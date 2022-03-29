@@ -37,6 +37,16 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">所属应用</label>
+                            <div class="layui-input-inline">
+                                <select id="appCode" name="appCode"  lay-search="">
+                                    <option  value="-1">全部</option>
+                                    <option  value="10001001">商城应用</option>
+                                    <option  value="10001004">卖家中心</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
@@ -122,6 +132,16 @@
                     {field: 'code',  title: '类型编码'},
                     {field: 'name',  title: '类型名称'},
                     {field: 'appCode',  title: '应用编码'},
+                    {field: 'appName',  title: '应用名称',templet: function (row) {
+                            if(row.appCode == "10001001"){
+                                return "商城应用"
+                            }
+
+                            if(row.appCode == "10001004"){
+                                return "卖家中心"
+                            }
+                            return " "
+                        }},
                     {field: 'createDate',  title: '创建时间'},
                     {title: '操作', minWidth: 300, toolbar: '#messageTypeTableBar', align: "center"}
                 ]

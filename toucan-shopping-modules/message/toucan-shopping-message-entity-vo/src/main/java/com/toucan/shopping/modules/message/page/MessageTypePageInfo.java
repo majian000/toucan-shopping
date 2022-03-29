@@ -33,6 +33,11 @@ public class MessageTypePageInfo extends PageInfo<MessageTypeVO> {
      */
     private String code;
 
+    /**
+     * 应用编码
+     */
+    private String appCode;
+
     private Long[] idArray; //ID数组
 
     //==============================================

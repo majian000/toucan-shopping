@@ -45,7 +45,8 @@
         <label class="layui-form-label required">所属应用</label>
         <div class="layui-input-block">
             <select  th:value="${model.appCode}" th:switch="${model.appCode}" name="appCode" >
-                <option th:case="'10001001'" th:selected="selected" value="10001001"   >商城应用</option>
+                <option th:selected="${model.appCode=='10001001'}" value="10001001"   >商城应用</option>
+                <option th:selected="${model.appCode=='10001004'}" value="10001004"   >卖家中心</option>
             </select>
         </div>
     </div>
