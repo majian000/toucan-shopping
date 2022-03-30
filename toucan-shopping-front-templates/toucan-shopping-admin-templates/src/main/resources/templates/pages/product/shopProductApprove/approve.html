@@ -112,7 +112,7 @@
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >店铺ID</label>
                                 <div class="layui-input-block">
-                                    <input type="text"  th:value="${model.shopId}"  class="layui-input">
+                                    <input type="text"  id="shopId" th:value="${model.shopId}"  class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-inline" style="width:40%">
@@ -230,6 +230,8 @@
             element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
         var carousel = layui.carousel;
         var carouselsku = layui.carousel;
+        var index;
+        var productRejectLoadding;
 
         var shopProductId = $("#id").val();
 
@@ -300,6 +302,46 @@
             return false;
         });
 
+
+
+        $("#rejectBtn").click(function() {
+            index = layer.open({
+                title: '审核驳回',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['60%', '50%'],
+                btn: ['确定'],
+                content: " <textarea  id=\"rejectText\" placeholder=\"请输入驳回原因\" class=\"layui-textarea\" lay-verify=\"required\" maxlength=\"200\"  ></textarea>",
+                yes: function(index, layero){
+                    productRejectLoadding = layer.load();
+                    var rejectText = $("#rejectText").val();
+                    var approveId = $("#id").val();
+                    var shopId = $("#shopId").val();
+                    $.ajax({
+                        url: "[[@{/}]]product/shopProductApprove/reject",
+                        contentType: "application/json; charset=utf-8",
+                        type: 'POST',
+                        data: JSON.stringify({rejectText:rejectText,approveId: approveId, shopId: shopId}),
+                        success: function (data) {
+                            if (data.code == 0) {
+                                layer.msg(data.msg);
+                                return false;
+                            }
+                            layer.close(index);
+                        },
+                        complete:function()
+                        {
+                            layer.close(productRejectLoadding);
+                        }
+                    });
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        });
 
 
         table.render({
