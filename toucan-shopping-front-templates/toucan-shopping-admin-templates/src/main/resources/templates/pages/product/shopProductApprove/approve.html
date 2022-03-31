@@ -281,7 +281,7 @@
                 url:"[[@{/product/shopProductApprove/pass}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
-                data:{id:form.field.id},
+                data:{id:form.field.id,productId:form.field.productId,productUuid:form.field.productUuid},
                 success:function(data){
                     if(data.code==0) {
                         layer.msg(data.msg);
