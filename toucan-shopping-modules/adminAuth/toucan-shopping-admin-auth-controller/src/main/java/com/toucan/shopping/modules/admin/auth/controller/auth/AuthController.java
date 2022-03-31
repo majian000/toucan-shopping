@@ -275,7 +275,7 @@ public class AuthController {
      */
     @RequestMapping(value="/verifyLoginAndUrl",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO verifyAndIsOnline(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO verifyLoginAndUrl(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(false);
         if(requestVo.getEntityJson()==null)
