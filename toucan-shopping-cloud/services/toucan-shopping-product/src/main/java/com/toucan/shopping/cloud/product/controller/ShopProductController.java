@@ -422,4 +422,48 @@ public class ShopProductController {
 
     }
 
+
+
+
+
+    /**
+     * 审核通过
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/pass",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO pass(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            ShopProductVO shopProductVO = requestJsonVO.formatEntity(ShopProductVO.class);
+            if(shopProductVO.getId()==null)
+            {
+                resultObjectVO.setMsg("商品ID不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            logger.info("通过店铺商品 {} ",requestJsonVO.getEntityJson());
+            int ret = shopProductService.updateApproveStatus(shopProductVO.getId(),ProductConstant.PASS);
+            if(ret<1)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("通过失败");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败");
+        }
+
+        return resultObjectVO;
+
+    }
+
+
+
 }

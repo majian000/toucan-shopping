@@ -870,5 +870,71 @@ public class ShopProductApproveController extends UIController {
     }
 
 
+
+
+
+    /**
+     * 审核通过
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/pass",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO pass(HttpServletRequest request, @RequestBody ShopProductVO shopProductVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(shopProductVO.getId()==null)
+            {
+                resultObjectVO.setMsg("店铺商品ID不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductVO);
+            resultObjectVO = feignShopProductService.pass(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                //发送商品审核驳回消息
+                if(resultObjectVO.isSuccess())
+                {
+                    SellerShopVO querySellerShopVO = new SellerShopVO();
+                    querySellerShopVO.setId(shopProductVO.getShopId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShopVO);
+                    resultObjectVO = feignSellerShopService.findById(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess()) {
+                        SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                        if(sellerShopVO!=null&&sellerShopVO.getUserMainId()!=null&&shopProductVO.getName()!=null) {
+                            //发送消息
+                            MessageVO messageVO = new MessageVO("商品审核消息", "您发布的商品,"+shopProductVO.getName()+"已经审核通过!", ProductConstant.MESSAGE_CONTENT_TYPE_1, sellerShopVO.getUserMainId());
+                            messageVO.setMessageTypeCode(ProductConstant.PRODUCT_APPROVE_MESSAGE_CODE);
+
+                            //保存消息发布事件
+                            EventPublish eventPublish = saveEventPublish(messageVO);
+                            if (eventPublish == null) {
+                                logger.warn("消息发布事件保存失败 payload {} ", JSONObject.toJSONString(messageVO));
+                            }
+
+                            requestJsonVO = RequestJsonVOGenerator.generator(appCode, messageVO);
+                            resultObjectVO = feignMessageUserService.send(requestJsonVO);
+                            if (resultObjectVO.isSuccess()) {
+                                //设置消息为已发送
+                                eventPublish.setStatus((short) 1);
+                                eventPublishService.updateStatus(eventPublish);
+                            }
+                        }
+                    }
+                }
+
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setMsg("审核失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+        }
+        return resultObjectVO;
+    }
+
 }
 

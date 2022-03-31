@@ -52,4 +52,14 @@ public interface FeignShopProductService {
     @RequestMapping(value="/reject",produces = "application/json;charset=UTF-8")
     ResultObjectVO reject(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 审核通过
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/pass",produces = "application/json;charset=UTF-8")
+    ResultObjectVO pass(@RequestBody RequestJsonVO requestJsonVO);
+
 }
