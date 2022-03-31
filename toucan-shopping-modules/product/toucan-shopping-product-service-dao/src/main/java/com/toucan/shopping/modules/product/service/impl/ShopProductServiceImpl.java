@@ -43,6 +43,11 @@ public class ShopProductServiceImpl implements ShopProductService {
     }
 
     @Override
+    public int updateApproveStatusAndProductId(Long id, Integer approveStatus, Long productId, String productUuid) {
+        return shopProductMapper.updateApproveStatusAndProductId(id,approveStatus,productId,productUuid);
+    }
+
+    @Override
     public PageInfo<ShopProductVO> queryListPage(ShopProductPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<ShopProductVO> pageInfo = new PageInfo();

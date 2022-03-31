@@ -20,6 +20,7 @@ public interface ShopProductService {
 
     int updateApproveStatus(Long id,Integer approveStatus);
 
+    int updateApproveStatusAndProductId(Long id,Integer approveStatus,Long productId,String productUuid);
 
     /**
      * 查询列表页

@@ -21,6 +21,7 @@ import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -444,8 +445,21 @@ public class ShopProductController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
+
+            if(shopProductVO.getProductId()==null)
+            {
+                resultObjectVO.setMsg("平台商品ID不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            if(StringUtils.isEmpty(shopProductVO.getProductUuid()))
+            {
+                resultObjectVO.setMsg("平台商品UUID不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
             logger.info("通过店铺商品 {} ",requestJsonVO.getEntityJson());
-            int ret = shopProductService.updateApproveStatus(shopProductVO.getId(),ProductConstant.PASS);
+            int ret = shopProductService.updateApproveStatusAndProductId(shopProductVO.getId(),ProductConstant.PASS,shopProductVO.getProductId(),shopProductVO.getProductUuid());
             if(ret<1)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);

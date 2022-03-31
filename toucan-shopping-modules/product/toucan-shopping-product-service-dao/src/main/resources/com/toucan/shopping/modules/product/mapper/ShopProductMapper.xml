@@ -117,6 +117,10 @@
     </update>
 
 
+    <update id="updateApproveStatusAndProductId">
+        update updateApproveStatusAndProductId  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid}   where id=#{id}  and delete_status=0
+    </update>
+
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
