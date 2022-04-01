@@ -476,7 +476,7 @@ public class AuthController {
                                                     if (roleFunction != null) {
                                                         BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
                                                     }
-                                                    roleFunctionCacheVOArray[i] = roleFunctionCacheVO;
+                                                    roleFunctionCacheVOArray[p] = roleFunctionCacheVO;
                                                 }
                                                 roleFunctionCacheService.saves(roleFunctionCacheVOArray);
                                             }
