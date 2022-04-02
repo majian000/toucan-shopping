@@ -148,7 +148,7 @@
                             <div class="layui-input-block">
                                 <div class="layui-carousel" id="productPhotos">
                                     <div carousel-item>
-                                        <div th:each="httpPreviewPhotoPath : ${model.httpPreviewPhotoPaths}">
+                                        <div th:each="httpPreviewPhotoPath : ${model.httpPreviewPhotoPaths}" th:if="${model.httpPreviewPhotoPaths!=null}">
                                             <img th:src="${httpPreviewPhotoPath}" th:width="450" th:height="450" />
                                         </div>
                                     </div>
@@ -163,7 +163,7 @@
                             <div class="layui-input-block">
                                 <div class="layui-carousel" id="productSkuPhotos">
                                     <div carousel-item>
-                                        <div th:each="httpSkuPreviewPhotoPath : ${model.httpSkuPreviewPhotoPaths}">
+                                        <div th:each="httpSkuPreviewPhotoPath : ${model.httpSkuPreviewPhotoPaths}" th:if="${model.httpSkuPreviewPhotoPaths!=null}">
                                             <img th:src="${httpSkuPreviewPhotoPath}" th:width="450" th:height="450" />
                                         </div>
                                     </div>
@@ -176,16 +176,16 @@
                         <div class="layui-form-item" >
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >付款方式</label>
-                                <div class="layui-input-block " th:if="${model.payMethod eq 1}">
+                                <div class="layui-input-block " th:if="${model.payMethod!=null&&model.payMethod eq 1}">
                                     <input type="text"  value="一口价(普通交易模式)"  class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >库存计数</label>
-                                <div class="layui-input-block " th:if="${model.buckleInventoryMethod eq 1}">
+                                <div class="layui-input-block " th:if="${model.buckleInventoryMethod!=null&&model.buckleInventoryMethod eq 1}">
                                     <input type="text"  value="买家拍下减库存"  class="layui-input">
                                 </div>
-                                <div class="layui-input-block " th:if="${model.buckleInventoryMethod eq 2}">
+                                <div class="layui-input-block " th:if="${model.buckleInventoryMethod!=null&&model.buckleInventoryMethod eq 2}">
                                     <input type="text"  value="买家付款减库存"  class="layui-input">
                                 </div>
                             </div>
@@ -194,8 +194,8 @@
                             <div class="layui-inline" style="width:40%">
                                 <label class="layui-form-label " >售后服务</label>
                                 <div class="layui-input-block "  style="padding-top:7px;" >
-                                    <a th:if="${model.giveInvoice eq 1}">提供发票</a>
-                                    <a th:if="${model.changeOrReturn eq 1}">退换货承诺</a>
+                                    <a th:if="${model.giveInvoice!=null&&model.giveInvoice eq 1}">提供发票</a>
+                                    <a th:if="${model.changeOrReturn!=null&&model.changeOrReturn eq 1}">退换货承诺</a>
                                 </div>
                             </div>
                         </div>
@@ -205,7 +205,7 @@
                         <div class="layui-inline" style="width:40%">
                             <label class="layui-form-label " >提取方式</label>
                             <div class="layui-input-block "  style="padding-top:7px;" >
-                                <a th:if="${#strings.contains(model.etractMethod,'1')}">使用物流配送</a>
+                                <a th:if="${model.etractMethod!=null&&#strings.contains(model.etractMethod,'1')}">使用物流配送</a>
                             </div>
                         </div>
                     </div>
