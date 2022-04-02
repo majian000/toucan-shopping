@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.apps.message.web.controller;
 
+import com.sun.deploy.association.utility.AppConstants;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -8,6 +9,7 @@ import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.message.constant.AppCodeConstant;
 import com.toucan.shopping.modules.message.page.MessageUserPageInfo;
 import com.toucan.shopping.modules.message.vo.MessageUserVO;
 import org.apache.commons.lang3.StringUtils;
@@ -45,8 +47,14 @@ public class UserMessageController {
         try {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             messageUserPageInfo.setUserMainId(Long.parseLong(userMainId));
+            if(messageUserPageInfo.getSrcType()!=null&&messageUserPageInfo.getSrcType().intValue()==1)
+            {
+                messageUserPageInfo.setMessageTypeAppCode(AppCodeConstant.SHOPPING_WEB);
+            }else if(messageUserPageInfo.getSrcType()!=null&&messageUserPageInfo.getSrcType().intValue()==2)
+            {
+                messageUserPageInfo.setMessageTypeAppCode(AppCodeConstant.SELLER_WEB);
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserPageInfo);
-
             resultObjectVO = feignMessageUserService.queryListPageByUserMianId(requestJsonVO);
         }catch(Exception e)
         {

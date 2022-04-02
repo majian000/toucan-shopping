@@ -40,6 +40,10 @@ public class MessageUserPageInfo extends PageInfo<MessageUserVO> {
 
     private Long[] idArray; //ID数组
 
+    private String messageTypeAppCode; //所属应用
+
+    private Integer srcType = -1; //请求源 1商城PC端
+
     //==============================================
 
 }

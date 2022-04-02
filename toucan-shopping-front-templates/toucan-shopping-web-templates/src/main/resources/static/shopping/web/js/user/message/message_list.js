@@ -21,7 +21,7 @@ function queryMessageList(cpage)
         $.ajax({
             type: "POST",
             url: messageBasePath + "/api/user/message/list",
-            data: {page:cpage},
+            data: {page:cpage,srcType:1},
             dataType: 'json',
             xhrFields: {
                 withCredentials: true //允许跨域带Cookie
