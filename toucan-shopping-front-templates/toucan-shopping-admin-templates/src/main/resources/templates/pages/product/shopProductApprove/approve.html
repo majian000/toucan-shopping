@@ -30,6 +30,8 @@
 <div class="layuimini-container" style="height:100%">
     <div class="layui-form layuimini-form">
         <input type="hidden" name="id" id="id" th:value="${model.id}">
+        <input type="hidden" name="id" id="approveStatus" th:value="${model.approveStatus}">
+
         <div class="layuimini-main" >
             <div class="layui-tab layui-tab-brief">
                 <ul class="layui-tab-title">
@@ -42,6 +44,14 @@
 
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label " >审核状态</label>
+                            <div class="layui-input-block" style="padding-top: 9px;">
+                                    <a th:if="${model.approveStatus==1}" >审核中</a>
+                                    <a th:if="${model.approveStatus==2}" style="color:green">审核通过</a>
+                                    <a th:if="${model.approveStatus==3}" style="color:red">审核驳回</a>
+                            </div>
+                        </div>
                         <div class="layui-form-item" >
                             <label class="layui-form-label " >店铺商品ID</label>
                             <div class="layui-input-block">
@@ -213,9 +223,9 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="layui-input-block">
+            <div class="layui-input-block" id="approveBtns">
                 <button class="layui-btn layui-btn-normal" lay-submit lay-filter="passBtn">审核通过</button>
-                <button class="layui-btn layui-btn-danger"  lay-filter="rejectBtn">审核驳回</button>
+                <button class="layui-btn layui-btn-danger"  id="rejectBtn">审核驳回</button>
             </div>
         </div>
     </div>
@@ -234,6 +244,12 @@
         var productRejectLoadding;
 
         var shopProductId = $("#id").val();
+        var approveStatus = $("#approveStatus").val();
+
+        if(approveStatus!=1)
+        {
+            $("#approveBtns").hide();
+        }
 
         //建造实例化
         carousel.render({
@@ -311,25 +327,36 @@
                 shade: 0.2,
                 maxmin:true,
 
-                area: ['60%', '50%'],
+                area: ['45%', '50%'],
                 btn: ['确定'],
-                content: " <textarea  id=\"rejectText\" placeholder=\"请输入驳回原因\" class=\"layui-textarea\" lay-verify=\"required\" maxlength=\"200\"  ></textarea>",
+                content: " <textarea  id=\"rejectText\" placeholder=\"请输入驳回原因\" class=\"layui-textarea\" lay-verify=\"required\" maxlength=\"200\"  style=\"width: 80%;height:80%;margin-top: 2%;margin-left: 2%;\" ></textarea>",
                 yes: function(index, layero){
                     productRejectLoadding = layer.load();
                     var rejectText = $("#rejectText").val();
                     var approveId = $("#id").val();
                     var shopId = $("#shopId").val();
+                    if(rejectText==null||rejectText==""||(rejectText.replace(/\s*/g,""))=="")
+                    {
+                        layer.msg("请输入驳回原因");
+                        layer.close(productRejectLoadding);
+                        return;
+                    }
+
                     $.ajax({
                         url: "[[@{/}]]product/shopProductApprove/reject",
                         contentType: "application/json; charset=utf-8",
                         type: 'POST',
-                        data: JSON.stringify({rejectText:rejectText,approveId: approveId, shopId: shopId}),
+                        data: JSON.stringify({approveText:rejectText,approveId: approveId, shopId: shopId}),
                         success: function (data) {
                             if (data.code == 0) {
                                 layer.msg(data.msg);
                                 return false;
                             }
                             layer.close(index);
+
+                            var iframeIndex = parent.layer.getFrameIndex(window.name);
+                            parent.location.reload();
+                            parent.layer.close(iframeIndex);
                         },
                         complete:function()
                         {

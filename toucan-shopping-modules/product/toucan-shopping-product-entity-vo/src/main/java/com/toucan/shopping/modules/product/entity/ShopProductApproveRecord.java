@@ -40,7 +40,7 @@ public class ShopProductApproveRecord {
     /**
      * 驳回原因
      */
-    private String rejectText;
+    private String approveText;
 
     /**
      * 审核人

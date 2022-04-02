@@ -113,12 +113,12 @@
 
 
     <update id="updateApproveStatus">
-        update t_shop_product  set approve_status=#{approveStatus} where id=#{id}  and delete_status=0
+        update t_shop_product  set approve_status=#{approveStatus} where id=#{id}  and delete_status=0 and approve_status=1
     </update>
 
 
     <update id="updateApproveStatusAndProductId">
-        update updateApproveStatusAndProductId  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid}   where id=#{id}  and delete_status=0
+        update updateApproveStatusAndProductId  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid}   where id=#{id}  and delete_status=0 and approve_status=1
     </update>
 
 

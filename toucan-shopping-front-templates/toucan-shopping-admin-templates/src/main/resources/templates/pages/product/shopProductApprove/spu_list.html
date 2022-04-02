@@ -176,7 +176,6 @@
                             }
                             return "";
                         }},
-                    {field: 'attributes',width: 550,  title: '属性列表'},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){
@@ -192,8 +191,7 @@
                         }
                     },
                     {field: 'createDate', width: 150, title: '创建时间'},
-                    {field: 'updateDate', width: 150, title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#productSpuTableBar', align: "center"}
+                    {field: 'updateDate', width: 150, title: '修改时间'}
                 ]
             ],
             limits: [15,30,100,200],

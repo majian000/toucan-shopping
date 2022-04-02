@@ -393,22 +393,18 @@ public class ShopProductController {
                 return resultObjectVO;
             }
             logger.info("驳回店铺商品 {} ",requestJsonVO.getEntityJson());
-            int ret = shopProductService.updateApproveStatus(shopProductApproveRecordVO.getApproveId(),ProductConstant.REJECT);
-            if(ret<1)
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("驳回失败");
-                return resultObjectVO;
-            }
+            shopProductService.updateApproveStatus(shopProductApproveRecordVO.getApproveId(),ProductConstant.REJECT);
             ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
             BeanUtils.copyProperties(shopProductApproveRecord,shopProductApproveRecordVO);
+            shopProductApproveRecord.setApproveStatus(ProductConstant.REJECT);
+            shopProductApproveRecord.setCreateAdminId(shopProductApproveRecordVO.getCreateAdminId());
             shopProductApproveRecord.setCreateDate(new Date());
             shopProductApproveRecord.setId(idGenerator.id());
-            ret = shopProductApproveRecordService.save(shopProductApproveRecord);
+            int ret = shopProductApproveRecordService.save(shopProductApproveRecord);
             if(ret<1)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("保存驳回记录失败");
+                resultObjectVO.setMsg("保存审核记录失败");
                 return resultObjectVO;
             }
 
@@ -459,14 +455,20 @@ public class ShopProductController {
                 return resultObjectVO;
             }
             logger.info("通过店铺商品 {} ",requestJsonVO.getEntityJson());
-            int ret = shopProductService.updateApproveStatusAndProductId(shopProductVO.getId(),ProductConstant.PASS,shopProductVO.getProductId(),shopProductVO.getProductUuid());
+            shopProductService.updateApproveStatusAndProductId(shopProductVO.getId(),ProductConstant.PASS,shopProductVO.getProductId(),shopProductVO.getProductUuid());
+            ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
+            shopProductApproveRecord.setApproveText("审批通过");
+            shopProductApproveRecord.setApproveStatus(ProductConstant.REJECT);
+            shopProductApproveRecord.setCreateAdminId(shopProductVO.getCreateAdminId());
+            shopProductApproveRecord.setCreateDate(new Date());
+            shopProductApproveRecord.setId(idGenerator.id());
+            int ret = shopProductApproveRecordService.save(shopProductApproveRecord);
             if(ret<1)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("通过失败");
+                resultObjectVO.setMsg("保存审核记录失败");
                 return resultObjectVO;
             }
-
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

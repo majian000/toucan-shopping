@@ -23,6 +23,7 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventPublish;
 import com.toucan.shopping.modules.common.persistence.event.enums.EventPublishTypeEnum;
 import com.toucan.shopping.modules.common.persistence.event.service.EventPublishService;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -471,10 +472,34 @@ public class ShopProductApproveController extends UIController {
     @ResponseBody
     public TableVO queryProductSpuList(HttpServletRequest request, ProductSpuPageInfo pageInfo)
     {
+
         TableVO tableVO = new TableVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignProductSpuService.queryListPage(requestJsonVO);
+            RequestJsonVO requestJsonVO = null;
+            ResultObjectVO resultObjectVO = null;
+            if(pageInfo.getCategoryId()!=null&&pageInfo.getCategoryId().longValue()!=-1) {
+                //查询分类以及子分类
+                CategoryVO categoryVO = new CategoryVO();
+                categoryVO.setId(pageInfo.getCategoryId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
+                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    if (resultObjectVO.getData() != null) {
+                        List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                        if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                            List<Long> categoryIdList = new LinkedList<>();
+                            for (CategoryVO cv : categoryVOS) {
+                                categoryIdList.add(cv.getId());
+                            }
+                            categoryIdList.add(pageInfo.getCategoryId());
+                            pageInfo.setCategoryIdList(categoryIdList);
+                            pageInfo.setCategoryId(null);
+                        }
+                    }
+                }
+            }
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            resultObjectVO = feignProductSpuService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
@@ -484,7 +509,9 @@ public class ShopProductApproveController extends UIController {
                     List<ProductSpuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ProductSpuVO.class);
                     if(tableVO.getCount()>0) {
                         boolean brandExists=false;
+                        boolean shopCategoryExists = false;
                         List<Long> brandIdList = new LinkedList<>();
+                        Long[] categoryIds = new Long[list.size()];
                         for(int i=0;i<list.size();i++)
                         {
                             ProductSpuVO productSpuVO = list.get(i);
@@ -506,10 +533,32 @@ public class ShopProductApproveController extends UIController {
                                     brandIdList.add(productSpuVO.getBrandId());
                                 }
                             }
+
+                            //设置店铺分类ID
+                            shopCategoryExists = false;
+                            for (int sci = 0; sci < categoryIds.length; sci++) {
+                                Long shopCategoryId = categoryIds[sci];
+                                if (productSpuVO.getCategoryId() != null && shopCategoryId != null
+                                        && shopCategoryId.longValue() == productSpuVO.getCategoryId().longValue()) {
+                                    shopCategoryExists = true;
+                                    break;
+                                }
+
+                            }
+                            if (!shopCategoryExists) {
+                                if (productSpuVO.getCategoryId() != null) {
+                                    categoryIds[i] = productSpuVO.getCategoryId();
+                                }
+                            }
+
                         }
 
                         //查询品牌名称
                         this.queryBrandForProductSpu(list, brandIdList);
+
+
+                        //查询类别名称
+                        this.queryCategoryForProductSpu(list, categoryIds);
 
                         tableVO.setData((List)list);
                     }
@@ -522,8 +571,44 @@ public class ShopProductApproveController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return tableVO;
+
     }
 
+
+
+
+    /**
+     * 查询类别信息
+     * @param list
+     * @param categoryIds
+     */
+    void queryCategoryForProductSpu(List<ProductSpuVO> list,Long[] categoryIds)
+    {
+        try {
+            //查询类别名称
+            CategoryVO queryCategoryVO = new CategoryVO();
+            queryCategoryVO.setIdArray(categoryIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                    for (ProductSpuVO productSpuVO : list) {
+                        for (CategoryVO categoryVO : categoryVOS) {
+                            if (productSpuVO.getCategoryId() != null && productSpuVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
+                                productSpuVO.setCategoryName(categoryVO.getName());
+                                productSpuVO.setCategoryPath(categoryVO.getNamePath());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
 
 
 
@@ -823,6 +908,7 @@ public class ShopProductApproveController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
+            shopProductApproveRecordVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductApproveRecordVO);
             resultObjectVO = feignShopProductService.reject(requestJsonVO);
             if(resultObjectVO.isSuccess())
@@ -835,10 +921,15 @@ public class ShopProductApproveController extends UIController {
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShopVO);
                     resultObjectVO = feignSellerShopService.findById(requestJsonVO.sign(),requestJsonVO);
                     if(resultObjectVO.isSuccess()) {
-                        SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                        List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
+                        SellerShopVO sellerShopVO = null;
+                        if(CollectionUtils.isNotEmpty(sellerShopVOS))
+                        {
+                            sellerShopVO = sellerShopVOS.get(0);
+                        }
                         if(sellerShopVO!=null&&sellerShopVO.getUserMainId()!=null) {
                             //发送消息
-                            MessageVO messageVO = new MessageVO("商品审核消息", shopProductApproveRecordVO.getRejectText(), ProductConstant.MESSAGE_CONTENT_TYPE_1, sellerShopVO.getUserMainId());
+                            MessageVO messageVO = new MessageVO("商品审核消息", shopProductApproveRecordVO.getApproveText(), ProductConstant.MESSAGE_CONTENT_TYPE_1, sellerShopVO.getUserMainId());
                             messageVO.setMessageTypeCode(ProductConstant.PRODUCT_APPROVE_MESSAGE_CODE);
 
                             //保存消息发布事件

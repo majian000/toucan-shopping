@@ -64,4 +64,8 @@ public class ShopProductVO extends ShopProduct {
      */
     private String vcode;
 
+    /**
+     * 审核人
+     */
+    private String createAdminId;
 }
