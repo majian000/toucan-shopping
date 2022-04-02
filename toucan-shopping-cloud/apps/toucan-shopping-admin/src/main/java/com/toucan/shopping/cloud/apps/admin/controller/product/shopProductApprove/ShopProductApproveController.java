@@ -184,7 +184,7 @@ public class ShopProductApproveController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/product/productSpu/edit.html";
+        return "pages/product/shopProductApprove/spu_detail.html";
     }
 
 

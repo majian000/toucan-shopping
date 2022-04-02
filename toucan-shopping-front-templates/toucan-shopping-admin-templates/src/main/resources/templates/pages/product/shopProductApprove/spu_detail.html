@@ -215,6 +215,25 @@
 
 
 
+
+        function getAttributeValues(attributeKeyId)
+        {
+            var attributeValueArray = new Array();
+            for(var i=0;i<selectAttributeArray.length;i++)
+            {
+                var attributeKV = selectAttributeArray[i];
+                if(attributeKV.type==2)
+                {
+                    if(attributeKV.attributeKeyId==attributeKeyId)
+                    {
+                        attributeValueArray.push(attributeKV);
+                    }
+                }
+            }
+            return attributeValueArray;
+
+        }
+
         function genAttributeKeyChildHtml(attributeKeyId)
         {
             var attributeKeyChildHtml="";
