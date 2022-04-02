@@ -457,7 +457,7 @@ public class ShopProductController {
             logger.info("通过店铺商品 {} ",requestJsonVO.getEntityJson());
             shopProductService.updateApproveStatusAndProductId(shopProductVO.getId(),ProductConstant.PASS,shopProductVO.getProductId(),shopProductVO.getProductUuid());
             ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
-            shopProductApproveRecord.setApproveText("审批通过");
+            shopProductApproveRecord.setApproveText("审核通过");
             shopProductApproveRecord.setApproveStatus(ProductConstant.REJECT);
             shopProductApproveRecord.setCreateAdminId(shopProductVO.getCreateAdminId());
             shopProductApproveRecord.setCreateDate(new Date());

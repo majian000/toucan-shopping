@@ -225,6 +225,7 @@ $("#ppfbtn").click(function() {
                 //     }
                 // });
 
+                $("#ppfbtn").unbind();
                 goApprovePage(result.msg);
 
             }
