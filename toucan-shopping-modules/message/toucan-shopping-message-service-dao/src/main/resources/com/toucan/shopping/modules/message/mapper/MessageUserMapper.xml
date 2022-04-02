@@ -26,7 +26,7 @@
             and t.user_main_id = #{userMainId}
         </if>
 
-        <if test="messageTypeAppCode!=null and messageTypeAppCode!=-1 ">
+        <if test="messageTypeAppCode!=null and messageTypeAppCode!='-1' ">
             and t.message_type_app_code = #{messageTypeAppCode}
         </if>
 
