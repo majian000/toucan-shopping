@@ -102,6 +102,16 @@
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
+
+    var selectSpu={spuId:-1,spuUuid:""};
+
+
+    function getSelectSpu()
+    {
+        return selectSpu;
+    }
+
+
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
@@ -157,7 +167,7 @@
             },
             cols: [
                 [
-                    {type: "checkbox", width: 50},
+                    {type: "radio", width: 100,event:'onClickSpuEvent'},
                     {field: 'id',  title: '商品ID', width: 150},
                     {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogEvent',
                         templet: function (row) {
@@ -276,18 +286,40 @@
             });
         }
 
+        function openDetailDialog(id)
+        {
+            var index = layer.open({
+                title: '查看平台商品',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]product/shopProductApprove/spuDetailPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
+
 
 
         //监听表格复选框选择
         table.on('checkbox(productSpuTableFilter)', function (obj) {
-            console.log(obj)
+            // console.log(obj)
         });
 
         table.on('tool(productSpuTableFilter)', function (obj) {
             var data = obj.data;
             if(obj.event=="openDetailDialogEvent")
             {
-                // openApproveDialog(data.id);
+                openDetailDialog(data.id);
+            }else if(obj.event=="onClickSpuEvent")
+            {
+                selectSpu.spuId = obj.data.id;
+                selectSpu.spuUuid = obj.data.uuid;
             }
         });
 
