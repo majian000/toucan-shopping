@@ -81,5 +81,7 @@ public class ShopProduct {
 
     private String etractMethod; //提取方式(多选用,分割) 1:用物流配送
 
+    private Short isResubmit; //是否重新提交 0:否 1:是
+
 
 }

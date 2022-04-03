@@ -104,6 +104,7 @@ public class ShopProductController {
                 publishProductVO.setCreateDate(new Date());
                 publishProductVO.setApproveStatus((short) 1); //审核中
                 publishProductVO.setStatus((short) 0);
+                publishProductVO.setIsResubmit((short)0);
                 int ret = shopProductService.save(publishProductVO);
 
                 if(ret<=0)
