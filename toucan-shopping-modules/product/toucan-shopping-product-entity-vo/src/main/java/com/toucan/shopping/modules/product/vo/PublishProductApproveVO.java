@@ -4,11 +4,13 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * 发布商品VO
  */
 @Data
-public class PublishProductVO extends ShopProductVO {
+public class PublishProductApproveVO extends ShopProductApproveVO {
 
 
     /**

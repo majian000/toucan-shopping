@@ -1,10 +1,8 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
-import com.toucan.shopping.cloud.apps.seller.web.redis.VerifyCodeRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignColorTableService;
@@ -13,8 +11,6 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductServi
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
-import com.toucan.shopping.modules.category.vo.CategoryVO;
-import com.toucan.shopping.modules.color.table.vo.ColorTableVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.*;
@@ -23,7 +19,6 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
-import com.toucan.shopping.modules.product.vo.AttributeValueVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.PublishProductVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
@@ -243,7 +238,7 @@ public class ShopProductApiController extends BaseController {
 
             //校验SKU主图
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
-                for(ProductSkuVO productSkuVO:publishProductVO.getProductSkuVOList())
+                for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
                 {
                     if(productSkuVO.getMainPhotoFile()==null)
                     {
@@ -271,7 +266,7 @@ public class ShopProductApiController extends BaseController {
             }
 
             //上传SKU表商品主图
-            for(ProductSkuVO productSkuVO:publishProductVO.getProductSkuVOList())
+            for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
             {
                 productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                 productSkuVO.setMainPhotoFile(null);
@@ -303,7 +298,7 @@ public class ShopProductApiController extends BaseController {
             publishProductVO.setShopId(sellerShopVO.getId());
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
-            resultObjectVO = feignShopProductService.publish(requestJsonVO);
+//            resultObjectVO = feignShopProductService.publish(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 resultObjectVO.setMsg("发布成功");

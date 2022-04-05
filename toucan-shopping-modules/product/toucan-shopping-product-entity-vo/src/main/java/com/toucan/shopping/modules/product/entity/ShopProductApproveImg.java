@@ -9,12 +9,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 店铺维度的SKU与商品预览图关联
+ * 店铺商品审核与商品预览图关联
  *
  * @author majian
  */
 @Data
-public class ShopProductImg {
+public class ShopProductApproveImg {
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
@@ -24,7 +24,7 @@ public class ShopProductImg {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long shopProductId; //店铺维度的SPU的ID
+    private Long productApproveId; //商品审核ID
 
     private String filePath; //文件路径
 

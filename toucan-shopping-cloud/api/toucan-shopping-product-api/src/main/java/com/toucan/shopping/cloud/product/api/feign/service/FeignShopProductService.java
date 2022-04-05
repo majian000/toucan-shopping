@@ -15,14 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignShopProductService {
 
 
-    /**
-     * 发布商品
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/publish",produces = "application/json;charset=UTF-8")
-    ResultObjectVO publish(@RequestBody RequestJsonVO requestJsonVO);
-
 
     /**
      * 查询列表
@@ -43,23 +35,5 @@ public interface FeignShopProductService {
     @RequestMapping(value="/query/id",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByShopProductId(@RequestBody RequestJsonVO requestJsonVO);
 
-
-    /**
-     * 审核驳回
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/reject",produces = "application/json;charset=UTF-8")
-    ResultObjectVO reject(@RequestBody RequestJsonVO requestJsonVO);
-
-
-
-    /**
-     * 审核通过
-     * @param requestJsonVO
-     * @return
-     */
-    @RequestMapping(value="/pass",produces = "application/json;charset=UTF-8")
-    ResultObjectVO pass(@RequestBody RequestJsonVO requestJsonVO);
 
 }

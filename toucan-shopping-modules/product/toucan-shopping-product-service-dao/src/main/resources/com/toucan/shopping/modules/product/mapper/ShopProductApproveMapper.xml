@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductApproveMapper">
+
+    <resultMap id="shopProductMap" type="com.toucan.shopping.modules.product.entity.ShopProductApprove" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+        <result column="shop_category_id" jdbcType="BIGINT" property="shopCategoryId" />
+        <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="attributes" jdbcType="VARCHAR" property="attributes" />
+        <result column="product_uuid" jdbcType="VARCHAR" property="productUuid" />
+        <result column="product_id" jdbcType="BIGINT" property="productId" />
+        <result column="status" jdbcType="SMALLINT" property="status" />
+        <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="approve_status" jdbcType="SMALLINT" property="approveStatus" />
+        <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="seller_no" jdbcType="VARCHAR" property="sellerNo" />
+        <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
+        <result column="buckle_inventory_method" jdbcType="SMALLINT" property="buckleInventoryMethod" />
+        <result column="give_invoice" jdbcType="SMALLINT" property="giveInvoice" />
+        <result column="change_or_return" jdbcType="SMALLINT" property="changeOrReturn" />
+        <result column="etract_method" jdbcType="VARCHAR" property="etractMethod" />
+        <result column="article_number" jdbcType="VARCHAR" property="articleNumber" />
+        <result column="brand_id" jdbcType="BIGINT" property="brandId" />
+        <result column="is_resubmit" jdbcType="SMALLINT" property="isResubmit" />
+        
+    </resultMap>
+
+    <resultMap id="shopProductVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveVO" extends="shopProductMap" >
+    </resultMap>
+
+
+    <sql id="queryListPageWhere">
+
+        <if test="categoryId!=null and categoryId!=-1">
+            and t.category_id = #{categoryId}
+        </if>
+
+        <if test="approveStatus!=null and approveStatus!=-1">
+            and t.approve_status = #{approveStatus}
+        </if>
+
+        <if test="shopId!=null and shopId!=-1">
+            and t.shop_id = #{shopId}
+        </if>
+
+        <if test="brandId!=null and brandId!=-1">
+            and t.brand_id = #{brandId}
+        </if>
+
+        <if test="name!=null and name!='' ">
+            and t.name  like concat(#{name},'%')
+        </if>
+
+        <if test="id!=null and id!=-1">
+            and t.id = #{id}
+        </if>
+
+        <if test="uuid!=null and uuid!='' ">
+            and t.uuid = #{uuid}
+        </if>
+
+        <if test="categoryIdList!=null and categoryIdList.size>0 ">
+            and t.category_id in
+            <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+
+        and t.delete_status = 0
+
+    </sql>
+
+
+    <select id="queryAllList" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">
+        select * from t_shop_product_approve t
+    </select>
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove"  >
+        insert into t_shop_product_approve(id,category_id,shop_category_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
+            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,approve_status,give_invoice,change_or_return,etract_method,article_number,brand_id,is_resubmit)
+        values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
+            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{approveStatus},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId},#{isResubmit})
+    </insert>
+
+
+    <update id="deleteById">
+        update t_shop_product_approve  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
+    <select id="queryListPage" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo">
+        select t.* from t_shop_product_approve t
+        <where>
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="findById" resultMap="shopProductVOMap" parameterType="java.lang.Long">
+        select t.* from t_shop_product_approve t
+        where t.id = #{id} and delete_status=0
+        limit 1
+    </select>
+
+
+    <update id="updateApproveStatus">
+        update t_shop_product_approve  set approve_status=#{approveStatus} where id=#{id}  and delete_status=0 and approve_status=1
+    </update>
+
+
+    <update id="updateApproveStatusAndProductId">
+        update updateApproveStatusAndProductId  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid}   where id=#{id}  and delete_status=0 and approve_status=1
+    </update>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo">
+        select count(*) from t_shop_product_approve t
+        <where>
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+
+    <select id="queryList" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductApproveVO">
+        select t.* from t_shop_product_approve t
+        <where>
+            1=1
+
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+</mapper>

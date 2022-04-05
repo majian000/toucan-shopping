@@ -3,15 +3,11 @@ package com.toucan.shopping.cloud.apps.admin.controller.product.shopProductAppro
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
+import com.toucan.shopping.cloud.product.api.feign.service.*;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -31,9 +27,9 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
-import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
+import com.toucan.shopping.modules.product.page.ShopProductApproveSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
-import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
+import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
@@ -54,7 +50,7 @@ import java.util.*;
  * @author majian
  */
 @Controller
-@RequestMapping("/product/shopProductApprove")
+@RequestMapping("/product/shopProduct")
 public class ShopProductApproveController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -69,7 +65,7 @@ public class ShopProductApproveController extends UIController {
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignShopProductService feignShopProductService;
+    private FeignShopProductApproveService feignShopProductApproveService;
 
     @Autowired
     private FeignCategoryService feignCategoryService;
@@ -87,7 +83,7 @@ public class ShopProductApproveController extends UIController {
     private FeignSellerShopService feignSellerShopService;
 
     @Autowired
-    private FeignProductSkuService feignProductSkuService;
+    private FeignShopProductApproveSkuService feignShopProductApproveSkuService;
 
     @Autowired
     private FeignProductSpuService feignProductSpuService;
@@ -194,13 +190,13 @@ public class ShopProductApproveController extends UIController {
     public String approvePage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
-            ShopProductVO shopProductVO = new ShopProductVO();
+            ShopProductApproveVO shopProductVO = new ShopProductApproveVO();
             shopProductVO.setId(id);;
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
-            ResultObjectVO resultObjectVO = feignShopProductService.queryByShopProductId(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignShopProductApproveService.queryByProductApproveId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                List<ShopProductVO> list = resultObjectVO.formatDataList(ShopProductVO.class);
+                List<ShopProductApproveVO> list = resultObjectVO.formatDataList(ShopProductApproveVO.class);
                 if(CollectionUtils.isNotEmpty(list)) {
                     Long[] categoryIds = new Long[list.size()];
                     Long[] shopCategoryIds = new Long[list.size()];
@@ -212,7 +208,7 @@ public class ShopProductApproveController extends UIController {
                     boolean shopExists=false;
                     for(int i=0;i<list.size();i++)
                     {
-                        ShopProductVO shopProductVOTmp = list.get(i);
+                        ShopProductApproveVO shopProductVOTmp = list.get(i);
                         categoryIds[i] = shopProductVOTmp.getCategoryId();
 
                         //设置品牌ID
@@ -291,7 +287,7 @@ public class ShopProductApproveController extends UIController {
 
 
 
-                    for(ShopProductVO shopProductVOTmp:list)
+                    for(ShopProductApproveVO shopProductVOTmp:list)
                     {
                         if(shopProductVOTmp.getMainPhotoFilePath()!=null) {
                             shopProductVOTmp.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVOTmp.getMainPhotoFilePath());
@@ -305,10 +301,10 @@ public class ShopProductApproveController extends UIController {
                             }
                         }
 
-                        if(CollectionUtils.isNotEmpty(shopProductVOTmp.getProductSkuVOList()))
+                        if(CollectionUtils.isNotEmpty(shopProductVOTmp.getShopProductApproveSkuVOList()))
                         {
                             shopProductVOTmp.setHttpSkuPreviewPhotoPaths(new LinkedList<>());
-                            for(ProductSkuVO productSkuVO:shopProductVOTmp.getProductSkuVOList())
+                            for(ShopProductApproveSkuVO productSkuVO:shopProductVOTmp.getShopProductApproveSkuVOList())
                             {
                                 if(StringUtils.isNotEmpty(productSkuVO.getProductPreviewPath())) {
                                     shopProductVOTmp.getHttpSkuPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
@@ -319,12 +315,12 @@ public class ShopProductApproveController extends UIController {
 
                     request.setAttribute("model", list.get(0));
                 }else{
-                    request.setAttribute("model", new ShopProductVO());
+                    request.setAttribute("model", new ShopProductApproveVO());
                 }
             }
         }catch(Exception e)
         {
-            request.setAttribute("model", new ShopProductVO());
+            request.setAttribute("model", new ShopProductApproveVO());
             logger.warn(e.getMessage(),e);
         }
         return "pages/product/shopProductApprove/approve.html";
@@ -337,7 +333,7 @@ public class ShopProductApproveController extends UIController {
      * @param list
      * @param categoryIds
      */
-    void queryCategory(List<ShopProductVO> list,Long[] categoryIds)
+    void queryCategory(List<ShopProductApproveVO> list,Long[] categoryIds)
     {
         try {
             //查询类别名称
@@ -348,7 +344,7 @@ public class ShopProductApproveController extends UIController {
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
-                    for (ShopProductVO shopProductVO : list) {
+                    for (ShopProductApproveVO shopProductVO : list) {
                         for (CategoryVO categoryVO : categoryVOS) {
                             if (shopProductVO.getCategoryId() != null && shopProductVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
                                 shopProductVO.setCategoryName(categoryVO.getName());
@@ -371,7 +367,7 @@ public class ShopProductApproveController extends UIController {
      * @param list
      * @param shopCategoryIds
      */
-    void queryShopCategory(List<ShopProductVO> list,Long[] shopCategoryIds)
+    void queryShopCategory(List<ShopProductApproveVO> list,Long[] shopCategoryIds)
     {
         try {
             ShopCategoryVO queryShopCategoryVO = new ShopCategoryVO();
@@ -383,7 +379,7 @@ public class ShopProductApproveController extends UIController {
                 List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
                 if(CollectionUtils.isNotEmpty(shopCategoryVOS))
                 {
-                    for(ShopProductVO shopProductVO:list)
+                    for(ShopProductApproveVO shopProductVO:list)
                     {
                         for(ShopCategoryVO shopCategoryVO:shopCategoryVOS)
                         {
@@ -408,7 +404,7 @@ public class ShopProductApproveController extends UIController {
      * @param list
      * @param brandIdList
      */
-    void queryBrand(List<ShopProductVO> list,List<Long> brandIdList)
+    void queryBrand(List<ShopProductApproveVO> list,List<Long> brandIdList)
     {
         try {
             BrandVO queryBrandVO = new BrandVO();
@@ -420,7 +416,7 @@ public class ShopProductApproveController extends UIController {
                 List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
                 if(CollectionUtils.isNotEmpty(brandVOS))
                 {
-                    for(ShopProductVO shopProductVO:list)
+                    for(ShopProductApproveVO shopProductVO:list)
                     {
                         for(BrandVO brandVO:brandVOS)
                         {
@@ -450,7 +446,7 @@ public class ShopProductApproveController extends UIController {
      * @param list
      * @param shopIdList
      */
-    void queryShop(List<ShopProductVO> list,List<Long> shopIdList)
+    void queryShop(List<ShopProductApproveVO> list,List<Long> shopIdList)
     {
         try {
             SellerShopVO queryShopVO = new SellerShopVO();
@@ -462,7 +458,7 @@ public class ShopProductApproveController extends UIController {
                 List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
                 if(CollectionUtils.isNotEmpty(sellerShopVOS))
                 {
-                    for(ShopProductVO shopProductVO:list)
+                    for(ShopProductApproveVO shopProductVO:list)
                     {
                         for(SellerShopVO sellerShopVO:sellerShopVOS)
                         {
@@ -707,7 +703,7 @@ public class ShopProductApproveController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, ShopProductPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, ShopProductApprovePageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -735,12 +731,12 @@ public class ShopProductApproveController extends UIController {
                 }
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+            resultObjectVO = feignShopProductApproveService.queryListPage(requestJsonVO);
             if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
                 if (resultObjectVO.getData() != null) {
                     Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
-                    List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductVO.class);
+                    List<ShopProductApproveVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductApproveVO.class);
                     if (CollectionUtils.isNotEmpty(list)) {
                         Long[] categoryIds = new Long[list.size()];
                         Long[] shopCategoryIds = new Long[list.size()];
@@ -751,7 +747,7 @@ public class ShopProductApproveController extends UIController {
                         boolean shopCategoryExists = false;
                         boolean shopExists = false;
                         for (int i = 0; i < list.size(); i++) {
-                            ShopProductVO shopProductVO = list.get(i);
+                            ShopProductApproveVO shopProductVO = list.get(i);
                             categoryIds[i] = shopProductVO.getCategoryId();
 
                             //设置品牌ID
@@ -822,7 +818,7 @@ public class ShopProductApproveController extends UIController {
                         this.queryShop(list, shopIdList);
 
 
-                        for (ShopProductVO shopProductVO : list) {
+                        for (ShopProductApproveVO shopProductVO : list) {
                             if (shopProductVO.getMainPhotoFilePath() != null) {
                                 shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductVO.getMainPhotoFilePath());
                             }
@@ -853,28 +849,28 @@ public class ShopProductApproveController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/query/product/sku/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO queryProductSkuList(HttpServletRequest request, ProductSkuPageInfo pageInfo)
+    public TableVO queryShopProductApproveSkuList(HttpServletRequest request, ShopProductApproveSkuPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
-            if(pageInfo.getShopProductId()==null)
+            if(pageInfo.getProductApproveId()==null)
             {
                 tableVO.setCode(TableVO.FAILD);
                 tableVO.setMsg("商品ID不能为空");
                 return tableVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignProductSkuService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignShopProductApproveSkuService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<ProductSkuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ProductSkuVO.class);
+                    List<ShopProductApproveSkuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductApproveSkuVO.class);
                     if(CollectionUtils.isNotEmpty(list))
                     {
-                        for(ProductSkuVO productSkuVO:list)
+                        for(ShopProductApproveSkuVO productSkuVO:list)
                         {
                             if(productSkuVO.getProductPreviewPath()!=null) {
                                 productSkuVO.setHttpMainPhoto(imageUploadService.getImageHttpPrefix()+productSkuVO.getProductPreviewPath());
@@ -976,7 +972,7 @@ public class ShopProductApproveController extends UIController {
             }
             shopProductApproveRecordVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductApproveRecordVO);
-            resultObjectVO = feignShopProductService.reject(requestJsonVO);
+            resultObjectVO = feignShopProductApproveService.reject(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //发送商品审核驳回消息
@@ -1037,7 +1033,7 @@ public class ShopProductApproveController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/pass",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO pass(HttpServletRequest request, @RequestBody ShopProductVO shopProductVO)
+    public ResultObjectVO pass(HttpServletRequest request, @RequestBody ShopProductApproveVO shopProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -1048,7 +1044,7 @@ public class ShopProductApproveController extends UIController {
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductVO);
-            resultObjectVO = feignShopProductService.pass(requestJsonVO);
+            resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 //发送商品审核驳回消息

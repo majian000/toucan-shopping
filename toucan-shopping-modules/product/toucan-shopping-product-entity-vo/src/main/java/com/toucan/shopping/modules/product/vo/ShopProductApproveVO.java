@@ -1,17 +1,18 @@
 package com.toucan.shopping.modules.product.vo;
 
 import com.toucan.shopping.modules.product.entity.ShopProduct;
+import com.toucan.shopping.modules.product.entity.ShopProductApprove;
 import lombok.Data;
 
 import java.util.List;
 
 /**
- * 店铺维度的SKU (关联到平台维度的SPU)
+ * 店铺维度的商品审核 (关联到平台维度的SPU)
  *
  * @author majian
  */
 @Data
-public class ShopProductVO extends ShopProduct {
+public class ShopProductApproveVO extends ShopProductApprove {
 
     private String categoryName; //类别名称
     private String categoryPath; //类别路径
@@ -57,7 +58,7 @@ public class ShopProductVO extends ShopProduct {
     /**
      * SKU列表
      */
-    private List<ProductSkuVO> productSkuVOList;
+    private List<ShopProductApproveSkuVO> shopProductApproveSkuVOList;
 
     /**
      * 验证码

@@ -25,20 +25,6 @@ public class FeignShopProductServiceFallbackFactory implements FallbackFactory<F
     public FeignShopProductService create(Throwable throwable) {
         logger.warn(throwable.getMessage(),throwable);
         return new FeignShopProductService(){
-            @Override
-            public ResultObjectVO publish(RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请重试");
-                    return resultObjectVO;
-                }
-                logger.warn("FeignBrandService publish faild  params{}",JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-                return resultObjectVO;
-            }
 
             @Override
             public ResultObjectVO queryListPage(RequestJsonVO requestJsonVO) {
@@ -49,7 +35,7 @@ public class FeignShopProductServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignBrandService queryListPage faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignShopProductService queryListPage faild  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
@@ -64,37 +50,7 @@ public class FeignShopProductServiceFallbackFactory implements FallbackFactory<F
                     resultObjectVO.setMsg("请重试");
                     return resultObjectVO;
                 }
-                logger.warn("FeignBrandService queryByShopProductId faild  params{}",JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-                return resultObjectVO;
-            }
-
-            @Override
-            public ResultObjectVO reject(RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请重试");
-                    return resultObjectVO;
-                }
-                logger.warn("FeignBrandService reject faild  params{}",JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请求失败");
-                return resultObjectVO;
-            }
-
-            @Override
-            public ResultObjectVO pass(RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请重试");
-                    return resultObjectVO;
-                }
-                logger.warn("FeignBrandService pass faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                logger.warn("FeignShopProductService queryByShopProductId faild  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;
