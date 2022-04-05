@@ -51,14 +51,14 @@
                 and t.id=#{id}
             </if>
 
-            <if test="shopProductId!=null  ">
-                and t.product_approve_id=#{shopProductId}
+            <if test="productApproveId!=null  ">
+                and t.product_approve_id=#{productApproveId}
             </if>
 
 
-            <if test="shopProductIdList!=null and shopProductIdList.size>0 ">
+            <if test="productApproveIdList!=null and productApproveIdList.size>0 ">
                 and t.product_approve_id in
-                <foreach item="item" index="index" collection="shopProductIdList" open="("  close=")" separator=",">
+                <foreach item="item" index="index" collection="productApproveIdList" open="("  close=")" separator=",">
                     #{item}
                 </foreach>
             </if>

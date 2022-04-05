@@ -58,7 +58,7 @@ public class ShopProductApproveVO extends ShopProductApprove {
     /**
      * SKU列表
      */
-    private List<ShopProductApproveSkuVO> shopProductApproveSkuVOList;
+    private List<ShopProductApproveSkuVO> productSkuVOList;
 
     /**
      * 验证码

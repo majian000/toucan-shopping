@@ -27,8 +27,7 @@
         <result column="etract_method" jdbcType="VARCHAR" property="etractMethod" />
         <result column="article_number" jdbcType="VARCHAR" property="articleNumber" />
         <result column="brand_id" jdbcType="BIGINT" property="brandId" />
-        <result column="is_resubmit" jdbcType="SMALLINT" property="isResubmit" />
-        
+
     </resultMap>
 
     <resultMap id="shopProductVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveVO" extends="shopProductMap" >
@@ -85,9 +84,9 @@
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove"  >
         insert into t_shop_product_approve(id,category_id,shop_category_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
-            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,approve_status,give_invoice,change_or_return,etract_method,article_number,brand_id,is_resubmit)
+            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,approve_status,give_invoice,change_or_return,etract_method,article_number,brand_id)
         values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
-            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{approveStatus},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId},#{isResubmit})
+            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{approveStatus},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId})
     </insert>
 
 

@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignColorTableService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
@@ -56,28 +57,20 @@ public class ShopProductApiController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private FeignShopCategoryService feignShopCategoryService;
-
-    @Autowired
     private FeignAttributeKeyValueService feignAttributeKeyValueService;
-
-    @Autowired
-    private FeignColorTableService feignColorTableService;
 
     @Autowired
     private ImageUploadService imageUploadService;
 
-    @Autowired
-    private FeignShopProductService feignShopProductService;
 
     @Autowired
     private FeignSellerShopService feignSellerShopService;
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
+
+    @Autowired
+    private FeignShopProductApproveService feignShopProductApproveService;
 
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
@@ -298,7 +291,7 @@ public class ShopProductApiController extends BaseController {
             publishProductVO.setShopId(sellerShopVO.getId());
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
-//            resultObjectVO = feignShopProductService.publish(requestJsonVO);
+            resultObjectVO = feignShopProductApproveService.publish(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 resultObjectVO.setMsg("发布成功");

@@ -50,7 +50,7 @@ import java.util.*;
  * @author majian
  */
 @Controller
-@RequestMapping("/product/shopProduct")
+@RequestMapping("/product/shopProductApprove")
 public class ShopProductApproveController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -301,10 +301,10 @@ public class ShopProductApproveController extends UIController {
                             }
                         }
 
-                        if(CollectionUtils.isNotEmpty(shopProductVOTmp.getShopProductApproveSkuVOList()))
+                        if(CollectionUtils.isNotEmpty(shopProductVOTmp.getProductSkuVOList()))
                         {
                             shopProductVOTmp.setHttpSkuPreviewPhotoPaths(new LinkedList<>());
-                            for(ShopProductApproveSkuVO productSkuVO:shopProductVOTmp.getShopProductApproveSkuVOList())
+                            for(ShopProductApproveSkuVO productSkuVO:shopProductVOTmp.getProductSkuVOList())
                             {
                                 if(StringUtils.isNotEmpty(productSkuVO.getProductPreviewPath())) {
                                     shopProductVOTmp.getHttpSkuPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());

@@ -97,7 +97,7 @@ public class ShopProductApproveController {
             skylarkLock.lock(PublishProductRedisLockKey.getPublishProductLockKey(shopId), shopId);
 
             //保存店铺商品
-            if(CollectionUtils.isNotEmpty(publishProductApproveVO.getShopProductApproveSkuVOList())) {
+            if(CollectionUtils.isNotEmpty(publishProductApproveVO.getProductSkuVOList())) {
                 publishProductApproveVO.setId(idGenerator.id());
                 publishProductApproveVO.setUuid(UUID.randomUUID().toString().replace("-", ""));
                 publishProductApproveVO.setCreateDate(new Date());
@@ -113,7 +113,7 @@ public class ShopProductApproveController {
                     resultObjectVO.setMsg("发布失败");
                 }
                 List<ShopProductApproveSku> productSkus = new LinkedList<>();
-                for(ShopProductApproveSkuVO productSkuVO : publishProductApproveVO.getShopProductApproveSkuVOList())
+                for(ShopProductApproveSkuVO productSkuVO : publishProductApproveVO.getProductSkuVOList())
                 {
                     ShopProductApproveSku productSku = new ShopProductApproveSku();
                     BeanUtils.copyProperties(productSku,productSkuVO);
@@ -133,7 +133,7 @@ public class ShopProductApproveController {
                 }
                 ret = shopProductApproveSkuService.saves(productSkus);
 
-                if(ret< publishProductApproveVO.getShopProductApproveSkuVOList().size())
+                if(ret< publishProductApproveVO.getProductSkuVOList().size())
                 {
                     logger.warn("发布商品失败 原因:保存SKU影响返回行和保存数量不一致 {}",JSONObject.toJSONString(productSkus));
                     resultObjectVO.setCode(ResultVO.FAILD);
@@ -189,7 +189,7 @@ public class ShopProductApproveController {
                             }
 
                             ret = shopProductApproveSkuService.deleteByShopProductApproveId(publishProductApproveVO.getId());
-                            if (ret< publishProductApproveVO.getShopProductApproveSkuVOList().size()) {
+                            if (ret< publishProductApproveVO.getProductSkuVOList().size()) {
                                 logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
                             }
 
@@ -344,7 +344,7 @@ public class ShopProductApproveController {
                 queryShopProductApproveSku.setProductApproveId(shopProductVO.getId());
                 //查询SKU
                 List<ShopProductApproveSkuVO> productSkuVOS = shopProductApproveSkuService.queryList(queryShopProductApproveSku);
-                shopProductVO.setShopProductApproveSkuVOList(productSkuVOS);
+                shopProductVO.setProductSkuVOList(productSkuVOS);
 
                 //查询商品图片
                 ShopProductApproveImgVO shopProductImgVO = new ShopProductApproveImgVO();

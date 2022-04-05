@@ -244,7 +244,7 @@
         var index;
         var productRejectLoadding;
 
-        var shopProductId = $("#id").val();
+        var productApproveId = $("#id").val();
         var approveStatus = $("#approveStatus").val();
 
         if(approveStatus!=1)
@@ -377,7 +377,7 @@
             elem: '#productSkuTable',
             url: "[[@{/}]]product/shopProductApprove/query/product/sku/list",
             method:'POST',
-            where:{shopProductId:shopProductId},
+            where:{productApproveId:productApproveId},
             done:function(res, curr, count)
             {
             },
