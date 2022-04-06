@@ -18,9 +18,6 @@ public interface ShopProductService {
 
     ShopProductVO findById(Long id);
 
-    int updateApproveStatus(Long id,Integer approveStatus);
-
-    int updateApproveStatusAndProductId(Long id,Integer approveStatus,Long productId,String productUuid);
 
     /**
      * 查询列表页

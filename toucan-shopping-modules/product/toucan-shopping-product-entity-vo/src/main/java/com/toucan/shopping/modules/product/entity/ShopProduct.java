@@ -55,7 +55,6 @@ public class ShopProduct {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId; //店铺ID
 
-    private Short approveStatus; //1审核中 2审核通过 3审核驳回
 
     private String rejectText; //驳回原因
 
@@ -82,6 +81,8 @@ public class ShopProduct {
     private String etractMethod; //提取方式(多选用,分割) 1:用物流配送
 
     private Short isResubmit; //是否重新提交 0:否 1:是
+
+    private Long productApproveId; //商品审核表ID
 
 
 }

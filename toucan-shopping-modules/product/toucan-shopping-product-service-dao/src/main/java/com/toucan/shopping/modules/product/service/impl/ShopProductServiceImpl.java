@@ -37,15 +37,6 @@ public class ShopProductServiceImpl implements ShopProductService {
         return shopProductMapper.findById(id);
     }
 
-    @Override
-    public int updateApproveStatus(Long id, Integer approveStatus) {
-        return shopProductMapper.updateApproveStatus(id,approveStatus);
-    }
-
-    @Override
-    public int updateApproveStatusAndProductId(Long id, Integer approveStatus, Long productId, String productUuid) {
-        return shopProductMapper.updateApproveStatusAndProductId(id,approveStatus,productId,productUuid);
-    }
 
     @Override
     public PageInfo<ShopProductVO> queryListPage(ShopProductPageInfo queryPageInfo) {

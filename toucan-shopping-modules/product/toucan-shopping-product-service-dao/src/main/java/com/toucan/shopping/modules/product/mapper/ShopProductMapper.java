@@ -17,9 +17,6 @@ public interface ShopProductMapper {
 
     int deleteById(Long id);
 
-    int updateApproveStatus(Long id, Integer approveStatus);
-
-    int updateApproveStatusAndProductId(Long id, Integer approveStatus, Long productId, String productUuid);
 
 
     /**
