@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductApproveMapper">
 
-    <resultMap id="shopProductMap" type="com.toucan.shopping.modules.product.entity.ShopProductApprove" >
+    <resultMap id="shopProductApproveMap" type="com.toucan.shopping.modules.product.entity.ShopProductApprove" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="shop_category_id" jdbcType="BIGINT" property="shopCategoryId" />
@@ -30,7 +30,7 @@
 
     </resultMap>
 
-    <resultMap id="shopProductVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveVO" extends="shopProductMap" >
+    <resultMap id="shopProductVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveVO" extends="shopProductApproveMap" >
     </resultMap>
 
 
@@ -77,7 +77,7 @@
     </sql>
 
 
-    <select id="queryAllList" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">
+    <select id="queryAllList" resultMap="shopProductApproveMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">
         select * from t_shop_product_approve t
     </select>
 
@@ -118,7 +118,7 @@
 
 
     <update id="updateApproveStatusAndProductId">
-        update updateApproveStatusAndProductId  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid}   where id=#{id}  and delete_status=0 and approve_status=1
+        update t_shop_product_approve  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid}   where id=#{id}  and delete_status=0 and approve_status=1
     </update>
 
 

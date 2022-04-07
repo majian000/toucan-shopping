@@ -103,7 +103,7 @@
 <script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
 
-    var selectSpu={spuId:-1,spuUuid:""};
+    var selectSpu={spuName:"",spuId:-1,spuUuid:""};
 
 
     function getSelectSpu()
@@ -320,6 +320,7 @@
             {
                 selectSpu.spuId = obj.data.id;
                 selectSpu.spuUuid = obj.data.uuid;
+                selectSpu.spuName = obj.data.name;
             }
         });
 

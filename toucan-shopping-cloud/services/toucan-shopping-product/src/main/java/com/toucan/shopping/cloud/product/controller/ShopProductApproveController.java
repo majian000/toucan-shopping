@@ -442,36 +442,37 @@ public class ShopProductApproveController {
         String productApproveId = "-1";
         Long shopProductId = idGenerator.id();
         try{
-            ShopProductApproveVO shopProductVO = requestJsonVO.formatEntity(ShopProductApproveVO.class);
+            ShopProductApproveVO shopProductApproveVO = requestJsonVO.formatEntity(ShopProductApproveVO.class);
 
-            if(shopProductVO.getId()==null)
+            if(shopProductApproveVO.getId()==null)
             {
                 resultObjectVO.setMsg("审核ID不能为空");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
 
-            if(shopProductVO.getProductId()==null)
+            if(shopProductApproveVO.getProductId()==null)
             {
                 resultObjectVO.setMsg("平台商品ID不能为空");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            if(StringUtils.isEmpty(shopProductVO.getProductUuid()))
+            if(StringUtils.isEmpty(shopProductApproveVO.getProductUuid()))
             {
                 resultObjectVO.setMsg("平台商品UUID不能为空");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            productApproveId = String.valueOf(shopProductVO.getId());
+            productApproveId = String.valueOf(shopProductApproveVO.getId());
             skylarkLock.lock(ProductApproveRedisLockKey.getProductApprovePassLockKey(productApproveId), productApproveId);
 
             logger.info("通过店铺商品 {} ",requestJsonVO.getEntityJson());
-            shopProductApproveService.updateApproveStatusAndProductId(shopProductVO.getId(),ProductConstant.PASS,shopProductVO.getProductId(),shopProductVO.getProductUuid());
+            shopProductApproveService.updateApproveStatusAndProductId(shopProductApproveVO.getId(),ProductConstant.PASS,shopProductApproveVO.getProductId(),shopProductApproveVO.getProductUuid());
             ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
+            shopProductApproveRecord.setApproveId(shopProductApproveVO.getId());
             shopProductApproveRecord.setApproveText("审核通过");
             shopProductApproveRecord.setApproveStatus(ProductConstant.REJECT);
-            shopProductApproveRecord.setCreateAdminId(shopProductVO.getCreateAdminId());
+            shopProductApproveRecord.setCreateAdminId(shopProductApproveVO.getCreateAdminId());
             shopProductApproveRecord.setCreateDate(new Date());
             shopProductApproveRecord.setId(idGenerator.id());
             int ret = shopProductRecordService.save(shopProductApproveRecord);
@@ -483,8 +484,20 @@ public class ShopProductApproveController {
             }
 
             //保存店铺商品信息
-            ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductVO.getId());
-            if(shopProductApprove!=null&&shopProductApprove.getApproveStatus().intValue()==ProductConstant.PASS.intValue()) {
+            ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductApproveVO.getId());
+            if(shopProductApprove!=null&&shopProductApprove.getId()!=-1&&shopProductApprove.getApproveStatus().intValue()==ProductConstant.PASS.intValue()) {
+
+                ShopProductVO queryShopProduct = new ShopProductVO();
+                queryShopProduct.setProductApproveId(shopProductApprove.getId());
+                List<ShopProductVO> shopProductVOS = shopProductService.queryList(queryShopProduct);
+                if(CollectionUtils.isNotEmpty(shopProductVOS))
+                {
+                    logger.info("审核通过,已存在店铺商品 approveId {} ",productApproveId);
+                    resultObjectVO.setCode(ResultVO.SUCCESS);
+                    resultObjectVO.setMsg("审核通过");
+                    return resultObjectVO;
+                }
+
                 ShopProduct shopProduct = new ShopProduct();
                 BeanUtils.copyProperties(shopProduct, shopProductApprove);
                 shopProduct.setId(shopProductId);

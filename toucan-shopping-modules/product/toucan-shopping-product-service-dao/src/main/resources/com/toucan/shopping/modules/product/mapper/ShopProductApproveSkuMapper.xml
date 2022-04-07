@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductApproveSkuMapper">
 
-    <resultMap id="productSkuMap" type="com.toucan.shopping.modules.product.entity.ShopProductApproveSku" >
+    <resultMap id="productApproveSkuMap" type="com.toucan.shopping.modules.product.entity.ShopProductApproveSku" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
         <result column="product_approve_uuid" jdbcType="VARCHAR" property="productApproveUuid" />
@@ -28,7 +28,7 @@
 
     </resultMap>
 
-    <resultMap id="productSkuVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveSkuVO" extends="productSkuMap">
+    <resultMap id="productSkuVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveSkuVO" extends="productApproveSkuMap">
 
     </resultMap>
 
@@ -115,17 +115,17 @@
     </select>
 
 
-    <select id="queryBySkuIdForUpdate" resultMap="productSkuMap" parameterType="java.lang.Long">
+    <select id="queryBySkuIdForUpdate" resultMap="productApproveSkuMap" parameterType="java.lang.Long">
         select * from t_shop_product_approve_sku where id=#{skuId} for update
     </select>
 
 
-    <select id="queryById" resultMap="productSkuMap" parameterType="java.lang.Long">
+    <select id="queryById" resultMap="productApproveSkuMap" parameterType="java.lang.Long">
         select * from t_shop_product_approve_sku where id=#{skuId} and delete_status=0
     </select>
 
 
-    <select id="queryByUuid" resultMap="productSkuMap" parameterType="java.lang.String">
+    <select id="queryByUuid" resultMap="productApproveSkuMap" parameterType="java.lang.String">
         select * from t_shop_product_approve_sku where uuid=#{uuid} and delete_status=0
     </select>
 
@@ -135,7 +135,7 @@
         update t_shop_product_approve_sku  set delete_status=1 where product_approve_id=#{productApproveId}  and delete_status=0
     </update>
 
-    <select id="queryListByProductApproveId" resultMap="productSkuMap" parameterType="java.lang.Long">
+    <select id="queryListByProductApproveId" resultMap="productSkuVOMap" parameterType="java.lang.Long">
         select * from t_shop_product_approve_sku where product_approve_id=#{productApproveId} and delete_status=0
     </select>
 

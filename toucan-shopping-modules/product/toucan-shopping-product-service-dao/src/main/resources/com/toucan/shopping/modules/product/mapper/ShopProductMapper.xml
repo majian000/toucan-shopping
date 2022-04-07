@@ -26,7 +26,6 @@
         <result column="etract_method" jdbcType="VARCHAR" property="etractMethod" />
         <result column="article_number" jdbcType="VARCHAR" property="articleNumber" />
         <result column="brand_id" jdbcType="BIGINT" property="brandId" />
-        <result column="is_resubmit" jdbcType="SMALLINT" property="isResubmit" />
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         
     </resultMap>
@@ -79,6 +78,21 @@
     </sql>
 
 
+    <sql id="queryListWhere">
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+
+        <if test="productApproveId!=null and productApproveId!=-1">
+            and t.product_approve_id = #{productApproveId}
+        </if>
+
+
+        and t.delete_status = 0
+    </sql>
+
     <select id="queryAllList" resultMap="shopProductMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct">
         select * from t_shop_product t
     </select>
@@ -86,9 +100,9 @@
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProduct"  >
         insert into t_shop_product(id,category_id,shop_category_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
-            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,give_invoice,change_or_return,etract_method,article_number,brand_id,is_resubmit,product_approve_id)
+            create_date,app_code,create_user_id,seller_no,pay_method,buckle_inventory_method,give_invoice,change_or_return,etract_method,article_number,brand_id,product_approve_id)
         values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
-            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId},#{isResubmit},#{productApproveId})
+            #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId},#{productApproveId})
     </insert>
 
 
@@ -132,12 +146,8 @@
         <where>
             1=1
 
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
+            <include refid="queryListWhere" />
 
-
-            and t.delete_status = 0
 
         </where>
     </select>

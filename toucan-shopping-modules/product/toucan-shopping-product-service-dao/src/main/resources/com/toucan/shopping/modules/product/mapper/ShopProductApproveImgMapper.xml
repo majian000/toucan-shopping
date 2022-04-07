@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductApproveImgMapper">
 
-    <resultMap id="shopProductImgMap" type="com.toucan.shopping.modules.product.entity.ShopProductApproveImg" >
+    <resultMap id="shopProductApproveImgMap" type="com.toucan.shopping.modules.product.entity.ShopProductApproveImg" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         <result column="file_path" jdbcType="VARCHAR" property="filePath" />
@@ -14,7 +14,12 @@
         
     </resultMap>
 
-    <select id="queryAllList" resultMap="shopProductImgMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApproveImg">
+
+    <resultMap id="shopProductApproveImgVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveImgVO" extends="shopProductApproveImgMap">
+
+    </resultMap>
+
+    <select id="queryAllList" resultMap="shopProductApproveImgMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApproveImg">
         select * from t_shop_product_approve_img t
     </select>
 
@@ -29,7 +34,7 @@
     </insert>
 
 
-    <select id="queryByIdList" resultMap="shopProductImgMap">
+    <select id="queryByIdList" resultMap="shopProductApproveImgMap">
         select * from t_shop_product_approve_img t
         where 1=1 and t.delete_status = 0
         and t.id in
@@ -42,7 +47,7 @@
 
 
 
-    <select id="queryList" resultMap="shopProductImgMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductApproveImgVO">
+    <select id="queryList" resultMap="shopProductApproveImgMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductApproveImgVO">
         select t.* from t_shop_product_approve_img t
         <where>
             1=1
@@ -76,8 +81,8 @@
 
 
 
-    <select id="queryListByApproveId" parameterType="java.lang.Long" resultMap="shopProductImgMap">
-        select t.* from t_shop_product_approve_img t where 1=1 and t.delete_status = 0 and t.approve_id = #{approveId}
+    <select id="queryListByApproveId" parameterType="java.lang.Long" resultMap="shopProductApproveImgMap">
+        select t.* from t_shop_product_approve_img t where 1=1 and t.delete_status = 0 and t.product_approve_id = #{approveId}
     </select>
 
 

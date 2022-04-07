@@ -219,7 +219,8 @@
         <div class="layui-form-item" id="connectProduct" >
             <label class="layui-form-label required " >关联平台商品</label>
             <div class="layui-input-block">
-                <input type="text" id="productId" name="productId" lay-verify="required"  class="layui-input">
+                <input type="text" id="selectSpu"  lay-verify="required"  class="layui-input">
+                <input type="hidden" id="productId" name="productId">
                 <input type="hidden" id="productUuid" name="productUuid">
             </div>
         </div>
@@ -276,16 +277,40 @@
             indicator: 'outside'	//这个属性：小圆点在外面
         });
 
-        $("#productId").click(function(){
+
+
+        /**
+         * 设置品牌
+         * @param brandId
+         * @param brandName
+         */
+        function setSpu(spuId,spuUuid,spuName)
+        {
+            $("#productId").val(spuId);
+            $("#productUuid").val(spuUuid);
+            $("#selectSpu").val(spuName);
+        }
+
+
+        $("#selectSpu").click(function(){
             var categoryId = $("#categoryId").val();
             var index = layer.open({
                 title: '平台商品列表',
                 type: 2,
                 shade: 0.2,
                 maxmin:true,
-
+                btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
+                yes: function (index) {
+                    var spuObject = window["layui-layer-iframe" + index].getSelectSpu();
+                    setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
+                    layer.close(index);
+                },
                 area: ['80%', '80%'],
-                content: '[[@{/}]]product/shopProductApprove/spuListPage/'+categoryId
+                content: '[[@{/}]]product/shopProductApprove/spuListPage/'+categoryId,
+                zIndex: layer.zIndex,
+                success: function(layero){
+                    layer.setTop(layero);
+                }
             });
             $(window).on("resize", function () {
                 layer.full(index);
@@ -296,11 +321,15 @@
         //监听提交
         form.on('submit(passBtn)', function (data) {
 
+            var id = $("#id").val();
+            var productId = $("#productId").val();
+            var productUuid = $("#productUuid").val();
+
             $.ajax({
                 url:"[[@{/product/shopProductApprove/pass}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
-                data:{id:form.field.id,productId:form.field.productId,productUuid:form.field.productUuid},
+                data:JSON.stringify({id:id,productId:productId,productUuid:productUuid}),
                 success:function(data){
                     if(data.code==0) {
                         layer.msg(data.msg);
