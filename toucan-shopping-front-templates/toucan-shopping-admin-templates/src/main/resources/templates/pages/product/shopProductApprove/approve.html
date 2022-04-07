@@ -216,7 +216,7 @@
                 </div>
             </div>
         </div>
-        <div class="layui-form-item" >
+        <div class="layui-form-item" id="connectProduct" >
             <label class="layui-form-label required " >关联平台商品</label>
             <div class="layui-input-block">
                 <input type="text" id="productId" name="productId" lay-verify="required"  class="layui-input">
@@ -250,6 +250,7 @@
         if(approveStatus!=1)
         {
             $("#approveBtns").hide();
+            $("#connectProduct").hide();
         }
 
         //建造实例化
