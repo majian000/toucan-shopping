@@ -7,11 +7,9 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
-import com.toucan.shopping.modules.product.entity.ShopProductApproveSku;
-import com.toucan.shopping.modules.product.entity.ShopProductApproveImg;
-import com.toucan.shopping.modules.product.entity.ShopProductApproveRecord;
+import com.toucan.shopping.modules.product.entity.*;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
-import com.toucan.shopping.modules.product.redis.PublishProductRedisLockKey;
+import com.toucan.shopping.modules.product.redis.ProductApproveRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -59,6 +57,9 @@ public class ShopProductApproveController {
     @Autowired
     private ShopProductApproveRecordService shopProductRecordService;
 
+    @Autowired
+    private ShopProductService shopProductService;
+
 
     /**
      * 发布商品
@@ -94,7 +95,7 @@ public class ShopProductApproveController {
                 return resultObjectVO;
             }
             shopId = String.valueOf(publishProductApproveVO.getShopId());
-            skylarkLock.lock(PublishProductRedisLockKey.getPublishProductLockKey(shopId), shopId);
+            skylarkLock.lock(ProductApproveRedisLockKey.getSaveProductLockKey(shopId), shopId);
 
             //保存店铺商品
             if(CollectionUtils.isNotEmpty(publishProductApproveVO.getProductSkuVOList())) {
@@ -212,7 +213,7 @@ public class ShopProductApproveController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("发布失败");
         }finally{
-            skylarkLock.unLock(PublishProductRedisLockKey.getPublishProductLockKey(shopId), shopId);
+            skylarkLock.unLock(ProductApproveRedisLockKey.getSaveProductLockKey(shopId), shopId);
         }
         return resultObjectVO;
     }
@@ -433,11 +434,15 @@ public class ShopProductApproveController {
     public ResultObjectVO pass(@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        String productApproveId = "-1";
+
         try{
             ShopProductApproveVO shopProductVO = requestJsonVO.formatEntity(ShopProductApproveVO.class);
+
             if(shopProductVO.getId()==null)
             {
-                resultObjectVO.setMsg("商品ID不能为空");
+                resultObjectVO.setMsg("审核ID不能为空");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -454,6 +459,9 @@ public class ShopProductApproveController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
+            productApproveId = String.valueOf(shopProductVO.getId());
+            skylarkLock.lock(ProductApproveRedisLockKey.getProductApprovePassLockKey(productApproveId), productApproveId);
+
             logger.info("通过店铺商品 {} ",requestJsonVO.getEntityJson());
             shopProductApproveService.updateApproveStatusAndProductId(shopProductVO.getId(),ProductConstant.PASS,shopProductVO.getProductId(),shopProductVO.getProductUuid());
             ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
@@ -469,11 +477,24 @@ public class ShopProductApproveController {
                 resultObjectVO.setMsg("保存审核记录失败");
                 return resultObjectVO;
             }
+
+            //保存店铺商品信息
+            ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductVO.getId());
+            ShopProduct shopProduct = new ShopProduct();
+            BeanUtils.copyProperties(shopProduct,shopProductApprove);
+
+            shopProduct.setId(idGenerator.id());
+            shopProduct.setProductApproveId(shopProductApprove.getId());
+            shopProductService.save(shopProduct);
+
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("查询失败");
+        }finally {
+            skylarkLock.unLock(ProductApproveRedisLockKey.getProductApprovePassLockKey(productApproveId),productApproveId);
         }
 
         return resultObjectVO;
