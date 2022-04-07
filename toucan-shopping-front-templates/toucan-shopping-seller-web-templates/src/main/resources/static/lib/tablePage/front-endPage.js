@@ -3,6 +3,8 @@
         this.$element = ele,
         this.defaults ={
               title:null,
+              optionTitle:null,
+              optionBody:null,
               body:null,
               display:null,
               pageNUmber:8,
@@ -23,6 +25,10 @@
                 titlesmall+="<th>"+_this.options.title[i]+"</th>";
                 titlelistBox = titlesmall;
             }
+            for(var i=0;i<_this.options.optionTitle.length;i++){
+                titlesmall+="<th>"+_this.options.optionTitle[i]+"</th>";
+                titlelistBox = titlesmall;
+            }
             var json = "";
             var maxpagenumberBox = 7;//选择项最多的数量
             var json = this.options.url;
@@ -40,6 +46,15 @@
                     }
                     bodyBox+="<td class='"+type+"' style='display:"+display+"'>"+json[i][type]+"</td>";
                     bodyBigBox = bodyBox;
+                }
+
+                if(_this.options.optionBody!=null) {
+                    for (var x = 0; x < _this.options.optionBody.length; x++) {
+                        var optionValue = _this.options.optionBody[x];
+                        var display = "table-cell";
+                        bodyBox += "<td  style='display:" + display + "'>" + optionValue + "</td>";
+                        bodyBigBox = bodyBox;
+                    }
                 }
                 histroy_DD +="<tr class='new_productBox'>"+bodyBigBox+"</tr>";
                 histroy_DDBox = histroy_DD;
