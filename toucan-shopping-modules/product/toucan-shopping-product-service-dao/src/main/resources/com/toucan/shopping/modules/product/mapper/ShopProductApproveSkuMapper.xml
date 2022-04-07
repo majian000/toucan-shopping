@@ -135,5 +135,8 @@
         update t_shop_product_approve_sku  set delete_status=1 where product_approve_id=#{productApproveId}  and delete_status=0
     </update>
 
+    <select id="queryListByProductApproveId" resultMap="productSkuMap" parameterType="java.lang.Long">
+        select * from t_shop_product_approve_sku where product_approve_id=#{productApproveId} and delete_status=0
+    </select>
 
 </mapper>

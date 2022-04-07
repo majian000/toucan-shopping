@@ -42,4 +42,6 @@ public interface ShopProductApproveSkuMapper {
      */
     Long queryListPageCount(ShopProductApproveSkuPageInfo pageInfo);
 
+    List<ShopProductApproveSkuVO> queryListByProductApproveId(Long productApproveId);
+
 }

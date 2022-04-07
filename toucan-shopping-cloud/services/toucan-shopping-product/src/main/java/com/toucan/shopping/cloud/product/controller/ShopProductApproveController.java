@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.product.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.netflix.discovery.converters.Auto;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -24,10 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 店铺商品审核
@@ -59,6 +57,12 @@ public class ShopProductApproveController {
 
     @Autowired
     private ShopProductService shopProductService;
+
+    @Autowired
+    private ShopProductImgService shopProductImgService;
+
+    @Autowired
+    private ProductSkuService productSkuService;
 
 
     /**
@@ -436,7 +440,7 @@ public class ShopProductApproveController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
 
         String productApproveId = "-1";
-
+        Long shopProductId = idGenerator.id();
         try{
             ShopProductApproveVO shopProductVO = requestJsonVO.formatEntity(ShopProductApproveVO.class);
 
@@ -480,19 +484,74 @@ public class ShopProductApproveController {
 
             //保存店铺商品信息
             ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductVO.getId());
-            ShopProduct shopProduct = new ShopProduct();
-            BeanUtils.copyProperties(shopProduct,shopProductApprove);
+            if(shopProductApprove!=null&&shopProductApprove.getApproveStatus().intValue()==ProductConstant.PASS.intValue()) {
+                ShopProduct shopProduct = new ShopProduct();
+                BeanUtils.copyProperties(shopProduct, shopProductApprove);
+                shopProduct.setId(shopProductId);
+                shopProduct.setUuid(UUID.randomUUID().toString().replace("-", ""));
+                shopProduct.setProductApproveId(shopProductApprove.getId());
+                ret = shopProductService.save(shopProduct);
 
-            shopProduct.setId(idGenerator.id());
-            shopProduct.setProductApproveId(shopProductApprove.getId());
-            shopProductService.save(shopProduct);
+                if(ret>0) {
+                    //保存商品图片
+                    List<ShopProductImg> shopProductImgs = new ArrayList<>();
+                    List<ShopProductApproveImg> shopProductApproveImgs = shopProductApproveImgService.queryListByApproveId(shopProductApprove.getId());
+                    if (CollectionUtils.isNotEmpty(shopProductApproveImgs)) {
+                        for (ShopProductApproveImg shopProductApproveImg : shopProductApproveImgs) {
+                            ShopProductImg shopProductImg = new ShopProductImg();
+                            BeanUtils.copyProperties(shopProductImg, shopProductApproveImg);
+                            shopProductImg.setId(idGenerator.id());
+                            shopProductImg.setShopProductId(shopProduct.getId());
+                            shopProductImgs.add(shopProductImg);
+                        }
+                    }
+                    if (CollectionUtils.isEmpty(shopProductImgs)) {
+                        throw new IllegalArgumentException("保存商品图片失败");
+                    }
 
+                    ret = shopProductImgService.saves(shopProductImgs);
+                    if(ret!=shopProductImgs.size()) {
+                        throw new IllegalArgumentException("保存商品图片失败");
+                    }
+                    //保存商品SKU
+                    List<ShopProductApproveSkuVO> shopProductApproveSkuVOS = shopProductApproveSkuService.queryListByProductApproveId(shopProductApprove.getId());
+                    List<ProductSku> productSkus = new ArrayList<>();
+                    if (CollectionUtils.isNotEmpty(shopProductApproveSkuVOS)) {
+                        for (ShopProductApproveSkuVO shopProductApproveSkuVO : shopProductApproveSkuVOS) {
+                            ProductSku productSku = new ProductSku();
+                            BeanUtils.copyProperties(productSku, shopProductApproveSkuVO);
+                            productSku.setId(idGenerator.id());
+                            productSku.setShopProductId(shopProduct.getId());
+                            productSku.setProductUuid(shopProduct.getUuid());
+                            productSkus.add(productSku);
+                        }
+                    }
+
+                    if (CollectionUtils.isEmpty(productSkus)) {
+                        throw new IllegalArgumentException("保存商品SKU失败");
+                    }
+
+                    ret = productSkuService.saves(productSkus);
+                    if(ret!=productSkus.size())
+                    {
+                        throw new IllegalArgumentException("保存商品SKU失败");
+                    }
+
+                }else{
+                    throw new IllegalArgumentException("保存商品图片失败");
+                }
+            }
 
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("查询失败");
+            resultObjectVO.setMsg("请求失败");
+
+            logger.info("开始回滚数据 shopProductId {}",shopProductId);
+            shopProductService.deleteById(shopProductId);
+            shopProductImgService.deleteByShopProductId(shopProductId);
+            productSkuService.deleteByShopProductId(shopProductId);
         }finally {
             skylarkLock.unLock(ProductApproveRedisLockKey.getProductApprovePassLockKey(productApproveId),productApproveId);
         }

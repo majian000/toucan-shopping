@@ -21,4 +21,6 @@ public interface ShopProductApproveImgService {
 
     int deleteByProductApproveId(Long productApproveId);
 
+    List<ShopProductApproveImg> queryListByApproveId(Long approveId);
+
 }

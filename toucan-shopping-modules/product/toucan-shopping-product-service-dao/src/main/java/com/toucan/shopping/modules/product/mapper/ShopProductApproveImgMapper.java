@@ -22,5 +22,7 @@ public interface ShopProductApproveImgMapper {
 
     int deleteByProductApproveId(Long productApproveId);
 
+    List<ShopProductApproveImg> queryListByApproveId(Long approveId);
+
 
 }

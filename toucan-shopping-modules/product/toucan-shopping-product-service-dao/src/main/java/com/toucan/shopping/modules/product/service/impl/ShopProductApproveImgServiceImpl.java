@@ -44,4 +44,9 @@ public class ShopProductApproveImgServiceImpl implements ShopProductApproveImgSe
     public int deleteByProductApproveId(Long productApproveId) {
         return shopProductImgMapper.deleteByProductApproveId(productApproveId);
     }
+
+    @Override
+    public List<ShopProductApproveImg> queryListByApproveId(Long approveId) {
+        return shopProductImgMapper.queryListByApproveId(approveId);
+    }
 }

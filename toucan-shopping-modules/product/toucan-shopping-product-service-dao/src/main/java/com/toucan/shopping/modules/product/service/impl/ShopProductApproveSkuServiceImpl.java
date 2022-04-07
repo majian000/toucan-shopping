@@ -61,4 +61,9 @@ public class ShopProductApproveSkuServiceImpl implements ShopProductApproveSkuSe
     public int deleteByShopProductApproveId(Long productApproveId) {
         return shopProductApproveSkuMapper.deleteByShopProductApproveId(productApproveId);
     }
+
+    @Override
+    public List<ShopProductApproveSkuVO> queryListByProductApproveId(Long productApproveId) {
+        return shopProductApproveSkuMapper.queryListByProductApproveId(productApproveId);
+    }
 }

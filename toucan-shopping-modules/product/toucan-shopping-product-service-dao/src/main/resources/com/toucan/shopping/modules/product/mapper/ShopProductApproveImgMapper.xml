@@ -76,4 +76,10 @@
 
 
 
+    <select id="queryListByApproveId" parameterType="java.lang.Long" resultMap="shopProductImgMap">
+        select t.* from t_shop_product_approve_img t where 1=1 and t.delete_status = 0 and t.approve_id = #{approveId}
+    </select>
+
+
+
 </mapper>
