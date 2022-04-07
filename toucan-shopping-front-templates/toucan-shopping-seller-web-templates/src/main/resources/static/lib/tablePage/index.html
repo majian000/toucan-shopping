@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="no-js css-menubar" lang="zh-cn">
+<head>
+    <link rel="stylesheet" type="text/css" href="${basePath}/static/lib/tablePage/table.css">
+    <script type="text/javascript" src="${basePath}/static/lib/tablePage/front-endPage.js"></script>
+    <script type="text/javascript" src="${basePath}/static/lib/tablePage/shujv2.js"></script>
+
+</head>
+<body>
+
+
+<div id="histroyBox" >
+    <table class="CJJ-Table" >
+        <thead>
+        <tr>
+            <th>装点</th>
+            <th>卸点</th>
+            <th>运输货物</th>
+            <th>下单日期</th>
+            <th>作者</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="new_productBox">
+            <td class="taskCode" style="display:table-cell">T1710121762</td>
+            <td class="startAddr" style="display:table-cell">测试</td>
+            <td class="endAddr" style="display:table-cell">test</td>
+            <td class="varietiesTypeName" style="display:table-cell">钢材</td>
+            <td class="createDate" style="display:table-cell">2017-10-12 19:04:08</td>
+            <td class="customerName" style="display:none">大头网</td>
+            <td><a href="#">编辑</a></td>
+        </tr>
+        <tr class="new_productBox">
+            <td class="taskCode" style="display:table-cell">T1710121767</td>
+            <td class="startAddr" style="display:table-cell">测试</td>
+            <td class="endAddr" style="display:table-cell">test</td>
+            <td class="varietiesTypeName" style="display:table-cell">钢材</td>
+            <td class="createDate" style="display:table-cell">2017-09-26 19:12:48</td>
+            <td class="customerName" style="display:none">好运虎测试公司</td>
+            <td><a href="#">编辑</a></td>
+        </tr>
+        <tr class="new_productBox">
+            <td class="taskCode" style="display:table-cell">T1709131501</td>
+            <td class="startAddr" style="display:table-cell">雨花经济开发区板桥镇龙腾北路11号</td>
+            <td class="endAddr" style="display:table-cell">逸仙路</td>
+            <td class="varietiesTypeName" style="display:table-cell">农副产品</td>
+            <td class="createDate" style="display:table-cell">2017-09-13 22:01:17</td>
+            <td class="customerName" style="display:none">测试0810</td>
+            <td><a href="#">编辑</a></td>
+        </tr>
+        <tr class="new_productBox">
+            <td class="taskCode" style="display:table-cell">T1708231164</td>
+            <td class="startAddr" style="display:table-cell">雨花经济开发区板桥镇龙腾北路11号</td>
+            <td class="endAddr" style="display:table-cell">逸仙路</td>
+            <td class="varietiesTypeName" style="display:table-cell">农副产品</td>
+            <td class="createDate" style="display:table-cell">2017-08-23 16:49:21</td>
+            <td class="customerName" style="display:none">测试0810</td>
+            <td><a href="#">编辑</a></td>
+        </tr>
+        <tr class="new_productBox">
+            <td class="taskCode" style="display:table-cell">T1708231159</td>
+            <td class="startAddr" style="display:table-cell">雨花经济开发区板桥镇龙腾北路11号</td>
+            <td class="endAddr" style="display:table-cell">逸仙路</td>
+            <td class="varietiesTypeName" style="display:table-cell">农副产品</td>
+            <td class="createDate" style="display:table-cell">2017-08-23 16:47:42</td>
+            <td class="customerName" style="display:none">测试0810</td>
+            <td><a href="#">编辑</a></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="5">
+                <div style="float:right;margin-left:10px;" class="tfootRight">
+                    <input placeholder="输入页码" type="text" />
+                    <button>确定</button>
+                </div>
+                <div style="float:right">
+                    <span class="firstPage" style="margin-right: 10px; cursor: pointer; float: left; margin-left: 10px; display: none;">首页</span>
+                    <span class="lastPage" style="margin-right: 10px; cursor: pointer; float: left; display: none;">上一页</span>
+                    <ul class="pagenumberBox">
+                        <li class="pagenumberBoxLi">1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                        <li>6</li>
+                        <li>7</li>
+                    </ul>
+                    <input class="typeNumber" type="text" value="1" onfocus="this.blur()" style="display:none;width:20px;height:20px;text-align:center;line-height:20px;border:1px solid #666;margin-right:5px;float:left;margin-top:2.5px;" />
+                    <span class="nextPage" style="margin-right: 10px; float: left; cursor: pointer; display: block;">下一页</span>
+                    <span class="endPage" style="cursor: pointer; float: left; display: block;">尾页</span>
+                </div>
+                <div style="float:right">
+                    <select><option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="500">500</option></select>
+                </div></td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    //前台分页的样子
+    $('#histroyBox').CJJTable({
+        'title':["装点","卸点","运输货物","下单日期","作者","操作"],//thead中的标题 必填
+        'body':["taskCode","startAddr","endAddr","varietiesTypeName","createDate","customerName",""],//tbody td 取值的字段 必填
+        'display':[1,1,1,1,1,2],//隐藏域，1显示，2隐藏 必填
+        'pageNUmber':10,//每页显示的条数 选填
+        'pageLength':data.length,//选填
+        'url':data,//数据源 必填
+        dbTrclick:function(e){//双击tr事件
+            alert(e.find('.taskCode').html())
+        }
+    });
+    //后台分页的样子
+    /*$('#histroyBox').CJJTable({
+        'title':["装点","卸点","运输货物","下单日期"],//thead中的标题 必填
+        'body':["contactName","contactMobliePhone","carrierName","taskNum","taskCustomerExpectPrice","taskCustomerBudgetFreight"],//tbody td 取值的字段 必填
+        'display':[1,1,1,1,2,2],//隐藏域，1显示，2隐藏 必填
+        'pageJson':{
+            "taskId":528710,
+            "pageSize":100,//ajax请求参数中的每页展示数量 选填
+            "token":"yJUmunFeG3REqisYAmCfeA"
+        },
+        'url':'api/quoted/quotedList',//数据源 必填
+        dbTrclick:function(that){ //双击tr事件
+            alert(that.find('.contactName').html())
+        }
+    });*/
+</script>
+
+
+
+
+</body></html>
+
+
+
+
+

@@ -1,0 +1,103 @@
+.CJJ-Table .clearfix {
+    clear: both;
+}
+
+.CJJ-Table .pagenumberBox {
+    float: left;
+}
+
+.CJJ-Table .pagenumberBox li {
+    float: left;
+    padding: 4px 9px 4px 9px;
+    border: 1px solid #d9d9d9;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+    color: #333;
+}
+
+.CJJ-Table .pagenumberBox li:hover {
+    background: #ff6666 !important;
+    padding: 5px 10px 5px 10px !important;
+    color: white !important;
+    border: none !important;
+}
+
+.CJJ-Table .pagenumberBoxLi {
+    background: #ff6666 !important;
+    padding: 5px 10px 5px 10px !important;
+    color: white !important;
+    border: none !important;
+}
+
+.CJJ-Table tfoot span {
+    padding: 4px 15px 4px 15px;
+    border: 1px solid #d9d9d9;
+    color: #333;
+}
+
+.CJJ-Table tfoot span:hover {
+    background: #ff6666 !important;
+    padding: 5px 16px 5px 16px !important;
+    color: white !important;
+    border: none !important;
+}
+
+.CJJ-Table .tfootRight input {
+    width: 80px;
+    padding-left: 10px;
+    height: 25px;
+    border: 1px solid #d9d9d9;
+    color: #333;
+}
+
+.CJJ-Table .tfootRight button {
+    width: 60px;
+    height: 25px;
+    border: 1px solid #d9d9d9;
+    color: #333;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.CJJ-Table .tfootRight button:hover {
+    background: #ff6666 !important;
+    height: 27px;
+    color: white !important;
+    border: none !important;
+}
+.CJJ-Table {
+    width: 98%;
+    margin-left: 1%;
+    margin-bottom: 20px;
+}
+
+.CJJ-Table thead{
+    border-bottom: 1px solid #ccc;
+    background: #f2f2f2;
+}
+
+.CJJ-Table thead th{
+    font-size: 14px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.CJJ-Table tbody td{
+    text-align: center;
+}
+
+.CJJ-Table tbody tr{
+    border-bottom: 1px dashed #d9d9d9;
+}
+
+.CJJ-Table tbody tr:hover{
+    background-color: #d5d5d5;
+}
+.CJJ-Table tfoot select{
+    width: 80px;
+    padding-left: 10px;
+    height: 26px;
+    border: 1px solid #d9d9d9;
+    color: #333;
+}
