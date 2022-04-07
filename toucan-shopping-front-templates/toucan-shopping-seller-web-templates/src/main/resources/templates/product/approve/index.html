@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
     <!--<link href="${basePath}/static/lib/jquery-treegrid/bootstrap-2.3.2/css/bootstrap.css" rel="stylesheet">-->
     <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
+    <link rel="stylesheet" href="${basePath}/static/lib/pagination/toPage.css" />
 
 </head>
 <body>
@@ -50,12 +51,59 @@
         <div class="right_bg mb-15" style="width:100%;min-height: 700px;">
             <div class="title" style="border-bottom: 1px solid#9a9999;"><span>审核列表</span></div>
             <div class="right_panel">
+                <div class="page_2">
+                    <div class="page_content">
+                        <ul style="width: 300px;margin: 10px auto;">
+                            <li>141,分页条目</li>
+                            <li>142,分页条目</li>
+                            <li>143,分页条目</li>
+                            <li>144,分页条目</li>
+                            <li>145,分页条目</li>
+                            <li>146,分页条目</li>
+                            <li>147,分页条目</li>
+                            <li>148,分页条目</li>
+                            <li>149,分页条目</li>
+                            <li>150,分页条目</li>
+                            <li>151,分页条目</li>
+                            <li>152,分页条目</li>
+                            <li>153,分页条目</li>
+                            <li>154,分页条目</li>
+                            <li>155,分页条目</li>
+                            <li>156,分页条目</li>
+                            <li>157,分页条目</li>
+                            <li>158,分页条目</li>
+                            <li>159,分页条目</li>
+                            <li>160,分页条目</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
 
+<script type="text/javascript" src="${basePath}/static/lib/pagination/toPage.js"></script>
+<script>
+    /*容器2参数*/
+    var obj_2={
+        obj_box:'.page_2',//翻页容器
+        total_item:999,//条目总数
+        per_num:20,//每页条目数
+        current_page:1//当前页
+    };
+    function drawTable()
+    {
+        var e = 10;
+        var n = '<ul style="width: 300px;margin: 10px auto;">';
+        for (var m = 0; m < e; m++) {
+            n += "<li>"+m+"分页条目</li>"+Math.ceil(Math.random()*1000);
+        }
+        n += "</ul>";
+        $(".page_2").children(".page_content").html(n)
+    }
+    page_ctrl(obj_2,drawTable);
+</script>
 
 
 <#include "/footer.html"/>
