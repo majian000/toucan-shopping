@@ -548,7 +548,7 @@ public class ShopProductApproveController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请求失败");
 
-            logger.info("开始回滚数据 shopProductId {}",shopProductId);
+            logger.warn("开始回滚数据 shopProductId {}",shopProductId);
             shopProductService.deleteById(shopProductId);
             shopProductImgService.deleteByShopProductId(shopProductId);
             productSkuService.deleteByShopProductId(shopProductId);
