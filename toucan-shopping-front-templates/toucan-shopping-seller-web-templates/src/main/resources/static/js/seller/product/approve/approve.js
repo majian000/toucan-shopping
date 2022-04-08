@@ -2,7 +2,7 @@
 var pagegizationConfigObject={
     obj_box:'.pageToolbar',//翻页容器
     total_item:1,//条目总数
-    per_num:2,//每页条目数
+    per_num:20,//每页条目数
     current_page:1//当前页
 };
 var g_product_approve_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
