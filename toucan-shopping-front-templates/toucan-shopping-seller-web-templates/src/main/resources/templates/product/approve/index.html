@@ -23,7 +23,7 @@
     <!--<link href="${basePath}/static/lib/jquery-treegrid/bootstrap-2.3.2/css/bootstrap.css" rel="stylesheet">-->
     <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
     <link rel="stylesheet" href="${basePath}/static/lib/pagination/toPage.css" />
-
+    <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
 </head>
 <body>
 
@@ -51,31 +51,247 @@
         <div class="right_bg mb-15" style="width:100%;min-height: 700px;">
             <div class="title" style="border-bottom: 1px solid#9a9999;"><span>审核列表</span></div>
             <div class="right_panel">
-                <div class="page_2">
-                    <div class="page_content">
-                        <ul style="width: 300px;margin: 10px auto;">
-                            <li>141,分页条目</li>
-                            <li>142,分页条目</li>
-                            <li>143,分页条目</li>
-                            <li>144,分页条目</li>
-                            <li>145,分页条目</li>
-                            <li>146,分页条目</li>
-                            <li>147,分页条目</li>
-                            <li>148,分页条目</li>
-                            <li>149,分页条目</li>
-                            <li>150,分页条目</li>
-                            <li>151,分页条目</li>
-                            <li>152,分页条目</li>
-                            <li>153,分页条目</li>
-                            <li>154,分页条目</li>
-                            <li>155,分页条目</li>
-                            <li>156,分页条目</li>
-                            <li>157,分页条目</li>
-                            <li>158,分页条目</li>
-                            <li>159,分页条目</li>
-                            <li>160,分页条目</li>
-                        </ul>
-                    </div>
+
+                <div class="bootstrap-frm" style="width:100%;max-width:100%;"  >
+                    <label style="width:40%;float: left;">
+                        <span>商品名称 :</span>
+                        <input type="text" id="name" maxlength="25"  name="name"   tabindex="1"  style="width:50%" />
+                    </label>
+                    <label style="width:40%;float: left;">
+                        <span>发布日期 :</span>
+                        <input type="text" id="name2" maxlength="25"  name="name"   tabindex="1"  style="width:30%" />
+                        至
+                        <input type="text" id="name3" maxlength="25"  name="name"   tabindex="1"  style="width:30%" />
+                    </label>
+                    <label style="width:40%;float: left;">
+                        <span>审核状态 :</span>
+                        <select>
+                            <option>全部</option>
+                            <option>审核中</option>
+                            <option>审核驳回</option>
+                            <option>审核通过</option>
+                        </select>
+                    </label>
+                    <label style="width:40%;float: left;">
+                        <input type="button" id="queryBtn" class="button" value="查询"  />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" id="resetBtn" class="button" value="重置"  />
+                    </label>
+                </div>
+                <div class="pageToolbar">
+                    <table id="productApproveTable" class="productApproveTable" border="1" width="900">
+                        <tbody><tr class="tabTh">
+                            <td width="100px">序号</td>
+                            <td width="100px">用户名</td>
+                            <td width="100px">姓名</td>
+                            <td width="100px">归属机构</td>
+                            <td width="100px">密码</td>
+                            <td width="100px">用户类型</td>
+                            <td width="200px">状 态(0无效/1有效)</td>
+                            <td width="100px">备注</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">1</td>
+                            <td>admin</td>
+                            <td>admin</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">2</td>
+                            <td>admin2</td>
+                            <td>admin2</td>
+                            <td>92</td>
+                            <td>******</td>
+                            <td>系统管理员2</td>
+                            <td>1</td>
+                            <td>it管理员2</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">3</td>
+                            <td>admin3</td>
+                            <td>admin3</td>
+                            <td>93</td>
+                            <td>******</td>
+                            <td>系统管理员3</td>
+                            <td>1</td>
+                            <td>it管理员3</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">4</td>
+                            <td>admin4</td>
+                            <td>admin4</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员4</td>
+                            <td>14</td>
+                            <td>it管理员4</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">5</td>
+                            <td>admin5</td>
+                            <td>admin5</td>
+                            <td>95</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">6</td>
+                            <td>admin6</td>
+                            <td>admin6</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员6</td>
+                            <td>1</td>
+                            <td>it管理员6</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">7</td>
+                            <td>admin7</td>
+                            <td>admin7</td>
+                            <td>7</td>
+                            <td>******</td>
+                            <td>系统管理员7</td>
+                            <td>1</td>
+                            <td>it管理员7</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">8</td>
+                            <td>admin8</td>
+                            <td>admin8</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员8</td>
+                            <td>1</td>
+                            <td>it管理员8</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">9</td>
+                            <td>admin9</td>
+                            <td>admin9</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">10</td>
+                            <td>admin10</td>
+                            <td>admin</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员10</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">11</td>
+                            <td>admin11</td>
+                            <td>admin11</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员11</td>
+                            <td>1</td>
+                            <td>it管理员11</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">12</td>
+                            <td>admin12</td>
+                            <td>admin12</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员12</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">13</td>
+                            <td>admin</td>
+                            <td>admin</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">14</td>
+                            <td>admin4</td>
+                            <td>admin4</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员4</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">15</td>
+                            <td>admin</td>
+                            <td>admin</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员5</td>
+                            <td>1</td>
+                            <td>it管理员5</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">16</td>
+                            <td>admin</td>
+                            <td>admin6</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理6</td>
+                            <td>1</td>
+                            <td>it管理员6</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">17</td>
+                            <td>admin</td>
+                            <td>admin</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">18</td>
+                            <td>admin</td>
+                            <td>admin</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">19</td>
+                            <td>admin19</td>
+                            <td>admin19</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        <tr align="center">
+                            <td><input type="checkbox">20</td>
+                            <td>admin20</td>
+                            <td>admin20</td>
+                            <td>9</td>
+                            <td>******</td>
+                            <td>系统管理员</td>
+                            <td>1</td>
+                            <td>it管理员</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -84,25 +300,23 @@
 </div>
 
 <script type="text/javascript" src="${basePath}/static/lib/pagination/toPage.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
 <script>
     /*容器2参数*/
-    var obj_2={
-        obj_box:'.page_2',//翻页容器
+    var pagegizationConfigObject={
+        obj_box:'.pageToolbar',//翻页容器
         total_item:999,//条目总数
         per_num:20,//每页条目数
         current_page:1//当前页
     };
     function drawTable()
     {
-        var e = 10;
-        var n = '<ul style="width: 300px;margin: 10px auto;">';
-        for (var m = 0; m < e; m++) {
-            n += "<li>"+m+"分页条目</li>"+Math.ceil(Math.random()*1000);
-        }
-        n += "</ul>";
-        $(".page_2").children(".page_content").html(n)
+        $("#productApproveTable").FrozenTable(2,0,0);
     }
-    page_ctrl(obj_2,drawTable);
+
+    $(document).ready(function(){
+        page_ctrl(pagegizationConfigObject,drawTable);
+    });
 </script>
 
 
