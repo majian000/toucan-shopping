@@ -74,9 +74,9 @@ public class ShopProductApproveApiController extends BaseController {
     @UserAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public PageInfo list(HttpServletRequest httpServletRequest,@RequestBody ShopProductApprovePageInfo pageInfo)
+    public ResultObjectVO list(HttpServletRequest httpServletRequest,@RequestBody ShopProductApprovePageInfo pageInfo)
     {
-        PageInfo pageResult = new PageInfo();
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
             if(pageInfo==null)
             {
@@ -85,23 +85,22 @@ public class ShopProductApproveApiController extends BaseController {
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             if(StringUtils.isEmpty(userMainId))
             {
-                return pageResult;
+                logger.warn("查询商品审核 没有找到用户ID {} ",userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败,请稍后重试");
+                return resultObjectVO;
             }
 
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
                     pageInfo.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
                     resultObjectVO = feignShopProductApproveService.queryListPage(requestJsonVO);
-                    if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null)
-                    {
-                        pageResult = resultObjectVO.formatData(PageInfo.class);
-                    }
                 }
             }
         }catch(Exception e)
@@ -109,7 +108,7 @@ public class ShopProductApproveApiController extends BaseController {
             logger.warn(e.getMessage(),e);
         }
 
-        return pageResult;
+        return resultObjectVO;
     }
 
 }

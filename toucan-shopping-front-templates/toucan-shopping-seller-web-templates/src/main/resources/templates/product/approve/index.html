@@ -88,44 +88,7 @@
                 </div>
                 <div class="pageToolbar">
                     <table id="productApproveTable" class="productApproveTable" border="1" width="900">
-                        <tbody>
-                        <tr class="tabTh">
-                            <td >序号</td>
-                            <td >审核状态</td>
-                            <td >商品名称</td>
-                            <td >商品分类</td>
-                            <td >发布时间</td>
-                            <td >操作</td>
-                        </tr>
-                        <tr align="center" class="tabTd">
-                            <td>1</td>
-                            <td><a style="color:red;">审核驳回</a></td>
-                            <td>小米10</td>
-                            <td>数码产品/手机</td>
-                            <td>2022-4-8 15:06:23</td>
-                            <td>
-                                <a href="#" style="color:red">查看驳回原因</a>
-                                &nbsp;&nbsp;&nbsp;
-                                <a href="#" style="color:blue">重新发布</a>
-                            </td>
-                        </tr>
-
-                        <tr align="center" class="tabTd">
-                            <td>1</td>
-                            <td><a style="color:green;">审核通过</a></td>
-                            <td>小米11</td>
-                            <td>数码产品/手机</td>
-                            <td>2022-4-8 15:06:23</td>
-                            <td></td>
-                        </tr>
-                        <tr align="center" class="tabTd">
-                            <td>1</td>
-                            <td>审核中</td>
-                            <td>小米9</td>
-                            <td>数码产品/手机</td>
-                            <td>2022-4-8 15:06:23</td>
-                            <td></td>
-                        </tr>
+                        <tbody id="productApproveTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -140,23 +103,6 @@
 <script type="text/javascript" src="${basePath}/static/lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/approve/approve.js"></script>
 
-<script>
-    /*容器2参数*/
-    var pagegizationConfigObject={
-        obj_box:'.pageToolbar',//翻页容器
-        total_item:999,//条目总数
-        per_num:20,//每页条目数
-        current_page:1//当前页
-    };
-    function drawTable()
-    {
-        $("#productApproveTable").FrozenTable(2,0,0);
-    }
-
-    $(document).ready(function(){
-        page_ctrl(pagegizationConfigObject,drawTable);
-    });
-</script>
 
 
 <#include "/footer.html"/>

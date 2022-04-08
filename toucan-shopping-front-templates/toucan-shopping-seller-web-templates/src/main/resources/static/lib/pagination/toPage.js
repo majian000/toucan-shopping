@@ -12,9 +12,6 @@ function page_ctrl(b,callback) {
     $(c).append('<div class="page_content"></div>');
     $(c).append('<div class="page_ctrl"></div>');
     function d() {
-        if(callback!=null) {
-            callback();
-        }
         var l = (a == g) ? 1 : a + 1;
         var h = '<button class="prev_page">上一页</button>';
         for (var k = 0; k < g - 1; k++) {
@@ -92,7 +89,6 @@ function page_ctrl(b,callback) {
                         d()
                     } else {
                         if (h.hasClass("to_page_num")) {
-                            alert(1);
                             a = parseInt(h.siblings(".input_page_num").val());
                             h.parent(".page_ctrl").html("");
                             d()
@@ -100,5 +96,9 @@ function page_ctrl(b,callback) {
                     }
                 }
             }
+            b.current_page = a;
+            if(callback!=null) {
+                callback();
+            }
         })
-};
+}
