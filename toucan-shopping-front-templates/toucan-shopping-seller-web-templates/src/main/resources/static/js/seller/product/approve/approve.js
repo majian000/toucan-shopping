@@ -8,7 +8,6 @@ var pagegizationConfigObject={
 var g_product_approve_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
 function doPage()
 {
-    alert(pagegizationConfigObject.current_page);
     loading.showLoading({
         type:6,
         tip:"查询中..."
