@@ -84,4 +84,9 @@ public class ShopProductApprove {
     private Short isResubmit; //是否重新提交 0:否 1:是
 
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long shopProductId; //店铺商品ID
+
+
 }

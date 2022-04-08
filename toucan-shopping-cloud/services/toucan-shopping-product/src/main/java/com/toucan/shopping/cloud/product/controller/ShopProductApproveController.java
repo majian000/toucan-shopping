@@ -550,6 +550,9 @@ public class ShopProductApproveController {
                         throw new IllegalArgumentException("保存商品SKU失败");
                     }
 
+                    //更新关联店铺商品ID
+                    shopProductApproveService.updateShopProductId(shopProductApproveVO.getId(),shopProduct.getId());
+
                 }else{
                     throw new IllegalArgumentException("保存商品图片失败");
                 }

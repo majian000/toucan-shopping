@@ -31,4 +31,7 @@ public interface ShopProductApproveService {
 
     List<ShopProductApproveVO> queryList(ShopProductApproveVO shopProductVO);
 
+
+    int updateShopProductId(Long id, Long shopProductId);
+
 }
