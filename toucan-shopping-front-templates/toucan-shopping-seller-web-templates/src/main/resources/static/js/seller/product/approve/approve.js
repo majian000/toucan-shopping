@@ -64,18 +64,30 @@ function drawTable(pageResult)
         for(var i=0;i<pageResult.list.length;i++)
         {
             var row = pageResult.list[i];
-            tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" +
-                "                            <td>"+(i+1)+"</td>\n" +
-                "                            <td><a style=\"color:red;\">审核驳回</a></td>\n" +
-                "                            <td>"+row.name+"</td>\n" +
-                "                            <td>数码产品/手机</td>\n" +
-                "                            <td>"+row.createDate+"</td>\n" +
-                "                            <td>\n" +
-                "                                <a href=\"#\" style=\"color:red\">查看驳回原因</a>\n" +
-                "                                &nbsp;&nbsp;&nbsp;\n" +
-                "                                <a href=\"#\" style=\"color:blue\">重新发布</a>\n" +
-                "                            </td>\n" +
-                "                        </tr>";
+            tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
+            tableHtml+=   "                            <td>"+(i+1)+"</td>\n" ;
+            if(row.approveStatus==1)
+            {
+                tableHtml+=    "                            <td>审核中</td>\n" ;
+            }else if(row.approveStatus==2)
+            {
+                tableHtml+=    "                            <td><a style=\"color:green;\">审核通过</a></td>\n" ;
+            }else if(row.approveStatus==3)
+            {
+                tableHtml+=    "                            <td><a style=\"color:red;\">审核驳回</a></td>\n" ;
+            }
+            tableHtml+=    "                            <td>"+row.name+"</td>\n" ;
+            tableHtml+=    "                            <td>数码产品/手机</td>\n" ;
+            tableHtml+=    "                            <td>"+row.createDate+"</td>\n" ;
+            tableHtml+=    "                            <td>\n" ;
+            if(row.approveStatus==3)
+            {
+                tableHtml+=     "                                <a href=\"#\" style=\"color:red\">查看驳回原因</a>\n" ;
+                tableHtml+=     "                                &nbsp;&nbsp;&nbsp;\n" ;
+                tableHtml+=     "                                <a href=\"#\" style=\"color:blue\">重新发布</a>\n" ;
+            }
+            tableHtml+=    "                            </td>\n" ;
+            tableHtml+=    "                        </tr>";
         }
 
     }
