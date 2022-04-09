@@ -77,7 +77,7 @@ function drawTable(pageResult)
                 tableHtml+=    "                            <td><a style=\"color:red;\">审核驳回</a></td>\n" ;
             }
             tableHtml+=    "                            <td>"+row.name+"</td>\n" ;
-            tableHtml+=    "                            <td>数码产品/手机</td>\n" ;
+            tableHtml+=    "                            <td>"+row.categoryName+"</td>\n" ;
             tableHtml+=    "                            <td>"+row.createDate+"</td>\n" ;
             tableHtml+=    "                            <td>\n" ;
             if(row.approveStatus==3)

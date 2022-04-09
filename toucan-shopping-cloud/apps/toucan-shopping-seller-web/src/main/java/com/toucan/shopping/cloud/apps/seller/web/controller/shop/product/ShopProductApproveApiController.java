@@ -1,14 +1,17 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.shop.product;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.apps.seller.web.vo.selectPage.GridResult;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
@@ -24,6 +27,7 @@ import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.PublishProductVO;
+import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -64,6 +68,43 @@ public class ShopProductApproveApiController extends BaseController {
     @Autowired
     private FeignSellerShopService feignSellerShopService;
 
+    @Autowired
+    private FeignCategoryService feignCategoryService;
+
+
+
+    /**
+     * 查询类别信息
+     * @param list
+     * @param categoryIds
+     */
+    void queryCategory(List<ShopProductApproveVO> list,Long[] categoryIds)
+    {
+        try {
+            //查询类别名称
+            CategoryVO queryCategoryVO = new CategoryVO();
+            queryCategoryVO.setIdArray(categoryIds);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryCategoryVO);
+            ResultObjectVO resultObjectVO = feignCategoryService.findByIdArray(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                    for (ShopProductApproveVO shopProductVO : list) {
+                        for (CategoryVO categoryVO : categoryVOS) {
+                            if (shopProductVO.getCategoryId() != null && shopProductVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
+                                shopProductVO.setCategoryName(categoryVO.getName());
+                                shopProductVO.setCategoryPath(categoryVO.getNamePath());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
 
 
     /**
@@ -101,6 +142,44 @@ public class ShopProductApproveApiController extends BaseController {
                     pageInfo.setShopId(sellerShopVO.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
                     resultObjectVO = feignShopProductApproveService.queryListPage(requestJsonVO);
+                    if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
+                        Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                        List<ShopProductApproveVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductApproveVO.class);
+                        if (CollectionUtils.isNotEmpty(list)) {
+
+                            Long[] categoryIds = new Long[list.size()];
+                            boolean categoryExists = false;
+                            for (int i = 0; i < list.size(); i++) {
+                                ShopProductApproveVO shopProductVO = list.get(i);
+
+
+                                //设置店铺分类ID
+                                categoryExists = false;
+                                for (int sci = 0; sci < categoryIds.length; sci++) {
+                                    Long categoryId = categoryIds[sci];
+                                    if (shopProductVO.getCategoryId() != null && categoryId != null
+                                            && categoryId.longValue() == shopProductVO.getCategoryId().longValue()) {
+                                        categoryExists = true;
+                                        break;
+                                    }
+
+                                }
+                                if (!categoryExists) {
+                                    if (shopProductVO.getCategoryId() != null) {
+                                        categoryIds[i] = shopProductVO.getCategoryId();
+                                    }
+                                }
+
+                            }
+
+                            //查询类别名称
+                            this.queryCategory(list, categoryIds);
+
+                            resultObjectDataMap.put("list",list);
+
+                            resultObjectVO.setData(resultObjectDataMap);
+                        }
+                    }
                 }
             }
         }catch(Exception e)
