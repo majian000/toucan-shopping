@@ -83,7 +83,7 @@ function drawTable(pageResult)
             if(row.approveStatus==3)
             {
                 tableHtml+=     "                                <a href=\"#\" style=\"color:red\">查看驳回原因</a>\n" ;
-                tableHtml+=     "                                &nbsp;&nbsp;&nbsp;\n" ;
+                tableHtml+=     "                                &nbsp;&nbsp;\n" ;
                 tableHtml+=     "                                <a href=\"#\" style=\"color:blue\">重新发布</a>\n" ;
             }
             tableHtml+=    "                            </td>\n" ;
