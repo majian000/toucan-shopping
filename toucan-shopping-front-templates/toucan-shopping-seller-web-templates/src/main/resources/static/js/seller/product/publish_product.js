@@ -182,7 +182,7 @@ function goApprovePage(msg)
     }else
     {
         $("#publish_msg_c").show();
-        $("#publish_msg").text(msg+","+g_goApproveSecond+"秒后跳转到商品审核列表");
+        $("#publish_msg").text(msg+","+g_goApproveSecond+"秒后跳转卖家首页");
         $("#publish_msg").css("color","green");
 
     }
