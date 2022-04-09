@@ -52,12 +52,12 @@ function drawTable(pageResult)
 {
     var tableHtml="";
     tableHtml+=" <tr class=\"tabTh\">\n" +
-        "                            <td >序号</td>\n" +
-        "                            <td >审核状态</td>\n" +
-        "                            <td >商品名称</td>\n" +
-        "                            <td >商品分类</td>\n" +
-        "                            <td >发布时间</td>\n" +
-        "                            <td >操作</td>\n" +
+        "                            <td style=\"width:50px;\" >序号</td>\n" +
+        "                            <td style=\"width:100px;\" >审核状态</td>\n" +
+        "                            <td style=\"width:300px;\">商品名称</td>\n" +
+        "                            <td style=\"width:150px;\" >商品分类</td>\n" +
+        "                            <td style=\"width:100px;\" >发布时间</td>\n" +
+        "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
     if(pageResult!=null&&pageResult.list!=null&&pageResult.list.length>0)
     {
@@ -65,28 +65,28 @@ function drawTable(pageResult)
         {
             var row = pageResult.list[i];
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
-            tableHtml+=   "                            <td>"+(i+1)+"</td>\n" ;
+            tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             if(row.approveStatus==1)
             {
-                tableHtml+=    "                            <td>审核中</td>\n" ;
+                tableHtml+=    "                            <td><div class=\"tabTdWrap\">审核中</div></td>\n" ;
             }else if(row.approveStatus==2)
             {
-                tableHtml+=    "                            <td><a style=\"color:green;\">审核通过</a></td>\n" ;
+                tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:green;\">审核通过</a></div></td>\n" ;
             }else if(row.approveStatus==3)
             {
-                tableHtml+=    "                            <td><a style=\"color:red;\">审核驳回</a></td>\n" ;
+                tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:red;\">审核驳回</a></div></td>\n" ;
             }
-            tableHtml+=    "                            <td>"+row.name+"</td>\n" ;
-            tableHtml+=    "                            <td>"+row.categoryName+"</td>\n" ;
-            tableHtml+=    "                            <td>"+row.createDate+"</td>\n" ;
-            tableHtml+=    "                            <td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.categoryName+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
             if(row.approveStatus==3)
             {
                 tableHtml+=     "                                <a href=\"#\" style=\"color:red\">查看驳回原因</a>\n" ;
                 tableHtml+=     "                                &nbsp;&nbsp;\n" ;
                 tableHtml+=     "                                <a href=\"#\" style=\"color:blue\">重新发布</a>\n" ;
             }
-            tableHtml+=    "                            </td>\n" ;
+            tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
 
