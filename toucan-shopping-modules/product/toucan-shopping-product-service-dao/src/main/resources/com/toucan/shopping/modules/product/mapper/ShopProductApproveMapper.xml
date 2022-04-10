@@ -66,6 +66,14 @@
             and t.uuid = #{uuid}
         </if>
 
+        <if test="startDateYMDHS!=null  ">
+            and t.create_date <![CDATA[ >= ]]>  #{startDateYMDHS}
+        </if>
+
+        <if test="endDateYMDHS!=null  ">
+            and t.create_date <![CDATA[ <= ]]>  #{endDateYMDHS}
+        </if>
+
         <if test="categoryIdList!=null and categoryIdList.size>0 ">
             and t.category_id in
             <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
