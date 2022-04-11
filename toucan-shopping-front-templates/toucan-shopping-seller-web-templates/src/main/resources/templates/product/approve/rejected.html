@@ -30,6 +30,8 @@
 </head>
 <body>
 
+<#setting number_format="#">
+
 <#include "/top.html"/>
 
 <#assign leftName = "productApprove">
@@ -51,10 +53,21 @@
     </div>
 
     <div class="right_content" >
-        <div class="right_bg mb-15" style="width:100%;min-height: 700px;">
+        <div class="right_bg mb-15" style="width:100%;">
             <div class="title" style="border-bottom: 1px solid#9a9999;"><span>驳回原因</span></div>
             <div class="right_panel">
                 <input type="hidden" id="approveId" value="${approveId!'-1'}" />
+
+                <div class="bootstrap-frm" style="width:80%;max-width:100%;"  >
+                    <div>
+                        <span id="rejectedText"></span>
+                    </div>
+                    <br/>
+
+                    <div style="width:100%;text-align:center;">
+                        <input type="button" id="backBtn" class="button" value="返回"  />
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -62,6 +75,7 @@
 </div>
 
 
+<script type="text/javascript" src="${basePath}/static/js/seller/product/approve/rejected.js"></script>
 
 
 <#include "/footer.html"/>

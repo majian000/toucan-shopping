@@ -58,7 +58,7 @@ public class ShopProductApprovePageController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/rejected/{approveId}")
     public String rejected (HttpServletRequest request, @PathVariable Long approveId){
-        request.setAttribute("approveId",approveId);
+        request.setAttribute("approveId",String.valueOf(approveId));
         return "product/approve/rejected";
     }
 
