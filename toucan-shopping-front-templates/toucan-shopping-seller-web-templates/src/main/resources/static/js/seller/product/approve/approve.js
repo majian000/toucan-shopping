@@ -98,6 +98,11 @@ function drawTable(pageResult)
 function initPagination()
 {
 
+    $(".pageToolbar").html("<table id=\"productApproveTable\" class=\"productApproveTable\" border=\"1\" width=\"900\">\n" +
+        "                        <tbody id=\"productApproveTableBody\">\n" +
+        "                        </tbody>\n" +
+        "                    </table>");
+
     loading.showLoading({
         type:6,
         tip:"查询中..."
@@ -144,11 +149,13 @@ $(function () {
 
     $("#queryBtn").bind( 'click' ,function(){
         pagegizationConfigObject.current_page = 1;
+        g_product_approve_query_obj.page = 1;
         g_product_approve_query_obj.name=$("#name").val();
         g_product_approve_query_obj.startDateYMDHS=$("#startDate").val();
         g_product_approve_query_obj.endDateYMDHS=$("#endDate").val();
         g_product_approve_query_obj.approveStatus=$("#approveStatus option:selected").val();
-        doPage();
+
+        initPagination();
     });
 
 
