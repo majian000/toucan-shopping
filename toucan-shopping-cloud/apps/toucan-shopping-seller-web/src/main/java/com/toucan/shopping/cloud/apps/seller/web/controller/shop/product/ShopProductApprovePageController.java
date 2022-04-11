@@ -42,10 +42,12 @@ public class ShopProductApprovePageController extends BaseController {
     private Toucan toucan;
 
     @Autowired
-    private FeignSellerShopService feignSellerShopService;
+    private CategoryService categoryService;
 
     @Autowired
-    private FeignShopProductApproveService feignShopProductApproveService;
+    private FeignShopCategoryService feignShopCategoryService;
+
+    private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/index")
@@ -62,4 +64,36 @@ public class ShopProductApprovePageController extends BaseController {
         return "product/approve/rejected";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/republish/{approveId}")
+    public String republish (HttpServletRequest request, @PathVariable Long approveId){
+        request.setAttribute("approveId",String.valueOf(approveId));
+        try {
+            request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryMiniCategorys(),simplePropertyPreFilter));
+        }catch(Exception e)
+        {
+            request.setAttribute("categoryList", "[]");
+            logger.warn(e.getMessage(),e);
+        }
+
+        try{
+            ShopCategoryVO queryShopCategory = new ShopCategoryVO();
+            queryShopCategory.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopCategory);
+            ResultObjectVO resultObjectVO = feignShopCategoryService.queryAllList(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ShopCategoryVO> shopCategoryVOList = resultObjectVO.formatDataList(ShopCategoryVO.class);
+                request.setAttribute("shopCategoryList", JSONArray.toJSONString(shopCategoryVOList));
+            }else{
+                request.setAttribute("shopCategoryList", "[]");
+            }
+
+        }catch(Exception e)
+        {
+            request.setAttribute("shopCategoryList", "[]");
+            logger.warn(e.getMessage(),e);
+        }
+        return "product/approve/republish_product";
+    }
 }

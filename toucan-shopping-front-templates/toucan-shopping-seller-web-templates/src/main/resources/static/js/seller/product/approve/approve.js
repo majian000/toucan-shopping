@@ -82,9 +82,9 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
             if(row.approveStatus==3)
             {
-                tableHtml+=     "                                <a href=\""+basePath+"/page/shop/product/approve/rejected/"+row.id+"\" style=\"color:red\">查看驳回原因</a>\n" ;
+                tableHtml+=     "                                <a href=\""+basePath+"/page/shop/product/approve/rejected/"+row.id+"\" style=\"color:red\">驳回原因</a>\n" ;
                 tableHtml+=     "                                &nbsp;&nbsp;\n" ;
-                tableHtml+=     "                                <a href=\"#\" style=\"color:blue\">重新发布</a>\n" ;
+                tableHtml+=     "                                <a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新发布</a>\n" ;
             }
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
