@@ -480,7 +480,7 @@ public class CategoryController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该功能项
+            //查询是否存在该分类
             CategoryVO query=new CategoryVO();
             query.setId(entity.getId());
             List<Category> categorys = categoryService.queryList(query);
@@ -491,6 +491,63 @@ public class CategoryController {
                 return resultObjectVO;
             }
             resultObjectVO.setData(categorys);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    /**
+     * 根据ID查询返回分类ID路径
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/path/by/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findIdPathById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            CategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),CategoryVO.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该分类
+            CategoryVO query=new CategoryVO();
+            query.setId(entity.getId());
+            List<Category> categorys = categoryService.queryList(query);
+            if(CollectionUtils.isEmpty(categorys))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("对象不存在!");
+                return resultObjectVO;
+            }
+            Category category = categorys.get(0);
+            CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+            BeanUtils.copyProperties(categoryTreeVO,category);
+            categoryTreeVO.setIdPath(new ArrayList<Long>());
+            categoryTreeVO.getIdPath().add(category.getId());
+            categoryService.setIdPath(categoryTreeVO);
+
+            resultObjectVO.setData(categoryTreeVO);
 
         }catch(Exception e)
         {
@@ -528,7 +585,7 @@ public class CategoryController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该功能项
+            //查询是否存在该分类
             CategoryVO query=new CategoryVO();
             query.setIdArray(entity.getIdArray());
             List<Category> categorys = categoryService.queryList(query);
@@ -929,7 +986,7 @@ public class CategoryController {
 
 
     /**
-     * 批量删除功能项
+     * 批量删除分类
      * @param requestVo
      * @return
      */
@@ -966,7 +1023,7 @@ public class CategoryController {
                     chidlren.add(category);
 
                     for(Category c:chidlren) {
-                        //删除当前功能项
+                        //删除当前分类
                         int row = categoryService.deleteById(c.getId());
                         if (row < 1) {
                             logger.warn("删除类别失败 {} ",JSONObject.toJSONString(c));

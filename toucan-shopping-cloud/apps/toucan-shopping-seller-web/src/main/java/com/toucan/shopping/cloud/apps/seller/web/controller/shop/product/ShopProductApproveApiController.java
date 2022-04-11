@@ -137,6 +137,17 @@ public class ShopProductApproveApiController extends BaseController {
                     shopProductApproveVO.setShopId(sellerShopVORet.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductApproveVO);
                     resultObjectVO = feignShopProductApproveService.queryByProductApproveIdAndShopId(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        shopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+                        CategoryVO queryCateogry = new CategoryVO();
+                        queryCateogry.setId(shopProductApproveVO.getCategoryId());
+                        requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), queryCateogry);
+
+                        ResultObjectVO resultCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
+
+
+                    }
                 }
             }
         }catch (Exception e)

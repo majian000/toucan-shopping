@@ -99,4 +99,10 @@ public interface CategoryService {
      */
     void setPath(CategoryTreeVO categoryTreeVO);
 
+    /**
+     * 设置ID路径
+     * @param categoryTreeVO
+     */
+    void setIdPath(CategoryTreeVO categoryTreeVO);
+
 }
