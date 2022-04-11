@@ -20,7 +20,11 @@ public interface ShopProductApproveService {
 
     int updateApproveStatus(Long id, Integer approveStatus);
 
+    int updateApproveStatusAndRejectText(Long id, Integer approveStatus,String rejectedText);
+
     int updateApproveStatusAndProductId(Long id, Integer approveStatus, Long productId, String productUuid);
+
+    int updateApproveStatusAndProductIdAndRejectText(Long id, Integer approveStatus, Long productId, String productUuid,String rejectedText);
 
     /**
      * 查询列表页
@@ -31,6 +35,7 @@ public interface ShopProductApproveService {
 
     List<ShopProductApproveVO> queryList(ShopProductApproveVO shopProductVO);
 
+    ShopProductApproveVO queryOne(ShopProductApproveVO shopProductVO);
 
     int updateShopProductId(Long id, Long shopProductId);
 

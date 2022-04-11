@@ -42,6 +42,14 @@ public interface FeignShopProductApproveService {
 
 
     /**
+     * 根据ID和店铺ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/id/shopId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO);
+
+    /**
      * 审核驳回
      * @param requestJsonVO
      * @return

@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="no-js css-menubar" lang="zh-cn"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+
+    <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+    <!--<link href="${basePath}/static/lib/jquery-treegrid/bootstrap-2.3.2/css/bootstrap.css" rel="stylesheet">-->
+    <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
+
+    <style type="text/css">
+
+    </style>
+
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "productApprove">
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">商品审核</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <div class="right_content" >
+        <div class="right_bg mb-15" style="width:100%;min-height: 700px;">
+            <div class="title" style="border-bottom: 1px solid#9a9999;"><span>驳回原因</span></div>
+            <div class="right_panel">
+                <input type="hidden" id="approveId" value="${approveId!'-1'}" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<#include "/footer.html"/>
+
+
+
+</body></html>
+
+
+
+
+

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.service.CategoryService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
@@ -12,11 +14,15 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
+import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,11 +41,25 @@ public class ShopProductApprovePageController extends BaseController {
     @Autowired
     private Toucan toucan;
 
+    @Autowired
+    private FeignSellerShopService feignSellerShopService;
+
+    @Autowired
+    private FeignShopProductApproveService feignShopProductApproveService;
+
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/index")
     public String index(HttpServletRequest request){
 
         return "product/approve/index";
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/rejected/{approveId}")
+    public String rejected (HttpServletRequest request, @PathVariable Long approveId){
+        request.setAttribute("approveId",approveId);
+        return "product/approve/rejected";
     }
 
 }

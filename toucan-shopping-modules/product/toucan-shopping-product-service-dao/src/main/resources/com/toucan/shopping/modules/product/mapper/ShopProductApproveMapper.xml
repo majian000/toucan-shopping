@@ -86,6 +86,19 @@
 
     </sql>
 
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+
+        <if test="id!=null and id!=-1">
+            and t.id = #{id}
+        </if>
+
+
+        <if test="shopId!=null and shopId!=-1">
+            and t.shop_id = #{shopId}
+        </if>
+
+    </sql>
 
     <select id="queryAllList" resultMap="shopProductApproveMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">
         select * from t_shop_product_approve t
@@ -126,11 +139,18 @@
         update t_shop_product_approve  set approve_status=#{approveStatus} where id=#{id}  and delete_status=0 and approve_status=1
     </update>
 
+    <update id="updateApproveStatusAndRejectText">
+        update t_shop_product_approve  set approve_status=#{approveStatus} , reject_text = #{rejectedText}  where id=#{id}  and delete_status=0 and approve_status=1
+    </update>
 
     <update id="updateApproveStatusAndProductId">
         update t_shop_product_approve  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid}   where id=#{id}  and delete_status=0 and approve_status=1
     </update>
 
+
+    <update id="updateApproveStatusAndProductIdAndRejectText">
+        update t_shop_product_approve  set approve_status=#{approveStatus} , product_id = #{productId} , product_uuid=#{productUuid} , reject_text = #{rejectedText}   where id=#{id}  and delete_status=0 and approve_status=1
+    </update>
 
 
     <update id="updateShopProductId">
@@ -153,15 +173,19 @@
         select t.* from t_shop_product_approve t
         <where>
             1=1
-
-            <if test="id!=null">
-                and t.id = #{id}
-            </if>
-
-
-            and t.delete_status = 0
-
+            <include refid="queryListWhere" ></include>
         </where>
     </select>
+
+
+    <select id="queryOne" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductApproveVO">
+        select t.* from t_shop_product_approve t
+        <where>
+            1=1
+            <include refid="queryListWhere" ></include>
+        </where>
+         limit 0,1
+    </select>
+
 
 </mapper>

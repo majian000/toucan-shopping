@@ -43,8 +43,18 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
     }
 
     @Override
+    public int updateApproveStatusAndRejectText(Long id, Integer approveStatus, String rejectedText) {
+        return shopProductApproveMapper.updateApproveStatusAndRejectText(id,approveStatus,rejectedText);
+    }
+
+    @Override
     public int updateApproveStatusAndProductId(Long id, Integer approveStatus, Long productId, String productUuid) {
         return shopProductApproveMapper.updateApproveStatusAndProductId(id,approveStatus,productId,productUuid);
+    }
+
+    @Override
+    public int updateApproveStatusAndProductIdAndRejectText(Long id, Integer approveStatus, Long productId, String productUuid, String rejectedText) {
+        return shopProductApproveMapper.updateApproveStatusAndProductIdAndRejectText(id,approveStatus,productId,productUuid,rejectedText);
     }
 
     @Override
@@ -59,6 +69,11 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
     @Override
     public List<ShopProductApproveVO> queryList(ShopProductApproveVO shopProductVO) {
         return shopProductApproveMapper.queryList(shopProductVO);
+    }
+
+    @Override
+    public ShopProductApproveVO queryOne(ShopProductApproveVO shopProductVO) {
+        return shopProductApproveMapper.queryOne(shopProductVO);
     }
 
     @Override
