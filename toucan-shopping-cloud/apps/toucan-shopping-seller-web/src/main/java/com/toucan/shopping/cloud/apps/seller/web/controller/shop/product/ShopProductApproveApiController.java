@@ -71,6 +71,8 @@ public class ShopProductApproveApiController extends BaseController {
     @Autowired
     private FeignCategoryService feignCategoryService;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
     /**
@@ -159,6 +161,19 @@ public class ShopProductApproveApiController extends BaseController {
                             shopProductApproveVO.setCategoryIdPath(categoryIdPath);
                         }
 
+                    }
+                    if(StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath()))
+                    {
+                        shopProductApproveVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveVO.getMainPhotoFilePath());
+                    }
+                    if(CollectionUtils.isNotEmpty(shopProductApproveVO.getPreviewPhotoPaths()))
+                    {
+                        List<String> httpPreviewPhotos = new LinkedList<>();
+                        for(String previewPhoto:shopProductApproveVO.getPreviewPhotoPaths())
+                        {
+                            httpPreviewPhotos.add(imageUploadService.getImageHttpPrefix()+previewPhoto);
+                        }
+                        shopProductApproveVO.setHttpPreviewPhotoPaths(httpPreviewPhotos);
                     }
                     resultObjectVO.setData(shopProductApproveVO);
                 }

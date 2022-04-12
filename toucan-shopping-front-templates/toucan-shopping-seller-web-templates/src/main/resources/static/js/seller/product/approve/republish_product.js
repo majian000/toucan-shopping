@@ -27,6 +27,18 @@ function initProductPublishForm(productApprove)
     $("#name").val(productApprove.name);
     $("#sellerNo").val(productApprove.sellerNo);
 
+    $("#mainPhotoImg").attr("src",productApprove.httpMainPhotoFilePath);
+
+    if(productApprove.httpPreviewPhotoPaths!=null)
+    {
+        $("#fileNum").val(productApprove.httpPreviewPhotoPaths.length);
+        for(var i=0;i<productApprove.httpPreviewPhotoPaths.length;i++)
+        {
+            $("#img_src"+i).attr("src",productApprove.httpPreviewPhotoPaths[i]);
+            $("#imgBg_div"+i).attr("data-src",productApprove.httpPreviewPhotoPaths[i]);
+            $("#uploading-tip"+i).attr("style","");
+        }
+    }
 
 }
 

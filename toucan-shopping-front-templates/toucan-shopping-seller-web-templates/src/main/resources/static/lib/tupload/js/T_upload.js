@@ -108,10 +108,10 @@
 				} else {
 					alert("最多上传" + $.Tupload.fileNum + "张");
 				}
-			})
+			});
 			$(".onDelPic").on('click', function () {
 				$.Tupload.onDelete($(this).attr("data"));
-			})
+			});
 			$(".upload_image").on('click', function () {
 				$.Tupload.setPreView();
 			})
@@ -202,7 +202,7 @@
 			$("#imgBg_div" + i).attr("data-src", "/static/lib/tupload/images/imgadd.png");
 			$("#img_src" + i).attr("src", "/static/lib/tupload/images/imgadd.png");
 			$("#uploading-tip" + i).hide();
-			this.imgsBase64[i] = ''
+			this.imgsBase64[i] = '';
 
 			$.Tupload.setPhotoImg();
 			$("#fileImage").val('')
