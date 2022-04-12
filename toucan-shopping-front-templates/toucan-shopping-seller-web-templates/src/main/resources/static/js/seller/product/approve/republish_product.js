@@ -21,6 +21,13 @@ function initProductPublishForm(productApprove)
     $("#selectBrandDiv").empty();
     $("#selectBrandDiv").append("<input type=\"text\" name=\"brandId\" id=\"selectBrand\" data-init=\""+productApprove.brandId+"\" >");
     initBrandListControlDefalutValue("selectBrandDiv","brandId","selectBrand",selectCategoryArray[0]);
+
+    $("#articleNumber").val(productApprove.articleNumber);
+
+    $("#name").val(productApprove.name);
+    $("#sellerNo").val(productApprove.sellerNo);
+
+
 }
 
 function initPage()
