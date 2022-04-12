@@ -27,8 +27,10 @@ function initProductPublishForm(productApprove)
     $("#name").val(productApprove.name);
     $("#sellerNo").val(productApprove.sellerNo);
 
+    //设置商品主图
     $("#mainPhotoImg").attr("src",productApprove.httpMainPhotoFilePath);
 
+    //设置商品预览图
     if(productApprove.httpPreviewPhotoPaths!=null)
     {
         $("#fileNum").val(productApprove.httpPreviewPhotoPaths.length);
