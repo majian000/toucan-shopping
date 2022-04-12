@@ -1,15 +1,75 @@
 
 var g_goApproveSecond=3;
-
 function showSetp2Page()
 {
     $("#step1").hide();
     $("#step2").show();
 }
 
+function initProductPublishForm(productApprove)
+{
+    var selectCategoryArray = productApprove.categoryIdPath;
+    for(var i=(selectCategoryArray.length-1);i>=0;i--)
+    {
+        $("#category_"+selectCategoryArray[i]).click();
+    }
+}
+
+function initPage()
+{
+
+    loading.showLoading({
+        type:6,
+        tip:"查询中..."
+    });
+
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/shop/product/approve/detail",
+        contentType: "application/json;charset=utf-8",
+        data:  JSON.stringify({id:$("#approveId").val()}),
+        dataType: "json",
+        success: function (result) {
+            if(result.code<=0)
+            {
+                $.message({
+                    message: "查询失败,请稍后重试",
+                    type: 'error'
+                });
+                $("#approveId").val("");
+                return ;
+            }
+            if(result.data.categoryIdPath==null||result.data.categoryIdPath.length==0)
+            {
+                $.message({
+                    message: "查询失败,请稍后重试",
+                    type: 'error'
+                });
+                $("#approveId").val("");
+                return ;
+            }
+            initProductPublishForm(result.data)
+        },
+        error: function (result) {
+            $.message({
+                message: "查询失败,请稍后重试",
+                type: 'error'
+            });
+            $("#approveId").val("");
+        },
+        complete:function()
+        {
+            loading.hideLoading();
+        }
+
+    });
+}
 
 $(function () {
 
+    intRootCategory();
+
+    initPage();
 
     $("#mainPhotoFile").on("change", function(){
         // Get a reference to the fileList

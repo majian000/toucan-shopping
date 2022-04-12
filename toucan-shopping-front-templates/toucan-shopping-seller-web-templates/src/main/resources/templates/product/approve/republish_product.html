@@ -105,6 +105,8 @@
 </head>
 <body>
 
+<#setting number_format="#">
+
 <#include "/top.html"/>
 
 <#assign leftName = "productApprove">
@@ -136,6 +138,7 @@
                     <form action="" id="productReleaseForm" method="post" class="bootstrap-frm" enctype="multipart/form-data" >
 
                         <input type="hidden" id="approveId" value="${approveId!'-1'}" />
+                        <input type="hidden" id="categoryIdPath" value="" />
 
 
                         <div class="toucan-form">
@@ -412,8 +415,8 @@
 
 <script src="${basePath}/static/js/seller/product/selectProductCategory/selectCategory.js"></script>
 <script src="${basePath}/static/js/seller/product/selectShopCategory/selectShopCategory.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/product/republish_product.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/tupload/js/T_upload.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/product/approve/republish_product.js"></script>
 
 
 </html>

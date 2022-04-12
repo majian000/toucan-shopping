@@ -10,6 +10,7 @@ function showSetp2Page()
 
 $(function () {
 
+    intRootCategory();
 
     $("#mainPhotoFile").on("change", function(){
         // Get a reference to the fileList
@@ -194,6 +195,7 @@ function goApprovePage(msg)
 }
 
 $("#ppfbtn").click(function() {
+
 
     loading.showLoading({
         type:6,

@@ -69,4 +69,12 @@ public class ShopProductApproveVO extends ShopProductApprove {
      * 审核人
      */
     private String createAdminId;
+
+
+    /**
+     * 分类上级ID路径(包含当前ID)
+     * 格式:当前分类ID,上级分类节点ID,上上级分类节点ID
+     */
+    private List<String> categoryIdPath;
+
 }

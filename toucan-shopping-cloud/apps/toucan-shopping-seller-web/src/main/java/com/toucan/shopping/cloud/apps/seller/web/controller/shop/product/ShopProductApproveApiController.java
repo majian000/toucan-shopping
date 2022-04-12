@@ -125,7 +125,7 @@ public class ShopProductApproveApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            //判断是个人店铺还是企业店铺
+            //查询店铺
             resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
@@ -145,9 +145,22 @@ public class ShopProductApproveApiController extends BaseController {
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), queryCateogry);
 
                         ResultObjectVO resultCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
-
+                        if(resultCategoryObjectVO.isSuccess()&&resultCategoryObjectVO.getData()!=null)
+                        {
+                            CategoryVO categoryVO = resultCategoryObjectVO.formatData(CategoryVO.class);
+                            List<String> categoryIdPath = new LinkedList<>();
+                            if(CollectionUtils.isNotEmpty(categoryVO.getIdPath()))
+                            {
+                                for(Long categoryId:categoryVO.getIdPath())
+                                {
+                                    categoryIdPath.add(String.valueOf(categoryId));
+                                }
+                            }
+                            shopProductApproveVO.setCategoryIdPath(categoryIdPath);
+                        }
 
                     }
+                    resultObjectVO.setData(shopProductApproveVO);
                 }
             }
         }catch (Exception e)

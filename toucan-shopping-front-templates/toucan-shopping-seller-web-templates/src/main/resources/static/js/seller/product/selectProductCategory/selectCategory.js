@@ -16,17 +16,17 @@ var g_preSelectCategoryId="-1"; //上一次选择的分类ID
 function intRootCategory() {
 	areaCont = "";
 	for (var i=0; i<category_list.length; i++) {
-		areaCont += '<li onClick="selectCategoryLevel1(' + i + ');"><a href="javascript:void(0)">' + category_list[i].name + '</a></li>';
+		areaCont += "<li onClick=\"selectCategoryLevel1("+ i + ");\" id=\"category_"+category_list[i].id+"\"><a href=\"javascript:void(0)\"  id=\"category_a_"+category_list[i].id+"\">" + category_list[i].name + "</a></li>";
 	}
 	$("#sort1").html(areaCont);
 }
-intRootCategory();
+
 
 /*选择一级目录*/
 function selectCategoryLevel1(p) {
 	areaCont = "";
 	for (var j=0; j<category_list[p].children.length; j++) {
-		areaCont += '<li onClick="selectCategoryLevel2(' + p + ',' + j + ');"><a href="javascript:void(0)">' + category_list[p].children[j].name + '</a></li>';
+		areaCont += "<li onClick=\"selectCategoryLevel2(" + p + "," + j + ");\"  id=\"category_"+category_list[p].children[j].id+"\"><a href=\"javascript:void(0)\"  id=\"category_a_"+category_list[p].children[j].id+"\">" + category_list[p].children[j].name + "</a></li>";
 	}
 	$("#sort2").html(areaCont).show();
 	$("#sort3").hide();
@@ -43,12 +43,14 @@ function selectCategoryLevel1(p) {
 	}
 }
 
+
+
 /*选择二级目录*/
 function selectCategoryLevel2(p,c) {
 	areaCont = "";
 	expressC = "";
 	for (var k=0; k<category_list[p].children[c].children.length; k++) {
-		areaCont += '<li onClick="selectD(' + p + ',' + c + ',' + k + ');"><a href="javascript:void(0)">' + category_list[p].children[c].children[k].name + '</a></li>';
+		areaCont += "<li onClick=\"selectD(" + p + "," + c + "," + k + ");\"  id=\"category_"+category_list[p].children[c].children[k].id+"\"><a href=\"javascript:void(0)\"  id=\"category_a_"+category_list[p].children[c].children[k].id+"\">" + category_list[p].children[c].children[k].name + "</a></li>";
 	}
 	$("#sort3").html(areaCont).show();
 	$("#sort2 li").eq(c).addClass("active").siblings("li").removeClass("active");
