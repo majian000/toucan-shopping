@@ -1,6 +1,5 @@
 package com.toucan.shopping.cloud.apps.message.web.controller;
 
-import com.sun.deploy.association.utility.AppConstants;
 import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageUserService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
