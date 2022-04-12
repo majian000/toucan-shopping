@@ -42,7 +42,6 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
      * @param requestVo
      * @return
      */
-    
     public ResultObjectVO save( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo.getEntityJson()==null)
@@ -95,7 +94,6 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
      * @param requestVo
      * @return
      */
-    
     public ResultObjectVO queryListByEntity( RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo.getEntityJson()==null)
@@ -180,5 +178,6 @@ public class AdminAppProxyImpl implements AdminAppServiceProxy {
         }
         return resultObjectVO;
     }
+
 
 }
