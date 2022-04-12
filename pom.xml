@@ -45,8 +45,6 @@
 
 
 
-        <!--  =================================工具包 =================================-->
-        <module>tools/cloud-to-standard-code-converter</module>
 
     </modules>
 
