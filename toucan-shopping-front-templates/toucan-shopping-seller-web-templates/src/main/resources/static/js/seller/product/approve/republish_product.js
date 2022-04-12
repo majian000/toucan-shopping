@@ -8,11 +8,19 @@ function showSetp2Page()
 
 function initProductPublishForm(productApprove)
 {
+
+    //设置选择分类默认值
     var selectCategoryArray = productApprove.categoryIdPath;
     for(var i=(selectCategoryArray.length-1);i>=0;i--)
     {
         $("#category_"+selectCategoryArray[i]).click();
     }
+
+    //设置选择品牌默认值
+    gSelectBrandId = productApprove.brandId;
+    $("#selectBrandDiv").empty();
+    $("#selectBrandDiv").append("<input type=\"text\" name=\"brandId\" id=\"selectBrand\" data-init=\""+productApprove.brandId+"\" >");
+    initBrandListControlDefalutValue("selectBrandDiv","brandId","selectBrand",selectCategoryArray[0]);
 }
 
 function initPage()

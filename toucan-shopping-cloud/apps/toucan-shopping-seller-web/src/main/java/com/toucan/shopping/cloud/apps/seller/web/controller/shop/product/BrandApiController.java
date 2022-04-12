@@ -73,6 +73,10 @@ public class BrandApiController {
             if(StringUtils.isNotEmpty(pageInfo.getQ_word())) {
                 pageInfo.setName(pageInfo.getQ_word());
             }
+            if(StringUtils.isNotEmpty(pageInfo.getSearchValue()))
+            {
+                pageInfo.setId(Long.parseLong(pageInfo.getSearchValue()));
+            }
             pageInfo.setEnabledStatus(1);
             pageInfo.setLimit(pageInfo.getPageSize());
             pageInfo.setPage(pageInfo.getPageNumber());
