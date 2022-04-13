@@ -75,6 +75,35 @@
     </select>
 
 
+
+    <select id="queryListOrderByCreateDateAsc" resultMap="shopProductApproveImgMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductApproveImgVO">
+        select t.* from t_shop_product_approve_img t
+        <where>
+            1=1
+
+            <if test="id!=null  ">
+                and t.id=#{id}
+            </if>
+
+            <if test="productApproveId!=null  ">
+                and t.product_approve_id=#{productApproveId}
+            </if>
+
+
+            <if test="productApproveIdList!=null and productApproveIdList.size>0 ">
+                and t.product_approve_id in
+                <foreach item="item" index="index" collection="productApproveIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+
+            and t.delete_status = 0
+
+        </where>
+         order by t.create_date asc
+    </select>
+
     <update id="deleteByProductApproveId">
         update t_shop_product_approve_img  set delete_status=1 where product_approve_id=#{productApproveId}  and delete_status=0
     </update>

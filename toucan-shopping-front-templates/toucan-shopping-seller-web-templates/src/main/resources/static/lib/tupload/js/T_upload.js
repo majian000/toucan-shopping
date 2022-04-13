@@ -1,5 +1,6 @@
 (function ($) {
 	var arrFile = [];
+	var delFilePos=new Array();
 	$.Tupload = {
 		fileNum: 0,
 		uploadFile: [],
@@ -203,9 +204,15 @@
 			$("#img_src" + i).attr("src", "/static/lib/tupload/images/imgadd.png");
 			$("#uploading-tip" + i).hide();
 			this.imgsBase64[i] = '';
-
 			$.Tupload.setPhotoImg();
 			$("#fileImage").val('')
+
+			delFilePos.push(i);
+			var deletePosHidden = $("#previewPhotoDelPosArray");
+			if(deletePosHidden!=null)
+			{
+				deletePosHidden.val(delFilePos.join(","));
+			}
 		}
 
 	}

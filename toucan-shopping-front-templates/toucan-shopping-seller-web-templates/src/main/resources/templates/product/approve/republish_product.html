@@ -137,7 +137,7 @@
 
                     <form action="" id="productReleaseForm" method="post" class="bootstrap-frm" enctype="multipart/form-data" >
 
-                        <input type="hidden" id="approveId" value="${approveId!'-1'}" />
+                        <input type="hidden" id="approveId" name="id" value="${approveId!'-1'}" />
                         <input type="hidden" id="categoryIdPath" value="" />
 
 
@@ -200,7 +200,7 @@
 
                                     <div class="item"  >
                                         <div class="field" style="width:100%;text-align:left;padding-left:6%;" >
-                                            <span class="red">*</span>商品主图上传：
+                                            重新上传主图：
                                             <input type="file" name="mainPhotoFile" id="mainPhotoFile" />
                                         </div>
                                     </div>
@@ -212,6 +212,7 @@
                                     </div>
 
                                     <div class="item"  >
+                                        <input type="hidden" id="previewPhotoDelPosArray" name="previewPhotoDelPosArray" />
                                         <div id="productPreviewImages" style="width:90%;margin-left:6%;">
                                             <div class="uploading-img">
                                             </div>

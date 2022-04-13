@@ -438,7 +438,7 @@ public class ShopProductApproveController {
                 //查询商品图片
                 ShopProductApproveImgVO shopProductImgVO = new ShopProductApproveImgVO();
                 shopProductImgVO.setProductApproveId(shopProductVO.getId());
-                List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryList(shopProductImgVO);
+                List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryListOrderByCreateDateAsc(shopProductImgVO);
                 if (CollectionUtils.isNotEmpty(shopProductImgs)) {
                     for (ShopProductApproveImg shopProductImg : shopProductImgs) {
                         //如果是商品主图

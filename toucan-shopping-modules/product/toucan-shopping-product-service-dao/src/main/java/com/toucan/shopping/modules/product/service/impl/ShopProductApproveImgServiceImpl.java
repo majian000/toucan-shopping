@@ -27,6 +27,11 @@ public class ShopProductApproveImgServiceImpl implements ShopProductApproveImgSe
     }
 
     @Override
+    public List<ShopProductApproveImg> queryListOrderByCreateDateAsc(ShopProductApproveImgVO queryModel) {
+        return shopProductImgMapper.queryListOrderByCreateDateAsc(queryModel);
+    }
+
+    @Override
     public int saves(List<ShopProductApproveImg> entitys) {
         return shopProductImgMapper.inserts(entitys);
     }
