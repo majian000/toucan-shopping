@@ -11,6 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class RePublishProductVO extends PublishProductVO {
 
 
+    /**
+     * 已删除的预览图索引
+     */
+    private String previewPhotoDelPosArray;
+
 
 
 

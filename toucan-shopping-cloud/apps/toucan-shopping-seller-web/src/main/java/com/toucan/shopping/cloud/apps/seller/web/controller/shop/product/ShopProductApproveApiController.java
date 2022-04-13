@@ -175,38 +175,38 @@ public class ShopProductApproveApiController extends BaseController {
                     }
 
                     if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList())) {
-                        Map<String,List<String>> attributeKeyValueMap = new HashMap<>();
+                        List<ShopProductApproveSkuAttribute> skuAttributes = new LinkedList<>();
                         boolean isFind = false;
                         String skuAttributeValue = null;
-                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
-                        {
-                            Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
-                            Set<String> keysSet = attributeKeyValue.keySet();
-                            for(String key:keysSet)
-                            {
-                                skuAttributeValue = attributeKeyValue.get(key);
-                                isFind = false;
-                                List<String> attributeValues = attributeKeyValueMap.get(key);
-                                if(attributeValues==null)
-                                {
-                                    attributeValues=new LinkedList<>();
-                                }
-                                for(String attributeValue:attributeValues)
-                                {
-                                    if(skuAttributeValue.equals(attributeValue))
-                                    {
-                                        isFind = true;
-                                    }
-                                }
-                                if(!isFind)
-                                {
-                                    attributeValues.add(skuAttributeValue);
-                                    attributeKeyValueMap.put(key,attributeValues);
-                                }
-                            }
-                        }
-
-                        shopProductApproveVO.setSkuAttributes(attributeKeyValueMap);
+//                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
+//                        {
+//                            Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
+//                            Set<String> keysSet = attributeKeyValue.keySet();
+//                            for(String key:keysSet)
+//                            {
+//                                skuAttributeValue = attributeKeyValue.get(key);
+//                                isFind = false;
+//                                List<String> attributeValues = attributeKeyValueMap.get(key);
+//                                if(attributeValues==null)
+//                                {
+//                                    attributeValues=new LinkedList<>();
+//                                }
+//                                for(String attributeValue:attributeValues)
+//                                {
+//                                    if(skuAttributeValue.equals(attributeValue))
+//                                    {
+//                                        isFind = true;
+//                                    }
+//                                }
+//                                if(!isFind)
+//                                {
+//                                    attributeValues.add(skuAttributeValue);
+//                                    attributeKeyValueMap.put(key,attributeValues);
+//                                }
+//                            }
+//                        }
+//
+//                        shopProductApproveVO.setSkuAttributes(attributeKeyValueMap);
                     }
                     resultObjectVO.setData(shopProductApproveVO);
                 }

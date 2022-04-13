@@ -81,6 +81,6 @@ public class ShopProductApproveVO extends ShopProductApprove {
     /**
      * SKU的所有属性对应
      */
-    private Map<String,List<String>> skuAttributes;
+    private List<ShopProductApproveSkuAttribute> skuAttributes;
 
 }

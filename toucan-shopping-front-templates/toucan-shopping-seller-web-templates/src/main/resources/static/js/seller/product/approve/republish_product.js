@@ -6,11 +6,17 @@ function showSetp2Page()
     $("#step2").show();
 }
 
-function drawSkuTable(skuList)
+function drawSkuTable(productApprove)
 {
-    if(skuList!=null&&skuList.length>0)
+    if(productApprove.productSkuVOList!=null&&productApprove.productSkuVOList.length>0)
     {
+        var attributeKeys = $(".rpai_key_ul");
+        if(attributeKeys!=null&&attributeKeys.length>0)
+        {
 
+        }else{
+
+        }
     }
 }
 

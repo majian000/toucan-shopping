@@ -337,7 +337,7 @@ function initAttributes(categoryId,callback)
                     attributeHtmls+=" <div class='attributeList'> ";
                     attributeHtmls+=" <ul class='rp_attr_kt' style='display:none' ><li>"+attribute.attributeName+"</li></ul> ";
                     attributeHtmls+=" <div class='field' style='width:100%'> ";
-                    attributeHtmls+=" <ul class='rpai"+i+"' id='rpai"+attribute.id+"' style='float:left;margin-left: 20px;' attr-group-name='"+attribute.attributeName+"'>";
+                    attributeHtmls+=" <ul class='rpai"+i+" rpai_key_ul' id='rpai"+attribute.id+"' style='float:left;margin-left: 20px;' attr-group-name='"+attribute.attributeName+"' >";
                     if(attribute.values!=null&&attribute.values.length>0) {
                         for(var j=0;j<attribute.values.length;j++) {
                             var attributeValue = attribute.values[j];
