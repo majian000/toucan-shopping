@@ -6,6 +6,14 @@ function showSetp2Page()
     $("#step2").show();
 }
 
+function drawSkuTable(skuList)
+{
+    if(skuList!=null&&skuList.length>0)
+    {
+
+    }
+}
+
 function initProductPublishForm(productApprove)
 {
 
@@ -41,6 +49,9 @@ function initProductPublishForm(productApprove)
             $("#uploading-tip"+i).attr("style","");
         }
     }
+
+    //绘制SKU表格
+    drawSkuTable(productApprove.productSkuVOList);
 
 }
 
