@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.product.entity.ShopProductApprove;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 店铺维度的商品审核 (关联到平台维度的SPU)
@@ -76,5 +77,10 @@ public class ShopProductApproveVO extends ShopProductApprove {
      * 格式:当前分类ID,上级分类节点ID,上上级分类节点ID
      */
     private List<String> categoryIdPath;
+
+    /**
+     * SKU的所有属性对应
+     */
+    private Map<String,List<String>> skuAttributes;
 
 }

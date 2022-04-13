@@ -24,10 +24,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
-import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.PublishProductVO;
-import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
+import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -40,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.awt.image.ImageWatched;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -174,6 +172,41 @@ public class ShopProductApproveApiController extends BaseController {
                             httpPreviewPhotos.add(imageUploadService.getImageHttpPrefix()+previewPhoto);
                         }
                         shopProductApproveVO.setHttpPreviewPhotoPaths(httpPreviewPhotos);
+                    }
+
+                    if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList())) {
+                        Map<String,List<String>> attributeKeyValueMap = new HashMap<>();
+                        boolean isFind = false;
+                        String skuAttributeValue = null;
+                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
+                        {
+                            Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
+                            Set<String> keysSet = attributeKeyValue.keySet();
+                            for(String key:keysSet)
+                            {
+                                skuAttributeValue = attributeKeyValue.get(key);
+                                isFind = false;
+                                List<String> attributeValues = attributeKeyValueMap.get(key);
+                                if(attributeValues==null)
+                                {
+                                    attributeValues=new LinkedList<>();
+                                }
+                                for(String attributeValue:attributeValues)
+                                {
+                                    if(skuAttributeValue.equals(attributeValue))
+                                    {
+                                        isFind = true;
+                                    }
+                                }
+                                if(!isFind)
+                                {
+                                    attributeValues.add(skuAttributeValue);
+                                    attributeKeyValueMap.put(key,attributeValues);
+                                }
+                            }
+                        }
+
+                        shopProductApproveVO.setSkuAttributes(attributeKeyValueMap);
                     }
                     resultObjectVO.setData(shopProductApproveVO);
                 }
