@@ -176,37 +176,42 @@ public class ShopProductApproveApiController extends BaseController {
 
                     if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList())) {
                         List<ShopProductApproveSkuAttribute> skuAttributes = new LinkedList<>();
-                        boolean isFind = false;
-                        String skuAttributeValue = null;
-//                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
-//                        {
-//                            Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
-//                            Set<String> keysSet = attributeKeyValue.keySet();
-//                            for(String key:keysSet)
-//                            {
-//                                skuAttributeValue = attributeKeyValue.get(key);
-//                                isFind = false;
-//                                List<String> attributeValues = attributeKeyValueMap.get(key);
-//                                if(attributeValues==null)
-//                                {
-//                                    attributeValues=new LinkedList<>();
-//                                }
-//                                for(String attributeValue:attributeValues)
-//                                {
-//                                    if(skuAttributeValue.equals(attributeValue))
-//                                    {
-//                                        isFind = true;
-//                                    }
-//                                }
-//                                if(!isFind)
-//                                {
-//                                    attributeValues.add(skuAttributeValue);
-//                                    attributeKeyValueMap.put(key,attributeValues);
-//                                }
-//                            }
-//                        }
-//
-//                        shopProductApproveVO.setSkuAttributes(attributeKeyValueMap);
+                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
+                        {
+                            Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
+                            Set<String> keysSet = attributeKeyValue.keySet();
+                            for(String key:keysSet)
+                            {
+                                ShopProductApproveSkuAttribute shopProductApproveSkuAttribute = null;
+                                Optional<ShopProductApproveSkuAttribute> shopProductApproveSkuAttributeOptional = skuAttributes.stream().filter(item -> item.getKey().equals(key)).findFirst();
+                                //如果不存在属性名对象就创建
+                                if(!shopProductApproveSkuAttributeOptional.isPresent())
+                                {
+                                    shopProductApproveSkuAttribute = new ShopProductApproveSkuAttribute();
+                                    shopProductApproveSkuAttribute.setKey(key);
+                                    shopProductApproveSkuAttribute.setValues(new LinkedList<>());
+                                    skuAttributes.add(shopProductApproveSkuAttribute);
+                                }else{
+                                    shopProductApproveSkuAttribute = shopProductApproveSkuAttributeOptional.get();
+                                }
+
+                                //如果这个属性名没有任何属性值就直接添加
+                                if(CollectionUtils.isEmpty(shopProductApproveSkuAttribute.getValues()))
+                                {
+                                    shopProductApproveSkuAttribute.getValues().add(attributeKeyValue.get(key));
+                                }else{
+                                    //判断是否有重复
+                                    Optional<String> shopProductApproveSkuAttributeValueOptional = shopProductApproveSkuAttribute.getValues().stream().filter(item -> item.equals(attributeKeyValue.get(key))).findFirst();
+                                    if(!shopProductApproveSkuAttributeValueOptional.isPresent())
+                                    {
+                                        shopProductApproveSkuAttribute.getValues().add(attributeKeyValue.get(key));
+                                    }
+                                }
+
+                            }
+                        }
+
+                        shopProductApproveVO.setSkuAttributes(skuAttributes);
                     }
                     resultObjectVO.setData(shopProductApproveVO);
                 }
