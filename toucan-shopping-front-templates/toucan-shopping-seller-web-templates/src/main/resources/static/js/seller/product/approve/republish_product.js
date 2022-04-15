@@ -20,18 +20,51 @@ function drawSkuTable(productApprove)
 
             }
         }else{
-            // var rp_attr_html="";
-            //
-            //
-            // rp_attr_html+="\n" +
-            //     "<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
-            //     "    <div class=\"sku_attribute_list\" style=\"padding-left: 6%;\">\n" +
-            //     "        <div id=\"tspSkuAttributeTable\"></div>\n" +
-            //     "    </div>\n" +
-            //     "</div>";
-            //  $("#rp_attr_div").html(rp_attr_html);
+            var rp_attr_html="";
+
+            for(var i=0;i<productApprove.skuAttributes.length;i++)
+            {
+                var skuAttributeValueHtml="";
+                var skuAttribute = productApprove.skuAttributes[i];
+                if(skuAttribute.values!=null&&skuAttribute.values.length>0)
+                {
+                    for(var j=0;j<skuAttribute.values.length;j++) {
+                        skuAttributeValueHtml += "<li class=\"rpai_li\">\n" +
+                            "                    <label>\n" +
+                            "                        <input type=\"checkbox\" class=\"chcBox_Width\" value=\""+skuAttribute.values[j]+"\">\n" +
+                            "                        <div style=\"background-color:null;width:15px;height:15px;float:right\"></div>"+skuAttribute.values[j]+"</label>\n" +
+                            "                </li>\n";
+                    }
+                }
+                rp_attr_html +="<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
+                    "    <div style=\"padding-left: 6%;\"> <a>"+skuAttribute.key+"</a>\n" +
+                    "        <input type=\"text\" name=\"attributeValue\" class=\"releaseProductInputText\" style=\"width:200px;\" tabindex=\"5\" maxlength=\"25\" placeholder=\"请输入自定义值\">\n" +
+                    "        <input type=\"button\" class=\"releaseProductButton attributeTableAddBtn\" value=\"添加\"> </div>\n" +
+                    "    <div class=\"attributeList\">\n" +
+                    "        <ul class=\"rp_attr_kt\" style=\"display:none\">\n" +
+                    "            <li>"+skuAttribute.key+"</li>\n" +
+                    "        </ul>\n" +
+                    "        <div class=\"field\" style=\"width:100%\">\n" +
+                    "            <ul class=\"rpai1 rpai_key_ul\"  style=\"float:left;margin-left: 20px;\" attr-group-name=\""+skuAttribute.key+"\">\n"
+                                    +skuAttributeValueHtml+
+                    "            </ul>\n" +
+                    "            <div class=\"clearfloat\"></div>\n" +
+                    "        </div>\n" +
+                    "    </div>\n" +
+                    "</div>";
+            }
+
+            rp_attr_html+="\n" +
+                "<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
+                "    <div class=\"sku_attribute_list\" style=\"padding-left: 6%;\">\n" +
+                "        <div id=\"tspSkuAttributeTable\"></div>\n" +
+                "    </div>\n" +
+                "</div>";
+
+             $(".rp_attr_div").html(rp_attr_html);
 
         }
+        bindAttLabelEvent();
     }
 }
 
@@ -79,7 +112,7 @@ function initProductPublishForm(productApprove)
     }
 
     //绘制SKU表格
-    drawSkuTable(productApprove.productSkuVOList);
+    drawSkuTable(productApprove);
 
 }
 
