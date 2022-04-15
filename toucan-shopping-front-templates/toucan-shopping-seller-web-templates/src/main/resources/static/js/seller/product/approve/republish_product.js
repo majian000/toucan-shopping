@@ -8,13 +8,28 @@ function showSetp2Page()
 
 function drawSkuTable(productApprove)
 {
-    if(productApprove.productSkuVOList!=null&&productApprove.productSkuVOList.length>0)
+    if(productApprove.skuAttributes!=null&&productApprove.skuAttributes.length>0)
     {
         var attributeKeys = $(".rpai_key_ul");
+        //已有属性名列表
         if(attributeKeys!=null&&attributeKeys.length>0)
         {
+            for(var i=0;i<attributeKeys.length;i++)
+            {
+                var attributeKey = attributeKeys[i];
 
+            }
         }else{
+            // var rp_attr_html="";
+            //
+            //
+            // rp_attr_html+="\n" +
+            //     "<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
+            //     "    <div class=\"sku_attribute_list\" style=\"padding-left: 6%;\">\n" +
+            //     "        <div id=\"tspSkuAttributeTable\"></div>\n" +
+            //     "    </div>\n" +
+            //     "</div>";
+            //  $("#rp_attr_div").html(rp_attr_html);
 
         }
     }
