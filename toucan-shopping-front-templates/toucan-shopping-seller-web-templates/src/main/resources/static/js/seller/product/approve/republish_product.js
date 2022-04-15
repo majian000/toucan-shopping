@@ -44,10 +44,7 @@ function initProductPublishForm(productApprove)
     for(var i=(selectCategoryArray.length-1);i>=0;i--)
     {
         selectCatePath +=selectCategoryArray[i];
-        if(i-1>0)
-        {
-            selectCatePath+="》";
-        }
+        selectCatePath+="》";
     }
     $("#selectProductCategory").html(selectCatePath);
     $("#categoryId").val(productApprove.categoryId);
