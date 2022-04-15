@@ -306,6 +306,51 @@ var attributeControl = {
         }
     }
 }
+
+function bindInputAddEvent()
+{
+    //SKU信息
+    $(".attributeTableAddBtn").bind("click", function () {
+        var attId = $(this).attr("attr-data");
+        var attVal = $("#attributeInput_"+attId).val();
+        if(attVal!=null)
+        {
+            attVal = attVal.replace(/(^\s*)|(\s*$)/g, "");
+        }
+        var attributeValueRegex = /^[\u0391-\uFFE5a-zA-Z0-9\【\】\(\)\（\）\+\-\s]{1,25}$/;
+        if(!attributeValueRegex.test(attVal))
+        {
+            $.message({
+                message: "必须由1-25位的组成,不能包含特殊符号",
+                type: 'error'
+            });
+            return;
+        }
+        var isFind = false;
+        $("#rpai"+attId).find('li').each(function() {
+            var attLiText = $(this).text();
+            if(attLiText!=null) {
+                attLiText = attLiText.replace(/(^\s*)|(\s*$)/g, "");
+            }
+
+            if(attLiText==attVal)
+            {
+                isFind=true;
+            }
+        });
+
+        if(!isFind) {
+            $("#rpai" + attId).append("<li class='rpai_li'><label><input  type='checkbox' class='chcBox_Width' value='" + attVal + "' />" + attVal + "</label></li>");
+            bindAttLabelEvent();
+            $("#attributeInput_"+attId).val("");
+        }else{
+            $.message({
+                message: "已存在该属性",
+                type: 'error'
+            });
+        }
+    });
+}
 function initAttributes(categoryId,callback)
 {
 
@@ -365,47 +410,7 @@ function initAttributes(categoryId,callback)
                 attributesHtml+="</div>";
                 $(".rp_attr_div").html(attributesHtml);
 
-                //SKU信息
-                $(".attributeTableAddBtn").bind("click", function () {
-                    var attId = $(this).attr("attr-data");
-                    var attVal = $("#attributeInput_"+attId).val();
-                    if(attVal!=null)
-                    {
-                        attVal = attVal.replace(/(^\s*)|(\s*$)/g, "");
-                    }
-                    var attributeValueRegex = /^[\u0391-\uFFE5a-zA-Z0-9\【\】\(\)\（\）\+\-\s]{1,25}$/;
-                    if(!attributeValueRegex.test(attVal))
-                    {
-                        $.message({
-                            message: "必须由1-25位的组成,不能包含特殊符号",
-                            type: 'error'
-                        });
-                        return;
-                    }
-                    var isFind = false;
-                    $("#rpai"+attId).find('li').each(function() {
-                        var attLiText = $(this).text();
-                        if(attLiText!=null) {
-                            attLiText = attLiText.replace(/(^\s*)|(\s*$)/g, "");
-                        }
-
-                        if(attLiText==attVal)
-                        {
-                            isFind=true;
-                        }
-                    });
-
-                    if(!isFind) {
-                        $("#rpai" + attId).append("<li class='rpai_li'><label><input  type='checkbox' class='chcBox_Width' value='" + attVal + "' />" + attVal + "</label></li>");
-                        bindAttLabelEvent();
-                        $("#attributeInput_"+attId).val("");
-                    }else{
-                        $.message({
-                            message: "已存在该属性",
-                            type: 'error'
-                        });
-                    }
-                });
+                bindInputAddEvent();
             }
         },
         complete:function(data,status){

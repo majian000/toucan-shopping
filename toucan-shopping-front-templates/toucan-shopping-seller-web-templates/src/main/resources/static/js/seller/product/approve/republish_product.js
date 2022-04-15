@@ -24,6 +24,7 @@ function drawSkuTable(productApprove)
 
             for(var i=0;i<productApprove.skuAttributes.length;i++)
             {
+                var inputUuid = toucan_uuid();
                 var skuAttributeValueHtml="";
                 var skuAttribute = productApprove.skuAttributes[i];
                 if(skuAttribute.values!=null&&skuAttribute.values.length>0)
@@ -38,14 +39,14 @@ function drawSkuTable(productApprove)
                 }
                 rp_attr_html +="<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
                     "    <div style=\"padding-left: 6%;\"> <a>"+skuAttribute.key+"</a>\n" +
-                    "        <input type=\"text\" name=\"attributeValue\" class=\"releaseProductInputText\" style=\"width:200px;\" tabindex=\"5\" maxlength=\"25\" placeholder=\"请输入自定义值\">\n" +
-                    "        <input type=\"button\" class=\"releaseProductButton attributeTableAddBtn\" value=\"添加\"> </div>\n" +
+                    "        <input type=\"text\" id=\"attributeInput_"+inputUuid+"\" name=\"attributeValue\" class=\"releaseProductInputText\" style=\"width:200px;\" tabindex=\"5\" maxlength=\"25\" placeholder=\"请输入自定义值\">\n" +
+                    "        <input type=\"button\" class=\"releaseProductButton attributeTableAddBtn\" value=\"添加\"  attr-data=\""+inputUuid+"\" > </div>\n" +
                     "    <div class=\"attributeList\">\n" +
                     "        <ul class=\"rp_attr_kt\" style=\"display:none\">\n" +
                     "            <li>"+skuAttribute.key+"</li>\n" +
                     "        </ul>\n" +
                     "        <div class=\"field\" style=\"width:100%\">\n" +
-                    "            <ul class=\"rpai1 rpai_key_ul\"  style=\"float:left;margin-left: 20px;\" attr-group-name=\""+skuAttribute.key+"\">\n"
+                    "            <ul class=\"rpai"+i+" rpai_key_ul\" id=\"rpai"+inputUuid+"\"  style=\"float:left;margin-left: 20px;\" attr-group-name=\""+skuAttribute.key+"\">\n"
                                     +skuAttributeValueHtml+
                     "            </ul>\n" +
                     "            <div class=\"clearfloat\"></div>\n" +
@@ -65,6 +66,7 @@ function drawSkuTable(productApprove)
 
         }
         bindAttLabelEvent();
+        bindInputAddEvent();
     }
 }
 
