@@ -56,7 +56,7 @@ function initProductPublishForm(productApprove)
     gSelectBrandId = productApprove.brandId;
     $("#selectBrandDiv").empty();
     $("#selectBrandDiv").append("<input type=\"text\" name=\"brandId\" id=\"selectBrand\" data-init=\""+productApprove.brandId+"\" >");
-    initBrandListControlDefalutValue("selectBrandDiv","brandId","selectBrand",selectCategoryArray[0]);
+    initBrandListControlDefalutValue("selectBrandDiv","brandId","selectBrand",productApprove.categoryId);
 
     $("#articleNumber").val(productApprove.articleNumber);
 
