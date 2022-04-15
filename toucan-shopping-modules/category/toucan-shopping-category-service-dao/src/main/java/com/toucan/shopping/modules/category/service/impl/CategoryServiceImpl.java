@@ -250,6 +250,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category parentCategory = this.queryById(categoryTreeVO.getParentId());
             if(parentCategory!=null) {
                 categoryTreeVO.getIdPath().add(parentCategory.getId());
+                categoryTreeVO.getNamePaths().add(parentCategory.getName());
                 categoryTreeVO.setParentId(parentCategory.getParentId());
                 this.setIdPath(categoryTreeVO);
             }

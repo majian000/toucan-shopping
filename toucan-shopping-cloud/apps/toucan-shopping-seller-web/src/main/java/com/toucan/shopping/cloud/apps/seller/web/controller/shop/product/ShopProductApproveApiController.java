@@ -149,6 +149,7 @@ public class ShopProductApproveApiController extends BaseController {
                         {
                             CategoryVO categoryVO = resultCategoryObjectVO.formatData(CategoryVO.class);
                             List<String> categoryIdPath = new LinkedList<>();
+                            List<String> categoryNamePath = new LinkedList<>();
                             if(CollectionUtils.isNotEmpty(categoryVO.getIdPath()))
                             {
                                 for(Long categoryId:categoryVO.getIdPath())
@@ -156,7 +157,16 @@ public class ShopProductApproveApiController extends BaseController {
                                     categoryIdPath.add(String.valueOf(categoryId));
                                 }
                             }
+                            if(CollectionUtils.isNotEmpty(categoryVO.getNamePaths()))
+                            {
+                                for(String categoryName:categoryVO.getNamePaths())
+                                {
+                                    categoryNamePath.add(String.valueOf(categoryName));
+                                }
+                            }
                             shopProductApproveVO.setCategoryIdPath(categoryIdPath);
+                            shopProductApproveVO.setCategoryNamePath(categoryNamePath);
+
                         }
 
                     }

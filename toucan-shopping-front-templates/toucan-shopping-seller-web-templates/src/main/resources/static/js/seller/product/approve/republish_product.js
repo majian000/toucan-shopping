@@ -39,11 +39,18 @@ function initProductPublishForm(productApprove)
 {
 
     //设置选择分类默认值
-    var selectCategoryArray = productApprove.categoryIdPath;
+    var selectCategoryArray = productApprove.categoryNamePath;
+    var selectCatePath = "";
     for(var i=(selectCategoryArray.length-1);i>=0;i--)
     {
-        $("#category_"+selectCategoryArray[i]).click();
+        selectCatePath +=selectCategoryArray[i];
+        if(i-1>0)
+        {
+            selectCatePath+="》";
+        }
     }
+    $("#selectProductCategory").html(selectCatePath);
+    $("#categoryId").val(productApprove.categoryId);
 
     //设置选择品牌默认值
     gSelectBrandId = productApprove.brandId;
@@ -128,7 +135,6 @@ function initPage()
 
 $(function () {
 
-    intRootCategory();
 
     initPage();
 
@@ -181,7 +187,6 @@ $(function () {
 
     $("#step2Back").bind( 'click' ,function(){
 
-        $("#step5").hide();
         $("#step4").hide();
         $("#step3").hide();
         $("#step2").hide();
@@ -217,7 +222,6 @@ $(function () {
         }
 
         if(result) {
-            $("#step5").hide();
             $("#step4").hide();
             $("#step3").show();
             $("#step2").hide();
@@ -227,7 +231,6 @@ $(function () {
 
 
     $("#step3Back").bind( 'click' ,function(){
-        $("#step5").hide();
         $("#step4").hide();
         $("#step3").hide();
         $("#step2").show();
@@ -235,7 +238,6 @@ $(function () {
     });
 
     $("#step3Next").bind( 'click' ,function(){
-        $("#step5").hide();
         $("#step4").show();
         $("#step3").hide();
         $("#step2").hide();
@@ -243,7 +245,6 @@ $(function () {
     });
 
     $("#step4Back").bind( 'click' ,function(){
-        $("#step5").hide();
         $("#step4").hide();
         $("#step3").show();
         $("#step2").hide();
@@ -252,21 +253,12 @@ $(function () {
 
     $("#step4Next").bind( 'click' ,function(){
         $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/vcode?"+new Date().getTime());
-        $("#step5").show();
         $("#step4").hide();
         $("#step3").hide();
         $("#step2").hide();
         $("#step1").hide();
     });
 
-
-    $("#step5Back").bind( 'click' ,function(){
-        $("#step5").hide();
-        $("#step4").show();
-        $("#step3").hide();
-        $("#step2").hide();
-        $("#step1").hide();
-    });
 });
 
 

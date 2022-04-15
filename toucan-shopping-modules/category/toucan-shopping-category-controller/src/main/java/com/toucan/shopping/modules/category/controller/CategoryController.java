@@ -544,7 +544,9 @@ public class CategoryController {
             CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
             BeanUtils.copyProperties(categoryTreeVO,category);
             categoryTreeVO.setIdPath(new ArrayList<Long>());
+            categoryTreeVO.setNamePaths(new ArrayList());
             categoryTreeVO.getIdPath().add(category.getId());
+            categoryTreeVO.getNamePaths().add(category.getName());
             categoryService.setIdPath(categoryTreeVO);
 
             resultObjectVO.setData(categoryTreeVO);
