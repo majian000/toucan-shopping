@@ -51,6 +51,7 @@ function skuUploadPreview(pos)
 
 function bindAttLabelEvent()
 {
+    $(".rp_attr_div label").unbind("change");
     //SKU信息
     $(".rp_attr_div label").bind("change", function () {
         attributeControl.Creat_Table();
@@ -305,14 +306,17 @@ var attributeControl = {
             return doubleArrays[0];
         }
     }
-}
+};
+
 
 function bindInputAddEvent()
 {
+    $(".attributeTableAddBtn").unbind("click");
     //SKU信息
     $(".attributeTableAddBtn").bind("click", function () {
         var attId = $(this).attr("attr-data");
         var attVal = $("#attributeInput_"+attId).val();
+
         if(attVal!=null)
         {
             attVal = attVal.replace(/(^\s*)|(\s*$)/g, "");
