@@ -146,6 +146,25 @@ function drawAttributeControl()
         bindAttLabelEvent();
         bindInputAddEvent();
     }
+    setAttributeChecked();
+}
+
+/**
+ * 设置属性选中状态
+ */
+function setAttributeChecked()
+{
+    if(productApprove.skuAttributes!=null&&productApprove.skuAttributes.length>0)
+    {
+        for(var i=0;i<productApprove.skuAttributes.length;i++) {
+            var skuAttribute = productApprove.skuAttributes[i];
+            if(skuAttribute.values!=null&&skuAttribute.values.length>0) {
+                for(var j=0;j<skuAttribute.values.length;j++) {
+                    $("input:checkbox[value='" + skuAttribute.values[j] + "']").click();
+                }
+            }
+        }
+    }
 }
 
 function initProductPublishForm(productApprove)
