@@ -126,9 +126,11 @@ const loading = {
         this._loadItem.appendTo($('body'));
     },
     hideLoading(){
-        this._loadItem.remove();
-        $('html').css("pointer-events", "auto");
-        this.resetData();
+        if(this._loadItem!=null) {
+            this._loadItem.remove();
+            $('html').css("pointer-events", "auto");
+            this.resetData();
+        }
     },
     resetData(){
         this._loadItem = null;

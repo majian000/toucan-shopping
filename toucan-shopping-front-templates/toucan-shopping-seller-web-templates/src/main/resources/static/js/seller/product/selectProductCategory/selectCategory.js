@@ -108,7 +108,7 @@ $("#releaseBtn").click(function() {
 
 		if(g_preSelectCategoryId!=g_selectCategoryId) {
 			g_preSelectCategoryId = g_selectCategoryId;
-			initAttributes(g_selectCategoryId,showSetp2Page);
+			initAttributes(g_selectCategoryId,showSetp2Page,null);
 			clearSkuTable();
 		}else{
 			showSetp2Page();

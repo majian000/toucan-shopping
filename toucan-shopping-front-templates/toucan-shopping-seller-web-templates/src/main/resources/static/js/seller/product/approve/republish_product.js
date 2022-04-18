@@ -6,57 +6,135 @@ function showSetp2Page()
     $("#step2").show();
 }
 
-function drawSkuTable(productApprove)
+/**
+ * 生成属性值HTML
+ * @param attributeValue
+ * @returns {string}
+ */
+function genAttributeValueHtml(attributeValue)
 {
+    return  "<li class=\"rpai_li\" att-value-name=\""+attributeValue+"\">\n" +
+        "                    <label>\n" +
+        "                        <input type=\"checkbox\" class=\"chcBox_Width\" value=\""+attributeValue+"\">\n" +
+        "                        <div style=\"background-color:null;width:15px;height:15px;float:right\"></div>"+attributeValue+"</label>\n" +
+        "                </li>\n";
+}
+
+/**
+ * 生成属性名HTML
+ * @param skuAttributeKey
+ * @param skuAttributeValueHtml
+ * @returns {string}
+ */
+function genAttributeKeyHtml(number,skuAttributeKey,skuAttributeValueHtml)
+{
+    var inputUuid = toucan_uuid();
+    return "<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
+        "    <div style=\"padding-left: 6%;\"> <a>"+skuAttributeKey+"</a>\n" +
+        "        <input type=\"text\" id=\"attributeInput_"+inputUuid+"\" name=\"attributeValue\" class=\"releaseProductInputText\" style=\"width:200px;\" tabindex=\"5\" maxlength=\"25\" placeholder=\"请输入自定义值\">\n" +
+        "        <input type=\"button\" class=\"releaseProductButton attributeTableAddBtn\" value=\"添加\"  attr-data=\""+inputUuid+"\" > </div>\n" +
+        "    <div class=\"attributeList\">\n" +
+        "        <ul class=\"rp_attr_kt\" style=\"display:none\">\n" +
+        "            <li>"+skuAttributeKey+"</li>\n" +
+        "        </ul>\n" +
+        "        <div class=\"field\" style=\"width:100%\">\n" +
+        "            <ul class=\"rpai"+number+" rpai_key_ul\" id=\"rpai"+inputUuid+"\"  style=\"float:left;margin-left: 20px;\" attr-group-name=\""+skuAttributeKey+"\">\n"
+        +skuAttributeValueHtml+
+        "            </ul>\n" +
+        "            <div class=\"clearfloat\"></div>\n" +
+        "        </div>\n" +
+        "    </div>\n" +
+        "</div>";
+}
+
+function drawAttributeControl()
+{
+    productApprove = g_productApprove;
     if(productApprove.skuAttributes!=null&&productApprove.skuAttributes.length>0)
     {
         var attributeKeys = $(".rpai_key_ul");
         //已有属性名列表
         if(attributeKeys!=null&&attributeKeys.length>0)
         {
-            for(var i=0;i<attributeKeys.length;i++)
-            {
-                var attributeKey = attributeKeys[i];
+            var attributeNameIsFind=false;
+            var attributeValueIsFind;false;
+            var maxAttributeNameNumber = 0 ;
+            for(var i=0;i<productApprove.skuAttributes.length;i++) {
+                var skuAttribute = productApprove.skuAttributes[i];
+                attributeNameIsFind = false;
+                maxAttributeNameNumber = 0;
+                for (var j = 0; j < attributeKeys.length; j++) {
+                    var attributeKey = $(attributeKeys[j]);
+                    maxAttributeNameNumber++;
+                    //该属性名未被删除
+                    if(skuAttribute.key==attributeKey.attr("attr-group-name"))
+                    {
+                        attributeNameIsFind = true;
+                        var attributeValueLis = attributeKey.find("li");
+                        //如果当前属性值列表为空
+                        if(attributeValueLis==null||attributeValueLis.length<=0)
+                        {
+                            var attributeValueHtml="";
+                            for (var p = 0; p < skuAttribute.values.length; p++) {
+                                attributeValueHtml+=genAttributeValueHtml(skuAttribute.values[p]);
+                            }
+                            attributeKey.append(attributeValueHtml);
+                        }else {
 
+                            for (var p = 0; p < skuAttribute.values.length; p++) {
+                                var skuAttributeValue = skuAttribute.values[p];
+                                attributeValueIsFind=false;
+                                //判断属性值有没有删除
+                                for (var k = 0; k < attributeValueLis.length; k++) {
+                                    var attributeValueControl = attributeValueLis[k];
+                                    if(skuAttributeValue==$(attributeValueControl).attr("att-value-name"))
+                                    {
+                                        attributeValueIsFind = true;
+                                    }
+                                }
+                                //不在当前控件列表中,就添加这个控件
+                                if(!attributeValueIsFind)
+                                {
+                                    attributeKey.append(genAttributeValueHtml(skuAttribute.values[p]));
+                                }
+
+                            }
+                        }
+                    }
+                }
+                //生成这个属性名和所有值列表
+                if(!attributeNameIsFind)
+                {
+                    //删除最后的那个sku表格,追加完当前属性名之后在把表格添加回去
+                    var tspSkuAttributeTableDivHtml = $("#tspSkuAttributeTableDiv").html();
+                    var attributeValueHtmls="";
+                    for (var p = 0; p < skuAttribute.values.length; p++) {
+                        attributeValueHtmls+=genAttributeValueHtml(skuAttribute.values[p]);
+                    }
+                    $(".rp_attr_div").append(genAttributeKeyHtml(maxAttributeNameNumber,skuAttribute.key,attributeValueHtmls));
+
+                    $("#tspSkuAttributeTableDiv").remove();
+                    tspSkuAttributeTableDivHtml = "<div class=\"item\" id=\"tspSkuAttributeTableDiv\" style=\"clear:both;text-align: left;\">\n"+tspSkuAttributeTableDivHtml+"</div>";
+                    $(".rp_attr_div").append(tspSkuAttributeTableDivHtml);
+                }
             }
         }else{
             var rp_attr_html="";
-
             for(var i=0;i<productApprove.skuAttributes.length;i++)
             {
-                var inputUuid = toucan_uuid();
                 var skuAttributeValueHtml="";
                 var skuAttribute = productApprove.skuAttributes[i];
                 if(skuAttribute.values!=null&&skuAttribute.values.length>0)
                 {
                     for(var j=0;j<skuAttribute.values.length;j++) {
-                        skuAttributeValueHtml += "<li class=\"rpai_li\">\n" +
-                            "                    <label>\n" +
-                            "                        <input type=\"checkbox\" class=\"chcBox_Width\" value=\""+skuAttribute.values[j]+"\">\n" +
-                            "                        <div style=\"background-color:null;width:15px;height:15px;float:right\"></div>"+skuAttribute.values[j]+"</label>\n" +
-                            "                </li>\n";
+                        skuAttributeValueHtml +=genAttributeValueHtml(skuAttribute.values[j]);
                     }
                 }
-                rp_attr_html +="<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
-                    "    <div style=\"padding-left: 6%;\"> <a>"+skuAttribute.key+"</a>\n" +
-                    "        <input type=\"text\" id=\"attributeInput_"+inputUuid+"\" name=\"attributeValue\" class=\"releaseProductInputText\" style=\"width:200px;\" tabindex=\"5\" maxlength=\"25\" placeholder=\"请输入自定义值\">\n" +
-                    "        <input type=\"button\" class=\"releaseProductButton attributeTableAddBtn\" value=\"添加\"  attr-data=\""+inputUuid+"\" > </div>\n" +
-                    "    <div class=\"attributeList\">\n" +
-                    "        <ul class=\"rp_attr_kt\" style=\"display:none\">\n" +
-                    "            <li>"+skuAttribute.key+"</li>\n" +
-                    "        </ul>\n" +
-                    "        <div class=\"field\" style=\"width:100%\">\n" +
-                    "            <ul class=\"rpai"+i+" rpai_key_ul\" id=\"rpai"+inputUuid+"\"  style=\"float:left;margin-left: 20px;\" attr-group-name=\""+skuAttribute.key+"\">\n"
-                                    +skuAttributeValueHtml+
-                    "            </ul>\n" +
-                    "            <div class=\"clearfloat\"></div>\n" +
-                    "        </div>\n" +
-                    "    </div>\n" +
-                    "</div>";
+                rp_attr_html +=genAttributeKeyHtml(i,skuAttribute.key,skuAttributeValueHtml);
             }
 
             rp_attr_html+="\n" +
-                "<div class=\"item\" style=\"clear:both;text-align: left;\">\n" +
+                "<div class=\"item\" id=\"tspSkuAttributeTableDiv\" style=\"clear:both;text-align: left;\">\n" +
                 "    <div class=\"sku_attribute_list\" style=\"padding-left: 6%;\">\n" +
                 "        <div id=\"tspSkuAttributeTable\"></div>\n" +
                 "    </div>\n" +
@@ -113,10 +191,13 @@ function initProductPublishForm(productApprove)
         }
     }
 
-    //绘制SKU表格
-    drawSkuTable(productApprove);
+    //绘制属性控件
+    g_productApprove = productApprove;
 
+    initAttributes(productApprove.categoryId,null,drawAttributeControl);
 }
+
+
 
 function initPage()
 {

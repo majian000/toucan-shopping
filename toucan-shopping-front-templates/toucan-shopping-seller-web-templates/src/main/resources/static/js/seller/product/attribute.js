@@ -351,7 +351,7 @@ function bindInputAddEvent()
         }
     });
 }
-function initAttributes(categoryId,callback)
+function initAttributes(categoryId,callback,drawCallback)
 {
 
     loading.showLoading({
@@ -387,9 +387,9 @@ function initAttributes(categoryId,callback)
                         for(var j=0;j<attribute.values.length;j++) {
                             var attributeValue = attribute.values[j];
                             if(attribute.attributeType==2) {
-                                attributeHtmls += " <li class='rpai_li'><label><input  type='checkbox' class='chcBox_Width' value='" + attributeValue.attributeValue + "' /><div style='background-color:"+attributeValue.rgbColor+";width:15px;height:15px;float:right'></div>" + attributeValue.attributeValue + "</label></li>";
+                                attributeHtmls += " <li class='rpai_li' att-value-name='"+attributeValue.attributeValue+"'><label><input  type='checkbox' class='chcBox_Width' value='" + attributeValue.attributeValue + "' /><div style='background-color:"+attributeValue.rgbColor+";width:15px;height:15px;float:right'></div>" + attributeValue.attributeValue + "</label></li>";
                             }else{
-                                attributeHtmls += " <li class='rpai_li'><label><input  type='checkbox' class='chcBox_Width' value='" + attributeValue.attributeValue + "' />" + attributeValue.attributeValue + "</label></li>";
+                                attributeHtmls += " <li class='rpai_li' att-value-name='"+attributeValue.attributeValue+"'><label><input  type='checkbox' class='chcBox_Width' value='" + attributeValue.attributeValue + "' />" + attributeValue.attributeValue + "</label></li>";
                             }
                         }
                     }
@@ -403,7 +403,7 @@ function initAttributes(categoryId,callback)
                 }
 
                 //SKU表格
-                attributesHtml+="<div class='item' style='clear:both;text-align: left;' >";
+                attributesHtml+="<div class='item' id=\"tspSkuAttributeTableDiv\" style='clear:both;text-align: left;' >";
                 attributesHtml+="<div class='sku_attribute_list' style='padding-left: 6%;'>";
                 attributesHtml+="<div id='tspSkuAttributeTable'></div>  ";
                 attributesHtml+="</div>";
@@ -412,12 +412,19 @@ function initAttributes(categoryId,callback)
 
                 bindInputAddEvent();
             }
+
+            if(drawCallback!=null)
+            {
+                drawCallback();
+            }
         },
         complete:function(data,status){
             bindAttLabelEvent();
 
             loading.hideLoading();
-            callback();
+            if(callback!=null) {
+                callback();
+            }
         }
     });
 }
