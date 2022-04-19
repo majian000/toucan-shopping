@@ -10,6 +10,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryServ
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -72,6 +73,9 @@ public class ShopProductApproveApiController extends BaseController {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private FeignShopCategoryService feignShopCategoryService;
 
 
     /**
@@ -173,30 +177,31 @@ public class ShopProductApproveApiController extends BaseController {
 
 
                         //查询店铺分类
-                        ResultObjectVO resultShopCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
-                        if(resultShopCategoryObjectVO.isSuccess()&&resultShopCategoryObjectVO.getData()!=null)
-                        {
-                            ShopCategoryVO shopCategoryVO = resultShopCategoryObjectVO.formatData(ShopCategoryVO.class);
-                            List<String> shopCategoryIdPath = new LinkedList<>();
-                            List<String> shopCategoryNamePath = new LinkedList<>();
-                            if(CollectionUtils.isNotEmpty(shopCategoryVO.getIdPath()))
-                            {
-                                for(Long shopCategoryId:shopCategoryVO.getIdPath())
-                                {
-                                    shopCategoryIdPath.add(String.valueOf(shopCategoryId));
+                        if(shopProductApproveVO.getShopCategoryId()!=null) {
+                            ShopCategoryVO queryShopCateogry = new ShopCategoryVO();
+                            queryShopCateogry.setId(shopProductApproveVO.getShopCategoryId());
+                            requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), queryShopCateogry);
+                            ResultObjectVO resultShopCategoryObjectVO = feignShopCategoryService.findIdPathById(requestJsonVO);
+                            if (resultShopCategoryObjectVO.isSuccess() && resultShopCategoryObjectVO.getData() != null) {
+                                ShopCategoryVO shopCategoryVO = resultShopCategoryObjectVO.formatData(ShopCategoryVO.class);
+                                List<String> shopCategoryIdPath = new LinkedList<>();
+                                List<String> shopCategoryNamePath = new LinkedList<>();
+                                if (CollectionUtils.isNotEmpty(shopCategoryVO.getIdPath())) {
+                                    for (Long shopCategoryId : shopCategoryVO.getIdPath()) {
+                                        shopCategoryIdPath.add(String.valueOf(shopCategoryId));
+                                    }
                                 }
-                            }
-                            if(CollectionUtils.isNotEmpty(shopCategoryVO.getNamePaths()))
-                            {
-                                for(String shopCategoryName:shopCategoryVO.getNamePaths())
-                                {
-                                    shopCategoryNamePath.add(String.valueOf(shopCategoryName));
+                                if (CollectionUtils.isNotEmpty(shopCategoryVO.getNamePaths())) {
+                                    for (String shopCategoryName : shopCategoryVO.getNamePaths()) {
+                                        shopCategoryNamePath.add(String.valueOf(shopCategoryName));
+                                    }
                                 }
-                            }
-                            shopProductApproveVO.setShopCategoryIdPath(shopCategoryIdPath);
-                            shopProductApproveVO.setShopCategoryNamePath(shopCategoryNamePath);
+                                shopProductApproveVO.setShopCategoryIdPath(shopCategoryIdPath);
+                                shopProductApproveVO.setShopCategoryNamePath(shopCategoryNamePath);
 
+                            }
                         }
+
                     }
                     if(StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath()))
                     {
