@@ -188,6 +188,12 @@ public class ShopProductApproveApiController extends BaseController {
                         List<ShopProductApproveSkuAttribute> skuAttributes = new LinkedList<>();
                         for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
                         {
+                            //设置商品预览图
+                            if(StringUtils.isNotEmpty(shopProductApproveSkuVO.getProductPreviewPath()))
+                            {
+                                shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+shopProductApproveSkuVO.getProductPreviewPath());
+                            }
+
                             Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
                             Set<String> keysSet = attributeKeyValue.keySet();
                             for(String key:keysSet)

@@ -193,7 +193,11 @@ function setSkuTableValue()
                     var result = toucan_compareArray(attributeValues,attributeValueGroup);
                     if(result)
                     {
-                        console.log(skuVo);
+                        var skuRowIndex = skuTableAttributeValueControl.attr("attr-row-index");
+
+                        $("#productSkuVOList_"+skuRowIndex+"_price").val(skuVo.price);
+                        $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
+                        $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
                     }
                 }
             }
@@ -203,7 +207,7 @@ function setSkuTableValue()
 
 function initProductPublishForm(productApprove)
 {
-
+    attributeControl.imgUploadTitle="图片重新上传";
     //设置选择分类默认值
     var selectCategoryArray = productApprove.categoryNamePath;
     var selectCatePath = "";
@@ -374,21 +378,6 @@ $(function () {
             });
             return ;
         }
-        if(skuTablePhotos.length>0)
-        {
-            for(var i=0;i<skuTablePhotos.length;i++)
-            {
-                var skuTablePhoto = $(skuTablePhotos[i]).val();
-                if(skuTablePhoto==null||skuTablePhoto=="")
-                {
-                    $.message({
-                        message: "请上传销售规格中的商品图片",
-                        type: 'error'
-                    });
-                    return ;
-                }
-            }
-        }
 
         if(result) {
             $("#step4").hide();
@@ -426,6 +415,12 @@ $(function () {
         $("#step3").hide();
         $("#step2").hide();
         $("#step1").hide();
+    });
+
+
+    /*点击下一步*/
+    $("#releaseBtn").click(function() {
+        showSetp2Page();
     });
 
 });

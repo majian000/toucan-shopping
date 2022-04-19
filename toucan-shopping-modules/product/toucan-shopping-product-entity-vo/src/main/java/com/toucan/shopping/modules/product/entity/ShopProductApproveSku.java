@@ -79,6 +79,8 @@ public class ShopProductApproveSku {
 
     private String productPreviewPath; //商品主图路径
 
+    private String httpProductPreviewPath; //商品主图HTTP路径
+
     private String productUuid; //SPU的UUID
 
 
