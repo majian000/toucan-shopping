@@ -174,6 +174,7 @@ function setSkuTableValue()
 {
     if(productApprove.skuAttributes!=null&&productApprove.skuAttributes.length>0)
     {
+        var stockNum=0;
         var skuTableAttributeValueControls = $(".productSkuAttributeValueHidden");
         var findCount = 0;
         if(skuTableAttributeValueControls!=null&&skuTableAttributeValueControls.length>0)
@@ -198,9 +199,11 @@ function setSkuTableValue()
                         $("#productSkuVOList_"+skuRowIndex+"_price").val(skuVo.price);
                         $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
                         $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
+                        stockNum+=skuVo.stockNum;
                     }
                 }
             }
+            $("#num").val(stockNum);
         }
     }
 }
