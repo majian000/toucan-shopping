@@ -147,6 +147,8 @@ function drawAttributeControl()
         bindInputAddEvent();
     }
     setAttributeChecked();
+    //设置sku的值
+    setSkuTableValue();
 }
 
 /**
@@ -161,6 +163,38 @@ function setAttributeChecked()
             if(skuAttribute.values!=null&&skuAttribute.values.length>0) {
                 for(var j=0;j<skuAttribute.values.length;j++) {
                     $("input:checkbox[value='" + skuAttribute.values[j] + "']").click();
+                }
+            }
+        }
+
+    }
+}
+
+function setSkuTableValue()
+{
+    if(productApprove.skuAttributes!=null&&productApprove.skuAttributes.length>0)
+    {
+        var skuTableAttributeValueControls = $(".productSkuAttributeValueHidden");
+        var findCount = 0;
+        if(skuTableAttributeValueControls!=null&&skuTableAttributeValueControls.length>0)
+        {
+            //遍历表格中每一行
+            for(var i=0;i<skuTableAttributeValueControls.length;i++)
+            {
+                var skuTableAttributeValueControl = $(skuTableAttributeValueControls[i]);
+                //拿到隐藏域的属性值列表
+                var attributeValues =  skuTableAttributeValueControl.val().split("_");
+                //遍历接口返回的商品实体
+                for(var p=0;p<productApprove.productSkuVOList.length;p++)
+                {
+                    findCount=0;
+                    var skuVo = productApprove.productSkuVOList[p];
+                    var attributeValueGroup = skuVo.attributeValueGroup.split("_");
+                    var result = toucan_compareArray(attributeValues,attributeValueGroup);
+                    if(result)
+                    {
+                        console.log(skuVo);
+                    }
                 }
             }
         }

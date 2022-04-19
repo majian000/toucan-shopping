@@ -134,7 +134,7 @@ var attributeControl = {
                 //创建行
                 $.each(zuheDate, function (index, item) {
                     var td_array = item.split(",");
-                    var tr = $("<tr></tr>");
+                    var tr = $("<tr id='sku_row_"+g_sku_pos+"'></tr>");
                     tr.appendTo(tbody);
                     var sku_attribute_json="{";
                     $.each(td_array, function (i, values) {
@@ -156,10 +156,13 @@ var attributeControl = {
                     td3.appendTo(tr);
                     var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
                     td4.appendTo(tr);
-                    var td5 = $("<input type='hidden' name='productSkuVOList["+g_sku_pos+"].attributes' id='productSkuVOList"+g_sku_pos+"_attributes'  />");
+                    var td5 = $("<input type='hidden' name='productSkuVOList["+g_sku_pos+"].attributes' id='productSkuVOList"+g_sku_pos+"_attributes'  class='productSkuAttributeHidden' attr-row-id='sku_row_"+g_sku_pos+"' />");
                     td5.appendTo(tr);
+                    var td6 = $("<input type='hidden'  id='productSkuVOList"+g_sku_pos+"_attributes_value'   class='productSkuAttributeValueHidden' attr-row-id='sku_row_"+g_sku_pos+"' />");
+                    td6.appendTo(tr);
 
                     $("#productSkuVOList"+g_sku_pos+"_attributes").val(sku_attribute_json);
+                    $("#productSkuVOList"+g_sku_pos+"_attributes_value").val(td_array.join("_"));
 
                     g_sku_pos++;
                     //var td3 = $("<td ><input name=\"Txt_NumberSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
