@@ -217,4 +217,17 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
     }
 
 
+    @Override
+    public void setIdPath(ShopCategoryVO shopCategoryVO) {
+        if(shopCategoryVO.getParentId()!=null&&shopCategoryVO.getParentId().longValue()!=-1)
+        {
+            ShopCategory parentCategory = this.queryById(shopCategoryVO.getParentId());
+            if(parentCategory!=null) {
+                shopCategoryVO.getIdPath().add(parentCategory.getId());
+                shopCategoryVO.getNamePaths().add(parentCategory.getName());
+                shopCategoryVO.setParentId(parentCategory.getParentId());
+                this.setIdPath(shopCategoryVO);
+            }
+        }
+    }
 }

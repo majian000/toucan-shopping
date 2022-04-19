@@ -84,6 +84,19 @@ public class ShopProductApproveVO extends ShopProductApprove {
      */
     private List<String> categoryNamePath;
 
+
+    /**
+     * 分类上级ID路径(包含当前ID)
+     * 格式:当前分类ID,上级分类节点ID,上上级分类节点ID
+     */
+    private List<String> shopCategoryIdPath;
+
+    /**
+     * 分类路径
+     * 格式:当前分类ID,上级分类节点ID,上上级分类节点ID
+     */
+    private List<String> shopCategoryNamePath;
+
     /**
      * SKU的所有属性对应
      */

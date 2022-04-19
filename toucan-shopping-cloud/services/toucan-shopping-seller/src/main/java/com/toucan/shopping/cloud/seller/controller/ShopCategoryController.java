@@ -1569,6 +1569,66 @@ public class ShopCategoryController {
     }
 
 
+
+
+    /**
+     * 根据ID查询返回分类ID路径
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/path/by/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findIdPathById(@RequestBody RequestJsonVO requestVo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ShopCategoryVO entity = JSONObject.parseObject(requestVo.getEntityJson(),ShopCategoryVO.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该分类
+            ShopCategoryVO query=new ShopCategoryVO();
+            query.setId(entity.getId());
+            List<ShopCategory> categorys = shopCategoryService.queryList(query);
+            if(CollectionUtils.isEmpty(categorys))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("对象不存在!");
+                return resultObjectVO;
+            }
+            ShopCategory shopCategory = categorys.get(0);
+            ShopCategoryVO shopCategoryVO = new ShopCategoryVO();
+            BeanUtils.copyProperties(shopCategoryVO,shopCategory);
+            shopCategoryVO.setIdPath(new ArrayList<Long>());
+            shopCategoryVO.setNamePaths(new ArrayList());
+            shopCategoryVO.getIdPath().add(shopCategory.getId());
+            shopCategoryVO.getNamePaths().add(shopCategory.getName());
+            shopCategoryService.setIdPath(shopCategoryVO);
+
+            resultObjectVO.setData(shopCategoryVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 根据ID数组查询
      * @param requestVo

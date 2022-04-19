@@ -108,4 +108,11 @@ public interface ShopCategoryService {
     void setNamePath(List<ShopCategoryVO> categoryVOS,List<Long> parentIdList);
 
 
+    /**
+     * 设置ID路径
+     * @param shopCategoryVO
+     */
+    void setIdPath(ShopCategoryVO shopCategoryVO);
+
+
 }

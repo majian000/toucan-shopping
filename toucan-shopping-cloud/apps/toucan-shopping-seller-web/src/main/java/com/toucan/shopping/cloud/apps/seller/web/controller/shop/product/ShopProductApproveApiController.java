@@ -28,6 +28,7 @@ import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -144,6 +145,7 @@ public class ShopProductApproveApiController extends BaseController {
                         queryCateogry.setId(shopProductApproveVO.getCategoryId());
                         requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), queryCateogry);
 
+                        //查询分类
                         ResultObjectVO resultCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
                         if(resultCategoryObjectVO.isSuccess()&&resultCategoryObjectVO.getData()!=null)
                         {
@@ -169,6 +171,32 @@ public class ShopProductApproveApiController extends BaseController {
 
                         }
 
+
+                        //查询店铺分类
+                        ResultObjectVO resultShopCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
+                        if(resultShopCategoryObjectVO.isSuccess()&&resultShopCategoryObjectVO.getData()!=null)
+                        {
+                            ShopCategoryVO shopCategoryVO = resultShopCategoryObjectVO.formatData(ShopCategoryVO.class);
+                            List<String> shopCategoryIdPath = new LinkedList<>();
+                            List<String> shopCategoryNamePath = new LinkedList<>();
+                            if(CollectionUtils.isNotEmpty(shopCategoryVO.getIdPath()))
+                            {
+                                for(Long shopCategoryId:shopCategoryVO.getIdPath())
+                                {
+                                    shopCategoryIdPath.add(String.valueOf(shopCategoryId));
+                                }
+                            }
+                            if(CollectionUtils.isNotEmpty(shopCategoryVO.getNamePaths()))
+                            {
+                                for(String shopCategoryName:shopCategoryVO.getNamePaths())
+                                {
+                                    shopCategoryNamePath.add(String.valueOf(shopCategoryName));
+                                }
+                            }
+                            shopProductApproveVO.setShopCategoryIdPath(shopCategoryIdPath);
+                            shopProductApproveVO.setShopCategoryNamePath(shopCategoryNamePath);
+
+                        }
                     }
                     if(StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath()))
                     {

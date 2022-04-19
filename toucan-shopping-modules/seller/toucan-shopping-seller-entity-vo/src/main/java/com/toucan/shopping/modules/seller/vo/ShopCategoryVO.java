@@ -57,4 +57,17 @@ public class ShopCategoryVO extends ShopCategory {
      * 节点路径,例如:家用电器/电视/全面屏电视
      */
     private String namePath;
+
+
+
+    /**
+     * 上级ID路径(包含当前ID)
+     * 格式:当前ID,上级节点ID,上上级节点ID
+     */
+    private List<Long> idPath;
+
+    /**
+     * 名称路径
+     */
+    private List<String> namePaths;
 }
