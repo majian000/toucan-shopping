@@ -147,7 +147,7 @@
                                 <div class="toucan-form-body">
                                     <div class="item" >
                                         <div class="field" style="width:90%;text-align:left;padding-left:6%;" >
-                                            <div class="selectedSort"><b>您当前选择的商品类别是：</b><a id="selectProductCategory"></a></div>
+                                            <div class="selectedSort"><b>您当前选择的商品分类是：</b><a id="selectProductCategory"></a></div>
                                             <input type="hidden" id="categoryId"  name="categoryId"/>
                                         </div>
                                     </div>
@@ -335,13 +335,13 @@
 
                             <div id="step4" style="display:none" >
                                 <div class="toucan-form-body">
-                                    <!--商品分类-->
-                                    <div class="wareSort clearfix">
-                                        <ul id="shop_category_sort1"></ul>
-                                        <ul id="shop_category_sort2" style="display: none;"></ul>
+
+                                    <div class="item" >
+                                        <div class="field" style="width:90%;text-align:left;padding-left:6%;" >
+                                            <div class="selectedSort"><b>您当前选择的店铺分类是：</b><a id="shopSelectProductCategory"></a></div>
+                                            <input type="hidden" id="shopCategoryId"  name="shopCategoryId"/>
+                                        </div>
                                     </div>
-                                    <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
-                                    <input type="hidden" id="shopCategoryId"  name="shopCategoryId"/>
 
 
                                     <div class="item" >
@@ -393,7 +393,6 @@
 
 </script>
 
-<script src="${basePath}/static/js/seller/product/selectShopCategory/selectShopCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/tupload/js/T_upload.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/common/toucan-uuid.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/approve/republish_product.js"></script>

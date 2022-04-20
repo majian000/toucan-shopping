@@ -279,13 +279,19 @@ function initProductPublishForm(productApprove)
         $(":checkbox[name='etractMethod'][value='" + productApprove.etractMethod + "']").prop("checked", "checked");
     }
 
-    //
     //设置选择店铺分类默认值
-    var selectShopCategoryArray = productApprove.shopCategoryIdPath;
-    for(var i=(selectShopCategoryArray.length-1);i>=0;i--)
+    var shopSelectCategoryArray = productApprove.shopCategoryNamePath;
+    var shopSelectCatePath = "";
+    for(var i=(shopSelectCategoryArray.length-1);i>=0;i--)
     {
-        $("#shop_category_"+selectShopCategoryArray[i]).click();
+        shopSelectCatePath +=shopSelectCategoryArray[i];
+        if(i>0)
+        {
+            shopSelectCatePath+="》";
+        }
     }
+    $("#shopSelectProductCategory").html(shopSelectCatePath);
+    $("#shopCategoryId").val(productApprove.shopCategoryId);
 
 }
 
