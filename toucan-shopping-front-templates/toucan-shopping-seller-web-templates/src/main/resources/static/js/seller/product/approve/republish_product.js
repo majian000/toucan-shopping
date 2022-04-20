@@ -523,6 +523,12 @@ $("#ppfbtn").click(function() {
         }
     }
 
+    //删除商品主图控件
+    if($("#mainPhotoFile").val()==null||$("#mainPhotoFile").val()=="")
+    {
+        $("#mainPhotoFile").remove();
+    }
+
     $('#productReleaseForm').ajaxSubmit({
         url: basePath+'/api/shop/product/republish',
         dataType:"json",
