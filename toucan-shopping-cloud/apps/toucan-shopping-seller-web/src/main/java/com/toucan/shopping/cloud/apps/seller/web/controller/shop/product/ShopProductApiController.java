@@ -19,10 +19,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
-import com.toucan.shopping.modules.product.vo.AttributeKeyVO;
-import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.PublishProductVO;
-import com.toucan.shopping.modules.product.vo.RePublishProductVO;
+import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -315,6 +312,20 @@ public class ShopProductApiController extends BaseController {
 
 
     /**
+     * 删除旧的商品图片
+     * @param imagePath
+     */
+    void deleteOldProductImage(String imagePath)
+    {
+        try{
+            imageUploadService.deleteFile(imagePath);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+    }
+
+    /**
      * 重新发布
      * @param request
      * @param previewPhotoFiles
@@ -328,222 +339,280 @@ public class ShopProductApiController extends BaseController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
 
-//            if(StringUtils.isEmpty(publishProductVO.getVcode()))
-//            {
-//                resultObjectVO.setMsg("请输入验证码");
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                return resultObjectVO;
-//            }
-//
-//            String cookie = request.getHeader("Cookie");
-//            if(StringUtils.isEmpty(cookie))
-//            {
-//                resultObjectVO.setMsg("请重新刷新验证码");
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                return resultObjectVO;
-//            }
-//            String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
-//            if(StringUtils.isEmpty(clientVCodeId))
-//            {
-//                resultObjectVO.setMsg("验证码异常");
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                return resultObjectVO;
-//            }
-//            String vcodeRedisKey = ShopProductRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
-//            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
-//            if(vCodeObject==null)
-//            {
-//                resultObjectVO.setMsg("验证码过期请刷新");
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                return resultObjectVO;
-//            }
-//            if(!StringUtils.equals(publishProductVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
-//            {
-//                resultObjectVO.setMsg("验证码输入有误");
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                return resultObjectVO;
-//            }
-//
-//            //删除缓存中验证码
-//            toucanStringRedisService.delete(vcodeRedisKey);
-//
-//
-//
-//            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-//            publishProductVO.setCreateUserId(Long.parseLong(userMainId));
-//
-//            //查询这个用户下的店铺
-//            UserVO queryUserVO = new UserVO();
-//            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
-//            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
-//            resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
-//            if(!resultObjectVO.isSuccess()) {
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
-//                return resultObjectVO;
-//            }
-//            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
-//            if (sellerShopVO == null) {
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
-//                return resultObjectVO;
-//            }
-//
-//
-//            //校验商品主图
-//            if(publishProductVO.getMainPhotoFile()==null)
-//            {
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("发布失败,请上传商品主图!");
-//                return resultObjectVO;
-//            }
-//
-//            //校验SKU列表
-//            if(CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList()))
-//            {
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("发布失败,SKU列表不能为空!");
-//                return resultObjectVO;
-//            }
-//
-//            //判断商品预览图数量
-//            if(CollectionUtils.isNotEmpty(previewPhotoFiles))
-//            {
-//                if(previewPhotoFiles.size()>6)
-//                {
-//                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                    resultObjectVO.setMsg("发布失败,商品预览图最大数量为6个!");
-//                    return resultObjectVO;
-//                }
-//            }
-//
-//            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
-//                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
-//                    if(StringUtils.isEmpty(productSkuVO.getAttributes()))
-//                    {
-//                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                        resultObjectVO.setMsg("发布失败,SKU列表属性值不能为空!");
-//                        return resultObjectVO;
-//                    }
-//                }
-//            }
-//
-//            publishProductVO.setAppCode("10001001");
-//
-//            //SKU属性表格式化成Map
-//            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
-//                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
-//                    productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
-//                    String name = publishProductVO.getName();
-//                    Set<String> keys = productSkuVO.getAttributeMap().keySet();
-//                    Iterator keyIt = keys.iterator();
-//                    int pos = 0;
-//                    StringBuilder attributeValueGroup = new StringBuilder();
-//                    while(keyIt.hasNext())
-//                    {
-//                        if(pos!=0)
-//                        {
-//                            attributeValueGroup.append("_");
-//                        }
-//                        String value = productSkuVO.getAttributeMap().get(keyIt.next());
-//                        name+=" " +value;
-//                        attributeValueGroup.append(value);
-//                        pos++;
-//                    }
-//                    productSkuVO.setAttributeValueGroup(attributeValueGroup.toString());
-//                    productSkuVO.setName(name);
-//                    productSkuVO.setAppCode(publishProductVO.getAppCode());
-//                }
-//            }
-//
-//            if(!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
-//            {
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
-//                return resultObjectVO;
-//            }
-//
-//            //校验商品预览图
-//            if(CollectionUtils.isNotEmpty(previewPhotoFiles)) {
-//
-//                for(MultipartFile multipartFile:previewPhotoFiles)
-//                {
-//                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),imageExtScope))
-//                    {
-//                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                        resultObjectVO.setMsg("发布失败,商品预览图格式只能为:JPG、JPEG、PNG!");
-//                        return resultObjectVO;
-//                    }
-//                }
-//            }
-//
-//            //校验SKU主图
-//            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
-//                for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
-//                {
-//                    if(productSkuVO.getMainPhotoFile()==null)
-//                    {
-//                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                        resultObjectVO.setMsg("发布失败,的商品主图不能为空!");
-//                        return resultObjectVO;
-//                    }
-//                    if(!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
-//                    {
-//                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                        resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
-//                        return resultObjectVO;
-//                    }
-//                }
-//            }
-//
-//            //上传商品主图
-//            publishProductVO.setMainPhotoFilePath(imageUploadService.uploadFile(publishProductVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(publishProductVO.getMainPhotoFile().getOriginalFilename())));
-//            publishProductVO.setMainPhotoFile(null);
-//            if(StringUtils.isEmpty(publishProductVO.getMainPhotoFilePath()))
-//            {
-//                resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                resultObjectVO.setMsg("发布失败,商品主图上传失败!");
-//                return resultObjectVO;
-//            }
-//
-//            //上传SKU表商品主图
-//            for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
-//            {
-//                productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
-//                productSkuVO.setMainPhotoFile(null);
-//                if(StringUtils.isEmpty(productSkuVO.getProductPreviewPath()))
-//                {
-//                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                    resultObjectVO.setMsg("发布失败,商品主图上传失败!");
-//                    return resultObjectVO;
-//                }
-//            }
-//
-//            //上传商品预览图
-//            if(CollectionUtils.isNotEmpty(previewPhotoFiles))
-//            {
-//                publishProductVO.setPreviewPhotoPaths(new LinkedList<>());
-//                for(MultipartFile multipartFile:previewPhotoFiles)
-//                {
-//                    String productPreviewPath = imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename()));
-//                    if(StringUtils.isEmpty(productPreviewPath))
-//                    {
-//                        resultObjectVO.setCode(ResultObjectVO.FAILD);
-//                        resultObjectVO.setMsg("发布失败,商品预览图上传失败!");
-//                        return resultObjectVO;
-//                    }
-//                    publishProductVO.getPreviewPhotoPaths().add(productPreviewPath);
-//                }
-//            }
-//
-//            publishProductVO.setShopId(sellerShopVO.getId());
-//
-//            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
-//            resultObjectVO = feignShopProductApproveService.publish(requestJsonVO);
-//            if(resultObjectVO.isSuccess())
-//            {
-//                resultObjectVO.setMsg("发布成功");
-//            }
+            if(StringUtils.isEmpty(publishProductVO.getVcode()))
+            {
+                resultObjectVO.setMsg("请输入验证码");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            String cookie = request.getHeader("Cookie");
+            if(StringUtils.isEmpty(cookie))
+            {
+                resultObjectVO.setMsg("请重新刷新验证码");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
+            if(StringUtils.isEmpty(clientVCodeId))
+            {
+                resultObjectVO.setMsg("验证码异常");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            String vcodeRedisKey = ShopProductRedisKey.getVerifyCodeKey(this.getAppCode(),clientVCodeId);
+            Object vCodeObject = toucanStringRedisService.get(vcodeRedisKey);
+            if(vCodeObject==null)
+            {
+                resultObjectVO.setMsg("验证码过期请刷新");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            if(!StringUtils.equals(publishProductVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+            {
+                resultObjectVO.setMsg("验证码输入有误");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            //删除缓存中验证码
+            toucanStringRedisService.delete(vcodeRedisKey);
+
+
+            if(publishProductVO.getId()==null)
+            {
+                resultObjectVO.setMsg("ID不能为空");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            publishProductVO.setCreateUserId(Long.parseLong(userMainId));
+
+            //查询这个用户下的店铺
+            UserVO queryUserVO = new UserVO();
+            queryUserVO.setUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
+            resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
+            if(!resultObjectVO.isSuccess()) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
+                return resultObjectVO;
+            }
+            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+            if (sellerShopVO == null) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
+                return resultObjectVO;
+            }
+
+            //查询库中的商品信息
+            SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
+            ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
+            shopProductApproveVO.setId(publishProductVO.getId());
+            shopProductApproveVO.setShopId(sellerShopVORet.getId());
+            requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductApproveVO);
+            resultObjectVO = feignShopProductApproveService.queryByProductApproveIdAndShopId(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                shopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+            }
+
+            //校验SKU列表
+            if(CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList()))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,SKU列表不能为空!");
+                return resultObjectVO;
+            }
+
+            //判断商品预览图数量
+            if(CollectionUtils.isNotEmpty(previewPhotoFiles))
+            {
+                if(previewPhotoFiles.size()>6)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("发布失败,商品预览图最大数量为6个!");
+                    return resultObjectVO;
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
+                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+                    if(StringUtils.isEmpty(productSkuVO.getAttributes()))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU列表属性值不能为空!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            publishProductVO.setAppCode("10001001");
+
+            //SKU属性表格式化成Map
+            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
+                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+                    productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
+                    String name = publishProductVO.getName();
+                    Set<String> keys = productSkuVO.getAttributeMap().keySet();
+                    Iterator keyIt = keys.iterator();
+                    int pos = 0;
+                    StringBuilder attributeValueGroup = new StringBuilder();
+                    while(keyIt.hasNext())
+                    {
+                        if(pos!=0)
+                        {
+                            attributeValueGroup.append("_");
+                        }
+                        String value = productSkuVO.getAttributeMap().get(keyIt.next());
+                        name+=" " +value;
+                        attributeValueGroup.append(value);
+                        pos++;
+                    }
+                    productSkuVO.setAttributeValueGroup(attributeValueGroup.toString());
+                    productSkuVO.setName(name);
+                    productSkuVO.setAppCode(publishProductVO.getAppCode());
+                }
+            }
+
+            if(publishProductVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
+                return resultObjectVO;
+            }
+
+            //校验商品预览图
+            if(CollectionUtils.isNotEmpty(previewPhotoFiles)) {
+
+                for(MultipartFile multipartFile:previewPhotoFiles)
+                {
+                    if(!ImageUtils.isImage(multipartFile.getOriginalFilename(),imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品预览图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            //校验SKU主图
+            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
+                for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+                {
+                    if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,SKU中的商品主图格式只能为:JPG、JPEG、PNG!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            //上传商品主图
+            if(publishProductVO.getMainPhotoFile()!=null) {
+                publishProductVO.setMainPhotoFilePath(imageUploadService.uploadFile(publishProductVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(publishProductVO.getMainPhotoFile().getOriginalFilename())));
+                publishProductVO.setMainPhotoFile(null);
+                if (StringUtils.isEmpty(publishProductVO.getMainPhotoFilePath())) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("发布失败,商品主图上传失败!");
+                    return resultObjectVO;
+                }
+                //删除旧的商品主图
+                this.deleteOldProductImage(shopProductApproveVO.getMainPhotoFilePath());
+            }
+
+
+            //上传SKU表商品主图
+            for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+            {
+                if(productSkuVO.getMainPhotoFile()!=null) {
+                    productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
+                    productSkuVO.setMainPhotoFile(null);
+                    if (StringUtils.isEmpty(productSkuVO.getProductPreviewPath())) {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品主图上传失败!");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            //删除旧的SKU商品图片
+            if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList()))
+            {
+                boolean previewIsChange=false;
+                for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
+                {
+                    previewIsChange = false;
+                    for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+                    {
+                        if(productSkuVO.getId()!=null&&oldProductSkuVO.getId().longValue()==productSkuVO.getId().longValue())
+                        {
+                            if(productSkuVO.getMainPhotoFile()!=null) {
+                                previewIsChange = true;
+                            }
+                        }
+                    }
+                    //图片修改了,那么就删除旧的图片
+                    if(previewIsChange)
+                    {
+                        this.deleteOldProductImage(oldProductSkuVO.getProductPreviewPath());
+                    }
+                }
+            }
+
+            List<String> reuploadPreviewPhotoPaths = new LinkedList<>();
+            //上传商品预览图
+            if(CollectionUtils.isNotEmpty(previewPhotoFiles))
+            {
+                for(MultipartFile multipartFile:previewPhotoFiles)
+                {
+                    String productPreviewPath = imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename()));
+                    if(StringUtils.isEmpty(productPreviewPath))
+                    {
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("发布失败,商品预览图上传失败!");
+                        return resultObjectVO;
+                    }
+                    reuploadPreviewPhotoPaths.add(productPreviewPath);
+                }
+            }
+
+            int reuploadPos=0;
+            //删除旧的商品预览图
+            if(StringUtils.isNotEmpty(publishProductVO.getPreviewPhotoDelPosArray()))
+            {
+                //拿到删除的图片下标
+                String[] deletePreviewPhotoPosArray = publishProductVO.getPreviewPhotoDelPosArray().split(",");
+
+                if(deletePreviewPhotoPosArray!=null&&deletePreviewPhotoPosArray.length>0)
+                {
+                    for(String deletePreviewPhotoPos:deletePreviewPhotoPosArray) {
+                        for (int i = 0; i < shopProductApproveVO.getPreviewPhotoPaths().size(); i++) {
+                            if(deletePreviewPhotoPos.equals(String.valueOf(i)))
+                            {
+                                this.deleteOldProductImage(shopProductApproveVO.getPreviewPhotoPaths().get(i));
+                                if(CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths)&&(reuploadPos+1)<reuploadPreviewPhotoPaths.size()) {
+                                    //将重新上传的图片 设置到原来的商品预览列表中
+                                    shopProductApproveVO.getPreviewPhotoPaths().set(i,reuploadPreviewPhotoPaths.get(reuploadPos));
+                                    reuploadPos++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            publishProductVO.setPreviewPhotoPaths(shopProductApproveVO.getPreviewPhotoPaths());
+
+
+            publishProductVO.setShopId(sellerShopVO.getId());
+
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
+            resultObjectVO = feignShopProductApproveService.republish(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                resultObjectVO.setMsg("发布成功");
+            }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

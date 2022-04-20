@@ -22,6 +22,15 @@ public interface FeignShopProductApproveService {
 
 
     /**
+     * 发布商品
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/republish",produces = "application/json;charset=UTF-8")
+    ResultObjectVO republish(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
      * 查询列表
      * @param requestJsonVO
      * @return
