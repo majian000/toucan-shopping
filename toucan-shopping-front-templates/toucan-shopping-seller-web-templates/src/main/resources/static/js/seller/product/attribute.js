@@ -161,6 +161,8 @@ var attributeControl = {
                     td5.appendTo(tr);
                     var td6 = $("<input type='hidden'  id='productSkuVOList"+g_sku_pos+"_attributes_value'   class='productSkuAttributeValueHidden' attr-row-id='sku_row_"+g_sku_pos+"' attr-row-index='"+g_sku_pos+"' />");
                     td6.appendTo(tr);
+                    var td7 = $("<input type='hidden' name=\"productSkuVOList["+g_sku_pos+"].id\"  id='productSkuVOList"+g_sku_pos+"_id'  />");
+                    td7.appendTo(tr);
 
                     $("#productSkuVOList"+g_sku_pos+"_attributes").val(sku_attribute_json);
                     $("#productSkuVOList"+g_sku_pos+"_attributes_value").val(td_array.join("_"));

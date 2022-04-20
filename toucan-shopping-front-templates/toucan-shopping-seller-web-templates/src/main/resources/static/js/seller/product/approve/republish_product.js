@@ -199,6 +199,7 @@ function setSkuTableValue()
                         $("#productSkuVOList_"+skuRowIndex+"_price").val(skuVo.price);
                         $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
                         $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
+                        $("#productSkuVOList_"+skuRowIndex+"_id").val(skuVo.id);
                         stockNum+=skuVo.stockNum;
                     }
                 }
@@ -255,6 +256,37 @@ function initProductPublishForm(productApprove)
     g_productApprove = productApprove;
 
     initAttributes(productApprove.categoryId,null,drawAttributeControl);
+
+    //付款方式
+    $(":radio[name='payMethod'][value='" + productApprove.payMethod + "']").prop("checked", "checked");
+
+    //库存计数
+    $(":radio[name='buckleInventoryMethod'][value='" + productApprove.buckleInventoryMethod + "']").prop("checked", "checked");
+
+    //售后服务
+    //提供发票
+    if(productApprove.giveInvoice!=null) {
+        $(":checkbox[name='giveInvoice'][value='" + productApprove.giveInvoice + "']").prop("checked", "checked");
+    }
+
+    //退换货承诺
+    if(productApprove.changeOrReturn!=null) {
+        $(":checkbox[name='changeOrReturn'][value='" + productApprove.changeOrReturn + "']").prop("checked", "checked");
+    }
+
+    //提取方式
+    if(productApprove.etractMethod!=null) {
+        $(":checkbox[name='etractMethod'][value='" + productApprove.etractMethod + "']").prop("checked", "checked");
+    }
+
+    //
+    //设置选择店铺分类默认值
+    var selectShopCategoryArray = productApprove.shopCategoryIdPath;
+    for(var i=(selectShopCategoryArray.length-1);i>=0;i--)
+    {
+        $("#shop_category_"+selectShopCategoryArray[i]).click();
+    }
+
 }
 
 
