@@ -329,17 +329,17 @@ public class ShopProductApiController extends BaseController {
      * 重新发布
      * @param request
      * @param previewPhotoFiles
-     * @param publishProductVO
+     * @param rePublishProductVO
      * @return
      */
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value = "/republish",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO republish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, RePublishProductVO publishProductVO){
+    public ResultObjectVO republish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, RePublishProductVO rePublishProductVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
 
-            if(StringUtils.isEmpty(publishProductVO.getVcode()))
+            if(StringUtils.isEmpty(rePublishProductVO.getVcode()))
             {
                 resultObjectVO.setMsg("请输入验证码");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -368,7 +368,7 @@ public class ShopProductApiController extends BaseController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            if(!StringUtils.equals(publishProductVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
+            if(!StringUtils.equals(rePublishProductVO.getVcode().toUpperCase(),String.valueOf(vCodeObject).toUpperCase()))
             {
                 resultObjectVO.setMsg("验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -379,7 +379,7 @@ public class ShopProductApiController extends BaseController {
             toucanStringRedisService.delete(vcodeRedisKey);
 
 
-            if(publishProductVO.getId()==null)
+            if(rePublishProductVO.getId()==null)
             {
                 resultObjectVO.setMsg("ID不能为空");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -387,7 +387,7 @@ public class ShopProductApiController extends BaseController {
             }
 
             String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            publishProductVO.setCreateUserId(Long.parseLong(userMainId));
+            rePublishProductVO.setCreateUserId(Long.parseLong(userMainId));
 
             //查询这个用户下的店铺
             UserVO queryUserVO = new UserVO();
@@ -409,7 +409,7 @@ public class ShopProductApiController extends BaseController {
             //查询库中的商品信息
             SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
             ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
-            shopProductApproveVO.setId(publishProductVO.getId());
+            shopProductApproveVO.setId(rePublishProductVO.getId());
             shopProductApproveVO.setShopId(sellerShopVORet.getId());
             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductApproveVO);
             resultObjectVO = feignShopProductApproveService.queryByProductApproveIdAndShopId(requestJsonVO);
@@ -418,7 +418,7 @@ public class ShopProductApiController extends BaseController {
             }
 
             //校验SKU列表
-            if(CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList()))
+            if(CollectionUtils.isEmpty(rePublishProductVO.getProductSkuVOList()))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,SKU列表不能为空!");
@@ -436,8 +436,8 @@ public class ShopProductApiController extends BaseController {
                 }
             }
 
-            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
-                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+            if(!CollectionUtils.isEmpty(rePublishProductVO.getProductSkuVOList())) {
+                for (ProductSkuVO productSkuVO : rePublishProductVO.getProductSkuVOList()) {
                     if(StringUtils.isEmpty(productSkuVO.getAttributes()))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -447,13 +447,13 @@ public class ShopProductApiController extends BaseController {
                 }
             }
 
-            publishProductVO.setAppCode("10001001");
+            rePublishProductVO.setAppCode("10001001");
 
             //SKU属性表格式化成Map
-            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
-                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+            if(!CollectionUtils.isEmpty(rePublishProductVO.getProductSkuVOList())) {
+                for (ProductSkuVO productSkuVO : rePublishProductVO.getProductSkuVOList()) {
                     productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
-                    String name = publishProductVO.getName();
+                    String name = rePublishProductVO.getName();
                     Set<String> keys = productSkuVO.getAttributeMap().keySet();
                     Iterator keyIt = keys.iterator();
                     int pos = 0;
@@ -471,11 +471,11 @@ public class ShopProductApiController extends BaseController {
                     }
                     productSkuVO.setAttributeValueGroup(attributeValueGroup.toString());
                     productSkuVO.setName(name);
-                    productSkuVO.setAppCode(publishProductVO.getAppCode());
+                    productSkuVO.setAppCode(rePublishProductVO.getAppCode());
                 }
             }
 
-            if(publishProductVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(publishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
+            if(rePublishProductVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(rePublishProductVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,商品主图的格式只能为:JPG、JPEG、PNG!");
@@ -497,8 +497,8 @@ public class ShopProductApiController extends BaseController {
             }
 
             //校验SKU主图
-            if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
-                for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+            if(!CollectionUtils.isEmpty(rePublishProductVO.getProductSkuVOList())){
+                for(ProductSkuVO productSkuVO: rePublishProductVO.getProductSkuVOList())
                 {
                     if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
                     {
@@ -510,10 +510,10 @@ public class ShopProductApiController extends BaseController {
             }
 
             //上传商品主图
-            if(publishProductVO.getMainPhotoFile()!=null) {
-                publishProductVO.setMainPhotoFilePath(imageUploadService.uploadFile(publishProductVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(publishProductVO.getMainPhotoFile().getOriginalFilename())));
-                publishProductVO.setMainPhotoFile(null);
-                if (StringUtils.isEmpty(publishProductVO.getMainPhotoFilePath())) {
+            if(rePublishProductVO.getMainPhotoFile()!=null) {
+                rePublishProductVO.setMainPhotoFilePath(imageUploadService.uploadFile(rePublishProductVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(rePublishProductVO.getMainPhotoFile().getOriginalFilename())));
+                rePublishProductVO.setMainPhotoFile(null);
+                if (StringUtils.isEmpty(rePublishProductVO.getMainPhotoFilePath())) {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                     resultObjectVO.setMsg("发布失败,商品主图上传失败!");
                     return resultObjectVO;
@@ -524,7 +524,7 @@ public class ShopProductApiController extends BaseController {
 
 
             //上传SKU表商品主图
-            for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+            for(ProductSkuVO productSkuVO: rePublishProductVO.getProductSkuVOList())
             {
                 if(productSkuVO.getMainPhotoFile()!=null) {
                     productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
@@ -544,7 +544,7 @@ public class ShopProductApiController extends BaseController {
                 for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
                 {
                     previewIsChange = false;
-                    for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+                    for(ProductSkuVO productSkuVO: rePublishProductVO.getProductSkuVOList())
                     {
                         if(productSkuVO.getId()!=null&&oldProductSkuVO.getId().longValue()==productSkuVO.getId().longValue())
                         {
@@ -580,10 +580,10 @@ public class ShopProductApiController extends BaseController {
 
             int reuploadPos=0;
             //删除旧的商品预览图
-            if(StringUtils.isNotEmpty(publishProductVO.getPreviewPhotoDelPosArray()))
+            if(StringUtils.isNotEmpty(rePublishProductVO.getPreviewPhotoDelPosArray()))
             {
                 //拿到删除的图片下标
-                String[] deletePreviewPhotoPosArray = publishProductVO.getPreviewPhotoDelPosArray().split(",");
+                String[] deletePreviewPhotoPosArray = rePublishProductVO.getPreviewPhotoDelPosArray().split(",");
 
                 if(deletePreviewPhotoPosArray!=null&&deletePreviewPhotoPosArray.length>0)
                 {
@@ -602,12 +602,12 @@ public class ShopProductApiController extends BaseController {
                     }
                 }
             }
-            publishProductVO.setPreviewPhotoPaths(shopProductApproveVO.getPreviewPhotoPaths());
+            rePublishProductVO.setPreviewPhotoPaths(shopProductApproveVO.getPreviewPhotoPaths());
 
 
-            publishProductVO.setShopId(sellerShopVO.getId());
+            rePublishProductVO.setShopId(sellerShopVO.getId());
 
-            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), publishProductVO);
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), rePublishProductVO);
             resultObjectVO = feignShopProductApproveService.republish(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {

@@ -153,7 +153,7 @@ var attributeControl = {
                     td1.appendTo(tr);
                     var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" id=\"productSkuVOList_"+g_sku_pos+"_stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
                     td2.appendTo(tr);
-                    var td3 = $("<td ><input type='file' class='skuTablePhotos' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' /></td>");
+                    var td3 = $("<td ><input type='file' class='skuTablePhotos skuTableUploadFile' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' /></td>");
                     td3.appendTo(tr);
                     var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
                     td4.appendTo(tr);
@@ -161,7 +161,7 @@ var attributeControl = {
                     td5.appendTo(tr);
                     var td6 = $("<input type='hidden'  id='productSkuVOList"+g_sku_pos+"_attributes_value'   class='productSkuAttributeValueHidden' attr-row-id='sku_row_"+g_sku_pos+"' attr-row-index='"+g_sku_pos+"' />");
                     td6.appendTo(tr);
-                    var td7 = $("<input type='hidden' name=\"productSkuVOList["+g_sku_pos+"].id\"  id='productSkuVOList"+g_sku_pos+"_id'  />");
+                    var td7 = $("<input type='hidden' name=\"productSkuVOList["+g_sku_pos+"].id\"  id='productSkuVOList_"+g_sku_pos+"_id'  />");
                     td7.appendTo(tr);
 
                     $("#productSkuVOList"+g_sku_pos+"_attributes").val(sku_attribute_json);

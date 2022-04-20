@@ -509,6 +509,20 @@ $("#ppfbtn").click(function() {
         tip:"发布中..."
     });
 
+    //删除SKU表格中没有文件上传的控件
+    var skuTableUploadFiles = $(".skuTableUploadFile");
+    if(skuTableUploadFiles.length>0)
+    {
+        for(var i=0;i<skuTableUploadFiles.length;i++)
+        {
+            var skuTableUploadFile=$(skuTableUploadFiles[i]);
+            $(skuTableUploadFile.val()==null||skuTableUploadFile.val()=="")
+            {
+                skuTableUploadFile.remove();
+            }
+        }
+    }
+
     $('#productReleaseForm').ajaxSubmit({
         url: basePath+'/api/shop/product/republish',
         dataType:"json",
