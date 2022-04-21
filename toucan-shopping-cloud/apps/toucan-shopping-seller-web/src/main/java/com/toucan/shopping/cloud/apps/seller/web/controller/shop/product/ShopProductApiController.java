@@ -136,7 +136,7 @@ public class ShopProductApiController extends BaseController {
             resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
             if(!resultObjectVO.isSuccess()) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
+                resultObjectVO.setMsg("发布失败,请稍后重试!");
                 return resultObjectVO;
             }
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
@@ -396,7 +396,7 @@ public class ShopProductApiController extends BaseController {
             resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
             if(!resultObjectVO.isSuccess()) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
+                resultObjectVO.setMsg("发布失败,请稍后重试!");
                 return resultObjectVO;
             }
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
@@ -587,32 +587,34 @@ public class ShopProductApiController extends BaseController {
                 }
             }
 
-            int reuploadPos=0;
-            //删除旧的商品预览图
-            if(StringUtils.isNotEmpty(republishProductVO.getPreviewPhotoDelPosArray()))
-            {
+            //如果进行了删除操作
+            if(StringUtils.isNotEmpty(republishProductVO.getPreviewPhotoDelPosArray())) {
+                int reuploadPos=0;
                 //拿到删除的图片下标
                 String[] deletePreviewPhotoPosArray = republishProductVO.getPreviewPhotoDelPosArray().split(",");
 
-                if(deletePreviewPhotoPosArray!=null&&deletePreviewPhotoPosArray.length>0)
-                {
-                    for(String deletePreviewPhotoPos:deletePreviewPhotoPosArray) {
+                if (deletePreviewPhotoPosArray != null && deletePreviewPhotoPosArray.length > 0) {
+                    for (String deletePreviewPhotoPos : deletePreviewPhotoPosArray) {
                         for (int i = 0; i < shopProductApproveVO.getPreviewPhotoPaths().size(); i++) {
-                            if(deletePreviewPhotoPos.equals(String.valueOf(i)))
-                            {
+                            if (deletePreviewPhotoPos.equals(String.valueOf(i))) {
                                 this.deleteOldProductImage(shopProductApproveVO.getPreviewPhotoPaths().get(i));
                                 if (CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths)) {
                                     //将重新上传的图片 设置到原来的商品预览列表中
-                                    if((reuploadPos+1)<reuploadPreviewPhotoPaths.size()) {
+                                    if ((reuploadPos + 1) < reuploadPreviewPhotoPaths.size()) {
                                         shopProductApproveVO.getPreviewPhotoPaths().set(i, reuploadPreviewPhotoPaths.get(reuploadPos));
                                         reuploadPos++;
                                     }
-                                }else{
+                                } else {
                                     shopProductApproveVO.getPreviewPhotoPaths().remove(i);
                                 }
                             }
                         }
                     }
+                }
+            }else{ //没有进行删除操作 直接追加上传的图片
+                if(CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths))
+                {
+                    shopProductApproveVO.getPreviewPhotoPaths().addAll(reuploadPreviewPhotoPaths);
                 }
             }
             republishProductVO.setPreviewPhotoPaths(shopProductApproveVO.getPreviewPhotoPaths());
