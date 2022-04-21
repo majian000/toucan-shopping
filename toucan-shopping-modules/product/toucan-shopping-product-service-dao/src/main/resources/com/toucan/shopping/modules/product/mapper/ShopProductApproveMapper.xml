@@ -16,8 +16,10 @@
         <result column="approve_status" jdbcType="SMALLINT" property="approveStatus" />
         <result column="reject_text" jdbcType="VARCHAR" property="rejectText" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="seller_no" jdbcType="VARCHAR" property="sellerNo" />
         <result column="pay_method" jdbcType="SMALLINT" property="payMethod" />
@@ -111,6 +113,13 @@
         values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
             #{createDate},#{appCode},#{createUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{approveStatus},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId})
     </insert>
+
+    <update id="updateForRepublish"  parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">
+        update  t_shop_product_approve set  name = #{name} , attributes=#{attributes} , status=#{status} ,update_date=#{updateDate} , update_user_id=#{updateUserId} ,
+          seller_no=#{sellerNo},pay_method=#{payMethod} ,buckle_inventory_method=#{buckleInventoryMethod},approve_status=1 ,give_invoice=#{giveInvoice},
+          change_or_return=#{changeOrReturn},etract_method=#{etractMethod},article_number=#{articleNumber},brand_id=#{brandId}
+          where id = #{id} and approve_status=3
+    </update>
 
 
     <update id="deleteById">

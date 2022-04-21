@@ -28,6 +28,11 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
     }
 
     @Override
+    public int updateForRepublish(ShopProductApprove entity) {
+        return shopProductApproveMapper.updateForRepublish(entity);
+    }
+
+    @Override
     public int deleteById(Long id) {
         return shopProductApproveMapper.deleteById(id);
     }

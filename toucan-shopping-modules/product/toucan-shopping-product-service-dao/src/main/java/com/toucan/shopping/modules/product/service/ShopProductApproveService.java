@@ -14,6 +14,13 @@ public interface ShopProductApproveService {
 
     int save(ShopProductApprove entity);
 
+    /**
+     * 重新发布
+     * @param entity
+     * @return
+     */
+    int updateForRepublish(ShopProductApprove entity);
+
     int deleteById(Long id);
 
     ShopProductApproveVO findById(Long id);

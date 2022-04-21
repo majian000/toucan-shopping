@@ -49,6 +49,15 @@ public class ShopProductApprove {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long createUserId; //创建人ID
 
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate; //修改时间
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long updateUserId; //修改人ID
+
     private Short status; //是否上架 0:未上架 1:已上架
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
@@ -80,8 +89,6 @@ public class ShopProductApprove {
     private Long shopCategoryId; //店铺内的所属分类
 
     private String etractMethod; //提取方式(多选用,分割) 1:用物流配送
-
-    private Short isResubmit; //是否重新提交 0:否 1:是
 
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)

@@ -471,7 +471,7 @@ $(function () {
     });
 
     $("#step4Next").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/vcode?"+new Date().getTime());
+        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
         $("#step4").hide();
         $("#step3").hide();
         $("#step2").hide();
@@ -550,7 +550,7 @@ $("#ppfbtn").click(function() {
     }
 
     $('#productReleaseForm').ajaxSubmit({
-        url: basePath+'/api/shop/product/republish',
+        url: basePath+'/api/shop/product/approve/republish',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
         success: function (result) {
@@ -558,7 +558,7 @@ $("#ppfbtn").click(function() {
             if(result.code<=0)
             {
                 $("#vcode").val("");
-                $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/vcode?"+new Date().getTime());
+                $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
                 $.message({
                     message: result.msg,
                     type: 'error'

@@ -15,6 +15,8 @@ public interface ShopProductApproveMapper {
 
     int insert(ShopProductApprove entity);
 
+    int updateForRepublish(ShopProductApprove entity);
+
     int deleteById(Long id);
 
     int updateApproveStatus(Long id, Integer approveStatus);

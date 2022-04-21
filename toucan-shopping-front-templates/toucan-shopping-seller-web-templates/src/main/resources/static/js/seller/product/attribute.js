@@ -374,7 +374,7 @@ function initAttributes(categoryId,callback,drawCallback)
     });
     $.ajax({
         type: "GET",
-        url: basePath+"/api/shop/product/"+categoryId+"/attributes",
+        url: basePath+"/api/shop/product/approve/"+categoryId+"/attributes",
         contentType: "application/json;charset=utf-8",
         data: null,
         dataType: "json",
