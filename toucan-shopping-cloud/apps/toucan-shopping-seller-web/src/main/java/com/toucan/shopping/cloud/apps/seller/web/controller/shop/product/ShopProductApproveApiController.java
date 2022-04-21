@@ -825,6 +825,8 @@ public class ShopProductApproveApiController extends BaseController {
                 }
                 //删除旧的商品主图
                 this.deleteOldProductImage(shopProductApproveVO.getMainPhotoFilePath());
+            }else{
+                republishProductVO.setMainPhotoFilePath(shopProductApproveVO.getMainPhotoFilePath());
             }
 
 
@@ -929,11 +931,11 @@ public class ShopProductApproveApiController extends BaseController {
             republishProductVO.setUpdateUserId(queryUserVO.getUserMainId());
             republishProductVO.setUuid(shopProductApproveVO.getUuid());
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), republishProductVO);
-//            resultObjectVO = feignShopProductApproveService.republish(requestJsonVO);
-//            if(resultObjectVO.isSuccess())
-//            {
-//                resultObjectVO.setMsg("发布成功");
-//            }
+            resultObjectVO = feignShopProductApproveService.republish(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                resultObjectVO.setMsg("发布成功");
+            }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
