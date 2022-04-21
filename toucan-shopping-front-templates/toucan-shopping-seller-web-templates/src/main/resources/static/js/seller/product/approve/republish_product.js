@@ -2,8 +2,41 @@
 var g_goApproveSecond=3;
 function showSetp2Page()
 {
-    $("#step1").hide();
-    $("#step2").show();
+    var result = checkInputFunctionByContainerId("step2",2);
+
+    var skuTablePhotos = $(".skuTablePhotos");
+    var skuTableImgPaths = $(".skuTableImgPaths");
+    if(skuTablePhotos==null||skuTablePhotos.length<=0)
+    {
+        $.message({
+            message: "请选择商品属性",
+            type: 'error'
+        });
+        return ;
+    }
+
+    if(skuTablePhotos.length>0)
+    {
+        for(var i=0;i<skuTablePhotos.length;i++)
+        {
+            var skuTablePhoto = $(skuTablePhotos[i]).val();
+            var skuTableImgPath =  $(skuTableImgPaths[i]).val();
+            alert(skuTableImgPath);
+            if((skuTablePhoto==null||skuTablePhoto=="")&&(skuTableImgPath==null||skuTableImgPath==""))
+            {
+                $.message({
+                    message: "请上传销售规格中的商品图片",
+                    type: 'error'
+                });
+                return ;
+            }
+        }
+    }
+
+    if(result) {
+        $("#step1").hide();
+        $("#step2").show();
+    }
 }
 
 /**
@@ -199,6 +232,8 @@ function setSkuTableValue()
                         $("#productSkuVOList_"+skuRowIndex+"_price").val(skuVo.price);
                         $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
                         $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
+                        $("#skuPreviewPath_"+skuRowIndex).value(skuVo.productPreviewPath);
+
                         $("#productSkuVOList_"+skuRowIndex+"_id").val(skuVo.id);
                         stockNum+=skuVo.stockNum;
                     }
@@ -408,24 +443,10 @@ $(function () {
     });
 
     $("#step2Next").bind( 'click' ,function(){
-        var result = checkInputFunctionByContainerId("step2",2);
-
-        var skuTablePhotos = $(".skuTablePhotos");
-        if(skuTablePhotos==null||skuTablePhotos.length<=0)
-        {
-            $.message({
-                message: "请选择商品属性",
-                type: 'error'
-            });
-            return ;
-        }
-
-        if(result) {
-            $("#step4").hide();
-            $("#step3").show();
-            $("#step2").hide();
-            $("#step1").hide();
-        }
+        $("#step4").hide();
+        $("#step3").show();
+        $("#step2").hide();
+        $("#step1").hide();
     });
 
 
