@@ -21,7 +21,6 @@ function showSetp2Page()
         {
             var skuTablePhoto = $(skuTablePhotos[i]).val();
             var skuTableImgPath =  $(skuTableImgPaths[i]).val();
-            alert(skuTableImgPath);
             if((skuTablePhoto==null||skuTablePhoto=="")&&(skuTableImgPath==null||skuTableImgPath==""))
             {
                 $.message({
@@ -232,7 +231,7 @@ function setSkuTableValue()
                         $("#productSkuVOList_"+skuRowIndex+"_price").val(skuVo.price);
                         $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
                         $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
-                        $("#skuPreviewPath_"+skuRowIndex).value(skuVo.productPreviewPath);
+                        $("#skuPreviewPath_"+skuRowIndex).val(skuVo.productPreviewPath);
 
                         $("#productSkuVOList_"+skuRowIndex+"_id").val(skuVo.id);
                         stockNum+=skuVo.stockNum;
