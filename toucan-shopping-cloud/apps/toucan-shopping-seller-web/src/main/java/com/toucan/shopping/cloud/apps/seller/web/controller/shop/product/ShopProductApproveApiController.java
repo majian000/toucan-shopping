@@ -907,6 +907,8 @@ public class ShopProductApproveApiController extends BaseController {
                     }
                     //将下标排序
                     Arrays.sort(deletePreviewPhotoPosIntArray);
+                    //过滤删除的商品预览图和替换上传的商品预览图
+                    List<String> releasePreviewPhotoPaths = new LinkedList<>();
 
                     for (Integer deletePreviewPhotoPos : deletePreviewPhotoPosIntArray) {
                         for (int i = 0; i < shopProductApproveVO.getPreviewPhotoPaths().size(); i++) {
@@ -914,16 +916,28 @@ public class ShopProductApproveApiController extends BaseController {
                                 this.deleteOldProductImage(shopProductApproveVO.getPreviewPhotoPaths().get(i));
                                 if (CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths)) {
                                     //将重新上传的图片 设置到原来的商品预览列表中
-                                    if ((reuploadPos + 1) < reuploadPreviewPhotoPaths.size()) {
+                                    if (reuploadPos < reuploadPreviewPhotoPaths.size()) {
                                         shopProductApproveVO.getPreviewPhotoPaths().set(i, reuploadPreviewPhotoPaths.get(reuploadPos));
                                         reuploadPos++;
                                     }
                                 } else {
-                                    shopProductApproveVO.getPreviewPhotoPaths().remove(i);
+                                    //将删除的设置成-1
+                                    shopProductApproveVO.getPreviewPhotoPaths().set(i,"-1");
                                 }
+                                break;
                             }
                         }
                     }
+
+                    //过滤掉删除的那些预览图
+                    for(String previewPhotoPath:shopProductApproveVO.getPreviewPhotoPaths())
+                    {
+                        if(!"-1".equals(previewPhotoPath))
+                        {
+                            releasePreviewPhotoPaths.add(previewPhotoPath);
+                        }
+                    }
+                    shopProductApproveVO.setPreviewPhotoPaths(releasePreviewPhotoPaths);
                 }
             }else{ //没有进行删除操作 直接追加上传的图片
                 if(CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths))
