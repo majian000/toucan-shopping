@@ -621,11 +621,11 @@ public class ShopProductApiController extends BaseController {
             republishProductVO.setShopId(sellerShopVO.getId());
 
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), republishProductVO);
-            resultObjectVO = feignShopProductApproveService.republish(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                resultObjectVO.setMsg("发布成功");
-            }
+//            resultObjectVO = feignShopProductApproveService.republish(requestJsonVO);
+//            if(resultObjectVO.isSuccess())
+//            {
+//                resultObjectVO.setMsg("发布成功");
+//            }
         }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);

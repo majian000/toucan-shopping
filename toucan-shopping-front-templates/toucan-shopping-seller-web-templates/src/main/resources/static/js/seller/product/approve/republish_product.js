@@ -536,7 +536,7 @@ $("#ppfbtn").click(function() {
         for(var i=0;i<skuTableUploadFiles.length;i++)
         {
             var skuTableUploadFile=$(skuTableUploadFiles[i]);
-            $(skuTableUploadFile.val()==null||skuTableUploadFile.val()=="")
+            if(skuTableUploadFile.val()==null||skuTableUploadFile.val()=="")
             {
                 skuTableUploadFile.remove();
             }
