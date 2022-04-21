@@ -81,7 +81,7 @@ public class ShopProductApiController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value = "/publish",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO publish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, PublishProductVO publishProductVO){
+    public ResultObjectVO publish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, PublishProductApproveVO publishProductVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
 
@@ -175,7 +175,7 @@ public class ShopProductApiController extends BaseController {
             }
 
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
-                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+                for (ShopProductApproveSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
                     if(StringUtils.isEmpty(productSkuVO.getAttributes()))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -189,7 +189,7 @@ public class ShopProductApiController extends BaseController {
 
             //SKU属性表格式化成Map
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
-                for (ProductSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
+                for (ShopProductApproveSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
                     productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
                     String name = publishProductVO.getName();
                     Set<String> keys = productSkuVO.getAttributeMap().keySet();
@@ -236,7 +236,7 @@ public class ShopProductApiController extends BaseController {
 
             //校验SKU主图
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())){
-                for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+                for(ShopProductApproveSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
                 {
                     if(productSkuVO.getMainPhotoFile()==null)
                     {
@@ -264,7 +264,7 @@ public class ShopProductApiController extends BaseController {
             }
 
             //上传SKU表商品主图
-            for(ProductSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
+            for(ShopProductApproveSkuVO productSkuVO: publishProductVO.getProductSkuVOList())
             {
                 productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(),ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
                 productSkuVO.setMainPhotoFile(null);
@@ -335,7 +335,7 @@ public class ShopProductApiController extends BaseController {
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping(value = "/republish",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO republish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, RePublishProductVO republishProductVO){
+    public ResultObjectVO republish(HttpServletRequest request, @RequestParam List<MultipartFile> previewPhotoFiles, RePublishProductApproveVO republishProductVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
 
@@ -437,7 +437,7 @@ public class ShopProductApiController extends BaseController {
             }
 
             if(!CollectionUtils.isEmpty(republishProductVO.getProductSkuVOList())) {
-                for (ProductSkuVO productSkuVO : republishProductVO.getProductSkuVOList()) {
+                for (ShopProductApproveSkuVO productSkuVO : republishProductVO.getProductSkuVOList()) {
                     if(StringUtils.isEmpty(productSkuVO.getAttributes()))
                     {
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -451,7 +451,7 @@ public class ShopProductApiController extends BaseController {
 
             //SKU属性表格式化成Map
             if(!CollectionUtils.isEmpty(republishProductVO.getProductSkuVOList())) {
-                for (ProductSkuVO productSkuVO : republishProductVO.getProductSkuVOList()) {
+                for (ShopProductApproveSkuVO productSkuVO : republishProductVO.getProductSkuVOList()) {
                     productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
                     String name = republishProductVO.getName();
                     Set<String> keys = productSkuVO.getAttributeMap().keySet();
@@ -498,7 +498,7 @@ public class ShopProductApiController extends BaseController {
 
             //校验SKU主图
             if(!CollectionUtils.isEmpty(republishProductVO.getProductSkuVOList())){
-                for(ProductSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
+                for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
                 {
                     if(productSkuVO.getMainPhotoFile()!=null&&!ImageUtils.isImage(productSkuVO.getMainPhotoFile().getOriginalFilename(),imageExtScope))
                     {
@@ -524,7 +524,7 @@ public class ShopProductApiController extends BaseController {
 
 
             //上传SKU表商品主图
-            for(ProductSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
+            for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
             {
                 if(productSkuVO.getMainPhotoFile()!=null) {
                     productSkuVO.setProductPreviewPath(imageUploadService.uploadFile(productSkuVO.getMainPhotoFile().getBytes(), ImageUtils.getImageExt(productSkuVO.getMainPhotoFile().getOriginalFilename())));
@@ -553,7 +553,7 @@ public class ShopProductApiController extends BaseController {
                 for(ShopProductApproveSkuVO oldProductSkuVO:shopProductApproveVO.getProductSkuVOList())
                 {
                     previewIsChange = false;
-                    for(ProductSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
+                    for(ShopProductApproveSkuVO productSkuVO: republishProductVO.getProductSkuVOList())
                     {
                         if(productSkuVO.getId()!=null&&oldProductSkuVO.getId().longValue()==productSkuVO.getId().longValue())
                         {

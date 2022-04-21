@@ -5,16 +5,18 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 重新发布商品VO
+ * 发布商品审核VO
  */
 @Data
-public class RePublishProductVO extends PublishProductVO {
+public class RePublishProductApproveVO extends PublishProductApproveVO {
 
 
     /**
      * 已删除的预览图索引
      */
     private String previewPhotoDelPosArray;
+
+
 
 
 
