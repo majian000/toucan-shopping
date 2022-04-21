@@ -899,11 +899,18 @@ public class ShopProductApproveApiController extends BaseController {
                 int reuploadPos=0;
                 //拿到删除的图片下标
                 String[] deletePreviewPhotoPosArray = republishProductVO.getPreviewPhotoDelPosArray().split(",");
-
                 if (deletePreviewPhotoPosArray != null && deletePreviewPhotoPosArray.length > 0) {
-                    for (String deletePreviewPhotoPos : deletePreviewPhotoPosArray) {
+                    Integer[] deletePreviewPhotoPosIntArray = new Integer[deletePreviewPhotoPosArray.length];
+                    for(int p=0;p<deletePreviewPhotoPosArray.length;p++)
+                    {
+                        deletePreviewPhotoPosIntArray[p] = Integer.parseInt(deletePreviewPhotoPosArray[p]);
+                    }
+                    //将下标排序
+                    Arrays.sort(deletePreviewPhotoPosIntArray);
+
+                    for (Integer deletePreviewPhotoPos : deletePreviewPhotoPosIntArray) {
                         for (int i = 0; i < shopProductApproveVO.getPreviewPhotoPaths().size(); i++) {
-                            if (deletePreviewPhotoPos.equals(String.valueOf(i))) {
+                            if (deletePreviewPhotoPos.intValue()==i) {
                                 this.deleteOldProductImage(shopProductApproveVO.getPreviewPhotoPaths().get(i));
                                 if (CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths)) {
                                     //将重新上传的图片 设置到原来的商品预览列表中
