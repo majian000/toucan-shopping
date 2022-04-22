@@ -407,7 +407,7 @@ public class ShopProductApproveApiController extends BaseController {
             String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
             if(StringUtils.isEmpty(clientVCodeId))
             {
-                resultObjectVO.setMsg("验证码异常");
+                resultObjectVO.setMsg("验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
@@ -661,7 +661,7 @@ public class ShopProductApproveApiController extends BaseController {
             String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
             if(StringUtils.isEmpty(clientVCodeId))
             {
-                resultObjectVO.setMsg("验证码异常");
+                resultObjectVO.setMsg("验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }

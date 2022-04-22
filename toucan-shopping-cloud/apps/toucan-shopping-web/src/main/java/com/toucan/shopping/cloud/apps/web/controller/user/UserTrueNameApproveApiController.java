@@ -145,7 +145,7 @@ public class UserTrueNameApproveApiController extends BaseController {
             String ClientVCodeId = VCodeUtil.getClientVCodeId(cookie);
             if(StringUtils.isEmpty(ClientVCodeId))
             {
-                resultObjectVO.setMsg("提交失败,验证码异常");
+                resultObjectVO.setMsg("提交失败,验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }

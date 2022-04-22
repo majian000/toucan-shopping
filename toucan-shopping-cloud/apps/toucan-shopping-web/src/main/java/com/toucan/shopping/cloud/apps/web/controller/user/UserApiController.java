@@ -386,7 +386,7 @@ public class UserApiController extends BaseController {
             String clientVCodeId = VCodeUtil.getClientVCodeId(cookie);
             if(StringUtils.isEmpty(clientVCodeId))
             {
-                resultObjectVO.setMsg("修改失败,验证码异常");
+                resultObjectVO.setMsg("修改失败,验证码输入有误");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
