@@ -152,6 +152,7 @@ public class ShopProductApproveController {
                     }
                 }else {
 
+                    int imgSort = 0 ;
                     //保存商品主图
                     List<ShopProductApproveImg> shopProductImgs = new LinkedList<>();
                     ShopProductApproveImg shopProductImg = new ShopProductApproveImg();
@@ -161,10 +162,11 @@ public class ShopProductApproveController {
                     shopProductImg.setCreateUserId(publishProductApproveVO.getCreateUserId());
                     shopProductImg.setDeleteStatus(0);
                     shopProductImg.setImgType((short) 1);
+                    shopProductImg.setImgSort(imgSort);
                     shopProductImg.setProductApproveId(publishProductApproveVO.getId());
                     shopProductImg.setFilePath(publishProductApproveVO.getMainPhotoFilePath());
                     shopProductImgs.add(shopProductImg);
-
+                    imgSort++;
                     //保存预览图
                     if (CollectionUtils.isNotEmpty(publishProductApproveVO.getPreviewPhotoPaths())) {
                         for (String pewviewPhotoPath : publishProductApproveVO.getPreviewPhotoPaths()) {
@@ -175,8 +177,10 @@ public class ShopProductApproveController {
                             productImg.setCreateUserId(publishProductApproveVO.getCreateUserId());
                             productImg.setDeleteStatus(0);
                             productImg.setImgType((short) 2);
+                            productImg.setImgSort(imgSort);
                             productImg.setProductApproveId(publishProductApproveVO.getId());
                             productImg.setFilePath(pewviewPhotoPath);
+                            imgSort++;
 
                             shopProductImgs.add(productImg);
                         }
@@ -316,6 +320,7 @@ public class ShopProductApproveController {
                     //删除商品图片关联
                     shopProductApproveImgService.deleteByProductApproveId(rePublishProductApproveVO.getId());
 
+                    int imgSort=0;
                     //保存商品主图
                     List<ShopProductApproveImg> shopProductImgs = new LinkedList<>();
                     ShopProductApproveImg shopProductImg = new ShopProductApproveImg();
@@ -325,9 +330,11 @@ public class ShopProductApproveController {
                     shopProductImg.setCreateUserId(rePublishProductApproveVO.getUpdateUserId());
                     shopProductImg.setDeleteStatus(0);
                     shopProductImg.setImgType((short) 1);
+                    shopProductImg.setImgSort(imgSort);
                     shopProductImg.setProductApproveId(rePublishProductApproveVO.getId());
                     shopProductImg.setFilePath(rePublishProductApproveVO.getMainPhotoFilePath());
                     shopProductImgs.add(shopProductImg);
+                    imgSort++;
 
                     //保存预览图
                     if (CollectionUtils.isNotEmpty(rePublishProductApproveVO.getPreviewPhotoPaths())) {
@@ -339,9 +346,10 @@ public class ShopProductApproveController {
                             productImg.setCreateUserId(rePublishProductApproveVO.getUpdateUserId());
                             productImg.setDeleteStatus(0);
                             productImg.setImgType((short) 2);
+                            productImg.setImgSort(imgSort);
                             productImg.setProductApproveId(rePublishProductApproveVO.getId());
                             productImg.setFilePath(pewviewPhotoPath);
-
+                            imgSort++;
                             shopProductImgs.add(productImg);
                         }
 
@@ -517,7 +525,7 @@ public class ShopProductApproveController {
                 //查询商品图片
                 ShopProductApproveImgVO shopProductImgVO = new ShopProductApproveImgVO();
                 shopProductImgVO.setProductApproveId(shopProductVO.getId());
-                List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryListOrderByCreateDateAsc(shopProductImgVO);
+                List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryListOrderByImgSortAsc(shopProductImgVO);
                 if (CollectionUtils.isNotEmpty(shopProductImgs)) {
                     for (ShopProductApproveImg shopProductImg : shopProductImgs) {
                         //如果是商品主图
@@ -601,7 +609,7 @@ public class ShopProductApproveController {
                 //查询商品图片
                 ShopProductApproveImgVO shopProductImgVO = new ShopProductApproveImgVO();
                 shopProductImgVO.setProductApproveId(shopProductVO.getId());
-                List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryListOrderByCreateDateAsc(shopProductImgVO);
+                List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryListOrderByImgSortAsc(shopProductImgVO);
                 if (CollectionUtils.isNotEmpty(shopProductImgs)) {
                     for (ShopProductApproveImg shopProductImg : shopProductImgs) {
                         //如果是商品主图

@@ -44,7 +44,7 @@ public class ShopProductApproveImg {
     private Integer deleteStatus; //删除状态 0未删除 1已删除
 
 
-
+    private Integer imgSort; //排序
 
 
 }

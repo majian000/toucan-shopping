@@ -17,6 +17,9 @@ public interface ShopProductApproveImgMapper {
 
     List<ShopProductApproveImg> queryListOrderByCreateDateAsc(ShopProductApproveImgVO queryModel);
 
+    List<ShopProductApproveImg> queryListOrderByImgSortAsc(ShopProductApproveImgVO queryModel);
+
+
     int inserts(List<ShopProductApproveImg> entitys);
 
     List<ShopProductApproveImg> queryByIdList(List<Long> ids);

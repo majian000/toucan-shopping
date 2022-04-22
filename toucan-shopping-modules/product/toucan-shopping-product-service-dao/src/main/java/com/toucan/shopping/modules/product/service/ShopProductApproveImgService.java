@@ -16,6 +16,8 @@ public interface ShopProductApproveImgService {
 
     List<ShopProductApproveImg> queryListOrderByCreateDateAsc(ShopProductApproveImgVO queryModel);
 
+    List<ShopProductApproveImg> queryListOrderByImgSortAsc(ShopProductApproveImgVO queryModel);
+
     int saves(List<ShopProductApproveImg> entitys);
 
 

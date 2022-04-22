@@ -32,6 +32,11 @@ public class ShopProductApproveImgServiceImpl implements ShopProductApproveImgSe
     }
 
     @Override
+    public List<ShopProductApproveImg> queryListOrderByImgSortAsc(ShopProductApproveImgVO queryModel) {
+        return shopProductImgMapper.queryListOrderByImgSortAsc(queryModel);
+    }
+
+    @Override
     public int saves(List<ShopProductApproveImg> entitys) {
         return shopProductImgMapper.inserts(entitys);
     }

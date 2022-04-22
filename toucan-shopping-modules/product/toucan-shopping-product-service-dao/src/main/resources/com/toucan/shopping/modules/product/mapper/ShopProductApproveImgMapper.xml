@@ -7,6 +7,7 @@
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         <result column="file_path" jdbcType="VARCHAR" property="filePath" />
         <result column="img_type" jdbcType="SMALLINT" property="imgType" />
+        <result column="img_sort" jdbcType="SMALLINT" property="imgSort" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
@@ -25,10 +26,10 @@
 
 
     <insert id="inserts"  keyProperty="id" >
-        insert into t_shop_product_approve_img(id,product_approve_id,file_path,img_type,create_date,app_code,create_user_id,delete_status)
+        insert into t_shop_product_approve_img(id,product_approve_id,file_path,img_type,img_sort,create_date,app_code,create_user_id,delete_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.productApproveId},#{entity.filePath},#{entity.imgType},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
+            (#{entity.id},#{entity.productApproveId},#{entity.filePath},#{entity.imgType},#{entity.imgSort},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
         </foreach>
 
     </insert>
@@ -103,6 +104,37 @@
         </where>
          order by t.create_date asc
     </select>
+
+
+
+    <select id="queryListOrderByImgSortAsc" resultMap="shopProductApproveImgMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductApproveImgVO">
+        select t.* from t_shop_product_approve_img t
+        <where>
+            1=1
+
+            <if test="id!=null  ">
+                and t.id=#{id}
+            </if>
+
+            <if test="productApproveId!=null  ">
+                and t.product_approve_id=#{productApproveId}
+            </if>
+
+
+            <if test="productApproveIdList!=null and productApproveIdList.size>0 ">
+                and t.product_approve_id in
+                <foreach item="item" index="index" collection="productApproveIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+
+            and t.delete_status = 0
+
+        </where>
+        order by t.img_sort asc
+    </select>
+
 
     <update id="deleteByProductApproveId">
         update t_shop_product_approve_img  set delete_status=1 where product_approve_id=#{productApproveId}  and delete_status=0
