@@ -160,7 +160,7 @@ public class ShopProductApproveController {
                     shopProductImg.setCreateDate(new Date());
                     shopProductImg.setCreateUserId(publishProductApproveVO.getCreateUserId());
                     shopProductImg.setDeleteStatus(0);
-                    shopProductImg.setIsMainPhoto((short) 1);
+                    shopProductImg.setImgType((short) 1);
                     shopProductImg.setProductApproveId(publishProductApproveVO.getId());
                     shopProductImg.setFilePath(publishProductApproveVO.getMainPhotoFilePath());
                     shopProductImgs.add(shopProductImg);
@@ -174,7 +174,7 @@ public class ShopProductApproveController {
                             productImg.setCreateDate(new Date());
                             productImg.setCreateUserId(publishProductApproveVO.getCreateUserId());
                             productImg.setDeleteStatus(0);
-                            productImg.setIsMainPhoto((short) 0);
+                            productImg.setImgType((short) 2);
                             productImg.setProductApproveId(publishProductApproveVO.getId());
                             productImg.setFilePath(pewviewPhotoPath);
 
@@ -324,7 +324,7 @@ public class ShopProductApproveController {
                     shopProductImg.setCreateDate(new Date());
                     shopProductImg.setCreateUserId(rePublishProductApproveVO.getUpdateUserId());
                     shopProductImg.setDeleteStatus(0);
-                    shopProductImg.setIsMainPhoto((short) 1);
+                    shopProductImg.setImgType((short) 1);
                     shopProductImg.setProductApproveId(rePublishProductApproveVO.getId());
                     shopProductImg.setFilePath(rePublishProductApproveVO.getMainPhotoFilePath());
                     shopProductImgs.add(shopProductImg);
@@ -338,7 +338,7 @@ public class ShopProductApproveController {
                             productImg.setCreateDate(new Date());
                             productImg.setCreateUserId(rePublishProductApproveVO.getUpdateUserId());
                             productImg.setDeleteStatus(0);
-                            productImg.setIsMainPhoto((short) 0);
+                            productImg.setImgType((short) 2);
                             productImg.setProductApproveId(rePublishProductApproveVO.getId());
                             productImg.setFilePath(pewviewPhotoPath);
 
@@ -438,10 +438,11 @@ public class ShopProductApproveController {
                                     shopProductImg.getProductApproveId().longValue()==shopProductVO.getId().longValue())
                             {
                                 //如果是商品主图
-                                if(shopProductImg.getIsMainPhoto().intValue()==1)
+                                if(shopProductImg.getImgType().intValue()==1)
                                 {
                                     shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
-                                }else{
+                                }else if(shopProductImg.getImgType().intValue()==2)
+                                {
                                     shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
                                 }
                                 break;
@@ -520,9 +521,9 @@ public class ShopProductApproveController {
                 if (CollectionUtils.isNotEmpty(shopProductImgs)) {
                     for (ShopProductApproveImg shopProductImg : shopProductImgs) {
                         //如果是商品主图
-                        if (shopProductImg.getIsMainPhoto().intValue() == 1) {
+                        if (shopProductImg.getImgType().intValue() == 1) {
                             shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
-                        } else {
+                        } else if (shopProductImg.getImgType().intValue() == 2) {
                             shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
                         }
                     }
@@ -604,9 +605,9 @@ public class ShopProductApproveController {
                 if (CollectionUtils.isNotEmpty(shopProductImgs)) {
                     for (ShopProductApproveImg shopProductImg : shopProductImgs) {
                         //如果是商品主图
-                        if (shopProductImg.getIsMainPhoto().intValue() == 1) {
+                        if (shopProductImg.getImgType().intValue() == 1) {
                             shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
-                        } else {
+                        } else if (shopProductImg.getImgType().intValue() == 2) {
                             shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
                         }
                     }

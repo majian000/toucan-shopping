@@ -105,10 +105,10 @@ public class ShopProductController {
                                     shopProductImg.getShopProductId().longValue()==shopProductVO.getId().longValue())
                             {
                                 //如果是商品主图
-                                if(shopProductImg.getIsMainPhoto().intValue()==1)
+                                if(shopProductImg.getImgType().intValue()==1)
                                 {
                                     shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
-                                }else{
+                                }else if(shopProductImg.getImgType().intValue()==2){
                                     shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
                                 }
                                 break;
@@ -187,9 +187,9 @@ public class ShopProductController {
                 if (CollectionUtils.isNotEmpty(shopProductImgs)) {
                     for (ShopProductImg shopProductImg : shopProductImgs) {
                         //如果是商品主图
-                        if (shopProductImg.getIsMainPhoto().intValue() == 1) {
+                        if (shopProductImg.getImgType().intValue() == 1) {
                             shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
-                        } else {
+                        } else  if (shopProductImg.getImgType().intValue() == 2) {
                             shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
                         }
                     }

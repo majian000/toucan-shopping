@@ -457,6 +457,7 @@ $(function () {
     });
 
     $("#step3Next").bind( 'click' ,function(){
+        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
         $("#step4").show();
         $("#step3").hide();
         $("#step2").hide();
@@ -470,13 +471,6 @@ $(function () {
         $("#step1").hide();
     });
 
-    $("#step4Next").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
-        $("#step4").hide();
-        $("#step3").hide();
-        $("#step2").hide();
-        $("#step1").hide();
-    });
 
 
     /*点击下一步*/

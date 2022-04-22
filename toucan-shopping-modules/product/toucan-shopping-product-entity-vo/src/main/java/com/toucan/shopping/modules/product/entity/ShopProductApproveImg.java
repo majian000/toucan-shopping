@@ -28,7 +28,7 @@ public class ShopProductApproveImg {
 
     private String filePath; //文件路径
 
-    private Short isMainPhoto; //是否是商品主图 0:否 1:是
+    private Short imgType; //图片类型 1:商品主图 2:商品预览图
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

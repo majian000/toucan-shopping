@@ -6,7 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         <result column="file_path" jdbcType="VARCHAR" property="filePath" />
-        <result column="is_main_photo" jdbcType="SMALLINT" property="isMainPhoto" />
+        <result column="img_type" jdbcType="SMALLINT" property="imgType" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
@@ -25,10 +25,10 @@
 
 
     <insert id="inserts"  keyProperty="id" >
-        insert into t_shop_product_approve_img(id,product_approve_id,file_path,is_main_photo,create_date,app_code,create_user_id,delete_status)
+        insert into t_shop_product_approve_img(id,product_approve_id,file_path,img_type,create_date,app_code,create_user_id,delete_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.productApproveId},#{entity.filePath},#{entity.isMainPhoto},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
+            (#{entity.id},#{entity.productApproveId},#{entity.filePath},#{entity.imgType},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
         </foreach>
 
     </insert>
