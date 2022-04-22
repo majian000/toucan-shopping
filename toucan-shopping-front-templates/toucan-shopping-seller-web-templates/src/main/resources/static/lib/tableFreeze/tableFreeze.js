@@ -1,13 +1,13 @@
 /*********************************
-** Ãû³Æ:JQeuryÊµÏÖ±í¸ñĞĞÁĞ¶³½á
+** åç§°:JQeuryå®ç°è¡¨æ ¼è¡Œåˆ—å†»ç»“
 **
-** ×÷Õß:Ñî»ı½­
+** ä½œè€…:æ¨ç§¯æ±Ÿ
 **
-** Ê±¼ä:2014Äê4ÔÂ16ÈÕ
+** æ—¶é—´:2014å¹´4æœˆ16æ—¥
 **
-** ÁªÏµ:yangjijiang@sina.cn
+** è”ç³»:yangjijiang@sina.cn
 **
-** ÃèÊö:ÀàËÆExcelÖĞµÄ¶³½á´°¸ñ¹¦ÄÜ.½¨Òé¸ø³ö±íÍ·¹Ì¶¨¿í¶È,ËùÓĞµ¥Ôª¸ñµÄ¸ß¶È,Ö¸¶¨±í¸ñ¿í¶È;
+** æè¿°:ç±»ä¼¼Excelä¸­çš„å†»ç»“çª—æ ¼åŠŸèƒ½.å»ºè®®ç»™å‡ºè¡¨å¤´å›ºå®šå®½åº¦,æ‰€æœ‰å•å…ƒæ ¼çš„é«˜åº¦,æŒ‡å®šè¡¨æ ¼å®½åº¦;
 **********************************/
 $.fn.mergeAttributes = function(src){
 	if($.browser.msie) {
@@ -156,7 +156,7 @@ $.fn.CloneTable = function(oSrcTable,iRowStart,iRowEnd,iColumnEnd){
 				var oidTd = oldTr.find("td").eq(j);
 				var newTd = oidTd.clone();
 				
-				/*IE Ò»ĞĞ¶àÁĞºÏ²¢Ê±
+				/*IE ä¸€è¡Œå¤šåˆ—åˆå¹¶æ—¶
 				if(iColumnEnd==-1 && iRowStart!=0 && $.browser.msie){
 					if (typeof(newTd.attr("colspan"))!="undefined" && newTd.attr("colspan")!=1) { 
 						alert(newTd.text()+"==2=="+newTd.attr("colspan")+"---"+colCount);
