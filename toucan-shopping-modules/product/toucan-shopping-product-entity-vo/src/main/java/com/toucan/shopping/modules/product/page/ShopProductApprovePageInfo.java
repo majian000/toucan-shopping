@@ -50,6 +50,11 @@ public class ShopProductApprovePageInfo extends PageInfo<ShopProductApproveVO> {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone = "GMT+8")
     private Date endDateYMDHS; //结束日期
 
+    private String orderColumn; //排序列
+
+    private String orderSort; //升序还是降序
+
+
 
     //==============================================
 

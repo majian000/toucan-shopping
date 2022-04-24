@@ -106,6 +106,8 @@ public class ShopProductApproveController {
                 publishProductApproveVO.setId(idGenerator.id());
                 publishProductApproveVO.setUuid(UUID.randomUUID().toString().replace("-", ""));
                 publishProductApproveVO.setCreateDate(new Date());
+                publishProductApproveVO.setUpdateDate(new Date());
+                publishProductApproveVO.setUpdateUserId(publishProductApproveVO.getCreateUserId());
                 publishProductApproveVO.setApproveStatus((short) 1); //审核中
                 publishProductApproveVO.setStatus((short) 0);
                 int ret = shopProductApproveService.save(publishProductApproveVO);
@@ -265,7 +267,7 @@ public class ShopProductApproveController {
             shopId = String.valueOf(rePublishProductApproveVO.getShopId());
             skylarkLock.lock(ProductApproveRedisLockKey.getResaveProductLockKey(shopId), shopId);
 
-            //保存店铺商品
+            //修改店铺商品
             if(CollectionUtils.isNotEmpty(rePublishProductApproveVO.getProductSkuVOList())) {
                 rePublishProductApproveVO.setApproveStatus((short) 1);
                 rePublishProductApproveVO.setUpdateDate(new Date());
@@ -652,7 +654,7 @@ public class ShopProductApproveController {
                 return resultObjectVO;
             }
             logger.info("驳回店铺商品 {} ",requestJsonVO.getEntityJson());
-            shopProductApproveService.updateApproveStatusAndRejectText(shopProductApproveRecordVO.getApproveId(),ProductConstant.REJECT,shopProductApproveRecordVO.getApproveText());
+            shopProductApproveService.updateApproveStatusAndRejectTextAndUpdateDate(shopProductApproveRecordVO.getApproveId(),ProductConstant.REJECT,shopProductApproveRecordVO.getApproveText(),new Date());
             ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
             BeanUtils.copyProperties(shopProductApproveRecord,shopProductApproveRecordVO);
             shopProductApproveRecord.setApproveStatus(ProductConstant.REJECT);

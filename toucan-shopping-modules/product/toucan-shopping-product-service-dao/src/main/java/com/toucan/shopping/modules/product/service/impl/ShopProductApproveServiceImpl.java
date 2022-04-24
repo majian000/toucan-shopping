@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -50,6 +51,11 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
     @Override
     public int updateApproveStatusAndRejectText(Long id, Integer approveStatus, String rejectedText) {
         return shopProductApproveMapper.updateApproveStatusAndRejectText(id,approveStatus,rejectedText);
+    }
+
+    @Override
+    public int updateApproveStatusAndRejectTextAndUpdateDate(Long id, Integer approveStatus, String rejectedText, Date updateDate) {
+        return shopProductApproveMapper.updateApproveStatusAndRejectTextAndUpdateDate(id,approveStatus,rejectedText,updateDate);
     }
 
     @Override

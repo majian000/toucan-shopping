@@ -730,6 +730,8 @@ public class ShopProductApproveController extends UIController {
                     }
                 }
             }
+            pageInfo.setOrderColumn("update_date");
+            pageInfo.setOrderSort("desc");
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
             resultObjectVO = feignShopProductApproveService.queryListPage(requestJsonVO);
             if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {

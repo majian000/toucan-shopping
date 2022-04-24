@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,6 +23,8 @@ public interface ShopProductApproveMapper {
     int updateApproveStatus(Long id, Integer approveStatus);
 
     int updateApproveStatusAndRejectText(Long id, Integer approveStatus,String rejectedText);
+
+    int updateApproveStatusAndRejectTextAndUpdateDate(Long id, Integer approveStatus, String rejectedText, Date updateDate);
 
     int updateApproveStatusAndProductId(Long id, Integer approveStatus, Long productId, String productUuid);
 
