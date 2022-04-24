@@ -100,7 +100,6 @@ function showSetp2Page()
             }
         }
     }
-    alert(result);
     if(result) {
         $("#step1").hide();
         $("#step2").show();
