@@ -1,8 +1,78 @@
 
 var g_goApproveSecond=3;
+var delFilePos=new Array();
+
+
+function initPreviewPhotoUploadDel()
+{
+
+    $(".uploading-img li").mouseenter(function () {
+        $(this).find(".uploading-tip").stop().animate({ height: '25px' }, 200);
+    });
+    $(".uploading-img li").mouseleave(function () {
+        $(this).find(".uploading-tip").stop().animate({ height: '0' }, 200);
+    });
+
+    $(".onDelPic").click(function(){
+        var attrIndex = $(this).attr("data");
+        $("#img_src"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+        $("#previewPhotoFiles_"+attrIndex).val(null);
+        $("#uploading-tip" + attrIndex).hide();
+
+        delFilePos.push(attrIndex);
+        var deletePosHidden = $("#previewPhotoDelPosArray");
+        if(deletePosHidden!=null)
+        {
+            deletePosHidden.val(delFilePos.join(","));
+        }
+    });
+
+}
+function initPreviewPhotoUpload()
+{
+
+    initPreviewPhotoUploadDel();
+    for(var i=0;i<6;i++)
+    {
+        $("#img_src"+i).click(function() {
+            uploadPreviewPhoto($(this).attr("attr-index"));
+        });
+
+
+        $("#previewPhotoFiles_"+i).on("change", function(){
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+            var attrIndex=$(this).attr("attr-index");
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#img_src"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test( files[0].type)){
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function(){
+                    $("#img_src"+attrIndex).attr("src",this.result);
+                    $("#uploading-tip" + attrIndex).show();
+                }
+
+            }
+
+        });
+    }
+}
+
 function showSetp2Page()
 {
-    var result = checkInputFunctionByContainerId("step2",2);
+    var result = checkInputFunctionByContainerId("step1",2);
 
     var skuTablePhotos = $(".skuTablePhotos");
     var skuTableImgPaths = $(".skuTableImgPaths");
@@ -14,7 +84,6 @@ function showSetp2Page()
         });
         return ;
     }
-
     if(skuTablePhotos.length>0)
     {
         for(var i=0;i<skuTablePhotos.length;i++)
@@ -31,7 +100,7 @@ function showSetp2Page()
             }
         }
     }
-
+    alert(result);
     if(result) {
         $("#step1").hide();
         $("#step2").show();
@@ -277,7 +346,6 @@ function initProductPublishForm(productApprove)
     //设置商品预览图
     if(productApprove.httpPreviewPhotoPaths!=null)
     {
-        $("#fileNum").val(productApprove.httpPreviewPhotoPaths.length);
         for(var i=0;i<productApprove.httpPreviewPhotoPaths.length;i++)
         {
             $("#img_src"+i).attr("src",productApprove.httpPreviewPhotoPaths[i]);
@@ -314,18 +382,20 @@ function initProductPublishForm(productApprove)
     }
 
     //设置选择店铺分类默认值
-    var shopSelectCategoryArray = productApprove.shopCategoryNamePath;
-    var shopSelectCatePath = "";
-    for(var i=(shopSelectCategoryArray.length-1);i>=0;i--)
-    {
-        shopSelectCatePath +=shopSelectCategoryArray[i];
-        if(i>0)
-        {
-            shopSelectCatePath+="》";
+    if(productApprove.shopCategoryId!=null) {
+        var shopSelectCategoryArray = productApprove.shopCategoryNamePath;
+        if(shopSelectCategoryArray!=null) {
+            var shopSelectCatePath = "";
+            for (var i = (shopSelectCategoryArray.length - 1); i >= 0; i--) {
+                shopSelectCatePath += shopSelectCategoryArray[i];
+                if (i > 0) {
+                    shopSelectCatePath += "》";
+                }
+            }
+            $("#shopSelectProductCategory").html(shopSelectCatePath);
         }
+        $("#shopCategoryId").val(productApprove.shopCategoryId);
     }
-    $("#shopSelectProductCategory").html(shopSelectCatePath);
-    $("#shopCategoryId").val(productApprove.shopCategoryId);
 
 }
 
@@ -333,6 +403,8 @@ function initProductPublishForm(productApprove)
 
 function initPage()
 {
+
+    initPreviewPhotoUpload();
 
     loading.showLoading({
         type:6,
@@ -414,19 +486,8 @@ $(function () {
     });
 
 
-    $.Tupload.init({
-        title: "",
-        fileNum: 6, // 上传文件数量
-        divId: "productPreviewImages", // div  id
-        accept: "image/jpeg,image/x-png,image/x-jpg", // 上传文件的类型
-        fileSize: 2 * 1048576,     // 上传文件的大小
-        onSuccess: function (data, i) {
-            console.log(data)
-        },
-        onDelete: function (i) {
 
-        }
-    });
+
 
     $("#refreshCaptcha").bind( 'click' ,function(){
         $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
@@ -576,3 +637,9 @@ $("#ppfbtn").click(function() {
     });
 
 });
+
+
+function uploadPreviewPhoto(attrIndex)
+{
+    $("#previewPhotoFiles_"+attrIndex).click();
+}

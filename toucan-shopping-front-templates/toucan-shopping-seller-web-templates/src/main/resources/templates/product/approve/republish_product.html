@@ -22,13 +22,74 @@
     <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
     <link rel="stylesheet" href="${basePath}/static/lib/selectPage/selectpage.css" type="text/css">
     <link rel="stylesheet" href="${basePath}/static/css/product/attribute.css" type="text/css">
-    <link rel="stylesheet" href="${basePath}/static/lib/tupload/css/upload.css" type="text/css">
     <script type="text/javascript" src="${basePath}/static/lib/selectPage/selectpage.js" ></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/product/brand_list.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/product/attribute.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/common/toucan-util.js"></script>
 
     <style>
+
+
+        .uploading-img{margin-left: auto;margin-right: auto;margin-top: 10px;padding: 20px;position: relative;border: 1px dashed #ccc; }
+        .uploading-img li{overflow: hidden;margin-bottom: 10px;width: 100px;height: 100px;background: url(../images/imgadd.png) no-repeat;position: relative;float: left;margin-right: 10px;}
+        .uploading-img li:last-child{margin-right: 0;}
+        .uploading-tip{line-height: 25px;box-sizing: border-box;height: 0;width: 100%;position: absolute;bottom: 0;left: 0; background:rgba(0,0,0,0.8);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000,endColorstr=#b2000000);zoom:1; padding: 0 30px;z-index: 100;}
+        :root .uploading-tip{filter:none\9;}/*for IE9*/
+        .uploading-tip >*{font-style: normal;font-size: 16px;color: green;font-family: "宋体";cursor: pointer;}
+        .uploading-tip span:nth-of-type(2){margin-left: 20px;}
+        .uploading-tip i{color: #ddd;font-family: "微软雅黑";}
+        .uploading-imgInput{border: 1px solid #C0C0C0;width: 650px;overflow: hidden;height: 40px;margin-top: 20px;}
+
+        .andArea {
+            color: #CCCCCC;
+            font-size: 18px;
+            position: relative;
+            text-align: center;
+            /* top: -40px; */
+            float: right;
+            cursor: pointer;
+        }
+        .filePicker {
+            cursor: pointer;
+            background:#00B7EE;
+            border-radius: 3px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 18px;
+            height: 38px;
+            line-height: 38px;
+            min-width: 100px;
+            margin: 0 auto 0px;
+            overflow: hidden;
+            transition: background 0.2s;
+            -moz-transition: background 0.2s;
+            -webkit-transition: background 0.2s;
+            -o-transition: background 0.2s;
+        }
+
+        #fileImage{cursor: pointer;opacity: 0;position: absolute;width: 100%;height: 100%;top: 0;left: 0;}
+        .uploading-imgInput span{
+            font-size: 18px;
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            min-width: 100px;
+            border-left: 1px solid #DFDFDF;text-align: center;cursor: pointer;
+        }
+        .uploading-imgInput input{border: none;width: 69%;height: 100%;outline: none;padding-left: 10px;}
+        .uploading-img ul{overflow: hidden;}
+        .uploading-imgBg{
+            display: flex;
+            align-items: center;
+            position: relative;width: 100px;height: 100px;text-align: center; background: url("../images/bg.png");}
+        .uploading-imgBg img{width: 100%;height: auto;}
+        .uploading-imgBg img.cur{width: auto;height: 100%;}
+        .uploadProgress {display:none; width: 100%;margin: 0;position: absolute;bottom: 0;height: 8px;left: 0px;background: #00B7EE;}
+        .uploadTrue{display:none;width: 20px;height:20px;margin: 0;position: absolute;bottom: 0;right: 0px;background: url('../images/TruePng.png') no-repeat;background-size: 100%;}
+
+
         .releaseProductInputText {
             border: 1px solid #CCC;
             color: #000000;
@@ -195,6 +256,64 @@
                                         <input type="hidden" id="previewPhotoDelPosArray" name="previewPhotoDelPosArray" />
                                         <div id="productPreviewImages" style="width:90%;margin-left:6%;">
                                             <div class="uploading-img">
+                                                <p></p>
+                                                <input type="hidden" id="fileNum" value="3">
+                                                <ul class="picView-magnify-list">
+                                                    <li data-toggle="tooltip" data-placement="top" title="点击图片预览">
+                                                        <div id="imgBg_div0" class="uploading-imgBg" data-magnify="gallery" data-src="/static/lib/tupload/images/imgadd.png" data-caption="图片预览">
+                                                            <img id="img_src0" class="upload_image" src="/static/lib/tupload/images/imgadd.png" attr-index="0" >
+                                                        </div>
+                                                        <div id="uploading-tip0" class="uploading-tip" style="display: none; height: 0px;">
+                                                            <i class="onDelPic" data="0">删除</i>
+                                                        </div>
+                                                        <input type="file" name="previewPhotoFiles" id="previewPhotoFiles_0" attr-index="0"  style="display:none" />
+                                                    </li>
+                                                    <li data-toggle="tooltip" data-placement="top" title="点击图片预览">
+                                                        <div id="imgBg_div1" class="uploading-imgBg" data-magnify="gallery" data-src="/static/lib/tupload/images/imgadd.png" data-caption="图片预览">
+                                                            <img id="img_src1" class="upload_image" src="/static/lib/tupload/images/imgadd.png" attr-index="1">
+                                                        </div>
+                                                        <div id="uploading-tip1" class="uploading-tip" style="display: none; height: 0px;">
+                                                            <i class="onDelPic" data="1">删除</i>
+                                                        </div>
+                                                        <input type="file" name="previewPhotoFiles" id="previewPhotoFiles_1" attr-index="1"  style="display:none" />
+                                                    </li>
+                                                    <li data-toggle="tooltip" data-placement="top" title="点击图片预览">
+                                                        <div id="imgBg_div2" class="uploading-imgBg" data-magnify="gallery" data-src="/static/lib/tupload/images/imgadd.png" data-caption="图片预览">
+                                                            <img id="img_src2" class="upload_image" src="/static/lib/tupload/images/imgadd.png" attr-index="2">
+                                                        </div>
+                                                        <div id="uploading-tip2" class="uploading-tip" style="display: none; height: 0px;">
+                                                            <i class="onDelPic" data="2">删除</i>
+                                                        </div>
+                                                        <input type="file" name="previewPhotoFiles" id="previewPhotoFiles_2" attr-index="2"  style="display:none" />
+                                                    </li>
+                                                    <li data-toggle="tooltip" data-placement="top" title="点击图片预览">
+                                                        <div id="imgBg_div3" class="uploading-imgBg" data-magnify="gallery" data-src="/static/lib/tupload/images/imgadd.png" data-caption="图片预览">
+                                                            <img id="img_src3" class="upload_image" src="/static/lib/tupload/images/imgadd.png" attr-index="3">
+                                                        </div>
+                                                        <div id="uploading-tip3" class="uploading-tip" style="display: none; height: 0px;">
+                                                            <i class="onDelPic" data="3">删除</i>
+                                                        </div>
+                                                        <input type="file" name="previewPhotoFiles" id="previewPhotoFiles_3" attr-index="3"  style="display:none" />
+                                                    </li>
+                                                    <li data-toggle="tooltip" data-placement="top" title="点击图片预览">
+                                                        <div id="imgBg_div4" class="uploading-imgBg" data-magnify="gallery" data-src="/static/lib/tupload/images/imgadd.png" data-caption="图片预览">
+                                                            <img id="img_src4" class="upload_image" src="/static/lib/tupload/images/imgadd.png" attr-index="4">
+                                                        </div>
+                                                        <div id="uploading-tip4" class="uploading-tip" style="display: none; height: 0px;">
+                                                            <i class="onDelPic" data="4">删除</i>
+                                                        </div>
+                                                        <input type="file" name="previewPhotoFiles" id="previewPhotoFiles_4" attr-index="4"  style="display:none" />
+                                                    </li>
+                                                    <li data-toggle="tooltip" data-placement="top" title="点击图片预览">
+                                                        <div id="imgBg_div5" class="uploading-imgBg" data-magnify="gallery" data-src="/static/lib/tupload/images/imgadd.png" data-caption="图片预览">
+                                                            <img id="img_src5" class="upload_image" src="/static/lib/tupload/images/imgadd.png" attr-index="5">
+                                                        </div>
+                                                        <div id="uploading-tip5" class="uploading-tip" style="display: none; height: 0px;">
+                                                            <i class="onDelPic" data="5">删除</i>
+                                                        </div>
+                                                        <input type="file" name="previewPhotoFiles" id="previewPhotoFiles_5" attr-index="5"  style="display:none" />
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -393,7 +512,6 @@
 
 </script>
 
-<script type="text/javascript" src="${basePath}/static/lib/tupload/js/T_upload.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/common/toucan-uuid.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/approve/republish_product.js"></script>
 

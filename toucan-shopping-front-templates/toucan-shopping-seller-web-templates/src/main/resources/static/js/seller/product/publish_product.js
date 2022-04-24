@@ -8,6 +8,66 @@ function showSetp2Page()
 }
 
 
+function initPreviewPhotoUploadDel()
+{
+
+    $(".uploading-img li").mouseenter(function () {
+        $(this).find(".uploading-tip").stop().animate({ height: '25px' }, 200);
+    });
+    $(".uploading-img li").mouseleave(function () {
+        $(this).find(".uploading-tip").stop().animate({ height: '0' }, 200);
+    });
+
+    $(".onDelPic").click(function(){
+       var attrIndex = $(this).attr("data");
+        $("#img_src"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+        $("#previewPhotoFiles_"+attrIndex).val(null);
+        $("#uploading-tip" + attrIndex).hide();
+    });
+
+}
+function initPreviewPhotoUpload()
+{
+
+    initPreviewPhotoUploadDel();
+    for(var i=0;i<6;i++)
+    {
+        $("#img_src"+i).click(function() {
+            uploadPreviewPhoto($(this).attr("attr-index"));
+        });
+
+
+        $("#previewPhotoFiles_"+i).on("change", function(){
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+            var attrIndex=$(this).attr("attr-index");
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#img_src"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test( files[0].type)){
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function(){
+                    $("#img_src"+attrIndex).attr("src",this.result);
+                    $("#uploading-tip" + attrIndex).show();
+                }
+
+            }
+
+        });
+    }
+}
+
 $(function () {
 
     intRootCategory();
@@ -40,19 +100,8 @@ $(function () {
     });
 
 
-    $.Tupload.init({
-        title: "",
-        fileNum: 6, // 上传文件数量
-        divId: "productPreviewImages", // div  id
-        accept: "image/jpeg,image/x-png,image/x-jpg", // 上传文件的类型
-        fileSize: 2 * 1048576,     // 上传文件的大小
-        onSuccess: function (data, i) {
-            console.log(data)
-        },
-        onDelete: function (i) {
+    initPreviewPhotoUpload();
 
-        }
-    });
 
     $("#refreshCaptcha").bind( 'click' ,function(){
         $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
@@ -235,3 +284,8 @@ $("#ppfbtn").click(function() {
     });
 
 });
+
+function uploadPreviewPhoto(attrIndex)
+{
+    $("#previewPhotoFiles_"+attrIndex).click();
+}

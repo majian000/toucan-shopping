@@ -76,7 +76,7 @@
 			html += '<input readonly="readonly" id="fileText" type="text" class="imgInput-file" placeholder="最多选择' + fileNum + '张图片"/>';
 			html += '<div class="andArea">';
 			html += '<div class="filePicker">浏览图片</div>';
-			html += '<input id="fileImage" name="previewPhotoFiles" type="file" multiple accept=' + accept + '>';
+			html += '<input id="fileImage" name="previewPhotoFiles" type="file" multiple="multiple" accept=' + accept + '>';
 			html += '</div>';
 			html += '</div>';
 			html += '</div>';
