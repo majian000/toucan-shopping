@@ -320,6 +320,8 @@ public class ShopProductApproveApiController extends BaseController {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
                     pageInfo.setShopId(sellerShopVO.getId());
+                    pageInfo.setOrderColumn("update_date");
+                    pageInfo.setOrderSort("desc");
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
                     resultObjectVO = feignShopProductApproveService.queryListPage(requestJsonVO);
                     if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
