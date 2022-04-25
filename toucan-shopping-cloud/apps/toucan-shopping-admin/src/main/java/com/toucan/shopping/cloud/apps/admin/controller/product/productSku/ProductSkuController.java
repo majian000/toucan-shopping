@@ -116,7 +116,7 @@ public class ProductSkuController extends UIController {
      * @param list
      * @param categoryIds
      */
-    void queryCategory(List<ShopProductVO> list,Long[] categoryIds)
+    void queryCategory(List<ProductSkuVO> list,Long[] categoryIds)
     {
         try {
             //查询类别名称
@@ -127,11 +127,11 @@ public class ProductSkuController extends UIController {
             if (resultObjectVO.isSuccess()) {
                 List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
                 if (CollectionUtils.isNotEmpty(categoryVOS)) {
-                    for (ShopProductVO shopProductVO : list) {
+                    for (ProductSkuVO productSkuVO : list) {
                         for (CategoryVO categoryVO : categoryVOS) {
-                            if (shopProductVO.getCategoryId() != null && shopProductVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
-                                shopProductVO.setCategoryName(categoryVO.getName());
-                                shopProductVO.setCategoryPath(categoryVO.getNamePath());
+                            if (productSkuVO.getCategoryId() != null && productSkuVO.getCategoryId().longValue() == categoryVO.getId().longValue()) {
+                                productSkuVO.setCategoryName(categoryVO.getName());
+                                productSkuVO.setCategoryPath(categoryVO.getNamePath());
                                 break;
                             }
                         }
@@ -150,7 +150,7 @@ public class ProductSkuController extends UIController {
      * @param list
      * @param shopCategoryIds
      */
-    void queryShopCategory(List<ShopProductVO> list,Long[] shopCategoryIds)
+    void queryShopCategory(List<ProductSkuVO> list,Long[] shopCategoryIds)
     {
         try {
             ShopCategoryVO queryShopCategoryVO = new ShopCategoryVO();
@@ -162,14 +162,14 @@ public class ProductSkuController extends UIController {
                 List<ShopCategoryVO> shopCategoryVOS = resultObjectVO.formatDataList(ShopCategoryVO.class);
                 if(CollectionUtils.isNotEmpty(shopCategoryVOS))
                 {
-                    for(ShopProductVO shopProductVO:list)
+                    for(ProductSkuVO productSkuVO:list)
                     {
                         for(ShopCategoryVO shopCategoryVO:shopCategoryVOS)
                         {
-                            if(shopProductVO.getShopCategoryId()!=null&&shopProductVO.getShopCategoryId().longValue()==shopCategoryVO.getId().longValue())
+                            if(productSkuVO.getShopCategoryId()!=null&&productSkuVO.getShopCategoryId().longValue()==shopCategoryVO.getId().longValue())
                             {
-                                shopProductVO.setShopCategoryName(shopCategoryVO.getName());
-                                shopProductVO.setShopCategoryPath(shopCategoryVO.getNamePath());
+                                productSkuVO.setShopCategoryName(shopCategoryVO.getName());
+                                productSkuVO.setShopCategoryPath(shopCategoryVO.getNamePath());
                                 break;
                             }
                         }
@@ -187,7 +187,7 @@ public class ProductSkuController extends UIController {
      * @param list
      * @param brandIdList
      */
-    void queryBrand(List<ShopProductVO> list,List<Long> brandIdList)
+    void queryBrand(List<ProductSkuVO> list,List<Long> brandIdList)
     {
         try {
             BrandVO queryBrandVO = new BrandVO();
@@ -199,17 +199,17 @@ public class ProductSkuController extends UIController {
                 List<BrandVO> brandVOS = resultObjectVO.formatDataList(BrandVO.class);
                 if(CollectionUtils.isNotEmpty(brandVOS))
                 {
-                    for(ShopProductVO shopProductVO:list)
+                    for(ProductSkuVO productSkuVO:list)
                     {
                         for(BrandVO brandVO:brandVOS)
                         {
-                            if(shopProductVO.getBrandId()!=null&&shopProductVO.getBrandId().longValue()==brandVO.getId().longValue())
+                            if(productSkuVO.getBrandId()!=null&&productSkuVO.getBrandId().longValue()==brandVO.getId().longValue())
                             {
-                                shopProductVO.setBrandChineseName(brandVO.getChineseName());
-                                shopProductVO.setBrandEnglishName(brandVO.getEnglishName());
-                                shopProductVO.setBrandLogo(brandVO.getLogoPath());
+                                productSkuVO.setBrandChineseName(brandVO.getChineseName());
+                                productSkuVO.setBrandEnglishName(brandVO.getEnglishName());
+                                productSkuVO.setBrandLogo(brandVO.getLogoPath());
                                 if(brandVO.getLogoPath()!=null) {
-                                    shopProductVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
+                                    productSkuVO.setBrandHttpLogo(imageUploadService.getImageHttpPrefix() +brandVO.getLogoPath());
                                 }
                                 break;
                             }
@@ -229,7 +229,7 @@ public class ProductSkuController extends UIController {
      * @param list
      * @param shopIdList
      */
-    void queryShop(List<ShopProductVO> list,List<Long> shopIdList)
+    void queryShop(List<ProductSkuVO> list,List<Long> shopIdList)
     {
         try {
             SellerShopVO queryShopVO = new SellerShopVO();
@@ -241,13 +241,13 @@ public class ProductSkuController extends UIController {
                 List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
                 if(CollectionUtils.isNotEmpty(sellerShopVOS))
                 {
-                    for(ShopProductVO shopProductVO:list)
+                    for(ProductSkuVO productSkuVO:list)
                     {
                         for(SellerShopVO sellerShopVO:sellerShopVOS)
                         {
-                            if(shopProductVO.getShopId()!=null&&shopProductVO.getShopId().longValue()==sellerShopVO.getId().longValue())
+                            if(productSkuVO.getShopId()!=null&&productSkuVO.getShopId().longValue()==sellerShopVO.getId().longValue())
                             {
-                                shopProductVO.setShopName(sellerShopVO.getName());
+                                productSkuVO.setShopName(sellerShopVO.getName());
                                 break;
                             }
                         }
@@ -402,12 +402,12 @@ public class ProductSkuController extends UIController {
             pageInfo.setOrderColumn("update_date");
             pageInfo.setOrderSort("desc");
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
-            resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
+            resultObjectVO = feignProductSkuService.queryListPage(requestJsonVO);
             if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
                 if (resultObjectVO.getData() != null) {
                     Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
-                    List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductVO.class);
+                    List<ProductSkuVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ProductSkuVO.class);
                     if (CollectionUtils.isNotEmpty(list)) {
                         Long[] categoryIds = new Long[list.size()];
                         Long[] shopCategoryIds = new Long[list.size()];
@@ -418,24 +418,24 @@ public class ProductSkuController extends UIController {
                         boolean shopCategoryExists = false;
                         boolean shopExists = false;
                         for (int i = 0; i < list.size(); i++) {
-                            ShopProductVO shopProductVO = list.get(i);
+                            ProductSkuVO shopProductVO = list.get(i);
                             categoryIds[i] = shopProductVO.getCategoryId();
 
                             //设置品牌ID
                             brandExists = false;
-                            for (Long brandId : brandIdList) {
-                                if (shopProductVO.getBrandId() != null && brandId != null
-                                        && brandId.longValue() == shopProductVO.getBrandId().longValue()) {
-                                    brandExists = true;
-                                    break;
-                                }
-
-                            }
-                            if (!brandExists) {
-                                if (shopProductVO.getBrandId() != null) {
-                                    brandIdList.add(shopProductVO.getBrandId());
-                                }
-                            }
+//                            for (Long brandId : brandIdList) {
+//                                if (shopProductVO.getBrandId() != null && brandId != null
+//                                        && brandId.longValue() == shopProductVO.getBrandId().longValue()) {
+//                                    brandExists = true;
+//                                    break;
+//                                }
+//
+//                            }
+//                            if (!brandExists) {
+//                                if (shopProductVO.getBrandId() != null) {
+//                                    brandIdList.add(shopProductVO.getBrandId());
+//                                }
+//                            }
 
 
                             //设置店铺分类ID
@@ -489,9 +489,9 @@ public class ProductSkuController extends UIController {
                         this.queryShop(list, shopIdList);
 
 
-                        for (ShopProductVO shopProductVO : list) {
-                            if (shopProductVO.getMainPhotoFilePath() != null) {
-                                shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductVO.getMainPhotoFilePath());
+                        for (ProductSkuVO productSkuVO : list) {
+                            if (productSkuVO.getProductPreviewPath() != null) {
+                                productSkuVO.setHttpMainPhoto(imageUploadService.getImageHttpPrefix() + productSkuVO.getProductPreviewPath());
                             }
                         }
 

@@ -37,6 +37,21 @@ public class ProductSkuVO  extends ProductSku {
     private String httpMainPhoto;
 
 
+    private String categoryName; //类别名称
+    private String categoryPath; //类别路径
+
+    private String shopCategoryName; //类别名称
+    private String shopCategoryPath; //类别路径
+
+    private String brandChineseName; //品牌中文名称
+    private String brandEnglishName; //品牌英文名称
+    private String brandLogo; //品牌logo
+    private String brandHttpLogo; //品牌LOGO地址
+
+    private String shopName; //店铺名称
+    private Long brandId; //品牌ID
+
+
 
 
 }

@@ -103,7 +103,19 @@
         <where>
             <include refid="queryListPageWhere" />
         </where>
-        order by t.id desc
+
+        <choose>
+            <when test="orderColumn!=null and orderColumn!=''">
+                order by t.${orderColumn}
+                <if test="orderSort!=null and orderSort!=''">
+                    ${orderSort}
+                </if>
+            </when>
+            <otherwise>
+                order by t.id desc
+            </otherwise>
+        </choose>
+
         limit #{start},#{limit}
     </select>
 
