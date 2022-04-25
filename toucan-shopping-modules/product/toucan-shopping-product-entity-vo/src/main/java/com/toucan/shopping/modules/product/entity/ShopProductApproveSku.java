@@ -88,4 +88,12 @@ public class ShopProductApproveSku {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productId; //这个商品的ID
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long categoryId; //商品分类ID
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING)
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long shopCategoryId; //店铺商品分类ID
+
 }

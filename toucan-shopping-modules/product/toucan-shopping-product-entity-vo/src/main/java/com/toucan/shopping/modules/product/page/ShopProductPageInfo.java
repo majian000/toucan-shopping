@@ -34,6 +34,12 @@ public class ShopProductPageInfo extends PageInfo<ShopProductVO> {
     private String name; //商品名称
 
     private List<Long> categoryIdList; //分类ID列表
+
+
+    private String orderColumn; //排序列
+
+    private String orderSort; //升序还是降序
+
     //==============================================
 
 }

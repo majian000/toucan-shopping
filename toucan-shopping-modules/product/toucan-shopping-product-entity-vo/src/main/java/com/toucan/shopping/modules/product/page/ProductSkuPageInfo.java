@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 列表查询页对象
  */
@@ -19,6 +21,16 @@ public class ProductSkuPageInfo extends PageInfo<ProductSkuVO> {
     // ===============查询条件===================
 
     private Long shopProductId;
+
+    private Long categoryId; //分类ID
+
+    private List<Long> categoryIdList; //分类ID列表
+
+    private Long shopCategoryId; //店铺分类ID
+
+    private String orderColumn; //排序列
+
+    private String orderSort; //升序还是降序
 
     //==============================================
 
