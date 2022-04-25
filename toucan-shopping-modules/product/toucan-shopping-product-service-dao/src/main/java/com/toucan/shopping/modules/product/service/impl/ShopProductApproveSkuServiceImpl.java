@@ -34,6 +34,11 @@ public class ShopProductApproveSkuServiceImpl implements ShopProductApproveSkuSe
         return pageInfo;
     }
 
+    @Override
+    public int updateProductIdAndProductUuidByApproveId(Long approveId, Long productId, String productUuid) {
+        return shopProductApproveSkuMapper.updateProductIdAndProductUuidByApproveId(approveId,productId,productUuid);
+    }
+
     @Transactional
     @Override
     public int save(ShopProductApproveSku productSku) {

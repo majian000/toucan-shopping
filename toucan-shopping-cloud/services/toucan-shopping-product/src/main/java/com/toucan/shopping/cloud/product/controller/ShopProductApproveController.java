@@ -126,6 +126,7 @@ public class ShopProductApproveController {
                     BeanUtils.copyProperties(productSku,productSkuVO);
 
                     productSku.setId(idGenerator.id());
+                    productSku.setUuid(UUID.randomUUID().toString().replace("-", ""));
                     productSku.setCreateUserId(publishProductApproveVO.getCreateUserId());
                     productSku.setCreateDate(new Date());
                     productSku.setStatus((short) 0);
@@ -727,7 +728,13 @@ public class ShopProductApproveController {
             skylarkLock.lock(ProductApproveRedisLockKey.getProductApprovePassLockKey(productApproveId), productApproveId);
 
             logger.info("通过店铺商品 {} ",requestJsonVO.getEntityJson());
+
+            //更新商品审核主表
             shopProductApproveService.updateApproveStatusAndProductIdAndRejectText(shopProductApproveVO.getId(),ProductConstant.PASS,shopProductApproveVO.getProductId(),shopProductApproveVO.getProductUuid(),"");
+
+            //更新商品审核SKU表
+            shopProductApproveSkuService.updateProductIdAndProductUuidByApproveId(shopProductApproveVO.getId(),shopProductApproveVO.getProductId(),shopProductApproveVO.getProductUuid());
+
             ShopProductApproveRecord shopProductApproveRecord = new ShopProductApproveRecord();
             shopProductApproveRecord.setApproveId(shopProductApproveVO.getId());
             shopProductApproveRecord.setApproveText("审核通过");
@@ -794,6 +801,7 @@ public class ShopProductApproveController {
                             ProductSku productSku = new ProductSku();
                             BeanUtils.copyProperties(productSku, shopProductApproveSkuVO);
                             productSku.setId(idGenerator.id());
+
                             productSku.setShopProductId(shopProduct.getId());
                             productSku.setProductUuid(shopProduct.getUuid());
                             productSkus.add(productSku);

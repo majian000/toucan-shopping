@@ -23,6 +23,15 @@ public interface ShopProductApproveSkuService {
     PageInfo<ShopProductApproveSkuVO> queryListPage(ShopProductApproveSkuPageInfo queryPageInfo);
 
     /**
+     * 更新审核SKU表中 商品ID和商品UUID
+     * @param approveId
+     * @param productId
+     * @param productUuid
+     * @return
+     */
+    int updateProductIdAndProductUuidByApproveId(Long approveId,  Long productId, String productUuid);
+
+    /**
      * 保存sku
      * @param productSku
      * @return

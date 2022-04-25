@@ -1035,17 +1035,17 @@ public class ShopProductApproveController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/pass",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO pass(HttpServletRequest request, @RequestBody ShopProductApproveVO shopProductVO)
+    public ResultObjectVO pass(HttpServletRequest request, @RequestBody ShopProductApproveVO shopProductApproveVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            if(shopProductVO.getId()==null)
+            if(shopProductApproveVO.getId()==null)
             {
                 resultObjectVO.setMsg("店铺商品ID不能为空");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), shopProductApproveVO);
             resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
@@ -1057,19 +1057,19 @@ public class ShopProductApproveController extends UIController {
                         List<ShopProductApproveVO> shopProductApproveVOS = resultObjectVO.formatDataList(ShopProductApproveVO.class);
                         if(CollectionUtils.isNotEmpty(shopProductApproveVOS)) {
 
-                            shopProductVO = shopProductApproveVOS.get(0);
+                            shopProductApproveVO = shopProductApproveVOS.get(0);
 
                             SellerShopVO querySellerShopVO = new SellerShopVO();
-                            querySellerShopVO.setId(shopProductVO.getShopId());
+                            querySellerShopVO.setId(shopProductApproveVO.getShopId());
                             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), querySellerShopVO);
                             resultObjectVO = feignSellerShopService.findById(requestJsonVO.sign(), requestJsonVO);
                             if (resultObjectVO.isSuccess()) {
                                 List<SellerShopVO> sellerShopVOS = resultObjectVO.formatDataList(SellerShopVO.class);
                                 if(CollectionUtils.isNotEmpty(sellerShopVOS)) {
                                     SellerShopVO sellerShopVO = sellerShopVOS.get(0);
-                                    if (sellerShopVO != null && sellerShopVO.getUserMainId() != null && shopProductVO.getName() != null) {
+                                    if (sellerShopVO != null && sellerShopVO.getUserMainId() != null && shopProductApproveVO.getName() != null) {
                                         //发送消息
-                                        MessageVO messageVO = new MessageVO("商品审核消息", "您发布的商品," + shopProductVO.getName() + "已经审核通过!", ProductConstant.MESSAGE_CONTENT_TYPE_1, sellerShopVO.getUserMainId());
+                                        MessageVO messageVO = new MessageVO("商品审核消息", "您发布的商品," + shopProductApproveVO.getName() + "已经审核通过!", ProductConstant.MESSAGE_CONTENT_TYPE_1, sellerShopVO.getUserMainId());
                                         messageVO.setMessageTypeCode(ProductConstant.PRODUCT_APPROVE_MESSAGE_CODE);
 
                                         //保存消息发布事件

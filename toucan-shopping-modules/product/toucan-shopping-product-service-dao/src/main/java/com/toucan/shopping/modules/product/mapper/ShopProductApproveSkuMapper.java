@@ -26,6 +26,8 @@ public interface ShopProductApproveSkuMapper {
 
     int deleteByShopProductApproveId(Long productApproveId);
 
+    int updateProductIdAndProductUuidByApproveId(Long approveId, Long productId, String productUuid);
+
 
 
     /**
