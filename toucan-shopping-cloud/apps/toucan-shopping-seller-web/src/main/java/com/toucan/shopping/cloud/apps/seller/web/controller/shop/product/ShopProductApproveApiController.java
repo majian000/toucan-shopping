@@ -498,7 +498,7 @@ public class ShopProductApproveApiController extends BaseController {
             //SKU属性表格式化成Map
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
                 for (ShopProductApproveSkuVO productSkuVO : publishProductVO.getProductSkuVOList()) {
-                    productSkuVO.setOnlyName(productSkuVO.getName());
+                    productSkuVO.setOnlyName(publishProductVO.getName());
                     productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
                     String name = publishProductVO.getName();
                     Set<String> keys = productSkuVO.getAttributeMap().keySet();
@@ -761,7 +761,7 @@ public class ShopProductApproveApiController extends BaseController {
             //SKU属性表格式化成Map
             if(!CollectionUtils.isEmpty(republishProductVO.getProductSkuVOList())) {
                 for (ShopProductApproveSkuVO productSkuVO : republishProductVO.getProductSkuVOList()) {
-                    productSkuVO.setOnlyName(productSkuVO.getName());
+                    productSkuVO.setOnlyName(republishProductVO.getName());
                     productSkuVO.setAttributeMap(JSONObject.parseObject(productSkuVO.getAttributes(), HashMap.class));
                     String name = republishProductVO.getName();
                     Set<String> keys = productSkuVO.getAttributeMap().keySet();
