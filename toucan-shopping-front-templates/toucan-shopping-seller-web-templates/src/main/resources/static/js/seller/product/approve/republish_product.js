@@ -355,7 +355,9 @@ function initProductPublishForm(productApprove)
         {
             $("#img_src"+i).attr("src",productApprove.httpPreviewPhotoPaths[i]);
             $("#imgBg_div"+i).attr("data-src",productApprove.httpPreviewPhotoPaths[i]);
-            $("#uploading-tip"+i).attr("style","");
+            $("#uploading-tip" + i).show();
+
+            $("#img_src"+i).unbind("click");
         }
     }
 

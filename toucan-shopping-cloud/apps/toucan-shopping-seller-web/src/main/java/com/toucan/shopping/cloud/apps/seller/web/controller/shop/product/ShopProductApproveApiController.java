@@ -916,16 +916,8 @@ public class ShopProductApproveApiController extends BaseController {
                         for (int i = 0; i < shopProductApproveVO.getPreviewPhotoPaths().size(); i++) {
                             if (deletePreviewPhotoPos.intValue()==i) {
                                 this.deleteOldProductImage(shopProductApproveVO.getPreviewPhotoPaths().get(i));
-                                if (CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths)) {
-                                    //将重新上传的图片 设置到原来的商品预览列表中
-                                    if (reuploadPos < reuploadPreviewPhotoPaths.size()) {
-                                        shopProductApproveVO.getPreviewPhotoPaths().set(i, reuploadPreviewPhotoPaths.get(reuploadPos));
-                                        reuploadPos++;
-                                    }
-                                } else {
-                                    //将删除的设置成-1
-                                    shopProductApproveVO.getPreviewPhotoPaths().set(i,"-1");
-                                }
+                                //将删除的设置成-1
+                                shopProductApproveVO.getPreviewPhotoPaths().set(i,"-1");
                                 break;
                             }
                         }
@@ -937,7 +929,20 @@ public class ShopProductApproveApiController extends BaseController {
                         if(!"-1".equals(previewPhotoPath))
                         {
                             releasePreviewPhotoPaths.add(previewPhotoPath);
+                        }else{
+                            if (CollectionUtils.isNotEmpty(reuploadPreviewPhotoPaths)) {
+                                //将重新上传的图片 设置到原来的商品预览列表中
+                                if (reuploadPos < reuploadPreviewPhotoPaths.size()) {
+                                    releasePreviewPhotoPaths.add(reuploadPreviewPhotoPaths.get(reuploadPos));
+                                    reuploadPos++;
+                                }
+                            }
                         }
+                    }
+                    //将剩余的追加到列表中
+                    for(int p=reuploadPos;p<reuploadPreviewPhotoPaths.size();p++)
+                    {
+                        releasePreviewPhotoPaths.add(reuploadPreviewPhotoPaths.get(p));
                     }
                     shopProductApproveVO.setPreviewPhotoPaths(releasePreviewPhotoPaths);
                 }
