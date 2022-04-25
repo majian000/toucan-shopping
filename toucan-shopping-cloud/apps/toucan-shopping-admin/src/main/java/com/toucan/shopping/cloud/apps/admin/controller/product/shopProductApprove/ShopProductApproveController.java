@@ -1049,7 +1049,7 @@ public class ShopProductApproveController extends UIController {
             resultObjectVO = feignShopProductApproveService.pass(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                //发送商品审核驳回消息
+                //发送商品审核消息
                 if(resultObjectVO.isSuccess())
                 {
                     resultObjectVO = feignShopProductApproveService.queryByProductApproveId(requestJsonVO);

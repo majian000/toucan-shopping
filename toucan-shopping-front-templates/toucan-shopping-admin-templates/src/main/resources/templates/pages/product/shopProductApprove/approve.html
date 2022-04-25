@@ -244,6 +244,7 @@
         var carouselsku = layui.carousel;
         var index;
         var productRejectLoadding;
+        var productPassLoadding;
 
         var productApproveId = $("#id").val();
         var approveStatus = $("#approveStatus").val();
@@ -325,6 +326,7 @@
             var productId = $("#productId").val();
             var productUuid = $("#productUuid").val();
 
+            productPassLoadding = layer.load();
             $.ajax({
                 url:"[[@{/product/shopProductApprove/pass}]]",
                 contentType: "application/json; charset=utf-8",
@@ -345,6 +347,10 @@
                         parent.layer.close(iframeIndex);
 
                     });
+                },
+                complete:function()
+                {
+                    layer.close(productPassLoadding);
                 }
             });
             return false;
