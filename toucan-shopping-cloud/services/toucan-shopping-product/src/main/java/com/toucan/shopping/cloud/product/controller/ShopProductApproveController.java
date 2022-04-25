@@ -803,7 +803,6 @@ public class ShopProductApproveController {
                             productSku.setId(idGenerator.id());
 
                             productSku.setShopProductId(shopProduct.getId());
-                            productSku.setProductUuid(shopProduct.getUuid());
                             productSkus.add(productSku);
                         }
                     }

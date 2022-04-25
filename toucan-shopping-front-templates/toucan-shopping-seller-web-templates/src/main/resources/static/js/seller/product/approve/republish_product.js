@@ -25,6 +25,11 @@ function initPreviewPhotoUploadDel()
         {
             deletePosHidden.val(delFilePos.join(","));
         }
+
+        $("#img_src"+attrIndex).click(function() {
+            uploadPreviewPhoto($(this).attr("attr-index"));
+        });
+
     });
 
 }
@@ -52,6 +57,7 @@ function initPreviewPhotoUpload()
 
             // Only proceed if the selected file is an image
             if (/^image/.test( files[0].type)){
+                $("#img_src"+attrIndex).unbind("click");
                 // Create a new instance of the FileReader
                 var reader = new FileReader();
 

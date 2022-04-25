@@ -79,17 +79,17 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku"  >
-        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
-        values(#{id},#{uuid},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId})
+        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
+        values(#{id},#{uuid},#{productUuid},#{productId},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId})
     </insert>
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_product_sku(id,uuid,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
+        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.uuid},#{entity.shopProductUuid},#{entity.shopProductId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
+            (#{entity.id},#{entity.uuid},#{entity.productUuid},#{entity.productId},#{entity.shopProductUuid},#{entity.shopProductId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
             #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId})
         </foreach>
 
