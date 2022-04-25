@@ -22,6 +22,8 @@ public class ShopProductApproveSku {
 
     private String name; //SKU名称(商品名称 + 属性值)
 
+    private String onlyName; //SKU名称(商品名称)
+
     private String attributes; //这个SKU的属性
 
     private String attributeValueGroup; //这个SKU的属性值组合,多个用_分割

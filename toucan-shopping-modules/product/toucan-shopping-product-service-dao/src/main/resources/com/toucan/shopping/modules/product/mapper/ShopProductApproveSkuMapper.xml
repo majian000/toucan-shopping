@@ -21,6 +21,7 @@
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
         <result column="brank_id" jdbcType="BIGINT" property="brankId" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="only_name" jdbcType="VARCHAR" property="onlyName" />
         <result column="stock_num" jdbcType="BIGINT" property="stockNum" />
         <result column="product_preview_path" jdbcType="VARCHAR" property="productPreviewPath" />
         <result column="product_uuid" jdbcType="VARCHAR" property="productUuid" />
@@ -79,18 +80,18 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApproveSku"  >
-        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
-        values(#{id},#{uuid},#{productApproveUuid},#{productApproveId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId})
+        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
+        values(#{id},#{uuid},#{productApproveUuid},#{productApproveId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{onlyName},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId})
     </insert>
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
+        insert into t_shop_product_approve_sku(id,uuid,product_approve_uuid,product_approve_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.uuid},#{entity.productApproveUuid},#{entity.productApproveId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
-            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId})
+            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.onlyName},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId})
         </foreach>
 
     </insert>

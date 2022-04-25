@@ -294,6 +294,7 @@ public class ShopProductApproveController {
                     BeanUtils.copyProperties(productSku,productSkuVO);
 
                     productSku.setId(idGenerator.id());
+                    productSku.setUuid(UUID.randomUUID().toString().replace("-", ""));
                     productSku.setCreateUserId(rePublishProductApproveVO.getCreateUserId());
                     productSku.setCreateDate(new Date());
                     productSku.setStatus((short) 0);
