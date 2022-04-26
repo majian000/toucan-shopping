@@ -163,7 +163,7 @@
 
         table.render({
             elem: '#shopProductTable',
-            url: "[[@{/}]]product/shopProductApprove/list",
+            url: "[[@{/}]]product/shopProduct/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -179,24 +179,7 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '商品ID', width: 150},
-                    {field: 'approveStatus',width: 150,   title: '审核状态',
-                        templet: function (row) {
-                            if(row.approveStatus == null){
-                                return "";
-                            }
-                            if(row.approveStatus == "1"){
-                                return "审核中";
-                            }
-                            if(row.approveStatus == "2"){
-                                return "<a style='color:green'>审核通过</a>";
-                            }
-                            if(row.approveStatus == "3"){
-                                return "<a style='color:red'>审核驳回</a>";
-                            }
-                            return row.approveStatus;
-                        }
-                    },
-                    {field: 'name',width: 400,  title: '商品名称',event:'openApproveDialogDevent',
+                    {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
                         templet: function (row) {
                             return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
                         }},
@@ -240,7 +223,6 @@
                     },
                     {field: 'shopId',width: 300,  title: '店铺ID'},
                     {field: 'shopName',width: 300,  title: '店铺名称'},
-                    {field: 'rejectText',width: 150,   title: '驳回原因'},
                     {field: 'sellerNo',width: 150,   title: '卖家编码'},
                     {field: 'articleNumber',width: 150, title: '货号'},
                     {field: 'payMethod',width: 150,   title: '付款方式',
@@ -343,7 +325,7 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
+                url:"[[@{/}]]product/shopProduct/query/category/tree/pid",
                 autoParam:["id", "pid", "name"],
                 dataFilter: filter
             },
@@ -379,7 +361,7 @@
 
             loaddingTree = layer.load();
             $.ajax({
-                url:"[[@{/}]]product/shopProductApprove/query/category/tree/pid",
+                url:"[[@{/}]]product/shopProduct/query/category/tree/pid",
                 type:"POST",
                 dataType: "json",
                 success: function(data){
@@ -407,7 +389,7 @@
                     maxmin:true,
 
                     area: ['100%', '100%'],
-                    content: "[[@{/product/shopProductApprove/addPage}]]",
+                    content: "[[@{/product/shopProduct/addPage}]]",
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -422,7 +404,7 @@
                 }
                 layer.confirm('确定删除商品?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]product/shopProductApprove/delete/ids",
+                        url:"[[@{/}]]product/shopProduct/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -458,7 +440,7 @@
             var data = obj.data;
             if (obj.event == 'approve') {
                 openApproveDialog(data.id);
-            }else if(obj.event=="openApproveDialogDevent")
+            }else if(obj.event=="openDetailDialogDevent")
             {
                 openApproveDialog(data.id);
             }
@@ -473,7 +455,7 @@
                 maxmin:true,
 
                 area: ['100%', '100%'],
-                content: '[[@{/}]]product/shopProductApprove/approvePage/'+id
+                content: '[[@{/}]]product/shopProduct/approvePage/'+id
             });
             $(window).on("resize", function () {
                 layer.full(index);

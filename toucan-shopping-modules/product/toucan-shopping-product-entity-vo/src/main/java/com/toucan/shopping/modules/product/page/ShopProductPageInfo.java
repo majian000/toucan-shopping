@@ -21,6 +21,8 @@ public class ShopProductPageInfo extends PageInfo<ShopProductVO> {
     // ===============查询条件===================
     private Long categoryId; //分类ID
 
+    private Long productApproveId;
+
     private Integer approveStatus; //审批状态  1审核中 2审核通过 3审核驳回
 
     private Long id; //商品ID
