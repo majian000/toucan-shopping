@@ -196,18 +196,18 @@
                             return row.approveStatus;
                         }
                     },
-                    {field: 'approveAfter',width: 150,   title: '上架时间',
+                    {field: 'shelvesStatus',width: 150,   title: '上架时间',
                         templet: function (row) {
-                            if(row.approveAfter == null){
+                            if(row.shelvesStatus == null){
                                 return "";
                             }
-                            if(row.approveAfter == "1"){
+                            if(row.shelvesStatus == "1"){
                                 return "放入仓库";
                             }
-                            if(row.approveAfter == "2"){
+                            if(row.shelvesStatus == "2"){
                                 return "立即上架";
                             }
-                            return row.approveAfter;
+                            return row.shelvesStatus;
                         }
                     },
                     {field: 'name',width: 400,  title: '商品名称',event:'openApproveDialogDevent',

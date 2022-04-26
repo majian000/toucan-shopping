@@ -58,7 +58,7 @@ public class ShopProductApprove {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long updateUserId; //修改人ID
 
-    private Short status; //是否上架 0:未上架 1:已上架
+    private Short shelvesStatus; //上架状态 1:放入仓库 2:立即上架
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
@@ -78,7 +78,6 @@ public class ShopProductApprove {
 
     private Short changeOrReturn; //退换货承诺 1:承诺 0:不承诺
 
-    private Short approveAfter; //上架时间 1:放入仓库 2:立即上架
 
     private String articleNumber; //货号
 

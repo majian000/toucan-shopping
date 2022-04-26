@@ -109,7 +109,6 @@ public class ShopProductApproveController {
                 publishProductApproveVO.setUpdateDate(new Date());
                 publishProductApproveVO.setUpdateUserId(publishProductApproveVO.getCreateUserId());
                 publishProductApproveVO.setApproveStatus((short) 1); //审核中
-                publishProductApproveVO.setStatus((short) 0);
                 int ret = shopProductApproveService.save(publishProductApproveVO);
 
                 if(ret<=0)
@@ -172,7 +171,6 @@ public class ShopProductApproveController {
                     shopProductImg.setFilePath(publishProductApproveVO.getMainPhotoFilePath());
                     shopProductImgs.add(shopProductImg);
                     imgSort++;
-                    //保存预览图
                     if (CollectionUtils.isNotEmpty(publishProductApproveVO.getPreviewPhotoPaths())) {
                         for (String pewviewPhotoPath : publishProductApproveVO.getPreviewPhotoPaths()) {
                             ShopProductApproveImg productImg = new ShopProductApproveImg();
@@ -190,29 +188,30 @@ public class ShopProductApproveController {
                             shopProductImgs.add(productImg);
                         }
 
-                        ret = shopProductApproveImgService.saves(shopProductImgs);
-                        if (ret <= publishProductApproveVO.getPreviewPhotoPaths().size()) {
-                            logger.warn("发布商品失败 原因:商品图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("发布失败");
+                    }
 
-                            ret = shopProductApproveService.deleteById(publishProductApproveVO.getId());
-                            if (ret <= 0) {
-                                //发送异常邮件,通知运营处理
-                                logger.warn("发布商品失败 回滚店铺商品表失败 id {}", publishProductApproveVO.getId());
-                            }
+                    //保存预览图
+                    ret = shopProductApproveImgService.saves(shopProductImgs);
+                    if (ret < shopProductImgs.size()) {
+                        logger.warn("发布商品失败 原因:商品图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("发布失败");
 
-                            ret = shopProductApproveSkuService.deleteByShopProductApproveId(publishProductApproveVO.getId());
-                            if (ret< publishProductApproveVO.getProductSkuVOList().size()) {
-                                logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
-                            }
+                        ret = shopProductApproveService.deleteById(publishProductApproveVO.getId());
+                        if (ret <= 0) {
+                            //发送异常邮件,通知运营处理
+                            logger.warn("发布商品失败 回滚店铺商品表失败 id {}", publishProductApproveVO.getId());
+                        }
 
-                            //TODO:删除服务器中图片资源
-                            ret = shopProductApproveImgService.deleteByProductApproveId(publishProductApproveVO.getId());
-                            if (ret< publishProductApproveVO.getPreviewPhotoPaths().size()) {
-                                logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
-                            }
+                        ret = shopProductApproveSkuService.deleteByShopProductApproveId(publishProductApproveVO.getId());
+                        if (ret< publishProductApproveVO.getProductSkuVOList().size()) {
+                            logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
+                        }
 
+                        //TODO:删除服务器中图片资源
+                        ret = shopProductApproveImgService.deleteByProductApproveId(publishProductApproveVO.getId());
+                        if (ret< publishProductApproveVO.getPreviewPhotoPaths().size()) {
+                            logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
                         }
 
                     }
@@ -769,7 +768,7 @@ public class ShopProductApproveController {
                 ShopProduct shopProduct = new ShopProduct();
                 BeanUtils.copyProperties(shopProduct, shopProductApprove);
                 //立即上架
-                if(shopProductApprove.getApproveAfter()!=null&&shopProductApprove.getApproveAfter().intValue()==2)
+                if(shopProductApprove.getShelvesStatus()!=null&&shopProductApprove.getShelvesStatus().intValue()==2)
                 {
                     shopProduct.setStatus((short)1);
                 }else{

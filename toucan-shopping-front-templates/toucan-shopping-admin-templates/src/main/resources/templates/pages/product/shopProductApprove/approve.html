@@ -53,6 +53,15 @@
                             </div>
                         </div>
                         <div class="layui-form-item" >
+                            <div class="layui-inline" style="width:40%">
+                                <label class="layui-form-label " >上架时间</label>
+                                <div class="layui-input-block "  style="padding-top:7px;" >
+                                    <a th:if="${model.shelvesStatus!=null&&model.shelvesStatus eq 1}">放入仓库</a>
+                                    <a th:if="${model.shelvesStatus!=null&&model.shelvesStatus eq 2}">直接上架</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" >
                             <label class="layui-form-label " >店铺商品ID</label>
                             <div class="layui-input-block">
                                 <input type="text"  th:value="${model.id}"  class="layui-input">
