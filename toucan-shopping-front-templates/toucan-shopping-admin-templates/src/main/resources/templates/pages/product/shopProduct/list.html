@@ -213,10 +213,10 @@
                                 return "";
                             }
                             if(row.status == "0"){
-                                return "未上架";
+                                return "<a style='color:red'>未上架</a>";
                             }
                             if(row.status == "1"){
-                                return "已上架";
+                                return "<a style='color:green'>已上架</a>";
                             }
                             return row.status;
                         }

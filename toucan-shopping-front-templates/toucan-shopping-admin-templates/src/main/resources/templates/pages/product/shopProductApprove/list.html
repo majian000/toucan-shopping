@@ -196,6 +196,20 @@
                             return row.approveStatus;
                         }
                     },
+                    {field: 'approveAfter',width: 150,   title: '上架时间',
+                        templet: function (row) {
+                            if(row.approveAfter == null){
+                                return "";
+                            }
+                            if(row.approveAfter == "1"){
+                                return "放入仓库";
+                            }
+                            if(row.approveAfter == "2"){
+                                return "立即上架";
+                            }
+                            return row.approveAfter;
+                        }
+                    },
                     {field: 'name',width: 400,  title: '商品名称',event:'openApproveDialogDevent',
                         templet: function (row) {
                             return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
@@ -224,20 +238,6 @@
                     {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
                     {field: 'productId',width: 150,  title: '平台商品ID'},
                     {field: 'attributes',width: 550,  title: '属性列表'},
-                    {field: 'status',width: 150,   title: '上架状态',
-                        templet: function (row) {
-                            if(row.status == null){
-                                return "";
-                            }
-                            if(row.status == "0"){
-                                return "未上架";
-                            }
-                            if(row.status == "1"){
-                                return "已上架";
-                            }
-                            return row.status;
-                        }
-                    },
                     {field: 'shopId',width: 300,  title: '店铺ID'},
                     {field: 'shopName',width: 300,  title: '店铺名称'},
                     {field: 'rejectText',width: 150,   title: '驳回原因'},

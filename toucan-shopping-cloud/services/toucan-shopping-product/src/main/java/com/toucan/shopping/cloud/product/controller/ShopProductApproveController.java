@@ -768,6 +768,13 @@ public class ShopProductApproveController {
 
                 ShopProduct shopProduct = new ShopProduct();
                 BeanUtils.copyProperties(shopProduct, shopProductApprove);
+                //立即上架
+                if(shopProductApprove.getApproveAfter()!=null&&shopProductApprove.getApproveAfter().intValue()==2)
+                {
+                    shopProduct.setStatus((short)1);
+                }else{
+                    shopProduct.setStatus((short)0);
+                }
                 shopProduct.setId(shopProductId);
                 shopProduct.setUuid(UUID.randomUUID().toString().replace("-", ""));
                 shopProduct.setProductApproveId(shopProductApprove.getId());

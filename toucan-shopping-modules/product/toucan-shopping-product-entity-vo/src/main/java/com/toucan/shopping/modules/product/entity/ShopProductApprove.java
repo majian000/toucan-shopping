@@ -78,6 +78,8 @@ public class ShopProductApprove {
 
     private Short changeOrReturn; //退换货承诺 1:承诺 0:不承诺
 
+    private Short approveAfter; //上架时间 1:放入仓库 2:立即上架
+
     private String articleNumber; //货号
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)

@@ -372,6 +372,9 @@ function initProductPublishForm(productApprove)
     //库存计数
     $(":radio[name='buckleInventoryMethod'][value='" + productApprove.buckleInventoryMethod + "']").prop("checked", "checked");
 
+    //库存计数
+    $(":radio[name='approveAfter'][value='" + productApprove.approveAfter + "']").prop("checked", "checked");
+
     //售后服务
     //提供发票
     if(productApprove.giveInvoice!=null) {

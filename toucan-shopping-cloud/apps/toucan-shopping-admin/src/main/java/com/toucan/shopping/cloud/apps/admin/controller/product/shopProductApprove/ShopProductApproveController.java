@@ -1008,6 +1008,10 @@ public class ShopProductApproveController extends UIController {
                                 //设置消息为已发送
                                 eventPublish.setStatus((short) 1);
                                 eventPublishService.updateStatus(eventPublish);
+                            }else{
+                                logger.warn("商品审核已被驳回,但是消息发送失败 payload {} ", JSONObject.toJSONString(messageVO));
+                                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                                resultObjectVO.setMsg("商品审核已被驳回,但是消息发送失败");
                             }
                         }
                     }
@@ -1084,6 +1088,10 @@ public class ShopProductApproveController extends UIController {
                                             //设置消息为已发送
                                             eventPublish.setStatus((short) 1);
                                             eventPublishService.updateStatus(eventPublish);
+                                        }else{
+                                            logger.warn("商品审核已被通过,但是消息发送失败 payload {} ", JSONObject.toJSONString(messageVO));
+                                            resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                                            resultObjectVO.setMsg("商品审核已被通过,但是消息发送失败");
                                         }
                                     }
                                 }

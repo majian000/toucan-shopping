@@ -30,6 +30,7 @@
         <result column="article_number" jdbcType="VARCHAR" property="articleNumber" />
         <result column="brand_id" jdbcType="BIGINT" property="brandId" />
         <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
+        <result column="approve_after" jdbcType="SMALLINT" property="approveAfter" />
 
 
     </resultMap>
@@ -109,14 +110,14 @@
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove"  >
         insert into t_shop_product_approve(id,category_id,shop_category_id,uuid,name,attributes,product_uuid,product_id,status,shop_id,
-            create_date,update_date,app_code,create_user_id,update_user_id,seller_no,pay_method,buckle_inventory_method,approve_status,give_invoice,change_or_return,etract_method,article_number,brand_id)
+            create_date,update_date,app_code,create_user_id,update_user_id,seller_no,pay_method,buckle_inventory_method,approve_status,give_invoice,change_or_return,etract_method,article_number,brand_id,approve_after)
         values(#{id},#{categoryId},#{shopCategoryId},#{uuid},#{name},#{attributes},#{productUuid},#{productId},#{status},#{shopId},
-            #{createDate},#{updateDate},#{appCode},#{createUserId},#{updateUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{approveStatus},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId})
+            #{createDate},#{updateDate},#{appCode},#{createUserId},#{updateUserId},#{sellerNo},#{payMethod},#{buckleInventoryMethod},#{approveStatus},#{giveInvoice},#{changeOrReturn},#{etractMethod},#{articleNumber},#{brandId},#{approveAfter})
     </insert>
 
     <update id="updateForRepublish"  parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">
         update  t_shop_product_approve set  name = #{name} , attributes=#{attributes} , status=#{status} ,update_date=#{updateDate} , update_user_id=#{updateUserId} ,
-          seller_no=#{sellerNo},pay_method=#{payMethod} ,buckle_inventory_method=#{buckleInventoryMethod},approve_status=1 ,give_invoice=#{giveInvoice},
+          seller_no=#{sellerNo},pay_method=#{payMethod} ,buckle_inventory_method=#{buckleInventoryMethod},approve_status=1 ,give_invoice=#{giveInvoice},approve_after=#{approveAfter},
           change_or_return=#{changeOrReturn},etract_method=#{etractMethod},article_number=#{articleNumber},brand_id=#{brandId}
           where id = #{id} and approve_status=3
     </update>
