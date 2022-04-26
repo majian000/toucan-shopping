@@ -1010,7 +1010,7 @@ public class ShopProductApproveController extends UIController {
                                 eventPublishService.updateStatus(eventPublish);
                             }else{
                                 logger.warn("商品审核已被驳回,但是消息发送失败 payload {} ", JSONObject.toJSONString(messageVO));
-                                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
+                                resultObjectVO.setCode(ResultObjectVO.FAILD);
                                 resultObjectVO.setMsg("商品审核已被驳回,但是消息发送失败");
                             }
                         }
