@@ -360,29 +360,29 @@ public class ShopProductApproveController {
                             shopProductImgs.add(productImg);
                         }
 
-                        ret = shopProductApproveImgService.saves(shopProductImgs);
-                        if (ret <= rePublishProductApproveVO.getPreviewPhotoPaths().size()) {
-                            logger.warn("发布商品失败 原因:商品图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
-                            resultObjectVO.setCode(ResultVO.FAILD);
-                            resultObjectVO.setMsg("发布失败");
+                    }
 
-                            ret = shopProductApproveService.deleteById(rePublishProductApproveVO.getId());
-                            if (ret <= 0) {
-                                //发送异常邮件,通知运营处理
-                                logger.warn("发布商品失败 回滚店铺商品表失败 id {}", rePublishProductApproveVO.getId());
-                            }
+                    ret = shopProductApproveImgService.saves(shopProductImgs);
+                    if (ret < shopProductImgs.size()) {
+                        logger.warn("发布商品失败 原因:商品图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("发布失败");
 
-                            ret = shopProductApproveSkuService.deleteByShopProductApproveId(rePublishProductApproveVO.getId());
-                            if (ret< rePublishProductApproveVO.getProductSkuVOList().size()) {
-                                logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
-                            }
+                        ret = shopProductApproveService.deleteById(rePublishProductApproveVO.getId());
+                        if (ret <= 0) {
+                            //发送异常邮件,通知运营处理
+                            logger.warn("发布商品失败 回滚店铺商品表失败 id {}", rePublishProductApproveVO.getId());
+                        }
 
-                            //TODO:删除服务器中图片资源
-                            ret = shopProductApproveImgService.deleteByProductApproveId(rePublishProductApproveVO.getId());
-                            if (ret< rePublishProductApproveVO.getPreviewPhotoPaths().size()) {
-                                logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
-                            }
+                        ret = shopProductApproveSkuService.deleteByShopProductApproveId(rePublishProductApproveVO.getId());
+                        if (ret< rePublishProductApproveVO.getProductSkuVOList().size()) {
+                            logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
+                        }
 
+                        //TODO:删除服务器中图片资源
+                        ret = shopProductApproveImgService.deleteByProductApproveId(rePublishProductApproveVO.getId());
+                        if (ret< rePublishProductApproveVO.getPreviewPhotoPaths().size()) {
+                            logger.warn("发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
                         }
 
                     }
