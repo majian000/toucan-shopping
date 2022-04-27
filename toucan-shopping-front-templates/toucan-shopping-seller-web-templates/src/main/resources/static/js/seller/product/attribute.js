@@ -65,6 +65,84 @@ function bindAttLabelEvent()
     });
 }
 
+
+
+
+function initSkuTablePreviewPhotoUploadDel()
+{
+
+    $(".sku-table-uploading-img li").mouseenter(function () {
+        $(this).find(".skuTableuploading-tip").stop().animate({ height: '25px' }, 200);
+    });
+    $(".sku-table-uploading-img li").mouseleave(function () {
+        $(this).find(".skuTableuploading-tip").stop().animate({ height: '0' }, 200);
+    });
+
+    $(".onSkuDelPic").click(function(){
+        var attrIndex = $(this).attr("data");
+        $("#skuPreview"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+        $("#skuProductProview"+attrIndex).val(null);
+        $("#skuTableuploading-tip" + attrIndex).hide();
+
+        $("#skuPreview"+attrIndex).click(function() {
+            uploadSkuTablePreviewPhoto($(this).attr("attr-index"));
+        });
+    });
+
+}
+
+
+function uploadSkuTablePreviewPhoto(attrIndex)
+{
+    $("#skuProductProview"+attrIndex).click();
+}
+
+function initSkuTablePreviewPhotoUpload(rowCount)
+{
+    for(var p=0;p<rowCount;p++){
+        $("#skuPreview"+p).unbind("click");
+    }
+
+    initSkuTablePreviewPhotoUploadDel();
+    for(var i=0;i<rowCount;i++)
+    {
+        $("#skuPreview"+i).click(function() {
+            uploadSkuTablePreviewPhoto($(this).attr("attr-index"));
+        });
+
+
+        $("#skuProductProview"+i).on("change", function(){
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+            var attrIndex=$(this).attr("attr-index");
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#skuPreview"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test( files[0].type)){
+                $("#skuPreview"+attrIndex).unbind("click");
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function(){
+                    $("#skuPreview"+attrIndex).attr("src",this.result);
+                    $("#skuTableuploading-tip" + attrIndex).show();
+                }
+
+            }
+
+        });
+    }
+}
+
 var attributeControl = {
     imgUploadTitle:"<span class='red'>*</span>图片上传",
     //SKU信息组合
@@ -122,7 +200,7 @@ var attributeControl = {
                 var td = $("<th >" + item + "</th>");
                 td.appendTo(trHead);
             });
-            var itemColumHead = $("<th  style=\"width:70px;\"><span class='red'>*</span>价格</th><th style=\"width:70px;\"><span class='red'>*</span>库存</th> <th  style=\"width:70px;\">"+this.imgUploadTitle+"</th> <th  style=\"width:70px;\"><span class='red'>*</span>图片预览</th>");
+            var itemColumHead = $("<th ><span class='red'>*</span>价格</th><th ><span class='red'>*</span>库存</th>  <th  ><span class='red'>*</span>图片预览(点击上传)</th>");
             itemColumHead.appendTo(trHead);
             //var itemColumHead2 = $("<td >商家编码</td><td >商品条形码</td>");
             //itemColumHead2.appendTo(trHead);
@@ -153,9 +231,22 @@ var attributeControl = {
                     td1.appendTo(tr);
                     var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" id=\"productSkuVOList_"+g_sku_pos+"_stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\" style=\"width:80%\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
                     td2.appendTo(tr);
-                    var td3 = $("<td ><input type='file' class='skuTablePhotos skuTableUploadFile' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' /></td>");
+                    var td3 = $("<input type='file' class='skuTablePhotos skuTableUploadFile' attr-index='"+g_sku_pos+"' style='display: none' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' />");
                     td3.appendTo(tr);
-                    var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'></td>");
+                    var td4 = $("<td >" +
+                        "<div class=\"sku-table-uploading-img\">"+
+                        "<ul class=\"picView-magnify-list\">\n" +
+                        "          <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+                        "           <div id=\"skuTableimgBg_div"+g_sku_pos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
+                        "<img id='skuPreview"+g_sku_pos+"' attr-index='"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'>" +
+                        "            </div>\n" +
+                        "           <div id=\"skuTableuploading-tip"+g_sku_pos+"\" class=\"skuTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
+                        "               <i class=\"onSkuDelPic\" data=\"0\">删除</i>\n" +
+                        "            </div>\n" +
+                        "         </li>"+
+                        " </ul>"+
+                        "</div>"+
+                        "</td>");
                     td4.appendTo(tr);
                     var td5 = $("<input type='hidden' name='productSkuVOList["+g_sku_pos+"].attributes' id='productSkuVOList"+g_sku_pos+"_attributes'  class='productSkuAttributeHidden' attr-row-id='sku_row_"+g_sku_pos+"' attr-row-index='"+g_sku_pos+"' />");
                     td5.appendTo(tr);
@@ -177,6 +268,7 @@ var attributeControl = {
                     //var td4 = $("<td ><input name=\"Txt_SnSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");
                     //td4.appendTo(tr);
                 });
+                initSkuTablePreviewPhotoUpload(g_sku_pos);
 
             }
             //结束创建Table表
