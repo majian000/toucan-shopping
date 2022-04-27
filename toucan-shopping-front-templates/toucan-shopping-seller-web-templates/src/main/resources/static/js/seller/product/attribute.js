@@ -149,13 +149,13 @@ var attributeControl = {
                         }
                     });
                     sku_attribute_json+="}";
-                    var td1 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].price\" id=\"productSkuVOList_"+g_sku_pos+"_price\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|money\"  placeholder='请输入价格'></td>");
+                    var td1 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].price\" id=\"productSkuVOList_"+g_sku_pos+"_price\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|money\" style=\"width:80%\"  placeholder='请输入价格'></td>");
                     td1.appendTo(tr);
-                    var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" id=\"productSkuVOList_"+g_sku_pos+"_stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
+                    var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" id=\"productSkuVOList_"+g_sku_pos+"_stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\" style=\"width:80%\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
                     td2.appendTo(tr);
                     var td3 = $("<td ><input type='file' class='skuTablePhotos skuTableUploadFile' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' /></td>");
                     td3.appendTo(tr);
-                    var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100px;height:100px'></td>");
+                    var td4 = $("<td ><img id='skuPreview"+g_sku_pos+"' src='"+basePath+"/static/lib/tupload/images/imgadd.png' style='width:100%;height:100%'></td>");
                     td4.appendTo(tr);
                     var td5 = $("<input type='hidden' name='productSkuVOList["+g_sku_pos+"].attributes' id='productSkuVOList"+g_sku_pos+"_attributes'  class='productSkuAttributeHidden' attr-row-id='sku_row_"+g_sku_pos+"' attr-row-index='"+g_sku_pos+"' />");
                     td5.appendTo(tr);
@@ -331,7 +331,7 @@ function bindInputAddEvent()
         {
             attVal = attVal.replace(/(^\s*)|(\s*$)/g, "");
         }
-        var attributeValueRegex = /^[\u0391-\uFFE5a-zA-Z0-9\【\】\(\)\（\）\+\-\s]{1,25}$/;
+        var attributeValueRegex = /^[\u0391-\uFFE5a-zA-Z0-9\【\】\(\)\（\）\+\-\s\.]{1,25}$/;
         if(!attributeValueRegex.test(attVal))
         {
             $.message({

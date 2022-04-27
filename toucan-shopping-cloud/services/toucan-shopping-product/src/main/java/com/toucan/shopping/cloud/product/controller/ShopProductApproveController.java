@@ -98,6 +98,21 @@ public class ShopProductApproveController {
                 resultObjectVO.setMsg("店铺ID不能为空!");
                 return resultObjectVO;
             }
+            if(publishProductApproveVO.getName().length()>ProductConstant.MAX_SHOP_PRODUCT_NAME_SIZE)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品名称过长,最大长度为:"+ProductConstant.MAX_SHOP_PRODUCT_NAME_SIZE+"!");
+                return resultObjectVO;
+            }
+            for(ShopProductApproveSkuVO productSkuVO : publishProductApproveVO.getProductSkuVOList())
+            {
+                if(productSkuVO.getName().length()>ProductConstant.MAX_SKU_NAME_SIZE)
+                {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("规格商品名称过长,最大长度为:"+ProductConstant.MAX_SKU_NAME_SIZE+"!");
+                    return resultObjectVO;
+                }
+            }
             shopId = String.valueOf(publishProductApproveVO.getShopId());
             skylarkLock.lock(ProductApproveRedisLockKey.getSaveProductLockKey(shopId), shopId);
 

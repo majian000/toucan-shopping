@@ -1,7 +1,7 @@
 package com.toucan.shopping.modules.product.constant;
 
 /**
- * 商品审核字典
+ * 商品字典
  */
 public class ProductConstant {
 
@@ -15,6 +15,9 @@ public class ProductConstant {
 
     private static String SELLER_APP_CODE="10001004"; //卖家端应用编码
 
+    public static final int MAX_SKU_NAME_SIZE=400; //SKU名称最大长度
+
+    public static final int MAX_SHOP_PRODUCT_NAME_SIZE=300; //商品名称最大长度
 
 
 
