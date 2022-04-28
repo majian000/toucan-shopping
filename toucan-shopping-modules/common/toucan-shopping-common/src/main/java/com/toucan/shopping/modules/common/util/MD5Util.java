@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.common.util;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,17 +9,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5Util {
 
-
     private static final Logger logger = LoggerFactory.getLogger(MD5Util.class);
 
-    private static MessageDigest md5;
-    static{
-        try {
-            md5 =  MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            logger.warn(e.getMessage(),e);
-        }
-    }
 
     /**
      * MD5 32位加密
@@ -27,12 +19,11 @@ public class MD5Util {
      * @throws NoSuchAlgorithmException
      */
     public static String md5(String text) throws NoSuchAlgorithmException {
-
+        //每次都拿一个对象,避免多线程访问对象共享,这里可以优化
+        MessageDigest md5 =  MessageDigest.getInstance("MD5");
         md5.update(text.getBytes());
         byte bytes[] = md5.digest();
-
         int i;
-
         StringBuilder builder = new StringBuilder("");
         for (int offset = 0; offset < bytes.length; offset++) {
             i = bytes[offset];

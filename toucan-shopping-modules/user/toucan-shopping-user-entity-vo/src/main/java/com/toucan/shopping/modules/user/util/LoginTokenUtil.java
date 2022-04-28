@@ -41,8 +41,4 @@ public class LoginTokenUtil {
     }
 
 
-    public static void main(String[] args) throws Exception {
-        System.out.println(generatorTokenByString("888161143875436604"));
-    }
-
 }
