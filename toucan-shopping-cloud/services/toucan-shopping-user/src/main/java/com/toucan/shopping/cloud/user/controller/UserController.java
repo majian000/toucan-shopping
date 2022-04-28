@@ -23,7 +23,6 @@ import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRedisKey;
 import com.toucan.shopping.modules.user.redis.UserCenterRegistRedisKey;
 import com.toucan.shopping.modules.user.service.*;
-import com.toucan.shopping.modules.user.util.LoginAuthTokenUtil;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import com.toucan.shopping.modules.user.vo.*;
 import org.apache.commons.beanutils.BeanUtils;
@@ -1280,7 +1279,7 @@ public class UserController {
 
                     userLogin.setPassword(null);
                     userLogin.setLoginToken(token);
-                    userLogin.setLoginAuthToken(LoginAuthTokenUtil.generatorAuthToken(token));
+                    userLogin.setLoginAuthToken(LoginTokenUtil.generatorTokenByString(token));
                     userLogin.setUserMainId(userEntity.getUserMainId());
 
                     resultObjectVO.setData(userLogin);

@@ -423,7 +423,7 @@ function bindInputAddEvent()
         {
             attVal = attVal.replace(/(^\s*)|(\s*$)/g, "");
         }
-        var attributeValueRegex = /^[\u0391-\uFFE5a-zA-Z0-9\【\】\(\)\（\）\+\-\s\.]{1,25}$/;
+        var attributeValueRegex = /^[\u0391-\uFFE5a-zA-Z0-9\【\】\(\)\（\）\+\-\s\.\/\|]{1,25}$/;
         if(!attributeValueRegex.test(attVal))
         {
             $.message({

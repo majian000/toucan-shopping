@@ -180,21 +180,21 @@ public class UserApiController extends BaseController {
                     //UID
                     Cookie uidCookie = new Cookie( "tss_uid", String.valueOf(userLoginVO.getUserMainId()));
                     uidCookie.setPath("/");
-                    //1天过期
-                    uidCookie.setMaxAge(86400);
+                    //7天过期
+                    uidCookie.setMaxAge(UserLoginConstant.LOGIN_UID_MAX_AGE);
                     response.addCookie(uidCookie);
 
                     //TOKEN
                     Cookie ltCookie = new Cookie( "tss_lt", userLoginVO.getLoginToken());
                     ltCookie.setPath("/");
-                    //1天过期
-                    ltCookie.setMaxAge(86400);
+                    //7天过期
+                    ltCookie.setMaxAge(UserLoginConstant.LOGIN_TOKEN_MAX_AGE);
                     response.addCookie(ltCookie);
 
                     //权限Token 半小时内不再进行权限校验
                     Cookie latCookie = new Cookie( "tss_lat", userLoginVO.getLoginAuthToken());
                     latCookie.setPath("/");
-                    latCookie.setMaxAge(1800); //30分钟过期
+                    latCookie.setMaxAge(UserLoginConstant.LOGIN_SUPER_TOKEN_MAX_AGE); //30分钟过期
                     response.addCookie(latCookie);
 
                     //删除登录失败计数

@@ -3,6 +3,21 @@ package com.toucan.shopping.modules.user.constant;
 public final class UserLoginConstant {
 
     /**
+     * 登录会话UID 最大存活时间 7天
+     */
+    public static Integer LOGIN_UID_MAX_AGE=86400*7;
+
+    /**
+     * 登录会话Token 最大存活时间 7天
+     */
+    public static Integer LOGIN_TOKEN_MAX_AGE=86400*7;
+
+    /**
+     * 登录会话超级Token 最大存活时间 30分钟
+     */
+    public static Integer LOGIN_SUPER_TOKEN_MAX_AGE=1800;
+
+    /**
      * 没有找到的用户
      */
     public static Integer NOT_FOUND_USER=-1;

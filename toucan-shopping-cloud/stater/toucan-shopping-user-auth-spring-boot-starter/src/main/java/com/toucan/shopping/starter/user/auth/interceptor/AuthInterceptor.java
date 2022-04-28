@@ -12,7 +12,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.common.wrapper.RequestWrapper;
-import com.toucan.shopping.modules.user.util.LoginAuthTokenUtil;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import org.apache.commons.lang3.StringUtils;
@@ -190,7 +189,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     return false;
                                 }
                                 //判断当前Token和权限Token能否对应的上
-                                String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
+                                String glat = LoginTokenUtil.generatorTokenByString(lt);
                                 if(glat.equals(lat))
                                 {
                                     return true;
@@ -261,7 +260,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     }
                                 }
                                 if (StringUtils.equals(uid, "-1") || StringUtils.equals(lt, "-1")) {
-                                    logger.info("请求头参数异常 " + authHeader);
+                                    logger.warn("请求头参数异常 " + authHeader);
                                     //删除cookies
                                     deleteCookies(response);
 
@@ -275,7 +274,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 String loginToken = LoginTokenUtil.generatorTokenByString(uid);
                                 if(!loginToken.equals(lt))
                                 {
-                                    logger.info("用户ID和登录Token不一致 " + authHeader);
+                                    logger.warn("用户ID和登录Token不一致 header:{} uid:{} loginToken:{}",authHeader,uid,loginToken);
                                     //删除cookies
                                     deleteCookies(response);
 
@@ -286,7 +285,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                 }
 
                                 //判断当前Token和权限Token能否对应的上
-                                String glat = LoginAuthTokenUtil.generatorAuthToken(lt);
+                                String glat = LoginTokenUtil.generatorTokenByString(lt);
                                 if(glat.equals(lat))
                                 {
                                     return true;
