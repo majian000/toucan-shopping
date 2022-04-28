@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 店铺管理 增删改查
@@ -340,10 +341,11 @@ public class SellerShopController {
     private void flushRedisCache(SellerShop sellerShop)
     {
         try{
-            if(toucanStringRedisService.get(SellerShopKey.getShopCacheKey(String.valueOf(sellerShop.getUserMainId())))!=null) {
+            if(toucanStringRedisService.get(SellerShopKey.getShopCacheKey(String.valueOf(sellerShop.getUserMainId())))==null) {
                 SellerShopVO sellerShopVO = new SellerShopVO();
                 BeanUtils.copyProperties(sellerShopVO, sellerShop);
                 toucanStringRedisService.set(SellerShopKey.getShopCacheKey(String.valueOf(sellerShopVO.getUserMainId())), JSONObject.toJSONString(sellerShopVO));
+                toucanStringRedisService.expire(SellerShopKey.getShopCacheKey(String.valueOf(sellerShopVO.getUserMainId())),ShopConstant.CACHE_TIMEOUT_SECOND, TimeUnit.SECONDS);
             }
         }catch(Exception e)
         {
