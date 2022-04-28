@@ -80,6 +80,8 @@ function initSkuTablePreviewPhotoUploadDel()
 
     $(".onSkuDelPic").click(function(){
         var attrIndex = $(this).attr("data");
+        $("#skuPreview"+attrIndex).unbind("click");
+
         $("#skuPreview"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
         $("#skuProductProview"+attrIndex).val(null);
         $("#skuTableuploading-tip" + attrIndex).hide();
@@ -87,6 +89,12 @@ function initSkuTablePreviewPhotoUploadDel()
         $("#skuPreview"+attrIndex).click(function() {
             uploadSkuTablePreviewPhoto($(this).attr("attr-index"));
         });
+
+        var skuPreviewPathObj = $("#skuPreviewPath_"+attrIndex);
+        if(skuPreviewPathObj!=null)
+        {
+            skuPreviewPathObj.val("");
+        }
     });
 
 }

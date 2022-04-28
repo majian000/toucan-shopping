@@ -306,6 +306,7 @@ function setSkuTableValue()
                         $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
                         $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
                         $("#skuPreviewPath_"+skuRowIndex).val(skuVo.productPreviewPath);
+                        $("#skuTableuploading-tip" + skuRowIndex).show();
 
                         $("#productSkuVOList_"+skuRowIndex+"_id").val(skuVo.id);
                         stockNum+=skuVo.stockNum;
