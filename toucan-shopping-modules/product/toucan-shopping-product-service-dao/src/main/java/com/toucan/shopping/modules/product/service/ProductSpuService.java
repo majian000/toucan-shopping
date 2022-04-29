@@ -35,5 +35,7 @@ public interface ProductSpuService {
      */
     PageInfo<ProductSpuVO> queryListPage(ProductSpuPageInfo queryPageInfo);
 
+    ProductSpu queryByIdIgnoreDelete(Long id);
+
 
 }

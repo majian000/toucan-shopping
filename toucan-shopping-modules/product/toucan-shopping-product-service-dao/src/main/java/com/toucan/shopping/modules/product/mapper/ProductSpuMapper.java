@@ -36,4 +36,6 @@ public interface ProductSpuMapper {
      */
     Long queryListPageCount(ProductSpuPageInfo pageInfo);
 
+    ProductSpu queryByIdIgnoreDelete(Long id);
+
 }

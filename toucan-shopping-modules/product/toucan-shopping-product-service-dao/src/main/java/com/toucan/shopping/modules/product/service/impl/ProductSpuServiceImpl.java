@@ -50,4 +50,9 @@ public class ProductSpuServiceImpl implements ProductSpuService {
         pageInfo.setTotal(productSpuMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public ProductSpu queryByIdIgnoreDelete(Long id) {
+        return productSpuMapper.queryByIdIgnoreDelete(id);
+    }
 }

@@ -133,5 +133,8 @@
         update t_product_spu  set delete_status=1 where id=#{id}  and delete_status=0
     </update>
 
+    <select id="queryByIdIgnoreDelete" parameterType="java.lang.Long" resultMap="productMap">
+        select * from t_product_spu where id = #{id} limit 0,1
+    </select>
 
 </mapper>

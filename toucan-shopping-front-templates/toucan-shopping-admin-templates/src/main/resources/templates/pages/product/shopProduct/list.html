@@ -438,24 +438,24 @@
 
         table.on('tool(shopProductTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'approve') {
-                openApproveDialog(data.id);
+            if (obj.event == 'detail') {
+                openDetailDialog(data.id);
             }else if(obj.event=="openDetailDialogDevent")
             {
-                openApproveDialog(data.id);
+                openDetailDialog(data.id);
             }
         });
 
-        function openApproveDialog(id)
+        function openDetailDialog(id)
         {
             var index = layer.open({
-                title: '审核商品',
+                title: '商品详情',
                 type: 2,
                 shade: 0.2,
                 maxmin:true,
 
                 area: ['100%', '100%'],
-                content: '[[@{/}]]product/shopProduct/approvePage/'+id
+                content: '[[@{/}]]product/shopProduct/detailPage/'+id
             });
             $(window).on("resize", function () {
                 layer.full(index);

@@ -6,12 +6,10 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.entity.ProductSpu;
 import com.toucan.shopping.modules.product.entity.ShopProductImg;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
-import com.toucan.shopping.modules.product.service.ProductSkuService;
-import com.toucan.shopping.modules.product.service.ShopProductApproveRecordService;
-import com.toucan.shopping.modules.product.service.ShopProductImgService;
-import com.toucan.shopping.modules.product.service.ShopProductService;
+import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.collections4.CollectionUtils;
@@ -51,6 +49,8 @@ public class ShopProductController {
     @Autowired
     private ShopProductApproveRecordService shopProductApproveRecordService;
 
+    @Autowired
+    private ProductSpuService productSpuService;
 
 
 
@@ -192,6 +192,15 @@ public class ShopProductController {
                         } else  if (shopProductImg.getImgType().intValue() == 2) {
                             shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
                         }
+                    }
+                }
+
+                //查询商品名称
+                if(shopProductVO.getProductId()!=null) {
+                    ProductSpu productSpu = productSpuService.queryByIdIgnoreDelete(shopProductVO.getProductId());
+                    if(productSpu!=null)
+                    {
+                        shopProductVO.setProductSpuName(productSpu.getName());
                     }
                 }
             }

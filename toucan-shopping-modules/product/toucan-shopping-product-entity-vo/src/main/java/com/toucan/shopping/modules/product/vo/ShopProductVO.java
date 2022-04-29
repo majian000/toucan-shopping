@@ -26,6 +26,8 @@ public class ShopProductVO extends ShopProduct {
 
     private String shopName; //店铺名称
 
+    private String productSpuName; //关联平台商品名称
+
 
     /**
      * 商品预览图路径
