@@ -167,6 +167,14 @@ public class UserApiController extends BaseController {
 
 
             userLoginVO.setAppCode(this.getAppCode());
+            try {
+                userLoginVO.setLoginIp(IPUtil.getRemoteAddr(request));
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
+            userLoginVO.setSrcType(1); //PC端登录
+
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),userLoginVO);
             resultObjectVO = feignUserService.loginByPassword(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
