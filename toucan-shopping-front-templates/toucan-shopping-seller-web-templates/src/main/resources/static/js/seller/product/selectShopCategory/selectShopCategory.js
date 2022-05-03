@@ -46,6 +46,7 @@ function selectShopCategoryLevel2(p,c) {
 	{
 		$("#shop_category_sort2 li").eq(c).removeClass("active");
 		expressShopCategoryC=expressShopCategoryP;
+		$("#shopCategoryId").val(shop_category_list[p].id);
 	}else{
 		$("#shop_category_sort2 li").eq(c).addClass("active").siblings("li").removeClass("active");
 		expressShopCategoryC = expressShopCategoryP + arrow + shop_category_list[p].children[c].name;

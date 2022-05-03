@@ -327,17 +327,23 @@ function initProductPublishForm(productApprove)
 
     //设置选择分类默认值
     var selectCategoryArray = productApprove.categoryIdPath;
-    for(var p=(selectCategoryArray.length-1);p>=0;p--)
-    {
-        $("#category_"+selectCategoryArray[p]).click();
+    if(selectCategoryArray!=null&&selectCategoryArray.length>0) {
+        for (var p = (selectCategoryArray.length - 1); p >= 0; p--) {
+            if ($("#category_" + selectCategoryArray[p]) != null) {
+                $("#category_" + selectCategoryArray[p]).click();
+            }
+        }
     }
 
 
     //设置店铺分类默认值
     var selectShopCategoryArray = productApprove.shopCategoryIdPath;
-    for(var p=(selectShopCategoryArray.length-1);p>=0;p--)
-    {
-        $("#shop_category_"+selectShopCategoryArray[p]).click();
+    if(selectShopCategoryArray!=null&&selectShopCategoryArray.length>0) {
+        for (var p = (selectShopCategoryArray.length - 1); p >= 0; p--) {
+            if ($("#shop_category_" + selectShopCategoryArray[p]) != null) {
+                $("#shop_category_" + selectShopCategoryArray[p]).click();
+            }
+        }
     }
 
     //设置选择品牌默认值
