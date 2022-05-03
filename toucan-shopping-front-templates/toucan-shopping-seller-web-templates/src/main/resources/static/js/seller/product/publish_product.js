@@ -76,6 +76,7 @@ function initPreviewPhotoUpload()
 $(function () {
 
     intRootCategory();
+    intRootShopCategory();
 
     $("#mainPhotoFile").on("change", function(){
         // Get a reference to the fileList

@@ -18,7 +18,7 @@ function intRootShopCategory() {
 	}
 	$("#shop_category_sort1").html(areaShopCategoryCont);
 }
-intRootShopCategory();
+
 
 /*选择一级目录*/
 function selectShopCategoryLevel1(p) {

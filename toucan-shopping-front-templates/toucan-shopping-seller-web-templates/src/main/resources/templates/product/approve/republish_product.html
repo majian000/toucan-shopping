@@ -221,32 +221,50 @@
                         <div class="toucan-form">
                             <div id="step1">
                                 <div class="toucan-form-body">
-                                    <div class="item" >
-                                        <div class="field" style="width:90%;text-align:left;padding-left:6%;" >
-                                            <div class="selectedSort"><b>您当前选择的商品分类是：</b><a id="selectProductCategory"></a></div>
-                                            <input type="hidden" id="categoryId"  name="categoryId"/>
+                                    <div class="item">
+                                        <!--商品分类-->
+                                        <div class="wareSort clearfix">
+                                            <ul id="sort1"></ul>
+                                            <ul id="sort2" style="display: none;"></ul>
+                                            <ul id="sort3" style="display: none;"></ul>
                                         </div>
+                                        <div class="selectedSort"><b>您当前选择的商品分类是：</b><i id="selectedSort"></i></div>
+                                        <input type="hidden" id="categoryId"  name="categoryId"/>
                                     </div>
 
-                                    <div class="item"  id="brandDiv" >
-                                        <div class="field" style="width:100%;text-align:left;padding-left:6%;" >
-                                            品牌：
-                                            <span  id="selectBrandDiv">
-                                                    <input type="text" name="brandId" id="selectBrand" style="width:80%"  class="releaseProductInputText" >
+                                    <div class="item" id="brandDiv" style="display:none;">
+                                        <div style="width:50%;float:left;">
+                                            <div class="field" style="width:100%;text-align:right;" >
+                                                品牌：
+                                                <span  id="selectBrandDiv">
+                                                    <input type="text" name="brandId" id="selectBrand" class="releaseProductInputText" >
                                                 </span>
-                                            未找到需要的品牌？<a href="#">点击申请</a>
+                                                未找到需要的品牌？<a href="#">点击申请</a>
+                                            </div>
                                         </div>
+
+                                        <div style="width:45%;float:left;">
+                                            <div class="field" style="text-align:right;" >
+                                                货号：<input type="text" id="articleNumber" name="articleNumber"  class="releaseProductInputText" style="width:200px;">
+                                            </div>
+                                        </div>
+
                                     </div>
 
 
-                                    <div class="item"  >
-                                        <div class="field" style="width:100%;text-align:left;padding-left:6%;" >
-                                            货号：
-                                            <input type="text" id="articleNumber" name="articleNumber"  class="releaseProductInputText" style="width:50%;">
-                                        </div>
-                                    </div>
 
 
+                                    <div class="item" style="clear:both;margin-bottom: 25px;">
+                                        <span class="wareSortBtn">
+                                            <input type="button" id="releaseBtn" class="button" value="下一步，完善商品信息" disabled="disabled"  />
+                                        </span>
+                                    </div><!--item end-->
+
+                                </div>
+
+                            </div>
+                            <div id="step2" style="display:none">
+                                <div class="toucan-form-body">
                                     <div class="item"  >
                                         <div class="field" style="width:100%;text-align:left;padding-left:6%;" >
                                             商品主图预览：
@@ -382,14 +400,18 @@
 
 
                                     <div class="item" style="clear:both;margin-bottom: 25px;">
-                                        <span class="wareSortBtn">
-                                            <input type="button" id="releaseBtn" class="button" value="下一步，完善支付信息"  />
+                                        <span class="wareSortBtn" style="margin-right:10px;">
+                                            <input type="button" id="step2Back" class="button" value="上一步，调整商品分类"  />
+                                        </span>
+
+                                        <span class="wareSortBtn" style="margin-left:10px;">
+                                            <input type="button" id="step2Next" class="button" value="下一步，完善支付信息"  />
                                         </span>
                                     </div><!--item end-->
                                 </div>
                             </div>
 
-                            <div id="step2" style="display:none">
+                            <div id="step3" style="display:none">
                                 <div class="toucan-form-body">
                                     <div class="item" >
                                         <div style="width:40%;float:left;">
@@ -433,18 +455,18 @@
 
                                     <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn" style="margin-right:10px;">
-                                            <input type="button" id="step2Back" class="button" value="上一步，调整商品信息"  />
+                                            <input type="button" id="step3Back" class="button" value="上一步，调整商品信息"  />
                                         </span>
 
                                         <span class="wareSortBtn" style="margin-left:10px;">
-                                            <input type="button" id="step2Next" class="button" value="下一步，完善物流信息"  />
+                                            <input type="button" id="step3Next" class="button" value="下一步，完善物流信息"  />
                                         </span>
                                     </div><!--item end-->
 
                                 </div>
                             </div>
 
-                            <div id="step3" style="display:none">
+                            <div id="step4" style="display:none">
                                 <div class="toucan-form-body">
                                     <div class="item" >
                                         <div style="width:40%;float:left;">
@@ -461,11 +483,11 @@
 
                                     <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn" style="margin-right:10px;">
-                                            <input type="button" id="step3Back" class="button" value="上一步，调整支付信息"  />
+                                            <input type="button" id="step4Back" class="button" value="上一步，调整支付信息"  />
                                         </span>
 
                                         <span class="wareSortBtn" style="margin-left:10px;">
-                                            <input type="button" id="step3Next" class="button" value="下一步，完善店铺分类"  />
+                                            <input type="button" id="step4Next" class="button" value="下一步，完善店铺分类"  />
                                         </span>
                                     </div><!--item end-->
 
@@ -473,15 +495,17 @@
                                 </div>
                             </div>
 
-                            <div id="step4" style="display:none" >
+                            <div id="step5" style="display:none" >
                                 <div class="toucan-form-body">
 
-                                    <div class="item" >
-                                        <div class="field" style="width:90%;text-align:left;padding-left:6%;" >
-                                            <div class="selectedSort"><b>您当前选择的店铺分类是：</b><a id="shopSelectProductCategory"></a></div>
-                                            <input type="hidden" id="shopCategoryId"  name="shopCategoryId"/>
-                                        </div>
+                                    <!--商品分类-->
+                                    <div class="wareSort clearfix">
+                                        <ul id="shop_category_sort1"></ul>
+                                        <ul id="shop_category_sort2" style="display: none;"></ul>
                                     </div>
+                                    <div class="selectedSort"><b>您当前选择的店铺分类是：</b><i id="selectedShopCategorySort"></i></div>
+                                    <input type="hidden" id="shopCategoryId"  name="shopCategoryId"/>
+
 
 
                                     <div class="item" >
@@ -496,7 +520,7 @@
 
                                     <div class="item" style="clear:both;margin-bottom: 25px;">
                                         <span class="wareSortBtn" style="margin-right:10px;">
-                                            <input type="button" id="step4Back" class="button" value="上一步，调整物流信息"  />
+                                            <input type="button" id="step5Back" class="button" value="上一步，调整物流信息"  />
                                         </span>
 
                                         <span class="wareSortBtn" style="margin-left:10px;">
@@ -533,6 +557,8 @@
 
 </script>
 
+<script src="${basePath}/static/js/seller/product/selectProductCategory/selectCategory.js"></script>
+<script src="${basePath}/static/js/seller/product/selectShopCategory/selectShopCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/common/toucan-uuid.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/approve/republish_product.js"></script>
 

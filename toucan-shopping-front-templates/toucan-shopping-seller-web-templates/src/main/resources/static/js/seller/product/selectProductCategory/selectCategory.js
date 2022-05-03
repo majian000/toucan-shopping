@@ -11,6 +11,7 @@ var expressP, expressC, expressD, expressArea, areaCont;
 var arrow = " <font>&gt;</font> ";
 var g_selectCategoryId="-1";
 var g_preSelectCategoryId="-1"; //上一次选择的分类ID
+var gCategoryDrawAttributeControl=null;
 
 /*初始化一级目录*/
 function intRootCategory() {
@@ -108,7 +109,11 @@ $("#releaseBtn").click(function() {
 
 		if(g_preSelectCategoryId!=g_selectCategoryId) {
 			g_preSelectCategoryId = g_selectCategoryId;
-			initAttributes(g_selectCategoryId,showSetp2Page,null);
+			if(gCategoryDrawAttributeControl!=null) {
+				initAttributes(g_selectCategoryId, showSetp2Page, gCategoryDrawAttributeControl);
+			}else{
+				initAttributes(g_selectCategoryId, showSetp2Page, null);
+			}
 			clearSkuTable();
 		}else{
 			showSetp2Page();

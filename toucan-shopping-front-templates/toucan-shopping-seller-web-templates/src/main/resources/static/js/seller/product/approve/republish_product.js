@@ -76,9 +76,17 @@ function initPreviewPhotoUpload()
     }
 }
 
+
 function showSetp2Page()
 {
-    var result = checkInputFunctionByContainerId("step1",2);
+    $("#step1").hide();
+    $("#step2").show();
+}
+
+
+function showSetp3Page()
+{
+    var result = checkInputFunctionByContainerId("step2",2);
 
     var skuTablePhotos = $(".skuTablePhotos");
     var skuTableImgPaths = $(".skuTableImgPaths");
@@ -107,8 +115,11 @@ function showSetp2Page()
         }
     }
     if(result) {
+        $("#step5").hide();
+        $("#step4").hide();
+        $("#step3").show();
+        $("#step2").hide();
         $("#step1").hide();
-        $("#step2").show();
     }
 }
 
@@ -165,16 +176,19 @@ function drawAttributeControl()
             var attributeNameIsFind=false;
             var attributeValueIsFind;false;
             var maxAttributeNameNumber = 0 ;
+            var attributeKeyIsDel=true;
             for(var i=0;i<productApprove.skuAttributes.length;i++) {
                 var skuAttribute = productApprove.skuAttributes[i];
                 attributeNameIsFind = false;
                 maxAttributeNameNumber = 0;
+                attributeKeyIsDel = true;
                 for (var j = 0; j < attributeKeys.length; j++) {
                     var attributeKey = $(attributeKeys[j]);
                     maxAttributeNameNumber++;
                     //该属性名未被删除
                     if(skuAttribute.key==attributeKey.attr("attr-group-name"))
                     {
+                        attributeKeyIsDel=false;
                         attributeNameIsFind = true;
                         var attributeValueLis = attributeKey.find("li");
                         //如果当前属性值列表为空
@@ -208,46 +222,16 @@ function drawAttributeControl()
                         }
                     }
                 }
-                //生成这个属性名和所有值列表
-                if(!attributeNameIsFind)
+
+                if(attributeKeyIsDel)
                 {
-                    //删除最后的那个sku表格,追加完当前属性名之后在把表格添加回去
-                    var tspSkuAttributeTableDivHtml = $("#tspSkuAttributeTableDiv").html();
-                    var attributeValueHtmls="";
-                    for (var p = 0; p < skuAttribute.values.length; p++) {
-                        attributeValueHtmls+=genAttributeValueHtml(skuAttribute.values[p]);
-                    }
-                    $(".rp_attr_div").append(genAttributeKeyHtml(maxAttributeNameNumber,skuAttribute.key,attributeValueHtmls));
-
-                    $("#tspSkuAttributeTableDiv").remove();
-                    tspSkuAttributeTableDivHtml = "<div class=\"item\" id=\"tspSkuAttributeTableDiv\" style=\"clear:both;text-align: left;\">\n"+tspSkuAttributeTableDivHtml+"</div>";
-                    $(".rp_attr_div").append(tspSkuAttributeTableDivHtml);
+                    $.message({
+                        message: "\""+skuAttribute.key+"\"属性已经被删除",
+                        type: 'error'
+                    });
                 }
+
             }
-        }else{
-            var rp_attr_html="";
-            for(var i=0;i<productApprove.skuAttributes.length;i++)
-            {
-                var skuAttributeValueHtml="";
-                var skuAttribute = productApprove.skuAttributes[i];
-                if(skuAttribute.values!=null&&skuAttribute.values.length>0)
-                {
-                    for(var j=0;j<skuAttribute.values.length;j++) {
-                        skuAttributeValueHtml +=genAttributeValueHtml(skuAttribute.values[j]);
-                    }
-                }
-                rp_attr_html +=genAttributeKeyHtml(i,skuAttribute.key,skuAttributeValueHtml);
-            }
-
-            rp_attr_html+="\n" +
-                "<div class=\"item\" id=\"tspSkuAttributeTableDiv\" style=\"clear:both;text-align: left;\">\n" +
-                "    <div class=\"sku_attribute_list\" style=\"padding-left: 6%;\">\n" +
-                "        <div id=\"tspSkuAttributeTable\"></div>\n" +
-                "    </div>\n" +
-                "</div>";
-
-             $(".rp_attr_div").html(rp_attr_html);
-
         }
         bindAttLabelEvent();
         bindInputAddEvent();
@@ -335,6 +319,27 @@ function initProductPublishForm(productApprove)
     $("#selectProductCategory").html(selectCatePath);
     $("#categoryId").val(productApprove.categoryId);
 
+    //绘制属性控件
+    g_productApprove = productApprove;
+
+    gCategoryDrawAttributeControl=drawAttributeControl;
+
+
+    //设置选择分类默认值
+    var selectCategoryArray = productApprove.categoryIdPath;
+    for(var p=(selectCategoryArray.length-1);p>=0;p--)
+    {
+        $("#category_"+selectCategoryArray[p]).click();
+    }
+
+
+    //设置店铺分类默认值
+    var selectShopCategoryArray = productApprove.shopCategoryIdPath;
+    for(var p=(selectShopCategoryArray.length-1);p>=0;p--)
+    {
+        $("#shop_category_"+selectShopCategoryArray[p]).click();
+    }
+
     //设置选择品牌默认值
     gSelectBrandId = productApprove.brandId;
     $("#selectBrandDiv").empty();
@@ -362,10 +367,7 @@ function initProductPublishForm(productApprove)
         }
     }
 
-    //绘制属性控件
-    g_productApprove = productApprove;
 
-    initAttributes(productApprove.categoryId,null,drawAttributeControl);
 
     //付款方式
     $(":radio[name='payMethod'][value='" + productApprove.payMethod + "']").prop("checked", "checked");
@@ -414,6 +416,9 @@ function initProductPublishForm(productApprove)
 
 function initPage()
 {
+
+    intRootCategory();
+    intRootShopCategory();
 
     initPreviewPhotoUpload();
 
@@ -504,9 +509,9 @@ $(function () {
         $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
     });
 
-
     $("#step2Back").bind( 'click' ,function(){
 
+        $("#step5").hide();
         $("#step4").hide();
         $("#step3").hide();
         $("#step2").hide();
@@ -514,14 +519,12 @@ $(function () {
     });
 
     $("#step2Next").bind( 'click' ,function(){
-        $("#step4").hide();
-        $("#step3").show();
-        $("#step2").hide();
-        $("#step1").hide();
+        showSetp3Page();
     });
 
 
     $("#step3Back").bind( 'click' ,function(){
+        $("#step5").hide();
         $("#step4").hide();
         $("#step3").hide();
         $("#step2").show();
@@ -529,7 +532,7 @@ $(function () {
     });
 
     $("#step3Next").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
+        $("#step5").hide();
         $("#step4").show();
         $("#step3").hide();
         $("#step2").hide();
@@ -537,18 +540,32 @@ $(function () {
     });
 
     $("#step4Back").bind( 'click' ,function(){
+        $("#step5").hide();
         $("#step4").hide();
         $("#step3").show();
         $("#step2").hide();
         $("#step1").hide();
     });
 
-
-
-    /*点击下一步*/
-    $("#releaseBtn").click(function() {
-        showSetp2Page();
+    $("#step4Next").bind( 'click' ,function(){
+        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
+        $("#step5").show();
+        $("#step4").hide();
+        $("#step3").hide();
+        $("#step2").hide();
+        $("#step1").hide();
     });
+
+
+    $("#step5Back").bind( 'click' ,function(){
+        $("#step5").hide();
+        $("#step4").show();
+        $("#step3").hide();
+        $("#step2").hide();
+        $("#step1").hide();
+    });
+
+
 
 });
 
