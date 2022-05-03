@@ -317,7 +317,7 @@ function initProductPublishForm(productApprove)
         }
     }
     $("#selectProductCategory").html(selectCatePath);
-    $("#categoryId").val(productApprove.categoryId);
+    g_selectCategoryId = productApprove.categoryId;
 
     //绘制属性控件
     g_productApprove = productApprove;

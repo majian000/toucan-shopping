@@ -117,7 +117,7 @@
     <update id="updateForRepublish"  parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">
         update  t_shop_product_approve set  name = #{name} , attributes=#{attributes} , shelves_status=#{shelvesStatus} ,update_date=#{updateDate} , update_user_id=#{updateUserId} ,
           seller_no=#{sellerNo},pay_method=#{payMethod} ,buckle_inventory_method=#{buckleInventoryMethod},approve_status=1 ,give_invoice=#{giveInvoice},
-          change_or_return=#{changeOrReturn},etract_method=#{etractMethod},article_number=#{articleNumber},brand_id=#{brandId}
+          change_or_return=#{changeOrReturn},etract_method=#{etractMethod},article_number=#{articleNumber},brand_id=#{brandId},category_id=#{categoryId},shop_category_id=#{shopCategoryId}
           where id = #{id} and approve_status=3
     </update>
 
