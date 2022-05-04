@@ -91,5 +91,12 @@ public class ShopProduct {
 
     private Long productApproveId; //商品审核表ID
 
+    private Short dustbinShowStatus; //垃圾箱中是否显示 1:显示 0:隐藏
+
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date deleteDate; //删除时间
+
 
 }

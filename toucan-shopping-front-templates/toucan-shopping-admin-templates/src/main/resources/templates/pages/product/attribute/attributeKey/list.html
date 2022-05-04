@@ -306,6 +306,7 @@
                 dataType: "json",
                 success: function(data){
                     var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                    layer.close(loaddingTree);
                 },
                 error: function(){
 

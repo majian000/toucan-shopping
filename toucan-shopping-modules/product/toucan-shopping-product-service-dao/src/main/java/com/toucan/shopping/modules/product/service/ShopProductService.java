@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.product.entity.ShopProduct;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ShopProductService {
@@ -15,6 +16,8 @@ public interface ShopProductService {
     int save(ShopProduct entity);
 
     int deleteById(Long id);
+
+    int deleteByIdAndInsertDeleteDate(Long id, Date deleteDate);
 
     ShopProductVO findById(Long id);
 

@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,6 +18,8 @@ public interface ShopProductMapper {
 
     int deleteById(Long id);
 
+
+    int deleteByIdAndInsertDeleteDate(Long id, Date deleteDate);
 
 
     /**

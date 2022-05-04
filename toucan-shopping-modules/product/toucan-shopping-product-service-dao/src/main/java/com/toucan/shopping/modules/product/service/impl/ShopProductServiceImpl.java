@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,6 +31,11 @@ public class ShopProductServiceImpl implements ShopProductService {
     @Override
     public int deleteById(Long id) {
         return shopProductMapper.deleteById(id);
+    }
+
+    @Override
+    public int deleteByIdAndInsertDeleteDate(Long id, Date deleteDate) {
+        return shopProductMapper.deleteByIdAndInsertDeleteDate(id,deleteDate);
     }
 
     @Override

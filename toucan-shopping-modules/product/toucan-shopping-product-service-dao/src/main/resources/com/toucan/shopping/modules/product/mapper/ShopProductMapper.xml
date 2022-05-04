@@ -29,6 +29,8 @@
         <result column="article_number" jdbcType="VARCHAR" property="articleNumber" />
         <result column="brand_id" jdbcType="BIGINT" property="brandId" />
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
+        <result column="dustbin_show_status" jdbcType="SMALLINT" property="dustbinShowStatus" />
+        <result column="delete_date" jdbcType="TIMESTAMP" property="deleteDate" />
         
     </resultMap>
 
@@ -110,6 +112,11 @@
 
     <update id="deleteById">
         update t_shop_product  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
+    <update id="deleteByIdAndInsertDeleteDate">
+        update t_shop_product  set delete_status=1 , set delete_date=#{deleteDate} where id=#{id}  and delete_status=0
     </update>
 
 
