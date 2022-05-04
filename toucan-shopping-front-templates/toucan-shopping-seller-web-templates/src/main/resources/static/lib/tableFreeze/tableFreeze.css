@@ -1,5 +1,5 @@
-.productApproveTable {empty-cells:show;border-collapse:collapse;border-spacing:0}
-.productApproveTable {font-family:宋体; font-size:10pt;border:1px #ababab  solid;background-color:white;margin-left: 2%;}
+.freezeTable {empty-cells:show;border-collapse:collapse;border-spacing:0}
+.freezeTable {font-family:宋体; font-size:10pt;border:1px #ababab  solid;background-color:white;margin-left: 2%;}
 .tabTh > td{height:20px;text-align:center;border:1px #ababab solid;background: #f1f1f1;}
 .productApproveTabletable .tabTh{color:#ababab;font-weight:bold;background-color:#ababab ;}
 .tabTd > td{

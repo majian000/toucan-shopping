@@ -77,4 +77,13 @@ public class ShopProductPageController extends BaseController {
         return "product/publish_product";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/index")
+    public String index(HttpServletRequest request){
+
+        return "product/index";
+    }
+
+
+
 }

@@ -2,22 +2,22 @@
 var pagegizationConfigObject={
     obj_box:'.pageToolbar',//翻页容器
     total_item:1,//条目总数
-    per_num:20,//每页条目数
+    per_num:10,//每页条目数
     current_page:1//当前页
 };
-var g_product_approve_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
+var g_product_query_obj={page:pagegizationConfigObject.current_page,limit:pagegizationConfigObject.per_num};
 function doPage()
 {
     loading.showLoading({
         type:6,
         tip:"查询中..."
     });
-    g_product_approve_query_obj.page = pagegizationConfigObject.current_page;
+    g_product_query_obj.page = pagegizationConfigObject.current_page;
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/product/approve/list",
+        url: basePath+"/api/shop/product/list",
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify(g_product_approve_query_obj),
+        data:  JSON.stringify(g_product_query_obj),
         dataType: "json",
         success: function (result) {
             if(result.code<=0)
@@ -53,7 +53,6 @@ function drawTable(pageResult)
     var tableHtml="";
     tableHtml+=" <tr class=\"tabTh\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
-        "                            <td style=\"width:100px;\" >审核状态</td>\n" +
         "                            <td style=\"width:300px;\">商品名称</td>\n" +
         "                            <td style=\"width:150px;\" >商品分类</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
@@ -66,40 +65,26 @@ function drawTable(pageResult)
             var row = pageResult.list[i];
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
-            if(row.approveStatus==1)
-            {
-                tableHtml+=    "                            <td><div class=\"tabTdWrap\">审核中</div></td>\n" ;
-            }else if(row.approveStatus==2)
-            {
-                tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:green;\">审核通过</a></div></td>\n" ;
-            }else if(row.approveStatus==3)
-            {
-                tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:red;\">审核驳回</a></div></td>\n" ;
-            }
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.categoryName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
-            if(row.approveStatus==3)
-            {
-                tableHtml+=     "                                <a href=\""+basePath+"/page/shop/product/approve/rejected/"+row.id+"\" style=\"color:red\">驳回原因</a>\n" ;
-                tableHtml+=     "                                &nbsp;&nbsp;\n" ;
-                tableHtml+=     "                                <a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新发布</a>\n" ;
-            }
+            tableHtml+=     "                                <a href=\""+basePath+"/page/shop/product/rejected/"+row.id+"\" style=\"color:blue\">商品详情</a>\n" ;
+            tableHtml+=     "                                &nbsp;&nbsp;\n" ;
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
 
     }
-    $("#productApproveTableBody").html(tableHtml);
-    $("#productApproveTable").FrozenTable(2,0,0);
+    $("#productTableBody").html(tableHtml);
+    $("#productTable").FrozenTable(2,0,0);
 }
 
 function initPagination()
 {
 
-    $(".pageToolbar").html("<table id=\"productApproveTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
-        "                        <tbody id=\"productApproveTableBody\">\n" +
+    $(".pageToolbar").html("<table id=\"productTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
+        "                        <tbody id=\"productTableBody\">\n" +
         "                        </tbody>\n" +
         "                    </table>");
 
@@ -110,9 +95,9 @@ function initPagination()
 
     $.ajax({
         type: "POST",
-        url: basePath+"/api/shop/product/approve/list",
+        url: basePath+"/api/shop/product/list",
         contentType: "application/json;charset=utf-8",
-        data:  JSON.stringify(g_product_approve_query_obj),
+        data:  JSON.stringify(g_product_query_obj),
         dataType: "json",
         success: function (result) {
             if(result.code<=0)
@@ -149,18 +134,17 @@ $(function () {
 
     $("#queryBtn").bind( 'click' ,function(){
         pagegizationConfigObject.current_page = 1;
-        g_product_approve_query_obj.page = 1;
-        g_product_approve_query_obj.name=$("#name").val();
-        g_product_approve_query_obj.startDateYMDHS=$("#startDate").val();
-        g_product_approve_query_obj.endDateYMDHS=$("#endDate").val();
-        g_product_approve_query_obj.approveStatus=$("#approveStatus option:selected").val();
+        g_product_query_obj.page = 1;
+        g_product_query_obj.name=$("#name").val();
+        g_product_query_obj.startDateYMDHS=$("#startDate").val();
+        g_product_query_obj.endDateYMDHS=$("#endDate").val();
 
         initPagination();
     });
 
 
     $("#resetBtn").bind( 'click' ,function(){
-        $("#productApproveForm").resetForm();
+        $("#productForm").resetForm();
     });
 
     $('#startDate').datetimepicker({
