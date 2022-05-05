@@ -120,7 +120,7 @@
     </update>
 
     <update id="updateStatus" >
-        update t_shop_product  set status=#{status} where id=#{id}  and delete_status=0
+        update t_shop_product  set status=#{status} where id=#{id} and shop_id=#{shopId} and delete_status=0
     </update>
 
     <select id="queryListPage" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">

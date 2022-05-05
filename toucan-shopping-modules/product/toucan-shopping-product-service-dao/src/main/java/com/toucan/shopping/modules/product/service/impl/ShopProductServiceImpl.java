@@ -44,8 +44,8 @@ public class ShopProductServiceImpl implements ShopProductService {
     }
 
     @Override
-    public int updateStatus(Long id, Integer status) {
-        return shopProductMapper.updateStatus(id,status);
+    public int updateStatus(Long id,Long shopId, Integer status) {
+        return shopProductMapper.updateStatus(id,shopId,status);
     }
 
 

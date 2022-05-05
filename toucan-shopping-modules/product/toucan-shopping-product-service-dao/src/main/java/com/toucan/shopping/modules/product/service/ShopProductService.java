@@ -27,7 +27,7 @@ public interface ShopProductService {
      * @param status
      * @return
      */
-    int updateStatus(Long id,Integer status);
+    int updateStatus(Long id,Long shopId,Integer status);
 
     /**
      * 查询列表页

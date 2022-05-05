@@ -272,18 +272,18 @@ public class ShopProductController {
             if(shopProductVO.getStatus()!=null
                     &&shopProductVO.getStatus().intValue()== ProductConstant.SHELVES_UP.intValue())
             {
-                shopProductService.updateStatus(shopProductVO.getId(),ProductConstant.SHELVES_DOWN); //下架
+                shopProductService.updateStatus(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_DOWN); //下架
             }else if(shopProductVO.getStatus()!=null
                     &&shopProductVO.getStatus().intValue()== ProductConstant.SHELVES_DOWN.intValue()) //如果当前是下架状态
             {
-                shopProductService.updateStatus(shopProductVO.getId(),ProductConstant.SHELVES_UP); //上架
+                shopProductService.updateStatus(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_UP); //上架
             }
 
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("发布失败");
+            resultObjectVO.setMsg("修改失败");
         }finally{
             skylarkLock.unLock(ProductApproveRedisLockKey.getResaveProductLockKey(shopId), shopId);
         }

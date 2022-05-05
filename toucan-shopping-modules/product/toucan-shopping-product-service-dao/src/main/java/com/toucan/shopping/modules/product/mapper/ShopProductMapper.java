@@ -40,6 +40,6 @@ public interface ShopProductMapper {
 
     ShopProductVO findById(Long id);
 
-    int updateStatus(Long id, Integer status);
+    int updateStatus(Long id, Long shopId ,Integer status);
 
 }

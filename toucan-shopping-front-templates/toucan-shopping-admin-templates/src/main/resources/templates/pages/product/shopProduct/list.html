@@ -444,8 +444,46 @@
             }else if(obj.event=="openDetailDialogDevent")
             {
                 openDetailDialog(data.id);
+            }else if (obj.event == 'shelves') {
+                shelves(data);
             }
         });
+
+
+        function shelves(row)
+        {
+            var statusValue="";
+            if(row.status == "0"){
+                statusValue="上架";
+            }
+            if(row.status == "1"){
+                statusValue="下架";
+            }
+            layer.confirm("确定要【"+statusValue+"】\""+row.name+"\"?", function (index) {
+                $.ajax({
+                    url:"[[@{/}]]shopProduct/shelves",
+                    contentType: "application/json; charset=utf-8",
+                    type:'POST',
+                    data:{id:row.id,shopId:row.shopId},
+                    success:function(data){
+                        layer.msg(data.msg);
+
+                        //执行搜索重载
+                        table.reload('shopProductTable', {
+                            page: {
+                                curr: 1
+                            }
+                            , where: data.field
+                        }, 'data');
+
+                    },
+                    complete:function(data)
+                    {
+                        layer.close(index);
+                    }
+                });
+            });
+        }
 
         function openDetailDialog(id)
         {
