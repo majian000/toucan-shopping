@@ -32,7 +32,7 @@ public class FeignShopProductServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请重试");
+                    resultObjectVO.setMsg("操作失败,请重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignShopProductService queryListPage faild  params{}",JSONObject.toJSONString(requestJsonVO));
@@ -47,10 +47,25 @@ public class FeignShopProductServiceFallbackFactory implements FallbackFactory<F
                 if(requestJsonVO==null)
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请重试");
+                    resultObjectVO.setMsg("操作失败,请重试");
                     return resultObjectVO;
                 }
                 logger.warn("FeignShopProductService queryByShopProductId faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO shelves(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("操作失败,请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopProductService shelves faild  params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求失败");
                 return resultObjectVO;

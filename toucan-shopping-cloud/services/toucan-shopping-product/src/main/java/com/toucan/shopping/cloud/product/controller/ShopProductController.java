@@ -6,9 +6,11 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.ProductSpu;
 import com.toucan.shopping.modules.product.entity.ShopProductImg;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
+import com.toucan.shopping.modules.product.redis.ProductApproveRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -217,6 +219,76 @@ public class ShopProductController {
 
 
 
+
+    /**
+     * 商品上架/下架
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/shelves",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO shelves(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        String shopId ="";
+        try {
+            logger.info("商品上架/下架 {} ",requestJsonVO.getEntityJson());
+            ShopProductVO queryShopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
+            if(queryShopProductVO.getShopId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            if(queryShopProductVO.getId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空!");
+                return resultObjectVO;
+            }
+            shopId = String.valueOf(queryShopProductVO.getShopId());
+            skylarkLock.lock(ProductApproveRedisLockKey.getResaveProductLockKey(shopId), shopId);
+
+            ShopProductVO shopProductVO = shopProductService.findById(queryShopProductVO.getId());
+            if(shopProductVO==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("该商品不存在!");
+                return resultObjectVO;
+            }
+            //如果当前是上架状态
+            if(shopProductVO.getStatus()!=null
+                    &&shopProductVO.getStatus().intValue()== ProductConstant.SHELVES_UP.intValue())
+            {
+                shopProductService.updateStatus(shopProductVO.getId(),ProductConstant.SHELVES_DOWN); //下架
+            }else if(shopProductVO.getStatus()!=null
+                    &&shopProductVO.getStatus().intValue()== ProductConstant.SHELVES_DOWN.intValue()) //如果当前是下架状态
+            {
+                shopProductService.updateStatus(shopProductVO.getId(),ProductConstant.SHELVES_UP); //上架
+            }
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("发布失败");
+        }finally{
+            skylarkLock.unLock(ProductApproveRedisLockKey.getResaveProductLockKey(shopId), shopId);
+        }
+        return resultObjectVO;
+    }
 
 
 

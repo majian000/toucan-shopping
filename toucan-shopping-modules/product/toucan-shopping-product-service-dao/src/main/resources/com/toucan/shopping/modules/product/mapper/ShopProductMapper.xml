@@ -119,6 +119,9 @@
         update t_shop_product  set delete_status=1 , set delete_date=#{deleteDate} where id=#{id}  and delete_status=0
     </update>
 
+    <update id="updateStatus" >
+        update t_shop_product  set status=#{status} where id=#{id}  and delete_status=0
+    </update>
 
     <select id="queryListPage" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.page.ShopProductPageInfo">
         select t.* from t_shop_product t

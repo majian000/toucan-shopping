@@ -21,6 +21,13 @@ public interface ShopProductService {
 
     ShopProductVO findById(Long id);
 
+    /**
+     * 修改上架/下架状态
+     * @param id
+     * @param status
+     * @return
+     */
+    int updateStatus(Long id,Integer status);
 
     /**
      * 查询列表页

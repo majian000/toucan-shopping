@@ -43,6 +43,11 @@ public class ShopProductServiceImpl implements ShopProductService {
         return shopProductMapper.findById(id);
     }
 
+    @Override
+    public int updateStatus(Long id, Integer status) {
+        return shopProductMapper.updateStatus(id,status);
+    }
+
 
     @Override
     public PageInfo<ShopProductVO> queryListPage(ShopProductPageInfo queryPageInfo) {
