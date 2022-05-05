@@ -570,14 +570,14 @@ public class FunctionController {
             //查询是否存在该功能项
             Function query=new Function();
             query.setId(entity.getId());
-            List<Function> appList = functionService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(appList))
+            List<Function> listByEntity = functionService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(listByEntity))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("功能项不存在!");
                 return resultObjectVO;
             }
-            resultObjectVO.setData(appList);
+            resultObjectVO.setData(listByEntity);
 
         }catch(Exception e)
         {
