@@ -70,4 +70,11 @@ public class ShopProductVO extends ShopProduct {
      * 审核人
      */
     private String createAdminId;
+
+
+    /**
+     * 商品介绍
+     */
+    private String content;
+
 }
