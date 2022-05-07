@@ -102,4 +102,9 @@ public class ShopProductApproveVO extends ShopProductApprove {
      */
     private List<ShopProductApproveSkuAttribute> skuAttributes;
 
+    /**
+     * 商品介绍
+     */
+    private String content;
+
 }

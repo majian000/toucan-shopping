@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductDescriptionMapper">
+
+    <resultMap id="shopProductDescriptionMap" type="com.toucan.shopping.modules.product.entity.ShopProductDescription" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
+        <result column="shop_id" jdbcType="BIGINT" property="shopId" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+
+    </resultMap>
+
+    <resultMap id="shopProductDescriptionVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductDescriptionVO" extends="shopProductDescriptionMap">
+
+    </resultMap>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ShopProductDescription"  >
+        insert into t_shop_product_description(id,shop_product_id,shop_id,content,create_date,create_user_id,app_code)
+        values(#{id},#{shopProductId},#{shopId},#{content},#{createDate},#{createUserId},#{appCode})
+    </insert>
+
+
+
+
+
+</mapper>
