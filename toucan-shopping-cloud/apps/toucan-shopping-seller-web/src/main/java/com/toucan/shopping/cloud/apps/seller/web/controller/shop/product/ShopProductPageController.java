@@ -44,8 +44,16 @@ public class ShopProductPageController extends BaseController {
     private SimplePropertyPreFilter simplePropertyPreFilter =  new SimplePropertyPreFilter(CategoryVO.class, "id","name","children");
 
     @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/publishProductDescription")
+    public String publishProductDescription(HttpServletRequest request){
+
+        return "product/publish_product_description";
+    }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
     @RequestMapping("/publish")
-    public String release(HttpServletRequest request){
+    public String publish(HttpServletRequest request){
 
         try {
             request.setAttribute("categoryList", JSONArray.toJSONString(categoryService.queryMiniCategorys(),simplePropertyPreFilter));
