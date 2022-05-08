@@ -68,7 +68,10 @@ function drawTable(pageResult)
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             if(row.approveStatus==1)
             {
-                tableHtml+=    "                            <td><div class=\"tabTdWrap\">审核中</div></td>\n" ;
+                tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
+                tableHtml+=    "                            <a>审核中</a>\n" ;
+                tableHtml+=     "                                <a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新编辑</a>\n" ;
+                tableHtml+=    "                            </div></td>\n" ;
             }else if(row.approveStatus==2)
             {
                 tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:green;\">审核通过</a></div></td>\n" ;
@@ -86,6 +89,8 @@ function drawTable(pageResult)
                 tableHtml+=     "                                &nbsp;&nbsp;\n" ;
                 tableHtml+=     "                                <a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新发布</a>\n" ;
             }
+
+            tableHtml+=     "                                <a href=\"\" style=\"color:blue\">商品预览</a>\n" ;
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
