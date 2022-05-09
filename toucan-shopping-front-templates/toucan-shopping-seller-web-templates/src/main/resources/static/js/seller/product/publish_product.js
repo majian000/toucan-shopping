@@ -161,6 +161,8 @@ $(function () {
         }
 
         if(result) {
+            var productDescriptionHtml = $(window.frames["productDescriptionFrame"].document).find("#productDescriptionHidden").val();
+            $("#productDescription").val(productDescriptionHtml);
             $("#step5").hide();
             $("#step4").hide();
             $("#step3").show();

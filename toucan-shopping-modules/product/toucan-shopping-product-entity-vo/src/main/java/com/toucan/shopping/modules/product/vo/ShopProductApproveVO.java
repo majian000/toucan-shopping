@@ -28,6 +28,8 @@ public class ShopProductApproveVO extends ShopProductApprove {
 
     private String shopName; //店铺名称
 
+    private String productDescription; //商品介绍
+
 
     /**
      * 商品预览图路径

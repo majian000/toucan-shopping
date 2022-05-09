@@ -4,7 +4,7 @@
 
     <resultMap id="shopProductApproveDescriptionMap" type="com.toucan.shopping.modules.product.entity.ShopProductApproveDescription" >
         <id column="id" jdbcType="BIGINT"  property="id" />
-        <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
+        <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         <result column="shop_id" jdbcType="BIGINT" property="shopId" />
         <result column="content" jdbcType="VARCHAR" property="content" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
@@ -25,6 +25,10 @@
         values(#{id},#{productApproveId},#{shopId},#{content},#{createDate},#{createUserId},#{appCode})
     </insert>
 
+
+    <update id="deleteByShopProductApproveId">
+        update t_shop_product_approve_description  set delete_status=1 where product_approve_id=#{productApproveId}  and delete_status=0
+    </update>
 
 
 

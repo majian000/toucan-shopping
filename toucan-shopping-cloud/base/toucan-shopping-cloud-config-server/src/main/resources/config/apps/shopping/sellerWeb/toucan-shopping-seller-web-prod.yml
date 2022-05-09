@@ -101,7 +101,7 @@ toucan:
   plugins:
     xss-filter:
       enabled: true
-      exclude-paths:  #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
+      exclude-paths: /api/shop/product/approve/publish,/api/shop/product/approve/republish #排除路径,多个用,分割(不支持正则,只有绝对路径,例如/user/login/password/form,/login/password)
   user-auth:
     enabled: true
     name: toucan-shopping-user

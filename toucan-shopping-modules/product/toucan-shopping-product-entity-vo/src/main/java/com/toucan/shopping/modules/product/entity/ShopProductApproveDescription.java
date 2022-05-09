@@ -24,7 +24,7 @@ public class ShopProductApproveDescription {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
-    private Long shopProductId; //店铺商品ID
+    private Long productApproveId; //店铺商品ID
 
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)

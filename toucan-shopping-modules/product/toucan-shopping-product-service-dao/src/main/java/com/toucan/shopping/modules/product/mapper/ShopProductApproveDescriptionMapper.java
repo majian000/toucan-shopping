@@ -10,4 +10,5 @@ public interface ShopProductApproveDescriptionMapper {
 
     int insert(ShopProductApproveDescription entity);
 
+    int deleteByShopProductApproveId(Long productApproveId);
 }

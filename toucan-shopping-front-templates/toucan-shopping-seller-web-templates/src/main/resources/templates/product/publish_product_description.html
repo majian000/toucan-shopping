@@ -11,6 +11,7 @@
 <div style="border: 1px solid #ccc;">
     <div id="product-description-toolbar" style="border-bottom: 1px solid #ccc;"></div>
     <div id="product-description-content" style="height: 500px"></div>
+    <input type="hidden" id="productDescriptionHidden" />
 </div>
 
 
@@ -41,7 +42,7 @@
             },
             onChange(editor) {
                 // console.log(editor.getHtml())
-
+                document.getElementById("productDescriptionHidden").value=editor.getHtml();
             }
         }
     });

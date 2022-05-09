@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
-import com.toucan.shopping.cloud.apps.seller.web.vo.selectPage.GridResult;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
@@ -14,12 +13,8 @@ import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryServi
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
-import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.GlobalUUID;
-import com.toucan.shopping.modules.common.util.ImageUtils;
-import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.VerifyCodeUtil;
+import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -33,13 +28,16 @@ import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sun.awt.image.ImageWatched;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -375,6 +373,35 @@ public class ShopProductApproveApiController extends BaseController {
     }
 
 
+    /**
+     * 上传商品介绍中的图片
+     * @param publishProductVO
+     */
+    void uploadProductDescriptionImgForPublish(PublishProductApproveVO publishProductVO) throws Exception {
+        //校验商品介绍
+        if(StringUtils.isNotEmpty(publishProductVO.getProductDescription()))
+        {
+            Document productDescriptionDoc = Jsoup.parse(publishProductVO.getProductDescription());
+            Elements imgElements = productDescriptionDoc.getElementsByTag("img");
+            if(imgElements!=null)
+            {
+                for(Element img:imgElements)
+                {
+                    String imgSrc = img.attr("src");
+                    if(StringUtils.isNotEmpty(imgSrc))
+                    {
+                        if(imgSrc.startsWith("data:image/"))
+                        {
+                            MultipartFile multipartFile = MultipartFileUtil.base64ConvertMutipartFile(imgSrc);
+                            String imgPath = imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename()));
+                            img.attr("src",imageUploadService.getImageHttpPrefix()+imgPath);
+                        }
+                    }
+                }
+                publishProductVO.setProductDescription(productDescriptionDoc.html());
+            }
+        }
+    }
 
 
 
@@ -494,6 +521,8 @@ public class ShopProductApproveApiController extends BaseController {
 
             publishProductVO.setAppCode("10001001");
 
+            //上传商品介绍图片
+            this.uploadProductDescriptionImgForPublish(publishProductVO);
 
             //SKU属性表格式化成Map
             if(!CollectionUtils.isEmpty(publishProductVO.getProductSkuVOList())) {
