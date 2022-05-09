@@ -49,6 +49,17 @@
     window.toolbar = E.createToolbar({
         editor,
         selector: '#product-description-toolbar',
-        config: {}
+        config: {
+            excludeKeys: [
+                "codeBlock",
+                "group-video",
+                "insertImage",
+                "emotion",
+                "insertLink",
+                "fullScreen",
+                "redo"
+
+            ]
+        }
     })
 </script>
