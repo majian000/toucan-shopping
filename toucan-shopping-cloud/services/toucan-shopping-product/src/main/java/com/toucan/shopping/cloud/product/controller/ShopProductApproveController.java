@@ -247,6 +247,7 @@ public class ShopProductApproveController {
                 shopProductApproveDescription.setCreateDate(new Date());
                 shopProductApproveDescription.setCreateUserId(publishProductApproveVO.getCreateUserId());
                 shopProductApproveDescription.setShopId(publishProductApproveVO.getShopId());
+                shopProductApproveDescription.setContent(publishProductApproveVO.getProductDescription());
                 ret = shopProductApproveDescriptionService.save(shopProductApproveDescription);
                 if(ret<=0)
                 {
