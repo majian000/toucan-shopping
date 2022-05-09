@@ -90,6 +90,11 @@ function drawTable(pageResult)
                 tableHtml+=     "                                &nbsp;&nbsp;<a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新编辑</a>\n" ;
             }
             tableHtml+=     "                                &nbsp;&nbsp;<a href=\"\" style=\"color:blue\">商品预览</a>\n" ;
+            if(row.approveStatus==3||row.approveStatus==1)
+            {
+                tableHtml+=     "                                &nbsp;&nbsp;<a href=\""+basePath+"/page/shop/product/approve/delete/"+row.id+"\" style=\"color:red\">删除</a>\n" ;
+
+            }
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
