@@ -91,6 +91,7 @@
         var index;
         var tree = layui.tree;
         var loadding;
+        var loaddingParentTree;
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
@@ -120,7 +121,6 @@
 
 
         $("#selectPid").click(function(){
-            loadding = layer.load();
             index = layer.open({
                 title: '选择上级节点',
                 type: 1,
@@ -130,6 +130,7 @@
                 area: ['20%', '60%'],
                 content: "<div id='areaTree'></div>",
                 success:function(layero){
+                    loaddingParentTree = layer.load();
                     $.ajax({
                         url:"[[@{/}]]category/query/tree",
                         contentType: "application/json; charset=utf-8",
@@ -152,7 +153,7 @@
                         },
                         complete:function()
                         {
-                            layer.close(loadding);
+                            layer.close(loaddingParentTree);
                         }
                     });
 
