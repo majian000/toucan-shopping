@@ -47,6 +47,12 @@ public interface ShopProductApproveSkuService {
 
     int deleteByShopProductApproveId(Long productApproveId);
 
+
+    int deleteByIdList(List<Long> idList);
+
+
+    int updateResumeByShopProductApproveId(Long productApproveId);
+
     List<ShopProductApproveSkuVO> queryListByProductApproveId(Long productApproveId);
 
 

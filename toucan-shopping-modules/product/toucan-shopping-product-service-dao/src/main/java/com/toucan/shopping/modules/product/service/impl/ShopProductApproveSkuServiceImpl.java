@@ -68,6 +68,16 @@ public class ShopProductApproveSkuServiceImpl implements ShopProductApproveSkuSe
     }
 
     @Override
+    public int deleteByIdList(List<Long> idList) {
+        return shopProductApproveSkuMapper.deleteByIdList(idList);
+    }
+
+    @Override
+    public int updateResumeByShopProductApproveId(Long productApproveId) {
+        return shopProductApproveSkuMapper.updateResumeByShopProductApproveId(productApproveId);
+    }
+
+    @Override
     public List<ShopProductApproveSkuVO> queryListByProductApproveId(Long productApproveId) {
         return shopProductApproveSkuMapper.queryListByProductApproveId(productApproveId);
     }

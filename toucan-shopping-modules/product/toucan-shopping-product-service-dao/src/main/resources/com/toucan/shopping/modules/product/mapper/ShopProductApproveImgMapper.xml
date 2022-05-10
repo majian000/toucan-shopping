@@ -142,6 +142,21 @@
 
 
 
+    <update id="deleteByIdList">
+        update t_shop_product_approve_img  set delete_status=1 where
+        and t.id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        and delete_status=0
+    </update>
+
+
+    <update id="updateResumeByShopProductApproveId">
+        update t_shop_product_approve_img  set delete_status=0 where product_approve_id=#{productApproveId}  and delete_status=1
+    </update>
+
+
     <select id="queryListByApproveId" parameterType="java.lang.Long" resultMap="shopProductApproveImgMap">
         select t.* from t_shop_product_approve_img t where 1=1 and t.delete_status = 0 and t.product_approve_id = #{approveId}
     </select>
