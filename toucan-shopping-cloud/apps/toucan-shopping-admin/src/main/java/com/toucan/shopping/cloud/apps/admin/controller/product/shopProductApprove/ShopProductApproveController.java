@@ -329,28 +329,6 @@ public class ShopProductApproveController extends UIController {
 
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/descriptionPage/{id}",method = RequestMethod.GET)
-    public String descriptionPage(HttpServletRequest request,@PathVariable Long id)
-    {
-        try {
-            ShopProductApproveVO shopProductVO = new ShopProductApproveVO();
-            shopProductVO.setId(id);;
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
-            ResultObjectVO resultObjectVO = feignShopProductApproveService.queryByProductApproveId(requestJsonVO);
-            if(resultObjectVO.isSuccess()) {
-                List<ShopProductApproveVO> list = resultObjectVO.formatDataList(ShopProductApproveVO.class);
-                if(CollectionUtils.isNotEmpty(list)) {
-                    request.setAttribute("description", list.get(0).getProductDescription());
-                }
-            }
-        }catch(Exception e)
-        {
-            request.setAttribute("description","" );
-            logger.warn(e.getMessage(),e);
-        }
-        return "pages/product/shopProductApprove/description.html";
-    }
 
 
     /**

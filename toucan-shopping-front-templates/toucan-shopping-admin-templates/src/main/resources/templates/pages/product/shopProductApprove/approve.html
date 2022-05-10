@@ -152,7 +152,7 @@
                     </div>
 
                     <div class="layui-tab-item">
-                        <iframe id="productDescriptionIframe" style="width:100%;height:100%;border:0px;"></iframe>
+                        <div th:utext="${model.productDescription}" style="width:750px;"></div>
                     </div>
 
                     <div class="layui-tab-item">
@@ -264,7 +264,6 @@
         var productApproveId = $("#id").val();
         var approveStatus = $("#approveStatus").val();
 
-        $("#productDescriptionIframe").attr("src","[[@{/product/shopProductApprove/descriptionPage/}]]"+approveStatus);
 
         if(approveStatus!=1)
         {
