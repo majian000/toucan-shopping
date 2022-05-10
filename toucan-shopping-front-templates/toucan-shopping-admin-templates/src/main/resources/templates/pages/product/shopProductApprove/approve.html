@@ -11,15 +11,6 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
-
-
-
-    <link th:href="@{lib/wangEditor/css/normalize.min.css}" rel="stylesheet">
-    <link th:href="@{lib/wangEditor/css/style.css}" rel="stylesheet">
-    <link th:href="@{lib/wangEditor/css/layout.css}" rel="stylesheet">
-
-    <script th:src="@{/lib/wangEditor/js/publishProductEditor.js}" charset="utf-8"></script>
-
     <style>
         body {
             background-color: #ffffff;
@@ -258,56 +249,6 @@
 </div>
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
-
-<script th:src="@{/lib/wangEditor/js/index.min.js}" charset="utf-8"></script>
-
-<script>
-    const E = window.wangEditor;
-
-    // 切换语言
-    const LANG = location.href.indexOf('lang=en') > 0 ? 'en' : 'zh-CN';
-    E.i18nChangeLanguage(LANG);
-
-    window.editor = E.createEditor({
-        selector: '#product-description-content',
-        html: '<p><br></p>',
-        config: {
-            placeholder: '请输入...',
-            MENU_CONF: {
-                uploadImage: {
-                    server: basePath+'/api/upload-img',
-                    timeout: 5 * 1000,
-                    // meta: { token: 'xxx', a: 100 },
-                    // metaWithUrl: true, // 参数拼接到 url 上
-                    // headers: { Accept: 'text/x-json' },
-                    fieldName: 'your-fileName',
-                    maxFileSize: 7 * 1024 * 1024, //最大支持7MB
-                    base64LimitSize: 1 * 1024 * 1024 // 1M 以下插入 base64
-                }
-            },
-            onChange(editor) {
-                // console.log(editor.getHtml())
-            }
-        }
-    });
-
-    window.toolbar = E.createToolbar({
-        editor,
-        selector: '#product-description-toolbar',
-        config: {
-            excludeKeys: [
-                "codeBlock",
-                "group-video",
-                "insertImage",
-                "emotion",
-                "insertLink",
-                "fullScreen",
-                "redo"
-
-            ]
-        }
-    })
-</script>
 <script>
     layui.use(['form','element', 'table','carousel'], function () {
         var $ = layui.jquery,
