@@ -175,7 +175,6 @@
         });
 
         $("#selectPid").click(function(){
-            loadding = layer.load();
             index = layer.open({
                 title: '选择上级节点',
                 type: 1,
@@ -185,6 +184,7 @@
                 area: ['20%', '60%'],
                 content: "<div id='areaTree'></div>",
                 success:function(layero){
+                    loadding = layer.load();
                     $.ajax({
                         url:"[[@{/}]]area/query/tree",
                         contentType: "application/json; charset=utf-8",
