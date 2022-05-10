@@ -210,7 +210,6 @@
 
 
         $("#selectCategoryId").click(function(){
-            loadding = layer.load();
             index = layer.open({
                 title: '选择所属分类',
                 type: 1,
@@ -220,6 +219,7 @@
                 area: ['20%', '60%'],
                 content: "<div id='categoryTree'></div>",
                 success:function(layero){
+                    loadding = layer.load();
                     $.ajax({
                         url:"[[@{/}]]product/brand/list/page/query/category/tree",
                         contentType: "application/json; charset=utf-8",
