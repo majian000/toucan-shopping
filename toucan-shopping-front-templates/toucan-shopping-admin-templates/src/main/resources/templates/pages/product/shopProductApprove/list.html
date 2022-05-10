@@ -462,6 +462,30 @@
             }else if(obj.event=="openApproveDialogDevent")
             {
                 openApproveDialog(data.id);
+            }else if (obj.event == 'delete') {
+                layer.confirm('确定删除该商品?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/shopProductApprove/delete/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            table.reload('shopProductTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
             }
         });
 

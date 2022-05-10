@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-product-proxy/shopProductApprove",fallbackFactory = FeignShopProductApproveServiceFallbackFactory.class)
 public interface FeignShopProductApproveService {
@@ -75,5 +76,15 @@ public interface FeignShopProductApproveService {
      */
     @RequestMapping(value="/pass",produces = "application/json;charset=UTF-8")
     ResultObjectVO pass(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
 }

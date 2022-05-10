@@ -27,6 +27,7 @@ import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
+import com.toucan.shopping.modules.product.entity.ShopProductApprove;
 import com.toucan.shopping.modules.product.page.ShopProductApproveSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
@@ -949,6 +950,42 @@ public class ShopProductApproveController extends UIController {
         {
             resultObjectVO.setMsg("请求失败");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,  @PathVariable String id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(id))
+            {
+                resultObjectVO.setMsg("请传入ID");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            ShopProductApprove shopProductApprove =new ShopProductApprove();
+            shopProductApprove.setId(Long.parseLong(id));
+
+            String entityJson = JSONObject.toJSONString(shopProductApprove);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignShopProductApproveService.deleteById(requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("删除失败,请稍后重试");
+            resultObjectVO.setCode(TableVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

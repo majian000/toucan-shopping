@@ -20,10 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -886,6 +883,58 @@ public class ShopProductApproveController {
 
         return resultObjectVO;
 
+    }
+
+
+
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            ShopProductApprove entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApprove.class);
+
+            if(entity.getId()==null)
+            {
+                logger.info("ID为空 param:"+ JSONObject.toJSONString(entity));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空!");
+                return resultObjectVO;
+            }
+
+            shopProductApproveService.deleteById(entity.getId());
+            shopProductApproveSkuService.deleteByShopProductApproveId(entity.getId());
+            shopProductApproveImgService.deleteByProductApproveId(entity.getId());
+            shopProductApproveDescriptionService.deleteByShopProductApproveId(entity.getId());
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
     }
 
 
