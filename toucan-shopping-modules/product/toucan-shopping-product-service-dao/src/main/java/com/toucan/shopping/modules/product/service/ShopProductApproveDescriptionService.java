@@ -17,4 +17,6 @@ public interface ShopProductApproveDescriptionService {
 
     int deleteByShopProductApproveId(Long productApproveId);
 
+    ShopProductApproveDescription queryByApproveId(Long productApproveId);
+
 }

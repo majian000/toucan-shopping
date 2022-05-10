@@ -31,4 +31,9 @@ public class ShopProductApproveDescriptionServiceImpl implements ShopProductAppr
     public int deleteByShopProductApproveId(Long productApproveId) {
         return shopProductApproveDescriptionMapper.deleteByShopProductApproveId(productApproveId);
     }
+
+    @Override
+    public ShopProductApproveDescription queryByApproveId(Long productApproveId) {
+        return shopProductApproveDescriptionMapper.queryByApproveId(productApproveId);
+    }
 }

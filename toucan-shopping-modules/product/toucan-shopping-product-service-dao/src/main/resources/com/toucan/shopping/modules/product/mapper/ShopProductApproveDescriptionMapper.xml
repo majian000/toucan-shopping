@@ -31,6 +31,9 @@
     </update>
 
 
+    <select id="queryByApproveId" resultMap="shopProductApproveDescriptionMap">
+        select * from t_shop_product_approve_description where product_approve_id=#{productApproveId} and delete_status=0 limit 1
+    </select>
 
 
 </mapper>

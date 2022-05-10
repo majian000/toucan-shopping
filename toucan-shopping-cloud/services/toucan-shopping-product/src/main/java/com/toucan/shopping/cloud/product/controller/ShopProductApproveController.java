@@ -577,6 +577,12 @@ public class ShopProductApproveController {
                         }
                     }
                 }
+
+                //查询商品介绍
+                ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductVO.getId());
+                if(shopProductApproveDescription!=null) {
+                    shopProductVO.setProductDescription(shopProductApproveDescription.getContent());
+                }
             }
             resultObjectVO.setData(shopProductVOS);
         }catch(Exception e)
@@ -661,6 +667,14 @@ public class ShopProductApproveController {
                         }
                     }
                 }
+
+
+                //查询商品介绍
+                ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductVO.getId());
+                if(shopProductApproveDescription!=null) {
+                    shopProductVO.setProductDescription(shopProductApproveDescription.getContent());
+                }
+
                 resultObjectVO.setData(shopProductVO);
             }
         }catch(Exception e)
