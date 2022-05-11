@@ -37,6 +37,8 @@ public class PublishProductApproveVO extends ShopProductApproveVO {
      */
     private BrandVO brand;
 
+    private ShopProductApproveDescriptionVO productDescription;
+
 
 
 

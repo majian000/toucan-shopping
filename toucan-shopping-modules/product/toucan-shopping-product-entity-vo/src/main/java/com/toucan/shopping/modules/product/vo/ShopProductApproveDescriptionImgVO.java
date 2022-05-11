@@ -1,8 +1,10 @@
 package com.toucan.shopping.modules.product.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveDescription;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,6 +18,13 @@ import java.util.List;
 public class ShopProductApproveDescriptionImgVO extends ShopProductApproveDescriptionImg {
 
     private List<Long> productApproveIdList; //店铺商品审核ID列表
+
+
+    /**
+     * 商品主图
+     */
+    @JSONField(serialize = false)
+    private MultipartFile mainPhotoFile;
 
 
 

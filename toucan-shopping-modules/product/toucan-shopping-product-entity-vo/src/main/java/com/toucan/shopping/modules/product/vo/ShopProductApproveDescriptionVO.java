@@ -4,6 +4,8 @@ import com.toucan.shopping.modules.product.entity.ShopProductApproveDescription;
 import com.toucan.shopping.modules.product.entity.ShopProductDescription;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 店铺商品审核的商品介绍 VO
  *
@@ -13,6 +15,10 @@ import lombok.Data;
 @Data
 public class ShopProductApproveDescriptionVO extends ShopProductApproveDescription {
 
+    /**
+     * 商品介绍的图片列表
+     */
+    List<ShopProductApproveDescriptionImgVO> productDescriptionImgs;
 
 
 
