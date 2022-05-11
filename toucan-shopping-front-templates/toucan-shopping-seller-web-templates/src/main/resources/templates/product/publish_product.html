@@ -215,7 +215,7 @@
                                         <div class="field" style="width:100%;text-align:left;padding-left:6%;padding-right: 5%;" >
 
                                             <div style="width:100%;margin-bottom: -3%;">
-                                                <input type="button" style="width:65px;" class="publishProductButton" value="添加一行" />
+                                                <input id="descriptionTableAddRowBtn" type="button" style="width:70px;" class="publishProductButton" value="添加一行" />
                                             </div>
                                             <div class="subbox">
                                                 <table id="descriptionTable">
@@ -227,7 +227,7 @@
                                                         <th>操作</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody id="descriptionTableBody">
                                                         <tr>
                                                             <td>
 
@@ -240,14 +240,15 @@
                                                                                 <i class="onDescriptionTableDelPic" data="0">删除</i>
                                                                             </div>
                                                                         </li>
+                                                                        <input type='file' class='descriptionTablePhotos descriptionTableUploadFile' attr-index='0' style='display: none' name='productDescription.productDescriptionImgs[0].mainPhotoFile' id='descriptionTableProview0' />
                                                                     </ul>
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <input type="text" id="descriptionTableTitle0"  class="releaseProductInputText" placeholder="请输入标题" maxlength="100" />
+                                                                <input type="text" id="descriptionTableTitle0"  class="releaseProductInputText" name="productDescription.productDescriptionImgs[0].title" placeholder="请输入标题" maxlength="100" />
                                                             </td>
                                                             <td>
-                                                                <input type="text" id="descriptionTableLink0"  class="releaseProductInputText" placeholder="请输入跳转链接" maxlength="1500" />
+                                                                <input type="text" id="descriptionTableLink0"  class="releaseProductInputText" name="productDescription.productDescriptionImgs[0].link" placeholder="请输入跳转链接" maxlength="1500" />
                                                             </td>
                                                             <td>
                                                                 <span class="comment">

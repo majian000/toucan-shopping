@@ -1,5 +1,6 @@
 
 var g_goApproveSecond=3;
+var g_descriptionTablePos=1;
 
 function showSetp2Page()
 {
@@ -291,6 +292,40 @@ $("#ppfbtn").click(function() {
         }
     });
 
+});
+
+
+$("#descriptionTableAddRowBtn").click(function() {
+    var rowHtml="<tr>\n" +
+        "                                                            <td>\n" +
+        "\n" +
+        "                                                                <div class=\"product-description-table-uploading-img\">\n" +
+        "                                                                    <ul class=\"picView-magnify-list\">\n" +
+        "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+        "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
+        "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\"/static/lib/tupload/images/imgadd.png\" style=\"width:100%;height:100%\">            </div>\n" +
+        "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
+        "                                                                                <i class=\"onDescriptionTableDelPic\" data=\""+g_descriptionTablePos+"\">删除</i>\n" +
+        "                                                                            </div>\n" +
+        "                                                                        </li>\n" +
+        "                                                                        <input type=\"file\" class=\"descriptionTablePhotos descriptionTableUploadFile\" attr-index=\""+g_descriptionTablePos+"\" style=\"display: none\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].mainPhotoFile\" id=\"descriptionTableProview"+g_descriptionTablePos+"\" />\n" +
+        "                                                                    </ul>\n" +
+        "                                                                </div>\n" +
+        "                                                            </td>\n" +
+        "                                                            <td>\n" +
+        "                                                                <input type=\"text\" id=\"descriptionTableTitle"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].title\" placeholder=\"请输入标题\" maxlength=\"100\" />\n" +
+        "                                                            </td>\n" +
+        "                                                            <td>\n" +
+        "                                                                <input type=\"text\" id=\"descriptionTableLink"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].link\" placeholder=\"请输入跳转链接\" maxlength=\"1500\" />\n" +
+        "                                                            </td>\n" +
+        "                                                            <td>\n" +
+        "                                                                <span class=\"comment\">\n" +
+        "                                                                    <a  style=\"color:red;cursor: pointer;\" attr-index=\"0\" onclick=\"javascript:alert(1);\" >删除</a>\n" +
+        "                                                                </span>\n" +
+        "                                                            </td>\n" +
+        "                                                        </tr>";
+    $("#descriptionTableBody").append(rowHtml);
+    g_descriptionTablePos++;
 });
 
 function uploadPreviewPhoto(attrIndex)
