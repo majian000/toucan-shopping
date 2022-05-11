@@ -214,6 +214,9 @@ $(function () {
         $("#step2").hide();
         $("#step1").hide();
     });
+
+
+    bindDescriptionTableDeleteRowEvent();
 });
 
 
@@ -296,7 +299,7 @@ $("#ppfbtn").click(function() {
 
 
 $("#descriptionTableAddRowBtn").click(function() {
-    var rowHtml="<tr>\n" +
+    var rowHtml="<tr id=\"descriptionTableTr"+g_descriptionTablePos+"\">\n" +
         "                                                            <td>\n" +
         "\n" +
         "                                                                <div class=\"product-description-table-uploading-img\">\n" +
@@ -320,13 +323,29 @@ $("#descriptionTableAddRowBtn").click(function() {
         "                                                            </td>\n" +
         "                                                            <td>\n" +
         "                                                                <span class=\"comment\">\n" +
-        "                                                                    <a  style=\"color:red;cursor: pointer;\" attr-index=\"0\" onclick=\"javascript:alert(1);\" >删除</a>\n" +
+        "                                                                    <a  class=\"descriptionTableDelRow\" style=\"color:red;cursor: pointer;\" attr-index=\"0\"  >删除</a>\n" +
         "                                                                </span>\n" +
         "                                                            </td>\n" +
         "                                                        </tr>";
     $("#descriptionTableBody").append(rowHtml);
     g_descriptionTablePos++;
+    bindDescriptionTableDeleteRowEvent();
 });
+
+function bindDescriptionTableDeleteRowEvent()
+{
+    $(".descriptionTableDelRow").unbind("click");
+    //SKU信息
+    $(".descriptionTableDelRow").bind("click", function () {
+        layer.confirm('确定删除?', {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+            $("#descriptionTableTr" + $(this).attr("attr-index")).remove();
+            layer.close(index);
+        });
+    });
+}
 
 function uploadPreviewPhoto(attrIndex)
 {
