@@ -23,166 +23,11 @@
     <link rel="stylesheet" href="${basePath}/static/lib/selectPage/selectpage.css" type="text/css">
     <link rel="stylesheet" href="${basePath}/static/css/product/attribute.css" type="text/css">
     <link rel="stylesheet" href="${basePath}/static/css/product/productDescriptionTable.css" type="text/css">
+    <link rel="stylesheet" href="${basePath}/static/css/product/publishProduct.css" type="text/css">
     <script type="text/javascript" src="${basePath}/static/lib/selectPage/selectpage.js" ></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/product/brand_list.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/seller/product/attribute.js"></script>
 
-    <style>
-
-        .uploading-img{margin-left: auto;margin-right: auto;margin-top: 10px;padding: 20px;position: relative;border: 1px dashed #ccc; }
-        .uploading-img li{overflow: hidden;margin-bottom: 10px;width: 100px;height: 100px;background: url(../images/imgadd.png) no-repeat;position: relative;float: left;margin-right: 10px;}
-        .uploading-img li:last-child{margin-right: 0;}
-        .uploading-tip{line-height: 25px;box-sizing: border-box;height: 0;width: 100%;position: absolute;bottom: 0;left: 0; background:rgba(0,0,0,0.8);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000,endColorstr=#b2000000);zoom:1; padding: 0 30px;z-index: 100;}
-        :root .uploading-tip{filter:none\9;}/*for IE9*/
-        .uploading-tip >*{font-style: normal;font-size: 16px;color: green;font-family: "宋体";cursor: pointer;}
-        .uploading-tip span:nth-of-type(2){margin-left: 20px;}
-        .uploading-tip i{color: #ddd;font-family: "微软雅黑";}
-        .uploading-imgInput{border: 1px solid #C0C0C0;width: 650px;overflow: hidden;height: 40px;margin-top: 20px;}
-
-
-        .sku-table-uploading-img{}
-        .sku-table-uploading-img li{overflow: hidden;margin-bottom: 10px;width: 100px;height: 100px;background: url(../images/imgadd.png) no-repeat;position: relative;float: left;margin-right: 10px;}
-        .sku-table-uploading-img li:last-child{margin-right: 0;}
-        .skuTableuploading-tip{line-height: 25px;box-sizing: border-box;height: 0;width: 100%;position: absolute;bottom: 0;left: 0; background:rgba(0,0,0,0.8);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000,endColorstr=#b2000000);zoom:1; padding: 0 30px;z-index: 100;}
-        :root .skuTableuploading-tip{filter:none\9;}/*for IE9*/
-        .skuTableuploading-tip >*{font-style: normal;font-size: 16px;color: green;font-family: "宋体";cursor: pointer;}
-        .skuTableuploading-tip span:nth-of-type(2){margin-left: 20px;}
-        .skuTableuploading-tip i{color: #ddd;font-family: "微软雅黑";}
-
-
-        .description-table-uploading-img{}
-        .description-table-uploading-img li{overflow: hidden;margin-bottom: 10px;width: 100px;height: 100px;background: url(../images/imgadd.png) no-repeat;position: relative;float: left;margin-right: 10px;}
-        .description-table-uploading-img li:last-child{margin-right: 0;}
-        .descriptionTableuploading-tip{line-height: 25px;box-sizing: border-box;height: 0;width: 100%;position: absolute;bottom: 0;left: 0; background:rgba(0,0,0,0.8);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000,endColorstr=#b2000000);zoom:1; padding: 0 30px;z-index: 100;}
-        :root .descriptionTableuploading-tip{filter:none\9;}/*for IE9*/
-        .descriptionTableuploading-tip >*{font-style: normal;font-size: 16px;color: green;font-family: "宋体";cursor: pointer;}
-        .descriptionTableuploading-tip span:nth-of-type(2){margin-left: 20px;}
-        .descriptionTableuploading-tip i{color: #ddd;font-family: "微软雅黑";}
-
-
-        .andArea {
-            color: #CCCCCC;
-            font-size: 18px;
-            position: relative;
-            text-align: center;
-            /* top: -40px; */
-            float: right;
-            cursor: pointer;
-        }
-        .filePicker {
-            cursor: pointer;
-            background:#00B7EE;
-            border-radius: 3px;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-            color: #FFFFFF;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 18px;
-            height: 38px;
-            line-height: 38px;
-            min-width: 100px;
-            margin: 0 auto 0px;
-            overflow: hidden;
-            transition: background 0.2s;
-            -moz-transition: background 0.2s;
-            -webkit-transition: background 0.2s;
-            -o-transition: background 0.2s;
-        }
-
-        #fileImage{cursor: pointer;opacity: 0;position: absolute;width: 100%;height: 100%;top: 0;left: 0;}
-        .uploading-imgInput span{
-            font-size: 18px;
-            display: inline-block;
-            height: 38px;
-            line-height: 38px;
-            min-width: 100px;
-            border-left: 1px solid #DFDFDF;text-align: center;cursor: pointer;
-        }
-        .uploading-imgInput input{border: none;width: 69%;height: 100%;outline: none;padding-left: 10px;}
-        .uploading-img ul{overflow: hidden;}
-        .uploading-imgBg{
-            display: flex;
-            align-items: center;
-            position: relative;width: 100px;height: 100px;text-align: center; background: url("../images/bg.png");}
-        .uploading-imgBg img{width: 100%;height: auto;}
-        .uploading-imgBg img.cur{width: auto;height: 100%;}
-        .uploadProgress {display:none; width: 100%;margin: 0;position: absolute;bottom: 0;height: 8px;left: 0px;background: #00B7EE;}
-        .uploadTrue{display:none;width: 20px;height:20px;margin: 0;position: absolute;bottom: 0;right: 0px;background: url('../images/TruePng.png') no-repeat;background-size: 100%;}
-
-        .releaseProductInputText {
-            border: 1px solid #CCC;
-            color: #000000;
-            height: 30px;
-            line-height:15px;
-            margin-bottom: 16px;
-            margin-right: 6px;
-            margin-top: 2px;
-            outline: 0 none;
-            padding: 5px 0px 5px 5px;
-            border-radius: 4px;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        }
-        .attributeList{
-            margin-left: 6%;
-            width: 85%;
-            padding-top: 2px;
-            height:auto!important;
-            border: 1px dashed #ccc;
-            background-color: #f6f6f6;
-
-        }
-        .clearfloat{
-            clear:both;
-            height:0;
-            font-size: 1px;
-            line-height: 0px;
-        }
-        .releaseProductButton{
-            width:40px;
-        }
-
-        .skuTable {
-            width:95%;
-            border-collapse: collapse;
-            text-align:center;
-            color:#303030;
-            border-color:#c6d1db;
-            margin-top: 10px;
-            border-top:1px solid #c6d1db;
-            border-right:1px solid #c6d1db;
-            border-bottom:1px solid #c6d1db;
-            border-left:1px solid #c6d1db;
-            table-layout: fixed;
-        }
-
-        .skuTable td{
-            font-size:11px;
-            padding: 4px 8px;
-            border-top:1px solid #c6d1db;
-            border-right:1px solid #c6d1db;
-            border-bottom:1px solid #c6d1db;
-            border-left:1px solid #c6d1db;
-        }
-
-        .skuTable th{
-            border-top:1px solid #c6d1db;
-            border-right:1px solid #c6d1db;
-            border-bottom:1px solid #c6d1db;
-            border-left:1px solid #c6d1db;
-        }
-
-        .skuTable tr{
-            box-sizing: border-box;
-            border-top:1px solid #c6d1db;
-            border-right:1px solid #c6d1db;
-            border-bottom:1px solid #c6d1db;
-            border-left:1px solid #c6d1db;
-        }
-    </style>
 
 </head>
 <body>
@@ -369,14 +214,16 @@
                                     <div class="item" >
                                         <div class="field" style="width:100%;text-align:left;padding-left:6%;padding-right: 5%;" >
 
+                                            <div style="width:100%;margin-bottom: -3%;">
+                                                <input type="button" style="width:65px;" class="publishProductButton" value="添加一行" />
+                                            </div>
                                             <div class="subbox">
-                                                <table>
+                                                <table id="descriptionTable">
                                                     <thead>
                                                     <tr>
-                                                        <th>图片上传</th>
+                                                        <th>图片上传(注:宽度推荐为750px)</th>
                                                         <th>标题</th>
                                                         <th>点击跳转</th>
-                                                        <th>宽度</th>
                                                         <th>操作</th>
                                                     </tr>
                                                     </thead>
@@ -388,24 +235,23 @@
                                                                     <ul class="picView-magnify-list">
                                                                         <li data-toggle="tooltip" data-placement="top" title="点击图片预览">
                                                                             <div id="descriptionTableimgBg_div0" class="uploading-imgBg" data-magnify="gallery" data-src="/static/lib/tupload/images/imgadd.png" data-caption="图片预览">
-                                                                                <img id="skuPreview0" attr-index="0" src="/static/lib/tupload/images/imgadd.png" style="width:100%;height:100%">            </div>
+                                                                                <img id="descriptionTablePreview0" attr-index="0" src="/static/lib/tupload/images/imgadd.png" style="width:100%;height:100%">            </div>
                                                                             <div id="descriptionTableuploading-tip0" class="descriptionTableuploading-tip" style="display: none; height: 0px;">
-                                                                                <i class="onSkuDelPic" data="0">删除</i>
+                                                                                <i class="onDescriptionTableDelPic" data="0">删除</i>
                                                                             </div>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <input type="text" />
+                                                                <input type="text" id="descriptionTableTitle0"  class="releaseProductInputText" placeholder="请输入标题" maxlength="100" />
                                                             </td>
                                                             <td>
-                                                            </td>
-                                                            <td>
+                                                                <input type="text" id="descriptionTableLink0"  class="releaseProductInputText" placeholder="请输入跳转链接" maxlength="1500" />
                                                             </td>
                                                             <td>
                                                                 <span class="comment">
-                                                                    <a href="#" style="color:red;">删除</a>
+                                                                    <a  style="color:red;cursor: pointer;" attr-index="0" onclick="javascript:alert(1);" >删除</a>
                                                                 </span>
                                                             </td>
                                                         </tr>

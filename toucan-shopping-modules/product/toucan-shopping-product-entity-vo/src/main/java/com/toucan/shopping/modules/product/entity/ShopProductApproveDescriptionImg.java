@@ -32,9 +32,9 @@ public class ShopProductApproveDescriptionImg {
 
     private String filePath; //文件路径
 
-    private String width; //宽度
+    private String width = "750"; //宽度
 
-    private String widthUnit; //图片宽度单位可选值 px,%
+    private String widthUnit ="px"; //图片宽度单位可选值 px,%
 
     private String title; //标题
 
