@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductApproveDescriptionImgMapper">
+
+    <resultMap id="shopProductApproveDescriptionImgMap" type="com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
+        <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+        <result column="img_sort" jdbcType="SMALLINT" property="imgSort" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        
+    </resultMap>
+
+    <select id="queryAllList" resultMap="shopProductApproveDescriptionImgMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg">
+        select * from t_shop_product_approve_description_img t
+    </select>
+
+
+    <insert id="inserts"  keyProperty="id" >
+        insert into t_shop_product_approve_description_img(id,product_approve_id,product_description_id,file_path,width,width_unit,title,link,img_sort,create_date,app_code,create_user_id,delete_status)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.productApproveId},#{entity.productDescriptionId},#{entity.filePath},#{entity.width},#{entity.widthUnit},#{entity.title},#{entity.link},#{entity.imgSort},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
+        </foreach>
+
+    </insert>
+
+
+    <select id="queryByIdList" resultMap="shopProductApproveDescriptionImgMap">
+        select * from t_shop_product_approve_description_img t
+        where 1=1 and t.delete_status = 0
+        and t.id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+
+
+
+    <select id="queryList" resultMap="shopProductApproveDescriptionImgMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductApproveDescriptionImgVO">
+        select t.* from t_shop_product_approve_description_img t
+        <where>
+            1=1
+
+            <if test="id!=null  ">
+                and t.id=#{id}
+            </if>
+
+            <if test="productApproveId!=null  ">
+                and t.product_approve_id=#{productApproveId}
+            </if>
+
+
+            <if test="productApproveIdList!=null and productApproveIdList.size>0 ">
+                and t.product_approve_id in
+                <foreach item="item" index="index" collection="productApproveIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+
+    <update id="deleteByProductApproveId">
+        update t_shop_product_approve_description_img  set delete_status=1 where product_approve_id=#{productApproveId}  and delete_status=0
+    </update>
+
+
+
+</mapper>
