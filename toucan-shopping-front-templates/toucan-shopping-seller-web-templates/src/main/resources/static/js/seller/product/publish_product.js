@@ -323,7 +323,7 @@ $("#descriptionTableAddRowBtn").click(function() {
         "                                                            </td>\n" +
         "                                                            <td>\n" +
         "                                                                <span class=\"comment\">\n" +
-        "                                                                    <a  class=\"descriptionTableDelRow\" style=\"color:red;cursor: pointer;\" attr-index=\"0\"  >删除</a>\n" +
+        "                                                                    <a  class=\"descriptionTableDelRow\" style=\"color:red;cursor: pointer;\" attr-index=\""+g_descriptionTablePos+"\"  >删除</a>\n" +
         "                                                                </span>\n" +
         "                                                            </td>\n" +
         "                                                        </tr>";
@@ -337,11 +337,12 @@ function bindDescriptionTableDeleteRowEvent()
     $(".descriptionTableDelRow").unbind("click");
     //SKU信息
     $(".descriptionTableDelRow").bind("click", function () {
+        var attrIndex = $(this).attr("attr-index");
         layer.confirm('确定删除?', {
             btn: ['确定','关闭'], //按钮
             title:'提示信息'
         }, function(index) {
-            $("#descriptionTableTr" + $(this).attr("attr-index")).remove();
+            $("#descriptionTableTr" +attrIndex ).remove();
             layer.close(index);
         });
     });
