@@ -379,28 +379,28 @@ public class ShopProductApproveApiController extends BaseController {
      */
     void uploadProductDescriptionImgForPublish(PublishProductApproveVO publishProductVO) throws Exception {
         //校验商品介绍
-        if(StringUtils.isNotEmpty(publishProductVO.getProductDescription()))
-        {
-            Document productDescriptionDoc = Jsoup.parse(publishProductVO.getProductDescription());
-            Elements imgElements = productDescriptionDoc.getElementsByTag("img");
-            if(imgElements!=null)
-            {
-                for(Element img:imgElements)
-                {
-                    String imgSrc = img.attr("src");
-                    if(StringUtils.isNotEmpty(imgSrc))
-                    {
-                        if(imgSrc.startsWith("data:image/"))
-                        {
-                            MultipartFile multipartFile = MultipartFileUtil.base64ConvertMutipartFile(imgSrc);
-                            String imgPath = imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename()));
-                            img.attr("src",imageUploadService.getImageHttpPrefix()+imgPath);
-                        }
-                    }
-                }
-                publishProductVO.setProductDescription(productDescriptionDoc.html());
-            }
-        }
+//        if(StringUtils.isNotEmpty(publishProductVO.getProductDescription()))
+//        {
+//            Document productDescriptionDoc = Jsoup.parse(publishProductVO.getProductDescription());
+//            Elements imgElements = productDescriptionDoc.getElementsByTag("img");
+//            if(imgElements!=null)
+//            {
+//                for(Element img:imgElements)
+//                {
+//                    String imgSrc = img.attr("src");
+//                    if(StringUtils.isNotEmpty(imgSrc))
+//                    {
+//                        if(imgSrc.startsWith("data:image/"))
+//                        {
+//                            MultipartFile multipartFile = MultipartFileUtil.base64ConvertMutipartFile(imgSrc);
+//                            String imgPath = imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename()));
+//                            img.attr("src",imageUploadService.getImageHttpPrefix()+imgPath);
+//                        }
+//                    }
+//                }
+//                publishProductVO.setProductDescription(productDescriptionDoc.html());
+//            }
+//        }
     }
 
 

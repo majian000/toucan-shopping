@@ -244,7 +244,7 @@ public class ShopProductApproveController {
                 shopProductApproveDescription.setCreateDate(new Date());
                 shopProductApproveDescription.setCreateUserId(publishProductApproveVO.getCreateUserId());
                 shopProductApproveDescription.setShopId(publishProductApproveVO.getShopId());
-                shopProductApproveDescription.setContent(publishProductApproveVO.getProductDescription());
+//                shopProductApproveDescription.setContent(publishProductApproveVO.getProductDescription());
                 ret = shopProductApproveDescriptionService.save(shopProductApproveDescription);
                 if(ret<=0)
                 {
@@ -581,7 +581,6 @@ public class ShopProductApproveController {
                 //查询商品介绍
                 ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductVO.getId());
                 if(shopProductApproveDescription!=null) {
-                    shopProductVO.setProductDescription(shopProductApproveDescription.getContent());
                 }
             }
             resultObjectVO.setData(shopProductVOS);
@@ -672,7 +671,6 @@ public class ShopProductApproveController {
                 //查询商品介绍
                 ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductVO.getId());
                 if(shopProductApproveDescription!=null) {
-                    shopProductVO.setProductDescription(shopProductApproveDescription.getContent());
                 }
 
                 resultObjectVO.setData(shopProductVO);
