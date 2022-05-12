@@ -92,7 +92,7 @@ function drawTable(pageResult)
             tableHtml+=     "                                &nbsp;<a href=\"\" style=\"color:blue\">商品预览</a>\n" ;
             if(row.approveStatus==3||row.approveStatus==1)
             {
-                tableHtml+=     "                                &nbsp;<a href=\""+basePath+"/page/shop/product/approve/delete/"+row.id+"\" style=\"color:red\">删除</a>\n" ;
+                tableHtml+=     "                                &nbsp;<a class=\"approveListDelRow\" attr-id=\""+row.id+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
 
             }
             tableHtml+=    "                            </div></td>\n" ;
@@ -102,6 +102,24 @@ function drawTable(pageResult)
     }
     $("#productApproveTableBody").html(tableHtml);
     $("#productApproveTable").FrozenTable(2,0,0);
+    bindApproveDelEvent();
+}
+
+function bindApproveDelEvent()
+{
+    $(".approveListDelRow").unbind("click");
+    //SKU信息
+    $(".approveListDelRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        layer.confirm('确定删除?', {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+            // $("#descriptionTableTr" +attrIndex ).remove();
+            alert(attrId);
+            layer.close(index);
+        });
+    });
 }
 
 function initPagination()
