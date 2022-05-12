@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
@@ -379,28 +380,15 @@ public class ShopProductApproveApiController extends BaseController {
      */
     void uploadProductDescriptionImgForPublish(PublishProductApproveVO publishProductVO) throws Exception {
         //校验商品介绍
-//        if(StringUtils.isNotEmpty(publishProductVO.getProductDescription()))
-//        {
-//            Document productDescriptionDoc = Jsoup.parse(publishProductVO.getProductDescription());
-//            Elements imgElements = productDescriptionDoc.getElementsByTag("img");
-//            if(imgElements!=null)
-//            {
-//                for(Element img:imgElements)
-//                {
-//                    String imgSrc = img.attr("src");
-//                    if(StringUtils.isNotEmpty(imgSrc))
-//                    {
-//                        if(imgSrc.startsWith("data:image/"))
-//                        {
-//                            MultipartFile multipartFile = MultipartFileUtil.base64ConvertMutipartFile(imgSrc);
-//                            String imgPath = imageUploadService.uploadFile(multipartFile.getBytes(),ImageUtils.getImageExt(multipartFile.getOriginalFilename()));
-//                            img.attr("src",imageUploadService.getImageHttpPrefix()+imgPath);
-//                        }
-//                    }
-//                }
-//                publishProductVO.setProductDescription(productDescriptionDoc.html());
-//            }
-//        }
+        if(publishProductVO.getProductDescription()!=null&&CollectionUtils.isNotEmpty(publishProductVO.getProductDescription().getProductDescriptionImgs()))
+        {
+            for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:publishProductVO.getProductDescription().getProductDescriptionImgs()) {
+                if(shopProductApproveDescriptionImgVO!=null&&shopProductApproveDescriptionImgVO.getImgFile()!=null) {
+                    shopProductApproveDescriptionImgVO.setFilePath(imageUploadService.uploadFile(shopProductApproveDescriptionImgVO.getImgFile().getBytes(), ImageUtils.getImageExt(shopProductApproveDescriptionImgVO.getImgFile().getOriginalFilename())));
+                    shopProductApproveDescriptionImgVO.setImgFile(null);
+                }
+            }
+        }
     }
 
 

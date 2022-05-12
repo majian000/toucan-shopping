@@ -21,10 +21,10 @@ public class ShopProductApproveDescriptionImgVO extends ShopProductApproveDescri
 
 
     /**
-     * 商品主图
+     * 图片
      */
     @JSONField(serialize = false)
-    private MultipartFile mainPhotoFile;
+    private MultipartFile imgFile;
 
 
 
