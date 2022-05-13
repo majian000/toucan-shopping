@@ -269,23 +269,27 @@ public class ShopProductApproveController {
                     {
                         List<ShopProductApproveDescriptionImg> shopProductApproveDescriptionImgs = new LinkedList<>();
                         for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:publishProductApproveVO.getProductDescription().getProductDescriptionImgs()) {
-                            ShopProductApproveDescriptionImg shopProductApproveDescriptionImg = new ShopProductApproveDescriptionImg();
-                            BeanUtils.copyProperties(shopProductApproveDescriptionImg,shopProductApproveDescriptionImgVO);
-                            shopProductApproveDescriptionImg.setId(idGenerator.id());
-                            shopProductApproveDescriptionImg.setProductApproveId(publishProductApproveVO.getId());
-                            shopProductApproveDescriptionImg.setProductDescriptionId(shopProductApproveDescription.getId());
-                            shopProductApproveDescriptionImg.setAppCode(publishProductApproveVO.getAppCode());
-                            shopProductApproveDescriptionImg.setCreateDate(new Date());
-                            shopProductApproveDescriptionImg.setCreateUserId(publishProductApproveVO.getCreateUserId());
-                            shopProductApproveDescriptionImgs.add(shopProductApproveDescriptionImg);
+                            if(StringUtils.isNotEmpty(shopProductApproveDescriptionImgVO.getFilePath())) {
+                                ShopProductApproveDescriptionImg shopProductApproveDescriptionImg = new ShopProductApproveDescriptionImg();
+                                BeanUtils.copyProperties(shopProductApproveDescriptionImg, shopProductApproveDescriptionImgVO);
+                                shopProductApproveDescriptionImg.setId(idGenerator.id());
+                                shopProductApproveDescriptionImg.setProductApproveId(publishProductApproveVO.getId());
+                                shopProductApproveDescriptionImg.setProductDescriptionId(shopProductApproveDescription.getId());
+                                shopProductApproveDescriptionImg.setAppCode(publishProductApproveVO.getAppCode());
+                                shopProductApproveDescriptionImg.setCreateDate(new Date());
+                                shopProductApproveDescriptionImg.setCreateUserId(publishProductApproveVO.getCreateUserId());
+                                shopProductApproveDescriptionImg.setDeleteStatus(0);
+                                shopProductApproveDescriptionImgs.add(shopProductApproveDescriptionImg);
+                            }
                         }
 
-                        ret = shopProductApproveDescriptionImgService.saves(shopProductApproveDescriptionImgs);
-                        if(ret<=0)
-                        {
-                            logger.warn("发布商品失败 原因:商品介绍图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
+                        if(CollectionUtils.isNotEmpty(shopProductApproveDescriptionImgs)) {
+                            ret = shopProductApproveDescriptionImgService.saves(shopProductApproveDescriptionImgs);
+                            if (ret <= 0) {
+                                logger.warn("发布商品失败 原因:商品介绍图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
 
-                            publishRollback(publishProductApproveVO,productSkus);
+                                publishRollback(publishProductApproveVO, productSkus);
+                            }
                         }
 
                     }

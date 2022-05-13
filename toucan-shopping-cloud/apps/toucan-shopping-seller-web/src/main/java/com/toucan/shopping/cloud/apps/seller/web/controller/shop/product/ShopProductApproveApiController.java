@@ -382,10 +382,13 @@ public class ShopProductApproveApiController extends BaseController {
         //校验商品介绍
         if(publishProductVO.getProductDescription()!=null&&CollectionUtils.isNotEmpty(publishProductVO.getProductDescription().getProductDescriptionImgs()))
         {
+            int sort = publishProductVO.getProductDescription().getProductDescriptionImgs().size();
             for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:publishProductVO.getProductDescription().getProductDescriptionImgs()) {
                 if(shopProductApproveDescriptionImgVO!=null&&shopProductApproveDescriptionImgVO.getImgFile()!=null) {
                     shopProductApproveDescriptionImgVO.setFilePath(imageUploadService.uploadFile(shopProductApproveDescriptionImgVO.getImgFile().getBytes(), ImageUtils.getImageExt(shopProductApproveDescriptionImgVO.getImgFile().getOriginalFilename())));
                     shopProductApproveDescriptionImgVO.setImgFile(null);
+                    shopProductApproveDescriptionImgVO.setImgSort(sort);
+                    sort--;
                 }
             }
         }

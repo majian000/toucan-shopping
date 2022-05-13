@@ -1,6 +1,6 @@
 
 var g_goApproveSecond=3;
-var g_descriptionTablePos=1;
+var g_descriptionTablePos=0;
 
 function showSetp2Page()
 {
@@ -162,8 +162,6 @@ $(function () {
         }
 
         if(result) {
-            var productDescriptionHtml = $(window.frames["productDescriptionFrame"].document).find("#productDescriptionHidden").val();
-            $("#productDescription").val(productDescriptionHtml);
             $("#step5").hide();
             $("#step4").hide();
             $("#step3").show();
@@ -215,7 +213,7 @@ $(function () {
         $("#step1").hide();
     });
 
-
+    appendDescriptionTableRow();
     bindDescriptionTableDeleteRowEvent();
 });
 
@@ -298,11 +296,12 @@ $("#ppfbtn").click(function() {
 });
 
 
-$("#descriptionTableAddRowBtn").click(function() {
+function appendDescriptionTableRow()
+{
     var rowHtml="<tr id=\"descriptionTableTr"+g_descriptionTablePos+"\">\n" +
         "                                                            <td>\n" +
         "\n" +
-        "                                                                <div class=\"product-description-table-uploading-img\">\n" +
+        "                                                                <div class=\"description-table-uploading-img\">\n" +
         "                                                                    <ul class=\"picView-magnify-list\">\n" +
         "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
         "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
@@ -311,15 +310,16 @@ $("#descriptionTableAddRowBtn").click(function() {
         "                                                                                <i class=\"onDescriptionTableDelPic\" data=\""+g_descriptionTablePos+"\">删除</i>\n" +
         "                                                                            </div>\n" +
         "                                                                        </li>\n" +
-        "                                                                        <input type=\"file\" class=\"descriptionTablePhotos descriptionTableUploadFile\" attr-index=\""+g_descriptionTablePos+"\" style=\"display: none\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].mainPhotoFile\" id=\"descriptionTableProview"+g_descriptionTablePos+"\" />\n" +
+        "                                                                        <input type=\"file\" class=\"descriptionTablePhotos descriptionTableUploadFile\" attr-index=\""+g_descriptionTablePos+"\" style=\"display: none\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].imgFile\" id=\"descriptionTableProviewFile"+g_descriptionTablePos+"\" />\n" +
+        "<input type=\"hidden\" class=\"descriptionTableImgPaths\" id=\"descriptionTablePreviewPath_"+g_descriptionTablePos+"\""+
         "                                                                    </ul>\n" +
         "                                                                </div>\n" +
         "                                                            </td>\n" +
         "                                                            <td>\n" +
-        "                                                                <input type=\"text\" id=\"descriptionTableTitle"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].title\" placeholder=\"请输入标题\" maxlength=\"100\" />\n" +
+        "                                                                <input type=\"text\" id=\"descriptionTableTitle"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].title\" placeholder=\"请输入标题(非必填)\" maxlength=\"100\" />\n" +
         "                                                            </td>\n" +
         "                                                            <td>\n" +
-        "                                                                <input type=\"text\" id=\"descriptionTableLink"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].link\" placeholder=\"请输入跳转链接\" maxlength=\"1500\" />\n" +
+        "                                                                <input type=\"text\" id=\"descriptionTableLink"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].link\" placeholder=\"请输入跳转链接(非必填)\" maxlength=\"1500\" />\n" +
         "                                                            </td>\n" +
         "                                                            <td>\n" +
         "                                                                <span class=\"comment\">\n" +
@@ -328,9 +328,100 @@ $("#descriptionTableAddRowBtn").click(function() {
         "                                                            </td>\n" +
         "                                                        </tr>";
     $("#descriptionTableBody").append(rowHtml);
+    descriptionTableUploadPreview(g_descriptionTablePos);
+    initDescriptionTablePreviewPhotoUploadDel();
     g_descriptionTablePos++;
     bindDescriptionTableDeleteRowEvent();
+}
+
+$("#descriptionTableAddRowBtn").click(function() {
+    appendDescriptionTableRow();
 });
+
+
+function uploadDescriptionTablePreviewPhoto(attrIndex)
+{
+    $("#descriptionTableProviewFile"+attrIndex).click();
+}
+
+
+/**
+ * 初始化商品介绍列表中的删除按钮
+ */
+function initDescriptionTablePreviewPhotoUploadDel()
+{
+
+    $(".description-table-uploading-img li").mouseenter(function () {
+        $(this).find(".descriptionTableuploading-tip").stop().animate({ height: '25px' }, 200);
+    });
+    $(".description-table-uploading-img li").mouseleave(function () {
+        $(this).find(".descriptionTableuploading-tip").stop().animate({ height: '0' }, 200);
+    });
+
+    $(".onDescriptionTableDelPic").unbind("click");
+    $(".onDescriptionTableDelPic").click(function(){
+        var attrIndex = $(this).attr("data");
+        $("#descriptionTablePreview"+attrIndex).unbind("click");
+
+        $("#descriptionTablePreview"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+        $("#descriptionTableProviewFile"+attrIndex).val(null);
+        $("#descriptionTableuploading-tip" + attrIndex).hide();
+
+        $("#descriptionTablePreview"+attrIndex).click(function() {
+            uploadDescriptionTablePreviewPhoto($(this).attr("attr-index"));
+        });
+
+        var descriptionPreviewPathObj = $("#descriptionTablePreviewPath_"+attrIndex);
+        if(descriptionPreviewPathObj!=null)
+        {
+            descriptionPreviewPathObj.val("");
+        }
+    });
+
+}
+
+/**
+ * 初始化商品介绍列表中点击上传图片
+ * @param pos
+ */
+function descriptionTableUploadPreview(pos)
+{
+
+    $("#descriptionTablePreview"+pos).click(function() {
+        uploadDescriptionTablePreviewPhoto($(this).attr("attr-index"));
+    });
+    if($("#descriptionTableProviewFile"+pos)!=null) {
+        $("#descriptionTableProviewFile" + pos).on("change", function () {
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#descriptionTablePreview" + pos).attr("src", "/static/lib/tupload/images/imgadd.png");
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test(files[0].type)) {
+                $("#descriptionTablePreview"+pos).unbind("click");
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function () {
+                    $("#descriptionTablePreview" + pos).attr("src", this.result);
+                    $("#descriptionTableuploading-tip" + pos).show();
+                }
+
+            }
+
+        });
+    }
+
+}
 
 function bindDescriptionTableDeleteRowEvent()
 {
