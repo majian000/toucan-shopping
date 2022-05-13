@@ -5,6 +5,7 @@
     <resultMap id="shopProductApproveDescriptionImgMap" type="com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
+        <result column="product_description_id" jdbcType="BIGINT" property="productDescriptionId" />
         <result column="file_path" jdbcType="VARCHAR" property="filePath" />
         <result column="img_sort" jdbcType="SMALLINT" property="imgSort" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -12,6 +13,11 @@
         <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         
+    </resultMap>
+
+
+    <resultMap id="shopProductApproveDescriptionImgVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductApproveDescriptionImgVO" extends="shopProductApproveDescriptionImgMap">
+
     </resultMap>
 
     <select id="queryAllList" resultMap="shopProductApproveDescriptionImgMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg">
@@ -64,6 +70,18 @@
             </if>
 
 
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+
+    <select id="queryVOListByProductApproveIdAndDescriptionId" resultMap="shopProductApproveDescriptionImgVOMap" >
+        select t.* from t_shop_product_approve_description_img t
+        <where>
+            1=1
+            and product_approve_id = #{productApproveId}
+            and product_description_id = #{descriptionId}
             and t.delete_status = 0
 
         </where>

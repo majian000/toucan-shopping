@@ -623,6 +623,12 @@ public class ShopProductApproveController {
                 //查询商品介绍
                 ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductVO.getId());
                 if(shopProductApproveDescription!=null) {
+                    ShopProductApproveDescriptionVO shopProductApproveDescriptionVO = new ShopProductApproveDescriptionVO();
+                    BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
+
+                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionId(shopProductVO.getId(),shopProductApproveDescription.getId());
+                    shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
+                    shopProductVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
                 }
             }
             resultObjectVO.setData(shopProductVOS);
@@ -713,6 +719,12 @@ public class ShopProductApproveController {
                 //查询商品介绍
                 ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductVO.getId());
                 if(shopProductApproveDescription!=null) {
+                    ShopProductApproveDescriptionVO shopProductApproveDescriptionVO = new ShopProductApproveDescriptionVO();
+                    BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
+
+                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionId(shopProductVO.getId(),shopProductApproveDescription.getId());
+                    shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
+                    shopProductVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
                 }
 
                 resultObjectVO.setData(shopProductVO);

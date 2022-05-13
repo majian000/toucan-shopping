@@ -313,7 +313,9 @@ public class ShopProductApproveController extends UIController {
                             }
                         }
                     }
-
+                    if(list.get(0).getShopProductApproveDescriptionVO()!=null) {
+                        list.get(0).setShopProductApproveDescriptionJson(JSONObject.toJSONString(list.get(0).getShopProductApproveDescriptionVO()));
+                    }
                     request.setAttribute("model", list.get(0));
                 }else{
                     request.setAttribute("model", new ShopProductApproveVO());

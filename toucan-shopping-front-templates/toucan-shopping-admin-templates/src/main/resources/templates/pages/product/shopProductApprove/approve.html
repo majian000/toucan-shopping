@@ -152,7 +152,7 @@
                     </div>
 
                     <div class="layui-tab-item">
-                        <div th:utext="${model.productDescription}" style="width:750px;"></div>
+                        <div id="productDescription" style="width:750px;"></div>
                     </div>
 
                     <div class="layui-tab-item">
@@ -263,7 +263,9 @@
 
         var productApproveId = $("#id").val();
         var approveStatus = $("#approveStatus").val();
+        var productDescriptionJson = "[[${model.shopProductApproveDescriptionJson!""}]]";
 
+        alert(productDescriptionJson);
 
         if(approveStatus!=1)
         {
