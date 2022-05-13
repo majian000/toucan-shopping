@@ -19,6 +19,7 @@ public class ShopProductApproveDescriptionImgVO extends ShopProductApproveDescri
 
     private List<Long> productApproveIdList; //店铺商品审核ID列表
 
+    private String httpFilePath; //HTTP访问地址
 
     /**
      * 图片

@@ -112,6 +112,6 @@ public class ShopProductApproveVO extends ShopProductApprove {
     /**
      * 商品介绍JSON字符串
      */
-    private String shopProductApproveDescriptionJson;
+    private String shopProductApproveDescriptionJson="{}";
 
 }

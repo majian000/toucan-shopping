@@ -31,6 +31,7 @@
     <div class="layui-form layuimini-form">
         <input type="hidden" name="id" id="id" th:value="${model.id}">
         <input type="hidden" name="id" id="approveStatus" th:value="${model.approveStatus}">
+        <input type="hidden" id="productDescriptionJson" th:value="${model.shopProductApproveDescriptionJson}" />
 
         <div class="layuimini-main" >
             <div class="layui-tab layui-tab-brief">
@@ -263,14 +264,28 @@
 
         var productApproveId = $("#id").val();
         var approveStatus = $("#approveStatus").val();
-        var productDescriptionJson = "[[${model.shopProductApproveDescriptionJson!""}]]";
-
-        alert(productDescriptionJson);
+        var productDescriptionJson = $("#productDescriptionJson").val();
+        var productDescriptionObject = JSON.parse(productDescriptionJson);
 
         if(approveStatus!=1)
         {
             $("#approveBtns").hide();
             $("#connectProduct").hide();
+        }
+        if(productDescriptionObject!=null&&productDescriptionObject.productDescriptionImgs!=null&&productDescriptionObject.productDescriptionImgs.length>0)
+        {
+            var productDescriptionHtml="";
+            for(var i=0;i<productDescriptionObject.productDescriptionImgs.length;i++)
+            {
+                var productDescriptionImg = productDescriptionObject.productDescriptionImgs[i];
+                if(productDescriptionImg!=null)
+                {
+                    var imgHtml = "";
+                    imgHtml="<p><img src='"+productDescriptionImg.httpFilePath+"' style='"+productDescriptionImg.width+productDescriptionImg.widthUnit+";'></p>";
+                    productDescriptionHtml+=imgHtml;
+                }
+            }
+            $("#productDescription").html(productDescriptionHtml);
         }
 
         //建造实例化
