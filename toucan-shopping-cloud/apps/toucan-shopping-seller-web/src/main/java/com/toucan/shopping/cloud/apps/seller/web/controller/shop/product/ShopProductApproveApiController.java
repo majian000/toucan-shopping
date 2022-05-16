@@ -124,6 +124,44 @@ public class ShopProductApproveApiController extends BaseController {
     }
 
 
+    /**
+     * 查询详情
+     * @param queryShopProductApproveVO
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO deleteByApproveId(HttpServletRequest request,@RequestBody ShopProductApproveVO queryShopProductApproveVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            String userMainId="-1";
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            //查询店铺
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+                    SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
+                    ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
+                    shopProductApproveVO.setId(queryShopProductApproveVO.getId());
+                    shopProductApproveVO.setShopId(sellerShopVORet.getId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductApproveVO);
+                    resultObjectVO = feignShopProductApproveService.deleteByProductApproveIdAndShopId(requestJsonVO);
+
+                }
+            }
+        }catch (Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("删除失败,请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 查询详情

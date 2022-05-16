@@ -5,7 +5,7 @@ package com.toucan.shopping.modules.product.constant;
  */
 public class ProductConstant {
 
-    public static final Integer PROCESSING=1; //审核通过
+    public static final Integer PROCESSING=1; //审核中
     public static final Integer PASS=2; //审核通过
     public static final Integer REJECT=3; //审核驳回
 

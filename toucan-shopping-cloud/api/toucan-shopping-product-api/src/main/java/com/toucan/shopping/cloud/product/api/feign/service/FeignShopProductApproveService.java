@@ -87,4 +87,13 @@ public interface FeignShopProductApproveService {
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 根据ID和店铺ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id/shopId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO deleteByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO);
+
 }

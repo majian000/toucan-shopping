@@ -116,11 +116,47 @@ function bindApproveDelEvent()
             title:'提示信息'
         }, function(index) {
             // $("#descriptionTableTr" +attrIndex ).remove();
-            alert(attrId);
-            layer.close(index);
+            $.ajax({
+                type: "POST",
+                url: basePath+"/api/shop/product/approve/delete",
+                contentType: "application/json;charset=utf-8",
+                data:  JSON.stringify({id:attrId}),
+                dataType: "json",
+                success: function (result) {
+                    if(result.code<=0)
+                    {
+                        $.message({
+                            message: "删除失败,请稍后重试",
+                            type: 'error'
+                        });
+                        return ;
+                    }
+
+                    $.message({
+                        message: "删除成功",
+                        type: 'success'
+                    });
+                },
+                error: function (result) {
+                    $.message({
+                        message: "删除失败,请稍后重试",
+                        type: 'error'
+                    });
+                },
+                complete:function()
+                {
+                    layer.close(index);
+                    $("#queryBtn").click();
+                }
+
+            });
+
+
         });
     });
 }
+
+
 
 function initPagination()
 {

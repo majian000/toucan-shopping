@@ -740,6 +740,74 @@ public class ShopProductApproveController {
     }
 
 
+
+    /**
+     * 根据ID和店铺ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id/shopId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteByProductApproveIdAndShopId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.warn("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+        try {
+            ShopProductApproveVO shopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
+            if(shopProductVO==null||shopProductVO.getId()==null||shopProductVO.getId().longValue()==-1)
+            {
+                logger.warn("没有找到ID: param:"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID!");
+                return resultObjectVO;
+            }
+            if(shopProductVO==null||shopProductVO.getShopId()==null||shopProductVO.getShopId().longValue()==-1)
+            {
+                logger.warn("没有找到店铺ID: param:"+ JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到店铺ID!");
+                return resultObjectVO;
+            }
+            ShopProductApproveVO queryShopProductApproveVO = new ShopProductApproveVO();
+            queryShopProductApproveVO.setId(shopProductVO.getId());
+            queryShopProductApproveVO.setShopId(shopProductVO.getShopId());
+
+            shopProductVO = shopProductApproveService.queryOne(queryShopProductApproveVO);
+
+            if(shopProductVO!=null) {
+                if(shopProductVO.getApproveStatus()!=null
+                        &&
+                        (shopProductVO.getApproveStatus().intValue()==ProductConstant.PROCESSING.intValue()||shopProductVO.getApproveStatus().intValue()==ProductConstant.REJECT.intValue())
+                )
+                shopProductApproveService.deleteById(shopProductVO.getId());
+                shopProductApproveSkuService.deleteByShopProductApproveId(shopProductVO.getId());
+                shopProductApproveImgService.deleteByProductApproveId(shopProductVO.getId());
+                shopProductApproveDescriptionService.deleteByShopProductApproveId(shopProductVO.getId());
+                shopProductApproveDescriptionImgService.deleteByProductApproveId(shopProductVO.getId());
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("删除失败!");
+        }
+
+        return resultObjectVO;
+    }
+
     /**
      * 审核驳回
      * @param requestJsonVO
@@ -993,6 +1061,7 @@ public class ShopProductApproveController {
             shopProductApproveSkuService.deleteByShopProductApproveId(entity.getId());
             shopProductApproveImgService.deleteByProductApproveId(entity.getId());
             shopProductApproveDescriptionService.deleteByShopProductApproveId(entity.getId());
+            shopProductApproveDescriptionImgService.deleteByProductApproveId(entity.getId());
 
         }catch(Exception e)
         {
