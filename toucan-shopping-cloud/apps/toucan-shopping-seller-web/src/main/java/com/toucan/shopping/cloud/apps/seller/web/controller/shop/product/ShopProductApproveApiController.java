@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveDescriptionImg;
 import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.vo.*;
@@ -843,6 +844,12 @@ public class ShopProductApproveApiController extends BaseController {
             resultObjectVO = feignShopProductApproveService.queryByProductApproveIdAndShopId(requestJsonVO);
             if(resultObjectVO.isSuccess()) {
                 shopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+            }
+            if(shopProductApproveVO.getApproveStatus().intValue()== ProductConstant.PASS.intValue())
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("该商品已审核通过,如要修改请在商品列表中操作!");
+                return resultObjectVO;
             }
 
             //校验SKU列表
