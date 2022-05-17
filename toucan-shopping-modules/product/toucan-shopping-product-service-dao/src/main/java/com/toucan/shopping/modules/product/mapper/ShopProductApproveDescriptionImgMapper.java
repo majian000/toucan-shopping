@@ -21,7 +21,8 @@ public interface ShopProductApproveDescriptionImgMapper {
 
     int deleteByProductApproveId(Long productApproveId);
 
-    List<ShopProductApproveDescriptionImgVO> queryVOListByProductApproveIdAndDescriptionId(Long productApproveId, Long descriptionId);
+    List<ShopProductApproveDescriptionImgVO> queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(Long productApproveId, Long descriptionId);
 
+    int updateResumeByIdList(List<Long> idList);
 
 }

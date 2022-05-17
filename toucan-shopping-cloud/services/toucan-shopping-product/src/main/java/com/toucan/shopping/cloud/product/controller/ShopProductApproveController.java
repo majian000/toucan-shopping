@@ -468,7 +468,86 @@ public class ShopProductApproveController {
                         //发送异常邮件,通知运营处理
                         logger.warn("发布商品失败 回滚店铺商品图片失败 {}", JSONObject.toJSONString(shopProductImgs));
                     }
+                }
 
+                //保存商品介绍
+                ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(rePublishProductApproveVO.getId());
+                if(shopProductApproveDescription==null) {
+                    shopProductApproveDescription.setId(idGenerator.id());
+                    shopProductApproveDescription.setProductApproveId(rePublishProductApproveVO.getId());
+                    shopProductApproveDescription.setShopId(rePublishProductApproveVO.getShopId());
+                    shopProductApproveDescription.setAppCode(rePublishProductApproveVO.getAppCode());
+                    shopProductApproveDescription.setCreateDate(new Date());
+                    shopProductApproveDescription.setCreateUserId(rePublishProductApproveVO.getCreateUserId());
+                    shopProductApproveDescriptionService.save(shopProductApproveDescription);
+                }
+
+                shopProductApproveDescriptionImgService.deleteByProductApproveId(rePublishProductApproveVO.getId());
+                //查询当前的商品介绍图片
+                List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS =
+                        shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(rePublishProductApproveVO.getId(),shopProductApproveDescription.getId());
+                List<Long> shopProductApproveDescriptionImgIdList =new LinkedList();
+                if(CollectionUtils.isNotEmpty(shopProductApproveDescriptionImgVOS))
+                {
+                    for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveDescriptionImgVOS)
+                    {
+                        shopProductApproveDescriptionImgIdList.add(shopProductApproveDescriptionImgVO.getId());
+                    }
+                }
+                if(rePublishProductApproveVO.getProductDescription()!=null)
+                {
+                    if(CollectionUtils.isNotEmpty(rePublishProductApproveVO.getProductDescription().getProductDescriptionImgs()))
+                    {
+                        List<ShopProductApproveDescriptionImg> shopProductApproveDescriptionImgs = new LinkedList<>();
+                        for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:rePublishProductApproveVO.getProductDescription().getProductDescriptionImgs()) {
+                            if(StringUtils.isNotEmpty(shopProductApproveDescriptionImgVO.getFilePath())) {
+                                ShopProductApproveDescriptionImg shopProductApproveDescriptionImg = new ShopProductApproveDescriptionImg();
+                                BeanUtils.copyProperties(shopProductApproveDescriptionImg, shopProductApproveDescriptionImgVO);
+                                shopProductApproveDescriptionImg.setId(idGenerator.id());
+                                shopProductApproveDescriptionImg.setProductApproveId(rePublishProductApproveVO.getId());
+                                shopProductApproveDescriptionImg.setProductDescriptionId(shopProductApproveDescription.getId());
+                                shopProductApproveDescriptionImg.setAppCode(rePublishProductApproveVO.getAppCode());
+                                shopProductApproveDescriptionImg.setCreateDate(new Date());
+                                shopProductApproveDescriptionImg.setCreateUserId(rePublishProductApproveVO.getCreateUserId());
+                                shopProductApproveDescriptionImg.setDeleteStatus(0);
+                                shopProductApproveDescriptionImgs.add(shopProductApproveDescriptionImg);
+                            }
+                        }
+
+                        if(CollectionUtils.isNotEmpty(shopProductApproveDescriptionImgs)) {
+                            ret = shopProductApproveDescriptionImgService.saves(shopProductApproveDescriptionImgs);
+                            if (ret <= 0) {
+                                logger.warn("发布商品失败 原因:商品介绍图片影响返回行和保存数量不一致 {}", JSONObject.toJSONString(shopProductImgs));
+
+                                resultObjectVO.setCode(ResultVO.FAILD);
+                                resultObjectVO.setMsg("重新发布失败");
+
+                                ret = shopProductApproveSkuService.updateResumeByShopProductApproveId(rePublishProductApproveVO.getId());
+                                shopProductApproveSkuService.deleteByIdList(skuIdList);
+
+                                if (ret <= 0) {
+                                    //发送异常邮件,通知运营处理
+                                    logger.warn("重新发布商品失败 回滚店铺商品SKU失败 {}", JSONObject.toJSONString(productSkus));
+                                }
+
+                                ret = shopProductApproveImgService.updateResumeByShopProductApproveId(rePublishProductApproveVO.getId());
+                                shopProductApproveImgService.deleteByIdList(imgIdList);
+
+                                //TODO:删除服务器中图片资源
+                                if (ret <= 0) {
+                                    //发送异常邮件,通知运营处理
+                                    logger.warn("重新发布商品失败 回滚店铺商品图片失败 {}", JSONObject.toJSONString(shopProductImgs));
+                                }
+
+                                //还原商品介绍图片
+                                if(CollectionUtils.isNotEmpty(shopProductApproveDescriptionImgIdList))
+                                {
+                                    shopProductApproveDescriptionImgService.updateResumeByIdList(shopProductApproveDescriptionImgIdList);
+                                }
+                            }
+                        }
+
+                    }
                 }
 
             }
@@ -632,7 +711,7 @@ public class ShopProductApproveController {
                     ShopProductApproveDescriptionVO shopProductApproveDescriptionVO = new ShopProductApproveDescriptionVO();
                     BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
 
-                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionId(shopProductVO.getId(),shopProductApproveDescription.getId());
+                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductApproveDescription.getId());
                     shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
                     shopProductVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
                 }
@@ -728,7 +807,7 @@ public class ShopProductApproveController {
                     ShopProductApproveDescriptionVO shopProductApproveDescriptionVO = new ShopProductApproveDescriptionVO();
                     BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
 
-                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionId(shopProductVO.getId(),shopProductApproveDescription.getId());
+                    List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductApproveDescription.getId());
                     shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
                     shopProductVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
                 }
@@ -1007,6 +1086,7 @@ public class ShopProductApproveController {
                         shopProductDescription.setId(idGenerator.id());
                         shopProductDescription.setShopProductId(shopProduct.getId());
                         shopProductDescription.setShopId(shopProduct.getShopId());
+                        shopProductDescription.setCreateDate(new Date());
                         BeanUtils.copyProperties(shopProductDescription, shopProductApproveDescription);
 
                         ret = shopProductDescriptionService.save(shopProductDescription);
@@ -1015,7 +1095,7 @@ public class ShopProductApproveController {
                             throw new IllegalArgumentException("保存商品介绍失败");
                         }
 
-                        List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionId(shopProductApprove.getId(),shopProductApproveDescription.getId());
+                        List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductApprove.getId(),shopProductApproveDescription.getId());
                         if(CollectionUtils.isNotEmpty(shopProductApproveDescriptionImgVOS))
                         {
                             List<ShopProductDescriptionImg> shopProductDescriptionImgs = new LinkedList<>();
@@ -1026,6 +1106,7 @@ public class ShopProductApproveController {
                                 shopProductDescriptionImg.setId(idGenerator.id());
                                 shopProductDescriptionImg.setShopProductId(shopProduct.getId()); //店铺商品ID
                                 shopProductDescriptionImg.setShopProductDescriptionId(shopProductDescription.getId());  //商品介绍主表ID
+                                shopProductDescriptionImg.setCreateDate(new Date());
                                 shopProductDescriptionImgs.add(shopProductDescriptionImg);
                             }
                             if(CollectionUtils.isNotEmpty(shopProductDescriptionImgs))

@@ -80,15 +80,15 @@
     </select>
 
 
-    <select id="queryVOListByProductApproveIdAndDescriptionId" resultMap="shopProductApproveDescriptionImgVOMap" >
+    <select id="queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc" resultMap="shopProductApproveDescriptionImgVOMap" >
         select t.* from t_shop_product_approve_description_img t
         <where>
             1=1
             and product_approve_id = #{productApproveId}
             and product_description_id = #{descriptionId}
             and t.delete_status = 0
-
         </where>
+        order by t.img_sort desc
     </select>
 
 
@@ -97,5 +97,13 @@
     </update>
 
 
+
+    <update id="updateResumeByIdList">
+        update t_shop_product_approve_description_img  set delete_status=0 where 1=1 and delete_status=1
+        and t.id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
 
 </mapper>

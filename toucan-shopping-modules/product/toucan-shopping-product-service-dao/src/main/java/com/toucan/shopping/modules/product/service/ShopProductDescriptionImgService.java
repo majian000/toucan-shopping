@@ -19,6 +19,9 @@ public interface ShopProductDescriptionImgService {
      * @param descriptionId
      * @return
      */
-    List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionId(Long productId, Long descriptionId);
+    List<ShopProductDescriptionImgVO> queryVOListByProductIdAndDescriptionIdOrderBySortDesc(Long productId, Long descriptionId);
+
+
+    int updateResumeByIdList(List<Long> idList);
 
 }

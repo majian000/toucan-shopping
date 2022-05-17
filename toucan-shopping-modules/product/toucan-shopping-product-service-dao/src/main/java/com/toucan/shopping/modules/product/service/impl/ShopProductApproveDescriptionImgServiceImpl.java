@@ -26,7 +26,13 @@ public class ShopProductApproveDescriptionImgServiceImpl implements ShopProductA
     }
 
     @Override
-    public List<ShopProductApproveDescriptionImgVO> queryVOListByProductApproveIdAndDescriptionId(Long productApproveId, Long descriptionId) {
-        return shopProductApproveDescriptionMapper.queryVOListByProductApproveIdAndDescriptionId(productApproveId,descriptionId);
+    public List<ShopProductApproveDescriptionImgVO> queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(Long productApproveId, Long descriptionId) {
+        return shopProductApproveDescriptionMapper.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(productApproveId,descriptionId);
+    }
+
+
+    @Override
+    public int updateResumeByIdList(List<Long> idList) {
+        return shopProductApproveDescriptionMapper.updateResumeByIdList(idList);
     }
 }

@@ -1,6 +1,7 @@
 
 var g_goApproveSecond=3;
 var delFilePos=new Array();
+var g_descriptionTablePos=0;
 
 
 function initPreviewPhotoUploadDel()
@@ -357,6 +358,22 @@ function initProductPublishForm(productApprove)
     $("#name").val(productApprove.name);
     $("#sellerNo").val(productApprove.sellerNo);
 
+    //设置商品介绍
+    if(productApprove.shopProductApproveDescriptionVO!=null) {
+        $("#productDescriptionId").val(productApprove.shopProductApproveDescriptionVO.id);
+    }
+    if(productApprove.shopProductApproveDescriptionVO!=null
+        &&productApprove.shopProductApproveDescriptionVO.productDescriptionImgs!=null
+        &&productApprove.shopProductApproveDescriptionVO.productDescriptionImgs.length>0)
+    {
+        for(var s=0;s<productApprove.shopProductApproveDescriptionVO.productDescriptionImgs.length;s++) {
+            appendDescriptionTableRow(productApprove.shopProductApproveDescriptionVO.productDescriptionImgs[s]);
+        }
+    }else {
+        appendDescriptionTableRow();
+    }
+    bindDescriptionTableDeleteRowEvent();
+
     //设置商品主图
     $("#mainPhotoImg").attr("src",productApprove.httpMainPhotoFilePath);
 
@@ -676,4 +693,188 @@ $("#ppfbtn").click(function() {
 function uploadPreviewPhoto(attrIndex)
 {
     $("#previewPhotoFiles_"+attrIndex).click();
+}
+
+
+
+function appendDescriptionTableRow(descriptionImg)
+{
+    var rowHtml="";
+    if(descriptionImg!=null)
+    {
+        rowHtml ="<tr id=\"descriptionTableTr"+g_descriptionTablePos+"\">\n" +
+            "                                                            <td>\n" +
+            "\n" +
+            "                                                                <div class=\"description-table-uploading-img\">\n" +
+            "                                                                    <ul class=\"picView-magnify-list\">\n" +
+            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+            "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\""+descriptionImg.httpFilePath+"\" data-caption=\"图片预览\">\n" +
+            "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\""+descriptionImg.httpFilePath+"\" style=\"width:100%;height:100%\">            </div>\n" +
+            "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
+            "                                                                                <i class=\"onDescriptionTableDelPic\" data=\""+g_descriptionTablePos+"\">删除</i>\n" +
+            "                                                                            </div>\n" +
+            "                                                                        </li>\n" +
+            "                                                                        <input type=\"file\" class=\"descriptionTablePhotos descriptionTableUploadFile\" attr-index=\""+g_descriptionTablePos+"\" style=\"display: none\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].imgFile\" id=\"descriptionTableProviewFile"+g_descriptionTablePos+"\" />\n" +
+            "<input type=\"hidden\" class=\"descriptionTableImgPaths\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].filePath\" value=\""+descriptionImg.filePath+"\" id=\"descriptionTablePreviewPath_"+g_descriptionTablePos+"\""+
+            "                                                                    </ul>\n" +
+            "                                                                </div>\n" +
+            "                                                            </td>\n" +
+            "                                                            <td>\n" +
+            "                                                                <input type=\"text\" id=\"descriptionTableTitle"+g_descriptionTablePos+"\"  value=\""+descriptionImg.title+"\" class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].title\" placeholder=\"请输入标题(非必填)\" maxlength=\"100\" />\n" +
+            "                                                            </td>\n" +
+            "                                                            <td>\n" +
+            "                                                                <input type=\"text\" id=\"descriptionTableLink"+g_descriptionTablePos+"\" value=\""+descriptionImg.link+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].link\" placeholder=\"请输入跳转链接(非必填)\" maxlength=\"1500\" />\n" +
+            "                                                            </td>\n" +
+            "                                                            <td>\n" +
+            "                                                                <span class=\"comment\">\n" +
+            "                                                                    <a  class=\"descriptionTableDelRow\" style=\"color:red;cursor: pointer;\" attr-index=\""+g_descriptionTablePos+"\"  >删除</a>\n" +
+            "                                                                </span>\n" +
+            "                                                            </td>\n" +
+            "                                                        </tr>";
+    }else{
+        rowHtml ="<tr id=\"descriptionTableTr"+g_descriptionTablePos+"\">\n" +
+            "                                                            <td>\n" +
+            "\n" +
+            "                                                                <div class=\"description-table-uploading-img\">\n" +
+            "                                                                    <ul class=\"picView-magnify-list\">\n" +
+            "                                                                        <li data-toggle=\"tooltip\" data-placement=\"top\" title=\"点击图片预览\">\n" +
+            "                                                                            <div id=\"descriptionTableimgBg_div"+g_descriptionTablePos+"\" class=\"uploading-imgBg\" data-magnify=\"gallery\" data-src=\"/static/lib/tupload/images/imgadd.png\" data-caption=\"图片预览\">\n" +
+            "                                                                                <img id=\"descriptionTablePreview"+g_descriptionTablePos+"\" attr-index=\""+g_descriptionTablePos+"\" src=\"/static/lib/tupload/images/imgadd.png\" style=\"width:100%;height:100%\">            </div>\n" +
+            "                                                                            <div id=\"descriptionTableuploading-tip"+g_descriptionTablePos+"\" class=\"descriptionTableuploading-tip\" style=\"display: none; height: 0px;\">\n" +
+            "                                                                                <i class=\"onDescriptionTableDelPic\" data=\""+g_descriptionTablePos+"\">删除</i>\n" +
+            "                                                                            </div>\n" +
+            "                                                                        </li>\n" +
+            "                                                                        <input type=\"file\" class=\"descriptionTablePhotos descriptionTableUploadFile\" attr-index=\""+g_descriptionTablePos+"\" style=\"display: none\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].imgFile\" id=\"descriptionTableProviewFile"+g_descriptionTablePos+"\" />\n" +
+            "<input type=\"hidden\" class=\"descriptionTableImgPaths\" id=\"descriptionTablePreviewPath_"+g_descriptionTablePos+"\""+
+            "                                                                    </ul>\n" +
+            "                                                                </div>\n" +
+            "                                                            </td>\n" +
+            "                                                            <td>\n" +
+            "                                                                <input type=\"text\" id=\"descriptionTableTitle"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].title\" placeholder=\"请输入标题(非必填)\" maxlength=\"100\" />\n" +
+            "                                                            </td>\n" +
+            "                                                            <td>\n" +
+            "                                                                <input type=\"text\" id=\"descriptionTableLink"+g_descriptionTablePos+"\"  class=\"releaseProductInputText\" name=\"productDescription.productDescriptionImgs["+g_descriptionTablePos+"].link\" placeholder=\"请输入跳转链接(非必填)\" maxlength=\"1500\" />\n" +
+            "                                                            </td>\n" +
+            "                                                            <td>\n" +
+            "                                                                <span class=\"comment\">\n" +
+            "                                                                    <a  class=\"descriptionTableDelRow\" style=\"color:red;cursor: pointer;\" attr-index=\""+g_descriptionTablePos+"\"  >删除</a>\n" +
+            "                                                                </span>\n" +
+            "                                                            </td>\n" +
+            "                                                        </tr>";
+    }
+    $("#descriptionTableBody").append(rowHtml);
+    descriptionTableUploadPreview(g_descriptionTablePos);
+    initDescriptionTablePreviewPhotoUploadDel();
+    g_descriptionTablePos++;
+    bindDescriptionTableDeleteRowEvent();
+    if(descriptionImg!=null)
+    {
+        $("#descriptionTablePreview"+(g_descriptionTablePos-1)).unbind("click");
+        $("#descriptionTableuploading-tip" + (g_descriptionTablePos-1)).show();
+    }
+}
+
+$("#descriptionTableAddRowBtn").click(function() {
+    appendDescriptionTableRow();
+});
+
+
+function uploadDescriptionTablePreviewPhoto(attrIndex)
+{
+    $("#descriptionTableProviewFile"+attrIndex).click();
+}
+
+
+/**
+ * 初始化商品介绍列表中的删除按钮
+ */
+function initDescriptionTablePreviewPhotoUploadDel()
+{
+
+    $(".description-table-uploading-img li").mouseenter(function () {
+        $(this).find(".descriptionTableuploading-tip").stop().animate({ height: '25px' }, 200);
+    });
+    $(".description-table-uploading-img li").mouseleave(function () {
+        $(this).find(".descriptionTableuploading-tip").stop().animate({ height: '0' }, 200);
+    });
+
+    $(".onDescriptionTableDelPic").unbind("click");
+    $(".onDescriptionTableDelPic").click(function(){
+        var attrIndex = $(this).attr("data");
+        $("#descriptionTablePreview"+attrIndex).unbind("click");
+        $("#descriptionTablePreviewPath_"+attrIndex).val("");
+        $("#descriptionTablePreview"+attrIndex).attr("src","/static/lib/tupload/images/imgadd.png");
+        $("#descriptionTableProviewFile"+attrIndex).val(null);
+        $("#descriptionTableuploading-tip" + attrIndex).hide();
+
+        $("#descriptionTablePreview"+attrIndex).click(function() {
+            uploadDescriptionTablePreviewPhoto($(this).attr("attr-index"));
+        });
+
+        var descriptionPreviewPathObj = $("#descriptionTablePreviewPath_"+attrIndex);
+        if(descriptionPreviewPathObj!=null)
+        {
+            descriptionPreviewPathObj.val("");
+        }
+    });
+
+}
+
+/**
+ * 初始化商品介绍列表中点击上传图片
+ * @param pos
+ */
+function descriptionTableUploadPreview(pos)
+{
+
+    $("#descriptionTablePreview"+pos).click(function() {
+        uploadDescriptionTablePreviewPhoto($(this).attr("attr-index"));
+    });
+    if($("#descriptionTableProviewFile"+pos)!=null) {
+        $("#descriptionTableProviewFile" + pos).on("change", function () {
+            // Get a reference to the fileList
+            var files = !!this.files ? this.files : [];
+
+            // If no files were selected, or no FileReader support, return
+            if (!files.length || !window.FileReader) {
+                $("#descriptionTablePreview" + pos).attr("src", "/static/lib/tupload/images/imgadd.png");
+                return;
+            }
+
+            // Only proceed if the selected file is an image
+            if (/^image/.test(files[0].type)) {
+                $("#descriptionTablePreview"+pos).unbind("click");
+                // Create a new instance of the FileReader
+                var reader = new FileReader();
+
+                // Read the local file as a DataURL
+                reader.readAsDataURL(files[0]);
+
+                // When loaded, set image data as background of div
+                reader.onloadend = function () {
+                    $("#descriptionTablePreview" + pos).attr("src", this.result);
+                    $("#descriptionTableuploading-tip" + pos).show();
+                }
+
+            }
+
+        });
+    }
+
+}
+
+function bindDescriptionTableDeleteRowEvent()
+{
+    $(".descriptionTableDelRow").unbind("click");
+    //SKU信息
+    $(".descriptionTableDelRow").bind("click", function () {
+        var attrIndex = $(this).attr("attr-index");
+        layer.confirm('确定删除?', {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+            $("#descriptionTableTr" +attrIndex ).remove();
+            layer.close(index);
+        });
+    });
 }
