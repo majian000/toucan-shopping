@@ -434,9 +434,9 @@ public class ShopProductApproveApiController extends BaseController {
                 if(shopProductApproveDescriptionImgVO!=null&&shopProductApproveDescriptionImgVO.getImgFile()!=null) {
                     shopProductApproveDescriptionImgVO.setFilePath(imageUploadService.uploadFile(shopProductApproveDescriptionImgVO.getImgFile().getBytes(), ImageUtils.getImageExt(shopProductApproveDescriptionImgVO.getImgFile().getOriginalFilename())));
                     shopProductApproveDescriptionImgVO.setImgFile(null);
-                    shopProductApproveDescriptionImgVO.setImgSort(sort);
-                    sort--;
                 }
+                shopProductApproveDescriptionImgVO.setImgSort(sort);
+                sort--;
             }
         }
     }
@@ -454,21 +454,21 @@ public class ShopProductApproveApiController extends BaseController {
             if(CollectionUtils.isNotEmpty(republishProductVOPersistent.getShopProductApproveDescriptionVO().getProductDescriptionImgs()))
             {
                 ShopProductApproveDescriptionVO shopProductApproveDescriptionVOPersistent = republishProductVOPersistent.getShopProductApproveDescriptionVO();
-                ShopProductApproveDescriptionVO  shopProductApproveDescriptionVO = rePublishProductApproveVO.getShopProductApproveDescriptionVO();
+                ShopProductApproveDescriptionVO  shopProductApproveDescriptionVO = rePublishProductApproveVO.getProductDescription();
                 boolean isFind; //是否在这次提交中找到了旧的图片路径
                 for(int i=0;i<shopProductApproveDescriptionVOPersistent.getProductDescriptionImgs().size();i++)
                 {
                     isFind = false;
                     ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVOPersistent = shopProductApproveDescriptionVOPersistent.getProductDescriptionImgs().get(i);
-                    for(int j=0;j<shopProductApproveDescriptionVO.getProductDescriptionImgs().size();j++){
-                        ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO = shopProductApproveDescriptionVO.getProductDescriptionImgs().get(j);
-                        if(StringUtils.isNotEmpty(shopProductApproveDescriptionImgVOPersistent.getFilePath())
-                                &&StringUtils.isNotEmpty(shopProductApproveDescriptionImgVO.getFilePath()))
-                        {
-                            if(shopProductApproveDescriptionImgVOPersistent.getFilePath().equals(shopProductApproveDescriptionImgVO.getFilePath()))
-                            {
-                                isFind = true;
-                                break;
+                    if(shopProductApproveDescriptionVO!=null&&shopProductApproveDescriptionVO.getProductDescriptionImgs()!=null) {
+                        for (int j = 0; j < shopProductApproveDescriptionVO.getProductDescriptionImgs().size(); j++) {
+                            ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO = shopProductApproveDescriptionVO.getProductDescriptionImgs().get(j);
+                            if (StringUtils.isNotEmpty(shopProductApproveDescriptionImgVOPersistent.getFilePath())
+                                    && StringUtils.isNotEmpty(shopProductApproveDescriptionImgVO.getFilePath())) {
+                                if (shopProductApproveDescriptionImgVOPersistent.getFilePath().equals(shopProductApproveDescriptionImgVO.getFilePath())) {
+                                    isFind = true;
+                                    break;
+                                }
                             }
                         }
                     }

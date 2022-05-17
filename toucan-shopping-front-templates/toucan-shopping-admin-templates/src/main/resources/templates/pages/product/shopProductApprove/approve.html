@@ -281,7 +281,12 @@
                 if(productDescriptionImg!=null)
                 {
                     var imgHtml = "";
-                    imgHtml="<p><img src='"+productDescriptionImg.httpFilePath+"' style='"+productDescriptionImg.width+productDescriptionImg.widthUnit+";'></p>";
+                    if(productDescriptionImg.link!=null)
+                    {
+                        imgHtml="<p><a href='"+productDescriptionImg.link+"'><img src='"+productDescriptionImg.httpFilePath+"' style='"+productDescriptionImg.width+productDescriptionImg.widthUnit+";'></a></p>";
+                    }else{
+                        imgHtml="<p><img src='"+productDescriptionImg.httpFilePath+"' style='"+productDescriptionImg.width+productDescriptionImg.widthUnit+";'></p>";
+                    }
                     productDescriptionHtml+=imgHtml;
                 }
             }

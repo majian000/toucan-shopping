@@ -649,6 +649,21 @@ $("#ppfbtn").click(function() {
         }
     }
 
+
+    //删除商品介绍表格中没有文件上传的控件
+    var descriptionTableUploadFiles = $(".descriptionTableUploadFile");
+    if(descriptionTableUploadFiles.length>0)
+    {
+        for(var i=0;i<descriptionTableUploadFiles.length;i++)
+        {
+            var descriptionTableUploadFile=$(descriptionTableUploadFiles[i]);
+            if(descriptionTableUploadFile.val()==null||descriptionTableUploadFile.val()=="")
+            {
+                descriptionTableUploadFile.remove();
+            }
+        }
+    }
+
     //删除商品主图控件
     if($("#mainPhotoFile").val()==null||$("#mainPhotoFile").val()=="")
     {
