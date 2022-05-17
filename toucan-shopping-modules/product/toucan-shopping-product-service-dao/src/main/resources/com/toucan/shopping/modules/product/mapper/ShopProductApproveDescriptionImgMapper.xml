@@ -7,6 +7,10 @@
         <result column="product_approve_id" jdbcType="BIGINT" property="productApproveId" />
         <result column="product_description_id" jdbcType="BIGINT" property="productDescriptionId" />
         <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+        <result column="width" jdbcType="VARCHAR" property="width" />
+        <result column="width_unit" jdbcType="VARCHAR" property="widthUnit" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="link" jdbcType="VARCHAR" property="link" />
         <result column="img_sort" jdbcType="SMALLINT" property="imgSort" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />

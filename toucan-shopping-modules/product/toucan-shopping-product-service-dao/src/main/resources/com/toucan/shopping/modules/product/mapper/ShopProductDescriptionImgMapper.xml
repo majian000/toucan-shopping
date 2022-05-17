@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.product.mapper.ShopProductDescriptionImgMapper">
+
+    <resultMap id="shopProductDescriptionImgMap" type="com.toucan.shopping.modules.product.entity.ShopProductDescriptionImg" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
+        <result column="shop_product_description_id" jdbcType="BIGINT" property="shopProductDescriptionId" />
+        <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+        <result column="width" jdbcType="VARCHAR" property="width" />
+        <result column="width_unit" jdbcType="VARCHAR" property="widthUnit" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="link" jdbcType="VARCHAR" property="link" />
+        <result column="img_sort" jdbcType="SMALLINT" property="imgSort" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        
+    </resultMap>
+
+
+    <resultMap id="shopProductDescriptionImgVOMap" type="com.toucan.shopping.modules.product.vo.ShopProductDescriptionImgVO" extends="shopProductDescriptionImgMap">
+
+    </resultMap>
+
+    <select id="queryAllList" resultMap="shopProductDescriptionImgMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductDescriptionImg">
+        select * from t_shop_product_description_img t
+    </select>
+
+
+    <insert id="inserts"  keyProperty="id" >
+        insert into t_shop_product_description_img(id,shop_product_id,shop_product_description_id,file_path,width,width_unit,title,link,img_sort,create_date,app_code,create_user_id,delete_status)
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.shopProductId},#{entity.shopProductDescriptionId},#{entity.filePath},#{entity.width},#{entity.widthUnit},#{entity.title},#{entity.link},#{entity.imgSort},#{entity.createDate},#{entity.appCode},#{entity.createUserId},#{entity.deleteStatus})
+        </foreach>
+
+    </insert>
+
+
+    <select id="queryByIdList" resultMap="shopProductDescriptionImgMap">
+        select * from t_shop_product_description_img t
+        where 1=1 and t.delete_status = 0
+        and t.id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+
+
+
+    <select id="queryList" resultMap="shopProductDescriptionImgMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductDescriptionImgVO">
+        select t.* from t_shop_product_description_img t
+        <where>
+            1=1
+
+            <if test="id!=null  ">
+                and t.id=#{id}
+            </if>
+
+            <if test="shopProductId!=null  ">
+                and t.shop_product_id=#{shopProductId}
+            </if>
+
+
+            <if test="shopProductIdList!=null and shopProductIdList.size>0 ">
+                and t.shop_product_id in
+                <foreach item="item" index="index" collection="shopProductIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+
+    <select id="queryVOListByProductIdAndDescriptionId" resultMap="shopProductDescriptionImgVOMap" >
+        select t.* from t_shop_product_description_img t
+        <where>
+            1=1
+            and shop_product_id = #{shopProductId}
+            and shop_product_description_id = #{descriptionId}
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+
+    <update id="deleteByShopProductId">
+        update t_shop_product_description_img  set delete_status=1 where shop_product_id=#{shopProductId}  and delete_status=0
+    </update>
+
+
+
+</mapper>

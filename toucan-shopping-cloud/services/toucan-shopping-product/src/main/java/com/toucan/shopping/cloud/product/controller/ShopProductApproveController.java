@@ -67,6 +67,12 @@ public class ShopProductApproveController {
     @Autowired
     private ShopProductApproveDescriptionImgService shopProductApproveDescriptionImgService;
 
+    @Autowired
+    private ShopProductDescriptionService shopProductDescriptionService;
+
+    @Autowired
+    private ShopProductDescriptionImgService shopProductDescriptionImgService;
+
 
     /**
      * 发布商品回滚数据
@@ -991,6 +997,46 @@ public class ShopProductApproveController {
                     if(ret!=productSkus.size())
                     {
                         throw new IllegalArgumentException("保存商品SKU失败");
+                    }
+
+                    //保存商品介绍
+                    ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductApprove.getId());
+                    if(shopProductApproveDescription!=null)
+                    {
+                        ShopProductDescription shopProductDescription = new ShopProductDescription();
+                        shopProductDescription.setId(idGenerator.id());
+                        shopProductDescription.setShopProductId(shopProduct.getId());
+                        shopProductDescription.setShopId(shopProduct.getShopId());
+                        BeanUtils.copyProperties(shopProductDescription, shopProductApproveDescription);
+
+                        ret = shopProductDescriptionService.save(shopProductDescription);
+                        if(ret<=0)
+                        {
+                            throw new IllegalArgumentException("保存商品介绍失败");
+                        }
+
+                        List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionId(shopProductApprove.getId(),shopProductApproveDescription.getId());
+                        if(CollectionUtils.isNotEmpty(shopProductApproveDescriptionImgVOS))
+                        {
+                            List<ShopProductDescriptionImg> shopProductDescriptionImgs = new LinkedList<>();
+                            for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveDescriptionImgVOS)
+                            {
+                                ShopProductDescriptionImg shopProductDescriptionImg = new ShopProductDescriptionImg();
+                                BeanUtils.copyProperties(shopProductDescriptionImg,shopProductApproveDescriptionImgVO);
+                                shopProductDescriptionImg.setId(idGenerator.id());
+                                shopProductDescriptionImg.setShopProductId(shopProduct.getId()); //店铺商品ID
+                                shopProductDescriptionImg.setShopProductDescriptionId(shopProductDescription.getId());  //商品介绍主表ID
+                                shopProductDescriptionImgs.add(shopProductDescriptionImg);
+                            }
+                            if(CollectionUtils.isNotEmpty(shopProductDescriptionImgs))
+                            {
+                                ret = shopProductDescriptionImgService.saves(shopProductDescriptionImgs);
+                                if(ret!=shopProductDescriptionImgs.size())
+                                {
+                                    throw new IllegalArgumentException("保存商品介绍图片失败");
+                                }
+                            }
+                        }
                     }
 
                     //更新关联店铺商品ID
