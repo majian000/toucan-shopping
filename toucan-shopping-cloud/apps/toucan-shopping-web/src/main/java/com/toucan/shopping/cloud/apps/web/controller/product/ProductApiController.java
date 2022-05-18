@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
