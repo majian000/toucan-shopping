@@ -473,6 +473,7 @@ public class ShopProductApproveController {
                 //保存商品介绍
                 ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(rePublishProductApproveVO.getId());
                 if(shopProductApproveDescription==null) {
+                    shopProductApproveDescription = new ShopProductApproveDescription();
                     shopProductApproveDescription.setId(idGenerator.id());
                     shopProductApproveDescription.setProductApproveId(rePublishProductApproveVO.getId());
                     shopProductApproveDescription.setShopId(rePublishProductApproveVO.getShopId());
