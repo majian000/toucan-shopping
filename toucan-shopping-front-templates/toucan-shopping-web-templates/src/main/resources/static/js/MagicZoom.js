@@ -588,7 +588,17 @@ function MagicZoom_findZooms() {
         }
     }
 };
-if (MagicZoom_ua == 'msie') try {
-    document.execCommand("BackgroundImageCache", false, true)
-} catch(e) {};
-MagicZoom_addEventListener(window, "load", MagicZoom_findZooms);
+
+function initMagicZomm() {
+    if (MagicZoom_ua == 'msie') try {
+        document.execCommand("BackgroundImageCache", false, true)
+    } catch (e) {
+    };
+    MagicZoom_findZooms();
+}
+
+// if (MagicZoom_ua == 'msie') try {
+//     document.execCommand("BackgroundImageCache", false, true)
+// } catch (e) {
+// };
+// MagicZoom_addEventListener(window, "load", MagicZoom_findZooms);

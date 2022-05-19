@@ -194,12 +194,18 @@ function FulSs()
 {
 	return document.getElementById("tsImgSCon").getElementsByTagName("ul")[0];
 }
-	
+
+/**
+ * 初始化图片查看预览
+ */
+function initProductPhotoPreview() {
+
 //图片集外面的DIV宽
-document.getElementById("tsImgSCon").style.width=FliS(0).offsetWidth*4+"px";
-	
+	document.getElementById("tsImgSCon").style.width = FliS(0).offsetWidth * 4 + "px";
+
 //Ul宽
-FulSs().style.width=FliS(0).offsetWidth*FulS().length+"px";
+	FulSs().style.width = FliS(0).offsetWidth * FulS().length + "px";
 
 //图片等比例
-tsScrollResize();
+	tsScrollResize();
+}
