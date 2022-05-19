@@ -1,7 +1,5 @@
 $(function(){
-
-    var urlParam = window.location.href;
-    var id = urlParam.substring(urlParam.lastIndexOf("/")+1, urlParam.length);
+    var id = getProductId();
     if(id!=null&&id!="") {
         $.ajax({
             type: "POST",
@@ -25,6 +23,36 @@ $(function(){
         });
     }
 });
+
+function drawAttributeList(productVO)
+{
+    if(productVO.attributes!=null) {
+        var attributesObject = JSON.parse(productVO.attributes);
+        var attributeHtml="";
+        for (var attributeKey in attributesObject) {
+            attributeHtml+="<div class=\"des_choice\">";
+            attributeHtml+=" <span class=\"fl\">"+attributeKey+"：</span>";
+            attributeHtml+=" <ul>";
+            var attributeValues= attributesObject[attributeKey];
+            if(attributeValues!=null&&attributeValues.length>0)
+            {
+                for(var j=0;j<attributeValues.length;j++)
+                {
+                    if(j==0)
+                    {
+                        attributeHtml+="<li class=\"checked\">"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                    }else{
+                        attributeHtml+="<li>"+attributeValues[j]+"<div class=\"ch_img\"></div></li>";
+                    }
+                }
+            }
+
+            attributeHtml+=" </ul>";
+            attributeHtml+="</div>";
+        }
+        $(".attributeList").append(attributeHtml);
+    }
+}
 
 function drawProductPage(productVO)
 {
@@ -56,5 +84,6 @@ function drawProductPage(productVO)
         initProductPhotoPreview();
 
 
+        drawAttributeList(productVO);
     }
 }

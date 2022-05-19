@@ -1,0 +1,38 @@
+.des_price .quan-item
+{
+    position: relative;
+    height: 16px;
+    padding-left: 2px;
+    line-height: 15px;
+    text-align: center;
+    border-top: 1px solid #df3033;
+    border-bottom: 1px solid #df3033;
+    background: #ffdedf;
+    font-size: 12px;
+    white-space: nowrap;
+    margin-right: 13px;
+    cursor: pointer;
+}
+
+.des_price .quan-item .text {
+    padding: 0 10px;
+    color: #df3033;
+    font-size: 12px;
+}
+
+.des_price .quan-item s {
+    left: 0;
+    background-position: -2px 0;
+}
+.des_price .quan-item b {
+    right: -2px;
+}
+.des_price  .quan-item b,.des_price .quan-item s {
+    position: absolute;
+    top: -1px;
+    display: block;
+    height: 18px;
+    width: 2px;
+    overflow: hidden;
+    background: url(/static/images/quan-arr.gif) no-repeat;
+}
