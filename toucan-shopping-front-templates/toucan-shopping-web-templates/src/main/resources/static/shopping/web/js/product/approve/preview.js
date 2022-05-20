@@ -140,6 +140,7 @@ function drawProductPage(productVO)
         }
 
         $(".des_name").html("<p>"+productVO.name+"</p>");
+        document.title = productVO.name;
         $("#productPrice").html("￥"+productVO.price);
 
         initMagicZomm();
