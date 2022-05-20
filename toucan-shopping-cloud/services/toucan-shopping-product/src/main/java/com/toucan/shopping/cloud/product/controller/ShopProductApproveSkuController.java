@@ -156,6 +156,7 @@ public class ShopProductApproveSkuController {
             return resultObjectVO;
         }
         try {
+            //TODO 在这里加个缓存,先查询缓存在查询数据库
             ShopProductApproveSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSku.class);
             ShopProductApproveSkuVO shopProductApproveSkuVO = shopProductApproveSkuService.queryVOById(productSku.getId());
             if(shopProductApproveSkuVO!=null) {
@@ -189,6 +190,10 @@ public class ShopProductApproveSkuController {
                         shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
                         shopProductApproveSkuVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
                     }
+
+                    //查询商品SKU列表
+                    shopProductApproveSkuVO.setProductSkuVOList(shopProductApproveSkuService.queryVOListByApproveId(shopProductApproveVO.getId()));
+
                 }
                 resultObjectVO.setData(shopProductApproveSkuVO);
             }

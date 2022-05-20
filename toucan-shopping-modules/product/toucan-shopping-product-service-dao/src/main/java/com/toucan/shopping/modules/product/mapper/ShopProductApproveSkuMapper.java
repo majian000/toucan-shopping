@@ -26,6 +26,7 @@ public interface ShopProductApproveSkuMapper {
 
     ShopProductApproveSku queryByUuid(String uuid);
 
+    List<ShopProductApproveSkuVO> queryVOListByApproveId(Long approveId);
 
     int deleteByShopProductApproveId(Long productApproveId);
 

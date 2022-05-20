@@ -12,3 +12,10 @@ function getProductId()
     }
     return id_op;
 }
+
+function getHrefIngoreId()
+{
+    var urlParam = window.location.href;
+    var currentLocation=urlParam.substring(0,urlParam.lastIndexOf("/"));
+    return currentLocation;
+}

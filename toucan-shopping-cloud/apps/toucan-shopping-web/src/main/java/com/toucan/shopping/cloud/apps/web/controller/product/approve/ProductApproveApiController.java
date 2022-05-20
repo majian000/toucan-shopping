@@ -76,8 +76,6 @@ public class ProductApproveApiController {
                 if(resultObjectVO.getData()!=null) {
                     shopProductApproveSkuVO = resultObjectVO.formatData(ShopProductApproveSkuVO.class);
 
-
-
                     if(shopProductApproveSkuVO.getMainPhotoFilePath()!=null) {
                         shopProductApproveSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveSkuVO.getMainPhotoFilePath());
                     }
@@ -98,6 +96,10 @@ public class ProductApproveApiController {
                             }
                         }
                     }
+                    if(shopProductApproveSkuVO.getProductPreviewPath()!=null) {
+                        shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+shopProductApproveSkuVO.getProductPreviewPath());
+                    }
+
 
                     retObject.setData(shopProductApproveSkuVO);
                 }

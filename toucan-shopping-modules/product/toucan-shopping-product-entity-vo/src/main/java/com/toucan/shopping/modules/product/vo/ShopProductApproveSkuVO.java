@@ -76,5 +76,9 @@ public class ShopProductApproveSkuVO extends ShopProductApproveSku {
      */
     private ShopProductApproveDescriptionVO shopProductApproveDescriptionVO;
 
+    /**
+     * SKU列表
+     */
+    private List<ShopProductApproveSkuVO> productSkuVOList;
 
 }

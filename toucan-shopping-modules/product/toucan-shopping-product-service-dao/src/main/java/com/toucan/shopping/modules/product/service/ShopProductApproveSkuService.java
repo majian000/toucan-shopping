@@ -44,6 +44,8 @@ public interface ShopProductApproveSkuService {
 
     ShopProductApproveSkuVO queryVOById(Long id);
 
+    List<ShopProductApproveSkuVO> queryVOListByApproveId(Long approveId);
+
     ShopProductApproveSku queryByUuid(String uuid);
 
 
