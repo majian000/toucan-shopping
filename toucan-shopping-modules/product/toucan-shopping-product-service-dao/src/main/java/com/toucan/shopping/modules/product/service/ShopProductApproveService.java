@@ -47,6 +47,8 @@ public interface ShopProductApproveService {
 
     ShopProductApproveVO queryOne(ShopProductApproveVO shopProductVO);
 
+    ShopProductApproveVO queryById(Long id);
+
     int updateShopProductId(Long id, Long shopProductId);
 
 }

@@ -1670,7 +1670,11 @@ ul.brand li .name span{
 }
 
 .des_con{
-	overflow:hidden; margin:25px;
+	overflow:hidden; margin:25px;max-width:750px;width:100%;
+}
+
+.des_con_p{
+	overflow:hidden; margin:25px;max-width:750px;width:100%;
 }
 
 table.jud_tab{

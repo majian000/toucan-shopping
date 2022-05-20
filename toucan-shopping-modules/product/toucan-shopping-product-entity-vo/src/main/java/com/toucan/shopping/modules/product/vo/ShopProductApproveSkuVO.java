@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.product.entity.ShopProductApproveSku;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +37,44 @@ public class ShopProductApproveSkuVO extends ShopProductApproveSku {
     private String httpMainPhoto;
 
 
+
+    private String productAttributes; //这个商品所有属性
+
+
+
+
+    /**
+     * 商品预览图路径
+     */
+    private List<String> previewPhotoPaths;
+
+
+    /**
+     * 商品预览图路径
+     */
+    private List<String> httpPreviewPhotoPaths;
+
+
+    /**
+     * SKU预览图路径
+     */
+    private List<String> httpSkuPreviewPhotoPaths;
+
+    /**
+     * 主图文件路径
+     */
+    private String mainPhotoFilePath;
+
+    /**
+     * 商品主图
+     */
+    private String httpMainPhotoFilePath;
+
+
+    /**
+     * 商品介绍
+     */
+    private ShopProductApproveDescriptionVO shopProductApproveDescriptionVO;
 
 
 }

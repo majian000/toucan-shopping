@@ -88,6 +88,10 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
     }
 
     @Override
+    public ShopProductApproveVO queryById(Long id) {
+        return shopProductApproveMapper.queryById(id);
+    }
+    @Override
     public int updateShopProductId(Long id, Long shopProductId) {
         return shopProductApproveMapper.updateShopProductId(id, shopProductId);
     }

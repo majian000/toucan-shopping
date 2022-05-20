@@ -6,11 +6,14 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.entity.ShopProductApproveDescription;
+import com.toucan.shopping.modules.product.entity.ShopProductApproveImg;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveSku;
 import com.toucan.shopping.modules.product.page.ShopProductApproveSkuPageInfo;
-import com.toucan.shopping.modules.product.service.ShopProductApproveSkuService;
+import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
-import com.toucan.shopping.modules.product.vo.ShopProductApproveSkuVO;
+import com.toucan.shopping.modules.product.vo.*;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -31,13 +35,17 @@ public class ShopProductApproveSkuController {
     @Autowired
     private ShopProductApproveSkuService shopProductApproveSkuService;
 
+    @Autowired
+    private ShopProductApproveService shopProductApproveService;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private ShopProductApproveDescriptionService shopProductApproveDescriptionService;
 
+    @Autowired
+    private ShopProductApproveDescriptionImgService shopProductApproveDescriptionImgService;
 
-
-
+    @Autowired
+    private ShopProductApproveImgService shopProductApproveImgService;
 
 
 
@@ -122,6 +130,79 @@ public class ShopProductApproveSkuController {
     }
 
 
+
+    /**
+     * 根据ID查询(商城PC端使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            ShopProductApproveSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSku.class);
+            ShopProductApproveSkuVO shopProductApproveSkuVO = shopProductApproveSkuService.queryVOById(productSku.getId());
+            if(shopProductApproveSkuVO!=null) {
+                ShopProductApproveVO shopProductApproveVO = shopProductApproveService.queryById(shopProductApproveSkuVO.getProductApproveId());
+                if(shopProductApproveVO!=null) {
+                    shopProductApproveSkuVO.setProductAttributes(shopProductApproveVO.getAttributes());
+                    shopProductApproveSkuVO.setPreviewPhotoPaths(new LinkedList<>());
+
+                    //查询商品图片
+                    ShopProductApproveImgVO shopProductImgVO = new ShopProductApproveImgVO();
+                    shopProductImgVO.setProductApproveId(shopProductApproveVO.getId());
+                    List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryListOrderByImgSortAsc(shopProductImgVO);
+                    if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(shopProductImgs)) {
+                        for (ShopProductApproveImg shopProductImg : shopProductImgs) {
+                            //如果是商品主图
+                            if (shopProductImg.getImgType().intValue() == 1) {
+                                shopProductApproveSkuVO.setMainPhotoFilePath(shopProductImg.getFilePath());
+                            } else if (shopProductImg.getImgType().intValue() == 2) {
+                                shopProductApproveSkuVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
+                            }
+                        }
+                    }
+
+                    //查询商品介绍
+                    ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductApproveVO.getId());
+                    if(shopProductApproveDescription!=null) {
+                        ShopProductApproveDescriptionVO shopProductApproveDescriptionVO = new ShopProductApproveDescriptionVO();
+                        BeanUtils.copyProperties(shopProductApproveDescriptionVO,shopProductApproveDescription);
+
+                        List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductApproveVO.getId(),shopProductApproveDescription.getId());
+                        shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
+                        shopProductApproveSkuVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
+                    }
+                }
+                resultObjectVO.setData(shopProductApproveSkuVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
     /**
      * 根据ID查询
      * @param requestJsonVO
@@ -152,19 +233,7 @@ public class ShopProductApproveSkuController {
                 List<ShopProductApproveSku> productSkuList = new ArrayList<ShopProductApproveSku>();
                 for(ShopProductApproveSku productSku:productSkus) {
                     if(StringUtils.isNotEmpty(productSku.getUuid())) {
-                        String productSkuKey = ProductRedisKeyUtil.getProductKey(requestJsonVO.getAppCode(),productSku.getUuid());
-                        Object productEntityObject = stringRedisTemplate.opsForValue().get(productSkuKey);
-                        ShopProductApproveSku productSkuEntity=null;
-                        //如果缓存不存在 查询数据库 刷新到缓存
-                        if(productEntityObject==null) {
-                            productSkuEntity = shopProductApproveSkuService.queryByUuid(productSku.getUuid());
-                            //刷新到缓存
-                            if(productSkuEntity!=null) {
-                                stringRedisTemplate.opsForValue().set(productSkuKey, JSONObject.toJSONString(productSkuEntity));
-                            }
-                        }else{
-                            productSkuEntity=JSONObject.parseObject(String.valueOf(productEntityObject),ShopProductApproveSku.class);
-                        }
+                        ShopProductApproveSku productSkuEntity= shopProductApproveSkuService.queryByUuid(productSku.getUuid());
                         if (productSkuEntity != null) {
                             productSkuList.add(productSkuEntity);
                         }

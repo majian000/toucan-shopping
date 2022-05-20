@@ -27,7 +27,7 @@ $(function(){
 function drawAttributeList(productVO)
 {
     if(productVO.attributes!=null) {
-        var attributesObject = JSON.parse(productVO.attributes);
+        var attributesObject = JSON.parse(productVO.productAttributes);
         var attributeHtml="";
         for (var attributeKey in attributesObject) {
             attributeHtml+="<div class=\"des_choice\">";
@@ -85,5 +85,22 @@ function drawProductPage(productVO)
 
 
         drawAttributeList(productVO);
+
+        if(productVO.shopProductApproveDescriptionVO!=null)
+        {
+            var productDescHtml="";
+            var shopProductApproveDescriptionVO=productVO.shopProductApproveDescriptionVO;
+            if(shopProductApproveDescriptionVO.productDescriptionImgs!=null
+                &&shopProductApproveDescriptionVO.productDescriptionImgs.length>0)
+            {
+                for(var i=0;i<shopProductApproveDescriptionVO.productDescriptionImgs.length;i++)
+                {
+                    var img = shopProductApproveDescriptionVO.productDescriptionImgs[i];
+                    productDescHtml+="<p><a href=\""+img.link+"\"><img title=\""+img.title+"\" src=\""+img.httpFilePath+"\"></a></p>"
+                }
+            }
+            $(".des_con_p").html(productDescHtml);
+        }
+
     }
 }

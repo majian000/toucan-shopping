@@ -48,6 +48,7 @@ public interface ShopProductApproveMapper {
 
     ShopProductApproveVO queryOne(ShopProductApproveVO shopProductVO);
 
+    ShopProductApproveVO queryById(Long id);
 
     ShopProductApproveVO findById(Long id);
 

@@ -21,6 +21,9 @@ public interface ShopProductApproveSkuMapper {
 
     ShopProductApproveSku queryById(Long id);
 
+
+    ShopProductApproveSkuVO queryVOById(Long id);
+
     ShopProductApproveSku queryByUuid(String uuid);
 
 

@@ -58,6 +58,11 @@ public class ShopProductApproveSkuServiceImpl implements ShopProductApproveSkuSe
     }
 
     @Override
+    public ShopProductApproveSkuVO queryVOById(Long id) {
+        return shopProductApproveSkuMapper.queryVOById(id);
+    }
+
+    @Override
     public ShopProductApproveSku queryByUuid(String uuid) {
         return shopProductApproveSkuMapper.queryByUuid(uuid);
     }

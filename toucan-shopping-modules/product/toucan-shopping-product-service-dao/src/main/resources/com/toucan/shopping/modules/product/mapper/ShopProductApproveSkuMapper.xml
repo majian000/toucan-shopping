@@ -124,7 +124,12 @@
 
 
     <select id="queryById" resultMap="productApproveSkuMap" parameterType="java.lang.Long">
-        select * from t_shop_product_approve_sku where id=#{skuId} and delete_status=0
+        select * from t_shop_product_approve_sku where id=#{skuId} and delete_status=0 limit 0,1
+    </select>
+
+
+    <select id="queryVOById" resultMap="productSkuVOMap" parameterType="java.lang.Long">
+        select * from t_shop_product_approve_sku where id=#{skuId} and delete_status=0 limit 0,1
     </select>
 
 
