@@ -89,7 +89,7 @@ function drawTable(pageResult)
             {
                 tableHtml+=     "                                &nbsp;<a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新编辑</a>\n" ;
             }
-            tableHtml+=     "                                &nbsp;<a href=\"\" style=\"color:blue\">商品预览</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"approvePreviewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
             if(row.approveStatus==3||row.approveStatus==1)
             {
                 tableHtml+=     "                                &nbsp;<a class=\"approveListDelRow\" attr-id=\""+row.id+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
@@ -103,6 +103,18 @@ function drawTable(pageResult)
     $("#productApproveTableBody").html(tableHtml);
     $("#productApproveTable").FrozenTable(2,0,0);
     bindApproveDelEvent();
+    bindApprovePreviewEvent();
+}
+
+function bindApprovePreviewEvent()
+{
+    $(".approvePreviewRow").unbind("click");
+    //SKU信息
+    $(".approvePreviewRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+
+        window.open(shoppingPcPath+productApprovePreviewPage+attrId);
+    });
 }
 
 function bindApproveDelEvent()

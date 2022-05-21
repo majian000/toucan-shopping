@@ -27,10 +27,16 @@ public class ProductApprovePageController extends BaseController {
 
 
     @RequestMapping("/preview/{id}")
-    public String page(@PathVariable String id)
+    public String preview(@PathVariable String id)
     {
         return "product/approve/preview";
     }
 
 
+
+    @RequestMapping("/preview/paid/{id}")
+    public String previewPageByProductApproveId(@PathVariable String id)
+    {
+        return "product/approve/preview";
+    }
 }

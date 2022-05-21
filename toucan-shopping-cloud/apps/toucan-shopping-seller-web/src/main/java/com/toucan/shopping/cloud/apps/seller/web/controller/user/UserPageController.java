@@ -50,7 +50,7 @@ public class UserPageController extends BaseController {
     public void regist(HttpServletResponse response)
     {
         try {
-            response.sendRedirect(toucan.getShoppingPC().getRegistPage());
+            response.sendRedirect(toucan.getShoppingPC().getBasePath()+toucan.getShoppingPC().getRegistPage());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

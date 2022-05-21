@@ -22,6 +22,7 @@ public class ProductConstant {
 
     public static final int MAX_SHOP_PRODUCT_NAME_SIZE=300; //商品名称最大长度
 
+    public static final int PRODUCT_APPROVE_SKU_REDIS_MAX_AGE=3600; //商品审核预览缓存 1小时过期
 
 
 

@@ -35,6 +35,11 @@ public class ToucanStringRedisServiceImpl implements ToucanStringRedisService {
     }
 
     @Override
+    public void set(String key, Object val, long timeout, TimeUnit unit) {
+        redisTemplate.opsForValue().set(key, val, timeout, unit);
+    }
+
+    @Override
     public Boolean expire(String key, long timeout, TimeUnit unit) {
         return redisTemplate.expire(key,timeout, unit);
     }

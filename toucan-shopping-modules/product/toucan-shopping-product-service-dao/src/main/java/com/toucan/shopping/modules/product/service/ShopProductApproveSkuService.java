@@ -59,5 +59,6 @@ public interface ShopProductApproveSkuService {
 
     List<ShopProductApproveSkuVO> queryListByProductApproveId(Long productApproveId);
 
+    ShopProductApproveSkuVO queryFirstOneByProductApproveId(Long productApproveId);
 
 }

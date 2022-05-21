@@ -19,3 +19,17 @@ function getHrefIngoreId()
     var currentLocation=urlParam.substring(0,urlParam.lastIndexOf("/"));
     return currentLocation;
 }
+
+/**
+ * 判断是skuId查询还是商品id查询
+ * @returns {number}
+ */
+function getPreviewType()
+{
+    var urlParam = window.location.href;
+    if(urlParam.indexOf("/paid/")!=-1)
+    {
+        return 1;
+    }
+    return 2;
+}

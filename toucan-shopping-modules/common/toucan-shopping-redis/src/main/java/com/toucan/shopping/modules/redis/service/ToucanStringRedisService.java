@@ -12,6 +12,8 @@ public interface ToucanStringRedisService {
 
     void set(String key,Object val);
 
+    void set(String key, Object val, long timeout, TimeUnit unit);
+
     Boolean expire(String key, long timeout, TimeUnit unit);
 
     boolean delete(String key);

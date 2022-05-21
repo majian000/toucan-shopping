@@ -20,14 +20,23 @@ public class ShoppingPC {
     private Freemarker freemarker;
 
     /**
-     * 用户注册页
-     */
-    private String registPage;
-
-    /**
      *
      * 根路径
      */
     private String basePath;
+
+
+    /**
+     * 用户注册页
+     */
+    private String registPage;
+
+
+    /**
+     * 商品审核预览页
+     */
+    private String productApprovePreviewPage;
+
+
 
 }

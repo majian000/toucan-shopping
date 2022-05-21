@@ -91,4 +91,9 @@ public class ShopProductApproveSkuServiceImpl implements ShopProductApproveSkuSe
     public List<ShopProductApproveSkuVO> queryListByProductApproveId(Long productApproveId) {
         return shopProductApproveSkuMapper.queryListByProductApproveId(productApproveId);
     }
+
+    @Override
+    public ShopProductApproveSkuVO queryFirstOneByProductApproveId(Long productApproveId) {
+        return shopProductApproveSkuMapper.queryFirstOneByProductApproveId(productApproveId);
+    }
 }

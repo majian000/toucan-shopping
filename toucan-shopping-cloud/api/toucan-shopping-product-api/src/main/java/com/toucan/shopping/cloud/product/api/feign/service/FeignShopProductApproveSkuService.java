@@ -39,4 +39,16 @@ public interface FeignShopProductApproveSkuService {
     @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 根据ID查询,只查询1个sku(商城PC端使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/one/by/productApproveId/for/front",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryOneByProductApproveIdForFront(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
 }

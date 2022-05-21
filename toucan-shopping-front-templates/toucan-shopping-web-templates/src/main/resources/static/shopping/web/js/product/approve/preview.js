@@ -4,9 +4,15 @@ var g_productVo;
 $(function(){
     var id = getProductId();
     if(id!=null&&id!="") {
+        var type= getPreviewType();
+        var requestPath = basePath + "/api/product/approve/detail";
+        if(type==1)
+        {
+            requestPath  = basePath + "/api/product/approve/detail/paid";
+        }
         $.ajax({
             type: "POST",
-            url: basePath + "/api/product/approve/detail",
+            url: requestPath,
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify({"id": id}),
             dataType: "json",

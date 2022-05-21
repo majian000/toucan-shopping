@@ -83,6 +83,21 @@ public class FeignShopProductApproveSkuServiceFallbackFactory implements Fallbac
                 resultObjectVO.setMsg("查询失败,请重试!");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryOneByProductApproveIdForFront(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopProductApproveSkuService queryOneByProductApproveIdForFront faild   params {}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败,请重试!");
+                return resultObjectVO;
+            }
         };
     }
 }

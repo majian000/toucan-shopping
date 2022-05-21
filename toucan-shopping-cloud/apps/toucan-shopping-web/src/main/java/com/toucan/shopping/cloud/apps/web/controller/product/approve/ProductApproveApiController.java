@@ -114,5 +114,61 @@ public class ProductApproveApiController {
     }
 
 
+    /**
+     * 根据商品审核主表ID查询1个预览的SKU
+     * @param shopProductApproveVO
+     * @return
+     */
+    @RequestMapping(value = "/detail/paid",method = RequestMethod.POST)
+    public ResultObjectVO detailByProductApproveId(@RequestBody ShopProductApproveVO shopProductApproveVO)
+    {
+        ResultObjectVO retObject = new ResultObjectVO();
+        try {
+            ShopProductApproveVO queryShopProductApprove = new ShopProductApproveVO();
+            queryShopProductApprove.setId(shopProductApproveVO.getId());;
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryShopProductApprove);
+            ResultObjectVO resultObjectVO = feignShopProductApproveSkuService.queryOneByProductApproveIdForFront(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    ShopProductApproveSkuVO shopProductApproveSkuVO = resultObjectVO.formatData(ShopProductApproveSkuVO.class);
+
+                    if(shopProductApproveSkuVO.getMainPhotoFilePath()!=null) {
+                        shopProductApproveSkuVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveSkuVO.getMainPhotoFilePath());
+                    }
+
+                    if(CollectionUtils.isNotEmpty(shopProductApproveSkuVO.getPreviewPhotoPaths())) {
+                        shopProductApproveSkuVO.setHttpPreviewPhotoPaths(new LinkedList<>());
+                        for(String previewPhotoPath:shopProductApproveSkuVO.getPreviewPhotoPaths())
+                        {
+                            shopProductApproveSkuVO.getHttpPreviewPhotoPaths().add(imageUploadService.getImageHttpPrefix()+previewPhotoPath);
+                        }
+                    }
+
+                    if(shopProductApproveSkuVO.getShopProductApproveDescriptionVO()!=null) {
+                        if(CollectionUtils.isNotEmpty(shopProductApproveSkuVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs()))
+                        {
+                            for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveSkuVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs()) {
+                                shopProductApproveDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveDescriptionImgVO.getFilePath());
+                            }
+                        }
+                    }
+                    if(shopProductApproveSkuVO.getProductPreviewPath()!=null) {
+                        shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+shopProductApproveSkuVO.getProductPreviewPath());
+                    }
+
+
+                    retObject.setData(shopProductApproveSkuVO);
+                }
+            }
+        }catch(Exception e)
+        {
+            retObject.setMsg("查询失败,请稍后重试");
+            retObject.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return retObject;
+    }
+
 
 }

@@ -54,4 +54,7 @@ public interface ShopProductApproveSkuMapper {
 
     List<ShopProductApproveSkuVO> queryListByProductApproveId(Long productApproveId);
 
+
+    ShopProductApproveSkuVO queryFirstOneByProductApproveId(Long productApproveId);
+
 }

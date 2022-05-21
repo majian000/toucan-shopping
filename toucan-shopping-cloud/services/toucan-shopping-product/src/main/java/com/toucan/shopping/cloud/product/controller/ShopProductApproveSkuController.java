@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.product.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.product.service.ShopProductApproveSkuRedisService;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -11,17 +12,17 @@ import com.toucan.shopping.modules.product.entity.ShopProductApproveImg;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveSku;
 import com.toucan.shopping.modules.product.page.ShopProductApproveSkuPageInfo;
 import com.toucan.shopping.modules.product.service.*;
-import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.*;
+import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,8 +48,11 @@ public class ShopProductApproveSkuController {
     @Autowired
     private ShopProductApproveImgService shopProductApproveImgService;
 
+    @Autowired
+    private ToucanStringRedisService toucanStringRedisService;
 
-
+    @Autowired
+    private ShopProductApproveSkuRedisService shopProductApproveSkuRedisService;
 
     /**
      * 查询列表
@@ -130,36 +134,19 @@ public class ShopProductApproveSkuController {
     }
 
 
-
     /**
-     * 根据ID查询(商城PC端使用)
-     * @param requestJsonVO
+     * 从缓存或者数据库中查询
+     * @param skuId
      * @return
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
      */
-    @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        if(requestJsonVO==null)
-        {
-            logger.info("请求参数为空");
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
-            return resultObjectVO;
-        }
-        if(requestJsonVO.getAppCode()==null)
-        {
-            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
-            resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("没有找到应用!");
-            return resultObjectVO;
-        }
-        try {
-            //TODO 在这里加个缓存,先查询缓存在查询数据库
-            ShopProductApproveSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSku.class);
-            ShopProductApproveSkuVO shopProductApproveSkuVO = shopProductApproveSkuService.queryVOById(productSku.getId());
-            if(shopProductApproveSkuVO!=null) {
+    private ShopProductApproveSkuVO queryProductApproveSkuByCacheOrDB(Long skuId) throws InvocationTargetException, IllegalAccessException {
+        ShopProductApproveSkuVO shopProductApproveSkuVO = shopProductApproveSkuRedisService.queryProductApproveSku(String.valueOf(skuId));
+        if(shopProductApproveSkuVO==null) { //查询数据库然后同步缓存
+            shopProductApproveSkuVO = shopProductApproveSkuService.queryVOById(skuId);
+
+            if(shopProductApproveSkuVO!=null) { //如果数据库中这条记录没被删除,就刷新到缓存
                 ShopProductApproveVO shopProductApproveVO = shopProductApproveService.queryById(shopProductApproveSkuVO.getProductApproveId());
                 if(shopProductApproveVO!=null) {
                     shopProductApproveSkuVO.setProductAttributes(shopProductApproveVO.getAttributes());
@@ -194,9 +181,99 @@ public class ShopProductApproveSkuController {
                     //查询商品SKU列表
                     shopProductApproveSkuVO.setProductSkuVOList(shopProductApproveSkuService.queryVOListByApproveId(shopProductApproveVO.getId()));
 
+                    //刷新到缓存
+                    shopProductApproveSkuRedisService.addToCache(shopProductApproveSkuVO);
                 }
-                resultObjectVO.setData(shopProductApproveSkuVO);
             }
+        }
+        return shopProductApproveSkuVO;
+    }
+
+
+    /**
+     * 根据ID查询(商城PC端使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/id/for/front",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryByIdForFront(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            //TODO 在这里加个缓存,先查询缓存在查询数据库
+            ShopProductApproveSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSku.class);
+
+            if(productSku.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空!");
+                return resultObjectVO;
+            }
+            ShopProductApproveSkuVO shopProductApproveSkuVO =queryProductApproveSkuByCacheOrDB(productSku.getId());
+            resultObjectVO.setData(shopProductApproveSkuVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
+
+
+
+    /**
+     * 根据ID查询,只查询1个sku(商城PC端使用)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/one/by/productApproveId/for/front",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOneByProductApproveIdForFront(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            ShopProductApproveVO shopProductApproveVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
+            if(shopProductApproveVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空!");
+                return resultObjectVO;
+            }
+
+            ShopProductApproveSku productSku = shopProductApproveSkuService.queryFirstOneByProductApproveId(shopProductApproveVO.getId());
+            ShopProductApproveSkuVO shopProductApproveSkuVO =queryProductApproveSkuByCacheOrDB(productSku.getId());
+            resultObjectVO.setData(shopProductApproveSkuVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

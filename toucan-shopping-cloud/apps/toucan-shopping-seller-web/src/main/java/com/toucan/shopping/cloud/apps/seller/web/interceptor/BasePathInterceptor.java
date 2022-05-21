@@ -17,9 +17,15 @@ public class BasePathInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         httpServletRequest.setAttribute("basePath", httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath());
+        //用户注册页
         if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getBasePath()!=null)
         {
             httpServletRequest.setAttribute("shoppingPcPath", toucan.getShoppingPC().getBasePath());
+        }
+        //商品审核预览页
+        if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getProductApprovePreviewPage()!=null)
+        {
+            httpServletRequest.setAttribute("productApprovePreviewPage", toucan.getShoppingPC().getProductApprovePreviewPage());
         }
         return true;
     }
