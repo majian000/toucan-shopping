@@ -215,7 +215,6 @@ public class ShopProductApproveSkuController {
             return resultObjectVO;
         }
         try {
-            //TODO 在这里加个缓存,先查询缓存在查询数据库
             ShopProductApproveSku productSku = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveSku.class);
 
             if(productSku.getId()==null)
