@@ -565,7 +565,7 @@ public class ShopProductApproveApiController extends BaseController {
                 return resultObjectVO;
             }
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
-            if (sellerShopVO == null) {
+            if (sellerShopVO == null||(sellerShopVO.getEnableStatus()!=null&&sellerShopVO.getEnableStatus().intValue()==0)) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
                 return resultObjectVO;
@@ -829,7 +829,7 @@ public class ShopProductApproveApiController extends BaseController {
                 return resultObjectVO;
             }
             SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
-            if (sellerShopVO == null) {
+            if (sellerShopVO == null||(sellerShopVO.getEnableStatus()!=null&&sellerShopVO.getEnableStatus().intValue()==0)) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("发布失败,当前店铺被禁用!");
                 return resultObjectVO;

@@ -67,6 +67,12 @@ public class SellerShopServiceImpl implements SellerShopService {
     }
 
     @Override
+    public SellerShop findByUserMainId(Long userMainId) {
+        return sellerShopMapper.findByUserMainId(userMainId);
+    }
+
+
+    @Override
     public List<SellerShop> queryList(SellerShopVO queryModel) {
         return sellerShopMapper.queryList(queryModel);
     }

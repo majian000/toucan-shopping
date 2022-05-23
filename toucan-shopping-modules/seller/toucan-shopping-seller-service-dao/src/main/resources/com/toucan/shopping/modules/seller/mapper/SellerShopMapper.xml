@@ -124,6 +124,12 @@
     </select>
 
 
+    <select id="findByUserMainId" resultMap="entityMap" parameterType="java.lang.Long">
+        select * from t_seller_shop t
+        where 1=1  and t.delete_status = 0 and t.user_main_id = #{userMainId}  limit 0,1
+
+    </select>
+
 
     <select id="queryList" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.vo.SellerShopVO">
         select t.* from t_seller_shop t

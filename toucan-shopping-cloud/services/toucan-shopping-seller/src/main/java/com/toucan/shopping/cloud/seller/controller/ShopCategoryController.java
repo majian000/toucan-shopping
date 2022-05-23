@@ -114,10 +114,10 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
+            if(sellerShop!=null)
             {
-                shopCategory.setShopId(sellerShops.get(0).getId());
+                shopCategory.setShopId(sellerShop.getId());
             }
 
             if(shopCategory.getShopId()==null)
@@ -155,10 +155,10 @@ public class ShopCategoryController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(shopCategory.getUserMainId());
             querySellerShop.setId(shopCategory.getShopId());
-            sellerShops = sellerShopService.findListByEntity(querySellerShop);
-            for(SellerShop sellerShop:sellerShops)
+            List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
+            for(SellerShop entity:sellerShops)
             {
-                int categoryMaxCount = sellerShop.getCategoryMaxCount()!=null?sellerShop.getCategoryMaxCount():toucan.getSeller().getShopCategoryMaxCount();
+                int categoryMaxCount = entity.getCategoryMaxCount()!=null?entity.getCategoryMaxCount():toucan.getSeller().getShopCategoryMaxCount();
                 if(count+1>categoryMaxCount)
                 {
                     //释放锁
@@ -596,10 +596,10 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
+            if(sellerShop!=null)
             {
-                shopCategory.setShopId(sellerShops.get(0).getId());
+                shopCategory.setShopId(sellerShop.getId());
             }
 
             if(shopCategory.getShopId()==null)
@@ -765,10 +765,10 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
+            if(sellerShop!=null)
             {
-                shopCategory.setShopId(sellerShops.get(0).getId());
+                shopCategory.setShopId(sellerShop.getId());
             }
 
             if(shopCategory.getShopId()==null)
@@ -934,10 +934,10 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
+            if(sellerShop!=null)
             {
-                shopCategory.setShopId(sellerShops.get(0).getId());
+                shopCategory.setShopId(sellerShop.getId());
             }
 
             if(shopCategory.getShopId()==null)
@@ -1133,10 +1133,10 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
+            if(sellerShop!=null)
             {
-                shopCategory.setShopId(sellerShops.get(0).getId());
+                shopCategory.setShopId(sellerShop.getId());
             }
 
             if(shopCategory.getShopId()==null)
@@ -1339,10 +1339,10 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShop = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
+            if(sellerShop!=null)
             {
-                shopCategory.setShopId(sellerShops.get(0).getId());
+                shopCategory.setShopId(sellerShop.getId());
             }
 
             if(shopCategory.getShopId()==null)
@@ -1910,10 +1910,10 @@ public class ShopCategoryController {
                 resultObjectVO.setMsg("店铺ID不能为空!");
                 return resultObjectVO;
             }
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(queryShopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShop = sellerShopService.findByUserMainId(queryShopCategory.getUserMainId());
+            if(sellerShop!=null)
             {
-                queryShopCategory.setShopId(sellerShops.get(0).getId());
+                queryShopCategory.setShopId(sellerShop.getId());
             }
 
             if(queryShopCategory.getShopId()==null)
@@ -2092,10 +2092,10 @@ public class ShopCategoryController {
             }
 
 
-            List<SellerShop> sellerShops = sellerShopService.findEnabledByUserMainId(shopCategory.getUserMainId());
-            if(!CollectionUtils.isEmpty(sellerShops))
+            SellerShop sellerShopEntity = sellerShopService.findByUserMainId(shopCategory.getUserMainId());
+            if(sellerShopEntity!=null)
             {
-                shopCategory.setShopId(sellerShops.get(0).getId());
+                shopCategory.setShopId(sellerShopEntity.getId());
             }
 
             if(shopCategory.getShopId()==null)

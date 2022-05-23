@@ -30,7 +30,7 @@ public interface FeignSellerShopService {
 
 
     /**
-     * 查询指定用户下店铺(启用的店铺)
+     * 查询指定用户下店铺
      * @param requestVo
      * @return
      */

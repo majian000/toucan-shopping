@@ -213,7 +213,6 @@ public class SellerShopController {
                 }
 
             }
-            querySellerShop.setEnableStatus((short)1);
             List<SellerShop> sellerShops = sellerShopService.findListByEntity(querySellerShop);
             if(!CollectionUtils.isEmpty(sellerShops)) {
                 SellerShop sellerShop = sellerShops.get(0);

@@ -51,6 +51,8 @@ public interface SellerShopService {
 
     List<SellerShop> findEnabledByUserMainId(Long userMainId);
 
+    SellerShop findByUserMainId(Long userMainId);
+
 
     List<SellerShop> queryList(SellerShopVO queryModel);
 
