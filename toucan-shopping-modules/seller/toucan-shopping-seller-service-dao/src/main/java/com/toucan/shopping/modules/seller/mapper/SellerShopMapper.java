@@ -32,6 +32,8 @@ public interface SellerShopMapper {
 
     List<SellerShop> findEnabledByUserMainId(Long userMainId);
 
+    SellerShop findOneEnabledByUserMainId(Long userMainId);
+
     SellerShop findByUserMainId(Long userMainId);
 
     List<SellerShop> queryList(SellerShopVO queryModel);
@@ -39,5 +41,7 @@ public interface SellerShopMapper {
     List<SellerShop> queryListPage(SellerShopPageInfo queryPageInfo);
 
     Long queryListPageCount(SellerShopPageInfo queryPageInfo);
+
+    SellerShop findById(Long id);
 
 }

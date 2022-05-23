@@ -62,9 +62,21 @@ public class SellerShopServiceImpl implements SellerShopService {
     }
 
     @Override
+    public SellerShop findById(Long id) {
+        return sellerShopMapper.findById(id);
+    }
+
+    @Override
     public List<SellerShop> findEnabledByUserMainId(Long userMainId) {
         return sellerShopMapper.findEnabledByUserMainId(userMainId);
     }
+
+    @Override
+    public SellerShop findOneEnabledByUserMainId(Long userMainId) {
+        return sellerShopMapper.findOneEnabledByUserMainId(userMainId);
+    }
+
+
 
     @Override
     public SellerShop findByUserMainId(Long userMainId) {

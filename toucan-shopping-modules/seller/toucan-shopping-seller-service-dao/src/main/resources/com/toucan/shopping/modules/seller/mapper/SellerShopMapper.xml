@@ -92,7 +92,7 @@
 
     <update id="updateLogo" parameterType="com.toucan.shopping.modules.seller.entity.SellerShop">
         update t_seller_shop set  logo=#{logo}
-          where  user_main_id=#{userMainId} and enable_status = 1 and delete_status = 0
+          where  user_main_id=#{userMainId} and id = #{id} and enable_status = 1 and delete_status = 0
     </update>
 
 
@@ -104,7 +104,7 @@
          <if test="logo!=null">
              ,logo=#{logo}
          </if>
-          where  user_main_id=#{userMainId} and enable_status = 1 and delete_status = 0
+          where  id=#{id} and enable_status = 1 and delete_status = 0
     </update>
 
 
@@ -120,6 +120,14 @@
     <select id="findEnabledByUserMainId" resultMap="entityMap" parameterType="java.lang.Long">
         select * from t_seller_shop t
         where 1=1  and t.delete_status = 0 and t.user_main_id = #{userMainId}  and t.enable_status = 1
+
+    </select>
+
+
+
+    <select id="findOneEnabledByUserMainId" resultMap="entityMap" parameterType="java.lang.Long">
+        select * from t_seller_shop t
+        where 1=1  and t.delete_status = 0 and t.user_main_id = #{userMainId}  and t.enable_status = 1 limit 0,1
 
     </select>
 
@@ -174,6 +182,13 @@
         </where>
 
     </select>
+
+    <select id="findById" resultMap="entityMap" parameterType="java.lang.Long">
+        select t.* from t_seller_shop t
+            where 1=1 and t.id = #{id}
+          limit 0,1
+    </select>
+
 
 
 

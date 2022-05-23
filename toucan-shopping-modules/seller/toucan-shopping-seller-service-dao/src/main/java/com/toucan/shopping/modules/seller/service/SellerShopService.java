@@ -49,7 +49,11 @@ public interface SellerShopService {
 
     List<SellerShop> findListByEntity(SellerShop query);
 
+    SellerShop findById(Long id);
+
     List<SellerShop> findEnabledByUserMainId(Long userMainId);
+
+    SellerShop findOneEnabledByUserMainId(Long userMainId);
 
     SellerShop findByUserMainId(Long userMainId);
 
