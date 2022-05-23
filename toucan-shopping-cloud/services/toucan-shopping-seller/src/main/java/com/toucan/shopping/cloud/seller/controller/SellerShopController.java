@@ -631,6 +631,7 @@ public class SellerShopController {
                 }else{
                     updateSellerShop.setChangeNameCount(sellerShopRet.getChangeNameCount());
                 }
+                updateSellerShop.setId(sellerShopRet.getId());
             }
 
 
@@ -643,7 +644,6 @@ public class SellerShopController {
             updateSellerShop.setName(sellerShop.getName());
             updateSellerShop.setIntroduce(sellerShop.getIntroduce());
             updateSellerShop.setUserMainId(sellerShop.getUserMainId());
-            updateSellerShop.setId(sellerShop.getId());
             updateSellerShop.setProvince(sellerShop.getProvince());
             updateSellerShop.setCity(sellerShop.getCity());
             updateSellerShop.setArea(sellerShop.getArea());
@@ -657,14 +657,14 @@ public class SellerShopController {
             int row = sellerShopService.updateInfo(updateSellerShop);
             if (row <=0) {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
+                resultObjectVO.setMsg("修改失败,请稍后重试!");
                 return resultObjectVO;
             }
             refershRedisCache(updateSellerShop.getId());
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
-            resultObjectVO.setMsg("请重试!");
+            resultObjectVO.setMsg("修改失败,请稍后重试!");
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;

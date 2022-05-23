@@ -39,11 +39,16 @@ function updateUserShop()
         return false;
     }
 
+    loading.showLoading({
+        type:6,
+        tip:"保存中..."
+    });
     $('#usform').ajaxSubmit({
         url: basePath+'/api/user/shop/edit',
         dataType:"json",
         contentType:"application/json;charset=utf-8",
         success: function (data) {
+            loading.hideLoading();
             if(data.code==401)
             {
                 window.location.href=basePath+data.data;
