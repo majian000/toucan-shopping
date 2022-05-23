@@ -17,6 +17,10 @@ function getHrefIngoreId()
 {
     var urlParam = window.location.href;
     var currentLocation=urlParam.substring(0,urlParam.lastIndexOf("/"));
+    if(currentLocation.indexOf("/paid")!=-1)
+    {
+        currentLocation = currentLocation.substring(0,currentLocation.indexOf("/paid"));
+    }
     return currentLocation;
 }
 
