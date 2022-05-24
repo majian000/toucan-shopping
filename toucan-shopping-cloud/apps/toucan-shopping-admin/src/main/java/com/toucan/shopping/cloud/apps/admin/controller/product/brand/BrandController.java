@@ -100,32 +100,8 @@ public class BrandController extends UIController {
     {
         TableVO tableVO = new TableVO();
         try {
-
-            RequestJsonVO requestJsonVO = null;
-            ResultObjectVO resultObjectVO = null;
-            if(pageInfo.getCategoryId()!=null&&pageInfo.getCategoryId().longValue()!=-1) {
-                //查询分类以及子分类
-                CategoryVO categoryVO = new CategoryVO();
-                categoryVO.setId(pageInfo.getCategoryId());
-                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
-                if (resultObjectVO.isSuccess()) {
-                    if (resultObjectVO.getData() != null) {
-                        List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
-                        if (CollectionUtils.isNotEmpty(categoryVOS)) {
-                            List<Long> categoryIdList = new LinkedList<>();
-                            for (CategoryVO cv : categoryVOS) {
-                                categoryIdList.add(cv.getId());
-                            }
-                            categoryIdList.add(pageInfo.getCategoryId());
-                            pageInfo.setCategoryIdList(categoryIdList);
-                            pageInfo.setCategoryId(null);
-                        }
-                    }
-                }
-            }
-            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            ResultObjectVO resultObjectVO = feignBrandService.queryListPage(SignUtil.sign(requestJsonVO),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)

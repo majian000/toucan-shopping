@@ -65,7 +65,7 @@
                                 </div>
                                 <input type="hidden" name="categoryId" id="categoryId">
                                 <div class="layui-inline">
-                                    <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                                    <button type="submit" class="layui-btn layui-btn-primary"  id="queryButton"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                                     <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                                 </div>
                             </div>
@@ -225,56 +225,6 @@
         });
 
 
-
-        $("#selectCategoryId").click(function(){
-            index = layer.open({
-                title: '选择所属分类',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-
-                area: ['20%', '60%'],
-                content: "<div id='categoryTree'></div>",
-                success:function(layero){
-                    loadding = layer.load();
-                    $.ajax({
-                        url:"[[@{/}]]product/brand/list/page/query/category/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#categoryTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
-                                        $("#selectCategoryId").val(obj.data.title);
-                                        $("#categoryId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
-
-                }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-
-        });
 
 
         /**
@@ -440,7 +390,7 @@
 
             loaddingTree = layer.load();
             $.ajax({
-                url:"[[@{/}]]product/attribute/attributeKey/query/category/tree/pid",
+                url:"[[@{/}]]category/query/category/tree/pid",
                 type:"POST",
                 dataType: "json",
                 success: function(data){
