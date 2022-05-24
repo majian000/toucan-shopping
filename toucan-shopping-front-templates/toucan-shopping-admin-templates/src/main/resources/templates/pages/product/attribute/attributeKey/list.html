@@ -78,13 +78,7 @@
                                         <input type="text" name="attributeName" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">所属分类</label>
-                                    <div class="layui-input-inline">
-                                        <input type="hidden" name="categoryId" id="categoryId" value="-1">
-                                        <input type="text" readonly  id="selectCategoryId"  class="layui-input" >
-                                    </div>
-                                </div>
+                                <input type="hidden" name="categoryId" id="categoryId" value="-1">
                                 <div class="layui-inline">
                                     <label class="layui-form-label">显示状态</label>
                                     <div class="layui-input-inline">
@@ -188,6 +182,8 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id', width: 200, title: '主键'},
+                    {field: 'categoryName',width: 350,  title: '所属分类'},
+                    {field: 'categoryPath',width: 350,  title: '所属分类路径'},
                     {field: 'path',width: 350,  title: '属性路径'},
                     {field: 'attributeName',width: 350,  title: '属性名'},
                     {field: 'attributeType',width: 150,   title: '属性类型',
@@ -218,8 +214,6 @@
                         }},
                     {field: 'parentId', width: 350, title: '上级属性名ID'},
                     {field: 'parentName',width: 350,  title: '上级属性名'},
-                    {field: 'categoryName',width: 350,  title: '所属分类'},
-                    {field: 'categoryPath',width: 350,  title: '所属分类路径'},
                     {field: 'attributeSort',  title: '排序'},
                     {field: 'showStatus', width: 150,  title: '显示状态',
                         templet: function (row) {
@@ -265,7 +259,7 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]productSpu/query/category/tree/pid",
+                url:"[[@{/}]]category/query/category/tree/pid",
                 autoParam:["id", "pid", "name"],
                 dataFilter: filter
             },
@@ -327,55 +321,6 @@
         });
 
 
-        $("#selectCategoryId").click(function(){
-            index = layer.open({
-                title: '选择所属分类',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-
-                area: ['20%', '60%'],
-                content: "<div id='categoryTree'></div>",
-                success:function(layero){
-                    loadding = layer.load();
-                    $.ajax({
-                        url:"[[@{/}]]product/attribute/attributeKey/query/category/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#categoryTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
-                                        $("#selectCategoryId").val(obj.data.title);
-                                        $("#categoryId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        },
-                        complete:function()
-                        {
-                            layer.close(loadding);
-                        }
-                    });
-
-                }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-
-        });
 
 
         /**

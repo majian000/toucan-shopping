@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 列表查询页对象
  */
@@ -33,6 +35,9 @@ public class AttributeKeyPageInfo extends PageInfo<AttributeKeyVO> {
 
 
     private Long[] idArray; //ID数组
+
+
+    private List<Long> categoryIdList; //分类ID列表
 
     //==============================================
 

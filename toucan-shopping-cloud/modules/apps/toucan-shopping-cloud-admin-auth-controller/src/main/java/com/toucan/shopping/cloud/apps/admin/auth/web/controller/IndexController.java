@@ -73,7 +73,17 @@ public class IndexController {
         return "/403.html";
     }
 
+    @RequestMapping(value = "/404",method = RequestMethod.GET)
+    public String page404(HttpServletRequest request, HttpServletResponse response)
+    {
+        return "/404.html";
+    }
 
+    @RequestMapping(value = "/500",method = RequestMethod.GET)
+    public String page500(HttpServletRequest request, HttpServletResponse response)
+    {
+        return "/500.html";
+    }
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/index/page",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
