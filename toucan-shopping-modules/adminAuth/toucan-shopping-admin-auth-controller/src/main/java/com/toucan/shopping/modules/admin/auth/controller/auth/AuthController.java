@@ -368,136 +368,140 @@ public class AuthController {
                 }
             }
 
-            if(CollectionUtils.isNotEmpty(adminRoles)) {
-                Integer count = 0;
-                //遍历每一个角色
-                for(int i=0;i<adminRoles.size();i++) {
-                    if(adminRoles.get(i)!=null) {
-                        String roleId = adminRoles.get(i).getRoleId();
+            //没有任何角色
+            if(CollectionUtils.isEmpty(adminRoles)) {
+                //权限校验失败
+                resultObjectVO.setData(-2);
+                return resultObjectVO;
+            }
+            Integer count = 0;
+            //遍历每一个角色
+            for(int i=0;i<adminRoles.size();i++) {
+                if(adminRoles.get(i)!=null) {
+                    String roleId = adminRoles.get(i).getRoleId();
 
-                        FunctionVO queryFunction = new FunctionVO();
-                        queryFunction.setUrl(query.getUrl());
-                        queryFunction.setAppCode(query.getAppCode());
-                        queryFunction.setDeleteStatus((short)0);
-                        queryFunction.setEnableStatus((short)1);
-                        List<FunctionCacheVO> functionCacheVOS = null;
-                        List<Function> functionList = new ArrayList<Function>();
-                        try {
-                            if(cacheIsRead) {
-                                if(functionCacheService!=null) {
-                                    //查询功能项
-                                    FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
-                                    BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
-                                    functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
-                                    if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
-                                        List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
-                                        if (CollectionUtils.isNotEmpty(functionCacheList)) {
-                                            for (Function functioncache : functionCacheList) {
-                                                //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
-                                                //例如/role/list这个接口也会把role/listPage查询出来
-                                                if (functioncache.getUrl().equals(query.getUrl())) {
-                                                    functionList.add(functioncache);
-                                                }
+                    FunctionVO queryFunction = new FunctionVO();
+                    queryFunction.setUrl(query.getUrl());
+                    queryFunction.setAppCode(query.getAppCode());
+                    queryFunction.setDeleteStatus((short)0);
+                    queryFunction.setEnableStatus((short)1);
+                    List<FunctionCacheVO> functionCacheVOS = null;
+                    List<Function> functionList = new ArrayList<Function>();
+                    try {
+                        if(cacheIsRead) {
+                            if(functionCacheService!=null) {
+                                //查询功能项
+                                FunctionCacheVO queryFunctionCacheVO = new FunctionCacheVO();
+                                BeanUtils.copyProperties(queryFunctionCacheVO, queryFunction);
+                                functionCacheVOS = functionCacheService.queryByEntity(queryFunctionCacheVO);
+                                if (CollectionUtils.isNotEmpty(functionCacheVOS)) {
+                                    List<Function> functionCacheList = JSONObject.parseArray(JSONObject.toJSONString(functionCacheVOS), Function.class);
+                                    if (CollectionUtils.isNotEmpty(functionCacheList)) {
+                                        for (Function functioncache : functionCacheList) {
+                                            //在进行一次过滤,因为elasticsearch查询url的时候,会把关联的都查询出来,这样查询不是eq查询
+                                            //例如/role/list这个接口也会把role/listPage查询出来
+                                            if (functioncache.getUrl().equals(query.getUrl())) {
+                                                functionList.add(functioncache);
                                             }
                                         }
                                     }
                                 }
                             }
-                        }catch(Exception e)
-                        {
-                            cacheIsRead = false;
-                            logger.warn(e.getMessage(),e);
                         }
-                        //从数据库查询
-                        if(CollectionUtils.isEmpty(functionList))
-                        {
-                            functionList = functionService.findListByEntity(queryFunction);
-                        }
-                        if(CollectionUtils.isNotEmpty(functionList))
-                        {
-                            for(Function function:functionList) {
-                                try {
-                                    if(cacheIsRead) {
-                                        if(functionCacheService!=null) {
-                                            //同步到缓存
-                                            FunctionCacheVO functionCacheVO = new FunctionCacheVO();
-                                            BeanUtils.copyProperties(functionCacheVO, function);
-                                            functionCacheService.save(functionCacheVO);
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    logger.warn(e.getMessage(), e);
-                                    cacheIsRead = false;
-                                }
-                                if(function.getFunctionId()==null)
-                                {
-                                    resultObjectVO.setData(false);
-                                    return resultObjectVO;
-                                }
-                                //查询这个功能项是否包含在这个管理员的角色与功能项的关联里
-                                RoleFunctionVO queryRoleFunction = new RoleFunctionVO();
-                                queryRoleFunction.setFunctionId(function.getFunctionId());
-                                queryRoleFunction.setRoleId(roleId);
-                                queryRoleFunction.setDeleteStatus((short) 0);
-                                queryRoleFunction.setAppCode(query.getAppCode());
-
-                                List<RoleFunctionCacheVO> roleFunctionCacheVOS = null;
-                                try {
-                                    if(cacheIsRead) {
-                                        if(roleFunctionCacheService!=null) {
-                                            RoleFunctionCacheVO queryRoleFunctionCacheVO = new RoleFunctionCacheVO();
-                                            BeanUtils.copyProperties(queryRoleFunctionCacheVO, queryRoleFunction);
-                                            roleFunctionCacheVOS = roleFunctionCacheService.queryByEntity(queryRoleFunctionCacheVO);
-                                            if (CollectionUtils.isNotEmpty(roleFunctionCacheVOS)) {
-                                                count = roleFunctionCacheVOS.size();
-                                            }
-                                        }
-                                    }
-                                }catch(Exception e)
-                                {
-                                    cacheIsRead = false;
-                                    logger.warn(e.getMessage(),e);
-                                }
-                                //如果缓存为空,就查询数据库,如果数据库为空 才认为这个人没有权限
-                                if(CollectionUtils.isEmpty(roleFunctionCacheVOS))
-                                {
-                                    List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(queryRoleFunction);
-                                    if(CollectionUtils.isNotEmpty(roleFunctions))
-                                    {
-                                        count = roleFunctions.size();
-
-                                        try{
-                                            //刷新缓存
-                                            if(roleFunctionCacheService!=null) {
-                                                RoleFunctionCacheVO[] roleFunctionCacheVOArray = new RoleFunctionCacheVO[count];
-                                                for (int p = 0; p < count; p++) {
-                                                    RoleFunction roleFunction = roleFunctions.get(p);
-                                                    RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
-                                                    if (roleFunction != null) {
-                                                        BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
-                                                    }
-                                                    roleFunctionCacheVOArray[p] = roleFunctionCacheVO;
-                                                }
-                                                roleFunctionCacheService.saves(roleFunctionCacheVOArray);
-                                            }
-                                        }catch(Exception e){
-                                            logger.warn(e.getMessage(),e);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if(count!=null&&count.intValue()>0)
-                        {
-                            //每次操作都延长登录会话1小时
-                            redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                                    AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
-                            resultObjectVO.setData(1);
-                            return resultObjectVO;
-                        }
-                        //权限校验失败
-                        resultObjectVO.setData(-2);
+                    }catch(Exception e)
+                    {
+                        cacheIsRead = false;
+                        logger.warn(e.getMessage(),e);
                     }
+                    //从数据库查询
+                    if(CollectionUtils.isEmpty(functionList))
+                    {
+                        functionList = functionService.findListByEntity(queryFunction);
+                    }
+                    if(CollectionUtils.isNotEmpty(functionList))
+                    {
+                        for(Function function:functionList) {
+                            try {
+                                if(cacheIsRead) {
+                                    if(functionCacheService!=null) {
+                                        //同步到缓存
+                                        FunctionCacheVO functionCacheVO = new FunctionCacheVO();
+                                        BeanUtils.copyProperties(functionCacheVO, function);
+                                        functionCacheService.save(functionCacheVO);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                logger.warn(e.getMessage(), e);
+                                cacheIsRead = false;
+                            }
+                            if(function.getFunctionId()==null)
+                            {
+                                resultObjectVO.setData(false);
+                                return resultObjectVO;
+                            }
+                            //查询这个功能项是否包含在这个管理员的角色与功能项的关联里
+                            RoleFunctionVO queryRoleFunction = new RoleFunctionVO();
+                            queryRoleFunction.setFunctionId(function.getFunctionId());
+                            queryRoleFunction.setRoleId(roleId);
+                            queryRoleFunction.setDeleteStatus((short) 0);
+                            queryRoleFunction.setAppCode(query.getAppCode());
+
+                            List<RoleFunctionCacheVO> roleFunctionCacheVOS = null;
+                            try {
+                                if(cacheIsRead) {
+                                    if(roleFunctionCacheService!=null) {
+                                        RoleFunctionCacheVO queryRoleFunctionCacheVO = new RoleFunctionCacheVO();
+                                        BeanUtils.copyProperties(queryRoleFunctionCacheVO, queryRoleFunction);
+                                        roleFunctionCacheVOS = roleFunctionCacheService.queryByEntity(queryRoleFunctionCacheVO);
+                                        if (CollectionUtils.isNotEmpty(roleFunctionCacheVOS)) {
+                                            count = roleFunctionCacheVOS.size();
+                                        }
+                                    }
+                                }
+                            }catch(Exception e)
+                            {
+                                cacheIsRead = false;
+                                logger.warn(e.getMessage(),e);
+                            }
+                            //如果缓存为空,就查询数据库,如果数据库为空 才认为这个人没有权限
+                            if(CollectionUtils.isEmpty(roleFunctionCacheVOS))
+                            {
+                                List<RoleFunction> roleFunctions = roleFunctionService.findListByEntity(queryRoleFunction);
+                                if(CollectionUtils.isNotEmpty(roleFunctions))
+                                {
+                                    count = roleFunctions.size();
+
+                                    try{
+                                        //刷新缓存
+                                        if(roleFunctionCacheService!=null) {
+                                            RoleFunctionCacheVO[] roleFunctionCacheVOArray = new RoleFunctionCacheVO[count];
+                                            for (int p = 0; p < count; p++) {
+                                                RoleFunction roleFunction = roleFunctions.get(p);
+                                                RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
+                                                if (roleFunction != null) {
+                                                    BeanUtils.copyProperties(roleFunctionCacheVO, roleFunction);
+                                                }
+                                                roleFunctionCacheVOArray[p] = roleFunctionCacheVO;
+                                            }
+                                            roleFunctionCacheService.saves(roleFunctionCacheVOArray);
+                                        }
+                                    }catch(Exception e){
+                                        logger.warn(e.getMessage(),e);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(count!=null&&count.intValue()>0)
+                    {
+                        //每次操作都延长登录会话1小时
+                        redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
+                                AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                        resultObjectVO.setData(1);
+                        return resultObjectVO;
+                    }
+                    //权限校验失败
+                    resultObjectVO.setData(-2);
                 }
             }
         }catch(Exception e)

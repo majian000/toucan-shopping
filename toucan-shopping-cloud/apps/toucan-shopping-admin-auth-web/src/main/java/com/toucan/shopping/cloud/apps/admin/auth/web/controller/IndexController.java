@@ -201,22 +201,22 @@ public class IndexController {
             if(resultObjectVO.getCode().longValue()==ResultObjectVO.SUCCESS.longValue())
             {
                 List<FunctionVO> functionVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),FunctionVO.class);
-                for(FunctionVO functionVO:functionVOList)
-                {
-                    if(functionVO.getPid().longValue()==-1)
-                    {
-                        //只查询目录和菜单
-                        if(functionVO.getType().shortValue()==0||functionVO.getType().shortValue()==1) {
-                            MenuInfo menuInfo=new MenuInfo();
-                            menuInfo.setId(functionVO.getId());
-                            menuInfo.setTitle(functionVO.getName());
-                            menuInfo.setHref(functionVO.getUrl());
-                            menuInfo.setTarget("_self");
-                            menuInfo.setIcon(functionVO.getIcon());
-                            menuInfos.add(menuInfo);
+                if(functionVOList!=null) {
+                    for (FunctionVO functionVO : functionVOList) {
+                        if (functionVO.getPid().longValue() == -1) {
+                            //只查询目录和菜单
+                            if (functionVO.getType().shortValue() == 0 || functionVO.getType().shortValue() == 1) {
+                                MenuInfo menuInfo = new MenuInfo();
+                                menuInfo.setId(functionVO.getId());
+                                menuInfo.setTitle(functionVO.getName());
+                                menuInfo.setHref(functionVO.getUrl());
+                                menuInfo.setTarget("_self");
+                                menuInfo.setIcon(functionVO.getIcon());
+                                menuInfos.add(menuInfo);
 
-                            //查询子节点
-                            queryChild(functionVOList,menuInfo);
+                                //查询子节点
+                                queryChild(functionVOList, menuInfo);
+                            }
                         }
                     }
                 }
