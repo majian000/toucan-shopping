@@ -73,7 +73,6 @@ public class IndexController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/index/page",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
     {
@@ -174,7 +173,6 @@ public class IndexController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/index/menus",method = RequestMethod.GET)
     @ResponseBody
     public IndexInfo menus(HttpServletRequest request)

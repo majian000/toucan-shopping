@@ -70,21 +70,22 @@ public class IndexController {
     @RequestMapping(value = "/403",method = RequestMethod.GET)
     public String page403(HttpServletRequest request, HttpServletResponse response)
     {
-        return "/403.html";
+        return "403.html";
     }
 
     @RequestMapping(value = "/404",method = RequestMethod.GET)
     public String page404(HttpServletRequest request, HttpServletResponse response)
     {
-        return "/404.html";
+        return "404.html";
     }
 
     @RequestMapping(value = "/500",method = RequestMethod.GET)
     public String page500(HttpServletRequest request, HttpServletResponse response)
     {
-        return "/500.html";
+        return "500.html";
     }
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+
+
     @RequestMapping(value = "/index/page",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
     {
@@ -185,7 +186,6 @@ public class IndexController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/index/menus",method = RequestMethod.GET)
     @ResponseBody
     public IndexInfo menus(HttpServletRequest request)
