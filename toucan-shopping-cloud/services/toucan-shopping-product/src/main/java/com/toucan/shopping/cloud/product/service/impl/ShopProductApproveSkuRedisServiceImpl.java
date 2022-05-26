@@ -24,7 +24,7 @@ public class ShopProductApproveSkuRedisServiceImpl implements ShopProductApprove
 
     @Override
     public ShopProductApproveSkuVO queryProductApproveSku(String id) {
-        Object shopProductApproveSkuObject = toucanStringRedisService.get(ProductApproveSkuRedisKey.getPreviewSkuKey(String.valueOf(id)));
+        Object shopProductApproveSkuObject = toucanStringRedisService.get(ProductApproveSkuRedisKey.getPreviewSkuKey(id));
         if(shopProductApproveSkuObject!=null) {
             return JSONObject.parseObject(String.valueOf(shopProductApproveSkuObject),ShopProductApproveSkuVO.class);
         }
@@ -39,7 +39,10 @@ public class ShopProductApproveSkuRedisServiceImpl implements ShopProductApprove
     @Override
     public void deleteCache(String id) {
         try {
-            toucanStringRedisService.delete(ProductApproveSkuRedisKey.getPreviewSkuKey(String.valueOf(id)));
+            Object shopProductApproveSkuObject = toucanStringRedisService.get(ProductApproveSkuRedisKey.getPreviewSkuKey(id));
+            if(shopProductApproveSkuObject!=null) {
+                toucanStringRedisService.delete(ProductApproveSkuRedisKey.getPreviewSkuKey(String.valueOf(id)));
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

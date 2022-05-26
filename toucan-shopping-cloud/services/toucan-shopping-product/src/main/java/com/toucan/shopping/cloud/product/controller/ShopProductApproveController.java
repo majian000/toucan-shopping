@@ -78,6 +78,7 @@ public class ShopProductApproveController {
     private ShopProductApproveSkuRedisService shopProductApproveSkuRedisService;
 
 
+
     /**
      * 发布商品回滚数据
      * @param publishProductApproveVO
@@ -1189,11 +1190,32 @@ public class ShopProductApproveController {
                 return resultObjectVO;
             }
 
+            List<ShopProductApproveSkuVO>  shopProductApproveSkuVOS = shopProductApproveSkuService.queryListByProductApproveId(entity.getId());
+            if(CollectionUtils.isNotEmpty(shopProductApproveSkuVOS))
+            {
+                for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveSkuVOS) {
+                    if(shopProductApproveSkuVO.getId()!=null) {
+                        shopProductApproveSkuRedisService.deleteCache(String.valueOf(shopProductApproveSkuVO.getId()));
+                    }
+                }
+            }
+
             shopProductApproveService.deleteById(entity.getId());
             shopProductApproveSkuService.deleteByShopProductApproveId(entity.getId());
             shopProductApproveImgService.deleteByProductApproveId(entity.getId());
             shopProductApproveDescriptionService.deleteByShopProductApproveId(entity.getId());
             shopProductApproveDescriptionImgService.deleteByProductApproveId(entity.getId());
+
+            Thread.sleep(ProductConstant.DELETE_REDIS_SLEEP);
+
+            if(CollectionUtils.isNotEmpty(shopProductApproveSkuVOS))
+            {
+                for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveSkuVOS) {
+                    if(shopProductApproveSkuVO.getId()!=null) {
+                        shopProductApproveSkuRedisService.deleteCache(String.valueOf(shopProductApproveSkuVO.getId()));
+                    }
+                }
+            }
 
         }catch(Exception e)
         {

@@ -26,4 +26,7 @@ public class ProductConstant {
 
 
 
+    public static final int DELETE_REDIS_SLEEP = 1000; //延迟双删,线程休眠时间
+
+
 }
