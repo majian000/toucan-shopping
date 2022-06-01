@@ -17,6 +17,17 @@
 
     </resultMap>
 
+
+    <sql id="queryColumns">
+        saa.id,
+        saa.admin_id,
+        saa.app_code,
+        saa.create_date,
+        saa.delete_status,
+        saa.create_admin_id
+    </sql>
+
+
     <select id="findListByEntity" resultMap="adminAppMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.AdminApp">
         select * from t_sa_admin_app saa
         <where>
@@ -37,13 +48,13 @@
 
 
     <select id="findAppListByAdminAppEntity" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.AdminApp">
-        select ta.name,tsaa.* from t_app ta left join t_sa_admin_app tsaa on ta.code = tsaa.app_code
-           where 1=1 and tsaa.delete_status =0 and ta.delete_status = 0 and ta.enable_status=1
+        select ta.name, <include refid="queryColumns" /> from t_app ta left join t_sa_admin_app saa on ta.code = saa.app_code
+           where 1=1 and saa.delete_status =0 and ta.delete_status = 0 and ta.enable_status=1
             <if test="adminId!=null">
-                and tsaa.admin_id = #{adminId}
+                and saa.admin_id = #{adminId}
             </if>
             <if test="appCode!=null and appCode!=''">
-                and tsaa.app_code = #{appCode}
+                and saa.app_code = #{appCode}
             </if>
 
     </select>

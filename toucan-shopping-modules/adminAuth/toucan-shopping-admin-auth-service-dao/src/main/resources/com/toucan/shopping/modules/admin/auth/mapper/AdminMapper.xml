@@ -20,6 +20,21 @@
         <result column="appNames" jdbcType="VARCHAR" property="appNames" />
     </resultMap>
 
+
+
+    <sql id="queryColumns">
+        saa.id,
+        saa.username,
+        saa.password,
+        saa.enable_status,
+        saa.create_date,
+        saa.delete_status,
+        saa.admin_id,
+        saa.create_admin_id
+    </sql>
+
+
+
     <sql id="queryListPageWhere">
 
         <if test="username!=null and username!='' ">
@@ -76,7 +91,7 @@
 
     <select id="queryListPage" resultMap="adminVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
         select tu.* from (
-            select tsa.*,ds2.appNames from t_sa_admin tsa left join (
+            select  <include refid="queryColumns" />,ds2.appNames from t_sa_admin saa left join (
                 select ds.admin_id,group_concat(ds.appName) as appNames from (
                     select tu.*,ta.name as appName from t_sa_admin tu
                     left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
@@ -89,7 +104,7 @@
 
                 )ds
                 group by ds.admin_id
-            )ds2 on tsa.admin_id = ds2.admin_id
+            )ds2 on saa.admin_id = ds2.admin_id
 
           order by create_date desc
         )tu
@@ -103,7 +118,7 @@
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
         select count(*) from (
-            select tsa.*,ds2.appNames from t_sa_admin tsa left join (
+            select  <include refid="queryColumns" />,ds2.appNames from t_sa_admin saa left join (
                     select ds.admin_id,group_concat(ds.appName) as appNames from (
                         select tu.*,ta.name as appName from t_sa_admin tu
                         left join t_sa_admin_app tsaa on tu.admin_id = tsaa.admin_id and tsaa.delete_status=0
@@ -116,7 +131,7 @@
 
                   )ds
                 group by ds.admin_id
-            )ds2 on tsa.admin_id = ds2.admin_id
+            )ds2 on saa.admin_id = ds2.admin_id
         )tu
         <where>
             1=1 and tu.delete_status = 0  and tu.appNames is not null

@@ -13,6 +13,18 @@
         
     </resultMap>
 
+
+    <sql id="queryColumns">
+        t.id,
+        t.function_id,
+        t.role_id,
+        t.app_code,
+        t.create_date,
+        t.delete_status,
+        t.create_admin_id
+    </sql>
+
+
     <sql id="queryListPageWhere">
 
         <if test="functionId!=null and functionId!=''">
@@ -80,8 +92,8 @@
 
     <select id="findListByAdminIdAndFunctionUrlAndAppCodeAndRoleIds" resultMap="roleFunctionMap">
             select * from (
-                select tsrf.*,tsf.name,tsf.url from t_sa_role_function tsrf
-                left join t_sa_function tsf on tsf.function_id =tsrf.function_id and tsf.delete_status = 0  and tsf.enable_status = 1
+                select <include refid="queryColumns" />,tsf.name,tsf.url from t_sa_role_function t
+                left join t_sa_function tsf on tsf.function_id =t.function_id and tsf.delete_status = 0  and tsf.enable_status = 1
             )ds
             where 1=1 and ds.url=#{url} and ds.app_code=#{appCode}
             and ds.delete_status=0
@@ -97,8 +109,8 @@
 
     <select id="findCountByAdminIdAndFunctionUrlAndAppCodeAndRoleIds" resultType="java.lang.Long">
         select count(*) from (
-        select tsrf.*,tsf.name,tsf.url from t_sa_role_function tsrf
-        left join t_sa_function tsf on tsf.function_id =tsrf.function_id and tsf.delete_status = 0  and tsf.enable_status = 1
+        select <include refid="queryColumns" />,tsf.name,tsf.url from t_sa_role_function tsrf
+        left join t_sa_function tsf on tsf.function_id =t.function_id and tsf.delete_status = 0  and tsf.enable_status = 1
         )ds
         where 1=1 and ds.url=#{url} and ds.app_code=#{appCode}
         and ds.delete_status=0

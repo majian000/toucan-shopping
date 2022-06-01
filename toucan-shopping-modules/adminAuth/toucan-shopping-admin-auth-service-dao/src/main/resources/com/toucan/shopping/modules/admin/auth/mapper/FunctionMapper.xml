@@ -33,6 +33,29 @@
 
     </resultMap>
 
+
+    <sql id="queryColumns">
+        t.id,
+        t.name,
+        t.function_id,
+        t.url,
+        t.icon,
+        t.app_code,
+        t.permission,
+        t.function_text,
+        t.enable_status,
+        t.type,
+        t.pid,
+        t.function_sort,
+        t.create_date,
+        t.update_date,
+        t.delete_status,
+        t.remark,
+        t.create_admin_id,
+        t.update_admin_id
+    </sql>
+    
+
     <sql id="queryListPageWhere">
 
         <if test="name!=null and name!=''">
@@ -132,7 +155,7 @@
 
 
     <select id="findTreeTableByPageInfo" resultMap="functionVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo">
-        select *,tsa.username as create_admin_username,tsau.username as update_admin_username from t_sa_function t
+        select <include refid="queryColumns" />,tsa.username as create_admin_username,tsau.username as update_admin_username from t_sa_function t
             left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id
             left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id
         <where>
@@ -146,7 +169,7 @@
 
 
     <select id="queryListPage" resultMap="functionMap" parameterType="com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo">
-        select t.* from t_sa_function t
+        select <include refid="queryColumns" /> from t_sa_function t
         <where>
             1=1
 
@@ -223,8 +246,8 @@
 
     <select id="queryListByRoleIdArray" resultMap="functionVOMap" >
         select distinct * from (
-            select tsf.* from t_sa_function tsf
-                right join t_sa_role_function tsrf on tsf.function_id = tsrf.function_id and tsrf.delete_status = 0
+            select <include refid="queryColumns" /> from t_sa_function t
+                right join t_sa_role_function tsrf on t.function_id = tsrf.function_id and tsrf.delete_status = 0
                     and tsrf.role_id in
                     <foreach item="item" index="index" collection="roleIds" open="("  close=")" separator=",">
                         #{item}
@@ -242,8 +265,8 @@
 
     <select id="queryListByRoleIdArrayAndParentId" resultMap="functionVOMap" >
         select distinct * from (
-        select tsf.* from t_sa_function tsf
-        right join t_sa_role_function tsrf on tsf.function_id = tsrf.function_id and tsrf.delete_status = 0
+        select <include refid="queryColumns" /> from t_sa_function t
+        right join t_sa_role_function tsrf on t.function_id = tsrf.function_id and tsrf.delete_status = 0
         and tsrf.role_id in
         <foreach item="item" index="index" collection="roleIds" open="("  close=")" separator=",">
             #{item}

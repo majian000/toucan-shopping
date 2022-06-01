@@ -6,7 +6,6 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="orgnazition_id" jdbcType="VARCHAR" property="orgnazitionId" />
-        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="pid" jdbcType="BIGINT" property="pid" />
         <result column="orgnazition_sort" jdbcType="BIGINT" property="orgnazitionSort" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -22,6 +21,23 @@
         <result column="create_admin_username" jdbcType="VARCHAR" property="createAdminUsername" />
         <result column="update_admin_username" jdbcType="VARCHAR" property="updateAdminUsername" />
     </resultMap>
+
+
+    <sql id="queryColumns">
+        t.id,
+        t.name,
+        t.orgnazition_id,
+        t.pid,
+        t.orgnazition_sort,
+        t.create_date,
+        t.update_date,
+        t.delete_status,
+        t.remark,
+        t.create_admin_id,
+        t.update_admin_id
+    </sql>
+
+
 
     <sql id="queryListPageWhere">
 
@@ -52,9 +68,9 @@
 
     <select id="findTreeTableByPageInfo" resultMap="orgnazitionVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.OrgnazitionTreeInfo">
 
-        select t.*,tsa.username as create_admin_username,tsau.username as update_admin_username from (
+        select <include refid="queryColumns" />,t.appName,tsa.username as create_admin_username,tsau.username as update_admin_username from (
             select t.id,t.name,t.orgnazition_id,t.pid,t.orgnazition_sort,t.delete_status,t.remark,t.create_date,t.create_admin_id,t.update_date,t.update_admin_id,group_concat(t.appName) as appNames from (
-                select t.*,ta.name as appName from t_sa_orgnazition t
+                select <include refid="queryColumns" />,ta.name as appName from t_sa_orgnazition t
                 left join t_sa_orgnazition_app tsoa on t.orgnazition_id = tsoa.orgnazition_id and tsoa.delete_status=0
                 left join t_app ta on tsoa.app_code = ta.code and ta.delete_status = 0
 

@@ -12,6 +12,17 @@
         
     </resultMap>
 
+
+    <sql id="queryColumns">
+        t.id,
+        t.admin_id,
+        t.role_id,
+        t.app_code,
+        t.create_date,
+        t.delete_status
+    </sql>
+
+
     <sql id="queryListPageWhere">
 
         <if test="adminId!=null and adminId!=''">
@@ -79,8 +90,8 @@
 
     <select id="listByAdminIdAndAppCode" resultMap="adminRoleMap" >
         select * from (
-            select distinct tsar.* from t_sa_admin_role tsar
-                left join t_sa_role tsr on tsar.role_id = tsr.role_id and tsr.delete_status=0 and tsr.enable_status=1
+            select distinct <include refid="queryColumns" />  from t_sa_admin_role t
+                left join t_sa_role tsr on t.role_id = tsr.role_id and tsr.delete_status=0 and tsr.enable_status=1
         )ds
         where admin_id=#{adminId}  and app_code=#{appCode} and delete_status=0
 

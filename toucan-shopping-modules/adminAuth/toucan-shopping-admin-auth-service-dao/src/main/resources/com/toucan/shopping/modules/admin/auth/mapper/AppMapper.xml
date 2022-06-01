@@ -22,6 +22,20 @@
     </resultMap>
 
 
+    <sql id="queryColumns">
+        t.id,
+        t.name,
+        t.code,
+        t.enable_status,
+        t.create_date,
+        t.update_date,
+        t.delete_status,
+        t.remark,
+        t.create_admin_id,
+        t.update_admin_id
+    </sql>
+
+
     <sql id="queryListPageWhere">
         <if test="name!=null and name!=''">
             and t.name like concat('%',#{name},'%')
@@ -61,7 +75,7 @@
 
 
     <select id="queryListPage" resultMap="appVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AppPageInfo">
-        select t.*,tsa.username as create_admin_username,tsau.username as update_admin_username from t_app t
+        select <include refid="queryColumns" />,tsa.username as create_admin_username,tsau.username as update_admin_username from t_app t
           left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id
           left join t_sa_admin tsau on t.update_admin_id = tsau.admin_id
         <where>
