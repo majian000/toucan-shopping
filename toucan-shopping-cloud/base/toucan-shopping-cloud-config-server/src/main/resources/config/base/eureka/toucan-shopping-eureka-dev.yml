@@ -15,7 +15,7 @@ eureka:
   server:
     useReadOnlyResponseCache: false #关闭readOnlyCacheMap缓存
     enableSelfPreservation: false #关闭保护机制
-    evictionIntervalTimerInMs: 1000 #1秒扫描一次失联服务
+    evictionIntervalTimerInMs: 2000 #2秒扫描一次失联服务
     renewalPercentThreshold: 0 #单独起一台
 management:
   endpoint:
