@@ -44,7 +44,6 @@ public class DBDateYearAlgorithm implements StandardShardingAlgorithm<Date> {
 
     @Override
     public void init() {
-        this.instanceName = String.valueOf(props.get("instance-name")!=null?props.get("instance-name"):"");
     }
 
     @Override
@@ -61,5 +60,6 @@ public class DBDateYearAlgorithm implements StandardShardingAlgorithm<Date> {
     @Override
     public void setProps(Properties properties) {
         this.props=properties;
+        this.instanceName = String.valueOf(props.get("instance-name")!=null?props.get("instance-name"):"");
     }
 }

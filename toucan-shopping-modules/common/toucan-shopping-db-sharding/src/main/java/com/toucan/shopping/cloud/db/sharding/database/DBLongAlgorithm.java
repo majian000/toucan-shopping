@@ -43,12 +43,7 @@ public class DBLongAlgorithm implements StandardShardingAlgorithm<Long> {
 
     @Override
     public void init() {
-        this.instanceName = String.valueOf(props.get("instance-name")!=null?props.get("instance-name"):"");
-        this.num = Integer.parseInt(String.valueOf(props.get("num")!=null?props.get("num"):"0"));
-        if(this.num==0)
-        {
-            throw new IllegalArgumentException("请配置分库数量");
-        }
+
     }
 
     @Override
@@ -65,6 +60,12 @@ public class DBLongAlgorithm implements StandardShardingAlgorithm<Long> {
     @Override
     public void setProps(Properties properties) {
         this.props=properties;
+        this.instanceName = String.valueOf(props.get("instance-name")!=null?props.get("instance-name"):"");
+        this.num = Integer.parseInt(String.valueOf(props.get("num")!=null?props.get("num"):"0"));
+        if(this.num==0)
+        {
+            throw new IllegalArgumentException("请配置分库数量");
+        }
     }
 
     public String getInstanceName() {
