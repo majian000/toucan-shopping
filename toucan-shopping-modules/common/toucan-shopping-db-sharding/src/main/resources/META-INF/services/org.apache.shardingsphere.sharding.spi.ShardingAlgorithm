@@ -1,0 +1,4 @@
+com.toucan.shopping.cloud.db.sharding.database.DBDateYearAlgorithm
+com.toucan.shopping.cloud.db.sharding.database.DBLongAlgorithm
+com.toucan.shopping.cloud.db.sharding.table.TableDateMonthAlgorithm
+com.toucan.shopping.cloud.db.sharding.table.TableLongAlgorithm

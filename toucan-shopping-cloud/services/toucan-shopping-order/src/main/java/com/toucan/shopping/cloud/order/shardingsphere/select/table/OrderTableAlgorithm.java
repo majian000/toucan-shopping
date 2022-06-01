@@ -1,18 +1,20 @@
 package com.toucan.shopping.cloud.order.shardingsphere.select.table;
 
 
-import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;
-import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
+import org.apache.shardingsphere.sharding.api.sharding.standard.PreciseShardingValue;
+import org.apache.shardingsphere.sharding.api.sharding.standard.RangeShardingValue;
+import org.apache.shardingsphere.sharding.api.sharding.standard.StandardShardingAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * 默认自定义分表
  */
-public class OrderTableAlgorithm implements PreciseShardingAlgorithm<Date> {
+public class OrderTableAlgorithm implements StandardShardingAlgorithm<Date> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,5 +34,30 @@ public class OrderTableAlgorithm implements PreciseShardingAlgorithm<Date> {
             }
         }
         throw new IllegalArgumentException();
+    }
+
+    @Override
+    public Collection<String> doSharding(Collection<String> collection, RangeShardingValue<Date> rangeShardingValue) {
+        return null;
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public String getType() {
+        return null;
+    }
+
+    @Override
+    public Properties getProps() {
+        return null;
+    }
+
+    @Override
+    public void setProps(Properties properties) {
+
     }
 }

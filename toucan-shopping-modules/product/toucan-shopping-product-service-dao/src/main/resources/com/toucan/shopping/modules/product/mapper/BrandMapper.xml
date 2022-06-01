@@ -34,7 +34,7 @@
         </if>
 
         <if test="categoryId!=null and categoryId!='' ">
-            and t.category_id_cache like concat('%',#{categoryId},'%')
+            and tc.category_id = #{categoryId}
         </if>
 
         <if test="enabledStatus!=null ">
@@ -101,7 +101,7 @@
 
 
     <select id="queryListPage" resultMap="brandVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
-        select t.* from t_brand t
+        select distinct t.* from t_brand t left join t_brand_category tc on t.id = tc.brand_id
         <where>
             1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
@@ -119,11 +119,13 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
-        select count(*) from t_brand t
-        <where>
-            1=1 and t.delete_status = 0
-           <include refid="queryListPageWhere"/>
-        </where>
+        select count(*) from (
+            select distinct t.* from t_brand t left join t_brand_category tc on t.id = tc.brand_id
+            <where>
+                1=1 and t.delete_status = 0
+                <include refid="queryListPageWhere" />
+            </where>
+        )ds
     </select>
 
 

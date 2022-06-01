@@ -22,6 +22,9 @@
     <packaging>pom</packaging>
 
 
+    <properties>
+
+    </properties>
 
     <modules>
 
@@ -43,6 +46,8 @@
         <module>common/toucan-shopping-layui</module>
         <!--elasticsearch公共模块 -->
         <module>common/toucan-shopping-elasticsearch</module>
+        <!--数据库分片 -->
+        <module>common/toucan-shopping-db-sharding</module>
         <!--fastdfs模块 -->
         <module>common/toucan-shopping-fastdfs</module>
         <!--图片上传模块 -->
@@ -191,6 +196,12 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.toucan.shopping.modules.common</groupId>
+                <artifactId>toucan-shopping-db-sharding</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-common-persistence-event</artifactId>

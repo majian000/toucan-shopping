@@ -133,6 +133,11 @@
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.common</groupId>
+            <artifactId>toucan-shopping-db-sharding</artifactId>
+        </dependency>
+
 
     </dependencies>
 
