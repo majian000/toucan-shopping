@@ -26,6 +26,25 @@
     </resultMap>
 
 
+    <sql id="queryColumns">
+        t.id,
+        t.trademark_area_type,
+        t.chinese_name,
+        t.english_name,
+        t.regist_number_1,
+        t.regist_number_2,
+        t.seminary,
+        t.owner_name,
+        t.category_id_cache,
+        t.create_admin_id,
+        t.create_date,
+        t.update_admin_id,
+        t.update_date,
+        t.delete_status,
+        t.enabled_status,
+        t.logo_path
+    </sql>
+
 
     <sql id="queryListPageWhere">
 
@@ -101,7 +120,7 @@
 
 
     <select id="queryListPage" resultMap="brandVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
-        select distinct t.* from t_brand t left join t_brand_category tc on t.id = tc.brand_id
+        select distinct <include refid="queryColumns" /> from t_brand t left join t_brand_category tc on t.id = tc.brand_id
         <where>
             1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
@@ -120,7 +139,7 @@
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
         select count(*) from (
-            select distinct t.* from t_brand t left join t_brand_category tc on t.id = tc.brand_id
+            select distinct <include refid="queryColumns" /> from t_brand t left join t_brand_category tc on t.id = tc.brand_id
             <where>
                 1=1 and t.delete_status = 0
                 <include refid="queryListPageWhere" />
