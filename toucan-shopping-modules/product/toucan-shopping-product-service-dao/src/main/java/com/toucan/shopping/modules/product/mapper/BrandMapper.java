@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.product.mapper;
 
+import com.toucan.shopping.modules.common.persistence.entity.DataCountResult;
 import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.page.BrandPageInfo;
 import com.toucan.shopping.modules.product.vo.BrandVO;
@@ -29,7 +30,7 @@ public interface BrandMapper {
      * @param pageInfo
      * @return
      */
-    Long queryListPageCount(BrandPageInfo pageInfo);
+    DataCountResult queryListPageCount(BrandPageInfo pageInfo);
 
     List<Brand> queryAllList(Brand queryModel);
 

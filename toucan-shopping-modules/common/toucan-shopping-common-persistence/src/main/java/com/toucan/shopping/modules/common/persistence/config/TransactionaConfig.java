@@ -1,4 +1,4 @@
-package com.toucan.shopping.modules.common.persistence;
+package com.toucan.shopping.modules.common.persistence.config;
 
 
 import org.aopalliance.aop.Advice;

@@ -51,9 +51,7 @@
         <if test="name!=null and name!='' ">
             and (t.chinese_name like binary concat(#{name},'%') or t.english_name like binary concat(#{name},'%'))
         </if>
-        <if test="categoryId!=null and categoryId!='' ">
-            and tc.category_id = #{categoryId}
-        </if>
+
         <if test="enabledStatus!=null ">
             and t.enabled_status = #{enabledStatus}
         </if>
@@ -62,6 +60,9 @@
             and t.id = #{id}
         </if>
 
+        <if test="categoryId!=null and categoryId!='' ">
+            and category_id is not null
+        </if>
 
     </sql>
 
@@ -118,11 +119,14 @@
 
 
     <select id="queryListPage" resultMap="brandVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
-        select distinct <include refid="queryColumns" /> from t_brand t left join t_brand_category tc on t.id = tc.brand_id
-
+        select distinct <include refid="queryColumns" />,tc.category_id from t_brand t left join t_brand_category tc on t.id = tc.brand_id  and tc.delete_status=0
+        <if test="categoryId!=null and categoryId!='' ">
+            and tc.category_id = #{categoryId}
+        </if>
         <where>
             1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
+
         </where>
         order by t.id desc
         limit #{start},#{limit}
@@ -136,12 +140,15 @@
 
 
 
-    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
-        select count(distinct t.id) from t_brand t left join t_brand_category tc on t.id = tc.brand_id
-
+    <select id="queryListPageCount" resultType="com.toucan.shopping.modules.common.persistence.entity.DataCountResult" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
+        select count(distinct t.id) as dataCount,tc.category_id from t_brand t left join t_brand_category tc on t.id = tc.brand_id  and tc.delete_status=0
+        <if test="categoryId!=null and categoryId!='' ">
+            and tc.category_id = #{categoryId}
+        </if>
         <where>
             1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
+
         </where>
     </select>
 
