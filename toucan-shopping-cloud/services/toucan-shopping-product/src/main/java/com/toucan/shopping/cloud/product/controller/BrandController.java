@@ -263,7 +263,7 @@ public class BrandController {
             {
                 for(BrandVO brandVO:pageInfo.getList())
                 {
-                    if(StringUtils.isNotEmpty(brandVO.getCategoryIdCache()))
+                    if(brandVO!=null&&StringUtils.isNotEmpty(brandVO.getCategoryIdCache()))
                     {
                         String[] categoryIdArray = brandVO.getCategoryIdCache().split(",");
                         brandVO.setCategoryIdCacheArray(categoryIdArray);
