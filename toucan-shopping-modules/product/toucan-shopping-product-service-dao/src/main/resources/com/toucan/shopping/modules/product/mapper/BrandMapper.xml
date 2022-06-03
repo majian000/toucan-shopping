@@ -51,7 +51,9 @@
         <if test="name!=null and name!='' ">
             and (t.chinese_name like binary concat(#{name},'%') or t.english_name like binary concat(#{name},'%'))
         </if>
-
+        <if test="categoryId!=null and categoryId!='' ">
+            and tc.category_id = #{categoryId}
+        </if>
         <if test="enabledStatus!=null ">
             and t.enabled_status = #{enabledStatus}
         </if>
@@ -117,9 +119,7 @@
 
     <select id="queryListPage" resultMap="brandVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
         select distinct <include refid="queryColumns" /> from t_brand t left join t_brand_category tc on t.id = tc.brand_id
-        <if test="categoryId!=null and categoryId!='' ">
-            and tc.category_id = #{categoryId}
-        </if>
+
         <where>
             1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
@@ -138,9 +138,7 @@
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
         select count(distinct t.id) from t_brand t left join t_brand_category tc on t.id = tc.brand_id
-        <if test="categoryId!=null and categoryId!='' ">
-            and tc.category_id = #{categoryId}
-        </if>
+
         <where>
             1=1 and t.delete_status = 0
             <include refid="queryListPageWhere" />
