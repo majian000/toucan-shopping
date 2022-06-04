@@ -119,7 +119,7 @@
 
 
     <select id="queryListPage" resultMap="brandVOMap" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">
-        select distinct <include refid="queryColumns" />,tc.category_id from t_brand t left join t_brand_category tc on t.id = tc.brand_id  and tc.delete_status=0
+        select <include refid="queryColumns" />,group_concat(tc.category_id) as category_id from t_brand t left join t_brand_category tc on t.id = tc.brand_id  and tc.delete_status=0
         <if test="categoryId!=null and categoryId!='' ">
             and tc.category_id = #{categoryId}
         </if>
@@ -128,6 +128,7 @@
             <include refid="queryListPageWhere" />
 
         </where>
+        group by t.id
         order by t.id desc
         limit #{start},#{limit}
     </select>
