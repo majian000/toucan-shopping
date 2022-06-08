@@ -165,7 +165,7 @@ function drawProductPage(productVO)
                 for(var i=0;i<shopProductApproveDescriptionVO.productDescriptionImgs.length;i++)
                 {
                     var img = shopProductApproveDescriptionVO.productDescriptionImgs[i];
-                    productDescHtml+="<p><a href=\""+img.link+"\"><img title=\""+img.title+"\" src=\""+img.httpFilePath+"\"></a></p>"
+                    productDescHtml+="<p><a href=\""+img.link+"\"><img title=\""+img.title+"\" src=\""+img.httpFilePath+"\" style=\"width:100%\"></a></p>"
                 }
             }
             $(".des_con_p").html(productDescHtml);
