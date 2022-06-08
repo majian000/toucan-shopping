@@ -13,13 +13,7 @@
     </resultMap>
 
 
-    <resultMap id="userVOMap" type="com.toucan.shopping.modules.user.vo.UserVO" >
-        <id column="id" jdbcType="BIGINT"  property="id" />
-        <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
-        <result column="password" jdbcType="VARCHAR" property="password" />
-        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
-        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+    <resultMap id="userVOMap" extends="userMap" type="com.toucan.shopping.modules.user.vo.UserVO" >
 
     </resultMap>
 
