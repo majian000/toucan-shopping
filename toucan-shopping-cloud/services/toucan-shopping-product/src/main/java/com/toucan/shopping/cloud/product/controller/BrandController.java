@@ -95,10 +95,10 @@ public class BrandController {
             }
 
             String[] categotyIdArray = brandVo.getCategoryIdCache().split(",");
-            if(categotyIdArray.length>10)
+            if(categotyIdArray.length>30)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌最多只能关联10个分类");
+                resultObjectVO.setMsg("品牌最多只能关联30个分类");
                 return resultObjectVO;
             }
 
@@ -331,10 +331,10 @@ public class BrandController {
             }
 
             String[] categotyIdArray = entity.getCategoryIdCache().split(",");
-            if(categotyIdArray.length>10)
+            if(categotyIdArray.length>30)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("品牌最多只能关联10个分类");
+                resultObjectVO.setMsg("品牌最多只能关联30个分类");
                 return resultObjectVO;
             }
 
@@ -720,7 +720,7 @@ public class BrandController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            File file = new File("D:\\mj\\2021-10-28\\刀具品牌.json");
+            File file = new File("D:\\mj\\2021-10-28\\布鞋品牌.json");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             StringBuffer buffer = new StringBuffer();
             String line = null;
@@ -769,7 +769,7 @@ public class BrandController {
                     }
 
                     BrandCategory brandCategory = new BrandCategory();
-                    brandCategory.setCategoryId(889589266152161429L);
+                    brandCategory.setCategoryId(889589266122801213L);
                     brandCategory.setBrandId(brandId);
 
                     List<BrandCategory> brandCategories = brandCategoryService.queryList(brandCategory);
@@ -787,10 +787,6 @@ public class BrandController {
                     //查询出关联的所有类目
                     brandCategory.setCategoryId(null);
                     brandCategories = brandCategoryService.queryList(brandCategory);
-                    if(brandCategories.size()>=2)
-                    {
-                        int a=0;
-                    }
                     if(CollectionUtils.isNotEmpty(brandCategories))
                     {
                         String categoryIdString="";
