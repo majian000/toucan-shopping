@@ -36,3 +36,111 @@
     overflow: hidden;
     background: url(/static/images/quan-arr.gif) no-repeat;
 }
+
+.p_attribute .attribute-brand
+{
+    width:100%;
+}
+
+.p_attribute .attribute-brand .brand-name{
+    color:#5e69ad;
+}
+
+
+.p_attribute .attribute-more
+{
+    width:100%;
+    list-style: none;
+}
+
+.attribute-more > li{
+    width:200px;
+    padding-left: 42px;
+    float: left;
+    margin-bottom: 5px;;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+.more-par{
+    padding-right: 20px;
+    margin-top: -5px;
+    text-align: right;
+    float: left;
+    width: 100%;
+}
+
+.more-par > a{
+    color: #005aa0;
+}
+
+.txt-arr{
+    text-decoration: none;
+}
+
+
+
+
+.Ptable {
+    margin: 10px 0;
+}
+.Ptable-item {
+    padding: 12px 0;
+    line-height: 220%;
+    color: #999;
+    font-size: 12px;
+}
+
+.Ptable-item-child {
+    padding: 12px 0;
+    line-height: 220%;
+    color: #999;
+    font-size: 12px;
+}
+.Ptable dl {
+    margin-left: 110px;
+}
+.Ptable-item:after {
+    content: "";
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+.Ptable-item h3 {
+    font-weight: 400;
+    width: 110px;
+    text-align: right;
+    float: left;
+    font-size: 12px;
+}
+.Ptable-item dt {
+    width: 160px;
+    float: left;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.Ptable-item dd {
+    margin-left: 210px;
+}
+
+.Ptable-item-dl {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}

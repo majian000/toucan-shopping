@@ -1669,12 +1669,30 @@ ul.brand li .name span{
 	width:58px; height:23px; line-height:23px\9; background:none; color:#555555; font-size:16px; text-align:center; font-family:"Microsoft YaHei"; padding:0; margin:5px auto 10px auto; border:1px solid #eaeaea;
 }
 
+.des_con_pd{
+	overflow:hidden; margin:25px;width:90%;
+}
+
+.des_con_at{
+	overflow:hidden;
+	margin-top: 25px;
+	margin-left: 35px;
+	width:90%;
+}
 .des_con{
-	overflow:hidden; margin:25px;max-width:750px;width:100%;
+	overflow:hidden; margin:25px;width:100%;
+}
+
+.des_con_inner{
+	overflow:hidden; width:100%;border-top:1px solid #eaeaea;margin-top:15px;
+}
+
+.des_con_w{
+	overflow:hidden; width:100%;
 }
 
 .des_con_p{
-	overflow:hidden; margin:25px;max-width:750px;width:100%;
+	overflow:hidden; margin:25px;max-width:750px;
 }
 
 table.jud_tab{

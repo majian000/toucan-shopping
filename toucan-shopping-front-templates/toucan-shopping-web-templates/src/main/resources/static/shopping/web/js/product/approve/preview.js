@@ -2,6 +2,8 @@
 var g_productVo;
 
 $(function(){
+
+    tabsEvent();
     var id = getProductId();
     if(id!=null&&id!="") {
         var type= getPreviewType();
@@ -172,4 +174,31 @@ function drawProductPage(productVO)
         }
 
     }
+}
+
+function tabsEvent()
+{
+    $(".tabls").bind("click", function () {
+        var tabNumber = $(this).attr("attr-n");
+        var tabMax = $(this).attr("attr-m");
+        for(var i=1;i<=tabMax;i++)
+        {
+            $(".step"+i).removeClass("current");
+            $(".step"+i+"Panel").hide();
+        }
+        $(".step"+tabNumber).addClass("current");
+        $(".step"+tabNumber+"Panel").show();
+    });
+
+    $(".moreAtt").bind("click", function () {
+        var tabNumber = $(this).attr("attr-n");
+        var tabMax = $(this).attr("attr-m");
+        for(var i=1;i<=tabMax;i++)
+        {
+            $(".step"+i).removeClass("current");
+            $(".step"+i+"Panel").hide();
+        }
+        $(".step"+tabNumber).addClass("current");
+        $(".step"+tabNumber+"Panel").show();
+    });
 }
