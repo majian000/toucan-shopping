@@ -76,6 +76,10 @@ public class ShopProductVO extends ShopProduct {
     /**
      * 商品介绍
      */
-    private String content;
+    private ShopProductDescriptionVO shopProductDescriptionVO;
 
+    /**
+     * 商品介绍JSON字符串
+     */
+    private String shopProductDescriptionJson="{}";
 }

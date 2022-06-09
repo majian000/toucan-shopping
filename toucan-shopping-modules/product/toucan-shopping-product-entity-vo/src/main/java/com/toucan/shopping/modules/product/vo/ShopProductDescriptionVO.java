@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.product.entity.ShopProductDescription;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +19,10 @@ import java.util.Map;
 public class ShopProductDescriptionVO extends ShopProductDescription {
 
 
+    /**
+     * 商品介绍的图片列表
+     */
+    List<ShopProductDescriptionImgVO> productDescriptionImgs;
 
 
 }

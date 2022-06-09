@@ -706,6 +706,17 @@ public class ShopProductController extends UIController {
                         }
                     }
 
+
+                    if(list.get(0).getShopProductDescriptionVO()!=null) {
+                        if(CollectionUtils.isNotEmpty(list.get(0).getShopProductDescriptionVO().getProductDescriptionImgs()))
+                        {
+                            for(ShopProductDescriptionImgVO shopProductDescriptionImgVO:list.get(0).getShopProductDescriptionVO().getProductDescriptionImgs()) {
+                                shopProductDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductDescriptionImgVO.getFilePath());
+                            }
+                            list.get(0).setShopProductDescriptionJson(JSONObject.toJSONString(list.get(0).getShopProductDescriptionVO()));
+                        }
+                    }
+
                     request.setAttribute("model", list.get(0));
                 }else{
                     request.setAttribute("model", new ShopProductVO());

@@ -8,12 +8,15 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.ProductSpu;
+import com.toucan.shopping.modules.product.entity.ShopProductApproveDescription;
+import com.toucan.shopping.modules.product.entity.ShopProductDescription;
 import com.toucan.shopping.modules.product.entity.ShopProductImg;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.redis.ProductApproveRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +57,11 @@ public class ShopProductController {
     @Autowired
     private ProductSpuService productSpuService;
 
+    @Autowired
+    private ShopProductDescriptionService shopProductDescriptionService;
+
+    @Autowired
+    private ShopProductDescriptionImgService shopProductDescriptionImgService;
 
 
 
@@ -204,6 +212,17 @@ public class ShopProductController {
                     {
                         shopProductVO.setProductSpuName(productSpu.getName());
                     }
+                }
+
+                //查询商品介绍
+                ShopProductDescription shopProductDescription = shopProductDescriptionService.queryByShopProductId(shopProductVO.getId());
+                if(shopProductDescription!=null) {
+                    ShopProductDescriptionVO shopProductDescriptionVO = new ShopProductDescriptionVO();
+                    BeanUtils.copyProperties(shopProductDescriptionVO,shopProductDescription);
+
+                    List<ShopProductDescriptionImgVO> shopProductDescriptionImgVOS = shopProductDescriptionImgService.queryVOListByProductIdAndDescriptionIdOrderBySortDesc(shopProductVO.getId(),shopProductDescription.getId());
+                    shopProductDescriptionVO.setProductDescriptionImgs(shopProductDescriptionImgVOS);
+                    shopProductVO.setShopProductDescriptionVO(shopProductDescriptionVO);
                 }
             }
             resultObjectVO.setData(shopProductVOS);

@@ -30,11 +30,13 @@
 <div class="layuimini-container" style="height:100%">
     <div class="layui-form layuimini-form">
         <input type="hidden" name="id" id="id" th:value="${model.id}">
+        <input type="hidden" id="productDescriptionJson" th:value="${model.shopProductDescriptionJson}" />
 
         <div class="layuimini-main" >
             <div class="layui-tab layui-tab-brief">
                 <ul class="layui-tab-title">
                     <li class="layui-this">商品信息</li>
+                    <li>商品介绍</li>
                     <li>商品预览</li>
                     <li>支付信息</li>
                     <li>物流信息</li>
@@ -140,6 +142,12 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="layui-tab-item">
+                        <div id="productDescription" style="width:750px;"></div>
+                    </div>
+
                     <div class="layui-tab-item">
 
 
@@ -239,6 +247,30 @@
         var productPassLoadding;
 
         var shopProductId = $("#id").val();
+        var productDescriptionJson = $("#productDescriptionJson").val();
+        var productDescriptionObject = JSON.parse(productDescriptionJson);
+
+
+        if(productDescriptionObject!=null&&productDescriptionObject.productDescriptionImgs!=null&&productDescriptionObject.productDescriptionImgs.length>0)
+        {
+            var productDescriptionHtml="";
+            for(var i=0;i<productDescriptionObject.productDescriptionImgs.length;i++)
+            {
+                var productDescriptionImg = productDescriptionObject.productDescriptionImgs[i];
+                if(productDescriptionImg!=null)
+                {
+                    var imgHtml = "";
+                    if(productDescriptionImg.link!=null)
+                    {
+                        imgHtml="<p><a href='"+productDescriptionImg.link+"'><img src='"+productDescriptionImg.httpFilePath+"' style='"+productDescriptionImg.width+productDescriptionImg.widthUnit+";'></a></p>";
+                    }else{
+                        imgHtml="<p><img src='"+productDescriptionImg.httpFilePath+"' style='"+productDescriptionImg.width+productDescriptionImg.widthUnit+";'></p>";
+                    }
+                    productDescriptionHtml+=imgHtml;
+                }
+            }
+            $("#productDescription").html(productDescriptionHtml);
+        }
 
         //建造实例化
         carousel.render({
