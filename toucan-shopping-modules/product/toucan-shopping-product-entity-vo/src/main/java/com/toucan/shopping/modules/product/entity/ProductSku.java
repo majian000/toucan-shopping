@@ -97,4 +97,6 @@ public class ProductSku {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopCategoryId; //店铺商品分类ID
 
+    private String productNo; //商品编号
+
 }

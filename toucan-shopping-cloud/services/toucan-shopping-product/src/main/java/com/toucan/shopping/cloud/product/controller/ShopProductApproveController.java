@@ -1067,6 +1067,7 @@ public class ShopProductApproveController {
                             ProductSku productSku = new ProductSku();
                             BeanUtils.copyProperties(productSku, shopProductApproveSkuVO);
                             productSku.setId(idGenerator.id());
+                            productSku.setProductNo(String.valueOf(idGenerator.id())); //这个版本先用雪花算法实现
 
                             productSku.setShopProductId(shopProduct.getId());
                             productSku.setShopProductUuid(shopProduct.getUuid());
