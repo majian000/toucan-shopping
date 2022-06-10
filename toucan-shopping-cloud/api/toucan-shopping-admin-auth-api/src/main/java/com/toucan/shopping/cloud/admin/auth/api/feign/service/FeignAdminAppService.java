@@ -28,5 +28,31 @@ public interface FeignAdminAppService {
     ResultObjectVO queryAppListByAdminId(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 查询列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 查询登录列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/login/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO loginList(@RequestBody RequestJsonVO requestVo);
+
+
+
+    /**
+     * 修改账号登录状态
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/batchUpdateLoginStatus",produces = "application/json;charset=UTF-8")
+    ResultObjectVO batchUpdateLoginStatus(@RequestBody RequestJsonVO requestVo);
 
 }

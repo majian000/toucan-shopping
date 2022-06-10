@@ -62,6 +62,7 @@ toucan:
   app-code: 10001001 #自定义应用编码
   admin-auth-scheduler:
     loop-es-cache: true #循环查询权限信息缓存到es
+    loop-login-cache: true #循环查询登录用户(将超时的key状态改成未登录)
   modules:
     log: #日志模块
       email:

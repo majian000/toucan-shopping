@@ -9,4 +9,8 @@ import lombok.Data;
 public class AdminAuthScheduler {
 
     private boolean loopEsCache = false;
+
+    private boolean loopLoginCache = false;
+
+
 }

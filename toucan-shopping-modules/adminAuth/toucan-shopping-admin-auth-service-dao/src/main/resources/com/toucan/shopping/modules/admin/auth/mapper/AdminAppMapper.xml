@@ -9,6 +9,7 @@
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="login_status" jdbcType="INTEGER" property="loginStatus" />
 
     </resultMap>
 
@@ -24,8 +25,35 @@
         saa.app_code,
         saa.create_date,
         saa.delete_status,
-        saa.create_admin_id
+        saa.create_admin_id,
+        saa.login_status
     </sql>
+
+
+
+    <sql id="queryListPageWhere">
+
+
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+
+        <if test="adminId!=null and adminId!=''">
+            and t.admin_id = #{adminId}
+        </if>
+
+        <if test="appCode!=null and appCode!=''">
+            and t.app_code = #{appCode}
+        </if>
+
+        <if test="loginStatus!=null and loginStatus!=-1">
+            and t.login_status = #{loginStatus}
+        </if>
+
+        and t.delete_status = 0
+
+    </sql>
+
 
 
     <select id="findListByEntity" resultMap="adminAppMap" parameterType="com.toucan.shopping.modules.admin.auth.entity.AdminApp">
@@ -79,5 +107,54 @@
     <update id="deleteByAdminIdAndAppCode" >
         update t_sa_admin_app set delete_status=1 where admin_id = #{adminId} and app_code = #{appCode} and delete_status=0
     </update>
+
+    <update id="updateLoginStatus">
+        update t_sa_admin_app set login_status=#{loginStatus} where admin_id = #{adminId} and app_code = #{appCode} and delete_status=0
+    </update>
+
+
+    <select id="queryListPage" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
+        select <include refid="queryColumns" /> from t_sa_admin_app t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
+        select count(*) from t_sa_admin_app t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
+
+    <select id="queryLoginListPage" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
+        SELECT t.admin_id,GROUP_CONCAT(t.app_code),t.login_status  from t_sa_admin_app t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+        GROUP BY t.admin_id
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryLoginListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
+        select count(*) from (
+            SELECT t.admin_id,GROUP_CONCAT(t.app_code),t.login_status  from t_sa_admin_app t
+            <where>
+                1=1
+                <include refid="queryListPageWhere" />
+            </where>
+            GROUP BY t.admin_id
+        )ds
+
+    </select>
 
 </mapper>

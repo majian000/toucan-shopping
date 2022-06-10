@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.mapper;
 
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
+import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -41,6 +43,38 @@ public interface AdminAppMapper {
     List<AdminAppVO> findAppListByAdminAppEntity(AdminApp query);
 
 
+
+    /**
+     * 查询列表页
+     * @param adminPageInfo
+     * @return
+     */
+    List<AdminAppVO> queryListPage(AdminAppPageInfo adminPageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param adminPageInfo
+     * @return
+     */
+    Long queryListPageCount(AdminAppPageInfo adminPageInfo);
+
+
+
+    /**
+     * 查询列表页
+     * @param adminPageInfo
+     * @return
+     */
+    List<AdminAppVO> queryLoginListPage(AdminAppPageInfo adminPageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param adminPageInfo
+     * @return
+     */
+    Long queryLoginListPageCount(AdminAppPageInfo adminPageInfo);
+
+
     /**
      * 删除指定账号下所有关联
      * @param adminId
@@ -55,5 +89,14 @@ public interface AdminAppMapper {
      * @return
      */
     int deleteByAdminIdAndAppCode(String adminId, String appCode);
+
+    /**
+     * 更新登录状态
+     * @param adminId
+     * @param appCode
+     * @param loginStatus
+     * @return
+     */
+    int updateLoginStatus(String adminId,String appCode,Short loginStatus);
 
 }

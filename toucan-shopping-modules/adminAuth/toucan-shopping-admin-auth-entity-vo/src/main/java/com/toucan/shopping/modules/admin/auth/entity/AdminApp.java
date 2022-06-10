@@ -50,4 +50,10 @@ public class AdminApp {
      */
     private String msg;
 
+
+    /**
+     * 登录状态(0未登录 1登陆中)
+     */
+    private Short loginStatus;
+
 }

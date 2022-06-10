@@ -169,7 +169,7 @@ public class AdminController {
         }
 
         try {
-            AdminVO adminQuery = JSONObject.parseObject(requestVo.getEntityJson(),AdminVO.class);
+            Admin adminQuery = JSONObject.parseObject(requestVo.getEntityJson(),Admin.class);
             List<Admin> admins = adminService.findListByEntity(adminQuery);
             resultObjectVO.setData(admins);
 
@@ -328,6 +328,9 @@ public class AdminController {
             //设置登录token1个小时超时
             redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
                     AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+
+            //设置登录状态
+            adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1);
             resultObjectVO.setData(admin);
 
         }catch(Exception e)
@@ -383,6 +386,8 @@ public class AdminController {
                     redisTemplate.opsForHash().delete(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId())
                             ,AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
 
+                    //更新登录状态
+                    adminAppService.updateLoginStatus(admin.getAdminId(),requestVo.getAppCode(),(short)0);
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                 }

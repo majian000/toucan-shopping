@@ -1,11 +1,13 @@
 package com.toucan.shopping.modules.common.vo;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Data
 public class RequestJsonVO extends RequestVO{
@@ -32,4 +34,12 @@ public class RequestJsonVO extends RequestVO{
     }
 
 
+
+    public <T> List<T> formatEntityList(Class<T> clazz)
+    {
+        if(entityJson!=null) {
+            return JSONArray.parseArray(entityJson,clazz);
+        }
+        return null;
+    }
 }

@@ -3,13 +3,16 @@ package com.toucan.shopping.modules.admin.auth.controller.admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,6 +134,90 @@ public class AdminAppController {
 
 
 
+    /**
+     * 查询列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO list(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminAppPageInfo adminAppPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppPageInfo.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+
+
+            //查询账号应用
+            PageInfo<AdminAppVO> pageInfo =  adminAppService.queryListPage(adminAppPageInfo);
+            resultObjectVO.setData(pageInfo);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询登录列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/login/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO loginList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminAppPageInfo adminAppPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppPageInfo.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+
+
+            //查询账号应用登录列表
+            PageInfo<AdminAppVO> pageInfo =  adminAppService.queryLoginListPage(adminAppPageInfo);
+            resultObjectVO.setData(pageInfo);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
 
     /**
      * 根据实体查询对象
@@ -193,5 +280,47 @@ public class AdminAppController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 修改账号登录状态
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/batchUpdateLoginStatus",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO batchUpdateLoginStatus(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
+            resultObjectVO.setMsg("没有找到参数");
+            return resultObjectVO;
+        }
+
+        try {
+            List<AdminAppVO> adminApps = requestVo.formatEntityList(AdminAppVO.class);
+            if(CollectionUtils.isNotEmpty(adminApps))
+            {
+                for(AdminAppVO adminAppVO:adminApps) {
+                    if(adminAppVO!=null) {
+                        try {
+                            adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), (short) 0);
+                        }catch(Exception e)
+                        {
+                            logger.warn(e.getMessage(),e);
+                        }
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 }
