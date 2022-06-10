@@ -53,7 +53,7 @@ public class AdminLoginStatusScheduler {
     public PageInfo queryPage(AdminAppPageInfo queryPageInfo) throws Exception
     {
         RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryPageInfo);
-        ResultObjectVO resultObjectVO = feignAdminAppService.list(requestJsonVO);
+        ResultObjectVO resultObjectVO = feignAdminAppService.loginList(requestJsonVO);
         if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
             String dataJson= JSONObject.toJSONString(resultObjectVO.getData());
             logger.info("调用权限中台 返回查询登录的用户列表 {}",dataJson);
@@ -66,7 +66,7 @@ public class AdminLoginStatusScheduler {
     /**
      * 10分钟刷新一次
      */
-    @Scheduled(cron = "0 0/10 * * * ? ")
+    @Scheduled(cron = "0 0/3 * * * ? ")
     public void rerun() {
         if (toucan.getAdminAuthScheduler().isLoopLoginCache()) {
             logger.info("刷新登录用户状态 开始.......");

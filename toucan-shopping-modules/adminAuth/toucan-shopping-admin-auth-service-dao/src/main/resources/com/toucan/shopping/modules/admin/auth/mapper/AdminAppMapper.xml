@@ -114,7 +114,7 @@
 
 
     <select id="queryListPage" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
-        select <include refid="queryColumns" /> from t_sa_admin_app t
+        select <include refid="queryColumns" /> from t_sa_admin_app saa
         <where>
             1=1
             <include refid="queryListPageWhere" />
@@ -124,7 +124,7 @@
 
 
     <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
-        select count(*) from t_sa_admin_app t
+        select count(*) from t_sa_admin_app saa
         <where>
             1=1
             <include refid="queryListPageWhere" />
