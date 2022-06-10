@@ -135,7 +135,7 @@
 
 
     <select id="queryLoginListPage" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
-        SELECT t.admin_id,GROUP_CONCAT(t.app_code),t.login_status  from t_sa_admin_app t
+        SELECT t.admin_id,GROUP_CONCAT(t.app_code) as appCodes,t.login_status  from t_sa_admin_app t
         <where>
             1=1
             <include refid="queryListPageWhere" />

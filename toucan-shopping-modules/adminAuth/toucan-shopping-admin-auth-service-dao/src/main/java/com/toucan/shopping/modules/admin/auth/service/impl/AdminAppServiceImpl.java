@@ -61,6 +61,9 @@ public class AdminAppServiceImpl implements AdminAppService {
         PageInfo<AdminAppVO> pageInfo = new PageInfo();
         pageInfo.setList(adminAppMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(adminAppMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 
@@ -70,6 +73,9 @@ public class AdminAppServiceImpl implements AdminAppService {
         PageInfo<AdminAppVO> pageInfo = new PageInfo();
         pageInfo.setList(adminAppMapper.queryLoginListPage(queryPageInfo));
         pageInfo.setTotal(adminAppMapper.queryLoginListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 
