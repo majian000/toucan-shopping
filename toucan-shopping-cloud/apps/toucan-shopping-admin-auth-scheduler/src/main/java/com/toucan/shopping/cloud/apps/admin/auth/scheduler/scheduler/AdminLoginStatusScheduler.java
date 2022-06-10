@@ -6,6 +6,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppServi
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
+import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -16,9 +17,11 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -41,6 +44,9 @@ public class AdminLoginStatusScheduler {
 
     @Autowired
     private FeignAdminAppService feignAdminAppService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
 
 
@@ -78,10 +84,32 @@ public class AdminLoginStatusScheduler {
                     page++;
                     if (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList())) {
                         String adminAppListJson = JSONObject.toJSONString(pageInfo.getList());
+                        logger.info("登录用户列表 {} ",adminAppListJson);
                         List<AdminAppVO> adminAppVOS = JSONArray.parseArray(adminAppListJson, AdminAppVO.class);
-                        List<AdminApp> offlineAdminApps = new LinkedList<>();
-
-
+                        List<AdminAppVO> offlineAdminApps = new LinkedList<>();
+                        for(AdminAppVO adminAppVO:adminAppVOS) {
+                            if(StringUtils.isNotEmpty(adminAppVO.getAdminId())&&StringUtils.isNotEmpty(adminAppVO.getAppCodes())) {
+                                String[] appCodeArray = adminAppVO.getAppCodes().split(",");
+                                for(String appCode:appCodeArray) {
+                                    Object loginTokenObject = redisTemplate.opsForHash().get(
+                                            AdminCenterRedisKey.getLoginTokenGroupKey(adminAppVO.getAdminId()),
+                                            AdminCenterRedisKey.getLoginTokenAppKey(adminAppVO.getAdminId(), appCode));
+                                    //自动超时下线
+                                    if(loginTokenObject==null)
+                                    {
+                                        AdminAppVO offlineAdminApp = new AdminAppVO();
+                                        offlineAdminApp.setAdminId(adminAppVO.getAdminId());
+                                        offlineAdminApp.setAppCode(appCode);
+                                        offlineAdminApps.add(offlineAdminApp);
+                                    }
+                                }
+                            }
+                        }
+                        //将那些超时下线的登录状态修改
+                        if(CollectionUtils.isNotEmpty(offlineAdminApps))
+                        {
+                            feignAdminAppService.batchUpdateLoginStatus(RequestJsonVOGenerator.generator(toucan.getAppCode(),offlineAdminApps));
+                        }
                     }
                 } while (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList()));
             }catch(Exception e)
