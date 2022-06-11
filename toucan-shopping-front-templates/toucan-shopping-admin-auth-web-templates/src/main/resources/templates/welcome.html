@@ -41,7 +41,7 @@
     <div class="layuimini-main">
         <div class="layui-row layui-col-space15">
             <div class="layui-col-md8">
-                <div class="layui-row layui-col-space15">
+                <div class="layui-row layui-col-space15" th:each="component : ${welcomeComponent}" th:utext="${component}" >
                     <!--<div class="layui-col-md6">
                         <div class="layui-card">
                             <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
@@ -109,6 +109,8 @@
                             </div>
                         </div>
                     </div>-->
+
+                    <!--
                     <div class="layui-col-md6">
                         <div class="layui-card">
                             <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>快捷入口</div>
@@ -122,14 +124,20 @@
                         </div>
 
                     </div>
-                    <div class="layui-col-md12" th:content="${onclineUserChart}">
-                        <div class="layui-card">
-                            <div class="layui-card-header"><i class="fa fa-line-chart icon"></i>报表统计</div>
-                            <div class="layui-card-body">
-                                <div id="online-user-charts" style="width: 100%;min-height:500px"></div>
-                            </div>
-                        </div>
-                    </div>
+
+ -->
+                    <!--<div class="layui-col-md12" >-->
+                        <!--<div class="layui-card">-->
+                            <!--<div class="layui-card-header">-->
+                                <!--<i class="fa fa-line-chart icon"></i>在线统计-->
+                                <!--<a href="#" id="refershOnlineUserCharts" style="margin-left: 85%;color: blue;">刷新</a>-->
+                            <!--</div>-->
+                            <!--<div class="layui-card-body">-->
+                                <!--<div id="online-user-charts" style="width: 100%;min-height:500px"></div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
                 </div>
             </div>
 
@@ -294,6 +302,7 @@
             layer = layui.layer,
             miniTab = layui.miniTab,
             echarts = layui.echarts;
+        var onlineUserChartLoadding;
 
         miniTab.listen();
 
@@ -328,65 +337,79 @@
             });
         });
 
-        /**
-         * 报表功能
-         */
-        var echartsRecords = echarts.init(document.getElementById('online-user-charts'), 'walden');
-        var optionRecords = {
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
+
+        function drawOnlineUserCharts() {
+            onlineUserChartLoadding = layer.load();
+            $.ajax({
+                url: "[[@{/app/queryAppLoginUserCountList}]]",
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify({}),
+                success: function (data) {
+                    layer.close(onlineUserChartLoadding);
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    optionRecords.xAxis.data = [];
+                    optionRecords.series[0].data = [];
+                    if (data.data != null && data.data.length > 0) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            var obj = data.data[i];
+                            optionRecords.xAxis.data.push(obj.appName);
+                            optionRecords.series[0].data.push(obj.loginCount);
+                        }
+                    }
+                    echartsRecords.clear();
+                    echartsRecords.setOption(optionRecords);
+                },
+                complete: function () {
+                    layer.close(onlineUserChartLoadding);
                 }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: ['周一','周二','周三','周四','周五','周六','周日']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    name:'邮件营销',
-                    type:'line',
-                    data:[120, 132, 101, 134, 90, 230, 210]
+            });
+        }
+
+        var onlineUserChartsObj = $("#online-user-charts");
+        if(onlineUserChartsObj!=null) {
+            /**
+             * 报表功能
+             */
+            var echartsRecords = echarts.init(document.getElementById('online-user-charts'));
+            var optionRecords = {
+                xAxis: {
+                    type: 'category',
+                    data: []
                 },
-                {
-                    name:'联盟广告',
-                    type:'line',
-                    data:[220, 182, 191, 234, 290, 330, 310]
+                yAxis: {
+                    type: 'value',
+                    minInterval: 1 //只显示整数
                 },
-                {
-                    name:'视频广告',
-                    type:'line',
-                    data:[150, 232, 201, 154, 190, 330, 410]
-                },
-                {
-                    name:'直接访问',
-                    type:'line',
-                    data:[320, 332, 301, 334, 390, 330, 320]
-                },
-                {
-                    name:'搜索引擎',
-                    type:'line',
-                    data:[820, 932, 901, 934, 1290, 1330, 1320]
+                series: [
+                    {
+                        type: 'bar',
+                        data: []
+                    }
+                ],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
                 }
-            ]
-        };
-        echartsRecords.setOption(optionRecords);
+            };
+
+            $("#refershOnlineUserCharts").bind("click", function () {
+
+                drawOnlineUserCharts();
+            });
+
+
+            drawOnlineUserCharts();
+        }
+
 
         // echarts 窗口缩放自适应
         window.onresize = function(){
