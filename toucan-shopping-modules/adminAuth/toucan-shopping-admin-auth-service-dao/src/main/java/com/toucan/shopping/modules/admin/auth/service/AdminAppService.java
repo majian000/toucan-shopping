@@ -6,6 +6,7 @@ package com.toucan.shopping.modules.admin.auth.service;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.List;
@@ -82,5 +83,13 @@ public interface AdminAppService {
      * @return
      */
     int updateLoginStatus(String adminId,String appCode,Short loginStatus);
+
+
+    /**
+     * 查询应用登录用户数
+     * @param appLoginUserVO
+     * @return
+     */
+    List<AppLoginUserVO> queryAppLoginUserCountList(AppLoginUserVO appLoginUserVO);
 
 }

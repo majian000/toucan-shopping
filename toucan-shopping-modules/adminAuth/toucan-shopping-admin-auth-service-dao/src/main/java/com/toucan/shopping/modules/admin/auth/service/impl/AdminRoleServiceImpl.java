@@ -67,6 +67,9 @@ public class AdminRoleServiceImpl implements AdminRoleService {
         PageInfo<AdminRole> pageInfo = new PageInfo();
         pageInfo.setList(adminRoleMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(adminRoleMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 }

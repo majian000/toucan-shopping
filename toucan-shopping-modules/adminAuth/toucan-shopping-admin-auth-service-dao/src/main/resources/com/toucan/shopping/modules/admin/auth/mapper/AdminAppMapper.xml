@@ -18,6 +18,9 @@
 
     </resultMap>
 
+    <resultMap id="appLoginUserVOMap" type="com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO">
+
+    </resultMap>
 
     <sql id="queryColumns">
         saa.id,
@@ -155,6 +158,24 @@
             GROUP BY t.admin_id
         )ds
 
+    </select>
+
+
+    <select id="queryAppLoginUserCountList" resultMap="appLoginUserVOMap" parameterType="com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO">
+            SELECT
+                count(t.id) AS loginCount,
+                t.app_code AS appCode,
+                max(ta. NAME) appName
+            FROM
+                t_sa_admin_app t
+            LEFT JOIN t_app ta ON t.app_code = ta. CODE AND ta.delete_status = 0
+            WHERE
+                t.delete_status = 0 and t.login_status = 1
+                <if test="appCode!=null and appCode!=''">
+                    and t.app_code = #{appCode}
+                </if>
+            GROUP BY
+                t.app_code
     </select>
 
 </mapper>

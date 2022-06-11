@@ -54,6 +54,9 @@ public class RoleServiceImpl implements RoleService {
         RolePageInfo pageInfo = new RolePageInfo();
         pageInfo.setList(roleMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(roleMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 

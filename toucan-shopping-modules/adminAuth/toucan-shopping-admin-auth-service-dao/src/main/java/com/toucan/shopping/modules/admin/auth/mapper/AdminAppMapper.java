@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -99,4 +100,11 @@ public interface AdminAppMapper {
      */
     int updateLoginStatus(String adminId,String appCode,Short loginStatus);
 
+
+    /**
+     * 查询应用登录用户数
+     * @param appLoginUserVO
+     * @return
+     */
+    List<AppLoginUserVO> queryAppLoginUserCountList(AppLoginUserVO appLoginUserVO);
 }

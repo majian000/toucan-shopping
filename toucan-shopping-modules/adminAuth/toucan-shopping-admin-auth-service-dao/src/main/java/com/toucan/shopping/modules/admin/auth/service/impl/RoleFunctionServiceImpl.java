@@ -133,6 +133,9 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
         PageInfo<RoleFunction> pageInfo = new PageInfo();
         pageInfo.setList(roleFunctionMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(roleFunctionMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 

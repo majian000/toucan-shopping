@@ -221,6 +221,9 @@ public class OrgnazitionServiceImpl implements OrgnazitionService {
         OrgnazitionTreeInfo pageInfo = new OrgnazitionTreeInfo();
         pageInfo.setList(orgnazitionMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(orgnazitionMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 

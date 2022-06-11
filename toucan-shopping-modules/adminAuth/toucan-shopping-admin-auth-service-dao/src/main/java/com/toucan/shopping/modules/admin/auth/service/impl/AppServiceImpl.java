@@ -53,6 +53,9 @@ public class AppServiceImpl implements AppService {
         AppPageInfo pageInfo = new AppPageInfo();
         pageInfo.setList(appMapper.queryListPage(appPageInfo));
         pageInfo.setTotal(appMapper.queryListPageCount(appPageInfo));
+        pageInfo.setLimit(appPageInfo.getLimit());
+        pageInfo.setPage(appPageInfo.getPage());
+        pageInfo.setSize(appPageInfo.getSize());
         return pageInfo;
     }
 

@@ -62,6 +62,9 @@ public class AdminServiceImpl implements AdminService {
         PageInfo<AdminVO> pageInfo = new PageInfo();
         pageInfo.setList(adminMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(adminMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 

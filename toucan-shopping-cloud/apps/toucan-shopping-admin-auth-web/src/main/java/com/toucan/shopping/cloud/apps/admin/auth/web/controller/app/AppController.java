@@ -3,11 +3,13 @@ package com.toucan.shopping.cloud.apps.admin.auth.web.controller.app;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
+import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -51,6 +53,9 @@ public class AppController extends UIController {
 
     @Autowired
     private FeignFunctionService feignFunctionService;
+
+    @Autowired
+    private FeignAdminAppService feignAdminAppService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -256,5 +261,29 @@ public class AppController extends UIController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 查询登录用户数
+     * @param appLoginUserVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/queryAppLoginUserCountList",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAppLoginUserCountList(@RequestBody AppLoginUserVO appLoginUserVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, appLoginUserVO);
+            resultObjectVO = feignAdminAppService.queryAppLoginUserCountList(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 }
 

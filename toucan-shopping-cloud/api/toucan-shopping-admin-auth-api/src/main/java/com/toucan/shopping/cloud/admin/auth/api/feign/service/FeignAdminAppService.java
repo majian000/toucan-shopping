@@ -55,4 +55,14 @@ public interface FeignAdminAppService {
     @RequestMapping(value="/batchUpdateLoginStatus",produces = "application/json;charset=UTF-8")
     ResultObjectVO batchUpdateLoginStatus(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 查询APP登录用户信息
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryAppLoginUserCountList",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryAppLoginUserCountList(@RequestBody RequestJsonVO requestVo);
+
 }

@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -313,6 +314,38 @@ public class AdminAppController {
                     }
                 }
             }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+    /**
+     * 查询APP登录用户信息
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/queryAppLoginUserCountList",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryAppLoginUserCountList(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USER);
+            resultObjectVO.setMsg("没有找到参数");
+            return resultObjectVO;
+        }
+
+        try {
+            AppLoginUserVO appLoginUserVO = JSONObject.parseObject(requestVo.getEntityJson(), AppLoginUserVO.class);
+            List<AppLoginUserVO> appLoginUserVOS = adminAppService.queryAppLoginUserCountList(appLoginUserVO);
+            resultObjectVO.setData(appLoginUserVOS);
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

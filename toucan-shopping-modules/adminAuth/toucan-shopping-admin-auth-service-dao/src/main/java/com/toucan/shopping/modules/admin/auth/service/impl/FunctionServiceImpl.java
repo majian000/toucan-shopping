@@ -125,6 +125,9 @@ public class FunctionServiceImpl implements FunctionService {
         FunctionTreeInfo pageInfo = new FunctionTreeInfo();
         pageInfo.setList(functionMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(functionMapper.queryListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
 

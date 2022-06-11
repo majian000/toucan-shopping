@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.mapper.AdminAppMapper;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,11 @@ public class AdminAppServiceImpl implements AdminAppService {
     @Override
     public int updateLoginStatus(String adminId, String appCode, Short loginStatus) {
         return adminAppMapper.updateLoginStatus(adminId,appCode,loginStatus);
+    }
+
+    @Override
+    public List<AppLoginUserVO> queryAppLoginUserCountList(AppLoginUserVO appLoginUserVO) {
+        return adminAppMapper.queryAppLoginUserCountList(appLoginUserVO);
     }
 
 
