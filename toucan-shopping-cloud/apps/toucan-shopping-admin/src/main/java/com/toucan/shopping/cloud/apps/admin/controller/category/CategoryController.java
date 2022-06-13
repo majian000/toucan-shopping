@@ -288,6 +288,18 @@ public class CategoryController extends UIController {
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),categoryTreeInfo);
             resultObjectVO = feignCategoryService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<CategoryTreeVO> categoryTreeVOS = resultObjectVO.formatDataList(CategoryTreeVO.class);
+                if(!CollectionUtils.isEmpty(categoryTreeVOS))
+                {
+                    for(CategoryTreeVO categoryTreeVO:categoryTreeVOS)
+                    {
+                        categoryTreeVO.setOpen(false);
+                    }
+                }
+                resultObjectVO.setData(categoryTreeVOS);
+            }
             return resultObjectVO;
         }catch(Exception e)
         {
