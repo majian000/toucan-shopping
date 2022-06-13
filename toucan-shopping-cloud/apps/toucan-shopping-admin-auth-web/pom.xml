@@ -93,6 +93,10 @@
             <groupId>com.toucan.shopping.cloud.starter</groupId>
             <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.toucan.shopping.cloud.starter</groupId>
+            <artifactId>toucan-shopping-admin-auth-log-spring-boot-starter</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.front.templates</groupId>

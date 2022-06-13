@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.admin.auth.log.mapper.RequestLogMapper">
+<mapper namespace="com.toucan.shopping.modules.admin.auth.log.mapper.OperateLogMapper">
 
-    <resultMap id="requestLogMap" type="com.toucan.shopping.modules.admin.auth.log.entity.RequestLog" >
+    <resultMap id="operateLogMap" type="com.toucan.shopping.modules.admin.auth.log.entity.OperateLog" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="method" jdbcType="VARCHAR" property="method" />
         <result column="uri" jdbcType="VARCHAR" property="uri" />
-        <result column="body" jdbcType="VARCHAR" property="body" />
+        <result column="params" jdbcType="VARCHAR" property="params" />
         <result column="function_name" jdbcType="VARCHAR" property="functionName" />
+        <result column="function_id" jdbcType="VARCHAR" property="functionId" />
         <result column="ip" jdbcType="VARCHAR" property="ip" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -17,7 +18,7 @@
 
     </resultMap>
 
-    <resultMap id="requestLogVOMap" type="com.toucan.shopping.modules.admin.auth.log.vo.RequestLogVO" extends="requestLogMap">
+    <resultMap id="operateLogVOMap" type="com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO" extends="operateLogMap">
     </resultMap>
 
 
@@ -25,7 +26,8 @@
         t.id,
         t.method,
         t.uri,
-        t.body,
+        t.params,
+        t.function_id,
         t.function_name,
         t.ip,
         t.app_code,
@@ -38,10 +40,10 @@
 
 
     <insert id="inserts"   >
-        insert into t_request_log(id,method,uri,body,function_name,remark,ip,app_code,create_date,create_admin_id,delete_status)
+        insert into t_sa_operate_log(id,method,uri,params,function_id,function_name,remark,ip,app_code,create_date,create_admin_id,delete_status)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.method},#{entity.uri},#{entity.body},#{entity.functionName},#{entity.remark},#{entity.ip},#{entity.appCode},#{entity.createDate},#{entity.createAdminId},#{entity.deleteStatus})
+            (#{entity.id},#{entity.method},#{entity.uri},#{entity.params},#{entity.functionId},#{entity.functionName},#{entity.remark},#{entity.ip},#{entity.appCode},#{entity.createDate},#{entity.createAdminId},#{entity.deleteStatus})
         </foreach>
 
     </insert>

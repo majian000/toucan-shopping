@@ -25,14 +25,14 @@ public class AdminAuthConfig {
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(bbsUserCenterStarterRequestWrapperFilter());
+        registration.setFilter(adminAuthStarterRequestWrapperFilter());
         registration.addUrlPatterns("/*");
         registration.setName("adminAuthStarterRequestWrapperFilterRegistrationBean");
         return registration;
     }
 
     @Bean(name = "adminAuthStarterRequestWrapperFilter")
-    public Filter bbsUserCenterStarterRequestWrapperFilter() {
+    public Filter adminAuthStarterRequestWrapperFilter() {
         return new RequestWrapperFilter();
     }
 

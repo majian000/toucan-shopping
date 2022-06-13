@@ -123,6 +123,8 @@
         <!-- =====================插件层====================== -->
         <!-- 权限中台插件-->
         <module>stater/toucan-shopping-admin-auth-spring-boot-starter</module>
+        <!--权限中台日志插件 -->
+        <module>stater/toucan-shopping-admin-auth-log-spring-boot-starter</module>
         <!-- 用户中心插件-->
         <module>stater/toucan-shopping-user-auth-spring-boot-starter</module>
         <!--签名插件 -->
@@ -259,6 +261,12 @@
             <dependency>
                 <groupId>com.toucan.shopping.cloud.starter</groupId>
                 <artifactId>toucan-shopping-admin-auth-spring-boot-starter</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toucan.shopping.cloud.starter</groupId>
+                <artifactId>toucan-shopping-admin-auth-log-spring-boot-starter</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

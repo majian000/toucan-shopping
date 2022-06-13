@@ -10,7 +10,7 @@ import java.util.Date;
  * 请求日志
  */
 @Data
-public class RequestLog {
+public class OperateLog {
     private Long id;
 
     /**
@@ -24,9 +24,9 @@ public class RequestLog {
     private String uri;
 
     /**
-     * 内容
+     * 参数
      */
-    private String body;
+    private String params;
 
     /**
      * 功能名称
@@ -38,6 +38,10 @@ public class RequestLog {
      */
     private String ip;
 
+    /**
+     * 功能ID
+     */
+    private String functionId;
 
     /**
      * 备注

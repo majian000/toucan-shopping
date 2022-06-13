@@ -1,43 +1,34 @@
 package com.toucan.shopping.modules.admin.auth.log.controller.requestLog;
 
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
-import com.toucan.shopping.modules.admin.auth.entity.App;
-import com.toucan.shopping.modules.admin.auth.log.entity.RequestLog;
-import com.toucan.shopping.modules.admin.auth.log.service.RequestLogService;
-import com.toucan.shopping.modules.admin.auth.log.vo.RequestLogVO;
-import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
+import com.toucan.shopping.modules.admin.auth.log.service.OperateLogService;
+import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * 请求日志管理
+ * 操作日志管理
  */
 @RestController
-@RequestMapping("/requestLog")
-public class RequestLogController {
+@RequestMapping("/operateLog")
+public class OperateLogController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Autowired
-    private RequestLogService requestLogService;
+    private OperateLogService operateLogService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -65,18 +56,19 @@ public class RequestLogController {
             return resultObjectVO;
         }
         try{
-            List<RequestLogVO> requestLogVOS = requestJsonVO.formatEntityList(RequestLogVO.class);
+            List<OperateLogVO> requestLogVOS = requestJsonVO.formatEntityList(OperateLogVO.class);
             if(!CollectionUtils.isEmpty(requestLogVOS))
             {
-                for(RequestLogVO requestLogVO:requestLogVOS)
+                for(OperateLogVO requestLogVO:requestLogVOS)
                 {
                     if(requestLogVO!=null)
                     {
                         requestLogVO.setId(idGenerator.id());
                         requestLogVO.setCreateDate(new Date());
+                        requestLogVO.setDeleteStatus((short)0);
                     }
                 }
-                int ret = requestLogService.saves(requestLogVOS);
+                int ret = operateLogService.saves(requestLogVOS);
                 if(ret!=requestLogVOS.size())
                 {
                     resultObjectVO.setCode(ResultObjectVO.FAILD);

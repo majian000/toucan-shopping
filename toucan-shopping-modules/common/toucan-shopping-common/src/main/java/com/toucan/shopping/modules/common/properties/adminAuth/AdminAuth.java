@@ -19,6 +19,11 @@ public class AdminAuth {
     private boolean enabled = false;
 
     /**
+     * 操作日志
+     */
+    private OperateLog operateLog;
+
+    /**
      * HTTP权限请求头,默认值为toucan-atuh-header
      * 后台管理端 Cookie:10001002_aid=d10590b318544049ba2104d1f5517a7d;10001002_lt=d10590b318544049ba2104d1f5517a7d
      */
