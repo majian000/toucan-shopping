@@ -85,6 +85,12 @@ toucan:
     ip-list: 8.140.187.184:8101,8.140.187.184:8101 #多个用,分割
   admin-auth:
     enabled: true
+    operate-log: #操作日志
+      enabled: true
+      #记录指定路径
+      path-patterns: /**
+      #忽略记录
+      exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
     name: toucan-shopping-admin-auth
     #HTTP权限请求头
     # 例如 后台管理端 Cookie:10001002_aid=d10590b318544049ba2104d1f5517a7d;10001002_lt=d10590b318544049ba2104d1f5517a7d
