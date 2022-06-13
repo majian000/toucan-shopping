@@ -68,13 +68,17 @@ public class OperateLogInterceptor implements HandlerInterceptor {
                 //json请求
                 if (request instanceof RequestWrapper ) {
                     RequestWrapper requestWrapper = (RequestWrapper)request;
-                    if(requestWrapper.body!=null) {
+                    if(requestWrapper.body!=null&&requestWrapper.body.length>0) {
                         jsonObject = JSONObject.parseObject(String.valueOf(requestWrapper.body));
+                    }else{
+                        jsonObject = JSONObject.parseObject(JSONObject.toJSONString(request.getParameterMap()));
                     }
                 }else if (request instanceof RequestXssWrapper){
                     RequestXssWrapper requestXssWrapper = (RequestXssWrapper)request;
-                    if(requestXssWrapper.body!=null) {
+                    if(requestXssWrapper.body!=null&&requestXssWrapper.body.length>0) {
                         jsonObject = JSONObject.parseObject(String.valueOf(requestXssWrapper.body));
+                    }else{
+                        jsonObject = JSONObject.parseObject(JSONObject.toJSONString(request.getParameterMap()));
                     }
                 } else {
                     jsonObject = JSONObject.parseObject(JSONObject.toJSONString(request.getParameterMap()));
