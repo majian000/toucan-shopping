@@ -85,10 +85,16 @@
 
         <!--权限服务实体和VO -->
         <module>adminAuth/toucan-shopping-admin-auth-entity-vo</module>
+        <!--权限服务日志相关的实体和VO -->
+        <module>adminAuth/toucan-shopping-admin-auth-log-entity-vo</module>
         <!--权限服务Service和Dao -->
         <module>adminAuth/toucan-shopping-admin-auth-service-dao</module>
+        <!--权限日志服务Service和Dao -->
+        <module>adminAuth/toucan-shopping-admin-auth-log-service-dao</module>
         <!--权限服务控制器 -->
         <module>adminAuth/toucan-shopping-admin-auth-controller</module>
+        <!--权限日志服务控制器 -->
+        <module>adminAuth/toucan-shopping-admin-auth-log-controller</module>
         <!--权限服务 缓存模块 -->
         <module>adminAuth/toucan-shopping-admin-auth-cache</module>
         <!-- 权限服务缓存 elasticsearch模块-->
@@ -324,6 +330,13 @@
 
             <dependency>
                 <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                <artifactId>toucan-shopping-admin-auth-log-service-dao</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.adminAuth</groupId>
                 <artifactId>toucan-shopping-admin-auth-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
@@ -509,6 +522,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.common</groupId>
                 <artifactId>toucan-shopping-redis</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                <artifactId>toucan-shopping-admin-auth-log-entity-vo</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

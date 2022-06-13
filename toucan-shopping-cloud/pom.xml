@@ -278,6 +278,13 @@
             </dependency>
 
             <dependency>
+                <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+                <artifactId>toucan-shopping-admin-auth-log-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.toucan.shopping.cloud.apps</groupId>
                 <artifactId>toucan-shopping-admin-auth-scheduler</artifactId>
                 <version>1.0-SNAPSHOT</version>

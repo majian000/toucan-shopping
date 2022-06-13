@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableDiscoveryClient
 @MapperScan({"com.toucan.shopping.modules.admin.auth.mapper",
+        "com.toucan.shopping.modules.admin.auth.log.mapper",
         "com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScan("com.toucan.shopping")
 public class CloudAdminAuthServiceApplication {
