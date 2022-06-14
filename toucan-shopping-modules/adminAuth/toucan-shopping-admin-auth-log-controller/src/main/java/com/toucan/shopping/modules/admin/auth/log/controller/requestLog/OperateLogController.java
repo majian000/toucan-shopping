@@ -120,7 +120,7 @@ public class OperateLogController {
                 resultObjectVO.setMsg("提前天数不能为空!");
                 return resultObjectVO;
             }
-            List<OperateLogChartVO> operateLogChartVOS = operateLogService.queryOperateLogCountList(operateLogChartVO.getStartDate(),operateLogChartVO.getEndDate(),null);
+            List<OperateLogChartVO> operateLogChartVOS = operateLogService.queryOperateLogCountList(operateLogChartVO.getStartDate(),operateLogChartVO.getEndDate(),operateLogChartVO.getAppCode());
             resultObjectVO.setData(operateLogChartVOS);
         }catch (Exception e)
         {
