@@ -70,6 +70,18 @@ public final class DateUtils {
 
 
     /**
+     * 提前几天的方法
+     *
+     * @param date   基准时间
+     * @param day 需提前天数
+     * @return
+     */
+    public static Date advanceDay(Date date, int day) {
+        long resultDate = date.getTime() - ((day*24*60*60) * 1000);
+        return new Date(resultDate);
+    }
+
+    /**
      * 根据格式化对象 解析时间
      * @param date
      * @param dateFormat

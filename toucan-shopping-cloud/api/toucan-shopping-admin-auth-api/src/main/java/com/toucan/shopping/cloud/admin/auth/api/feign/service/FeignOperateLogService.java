@@ -19,4 +19,13 @@ public interface FeignOperateLogService {
     @RequestMapping(value="/saves",produces = "application/json;charset=UTF-8")
     ResultObjectVO saves(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 查询操作日志统计表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/queryOperateChart",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryOperateChart(@RequestBody RequestJsonVO requestJsonVO);
+
 }

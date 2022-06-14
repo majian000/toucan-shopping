@@ -1,8 +1,10 @@
 package com.toucan.shopping.modules.admin.auth.log.mapper;
 
+import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -12,4 +14,12 @@ public interface OperateLogMapper {
 
     int inserts(List<OperateLogVO> entitys);
 
+    /**
+     * 查询指定时间段 指定应用的操作数量
+     * @param startDate
+     * @param endDate
+     * @param appCode
+     * @return
+     */
+    List<OperateLogChartVO> queryOperateLogCountList(Date startDate, Date endDate, String appCode);
 }

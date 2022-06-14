@@ -21,6 +21,9 @@
     <resultMap id="operateLogVOMap" type="com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO" extends="operateLogMap">
     </resultMap>
 
+    <resultMap id="operateLogChartVOMap" type="com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO" extends="operateLogVOMap">
+
+    </resultMap>
 
     <sql id="queryColumns">
         t.id,
@@ -47,5 +50,24 @@
         </foreach>
 
     </insert>
+
+    <select id="queryOperateLogCountList" resultMap="operateLogChartVOMap">
+        SELECT MAX(ta.name) AS appName,app_code AS appCode,COUNT(t.id) operateCount,DATE_FORMAT(t.create_date,'%Y-%m-%e') AS operateDateYMD FROM t_sa_operate_log t
+        LEFT JOIN t_app ta ON t.app_code=ta.code AND ta.delete_status = 0
+        <where>
+          1=1
+            <if test="startDate!=null">
+                and t.create_date <![CDATA[ >= ]]>  #{startDate}
+            </if>
+            <if test="endDate!=null">
+                and t.create_date <![CDATA[ <= ]]>  #{endDate}
+            </if>
+            <if test="appCode!=null and appCode!=''">
+                and t.app_code=#{appCode}
+            </if>
+        </where>
+        GROUP BY t.app_code,DATE_FORMAT(t.create_date,'%Y-%m-%e')
+        ORDER BY operateDateYMD ASC
+    </select>
 
 </mapper>

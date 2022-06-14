@@ -39,111 +39,15 @@
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
-        <div class="layui-row layui-col-space15">
-            <div class="layui-col-md8">
-                <div class="layui-row layui-col-space15" th:each="component : ${welcomeComponent}" th:utext="${component}" >
-                    <!--<div class="layui-col-md6">
-                        <div class="layui-card">
-                            <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
-                            <div class="layui-card-body">
-                                <div class="welcome-module">
-                                    <div class="layui-row layui-col-space10">
-                                        <div class="layui-col-xs6">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <span class="label pull-right layui-bg-blue">实时</span>
-                                                        <h5>用户统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-col-xs6">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <span class="label pull-right layui-bg-cyan">实时</span>
-                                                        <h5>商品统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-col-xs6">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <span class="label pull-right layui-bg-orange">实时</span>
-                                                        <h5>浏览统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-col-xs6">
-                                            <div class="panel layui-bg-number">
-                                                <div class="panel-body">
-                                                    <div class="panel-title">
-                                                        <span class="label pull-right layui-bg-green">实时</span>
-                                                        <h5>订单统计</h5>
-                                                    </div>
-                                                    <div class="panel-content">
-                                                        <h1 class="no-margins">1234</h1>
-                                                        <small>当前分类总记录数</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
+        <div class="layui-row layui-col-space15"  >
+            <div style="margin-left:10px"  th:each="component : ${welcomeComponent}" th:utext="${component}" >
 
-                    <!--
-                    <div class="layui-col-md6">
-                        <div class="layui-card">
-                            <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>快捷入口</div>
-                            <div class="layui-card-body">
-                                <div class="welcome-module">
-                                    <div class="layui-row layui-col-space10 layuimini-qiuck">
-                                        <div class="layui-col-xs3 layuimini-qiuck-module" th:each="qb : ${quickButtons}" th:utext="${qb}"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
- -->
-                    <!--<div class="layui-col-md12" >-->
-                        <!--<div class="layui-card">-->
-                            <!--<div class="layui-card-header">-->
-                                <!--<i class="fa fa-line-chart icon"></i>在线统计-->
-                                <!--<a href="#" id="refershOnlineUserCharts" style="margin-left: 85%;color: blue;">刷新</a>-->
-                            <!--</div>-->
-                            <!--<div class="layui-card-body">-->
-                                <!--<div id="online-user-charts" style="width: 100%;min-height:500px"></div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-                </div>
             </div>
 
+            <!--
             <div class="layui-col-md4">
 
-                <!--<div class="layui-card">
+                <div class="layui-card">
                     <div class="layui-card-header"><i class="fa fa-bullhorn icon icon-tip"></i>系统公告</div>
                     <div class="layui-card-body layui-text">
                         <div class="layuimini-notice">
@@ -231,9 +135,9 @@
                             </div>
                         </div>
                     </div>
-                </div>-->
+                </div>
 
-               <!-- <div class="layui-card">
+                <div class="layui-card">
                     <div class="layui-card-header"><i class="fa fa-fire icon"></i>版本信息</div>
                     <div class="layui-card-body layui-text">
                         <table class="layui-table">
@@ -287,22 +191,24 @@
                             </tbody>
                         </table>
                     </div>
-                </div>-->
-
-
+                </div>
             </div>
+            -->
+
         </div>
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/lay-config.js?v=2.0.0}" charset="utf-8"></script>
 <script>
-    layui.use(['layer', 'miniTab','echarts'], function () {
+    layui.use(['layer','form', 'miniTab','echarts'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
+            form = layui.form,
             miniTab = layui.miniTab,
             echarts = layui.echarts;
         var onlineUserChartLoadding;
+        var operateChartLoadding;
 
         miniTab.listen();
 
@@ -338,7 +244,7 @@
         });
 
 
-        function drawOnlineUserCharts() {
+        function drawOnlineUserCharts(optionRecords) {
             onlineUserChartLoadding = layer.load();
             $.ajax({
                 url: "[[@{/app/queryAppLoginUserCountList}]]",
@@ -369,12 +275,13 @@
             });
         }
 
-        var onlineUserChartsObj = $("#online-user-charts");
-        if(onlineUserChartsObj!=null) {
+        var echartsRecords = null;
+        var onlineUserChartsObj = $("#online-user-charts-dev");
+        if(onlineUserChartsObj!=null&&onlineUserChartsObj.html()!=null&&onlineUserChartsObj.html()!="") {
             /**
              * 报表功能
              */
-            var echartsRecords = echarts.init(document.getElementById('online-user-charts'));
+            echartsRecords = echarts.init(document.getElementById('online-user-charts'));
             var optionRecords = {
                 xAxis: {
                     type: 'category',
@@ -403,17 +310,103 @@
 
             $("#refershOnlineUserCharts").bind("click", function () {
 
-                drawOnlineUserCharts();
+                drawOnlineUserCharts(optionRecords);
             });
 
 
-            drawOnlineUserCharts();
+            drawOnlineUserCharts(optionRecords);
         }
+
+
+
+
+        function drawOperateCharts(optionRecords) {
+            operateChartLoadding = layer.load();
+            $.ajax({
+                url: "[[@{/operate/log/chart/queryOperateChart}]]",
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify({}),
+                success: function (data) {
+                    layer.close(operateChartLoadding);
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    optionRecords.legend.data=data.data.appNames;
+                    optionRecords.xAxis.data = data.data.categorys;
+                    optionRecords.series = [];
+                    if (data.data != null && data.data.datas!=null && data.data.datas.length > 0) {
+                        for (var i = 0; i < data.data.datas.length; i++) {
+                            var obj = data.data.datas[i];
+                            obj.name=obj.appName;
+                            obj.type = "line";
+                            obj.data = obj.values;
+                            optionRecords.series.push(obj);
+                        }
+                    }
+                    operateEchartsRecords.clear();
+                    console.log(optionRecords);
+                    operateEchartsRecords.setOption(optionRecords);
+                },
+                complete: function () {
+                    layer.close(operateChartLoadding);
+                }
+            });
+        }
+        var operateEchartsRecords = null;
+        var operateChartsObj = $("#operate-charts-dev");
+        if(operateChartsObj!=null&&operateChartsObj.html()!=null&&operateChartsObj.html()!="") {
+            /**
+             * 操作报表功能
+             */
+            operateEchartsRecords = echarts.init(document.getElementById('operate-charts'), 'walden');
+            var operateOptionRecords = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:[]
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: []
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+
+                ]
+            };
+
+
+            drawOperateCharts(operateOptionRecords);
+        }
+
 
 
         // echarts 窗口缩放自适应
         window.onresize = function(){
-            echartsRecords.resize();
+            if(echartsRecords!=null) {
+                echartsRecords.resize();
+            }
+
+            if(operateEchartsRecords!=null){
+                operateEchartsRecords.resize();
+            }
         }
 
     });

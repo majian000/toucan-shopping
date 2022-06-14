@@ -49,7 +49,7 @@ public class OperateLog {
     private String remark;
 
     /**
-     *编码
+     *应用编码
      */
     private String appCode;
 
