@@ -129,17 +129,17 @@ public class IndexController {
                 List<Function> functions = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),Function.class);
                 if(!CollectionUtils.isEmpty(functions))
                 {
-                    List<String> quickButtons = new ArrayList<String>();
+                    List<String> welcomeComponent = new ArrayList<String>();
 
                     for(Function buttonFunction:functions)
                     {
                         if(buttonFunction.getType().shortValue()==5)
                         {
-                            quickButtons.add(buttonFunction.getFunctionText());
+                            welcomeComponent.add(buttonFunction.getFunctionText());
                         }
                     }
 
-                    request.setAttribute("quickButtons",quickButtons);
+                    request.setAttribute("welcomeComponent",welcomeComponent);
                 }
             }
         }catch(Exception e)

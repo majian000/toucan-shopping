@@ -247,7 +247,7 @@
         function drawOnlineUserCharts(optionRecords) {
             onlineUserChartLoadding = layer.load();
             $.ajax({
-                url: "[[@{/app/queryAppLoginUserCountList}]]",
+                url: "[[@{/online/user/chart/queryAppLoginUserCountList}]]",
                 contentType: "application/json; charset=utf-8",
                 type: 'POST',
                 data: JSON.stringify({}),

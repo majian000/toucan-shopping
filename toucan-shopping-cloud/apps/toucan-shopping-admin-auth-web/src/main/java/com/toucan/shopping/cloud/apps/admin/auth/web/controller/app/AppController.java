@@ -263,27 +263,5 @@ public class AppController extends UIController {
 
 
 
-    /**
-     * 查询登录用户数
-     * @param appLoginUserVO
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/queryAppLoginUserCountList",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryAppLoginUserCountList(@RequestBody AppLoginUserVO appLoginUserVO)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, appLoginUserVO);
-            resultObjectVO = feignAdminAppService.queryAppLoginUserCountList(requestJsonVO);
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
 }
 
