@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.admin.auth.service.AdminService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
+import com.toucan.shopping.modules.common.util.AdminRegistUtil;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.MD5Util;
 import com.toucan.shopping.modules.common.util.UserRegistUtil;
@@ -97,10 +98,10 @@ public class AdminController {
                 return resultObjectVO;
             }
 
-            if(!UserRegistUtil.checkPwd(admin.getPassword()))
+            if(!AdminRegistUtil.checkPwd(admin.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("添加失败,请输入6至15位的密码");
+                resultObjectVO.setMsg("添加失败,请输入6至25位的密码");
                 return resultObjectVO;
             }
 
@@ -213,10 +214,10 @@ public class AdminController {
                 return resultObjectVO;
             }
 
-            if(!UserRegistUtil.checkPwd(adminVO.getPassword()))
+            if(!AdminRegistUtil.checkPwd(adminVO.getPassword()))
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_ERROR);
-                resultObjectVO.setMsg("请输入6至15位的密码");
+                resultObjectVO.setMsg("请输入6至25位的密码");
                 return resultObjectVO;
             }
             adminVO.setPassword(MD5Util.md5(adminVO.getPassword()));
@@ -281,10 +282,10 @@ public class AdminController {
                 return resultObjectVO;
             }
 
-            if(admin.getPassword().length()>15)
+            if(admin.getPassword().length()>25)
             {
                 resultObjectVO.setCode(AdminResultVO.PASSWORD_NOT_FOUND);
-                resultObjectVO.setMsg("登录失败,密码长度不能大与15位");
+                resultObjectVO.setMsg("登录失败,密码长度不能大与25位");
                 return resultObjectVO;
             }
             Admin query=new Admin();
