@@ -478,39 +478,52 @@ public class ProductSpuController {
             //构造树结构
             List<ProductSpuAttributeKeyValueTreeVO> productSpuAttributeKeyValueTreeVOS = new LinkedList<>();
             Brand brand = brandService.findByIdIngoreDeleteStatus(productSpuVO.getBrandId());
+            //品牌名称属性
+            ProductSpuAttributeKeyValueTreeVO brandAttribute = new ProductSpuAttributeKeyValueTreeVO();
+            brandAttribute.setValues(new LinkedList<>());
+            brandAttribute.setName("品牌");
             if(brand!=null) {
-                ProductSpuAttributeKeyValueTreeVO brandAttribute = new ProductSpuAttributeKeyValueTreeVO();
-                brandAttribute.setValues(new LinkedList<>());
-                brandAttribute.setName("品牌");
                 if(StringUtils.isNotEmpty(brand.getChineseName())) {
                     brandAttribute.getValues().add(brand.getChineseName());
                 }
                 if(StringUtils.isNotEmpty(brand.getEnglishName())){
                     brandAttribute.getValues().add(brand.getEnglishName());
                 }
-                productSpuAttributeKeyValueTreeVOS.add(brandAttribute);
             }
+            //产品名称属性
+            ProductSpuAttributeKeyValueTreeVO productNameAttribute = new ProductSpuAttributeKeyValueTreeVO();
+            productNameAttribute.setValues(new LinkedList<>());
+            productNameAttribute.setName("产品名称");
+            productNameAttribute.getValues().add(productSpuVO.getName());
+
+
             for(int i=0;i<attributeValueVOS.size();i++)
             {
                 ProductSpuAttributeKeyValueVO attributeKeyVO = attributeValueVOS.get(i);
                 //找到所有根节点
                 if(attributeKeyVO.getType().intValue()==1&&attributeKeyVO.getParentAttributeKeyId()!=null&&attributeKeyVO.getParentAttributeKeyId().longValue()==-1L) {
-                    ProductSpuAttributeKeyValueTreeVO productSpuAttributeKeyValueTreeVO = new ProductSpuAttributeKeyValueTreeVO();
-                    productSpuAttributeKeyValueTreeVO.setAttributeKeyId(attributeKeyVO.getAttributeKeyId());
-                    productSpuAttributeKeyValueTreeVO.setName(attributeKeyVO.getAttributeName());
-                    productSpuAttributeKeyValueTreeVO.setValues(new LinkedList<>());
-                    productSpuAttributeKeyValueTreeVO.setChildren(new LinkedList<>());
-                    productSpuAttributeKeyValueTreeVOS.add(productSpuAttributeKeyValueTreeVO);
+                    ProductSpuAttributeKeyValueTreeVO productSpuAttributeKeyTreeVO = new ProductSpuAttributeKeyValueTreeVO();
+                    productSpuAttributeKeyTreeVO.setAttributeKeyId(attributeKeyVO.getAttributeKeyId());
+                    productSpuAttributeKeyTreeVO.setName(attributeKeyVO.getAttributeName());
+                    productSpuAttributeKeyTreeVO.setValues(new LinkedList<>());
+                    productSpuAttributeKeyTreeVO.setChildren(new LinkedList<>());
+                    productSpuAttributeKeyValueTreeVOS.add(productSpuAttributeKeyTreeVO);
                     for (int j = 0; j < attributeValueVOS.size(); j++) {
                         ProductSpuAttributeKeyValueVO attributeValueVO = attributeValueVOS.get(j);
                         if(attributeValueVO.getType().intValue()==2
                                 &&attributeValueVO.getAttributeKeyId().longValue()==attributeKeyVO.getAttributeKeyId().longValue())
                         {
-                            productSpuAttributeKeyValueTreeVO.getValues().add(attributeValueVO.getAttributeValue());
+                            productSpuAttributeKeyTreeVO.getValues().add(attributeValueVO.getAttributeValue());
                         }
+                    }
+                    if("主体".equals(attributeKeyVO.getAttributeName()))
+                    {
+                        productSpuAttributeKeyTreeVO.getChildren().add(brandAttribute);
+                        productSpuAttributeKeyTreeVO.getChildren().add(productNameAttribute);
                     }
                 }
             }
+
 
             for(ProductSpuAttributeKeyValueTreeVO rootAttribute:productSpuAttributeKeyValueTreeVOS)
             {
