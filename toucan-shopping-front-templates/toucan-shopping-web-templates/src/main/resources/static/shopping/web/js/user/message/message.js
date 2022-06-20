@@ -21,7 +21,7 @@ function queryUnreadCount()
         $.ajax({
             type: "POST",
             url: messageBasePath + "/api/user/message/unread/count",
-            data: null,
+            data: {"srcType":1},
             dataType: 'json',
             xhrFields: {
                 withCredentials: true //允许跨域带Cookie

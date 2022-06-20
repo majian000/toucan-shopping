@@ -49,6 +49,12 @@
         <if test="status!=null  ">
             and t.status = #{status}
         </if>
+        <if test="messageTypeAppCode!=null and messageTypeAppCode!='-1' ">
+            and t.message_type_app_code = #{messageTypeAppCode}
+        </if>
+        <if test="messageTypeCode!=null and messageTypeCode!='' ">
+            and t.message_type_code = #{messageTypeCode}
+        </if>
     </sql>
     
     
@@ -80,11 +86,18 @@
 
     <update id="updateStatus" parameterType="com.toucan.shopping.modules.message.vo.MessageUserVO">
         update t_message_user set status=#{status} where id = #{id} and user_main_id=#{userMainId}
+
+        <if test="messageTypeAppCode!=null and messageTypeAppCode!='-1' ">
+            and t.message_type_app_code = #{messageTypeAppCode}
+        </if>
     </update>
 
 
     <update id="updateAllReadStatus" parameterType="java.lang.Long">
         update t_message_user set status=1 where  user_main_id=#{userMainId}
+        <if test="messageTypeAppCode!=null and messageTypeAppCode!='-1' ">
+            and message_type_app_code = #{messageTypeAppCode}
+        </if>
     </update>
 
     <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.message.entity.MessageUser">

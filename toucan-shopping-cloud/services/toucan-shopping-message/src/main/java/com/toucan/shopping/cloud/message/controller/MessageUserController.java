@@ -751,7 +751,7 @@ public class MessageUserController {
                 resultObjectVO.setMsg("用户ID不能为空!");
                 return resultObjectVO;
             }
-            int ret  =  messageUserService.updateAllReadStatus(messageUserVO.getUserMainId());
+            int ret  =  messageUserService.updateAllReadStatus(messageUserVO.getUserMainId(),messageUserVO.getMessageTypeAppCode());
             if(ret<=0)
             {
                 logger.warn("更新消息状态失败 {}",JSONObject.toJSONString(messageUserVO));

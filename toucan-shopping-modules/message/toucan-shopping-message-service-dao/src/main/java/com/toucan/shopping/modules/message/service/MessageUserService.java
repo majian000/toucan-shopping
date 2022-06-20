@@ -62,5 +62,5 @@ public interface MessageUserService {
      * @param userMainId
      * @return
      */
-    int updateAllReadStatus(Long userMainId);
+    int updateAllReadStatus(Long userMainId,String messageTypeAppCode);
 }

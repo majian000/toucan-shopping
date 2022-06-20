@@ -16,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -69,7 +66,7 @@ public class UserMessageController {
     @UserAuth
     @RequestMapping("/unread/count")
     @ResponseBody
-    public ResultObjectVO queryUnreadCount(HttpServletRequest request)
+    public ResultObjectVO queryUnreadCount(HttpServletRequest request, @RequestParam Integer srcType)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId = "-1";
@@ -77,6 +74,13 @@ public class UserMessageController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             MessageUserVO messageUserVO=new MessageUserVO();
             messageUserVO.setUserMainId(Long.parseLong(userMainId));
+            if(srcType!=null&&srcType.intValue()==1)
+            {
+                messageUserVO.setMessageTypeAppCode(AppCodeConstant.SHOPPING_WEB);
+            }else if(srcType!=null&&srcType.intValue()==2)
+            {
+                messageUserVO.setMessageTypeAppCode(AppCodeConstant.SELLER_WEB);
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
 
             resultObjectVO = feignMessageUserService.queryUnreadCountByUserMainId(requestJsonVO);
@@ -120,7 +124,7 @@ public class UserMessageController {
     @UserAuth
     @RequestMapping("/read/all")
     @ResponseBody
-    public ResultObjectVO readAll(HttpServletRequest request)
+    public ResultObjectVO readAll(HttpServletRequest request, @RequestParam Integer srcType)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId = "-1";
@@ -128,6 +132,13 @@ public class UserMessageController {
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             MessageUserVO messageUserVO=new MessageUserVO();
             messageUserVO.setUserMainId(Long.parseLong(userMainId));
+            if(srcType!=null&&srcType.intValue()==1)
+            {
+                messageUserVO.setMessageTypeAppCode(AppCodeConstant.SHOPPING_WEB);
+            }else if(srcType!=null&&srcType.intValue()==2)
+            {
+                messageUserVO.setMessageTypeAppCode(AppCodeConstant.SELLER_WEB);
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),messageUserVO);
 
             resultObjectVO = feignMessageUserService.updateAllReadStatus(requestJsonVO);

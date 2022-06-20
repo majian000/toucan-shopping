@@ -73,5 +73,5 @@ public interface MessageUserMapper {
      */
     int updateStatus(MessageUserVO messageUserVO);
 
-    int updateAllReadStatus(Long userMainId);
+    int updateAllReadStatus(Long userMainId,String messageTypeAppCode);
 }

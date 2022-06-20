@@ -84,8 +84,8 @@ public class MessageUserServiceImpl implements MessageUserService {
 
 
     @Override
-    public int updateAllReadStatus(Long userMainId) {
-        return messageUserMapper.updateAllReadStatus(userMainId);
+    public int updateAllReadStatus(Long userMainId,String messageTypeAppCode) {
+        return messageUserMapper.updateAllReadStatus(userMainId,messageTypeAppCode);
     }
 
 }

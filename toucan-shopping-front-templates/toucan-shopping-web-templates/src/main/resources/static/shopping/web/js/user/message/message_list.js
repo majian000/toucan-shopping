@@ -127,7 +127,7 @@ function allRead()
     $.ajax({
         type: "POST",
         url: messageBasePath + "/api/user/message/read/all",
-        data: null,
+        data:  {"srcType":1},
         dataType: 'json',
         xhrFields: {
             withCredentials: true //允许跨域带Cookie
