@@ -14,6 +14,10 @@ spring:
       sampler:
         #采样率 1全部采集
         probability: 1
+  compression: #开启gzip压缩
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024 #只压缩1MB以上的内容
 
 
 eureka:
