@@ -18,6 +18,11 @@ spring:
     loadbalancer:
       retry:
         enabled: true #开启重试机制
+  compression: #开启gzip压缩
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024 #只压缩1MB以上的内容
+
 eureka:
   client:
     registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
