@@ -52,6 +52,7 @@ public class ProductSpuAttributeValueServiceImpl implements ProductSpuAttributeV
         {
             ProductSpuAttributeKeyValueVO attributeKeyVO = allList.get(i);
             if(attributeKeyVO.getType().intValue()==1
+                    &&attributeKeyVO.getParentAttributeKeyId()!=null&&parentAttributeTree.getAttributeKeyId()!=null
                     &&attributeKeyVO.getParentAttributeKeyId().longValue()==parentAttributeTree.getAttributeKeyId().longValue())
             {
                 ProductSpuAttributeKeyValueTreeVO productSpuAttributeKeyChildVO = new ProductSpuAttributeKeyValueTreeVO();

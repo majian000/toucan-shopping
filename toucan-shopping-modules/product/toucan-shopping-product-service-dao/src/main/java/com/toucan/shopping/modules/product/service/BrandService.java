@@ -27,6 +27,8 @@ public interface BrandService {
 
     List<Brand> queryByIdList(List<Long> id);
 
+    Brand findByIdIngoreDeleteStatus(Long id);
+
 
     List<Brand> queryAllList(Brand queryModel);
 

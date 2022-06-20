@@ -37,6 +37,11 @@ public class BrandServiceImpl implements BrandService {
         return brandMapper.queryByIdList(idList);
     }
 
+    @Override
+    public Brand findByIdIngoreDeleteStatus(Long id) {
+        return brandMapper.findByIdIngoreDeleteStatus(id);
+    }
+
 
     @Override
     public List<Brand> queryAllList(Brand queryModel) {

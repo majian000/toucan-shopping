@@ -139,6 +139,9 @@
         update t_brand  set delete_status=1 where id=#{id}   and delete_status=0
     </update>
 
+    <select id="findByIdIngoreDeleteStatus" resultMap="brandMap">
+        select * from t_brand t where t.id=#{id}  limit 0,1
+    </select>
 
 
     <select id="queryListPageCount" resultType="com.toucan.shopping.modules.common.persistence.entity.DataCountResult" parameterType="com.toucan.shopping.modules.product.page.BrandPageInfo">

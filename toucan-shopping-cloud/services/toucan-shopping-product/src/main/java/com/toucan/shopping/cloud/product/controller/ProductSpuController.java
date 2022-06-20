@@ -9,16 +9,10 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultListVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.product.entity.ProductSpu;
-import com.toucan.shopping.modules.product.entity.ProductSpuAttributeKey;
-import com.toucan.shopping.modules.product.entity.ProductSpuAttributeValue;
+import com.toucan.shopping.modules.product.entity.*;
 import com.toucan.shopping.modules.product.page.ProductSpuPageInfo;
 import com.toucan.shopping.modules.product.redis.ProductSpuRedisLockKey;
-import com.toucan.shopping.modules.product.service.ProductSkuService;
-import com.toucan.shopping.modules.product.service.ProductSpuAttributeKeyService;
-import com.toucan.shopping.modules.product.service.ProductSpuAttributeValueService;
-import com.toucan.shopping.modules.product.service.ProductSpuService;
+import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -53,6 +47,9 @@ public class ProductSpuController {
 
     @Autowired
     private SkylarkLock skylarkLock;
+
+    @Autowired
+    private BrandService brandService;
 
 
     /**
@@ -477,8 +474,22 @@ public class ProductSpuController {
                 attributeValueVOS.add(productSpuAttributeKeyValueVO);
             }
 
+
             //构造树结构
             List<ProductSpuAttributeKeyValueTreeVO> productSpuAttributeKeyValueTreeVOS = new LinkedList<>();
+            Brand brand = brandService.findByIdIngoreDeleteStatus(productSpuVO.getBrandId());
+            if(brand!=null) {
+                ProductSpuAttributeKeyValueTreeVO brandAttribute = new ProductSpuAttributeKeyValueTreeVO();
+                brandAttribute.setValues(new LinkedList<>());
+                brandAttribute.setName("品牌");
+                if(StringUtils.isNotEmpty(brand.getChineseName())) {
+                    brandAttribute.getValues().add(brand.getChineseName());
+                }
+                if(StringUtils.isNotEmpty(brand.getEnglishName())){
+                    brandAttribute.getValues().add(brand.getEnglishName());
+                }
+                productSpuAttributeKeyValueTreeVOS.add(brandAttribute);
+            }
             for(int i=0;i<attributeValueVOS.size();i++)
             {
                 ProductSpuAttributeKeyValueVO attributeKeyVO = attributeValueVOS.get(i);

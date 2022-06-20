@@ -42,5 +42,7 @@ public interface BrandMapper {
 
     int deleteById(Long id);
 
+    Brand findByIdIngoreDeleteStatus(Long id);
+
 
 }
