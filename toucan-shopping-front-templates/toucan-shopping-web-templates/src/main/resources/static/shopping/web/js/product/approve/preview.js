@@ -257,10 +257,6 @@ function drawSpuAttributes(productId)
         dataType: "json",
         success: function (result) {
             if (result.code <= 0) {
-                $.message({
-                    message: "查询失败,请稍后重试",
-                    type: 'error'
-                });
                 return ;
             }
             drawSalesAttribute(result.data);
