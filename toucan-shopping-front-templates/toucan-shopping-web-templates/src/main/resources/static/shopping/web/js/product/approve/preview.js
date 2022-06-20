@@ -173,7 +173,102 @@ function drawProductPage(productVO)
             $(".des_con_p").html(productDescHtml);
         }
 
+        drawSpuAttributes(productVO.productId);
     }
+}
+
+function drawSalesAttributeChildHtml(attributeChild)
+{
+    var salesAttributeChildHtml="<div class=\"Ptable-item-child\">";
+    salesAttributeChildHtml+="<dl style=\"Ptable-item-dl\">";
+    salesAttributeChildHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
+    salesAttributeChildHtml+="<dt>";
+    salesAttributeChildHtml+=attributeChild.name;
+    salesAttributeChildHtml+="</dt>";
+    salesAttributeChildHtml+=" <dd>";
+    for(var j=0;j<attributeChild.values.length;j++) {
+        var attributeValue = attributeChild.values[j];
+        salesAttributeChildHtml+=attributeValue+"&nbsp;";
+    }
+    salesAttributeChildHtml+="  </dd>";
+    salesAttributeChildHtml+="</dl>";
+    salesAttributeChildHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
+    if(attributeChild.children!=null) {
+        for (var p = 0; p < attributeChild.children.length; p++) {
+            salesAttributeChildHtml += drawSalesAttributeChildHtml(attributeChild.children[p]);
+        }
+    }
+    salesAttributeChildHtml+="</dl>";
+    salesAttributeChildHtml+="</dl>";
+    salesAttributeChildHtml+="</div>";
+    return salesAttributeChildHtml;
+}
+
+function drawSalesAttribute(spu)
+{
+    if(spu!=null&&spu.attributeTree.length>0)
+    {
+        var salesAttributeHtml="<div class=\"Ptable\">";
+        for(var i=0;i<spu.attributeTree.length;i++)
+        {
+            var attributeTree = spu.attributeTree[i];
+            salesAttributeHtml+="<div class=\"Ptable-item\">";
+            salesAttributeHtml+="<h3>"+attributeTree.name+"</h3>";
+            if(attributeTree.values!=null&&attributeTree.values.length>0) {
+                salesAttributeHtml += "<dl style=\"Ptable-item-dl\">";
+                salesAttributeHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
+                salesAttributeHtml+="<dd style=\"margin-left: 20px;\">";
+                for(var j=0;j<attributeTree.values.length;j++) {
+                    var attributeValue = attributeTree.values[j];
+                    salesAttributeHtml+=attributeValue+"&nbsp;";
+                }
+                salesAttributeHtml+="</dd>";
+                salesAttributeHtml+="</dl>";
+                salesAttributeHtml+="</dl>";
+            }
+            salesAttributeHtml+="</dl>";
+            if(attributeTree.children!=null&&attributeTree.children.length>0)
+            {
+                salesAttributeHtml+="<dl class=\"clearfix\" style=\"margin:0\">";
+                if(attributeTree.children!=null) {
+                    for (var p = 0; p < attributeTree.children.length; p++) {
+                        salesAttributeHtml += drawSalesAttributeChildHtml(attributeTree.children[p]);
+                    }
+                }
+                salesAttributeHtml+="</dl>";
+            }
+            salesAttributeHtml+="</div>";
+        }
+        salesAttributeHtml+="</div>";
+        $(".spuAttributeList").html(salesAttributeHtml);
+    }
+}
+
+
+
+
+function drawSpuAttributes(productId)
+{
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/product/approve/spu/info",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({"productId": productId}),
+        dataType: "json",
+        success: function (result) {
+            if (result.code <= 0) {
+                $.message({
+                    message: "查询失败,请稍后重试",
+                    type: 'error'
+                });
+                return ;
+            }
+            drawSalesAttribute(result.data);
+        },
+        error: function (result) {
+
+        }
+    });
 }
 
 function tabsEvent()

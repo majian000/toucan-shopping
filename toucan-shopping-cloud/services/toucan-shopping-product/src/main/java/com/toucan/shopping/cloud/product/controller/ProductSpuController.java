@@ -477,6 +477,37 @@ public class ProductSpuController {
                 attributeValueVOS.add(productSpuAttributeKeyValueVO);
             }
 
+            //构造树结构
+            List<ProductSpuAttributeKeyValueTreeVO> productSpuAttributeKeyValueTreeVOS = new LinkedList<>();
+            for(int i=0;i<attributeValueVOS.size();i++)
+            {
+                ProductSpuAttributeKeyValueVO attributeKeyVO = attributeValueVOS.get(i);
+                //找到所有根节点
+                if(attributeKeyVO.getType().intValue()==1&&attributeKeyVO.getParentAttributeKeyId()!=null&&attributeKeyVO.getParentAttributeKeyId().longValue()==-1L) {
+                    ProductSpuAttributeKeyValueTreeVO productSpuAttributeKeyValueTreeVO = new ProductSpuAttributeKeyValueTreeVO();
+                    productSpuAttributeKeyValueTreeVO.setAttributeKeyId(attributeKeyVO.getAttributeKeyId());
+                    productSpuAttributeKeyValueTreeVO.setName(attributeKeyVO.getAttributeName());
+                    productSpuAttributeKeyValueTreeVO.setValues(new LinkedList<>());
+                    productSpuAttributeKeyValueTreeVO.setChildren(new LinkedList<>());
+                    productSpuAttributeKeyValueTreeVOS.add(productSpuAttributeKeyValueTreeVO);
+                    for (int j = 0; j < attributeValueVOS.size(); j++) {
+                        ProductSpuAttributeKeyValueVO attributeValueVO = attributeValueVOS.get(j);
+                        if(attributeValueVO.getType().intValue()==2
+                                &&attributeValueVO.getAttributeKeyId().longValue()==attributeKeyVO.getAttributeKeyId().longValue())
+                        {
+                            productSpuAttributeKeyValueTreeVO.getValues().add(attributeValueVO.getAttributeValue());
+                        }
+                    }
+                }
+            }
+
+            for(ProductSpuAttributeKeyValueTreeVO rootAttribute:productSpuAttributeKeyValueTreeVOS)
+            {
+                productSpuAttributeValueService.queryAttributeTree(attributeValueVOS,rootAttribute);
+            }
+
+
+            productSpuVO.setAttributeTree(productSpuAttributeKeyValueTreeVOS);
             productSpuVO.setAttributeKeyValues(attributeValueVOS);
 
             resultObjectVO.setData(productSpuVO);

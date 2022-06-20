@@ -61,6 +61,8 @@ public class ProductApproveApiController {
     @Autowired
     private ImageUploadService imageUploadService;
 
+    @Autowired
+    private FeignProductSpuService feignProductSpuService;
 
     @RequestMapping(value = "/detail",method = RequestMethod.POST)
     public ResultObjectVO detail(@RequestBody ShopProductApproveSkuVO shopProductApproveSkuVO)
@@ -161,6 +163,39 @@ public class ProductApproveApiController {
                     retObject.setData(shopProductApproveSkuVO);
                 }
             }
+        }catch(Exception e)
+        {
+            retObject.setMsg("查询失败,请稍后重试");
+            retObject.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return retObject;
+    }
+
+
+
+
+    /**
+     * 根据商品审核主表ID查询1个预览的SKU
+     * @param shopProductApproveVO
+     * @return
+     */
+    @RequestMapping(value = "/spu/info",method = RequestMethod.POST)
+    public ResultObjectVO querySpuAttributeList(@RequestBody ShopProductApproveVO shopProductApproveVO)
+    {
+        ResultObjectVO retObject = new ResultObjectVO();
+        try {
+            if(shopProductApproveVO.getProductId()==null)
+            {
+                retObject.setMsg("查询失败,没有找到商品ID");
+                retObject.setCode(ResultObjectVO.FAILD);
+            }
+
+            ProductSpuVO queryProductSpu = new ProductSpuVO();
+            queryProductSpu.setId(shopProductApproveVO.getProductId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryProductSpu);
+            retObject = feignProductSpuService.findById(requestJsonVO);
+
         }catch(Exception e)
         {
             retObject.setMsg("查询失败,请稍后重试");

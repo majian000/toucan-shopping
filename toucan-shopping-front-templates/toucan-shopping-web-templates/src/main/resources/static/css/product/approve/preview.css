@@ -144,3 +144,6 @@
     clear: both;
     visibility: hidden;
 }
+.Ptable-item, .p-parameter {
+    border-bottom: 1px solid #eee;
+}

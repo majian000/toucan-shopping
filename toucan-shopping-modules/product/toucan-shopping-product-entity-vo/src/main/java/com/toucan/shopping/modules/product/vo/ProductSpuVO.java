@@ -29,7 +29,9 @@ public class ProductSpuVO extends ProductSpu {
     private List<ProductSpuAttributeKeyVO> attributeKeys; //所有属性名
     private List<ProductSpuAttributeValueVO> attributeValues; //所有属性值
 
-    private List<ProductSpuAttributeKeyValueVO> attributeKeyValues; //所有属性名和属性值
+    private List<ProductSpuAttributeKeyValueVO> attributeKeyValues; //所有属性名和属性值(都在一个数组中)
+
+    private List<ProductSpuAttributeKeyValueTreeVO> attributeTree; //属性树
 
     private String attributeKeyValuesJson; //属性名和属性值 对象JSON字符串
 
