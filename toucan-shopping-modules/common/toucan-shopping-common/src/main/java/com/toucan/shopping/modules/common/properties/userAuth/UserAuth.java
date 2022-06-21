@@ -18,6 +18,8 @@ public class UserAuth {
      */
     private boolean enabled = false;
 
+    private String loginSalt; //登录token加盐
+
     /**
      * HTTP权限请求头,默认值为Cookie
      * 后台管理端 Cookie:adminId=d10590b318544049ba2104d1f5517a7d&loginToken=d10590b318544049ba2104d1f5517a7d

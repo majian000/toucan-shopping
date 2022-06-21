@@ -111,6 +111,7 @@ toucan:
   user-auth:
     enabled: true
     name: toucan-shopping-user
+    login-salt: 0.4947 #这个必须要修改成你自己的,要不然会有很严重的安全性问题
     #HTTP权限请求头
     # 例如 商城C端 Cookie:uid=d10590b318544049ba2104d1f5517a7d;lt=d10590b318544049ba2104d1f5517a7d
     http-toucan-auth-header: Cookie

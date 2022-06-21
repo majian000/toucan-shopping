@@ -1,10 +1,6 @@
-package com.toucan.shopping.cloud.apps.web.app.config;
+package com.toucan.shopping.cloud.apps.seller.web.app.config;
 
 
-import com.toucan.shopping.cloud.apps.web.redis.UserEditInfoRedisKey;
-import com.toucan.shopping.modules.content.constant.BannerRedisKey;
-import com.toucan.shopping.cloud.apps.web.redis.UserLoginRedisKey;
-import com.toucan.shopping.cloud.apps.web.redis.UserRegistRedisKey;
 import com.toucan.shopping.modules.common.context.ToucanApplicationContext;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
@@ -31,10 +27,6 @@ public class AfterStartConfig {
     @PostConstruct
     public void initAppCode()
     {
-        UserRegistRedisKey.appCode = toucan.getAppCode();
-        UserLoginRedisKey.appCode = toucan.getAppCode();
-        BannerRedisKey.appCode = toucan.getAppCode();
-        UserEditInfoRedisKey.appCode = toucan.getAppCode();
         LoginTokenUtil.salt=toucan.getUserAuth().getLoginSalt();
 
         ToucanApplicationContext.setMaxFileSize(maxFileSize);
