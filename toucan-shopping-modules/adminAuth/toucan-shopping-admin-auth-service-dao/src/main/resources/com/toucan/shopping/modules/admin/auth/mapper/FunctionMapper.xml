@@ -278,6 +278,20 @@
 
     </select>
 
+    <select id="queryListByUrlsAndAppCodes" resultMap="functionVOMap">
+        select * from t_sa_function t
+        where t.delete_status=0
+        and t.url in
+        <foreach item="url" index="index" collection="urls" open="("  close=")" separator=",">
+            #{url}
+        </foreach>
+
+        and t.app_code in
+        <foreach item="appCode" index="index" collection="appCodes" open="("  close=")" separator=",">
+            #{appCode}
+        </foreach>
+
+    </select>
 
 
 </mapper>

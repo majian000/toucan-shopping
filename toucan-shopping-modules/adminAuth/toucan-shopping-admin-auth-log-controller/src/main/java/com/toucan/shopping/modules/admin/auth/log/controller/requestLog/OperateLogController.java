@@ -5,11 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.log.service.OperateLogService;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
+import com.toucan.shopping.modules.admin.auth.service.FunctionService;
+import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 操作日志管理
@@ -34,6 +39,9 @@ public class OperateLogController {
 
     @Autowired
     private IdGenerator idGenerator;
+
+    @Autowired
+    private FunctionService functionService;
 
 
     /**
@@ -61,6 +69,8 @@ public class OperateLogController {
             List<OperateLogVO> requestLogVOS = requestJsonVO.formatEntityList(OperateLogVO.class);
             if(!CollectionUtils.isEmpty(requestLogVOS))
             {
+                List<String> urls = new LinkedList<>();
+                List<String> appCodes = new LinkedList<>();
                 for(OperateLogVO requestLogVO:requestLogVOS)
                 {
                     if(requestLogVO!=null)
@@ -68,8 +78,35 @@ public class OperateLogController {
                         requestLogVO.setId(idGenerator.id());
                         requestLogVO.setCreateDate(new Date());
                         requestLogVO.setDeleteStatus((short)0);
+
+                        if(StringUtils.isNotEmpty(requestLogVO.getUri())) {
+                            urls.add(requestLogVO.getUri());
+                        }
+
+                        if(StringUtils.isNotEmpty(requestLogVO.getAppCode())) {
+                            appCodes.add(requestLogVO.getAppCode());
+                        }
                     }
                 }
+
+                urls = urls.stream().distinct().collect(Collectors.toList());
+                appCodes = appCodes.stream().distinct().collect(Collectors.toList());
+                List<FunctionVO> functionVOS = functionService.queryListByUrlsAndAppCodes(urls,appCodes);
+                for(OperateLogVO operateLogVO:requestLogVOS)
+                {
+                    if(StringUtils.isNotEmpty(operateLogVO.getUri())&&StringUtils.isNotEmpty(operateLogVO.getAppCode()))
+                    {
+                        for(FunctionVO functionVO:functionVOS)
+                        {
+                            if(functionVO!=null&&operateLogVO.getUri().equals(functionVO.getUrl())&&operateLogVO.getAppCode().equals(functionVO.getAppCode())){
+                                operateLogVO.setFunctionId(functionVO.getFunctionId());
+                                operateLogVO.setFunctionName(functionVO.getName());
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 int ret = operateLogService.saves(requestLogVOS);
                 if(ret!=requestLogVOS.size())
                 {

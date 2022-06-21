@@ -145,6 +145,13 @@ public interface FunctionService {
     List<FunctionVO> queryListByRoleIdArrayAndParentId(String[] roleIds,String url);
 
 
+    /**
+     * 根据路径和应用编码查询
+     * @param urls
+     * @param appCodes
+     * @return
+     */
+    List<FunctionVO> queryListByUrlsAndAppCodes(List<String> urls,List<String> appCodes);
 
 
 

@@ -249,4 +249,9 @@ public class FunctionServiceImpl implements FunctionService {
         return functionMapper.queryListByRoleIdArrayAndParentId(roleIds,parentId);
     }
 
+    @Override
+    public List<FunctionVO> queryListByUrlsAndAppCodes(List<String> urls, List<String> appCodes) {
+        return functionMapper.queryListByUrlsAndAppCodes(urls,appCodes);
+    }
+
 }

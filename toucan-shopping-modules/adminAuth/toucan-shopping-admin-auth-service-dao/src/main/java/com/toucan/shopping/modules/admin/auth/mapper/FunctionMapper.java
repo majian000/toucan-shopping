@@ -84,5 +84,6 @@ public interface FunctionMapper {
 
     List<FunctionVO> queryListByRoleIdArrayAndParentId(String[] roleIds,String parentId);
 
+    List<FunctionVO> queryListByUrlsAndAppCodes(List<String> urls, List<String> appCodes);
 
 }
