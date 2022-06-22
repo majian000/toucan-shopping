@@ -36,6 +36,20 @@ public class OperateLogPageInfo extends PageInfo<OperateLogVO> {
      */
     private String appCode;
 
+    /**
+     * IP
+     */
+    private String ip;
+
+    /**
+     * 功能名称
+     */
+    private String functionName;
+
+    /**
+     * 功能ID
+     */
+    private String functionId;
 
     //==============================================
 }

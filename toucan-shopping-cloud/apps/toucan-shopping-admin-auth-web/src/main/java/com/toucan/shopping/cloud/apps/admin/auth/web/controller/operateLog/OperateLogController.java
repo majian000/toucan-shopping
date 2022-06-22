@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.admin.auth.web.controller.operateLog;
 
 
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignOperateLogService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
@@ -46,13 +47,16 @@ public class OperateLogController extends UIController {
     @Autowired
     private FeignFunctionService feignFunctionService;
 
+    @Autowired
+    private FeignAppService feignAppService;
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/listPage",method = RequestMethod.GET)
     public String page(HttpServletRequest request)
     {
+        super.initSelectApp(request,toucan,feignAppService);
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/app/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/operateLog/listPage",feignFunctionService);
 
         return "pages/operateLog/list.html";
     }

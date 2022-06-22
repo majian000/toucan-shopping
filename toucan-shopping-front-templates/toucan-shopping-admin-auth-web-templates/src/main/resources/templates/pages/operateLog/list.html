@@ -22,9 +22,36 @@
                 <form class="layui-form layui-form-pane" id="searchForm" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
+                            <label class="layui-form-label">所属应用</label>
+                            <div class="layui-input-inline">
+                                <select id="selectApp" name="appCode"  lay-search="">
+                                    <option value="">请选择</option>
+                                    <option th:each="aa : ${apps}" th:value="${aa.code}" th:text="${aa.code}+' '+${aa.name}">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">管理员ID</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="adminId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">IP</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ip" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">功能ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="functionId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">功能名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="functionName" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">

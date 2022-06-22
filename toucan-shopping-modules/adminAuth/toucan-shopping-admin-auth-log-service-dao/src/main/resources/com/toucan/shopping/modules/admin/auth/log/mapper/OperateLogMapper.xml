@@ -43,10 +43,19 @@
 
     <sql id="queryListPageWhere">
         <if test="adminId!=null and adminId!=''">
-            and t.admin_id =#{adminId}
+            and t.create_admin_id =#{adminId}
+        </if>
+        <if test="ip!=null and ip!=''">
+            and t.ip like concat(#{ip},'%')
         </if>
         <if test="appCode!=null and appCode!=''">
             and t.app_code =#{appCode}
+        </if>
+        <if test="functionName!=null and functionName!=''">
+            and t.function_name like concat(#{functionName},'%')
+        </if>
+        <if test="functionId!=null and functionId!=''">
+            and t.function_id = #{functionId}
         </if>
     </sql>
 
