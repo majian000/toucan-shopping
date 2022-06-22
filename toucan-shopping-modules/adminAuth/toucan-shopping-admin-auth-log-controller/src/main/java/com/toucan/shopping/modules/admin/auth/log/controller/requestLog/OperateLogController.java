@@ -4,10 +4,12 @@ package com.toucan.shopping.modules.admin.auth.log.controller.requestLog;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.log.service.OperateLogService;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
+import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
 import com.toucan.shopping.modules.admin.auth.service.FunctionService;
 import com.toucan.shopping.modules.admin.auth.vo.FunctionVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -165,4 +167,48 @@ public class OperateLogController {
         }
         return resultObjectVO;
     }
+
+
+
+    /**
+     * 查询列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            OperateLogPageInfo pageInfo = JSONObject.parseObject(requestVo.getEntityJson(), OperateLogPageInfo.class);
+            PageInfo<OperateLogVO> page =  operateLogService.queryListPage(pageInfo);
+            if(!CollectionUtils.isEmpty(page.getList()))
+            {
+                for(OperateLogVO operateLogVO:page.getList())
+                {
+                    if(operateLogVO!=null&&operateLogVO.getParams().length()>200)
+                    {
+                        operateLogVO.setParams(operateLogVO.getParams().substring(0,200)+"...");
+                    }
+                }
+            }
+            resultObjectVO.setData(page);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 }

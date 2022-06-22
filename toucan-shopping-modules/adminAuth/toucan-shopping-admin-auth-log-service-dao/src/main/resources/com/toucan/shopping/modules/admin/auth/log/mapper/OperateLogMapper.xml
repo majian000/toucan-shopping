@@ -41,6 +41,16 @@
     </sql>
 
 
+    <sql id="queryListPageWhere">
+        <if test="adminId!=null and adminId!=''">
+            and t.admin_id =#{adminId}
+        </if>
+        <if test="appCode!=null and appCode!=''">
+            and t.app_code =#{appCode}
+        </if>
+    </sql>
+
+
 
     <insert id="inserts"   >
         insert into t_sa_operate_log(id,method,uri,params,function_id,function_name,remark,ip,app_code,create_date,create_admin_id,delete_status)
@@ -69,5 +79,38 @@
         GROUP BY t.app_code,DATE_FORMAT(t.create_date,'%Y-%m-%e')
         ORDER BY operateDateYMD ASC
     </select>
+
+
+
+
+    <select id="queryListPage" resultMap="operateLogVOMap" parameterType="com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo">
+        select <include refid="queryColumns" /> from t_sa_operate_log t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+        order by t.create_date desc
+        limit #{start},#{limit}
+
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo">
+        select count(*) from t_sa_operate_log t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+
 
 </mapper>

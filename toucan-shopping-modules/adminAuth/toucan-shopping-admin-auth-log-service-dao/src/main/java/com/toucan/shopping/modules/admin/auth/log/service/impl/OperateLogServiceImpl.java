@@ -3,7 +3,9 @@ package com.toucan.shopping.modules.admin.auth.log.service.impl;
 import com.toucan.shopping.modules.admin.auth.log.mapper.OperateLogMapper;
 import com.toucan.shopping.modules.admin.auth.log.service.OperateLogService;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
+import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
+import com.toucan.shopping.modules.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +27,13 @@ public class OperateLogServiceImpl implements OperateLogService {
     @Override
     public List<OperateLogChartVO> queryOperateLogCountList(Date startDate, Date endDate, String appCode) {
         return operateLogMapper.queryOperateLogCountList(startDate,endDate,appCode);
+    }
+
+    @Override
+    public PageInfo<OperateLogVO> queryListPage(OperateLogPageInfo pageInfo) {
+        pageInfo.setStart(pageInfo.getPage()*pageInfo.getLimit()-pageInfo.getLimit());
+        pageInfo.setList(operateLogMapper.queryListPage(pageInfo));
+        pageInfo.setTotal(operateLogMapper.queryListPageCount(pageInfo));
+        return pageInfo;
     }
 }

@@ -2,7 +2,9 @@ package com.toucan.shopping.modules.admin.auth.log.service;
 
 
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
+import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
+import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -27,5 +29,8 @@ public interface OperateLogService {
      * @return
      */
     List<OperateLogChartVO> queryOperateLogCountList(Date startDate, Date endDate,String appCode);
+
+
+    PageInfo<OperateLogVO> queryListPage(OperateLogPageInfo pageInfo);
 
 }

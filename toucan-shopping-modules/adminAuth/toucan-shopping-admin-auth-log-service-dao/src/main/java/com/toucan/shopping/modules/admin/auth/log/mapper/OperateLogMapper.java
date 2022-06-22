@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.admin.auth.log.mapper;
 
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
+import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
+import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -22,4 +24,11 @@ public interface OperateLogMapper {
      * @return
      */
     List<OperateLogChartVO> queryOperateLogCountList(Date startDate, Date endDate, String appCode);
+
+
+
+    List<OperateLogVO> queryListPage(OperateLogPageInfo pageInfo);
+
+    Long queryListPageCount(OperateLogPageInfo pageInfo);
+
 }
