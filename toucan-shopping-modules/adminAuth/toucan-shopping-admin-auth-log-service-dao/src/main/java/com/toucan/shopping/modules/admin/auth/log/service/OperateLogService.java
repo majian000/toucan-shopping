@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.log.service;
 
 
+import com.toucan.shopping.modules.admin.auth.log.entity.OperateLog;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
@@ -32,5 +33,8 @@ public interface OperateLogService {
 
 
     PageInfo<OperateLogVO> queryListPage(OperateLogPageInfo pageInfo);
+
+
+    List<OperateLog> findListByEntity(OperateLog query);
 
 }

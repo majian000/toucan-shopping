@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.log.mapper;
 
+import com.toucan.shopping.modules.admin.auth.log.entity.OperateLog;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogVO;
@@ -30,5 +31,8 @@ public interface OperateLogMapper {
     List<OperateLogVO> queryListPage(OperateLogPageInfo pageInfo);
 
     Long queryListPageCount(OperateLogPageInfo pageInfo);
+
+
+    List<OperateLog> findListByEntity(OperateLog query);
 
 }

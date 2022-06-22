@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.log.service.impl;
 
+import com.toucan.shopping.modules.admin.auth.log.entity.OperateLog;
 import com.toucan.shopping.modules.admin.auth.log.mapper.OperateLogMapper;
 import com.toucan.shopping.modules.admin.auth.log.service.OperateLogService;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
@@ -35,5 +36,10 @@ public class OperateLogServiceImpl implements OperateLogService {
         pageInfo.setList(operateLogMapper.queryListPage(pageInfo));
         pageInfo.setTotal(operateLogMapper.queryListPageCount(pageInfo));
         return pageInfo;
+    }
+
+    @Override
+    public List<OperateLog> findListByEntity(OperateLog query) {
+        return operateLogMapper.findListByEntity(query);
     }
 }

@@ -40,5 +40,14 @@ public interface FeignOperateLogService {
     ResultObjectVO listPage(@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
+
+
 
 }

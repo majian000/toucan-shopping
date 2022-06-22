@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.admin.auth.log.controller.requestLog;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.log.entity.OperateLog;
 import com.toucan.shopping.modules.admin.auth.log.service.OperateLogService;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogChartVO;
 import com.toucan.shopping.modules.admin.auth.log.vo.OperateLogPageInfo;
@@ -168,6 +169,53 @@ public class OperateLogController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            OperateLogVO operateLogVO = JSONObject.parseObject(requestVo.getEntityJson(),OperateLogVO.class);
+            if(operateLogVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在
+            OperateLogVO query=new OperateLogVO();
+            query.setId(operateLogVO.getId());
+            List<OperateLog> list = operateLogService.findListByEntity(query);
+            if(CollectionUtils.isEmpty(list))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("记录不存在!");
+                return resultObjectVO;
+            }
+            resultObjectVO.setData(list);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

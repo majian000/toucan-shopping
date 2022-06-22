@@ -122,4 +122,16 @@
 
 
 
+
+    <select id="findListByEntity" resultMap="operateLogMap" parameterType="com.toucan.shopping.modules.admin.auth.log.entity.OperateLog">
+        select * from t_sa_operate_log t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
 </mapper>

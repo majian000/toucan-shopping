@@ -124,7 +124,7 @@
             cols: [
                 [
                 {field: 'id', width: 180, title: '主键'},
-                {field: 'method', width: 180, title: '方式'},
+                {field: 'method', width: 180, title: '请求方式'},
                 {field: 'uri', width: 180, title: '请求地址'},
                 {field: 'params', width: 180, title: '请求参数'},
                 {field: 'functionId', width: 150, title: '功能ID'},
@@ -133,7 +133,7 @@
                 {field: 'ip', width: 180, title: 'IP'},
                 {field: 'remark', width: 180, title: '备注'},
                 {field: 'createAdminId', width: 180, title: '创建人ID'},
-                {field: 'createDate', width: 180, title: '创建时间'},
+                {field: 'createDate', width: 180, title: '请求时间'},
                 {title: '操作', minWidth: 150, toolbar: '#operateLogTableBar', align: "center"}
             ]
             ],
@@ -168,6 +168,23 @@
         });
 
         table.on('tool(operateLogTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'show') {
+
+                var index = layer.open({
+                    title: '查看操作记录',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]operateLog/showPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            }
         });
 
     });
