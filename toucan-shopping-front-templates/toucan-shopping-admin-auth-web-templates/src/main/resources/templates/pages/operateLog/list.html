@@ -31,6 +31,29 @@
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">请求方式</label>
+                            <div class="layui-input-inline">
+                                <select  name="method"  lay-search="">
+                                    <option value="">请选择</option>
+                                    <option value="GET">GET</option>
+                                    <option value="POST">POST</option>
+                                    <option value="PUT">PUT</option>
+                                    <option value="DELETE">DELETE</option>
+                                    <option value="HEAD">HEAD</option>
+                                    <option value="OPTIONS">OPTIONS</option>
+                                    <option value="PATCH">PATCH</option>
+                                    <option value="TRACE ">TRACE </option>
+                                    <option value="CONNECT">CONNECT</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">请求地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="uri" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">管理员ID</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="adminId" autocomplete="off" class="layui-input">

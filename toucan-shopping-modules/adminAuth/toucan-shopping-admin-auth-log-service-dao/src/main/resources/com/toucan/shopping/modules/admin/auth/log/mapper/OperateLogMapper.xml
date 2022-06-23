@@ -48,6 +48,12 @@
         <if test="ip!=null and ip!=''">
             and t.ip like concat(#{ip},'%')
         </if>
+        <if test="method!=null and method!=''">
+            and t.method =#{method}
+        </if>
+        <if test="uri!=null and uri!=''">
+            and t.uri like concat(#{uri},'%')
+        </if>
         <if test="appCode!=null and appCode!=''">
             and t.app_code =#{appCode}
         </if>
