@@ -457,7 +457,8 @@ public class FunctionController {
             if(StringUtils.isNotEmpty(queryPageInfo.getName())||
                     StringUtils.isNotEmpty(queryPageInfo.getUrl())||
                     StringUtils.isNotEmpty(queryPageInfo.getPermission())||
-                    queryPageInfo.getEnableStatus()!=null)
+                    queryPageInfo.getEnableStatus()!=null||
+                    StringUtils.isNotEmpty(queryPageInfo.getFunctionId()))
             {
                 Function queryFunction = new Function();
                 BeanUtils.copyProperties(queryFunction,queryPageInfo);

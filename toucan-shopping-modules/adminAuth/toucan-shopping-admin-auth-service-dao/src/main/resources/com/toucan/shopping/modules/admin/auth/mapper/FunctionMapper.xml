@@ -65,6 +65,9 @@
             and t.enable_status = #{enableStatus}
         </if>
 
+        <if test="functionId!=null and functionId!=''">
+            and t.function_id = #{functionId}
+        </if>
         <if test="url!=null and url!=''">
             and t.url like concat('%',#{url},'%')
         </if>
@@ -112,6 +115,10 @@
             <if test="permission!=null and permission!=''">
                 and t.permission = #{permission}
             </if>
+
+            <if test="functionId!=null and functionId!=''">
+                and t.function_id = #{functionId}
+            </if>
             <if test="appCode!=null and appCode!=''">
                 and t.app_code = #{appCode}
             </if>
@@ -144,6 +151,10 @@
             </if>
             <if test="appCode!=null and appCode!=''">
                 and t.app_code = #{appCode}
+            </if>
+
+            <if test="functionId!=null and functionId!=''">
+                and t.function_id = #{functionId}
             </if>
             <if test="enableStatus!=null">
                 and t.enable_status = #{enableStatus}
