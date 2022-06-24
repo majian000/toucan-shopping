@@ -103,6 +103,7 @@ public class CategoryController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+            categoryRedisService.clearCaches();
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -183,6 +184,7 @@ public class CategoryController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+            categoryRedisService.clearCaches();
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
@@ -244,6 +246,8 @@ public class CategoryController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+
+            categoryRedisService.clearCaches();
 
         }catch(Exception e)
         {
@@ -367,60 +371,8 @@ public class CategoryController {
             return resultObjectVO;
         }
         try {
-            CategoryVO query = new CategoryVO();
-            List<Category> categoryList = categoryService.queryPcIndexList(query);
-            if(!CollectionUtils.isEmpty(categoryList)) {
-                List<CategoryVO> categoryTreeVOS = new ArrayList<CategoryVO>();
-                for(Category category : categoryList)
-                {
-                    if(category.getParentId().longValue()==-1) {
-                        CategoryTreeVO treeVO = new CategoryTreeVO();
-                        BeanUtils.copyProperties(treeVO, category);
-                        treeVO.setTitle(category.getName());
-                        treeVO.setText(category.getName());
-                        if(StringUtils.isNotEmpty(treeVO.getName()))
-                        {
-                            StringBuilder linkhtml = new StringBuilder();
-                            if(treeVO.getName().indexOf("/")!=-1&&treeVO.getHref().indexOf("&toucan_spliter_2021&")!=-1)
-                            {
-                                String[] names = treeVO.getName().split("/");
-                                String[] hrefs = treeVO.getHref().split("&toucan_spliter_2021&");
-                                if(names.length==hrefs.length) {
-                                    for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\""+hrefs[i]+"\">");
-                                        linkhtml.append(names[i]);
-                                        linkhtml.append("</a>");
-                                        if(i+1<names.length)
-                                        {
-                                            linkhtml.append("<a class=\"category_a\" >/</a>");
-                                        }
-                                    }
-                                }else{
-                                    for (int i = 0; i < names.length; i++) {
-                                        linkhtml.append("<a class=\"category_a\" href=\"#\">");
-                                        linkhtml.append(names[i]);
-                                        linkhtml.append("</a>");
-                                        if(i+1<names.length)
-                                        {
-                                            linkhtml.append("<a class=\"category_a\" >/</a>");
-                                        }
-                                    }
-                                }
-                            }else{
-                                linkhtml.append("<a class=\"category_a\" href=\""+treeVO.getHref()+"\">"+treeVO.getName()+"</a>");
-                            }
-                            treeVO.setRootLinks(linkhtml.toString());
-                        }
-                        categoryTreeVOS.add(treeVO);
 
-                        treeVO.setChildren(new ArrayList<CategoryTreeVO>());
-                        categoryService.setChildren(categoryList,treeVO);
-                    }
-                }
-                categoryRedisService.flushWebIndexCaches(categoryTreeVOS);
-                categoryRedisService.flushWMiniTree(categoryTreeVOS);
-                categoryRedisService.flushNavigationMiniTree(categoryTreeVOS);
-            }
+            categoryRedisService.clearFullCategoryTree();
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -442,7 +394,8 @@ public class CategoryController {
     public ResultObjectVO clearWebIndexCache(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            resultObjectVO.setData(categoryRedisService.clearWebIndexCache());
+            categoryRedisService.clearCaches();
+            resultObjectVO.setData(true);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -641,6 +594,13 @@ public class CategoryController {
         try {
             CategoryVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
 
+            List<CategoryTreeVO> categoryVOS = categoryRedisService.queryFullCategoryTree();
+            if(!CollectionUtils.isEmpty(categoryVOS))
+            {
+                resultObjectVO.setData(categoryVOS);
+                return resultObjectVO;
+            }
+
             List<Category> categoryList = categoryService.queryList(query);
 
             CategoryTreeVO rootTreeVO = new CategoryTreeVO();
@@ -672,9 +632,12 @@ public class CategoryController {
                 rootTreeVO.setChildren(categoryTreeVOS);
             }
 
-            List<CategoryVO> rootCategoryTreeVOS = new ArrayList<CategoryVO>();
+            List<CategoryTreeVO> rootCategoryTreeVOS = new ArrayList<CategoryTreeVO>();
             rootCategoryTreeVOS.add(rootTreeVO);
             resultObjectVO.setData(rootCategoryTreeVOS);
+
+            categoryRedisService.addFullCategoryCache(rootCategoryTreeVOS);
+
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -1046,6 +1009,7 @@ public class CategoryController {
             }
             resultObjectVO.setData(resultObjectVOList);
 
+            categoryRedisService.clearCaches();
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

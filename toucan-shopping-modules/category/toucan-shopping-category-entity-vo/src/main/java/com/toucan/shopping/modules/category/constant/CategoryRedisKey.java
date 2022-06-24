@@ -34,4 +34,13 @@ public class CategoryRedisKey {
         return "TOUCAN_SHOPPING_WEB:INDEX:CATEGORY:NAVIGATION:MINI";
     }
 
+    /**
+     * 完整分类树结构
+     * @return
+     */
+    public static String getFullTreeKey()
+    {
+        return "TOUCAN_SHOPPING_WEB:INDEX:CATEGORY:FULL:TREE";
+    }
+
 }
