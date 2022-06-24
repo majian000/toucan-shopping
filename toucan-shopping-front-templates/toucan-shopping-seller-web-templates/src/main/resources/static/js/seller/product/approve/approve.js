@@ -85,16 +85,14 @@ function drawTable(pageResult)
                 tableHtml+=     "                                &nbsp;<a href=\""+basePath+"/page/shop/product/approve/rejected/"+row.id+"\" style=\"color:red\">驳回原因</a>\n" ;
                 tableHtml+=     "                                &nbsp;\n" ;
                 tableHtml+=     "                                <a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新发布</a>\n" ;
+                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"approvePreviewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
             }else if(row.approveStatus==1)
             {
                 tableHtml+=     "                                &nbsp;<a  href=\""+basePath+"/page/shop/product/approve/republish/"+row.id+"\" style=\"color:blue\">重新编辑</a>\n" ;
+                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"approvePreviewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
             }
-            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"approvePreviewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
-            if(row.approveStatus==3||row.approveStatus==1)
-            {
-                tableHtml+=     "                                &nbsp;<a class=\"approveListDelRow\" attr-id=\""+row.id+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a class=\"approveListDelRow\" attr-id=\""+row.id+"\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
 
-            }
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
