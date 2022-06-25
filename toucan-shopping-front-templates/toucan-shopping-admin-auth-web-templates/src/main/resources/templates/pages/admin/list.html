@@ -336,6 +336,11 @@
                     });
                 });
             }else if (obj.event == 'role') {
+                if(data.appNames==null||data.appNames=="")
+                {
+                    layer.msg("请关联应用!");
+                    return;
+                }
                 index = layer.open({
                     title: '选择角色',
                     type: 1,
