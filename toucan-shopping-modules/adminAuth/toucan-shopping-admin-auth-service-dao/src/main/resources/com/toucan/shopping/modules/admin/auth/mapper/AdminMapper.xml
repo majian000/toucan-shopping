@@ -109,7 +109,7 @@
           order by create_date desc
         )tu
         <where>
-            1=1 and tu.delete_status = 0 and tu.appNames is not null
+            1=1 and tu.delete_status = 0
             <include refid="queryListPageWhere" />
         </where>
         limit #{start},#{limit}
@@ -134,7 +134,7 @@
             )ds2 on saa.admin_id = ds2.admin_id
         )tu
         <where>
-            1=1 and tu.delete_status = 0  and tu.appNames is not null
+            1=1 and tu.delete_status = 0
 
             <include refid="queryListPageWhere" />
         </where>
