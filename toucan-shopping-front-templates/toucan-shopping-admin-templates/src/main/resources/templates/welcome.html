@@ -141,7 +141,21 @@
                 series: [
                     {
                         type: 'bar',
-                        data: []
+                        data: [],
+                        showBackground: true,
+                        backgroundStyle: {
+                            color: 'rgba(111, 162, 135, 0.2)'
+                        },
+                        itemStyle: {
+                            normal: {
+                                //这里是颜色
+                                color: function(params) {
+                                    //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+                                    var colorList = ['#00A3E0','#FFA100', '#ffc0cb', '#CCCCCC', '#BBFFAA','#749f83', '#ca8622'];
+                                    return colorList[params.dataIndex]
+                                }
+                            }
+                        }
                     }
                 ],
                 tooltip: {
