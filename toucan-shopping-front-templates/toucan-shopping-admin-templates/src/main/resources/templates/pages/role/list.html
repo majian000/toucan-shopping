@@ -41,6 +41,7 @@
                         </div>
                         <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" > 重 置</button>
                         </div>
                     </div>
                 </form>
@@ -105,6 +106,11 @@
             return formParam;
         }
 
+
+        $("#data-reset-btn").click(function(){
+            $("#userSearchForm")[0].reset();
+            layui.form.render();
+        });
 
 
 
