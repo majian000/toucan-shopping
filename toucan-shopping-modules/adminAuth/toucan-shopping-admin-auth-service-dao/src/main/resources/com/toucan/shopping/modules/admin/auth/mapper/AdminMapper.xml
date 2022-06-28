@@ -41,6 +41,9 @@
             and tu.username  like concat('%',#{username},'%')
         </if>
 
+        <if test="adminId!=null and adminId!=''">
+            and tu.admin_id = #{adminId}
+        </if>
 
         <if test="idArray!=null and idArray.length>0 ">
             and tu.id in

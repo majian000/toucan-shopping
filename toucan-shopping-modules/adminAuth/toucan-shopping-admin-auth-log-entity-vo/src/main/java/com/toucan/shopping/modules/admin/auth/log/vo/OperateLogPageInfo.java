@@ -22,7 +22,7 @@ public class OperateLogPageInfo extends PageInfo<OperateLogVO> {
     /**
      * 所属管理员账号ID
      */
-    private String adminId;
+    private String createAdminId;
 
 
 

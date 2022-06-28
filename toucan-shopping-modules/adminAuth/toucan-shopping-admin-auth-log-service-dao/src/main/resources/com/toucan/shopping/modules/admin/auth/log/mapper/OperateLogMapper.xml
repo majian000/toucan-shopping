@@ -42,8 +42,8 @@
 
 
     <sql id="queryListPageWhere">
-        <if test="adminId!=null and adminId!=''">
-            and t.create_admin_id =#{adminId}
+        <if test="createAdminId!=null and createAdminId!=''">
+            and t.create_admin_id =#{createAdminId}
         </if>
         <if test="ip!=null and ip!=''">
             and t.ip like concat(#{ip},'%')

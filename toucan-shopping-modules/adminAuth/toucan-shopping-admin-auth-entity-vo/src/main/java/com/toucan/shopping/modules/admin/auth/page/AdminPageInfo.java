@@ -65,7 +65,7 @@ public class AdminPageInfo extends PageInfo<Admin> {
     private String createAdminId;
 
     /**
-     * 备注
+     * 账号ID
      */
     private String adminId;
 

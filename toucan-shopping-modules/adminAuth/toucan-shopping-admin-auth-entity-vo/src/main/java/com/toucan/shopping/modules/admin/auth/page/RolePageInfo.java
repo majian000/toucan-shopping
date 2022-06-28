@@ -35,6 +35,11 @@ public class RolePageInfo extends PageInfo<Role> {
      */
     private String appCode;
 
+    /**
+     * 角色ID
+     */
+    private String roleId;
+
 
     //==============================================
 
