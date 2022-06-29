@@ -160,14 +160,14 @@ public class CategoryController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/flush/index/cache",method = RequestMethod.POST)
+    @RequestMapping(value = "/flush/all/cache",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO flushIndexCache(HttpServletRequest request)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             RequestJsonVO requestVo =  RequestJsonVOGenerator.generator(appCode, new CategoryVO());
-            resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestVo), requestVo);
+            resultObjectVO = feignCategoryService.flushAllCache(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

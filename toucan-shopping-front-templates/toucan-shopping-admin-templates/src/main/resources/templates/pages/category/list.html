@@ -220,7 +220,7 @@
             }else if (obj.event === 'flushIndexCache') {
                 layer.confirm('确定刷新缓存?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]category/flush/index/cache",
+                        url:"[[@{/}]]category/flush/all/cache",
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         data:null,

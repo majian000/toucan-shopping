@@ -156,7 +156,7 @@ public class IndexServiceImpl implements IndexService {
             }else {
                 CategoryVO categoryVO = new CategoryVO();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                resultObjectVO = feignCategoryService.flushNavigationMiniTreeCache(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     List<CategoryVO> categoryVOList = categoryRedisService.queryWebNavigationCache();
                     if(!CollectionUtils.isEmpty(categoryVOList))

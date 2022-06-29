@@ -61,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
             }else {
                 CategoryVO categoryVO = new CategoryVO();
                 RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
-                resultObjectVO = feignCategoryService.flushWebIndexCache(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+                resultObjectVO = feignCategoryService.flushWMiniTreeCache(requestJsonVO);
                 if (resultObjectVO.isSuccess()) {
                     return categoryRedisService.queryMiniTree();
                 }else{

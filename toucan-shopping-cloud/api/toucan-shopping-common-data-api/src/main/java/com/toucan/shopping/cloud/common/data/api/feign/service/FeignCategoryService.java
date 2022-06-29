@@ -110,7 +110,31 @@ public interface FeignCategoryService {
     ResultObjectVO flushWebIndexCache(@RequestHeader(value = "toucan-sign-header", defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestVo);
 
 
+    /**
+     * 刷新全部缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/all/cache",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public ResultObjectVO flushAllCache(@RequestBody RequestJsonVO requestVo);
 
+
+    /**
+     * 刷新预览树缓存
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/wmini/tree",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO flushWMiniTreeCache(@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 导航分类树
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/flush/navigation/mini/tree",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public ResultObjectVO flushNavigationMiniTreeCache(@RequestBody RequestJsonVO requestVo);
 
     /**
      * 清空首页缓存

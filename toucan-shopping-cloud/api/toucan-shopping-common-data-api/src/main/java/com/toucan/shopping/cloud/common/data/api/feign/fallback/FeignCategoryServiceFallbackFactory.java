@@ -203,6 +203,51 @@ public class FeignCategoryServiceFallbackFactory implements FallbackFactory<Feig
                 return resultObjectVO;
             }
 
+            @Override
+            public ResultObjectVO flushAllCache(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.flushAllCache faild header:{} params:{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO flushWMiniTreeCache(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.flushWMiniTreeCache faild params:{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
+            public ResultObjectVO flushNavigationMiniTreeCache(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignCategoryService.flushNavigationMiniTreeCache faild  params:{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
 
             @Override
             public ResultObjectVO clearWebIndexCache(String signHeader, RequestJsonVO requestVo) {
