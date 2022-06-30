@@ -166,7 +166,6 @@ public class AppController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("应用编码不允许修改!");
                 return resultObjectVO;
-
             }
 
             app.setUpdateDate(new Date());
@@ -176,7 +175,6 @@ public class AppController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
-
 
             resultObjectVO.setData(app);
 
@@ -300,6 +298,47 @@ public class AppController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 根据编码查询启用状态
+     * @param requestVo
+     * @return true:启用 false:停用
+     */
+    @RequestMapping(value="/enable/status/by/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO enableStatusByCode(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setData(false);
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            App app = JSONObject.parseObject(requestVo.getEntityJson(), App.class);
+            if (app.getCode() == null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            //查询是否存在该应用
+            app = appService.findByAppCode(app.getCode());
+            if(app!=null&&app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==1)
+            {
+                resultObjectVO.setData(true);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+
+    }
 
 
     /**

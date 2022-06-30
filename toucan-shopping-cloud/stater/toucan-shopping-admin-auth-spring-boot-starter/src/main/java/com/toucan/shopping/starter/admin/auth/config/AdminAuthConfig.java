@@ -15,7 +15,6 @@ import javax.servlet.Filter;
         name = "enabled",
         havingValue = "true"
 )
-@EnableEurekaClient
 public class AdminAuthConfig {
 
     /**

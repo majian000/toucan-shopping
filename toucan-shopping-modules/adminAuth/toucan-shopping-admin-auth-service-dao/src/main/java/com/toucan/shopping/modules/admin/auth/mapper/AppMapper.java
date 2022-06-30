@@ -22,4 +22,6 @@ public interface AppMapper {
     Long queryListPageCount(AppPageInfo appPageInfo);
 
     int deleteById(Long id);
+
+    App findByAppCode(String appCode);
 }

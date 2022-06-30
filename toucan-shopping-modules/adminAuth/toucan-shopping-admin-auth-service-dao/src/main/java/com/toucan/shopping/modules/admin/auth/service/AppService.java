@@ -12,6 +12,8 @@ public interface AppService {
 
     List<App> findListByEntity(App app);
 
+    App findByAppCode(String appCode);
+
     int save(App app);
 
     int update(App app);

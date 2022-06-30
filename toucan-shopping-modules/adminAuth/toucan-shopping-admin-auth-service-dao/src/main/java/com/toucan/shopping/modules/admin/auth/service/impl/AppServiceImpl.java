@@ -25,6 +25,11 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    public App findByAppCode(String appCode) {
+        return appMapper.findByAppCode(appCode);
+    }
+
+    @Override
     public int save(App user) {
         return appMapper.insert(user);
     }

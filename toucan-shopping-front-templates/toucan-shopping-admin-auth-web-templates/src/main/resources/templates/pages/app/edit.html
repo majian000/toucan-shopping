@@ -18,6 +18,7 @@
 <body>
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}">
+    <input type="hidden" id="oldEnableStatus" th:value="${model.enableStatus}">
     <div class="layui-form-item">
         <label class="layui-form-label required">应用名称</label>
         <div class="layui-input-block">
@@ -33,7 +34,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">账号状态</label>
+        <label class="layui-form-label">应用状态</label>
         <div class="layui-input-block" th:if="${model.enableStatus eq 1}" >
             <input type="radio" name="enableStatus" value="1" title="启用" checked>
             <input type="radio" name="enableStatus" value="0" title="禁用">
@@ -63,15 +64,15 @@
             layer = layui.layer,
             $ = layui.$;
 
-        //监听提交
-        form.on('submit(saveBtn)', function (data) {
+        function updateForm(data)
+        {
             $.ajax({
-                url:"[[@{/app/update}]]",
+                url: "[[@{/app/update}]]",
                 contentType: "application/json; charset=utf-8",
-                type:'POST',
-                data:JSON.stringify(data.field),
-                success:function(data){
-                    if(data.code==0) {
+                type: 'POST',
+                data: JSON.stringify(data.field),
+                success: function (data) {
+                    if (data.code == 0) {
                         layer.msg(data.msg);
                         return false;
                     }
@@ -87,6 +88,26 @@
                     });
                 }
             });
+        }
+
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var currentEnableStatus = data.field.enableStatus;
+            var oldEnableStatus = $("#oldEnableStatus").val();
+            if(currentEnableStatus!=oldEnableStatus)
+            {
+                if(currentEnableStatus=="0")
+                {
+                    layer.confirm('如果禁用,这个应用下所有账号权限将停用,确定要禁用吗?', function (index) {
+                        return updateForm(data);
+                    });
+                }else{
+                    return updateForm(data);
+                }
+            }else {
+                return updateForm(data);
+            }
             return false;
         });
 

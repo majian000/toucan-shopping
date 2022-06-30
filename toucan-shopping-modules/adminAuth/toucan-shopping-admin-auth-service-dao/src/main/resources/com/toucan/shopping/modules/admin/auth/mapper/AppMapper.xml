@@ -74,6 +74,18 @@
     </select>
 
 
+    <select id="findByAppCode" resultMap="appMap" parameterType="java.lang.String">
+        select * from t_app t
+        <where>
+            1=1
+            and t.code = #{code}
+            and t.delete_status = 0
+        </where>
+        limit 0,1
+
+    </select>
+
+
     <select id="queryListPage" resultMap="appVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AppPageInfo">
         select <include refid="queryColumns" />,tsa.username as create_admin_username,tsau.username as update_admin_username from t_app t
           left join t_sa_admin tsa on t.create_admin_id = tsa.admin_id

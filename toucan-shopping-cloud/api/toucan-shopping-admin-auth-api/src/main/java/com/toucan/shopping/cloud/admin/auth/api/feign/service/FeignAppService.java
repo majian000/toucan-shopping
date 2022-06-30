@@ -86,6 +86,15 @@ public interface FeignAppService {
      * @return
      */
     @RequestMapping(value="/find/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO findByCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+    ResultObjectVO findByCode(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestVo);
+
+
+    /**
+     * 根据编码查询启用状态
+     * @param requestVo
+     * @return true:启用 false:停用
+     */
+    @RequestMapping(value="/enable/status/by/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO enableStatusByCode(@RequestBody RequestJsonVO requestVo);
 
 }

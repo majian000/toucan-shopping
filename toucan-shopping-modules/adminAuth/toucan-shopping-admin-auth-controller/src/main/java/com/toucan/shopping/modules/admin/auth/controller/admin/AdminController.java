@@ -4,12 +4,10 @@ package com.toucan.shopping.modules.admin.auth.controller.admin;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
-import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
-import com.toucan.shopping.modules.admin.auth.service.AdminOrgnazitionService;
-import com.toucan.shopping.modules.admin.auth.service.AdminRoleService;
-import com.toucan.shopping.modules.admin.auth.service.AdminService;
+import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -59,6 +57,9 @@ public class AdminController {
 
     @Autowired
     private IdGenerator idGenerator;
+
+    @Autowired
+    private AppService appService;
 
     /**
      * 保存管理员账户
@@ -318,6 +319,13 @@ public class AdminController {
             {
                 resultObjectVO.setCode(AdminResultVO.FAILD);
                 resultObjectVO.setMsg("登录失败,没有权限登录应用!");
+                return resultObjectVO;
+            }
+            App app = appService.findByAppCode(requestVo.getAppCode());
+            if(app!=null&&app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==0)
+            {
+                resultObjectVO.setCode(AdminResultVO.FAILD);
+                resultObjectVO.setMsg("登录失败,该应用已被禁用!");
                 return resultObjectVO;
             }
 
