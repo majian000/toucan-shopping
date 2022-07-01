@@ -338,12 +338,12 @@ public class AppController {
             AppVO appVO = AdminAuthCacheHelper.getAppCacheService().findByAppCode(app.getCode());
             if(appVO!=null)
             {
-//                if(appVO.getEnableStatus()!=null&&appVO.getEnableStatus().intValue()==1)
-//                {
-//                    resultObjectVO.setData(true);
-//                }else{
+                if(appVO.getEnableStatus()!=null&&appVO.getEnableStatus().intValue()==1)
+                {
+                    resultObjectVO.setData(true);
+                }else{
                     resultObjectVO.setData(false);
-//                }
+                }
                 return resultObjectVO;
             }
             //查询是否存在该应用
