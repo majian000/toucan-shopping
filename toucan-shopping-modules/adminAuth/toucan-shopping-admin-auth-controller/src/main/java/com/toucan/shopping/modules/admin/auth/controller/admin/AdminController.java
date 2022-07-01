@@ -2,9 +2,11 @@ package com.toucan.shopping.modules.admin.auth.controller.admin;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
+import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.*;
@@ -649,6 +651,8 @@ public class AdminController {
                 return resultObjectVO;
             }
 
+            AdminRoleCacheService adminRoleCacheService = AdminAuthCacheHelper.getAdminRoleCacheService();
+            List<String> deleteFaildIdList = new LinkedList<>();
             //查询出当前账号数据库中保存的应用关联
             AdminApp queryAdminApp = new AdminApp();
             queryAdminApp.setAdminId(admin.getAdminId());
@@ -668,6 +672,8 @@ public class AdminController {
                         adminRoleService.deleteByAdminIdAndAppCodes(admin.getAdminId(),new String[]{adminAppPersistent.getAppCode()});
                         //账号机构关联
                         adminOrgnazitionService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                        //删除指定账号下的指定所有应用下的所有账号角色关联
+                        adminRoleCacheService.deleteByAdminIdAndAppCodes(admin.getAdminId(), adminAppPersistent.getAppCode(), deleteFaildIdList);
                     }
 
                 }else{
@@ -691,6 +697,8 @@ public class AdminController {
                             adminRoleService.deleteByAdminIdAndAppCodes(admin.getAdminId(),new String[]{adminAppPersistent.getAppCode()});
                             //账号机构关联
                             adminOrgnazitionService.deleteByAdminIdAndAppCode(admin.getAdminId(),adminAppPersistent.getAppCode());
+                            //删除指定账号下的指定所有应用下的所有账号角色关联
+                            adminRoleCacheService.deleteByAdminIdAndAppCodes(admin.getAdminId(), adminAppPersistent.getAppCode(), deleteFaildIdList);
                         }
                     }
                 }
@@ -826,6 +834,7 @@ public class AdminController {
 
             //删除账号角色关联
             adminRoleService.deleteByAdminId(adminList.get(0).getAdminId());
+
 
             //删除账号部门关联
             adminOrgnazitionService.deleteByAdminId(adminList.get(0).getAdminId());
