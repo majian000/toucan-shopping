@@ -382,12 +382,14 @@ public class AdminAppController {
 
         try {
             AdminAppVO adminAppVO = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppVO.class);
-            if (adminAppVO.getAppCodes() == null) {
+            if (adminAppVO.getAppCode() == null) {
+                resultObjectVO.setData(false);
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到应用编码");
                 return resultObjectVO;
             }
             if (adminAppVO.getAdminId() == null) {
+                resultObjectVO.setData(false);
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到账号ID");
                 return resultObjectVO;
@@ -403,19 +405,18 @@ public class AdminAppController {
                 }else{
                     resultObjectVO.setData(false);
                     resultObjectVO.setMsg("该应用已被禁用");
+                    return resultObjectVO;
                 }
-                return resultObjectVO;
-            }
-            App app = appService.findByAppCode(adminAppVO.getAppCode());
-            if(app!=null&&app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==1)
-            {
-                resultObjectVO.setData(true);
-                resultObjectVO.setMsg("");
-                //刷新到缓存
-                appVO = new AppVO();
-                BeanUtils.copyProperties(appVO,app);
-                AdminAuthCacheHelper.getAppCacheService().save(appVO);
-                return resultObjectVO;
+            }else {
+                App app = appService.findByAppCode(adminAppVO.getAppCode());
+                if (app != null && app.getEnableStatus() != null && app.getEnableStatus().intValue() == 1) {
+                    resultObjectVO.setData(true);
+                    resultObjectVO.setMsg("");
+                    //刷新到缓存
+                    appVO = new AppVO();
+                    BeanUtils.copyProperties(appVO, app);
+                    AdminAuthCacheHelper.getAppCacheService().save(appVO);
+                }
             }
 
             AdminAppVO adminAppCacheVO = AdminAuthCacheHelper.getAdminAppCacheService().findByAdminIdAndAppCode(adminAppVO.getAdminId(),adminAppVO.getAppCode());
@@ -423,21 +424,20 @@ public class AdminAppController {
             {
                 resultObjectVO.setData(true);
                 resultObjectVO.setMsg("");
-                return resultObjectVO;
-            }
-            //判断账号是否关联了应用
-            AdminApp adminApp = new AdminApp();
-            adminApp.setAppCode(adminAppVO.getAppCode());
-            adminApp.setAdminId(adminAppVO.getAdminId());
-            List<AdminApp> adminApps = adminAppService.findListByEntity(adminApp);
-            if(CollectionUtils.isNotEmpty(adminApps))
-            {
-                resultObjectVO.setData(true);
-                resultObjectVO.setMsg("");
-                //刷新到缓存
-                adminAppVO = new AdminAppVO();
-                BeanUtils.copyProperties(adminAppVO,adminApps.get(0));
-                AdminAuthCacheHelper.getAdminAppCacheService().save(adminAppVO);
+            }else {
+                //判断账号是否关联了应用
+                AdminApp adminApp = new AdminApp();
+                adminApp.setAppCode(adminAppVO.getAppCode());
+                adminApp.setAdminId(adminAppVO.getAdminId());
+                List<AdminApp> adminApps = adminAppService.findListByEntity(adminApp);
+                if (CollectionUtils.isNotEmpty(adminApps)) {
+                    resultObjectVO.setData(true);
+                    resultObjectVO.setMsg("");
+                    //刷新到缓存
+                    adminAppVO = new AdminAppVO();
+                    BeanUtils.copyProperties(adminAppVO, adminApps.get(0));
+                    AdminAuthCacheHelper.getAdminAppCacheService().save(adminAppVO);
+                }
             }
         }catch(Exception e)
         {
