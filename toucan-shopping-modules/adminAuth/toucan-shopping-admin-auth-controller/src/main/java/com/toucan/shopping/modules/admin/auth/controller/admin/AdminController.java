@@ -653,6 +653,7 @@ public class AdminController {
 
             //清空现有关联
             adminAppService.deleteByAdminId(admin.getAdminId());
+            AdminAuthCacheHelper.getAdminAppCacheService().deleteByAdminId(admin.getAdminId());
 
             if(!CollectionUtils.isEmpty(admin.getAdminApps())) {
                 //重新保存关联
