@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.helper;
 
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
+import com.toucan.shopping.modules.admin.auth.cache.service.AppCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 
@@ -26,6 +27,11 @@ public class AdminAuthCacheHelper {
      */
     private static RoleFunctionCacheService roleFunctionCacheService;
 
+    /**
+     * 应用缓存
+     */
+    private static AppCacheService appCacheService;
+
 
     public static FunctionCacheService getFunctionCacheService() {
         return functionCacheService;
@@ -49,5 +55,13 @@ public class AdminAuthCacheHelper {
 
     public static void setAdminRoleCacheService(AdminRoleCacheService adminRoleCacheService) {
         AdminAuthCacheHelper.adminRoleCacheService = adminRoleCacheService;
+    }
+
+    public static AppCacheService getAppCacheService() {
+        return appCacheService;
+    }
+
+    public static void setAppCacheService(AppCacheService appCacheService) {
+        AdminAuthCacheHelper.appCacheService = appCacheService;
     }
 }

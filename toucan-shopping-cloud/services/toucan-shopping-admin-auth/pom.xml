@@ -90,6 +90,15 @@
             <artifactId>toucan-shopping-admin-auth-cache</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-es</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.cloud.starter</groupId>

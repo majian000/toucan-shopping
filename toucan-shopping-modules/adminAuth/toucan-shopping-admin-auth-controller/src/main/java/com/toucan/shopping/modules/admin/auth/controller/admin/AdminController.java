@@ -6,7 +6,7 @@ import com.toucan.shopping.modules.admin.auth.entity.Admin;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
-import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
+import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -14,7 +14,6 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.util.AdminRegistUtil;
 import com.toucan.shopping.modules.common.util.GlobalUUID;
 import com.toucan.shopping.modules.common.util.MD5Util;
-import com.toucan.shopping.modules.common.util.UserRegistUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -332,11 +331,11 @@ public class AdminController {
             String loginToken =UUID.randomUUID().toString().replace("-","");
             admin.setLoginToken(loginToken);
             //登录哈希表 例如 00DDEXXAA0_LOGIN_TOKENS:[{00DDEXXAA0_LOGIN_TOKENS_10000001:"XXXXXX"},{00DDEXXAA0_LOGIN_TOKENS_10000002:"YYYYYYY"}]
-            redisTemplate.opsForHash().put(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()),loginToken);
+            redisTemplate.opsForHash().put(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
+                    AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()),loginToken);
             //设置登录token1个小时超时
-            redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+            redisTemplate.expire(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
+                    AdminAuthRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
             //设置登录状态
             adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1);
@@ -385,15 +384,15 @@ public class AdminController {
                 return resultObjectVO;
             }
 
-            Object loginTokenObject = redisTemplate.opsForHash().get(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+            Object loginTokenObject = redisTemplate.opsForHash().get(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()), AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
             if(loginTokenObject!=null)
             {
                 String redisLoginToken = String.valueOf(loginTokenObject);
                 if(redisLoginToken.equals(admin.getLoginToken()))
                 {
                     //删除对应的登录会话
-                    redisTemplate.opsForHash().delete(AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId())
-                            ,AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+                    redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId())
+                            , AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
 
                     //更新登录状态
                     adminAppService.updateLoginStatus(admin.getAdminId(),requestVo.getAppCode(),(short)0);
@@ -505,8 +504,8 @@ public class AdminController {
 
             admin.setAdminId(adminList.get(0).getAdminId());
             Object loginTokenObject = redisTemplate.opsForHash().get(
-                    AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(), requestVo.getAppCode()));
+                    AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
+                    AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(), requestVo.getAppCode()));
             if(loginTokenObject!=null) {
                 admin.setLoginToken(String.valueOf(loginTokenObject));
             }
@@ -571,8 +570,8 @@ public class AdminController {
                 admin.setAdminId(adminList.get(0).getAdminId());
             }
             Object loginTokenObject = redisTemplate.opsForHash().get(
-                    AdminCenterRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminCenterRedisKey.getLoginTokenAppKey(admin.getAdminId(), requestVo.getAppCode()));
+                    AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
+                    AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(), requestVo.getAppCode()));
             if (loginTokenObject != null) {
                 if(StringUtils.equals(admin.getLoginToken(),String.valueOf(loginTokenObject)))
                 {

@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.redis;
 
-public class AdminCenterRedisKey {
+public class AdminAuthRedisKey {
 
 
     public static Integer LOGIN_TIMEOUT_SECOND=60*60*60; //1小时超时
@@ -25,6 +25,11 @@ public class AdminCenterRedisKey {
     public static String getLoginTokenAppKey(String adminIdOrUserId,String appCode)
     {
         return adminIdOrUserId+"_LOGIN_TOKENS_"+appCode;
+    }
+
+    public static String getAppRedisKey(String appCode)
+    {
+        return "TOUCAN_ADMIN_AUTH:APPS:"+appCode;
     }
 
 }

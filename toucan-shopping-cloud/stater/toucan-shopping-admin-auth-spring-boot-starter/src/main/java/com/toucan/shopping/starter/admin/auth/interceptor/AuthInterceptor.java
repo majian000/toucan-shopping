@@ -49,6 +49,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     public void responseWrite(HttpServletResponse response, String content) throws IOException {
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().write(content);
     }
 
@@ -151,7 +152,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                 //应用被禁用
                 if(!enableStatus.booleanValue())
                 {
-                    String contentType = request.getContentType().toLowerCase();
+                    String contentType = request.getContentType();
+                    if(contentType==null)
+                    {
+                        response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                                + request.getContextPath() + "/" + toucan.getAdminAuth().getPage403());
+                    }
+                    contentType = contentType.toLowerCase();
                     if(contentType.indexOf("application/json")!=-1)
                     {
                         resultVO.setCode(ResultVO.FAILD);

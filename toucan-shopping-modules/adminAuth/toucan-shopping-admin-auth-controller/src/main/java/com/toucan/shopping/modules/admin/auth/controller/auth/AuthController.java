@@ -5,12 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.AdminRole;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
 import com.toucan.shopping.modules.admin.auth.entity.RoleFunction;
 import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
-import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
+import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.*;
 import com.toucan.shopping.modules.admin.auth.vo.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -241,8 +239,8 @@ public class AuthController {
                         if(count!=null&&count.intValue()>0)
                         {
                             //每次操作都延长登录会话1小时
-                            redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                                    AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                            redisTemplate.expire(AdminAuthRedisKey.getLoginTokenGroupKey(query.getAdminId()),
+                                    AdminAuthRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
                             resultObjectVO.setData(true);
                             return resultObjectVO;
                         }
@@ -306,8 +304,8 @@ public class AuthController {
 
             //校验登录会话
             Object loginTokenObject = redisTemplate.opsForHash().get(
-                    AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                    AdminCenterRedisKey.getLoginTokenAppKey(query.getAdminId(), requestVo.getAppCode()));
+                    AdminAuthRedisKey.getLoginTokenGroupKey(query.getAdminId()),
+                    AdminAuthRedisKey.getLoginTokenAppKey(query.getAdminId(), requestVo.getAppCode()));
             if (loginTokenObject == null) {
                 resultObjectVO.setData(-1);
                 return resultObjectVO;
@@ -495,8 +493,8 @@ public class AuthController {
                     if(count!=null&&count.intValue()>0)
                     {
                         //每次操作都延长登录会话1小时
-                        redisTemplate.expire(AdminCenterRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                                AdminCenterRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                        redisTemplate.expire(AdminAuthRedisKey.getLoginTokenGroupKey(query.getAdminId()),
+                                AdminAuthRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
                         resultObjectVO.setData(1);
                         return resultObjectVO;
                     }

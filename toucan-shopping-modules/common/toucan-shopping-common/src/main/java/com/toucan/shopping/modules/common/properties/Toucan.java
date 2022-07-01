@@ -99,7 +99,7 @@ public class Toucan {
     private Seller seller;
 
     /**
-     * 第三方模块
+     * 扩展模块
      */
     private Modules modules;
 

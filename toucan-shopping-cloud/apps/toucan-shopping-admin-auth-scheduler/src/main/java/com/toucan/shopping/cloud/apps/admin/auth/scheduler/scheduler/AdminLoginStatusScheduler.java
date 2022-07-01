@@ -3,16 +3,12 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
-import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
-import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
-import com.toucan.shopping.modules.admin.auth.redis.AdminCenterRedisKey;
+import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
-import com.toucan.shopping.modules.admin.auth.vo.AdminRoleVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -92,8 +88,8 @@ public class AdminLoginStatusScheduler {
                                 String[] appCodeArray = adminAppVO.getAppCodes().split(",");
                                 for(String appCode:appCodeArray) {
                                     Object loginTokenObject = redisTemplate.opsForHash().get(
-                                            AdminCenterRedisKey.getLoginTokenGroupKey(adminAppVO.getAdminId()),
-                                            AdminCenterRedisKey.getLoginTokenAppKey(adminAppVO.getAdminId(), appCode));
+                                            AdminAuthRedisKey.getLoginTokenGroupKey(adminAppVO.getAdminId()),
+                                            AdminAuthRedisKey.getLoginTokenAppKey(adminAppVO.getAdminId(), appCode));
                                     //自动超时下线
                                     if(loginTokenObject==null)
                                     {

@@ -104,7 +104,7 @@ toucan:
     #拦截指定路径
     path-patterns: /**
     #忽略拦截
-    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json
+    exclude-path-patterns: /**/*.js,/**/*.css,/**/*.jpg,/**/*.png,/**/*.gif,/**/*.json,/403,/login/page
   plugins:
     xss-filter:
       enabled: true

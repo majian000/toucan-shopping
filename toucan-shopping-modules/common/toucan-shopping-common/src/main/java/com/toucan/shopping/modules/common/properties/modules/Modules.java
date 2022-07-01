@@ -1,5 +1,6 @@
 package com.toucan.shopping.modules.common.properties.modules;
 
+import com.toucan.shopping.modules.common.properties.modules.adminAuthCache.AdminAuthCache;
 import com.toucan.shopping.modules.common.properties.modules.areaCache.AreaCache;
 import com.toucan.shopping.modules.common.properties.modules.categoryCache.CategoryCache;
 import com.toucan.shopping.modules.common.properties.modules.contentCache.ContentCache;
@@ -16,6 +17,10 @@ import lombok.Data;
 public class Modules {
 
 
+    /**
+     * 权限缓存模块
+     */
+    private AdminAuthCache adminAuthCache;
 
     /**
      * 地区缓存模块

@@ -5,15 +5,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
+import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AppService;
 import com.toucan.shopping.modules.admin.auth.service.OrgnazitionAppService;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
+import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +82,12 @@ public class AppController {
                 return resultObjectVO;
             }
 
+            if(!AlphabetNumberUtils.isAlphabetNumber(app.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("添加失败,应用编码只允许字母、数字、下划线组成,长度1-8位");
+                return resultObjectVO;
+            }
 
             App query=new App();
             query.setCode(app.getCode());
@@ -175,6 +185,8 @@ public class AppController {
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
             }
+
+            AdminAuthCacheHelper.getAppCacheService().deleteByAppCode(app.getCode());
 
             resultObjectVO.setData(app);
 
@@ -306,7 +318,7 @@ public class AppController {
      */
     @RequestMapping(value="/enable/status/by/code",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO enableStatusByCode(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO queryEnableStatusByCode(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(false);
         if(requestVo==null||requestVo.getEntityJson()==null)
@@ -323,11 +335,28 @@ public class AppController {
                 resultObjectVO.setMsg("没有找到应用编码");
                 return resultObjectVO;
             }
+            AppVO appVO = AdminAuthCacheHelper.getAppCacheService().findByAppCode(app.getCode());
+            if(appVO!=null)
+            {
+//                if(appVO.getEnableStatus()!=null&&appVO.getEnableStatus().intValue()==1)
+//                {
+//                    resultObjectVO.setData(true);
+//                }else{
+                    resultObjectVO.setData(false);
+//                }
+                return resultObjectVO;
+            }
             //查询是否存在该应用
             app = appService.findByAppCode(app.getCode());
             if(app!=null&&app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==1)
             {
                 resultObjectVO.setData(true);
+            }
+            if(app!=null)
+            {
+                appVO = new AppVO();
+                BeanUtils.copyProperties(appVO,app);
+                AdminAuthCacheHelper.getAppCacheService().save(appVO);
             }
         }catch(Exception e)
         {
