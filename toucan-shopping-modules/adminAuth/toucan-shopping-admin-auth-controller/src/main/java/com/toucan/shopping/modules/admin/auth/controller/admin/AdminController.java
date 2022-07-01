@@ -651,9 +651,67 @@ public class AdminController {
                 return resultObjectVO;
             }
 
+
+            AdminApp queryAdminApp = new AdminApp();
+            queryAdminApp.setAdminId(admin.getAdminId());
+            //查询出当前账号数据库中保存的应用关联
+            List<AdminApp> adminAppPersistentList = adminAppService.findListByEntity(queryAdminApp);
+
+            //账号被禁用
+            if (admin.getEnableStatus() != null && admin.getEnableStatus().intValue() == 0) {
+                if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
+                    for (AdminApp adminApp : adminAppPersistentList) {
+                        //删除所有的登录会话
+                        redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(adminApp.getAdminId())
+                                , AdminAuthRedisKey.getLoginTokenAppKey(adminApp.getAdminId(), adminApp.getAppCode()));
+
+                        //更新登录状态
+                        adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
+                    }
+                }
+            }
+
+            //如果这次没有勾选任何应用
+            if(CollectionUtils.isEmpty(admin.getAdminApps()))
+            {
+                //清空账号所有应用会话
+                if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
+                    for (AdminApp adminApp : adminAppPersistentList) {
+                        //删除所有的登录会话
+                        redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(adminApp.getAdminId())
+                                , AdminAuthRedisKey.getLoginTokenAppKey(adminApp.getAdminId(), adminApp.getAppCode()));
+
+                        //更新登录状态
+                        adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
+                    }
+                }
+            }else{
+                boolean find=false;
+                //遍历旧的关联,找到这次新操作中 删除旧的那个关联
+                for(AdminApp adminAppPersistent:adminAppPersistentList) {
+                    find = false;
+                    for (AdminApp adminApp : admin.getAdminApps()) {
+                        if(adminAppPersistent.getAppCode().equals(adminApp.getAppCode()))
+                        {
+                            find=true;
+                            break;
+                        }
+                    }
+                    //如果旧的关联 不包含在新的操作中,那么就删除旧关联的会话
+                    if(!find) {
+                        //删除所有的登录会话
+                        redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(adminAppPersistent.getAdminId())
+                                , AdminAuthRedisKey.getLoginTokenAppKey(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode()));
+
+                        //更新登录状态
+                        adminAppService.updateLoginStatus(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode(), (short) 0);
+                    }
+                }
+            }
+
+
             //清空现有关联
             adminAppService.deleteByAdminId(admin.getAdminId());
-            AdminAuthCacheHelper.getAdminAppCacheService().deleteByAdminId(admin.getAdminId());
 
             if(!CollectionUtils.isEmpty(admin.getAdminApps())) {
                 //重新保存关联

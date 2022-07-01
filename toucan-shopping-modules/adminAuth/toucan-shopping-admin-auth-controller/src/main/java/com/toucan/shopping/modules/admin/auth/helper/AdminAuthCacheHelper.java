@@ -29,10 +29,6 @@ public class AdminAuthCacheHelper {
      */
     private static AppCacheService appCacheService;
 
-    /**
-     * 账号应用缓存
-     */
-    private static AdminAppCacheService adminAppCacheService;
 
 
     public static FunctionCacheService getFunctionCacheService() {
@@ -67,11 +63,4 @@ public class AdminAuthCacheHelper {
         AdminAuthCacheHelper.appCacheService = appCacheService;
     }
 
-    public static AdminAppCacheService getAdminAppCacheService() {
-        return adminAppCacheService;
-    }
-
-    public static void setAdminAppCacheService(AdminAppCacheService adminAppCacheService) {
-        AdminAuthCacheHelper.adminAppCacheService = adminAppCacheService;
-    }
 }

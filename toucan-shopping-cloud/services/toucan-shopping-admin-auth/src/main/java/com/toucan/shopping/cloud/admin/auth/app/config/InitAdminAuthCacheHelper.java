@@ -3,7 +3,6 @@ package com.toucan.shopping.cloud.admin.auth.app.config;
 import com.toucan.shopping.modules.admin.auth.cache.es.service.impl.AdminRoleElasticSearchServiceImpl;
 import com.toucan.shopping.modules.admin.auth.cache.es.service.impl.FunctionElasticSearchServiceImpl;
 import com.toucan.shopping.modules.admin.auth.cache.es.service.impl.RoleFunctionElasticSearchServiceImpl;
-import com.toucan.shopping.modules.admin.auth.cache.redis.service.impl.AdminAppCacheRedisServiceImpl;
 import com.toucan.shopping.modules.admin.auth.cache.redis.service.impl.AppCacheRedisServiceImpl;
 import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.common.spring.context.SpringContextHolder;
@@ -28,12 +27,10 @@ public class InitAdminAuthCacheHelper implements ApplicationRunner {
         AdminAuthCacheHelper.setFunctionCacheService(SpringContextHolder.getBean(FunctionElasticSearchServiceImpl.class));
         AdminAuthCacheHelper.setRoleFunctionCacheService(SpringContextHolder.getBean(RoleFunctionElasticSearchServiceImpl.class));
         AdminAuthCacheHelper.setAppCacheService(SpringContextHolder.getBean(AppCacheRedisServiceImpl.class));
-        AdminAuthCacheHelper.setAdminAppCacheService(SpringContextHolder.getBean(AdminAppCacheRedisServiceImpl.class));
 
         logger.info("权限中台缓存服务 adminRoleCacheService : {}",AdminAuthCacheHelper.getAdminRoleCacheService());
         logger.info("权限中台缓存服务 functionCacheService : {}",AdminAuthCacheHelper.getFunctionCacheService());
         logger.info("权限中台缓存服务 roleFunctionCacheService : {}",AdminAuthCacheHelper.getRoleFunctionCacheService());
         logger.info("权限中台缓存服务 appCacheRedisService : {}",AdminAuthCacheHelper.getAppCacheService());
-        logger.info("权限中台缓存服务 adminAppCacheRedisService : {}",AdminAuthCacheHelper.getAdminAppCacheService());
     }
 }

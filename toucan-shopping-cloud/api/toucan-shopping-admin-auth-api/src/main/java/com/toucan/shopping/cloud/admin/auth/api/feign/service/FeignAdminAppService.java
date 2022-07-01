@@ -68,12 +68,5 @@ public interface FeignAdminAppService {
 
 
 
-    /**
-     * 查询应用状态以及账号应用状态
-     * @param requestVo
-     * @return true:启用 false:停用
-     */
-    @RequestMapping(value="/query/admin/app/status",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO queryAdminAppStatus(@RequestBody RequestJsonVO requestVo);
 
 }
