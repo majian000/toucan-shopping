@@ -51,7 +51,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="enableStatus!=null">
+        <if test="enableStatus!=null and enableStatus!=-1">
             and tu.enable_status = #{enableStatus}
         </if>
     </sql>
