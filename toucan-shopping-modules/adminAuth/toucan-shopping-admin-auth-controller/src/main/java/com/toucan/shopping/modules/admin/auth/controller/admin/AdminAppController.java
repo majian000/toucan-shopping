@@ -39,17 +39,11 @@ public class AdminAppController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private AdminService adminService;
 
     @Autowired
     private AdminAppService adminAppService;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
-    @Autowired
-    private AppService appService;
 
     /**
      * 保存管理员账户

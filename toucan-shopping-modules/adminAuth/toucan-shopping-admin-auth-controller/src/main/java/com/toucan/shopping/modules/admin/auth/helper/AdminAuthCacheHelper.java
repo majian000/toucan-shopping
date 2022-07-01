@@ -7,6 +7,11 @@ import com.toucan.shopping.modules.admin.auth.cache.service.*;
  */
 public class AdminAuthCacheHelper {
 
+    /**
+     * 账号登录缓存服务
+     */
+    private static AdminLoginCacheService adminLoginCacheService;
+
 
     /**
      * 管理员角色缓存
@@ -63,4 +68,11 @@ public class AdminAuthCacheHelper {
         AdminAuthCacheHelper.appCacheService = appCacheService;
     }
 
+    public static AdminLoginCacheService getAdminLoginCacheService() {
+        return adminLoginCacheService;
+    }
+
+    public static void setAdminLoginCacheService(AdminLoginCacheService adminLoginCacheService) {
+        AdminAuthCacheHelper.adminLoginCacheService = adminLoginCacheService;
+    }
 }
