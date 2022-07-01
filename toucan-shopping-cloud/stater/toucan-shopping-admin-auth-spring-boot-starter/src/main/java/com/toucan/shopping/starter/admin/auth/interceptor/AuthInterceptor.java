@@ -140,41 +140,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         ResultObjectVO resultVO = new ResultObjectVO();
         resultVO.setCode(ResultVO.SUCCESS);
         if (handler instanceof HandlerMethod&&toucan.getAdminAuth().isEnabled()) {
-            //判断应用是否被禁用
-            FeignAppService feignAppService = springContextHolder.getBean(FeignAppService.class);
-            App queryApp = new App();
-            queryApp.setCode(toucan.getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryApp);
-            ResultObjectVO resultObjectVO = feignAppService.enableStatusByCode(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                Boolean enableStatus = resultObjectVO.formatData(Boolean.class);
-                //应用被禁用
-                if(!enableStatus.booleanValue())
-                {
-                    String contentType = request.getContentType();
-                    if(contentType==null)
-                    {
-                        response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                + request.getContextPath() + "/" + toucan.getAdminAuth().getPage403());
-                    }
-                    contentType = contentType.toLowerCase();
-                    if(contentType.indexOf("application/json")!=-1)
-                    {
-                        resultVO.setCode(ResultVO.FAILD);
-                        resultVO.setMsg("访问失败,该应用已被禁用");
-                        response.setStatus(HttpStatus.FORBIDDEN.value());
-                        responseWrite(response,JSONObject.toJSONString(resultVO));
-                    }else if(contentType.indexOf("x-www-form-urlencoded")!=-1)
-                    {
-                        response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                                + request.getContextPath() + "/" + toucan.getAdminAuth().getPage403());
-                    }
-                    return false;
-                }
-            }
-
-
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             AdminAuth authAnnotation = method.getAnnotation(AdminAuth.class);
@@ -185,7 +150,6 @@ public class AuthInterceptor implements HandlerInterceptor {
                     //由权限中台做权限判断
                     if (authAnnotation.verifyMethod() == AdminAuth.VERIFYMETHOD_ADMIN_AUTH) {
                         //拿到权限中台账号服务
-                        FeignAdminService feignAdminService = springContextHolder.getBean(FeignAdminService.class);
                         if (authAnnotation.login()) {
                             String aidKey = toucan.getAppCode()+"_aid=";
                             String ltKey = toucan.getAppCode()+"_lt=";

@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.AppPageInfo;
+import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AppService;
 import com.toucan.shopping.modules.admin.auth.service.OrgnazitionAppService;
@@ -22,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +52,8 @@ public class AppController {
     @Autowired
     private OrgnazitionAppService orgnazitionAppService;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     /**
      * 添加应用
@@ -187,6 +191,24 @@ public class AppController {
             }
 
             AdminAuthCacheHelper.getAppCacheService().deleteByAppCode(app.getCode());
+
+            //应用禁用
+            if(app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==0)
+            {
+                //直接删除所有关联这个应用的登录账号会话
+                AdminApp adminApp = new AdminApp();
+                adminApp.setAppCode(app.getCode());
+                List<AdminApp> adminApps = adminAppService.findListByEntity(adminApp);
+                for(AdminApp aa:adminApps)
+                {
+                    //删除所有的登录会话
+                    redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(aa.getAdminId())
+                            , AdminAuthRedisKey.getLoginTokenAppKey(aa.getAdminId(), aa.getAppCode()));
+                    //更新登录状态
+                    adminAppService.updateLoginStatus(aa.getAdminId(), aa.getAppCode(), (short) 0);
+                }
+
+            }
 
             resultObjectVO.setData(app);
 
