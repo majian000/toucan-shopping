@@ -77,7 +77,7 @@
     </insert>
 
     <select id="queryOperateLogCountList" resultMap="operateLogChartVOMap">
-        SELECT MAX(ta.name) AS appName,app_code AS appCode,COUNT(t.id) operateCount,DATE_FORMAT(t.create_date,'%Y-%m-%e') AS operateDateYMD FROM t_sa_operate_log t
+        SELECT MAX(ta.name) AS appName,app_code AS appCode,COUNT(t.id) operateCount,DATE_FORMAT(t.create_date,'%Y-%m-%d') AS operateDateYMD FROM t_sa_operate_log t
         LEFT JOIN t_app ta ON t.app_code=ta.code AND ta.delete_status = 0
         <where>
           1=1
@@ -91,7 +91,7 @@
                 and t.app_code=#{appCode}
             </if>
         </where>
-        GROUP BY t.app_code,DATE_FORMAT(t.create_date,'%Y-%m-%e')
+        GROUP BY t.app_code,DATE_FORMAT(t.create_date,'%Y-%m-%d')
         ORDER BY operateDateYMD ASC
     </select>
 
