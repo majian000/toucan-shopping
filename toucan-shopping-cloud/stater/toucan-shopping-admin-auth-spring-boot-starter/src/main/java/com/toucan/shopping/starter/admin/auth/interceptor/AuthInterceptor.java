@@ -2,15 +2,18 @@ package com.toucan.shopping.starter.admin.auth.interceptor;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAppService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAuthService;
 import com.toucan.shopping.modules.admin.auth.entity.App;
+import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AuthVerifyVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.spring.context.SpringContextHolder;
+import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -140,16 +143,16 @@ public class AuthInterceptor implements HandlerInterceptor {
         ResultObjectVO resultVO = new ResultObjectVO();
         resultVO.setCode(ResultVO.SUCCESS);
         if (handler instanceof HandlerMethod&&toucan.getAdminAuth().isEnabled()) {
-            //判断应用是否被禁用
-            FeignAppService feignAppService = springContextHolder.getBean(FeignAppService.class);
-            App queryApp = new App();
-            queryApp.setCode(toucan.getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryApp);
-            ResultObjectVO resultObjectVO = feignAppService.enableStatusByCode(requestJsonVO);
+            //判断应用是否被禁用、判断账号是否有该应用关联
+            FeignAdminAppService feignAdminAppService = springContextHolder.getBean(FeignAdminAppService.class);
+            AdminAppVO adminAppVO = new AdminAppVO();
+            adminAppVO.setAppCode(toucan.getAppCode());
+            adminAppVO.setAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            ResultObjectVO resultObjectVO = feignAdminAppService.queryAdminAppStatus(RequestJsonVOGenerator.generator(toucan.getAppCode(), adminAppVO));
             if(resultObjectVO.isSuccess())
             {
                 Boolean enableStatus = resultObjectVO.formatData(Boolean.class);
-                //应用被禁用
+                //应用被禁用或账号已经不关联这个应用了
                 if(!enableStatus.booleanValue())
                 {
                     String contentType = request.getContentType();
@@ -162,7 +165,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                     if(contentType.indexOf("application/json")!=-1)
                     {
                         resultVO.setCode(ResultVO.FAILD);
-                        resultVO.setMsg("访问失败,该应用已被禁用");
+                        resultVO.setMsg(resultObjectVO.getMsg());
                         response.setStatus(HttpStatus.FORBIDDEN.value());
                         responseWrite(response,JSONObject.toJSONString(resultVO));
                     }else if(contentType.indexOf("x-www-form-urlencoded")!=-1)

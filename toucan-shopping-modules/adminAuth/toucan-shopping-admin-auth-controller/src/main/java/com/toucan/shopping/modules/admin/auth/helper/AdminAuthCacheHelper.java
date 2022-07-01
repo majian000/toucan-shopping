@@ -1,9 +1,6 @@
 package com.toucan.shopping.modules.admin.auth.helper;
 
-import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
-import com.toucan.shopping.modules.admin.auth.cache.service.AppCacheService;
-import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
-import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
+import com.toucan.shopping.modules.admin.auth.cache.service.*;
 
 /**
  * 权限中台缓存助手
@@ -31,6 +28,11 @@ public class AdminAuthCacheHelper {
      * 应用缓存
      */
     private static AppCacheService appCacheService;
+
+    /**
+     * 账号应用缓存
+     */
+    private static AdminAppCacheService adminAppCacheService;
 
 
     public static FunctionCacheService getFunctionCacheService() {
@@ -63,5 +65,13 @@ public class AdminAuthCacheHelper {
 
     public static void setAppCacheService(AppCacheService appCacheService) {
         AdminAuthCacheHelper.appCacheService = appCacheService;
+    }
+
+    public static AdminAppCacheService getAdminAppCacheService() {
+        return adminAppCacheService;
+    }
+
+    public static void setAdminAppCacheService(AdminAppCacheService adminAppCacheService) {
+        AdminAuthCacheHelper.adminAppCacheService = adminAppCacheService;
     }
 }

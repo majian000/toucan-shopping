@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-admin-auth-proxy/adminApp",fallbackFactory = FeignAdminAppServiceFallbackFactory.class)
 public interface FeignAdminAppService {
@@ -64,5 +65,15 @@ public interface FeignAdminAppService {
      */
     @RequestMapping(value="/queryAppLoginUserCountList",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryAppLoginUserCountList(@RequestBody RequestJsonVO requestVo);
+
+
+
+    /**
+     * 查询应用状态以及账号应用状态
+     * @param requestVo
+     * @return true:启用 false:停用
+     */
+    @RequestMapping(value="/query/admin/app/status",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    public ResultObjectVO queryAdminAppStatus(@RequestBody RequestJsonVO requestVo);
 
 }

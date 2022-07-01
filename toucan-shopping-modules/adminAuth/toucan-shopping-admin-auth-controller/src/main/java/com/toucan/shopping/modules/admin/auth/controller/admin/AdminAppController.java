@@ -3,26 +3,28 @@ package com.toucan.shopping.modules.admin.auth.controller.admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.admin.auth.entity.AdminApp;
+import com.toucan.shopping.modules.admin.auth.entity.App;
+import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
 import com.toucan.shopping.modules.admin.auth.service.AdminAppService;
 import com.toucan.shopping.modules.admin.auth.service.AdminService;
+import com.toucan.shopping.modules.admin.auth.service.AppService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
+import com.toucan.shopping.modules.admin.auth.vo.AppVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.admin.auth.vo.AdminResultVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -46,6 +48,8 @@ public class AdminAppController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private AppService appService;
 
     /**
      * 保存管理员账户
@@ -354,6 +358,96 @@ public class AdminAppController {
             resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
+    }
+
+
+
+    /**
+     * 查询应用状态以及账号应用状态
+     * @param requestVo
+     * @return true:启用 false:停用
+     */
+    @RequestMapping(value="/query/admin/app/status",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAdminAppStatus(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setData(false);
+        resultObjectVO.setMsg("该应用已被禁用");
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            AdminAppVO adminAppVO = JSONObject.parseObject(requestVo.getEntityJson(), AdminAppVO.class);
+            if (adminAppVO.getAppCodes() == null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+            if (adminAppVO.getAdminId() == null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到账号ID");
+                return resultObjectVO;
+            }
+            //判断应用状态
+            AppVO appVO = AdminAuthCacheHelper.getAppCacheService().findByAppCode(adminAppVO.getAppCode());
+            if(appVO!=null)
+            {
+                if(appVO.getEnableStatus()!=null&&appVO.getEnableStatus().intValue()==1)
+                {
+                    resultObjectVO.setData(true);
+                    resultObjectVO.setMsg("");
+                }else{
+                    resultObjectVO.setData(false);
+                    resultObjectVO.setMsg("该应用已被禁用");
+                }
+                return resultObjectVO;
+            }
+            App app = appService.findByAppCode(adminAppVO.getAppCode());
+            if(app!=null&&app.getEnableStatus()!=null&&app.getEnableStatus().intValue()==1)
+            {
+                resultObjectVO.setData(true);
+                resultObjectVO.setMsg("");
+                //刷新到缓存
+                appVO = new AppVO();
+                BeanUtils.copyProperties(appVO,app);
+                AdminAuthCacheHelper.getAppCacheService().save(appVO);
+                return resultObjectVO;
+            }
+
+            AdminAppVO adminAppCacheVO = AdminAuthCacheHelper.getAdminAppCacheService().findByAdminIdAndAppCode(adminAppVO.getAdminId(),adminAppVO.getAppCode());
+            if(adminAppCacheVO!=null)
+            {
+                resultObjectVO.setData(true);
+                resultObjectVO.setMsg("");
+                return resultObjectVO;
+            }
+            //判断账号是否关联了应用
+            AdminApp adminApp = new AdminApp();
+            adminApp.setAppCode(adminAppVO.getAppCode());
+            adminApp.setAdminId(adminAppVO.getAdminId());
+            List<AdminApp> adminApps = adminAppService.findListByEntity(adminApp);
+            if(CollectionUtils.isNotEmpty(adminApps))
+            {
+                resultObjectVO.setData(true);
+                resultObjectVO.setMsg("");
+                //刷新到缓存
+                adminAppVO = new AdminAppVO();
+                BeanUtils.copyProperties(adminAppVO,adminApps.get(0));
+                AdminAuthCacheHelper.getAdminAppCacheService().save(adminAppVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+
     }
 
 }
