@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,9 +45,6 @@ public class AuthController {
 
     @Autowired
     private AdminRoleService adminRoleService;
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
 
     @Autowired
@@ -239,8 +235,7 @@ public class AuthController {
                         if(count!=null&&count.intValue()>0)
                         {
                             //每次操作都延长登录会话1小时
-                            redisTemplate.expire(AdminAuthRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                                    AdminAuthRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                            AdminAuthCacheHelper.getAdminLoginCacheService().loginTokenDelay(query.getAdminId());
                             resultObjectVO.setData(true);
                             return resultObjectVO;
                         }
@@ -302,10 +297,9 @@ public class AuthController {
                 throw new IllegalArgumentException("loginToken为空");
             }
 
+
             //校验登录会话
-            Object loginTokenObject = redisTemplate.opsForHash().get(
-                    AdminAuthRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                    AdminAuthRedisKey.getLoginTokenAppKey(query.getAdminId(), requestVo.getAppCode()));
+            Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(query.getAdminId(),requestVo.getAppCode());
             if (loginTokenObject == null) {
                 resultObjectVO.setData(-1);
                 return resultObjectVO;
@@ -493,8 +487,7 @@ public class AuthController {
                     if(count!=null&&count.intValue()>0)
                     {
                         //每次操作都延长登录会话1小时
-                        redisTemplate.expire(AdminAuthRedisKey.getLoginTokenGroupKey(query.getAdminId()),
-                                AdminAuthRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+                        AdminAuthCacheHelper.getAdminLoginCacheService().loginTokenDelay(query.getAdminId());
                         resultObjectVO.setData(1);
                         return resultObjectVO;
                     }

@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +46,6 @@ public class AdminController {
     @Autowired
     private AdminAppService adminAppService;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     @Autowired
     private AdminRoleService adminRoleService;
@@ -332,12 +329,9 @@ public class AdminController {
 
             String loginToken =UUID.randomUUID().toString().replace("-","");
             admin.setLoginToken(loginToken);
-            //登录哈希表 例如 00DDEXXAA0_LOGIN_TOKENS:[{00DDEXXAA0_LOGIN_TOKENS_10000001:"XXXXXX"},{00DDEXXAA0_LOGIN_TOKENS_10000002:"YYYYYYY"}]
-            redisTemplate.opsForHash().put(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()),loginToken);
-            //设置登录token1个小时超时
-            redisTemplate.expire(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminAuthRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
+
+            //保存登录缓存
+            AdminAuthCacheHelper.getAdminLoginCacheService().loginToken(admin.getAdminId(),requestVo.getAppCode(),loginToken);
 
             //设置登录状态
             adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1);
@@ -386,15 +380,15 @@ public class AdminController {
                 return resultObjectVO;
             }
 
-            Object loginTokenObject = redisTemplate.opsForHash().get(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()), AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+
+            Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(admin.getAdminId(),requestVo.getAppCode());
             if(loginTokenObject!=null)
             {
                 String redisLoginToken = String.valueOf(loginTokenObject);
                 if(redisLoginToken.equals(admin.getLoginToken()))
                 {
                     //删除对应的登录会话
-                    redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId())
-                            , AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(),requestVo.getAppCode()));
+                    AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(admin.getAdminId(),requestVo.getAppCode());
 
                     //更新登录状态
                     adminAppService.updateLoginStatus(admin.getAdminId(),requestVo.getAppCode(),(short)0);
@@ -505,9 +499,8 @@ public class AdminController {
             }
 
             admin.setAdminId(adminList.get(0).getAdminId());
-            Object loginTokenObject = redisTemplate.opsForHash().get(
-                    AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(), requestVo.getAppCode()));
+
+            Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(admin.getAdminId(),requestVo.getAppCode());
             if(loginTokenObject!=null) {
                 admin.setLoginToken(String.valueOf(loginTokenObject));
             }
@@ -571,9 +564,8 @@ public class AdminController {
 
                 admin.setAdminId(adminList.get(0).getAdminId());
             }
-            Object loginTokenObject = redisTemplate.opsForHash().get(
-                    AdminAuthRedisKey.getLoginTokenGroupKey(admin.getAdminId()),
-                    AdminAuthRedisKey.getLoginTokenAppKey(admin.getAdminId(), requestVo.getAppCode()));
+
+            Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(admin.getAdminId(),requestVo.getAppCode());
             if (loginTokenObject != null) {
                 if(StringUtils.equals(admin.getLoginToken(),String.valueOf(loginTokenObject)))
                 {
@@ -661,9 +653,8 @@ public class AdminController {
             if (admin.getEnableStatus() != null && admin.getEnableStatus().intValue() == 0) {
                 if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
                     for (AdminApp adminApp : adminAppPersistentList) {
-                        //删除所有的登录会话
-                        redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(adminApp.getAdminId())
-                                , AdminAuthRedisKey.getLoginTokenAppKey(adminApp.getAdminId(), adminApp.getAppCode()));
+                        //删除登录会话
+                        AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminApp.getAdminId(),adminApp.getAppCode());
 
                         //更新登录状态
                         adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
@@ -677,9 +668,8 @@ public class AdminController {
                 //清空账号所有应用会话
                 if (!CollectionUtils.isEmpty(adminAppPersistentList)) {
                     for (AdminApp adminApp : adminAppPersistentList) {
-                        //删除所有的登录会话
-                        redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(adminApp.getAdminId())
-                                , AdminAuthRedisKey.getLoginTokenAppKey(adminApp.getAdminId(), adminApp.getAppCode()));
+                        //删除登录会话
+                        AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminApp.getAdminId(),adminApp.getAppCode());
 
                         //更新登录状态
                         adminAppService.updateLoginStatus(adminApp.getAdminId(), adminApp.getAppCode(), (short) 0);
@@ -699,9 +689,8 @@ public class AdminController {
                     }
                     //如果旧的关联 不包含在新的操作中,那么就删除旧关联的会话
                     if(!find) {
-                        //删除所有的登录会话
-                        redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(adminAppPersistent.getAdminId())
-                                , AdminAuthRedisKey.getLoginTokenAppKey(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode()));
+                        //删除登录会话
+                        AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminAppPersistent.getAdminId(),adminAppPersistent.getAppCode());
 
                         //更新登录状态
                         adminAppService.updateLoginStatus(adminAppPersistent.getAdminId(), adminAppPersistent.getAppCode(), (short) 0);

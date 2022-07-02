@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,8 +51,6 @@ public class AppController {
     @Autowired
     private OrgnazitionAppService orgnazitionAppService;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     /**
      * 添加应用
@@ -202,8 +199,7 @@ public class AppController {
                 for(AdminApp aa:adminApps)
                 {
                     //删除所有的登录会话
-                    redisTemplate.opsForHash().delete(AdminAuthRedisKey.getLoginTokenGroupKey(aa.getAdminId())
-                            , AdminAuthRedisKey.getLoginTokenAppKey(aa.getAdminId(), aa.getAppCode()));
+                    AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(aa.getAdminId(),aa.getAppCode());
                     //更新登录状态
                     adminAppService.updateLoginStatus(aa.getAdminId(), aa.getAppCode(), (short) 0);
                 }
