@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.modules.admin.auth.vo.AppFunctionTreeVO;
 import com.toucan.shopping.modules.admin.auth.vo.RoleFunctionVO;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.admin.auth.entity.App;
 import com.toucan.shopping.modules.admin.auth.entity.Function;
@@ -66,6 +67,8 @@ public class FunctionController extends UIController {
 
     @Autowired
     private FeignRoleService feignRoleService;
+    @Autowired
+    private IdGenerator idGenerator;
 
 
 
@@ -347,9 +350,9 @@ public class FunctionController extends UIController {
                     List<App> rootNodes = resultObjectVO.formatDataList(App.class);
                     List<AppFunctionTreeVO> appFunctionTreeVOS = new LinkedList<>();
                     for(App rootNode:rootNodes) {
-
+                        //随机生成一个应用节点ID,必须是负数
                         AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
-                        appFunctionTreeVO.setId(Long.parseLong(rootNode.getCode()));
+                        appFunctionTreeVO.setId((0-idGenerator.id()));
                         appFunctionTreeVO.setPid(-2L);
                         appFunctionTreeVO.setParentId(-2L);
                         appFunctionTreeVO.setAppCode(rootNode.getCode());
