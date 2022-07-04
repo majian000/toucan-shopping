@@ -117,7 +117,7 @@ public class FunctionServiceProxyImpl implements FunctionServiceProxy {
                 for(App app : apps)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
-                    appFunctionTreeVO.setId(String.valueOf(-1L));
+                    appFunctionTreeVO.setId(-1L);
                     appFunctionTreeVO.setAppCode(app.getCode());
                     appFunctionTreeVO.setTitle(app.getName());
                     appFunctionTreeVO.setEnableStatus((short)1);
@@ -270,7 +270,7 @@ public class FunctionServiceProxyImpl implements FunctionServiceProxy {
                 for(AdminAppVO adminAppVO : adminApps)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
-                    appFunctionTreeVO.setId(String.valueOf(adminAppVO.getId()));
+                    appFunctionTreeVO.setId(adminAppVO.getId());
                     appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
                     appFunctionTreeVO.setName(adminAppVO.getAppCode()+" "+adminAppVO.getName());
                     appFunctionTreeVO.setPid(-1L);
@@ -285,7 +285,7 @@ public class FunctionServiceProxyImpl implements FunctionServiceProxy {
                         //将-1替换成adminApp的id
                         if(function.getPid().longValue()==-1)
                         {
-                            function.setPid(Long.parseLong(appFunctionTreeVO.getId()));
+                            function.setPid(appFunctionTreeVO.getId());
                         }
                     }
                     appFunctionTreeVOS.addAll(functions);

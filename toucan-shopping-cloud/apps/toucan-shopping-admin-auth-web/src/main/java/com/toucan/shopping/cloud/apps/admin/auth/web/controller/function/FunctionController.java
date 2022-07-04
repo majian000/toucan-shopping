@@ -349,7 +349,7 @@ public class FunctionController extends UIController {
                     for(App rootNode:rootNodes) {
 
                         AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
-                        appFunctionTreeVO.setId(rootNode.getCode());
+                        appFunctionTreeVO.setId(Long.parseLong(rootNode.getCode()));
                         appFunctionTreeVO.setPid(-2L);
                         appFunctionTreeVO.setParentId(-2L);
                         appFunctionTreeVO.setAppCode(rootNode.getCode());
