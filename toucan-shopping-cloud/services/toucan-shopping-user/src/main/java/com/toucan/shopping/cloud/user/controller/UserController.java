@@ -1269,7 +1269,7 @@ public class UserController {
                     String token = LoginTokenUtil.generatorToken(userEntity.getUserMainId());
                     toucanStringRedisService.put(loginGroupKey,loginTokenAppKey, token);
 
-                    //设置登录token5个小时超时
+                    //设置登录token超时
                     toucanStringRedisService.expire(loginGroupKey,
                             UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
@@ -1552,7 +1552,7 @@ public class UserController {
                 if(StringUtils.equals(userLoginVO.getLoginToken(),String.valueOf(loginTokenObject)))
                 {
                     //登录时长重置
-                    //设置登录token5个小时超时
+                    //设置登录token超时
                     toucanStringRedisService.expire(loginTokenGroupKey,UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
                     resultObjectVO.setData(true);
@@ -1669,7 +1669,7 @@ public class UserController {
                 }
 
                 //登录时长重置
-                //延长登录token5个小时超时
+                //延长登录token超时
                 toucanStringRedisService.expire(loginTokenGroupKey,UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
                 resultObjectVO.setCode(ResultVO.SUCCESS);
 

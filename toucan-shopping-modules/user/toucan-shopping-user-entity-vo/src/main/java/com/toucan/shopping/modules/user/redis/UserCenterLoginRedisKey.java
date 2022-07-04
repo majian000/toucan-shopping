@@ -7,7 +7,7 @@ public class UserCenterLoginRedisKey {
 
 
 
-    public static Integer LOGIN_TIMEOUT_SECOND=60*60*5; //没有任何操作,5小时超时
+    public static Integer LOGIN_TIMEOUT_SECOND=60*60*24*1; //没有任何操作,1天超时
 
 
 

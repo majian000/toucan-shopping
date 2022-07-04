@@ -100,7 +100,7 @@ public class UserRedisServiceImpl implements UserRedisService {
 
                 toucanStringRedisService.put(loginGroupKey,
                         loginInfoAppKey, JSONObject.toJSONString(userLogin));
-                //设置登录token5个小时超时
+                //设置登录token超时
                 toucanStringRedisService.expire(loginGroupKey,
                         UserCenterLoginRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
