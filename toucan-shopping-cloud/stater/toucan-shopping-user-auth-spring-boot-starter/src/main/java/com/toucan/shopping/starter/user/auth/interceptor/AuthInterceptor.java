@@ -12,6 +12,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.common.wrapper.RequestWrapper;
+import com.toucan.shopping.modules.user.redis.UserCenterLoginRedisKey;
 import com.toucan.shopping.modules.user.util.LoginTokenUtil;
 import com.toucan.shopping.modules.user.vo.UserLoginVO;
 import org.apache.commons.lang3.StringUtils;
@@ -78,7 +79,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         //重新生成权限token 半小时内不再进行权限校验
         Cookie latCookie = new Cookie( "tss_lat", LoginAuthToken);
         latCookie.setPath("/");
-        latCookie.setMaxAge(1800); //30分钟过期
+        latCookie.setMaxAge(UserCenterLoginRedisKey.SUPER_TOKEN_CLIENT_SECOND); //30分钟过期
         response.addCookie(latCookie);
     }
 

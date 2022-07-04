@@ -10,6 +10,7 @@ public class UserCenterLoginRedisKey {
     public static Integer LOGIN_TIMEOUT_SECOND=60*60*24*1; //没有任何操作,1天超时
 
 
+    public static Integer SUPER_TOKEN_CLIENT_SECOND=30*60; //超级会话 30分钟过期
 
 
 
