@@ -142,7 +142,7 @@ public class FunctionController {
                 for(App app : apps)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
-                    appFunctionTreeVO.setId(-1L);
+                    appFunctionTreeVO.setId(String.valueOf(-1L));
                     appFunctionTreeVO.setAppCode(app.getCode());
                     appFunctionTreeVO.setTitle(app.getName());
                     appFunctionTreeVO.setEnableStatus((short)1);
@@ -388,7 +388,7 @@ public class FunctionController {
                 for(AdminAppVO adminAppVO : adminApps)
                 {
                     AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
-                    appFunctionTreeVO.setId(adminAppVO.getId());
+                    appFunctionTreeVO.setId(String.valueOf(adminAppVO.getId()));
                     appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
                     appFunctionTreeVO.setName(adminAppVO.getAppCode()+" "+adminAppVO.getName());
                     appFunctionTreeVO.setPid(-1L);
@@ -403,7 +403,7 @@ public class FunctionController {
                         //将-1替换成adminApp的id
                         if(function.getPid().longValue()==-1)
                         {
-                            function.setPid(appFunctionTreeVO.getId());
+                            function.setPid(Long.parseLong(appFunctionTreeVO.getId()));
                         }
                     }
                     appFunctionTreeVOS.addAll(functions);
@@ -479,7 +479,7 @@ public class FunctionController {
                     long rootNodeId = -1L;
                     for (AdminAppVO adminAppVO : adminApps) {
                         AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
-                        appFunctionTreeVO.setId(rootNodeId);
+                        appFunctionTreeVO.setId(String.valueOf(rootNodeId));
                         appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
                         appFunctionTreeVO.setName(adminAppVO.getAppCode() + " " + adminAppVO.getName());
                         appFunctionTreeVO.setPid(-1L);
