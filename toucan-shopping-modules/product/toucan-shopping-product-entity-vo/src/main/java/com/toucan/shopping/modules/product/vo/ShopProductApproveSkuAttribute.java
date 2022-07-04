@@ -21,4 +21,11 @@ public class ShopProductApproveSkuAttribute {
      */
     private List<String> values;
 
+    public ShopProductApproveSkuAttribute() {
+    }
+
+    public ShopProductApproveSkuAttribute(String key, List<String> values) {
+        this.key = key;
+        this.values = values;
+    }
 }

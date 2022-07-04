@@ -81,4 +81,6 @@ public class ShopProductApproveSkuVO extends ShopProductApproveSku {
      */
     private List<ShopProductApproveSkuVO> productSkuVOList;
 
+
+
 }

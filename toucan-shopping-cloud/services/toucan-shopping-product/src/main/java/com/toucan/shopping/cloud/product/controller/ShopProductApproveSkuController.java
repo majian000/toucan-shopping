@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.product.entity.Brand;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveDescription;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveImg;
 import com.toucan.shopping.modules.product.entity.ShopProductApproveSku;
@@ -53,6 +54,9 @@ public class ShopProductApproveSkuController {
 
     @Autowired
     private ShopProductApproveSkuRedisService shopProductApproveSkuRedisService;
+
+    @Autowired
+    private BrandService brandService;
 
     /**
      * 查询列表
@@ -167,6 +171,7 @@ public class ShopProductApproveSkuController {
                         }
                     }
 
+
                     //查询商品介绍
                     ShopProductApproveDescription shopProductApproveDescription = shopProductApproveDescriptionService.queryByApproveId(shopProductApproveVO.getId());
                     if(shopProductApproveDescription!=null) {
@@ -176,6 +181,45 @@ public class ShopProductApproveSkuController {
                         List<ShopProductApproveDescriptionImgVO> shopProductApproveDescriptionImgVOS = shopProductApproveDescriptionImgService.queryVOListByProductApproveIdAndDescriptionIdOrderBySortDesc(shopProductApproveVO.getId(),shopProductApproveDescription.getId());
                         shopProductApproveDescriptionVO.setProductDescriptionImgs(shopProductApproveDescriptionImgVOS);
                         shopProductApproveSkuVO.setShopProductApproveDescriptionVO(shopProductApproveDescriptionVO);
+
+
+                        //商品介绍中的属性列表
+                        List<ShopProductApproveSkuAttribute> attributes = new ArrayList<>();
+
+
+                        ShopProductApproveSkuAttribute productNameAttribute = new ShopProductApproveSkuAttribute("",new ArrayList<>());
+                        productNameAttribute.setKey("商品名称");
+                        productNameAttribute.getValues().add(shopProductApproveVO.getName());
+                        attributes.add(productNameAttribute);
+
+                        Brand brand = brandService.findByIdIngoreDeleteStatus(shopProductApproveVO.getBrandId());
+                        if(brand!=null) {
+                            ShopProductApproveSkuAttribute brandNameAttribute = new ShopProductApproveSkuAttribute("",new ArrayList<>());
+                            brandNameAttribute.setKey("品牌");
+
+                            if(StringUtils.isNotEmpty(brand.getChineseName())&&StringUtils.isNotEmpty(brand.getEnglishName()))
+                            {
+                                brandNameAttribute.getValues().add(brand.getChineseName()+"/"+brand.getEnglishName());
+                            }else {
+                                if (StringUtils.isNotEmpty(brand.getChineseName())) {
+                                    brandNameAttribute.getValues().add(brand.getChineseName());
+                                }
+                                if (StringUtils.isNotEmpty(brand.getEnglishName())) {
+                                    brandNameAttribute.getValues().add(brand.getEnglishName());
+                                }
+                            }
+
+                            shopProductApproveDescriptionVO.setBrandNameAttribute(brandNameAttribute);
+
+
+                            ShopProductApproveSkuAttribute brandSeminaryAttribute = new ShopProductApproveSkuAttribute("",new ArrayList<>());
+                            brandSeminaryAttribute.setKey("商品产地");
+                            brandSeminaryAttribute.getValues().add(brand.getSeminary());
+
+                            attributes.add(brandSeminaryAttribute);
+                        }
+
+                        shopProductApproveDescriptionVO.setAttributes(attributes);
                     }
 
                     //查询商品SKU列表

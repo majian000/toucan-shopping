@@ -171,6 +171,28 @@ function drawProductPage(productVO)
                 }
             }
             $(".des_con_p").html(productDescHtml);
+
+            if(productVO.shopProductApproveDescriptionVO.brandNameAttribute!=null)
+            {
+                $(".description-attribute-brand").html("");
+                $(".description-attribute-brand").append(" <li title=\""+productVO.shopProductApproveDescriptionVO.brandNameAttribute.key+"\">品牌：\n" +
+                    "                                <a href=\"#\" class=\"brand-name\" target=\"_blank\">"+productVO.shopProductApproveDescriptionVO.brandNameAttribute.values[0]+"</a>\n" +
+                    "                            </li>");
+            }
+
+            if(productVO.shopProductApproveDescriptionVO.attributes!=null)
+            {
+                $(".description-attribute-more").html("");
+                for(var j=0;j<productVO.shopProductApproveDescriptionVO.attributes.length;j++)
+                {
+                    var descriptionAttribute = productVO.shopProductApproveDescriptionVO.attributes[j];
+                    if(descriptionAttribute.values!=null&&descriptionAttribute.values.length>0) {
+                        var descriptionAttributeValue = descriptionAttribute.values[0];
+                        $(".description-attribute-more").append("<li title=\""+descriptionAttributeValue+"\">"+descriptionAttribute.key+"："+descriptionAttributeValue+"</li>");
+                    }
+                }
+
+            }
         }
 
         drawSpuAttributes(productVO.productId);

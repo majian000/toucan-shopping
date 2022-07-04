@@ -20,6 +20,11 @@ public class ShopProductApproveDescriptionVO extends ShopProductApproveDescripti
      */
     List<ShopProductApproveDescriptionImgVO> productDescriptionImgs;
 
+    /**
+     * 商品介绍中带连接的属性
+     */
+    ShopProductApproveSkuAttribute brandNameAttribute;
 
+    List<ShopProductApproveSkuAttribute> attributes;
 
 }
