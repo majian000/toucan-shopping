@@ -214,7 +214,11 @@ public class ShopProductApproveSkuController {
 
                             ShopProductApproveSkuAttribute brandSeminaryAttribute = new ShopProductApproveSkuAttribute("",new ArrayList<>());
                             brandSeminaryAttribute.setKey("商品产地");
-                            brandSeminaryAttribute.getValues().add(brand.getSeminary());
+                            if(StringUtils.isNotEmpty(brand.getSeminary())) {
+                                brandSeminaryAttribute.getValues().add(brand.getSeminary());
+                            }else{
+                                brandSeminaryAttribute.getValues().add("");
+                            }
 
                             attributes.add(brandSeminaryAttribute);
                         }
