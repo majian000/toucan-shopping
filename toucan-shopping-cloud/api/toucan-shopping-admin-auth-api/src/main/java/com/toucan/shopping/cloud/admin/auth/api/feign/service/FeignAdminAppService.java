@@ -38,6 +38,16 @@ public interface FeignAdminAppService {
     ResultObjectVO list(@RequestBody RequestJsonVO requestVo);
 
 
+
+    /**
+     * 查询在线用户列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/online/list",produces = "application/json;charset=UTF-8")
+    ResultObjectVO onlineList(@RequestBody RequestJsonVO requestVo);
+
+
     /**
      * 查询登录列表分页
      * @param requestVo

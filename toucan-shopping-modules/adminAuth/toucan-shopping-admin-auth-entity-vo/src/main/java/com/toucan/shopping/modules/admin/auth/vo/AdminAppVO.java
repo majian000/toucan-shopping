@@ -23,5 +23,20 @@ public class AdminAppVO extends AdminApp {
      */
     private String appCodes;
 
+    /**
+     * 账号ID
+     */
+    private String adminId;
+
+    /**
+     * 应用名称
+     */
+    private String appName;
+
+
+    /**
+     * 账号名称
+     */
+    private String username;
 
 }

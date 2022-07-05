@@ -42,4 +42,9 @@ public class AdminAppPageInfo extends PageInfo<AdminApp> {
      * 登录状态(0未登录 1登陆中 -1或null查询全部)
      */
     private Short loginStatus;
+
+    /**
+     * 账号名称
+     */
+    private String username;
 }

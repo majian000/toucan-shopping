@@ -60,6 +60,11 @@ public class AdminAppServiceImpl implements AdminAppService {
         return adminAppMapper.queryAppLoginUserCountList(appLoginUserVO);
     }
 
+    @Override
+    public AdminAppVO findById(Long id) {
+        return adminAppMapper.findById(id);
+    }
+
 
     @Override
     public PageInfo<AdminAppVO> queryListPage(AdminAppPageInfo queryPageInfo) {
@@ -72,6 +77,22 @@ public class AdminAppServiceImpl implements AdminAppService {
         pageInfo.setSize(queryPageInfo.getSize());
         return pageInfo;
     }
+
+
+
+
+    @Override
+    public PageInfo<AdminAppVO> queryOnlineListPage(AdminAppPageInfo queryPageInfo) {
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        PageInfo<AdminAppVO> pageInfo = new PageInfo();
+        pageInfo.setList(adminAppMapper.queryOnlineListPage(queryPageInfo));
+        pageInfo.setTotal(adminAppMapper.queryOnlineListPageCount(queryPageInfo));
+        pageInfo.setLimit(queryPageInfo.getLimit());
+        pageInfo.setPage(queryPageInfo.getPage());
+        pageInfo.setSize(queryPageInfo.getSize());
+        return pageInfo;
+    }
+
 
     @Override
     public PageInfo<AdminAppVO> queryLoginListPage(AdminAppPageInfo queryPageInfo) {

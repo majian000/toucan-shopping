@@ -58,6 +58,13 @@ public interface AdminAppService {
      */
     PageInfo<AdminAppVO> queryListPage(AdminAppPageInfo appPageInfo);
 
+    /**
+     * 查询列表页
+     * @param appPageInfo
+     * @return
+     */
+    PageInfo<AdminAppVO> queryOnlineListPage(AdminAppPageInfo appPageInfo);
+
 
     /**
      * 查询登录列表页
@@ -92,4 +99,10 @@ public interface AdminAppService {
      */
     List<AppLoginUserVO> queryAppLoginUserCountList(AppLoginUserVO appLoginUserVO);
 
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    AdminAppVO findById(Long id);
 }

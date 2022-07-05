@@ -60,6 +60,26 @@ public interface AdminAppMapper {
     Long queryListPageCount(AdminAppPageInfo adminPageInfo);
 
 
+    /**
+     * 查询列表页
+     * @param adminPageInfo
+     * @return
+     */
+    List<AdminAppVO> queryOnlineListPage(AdminAppPageInfo adminPageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param adminPageInfo
+     * @return
+     */
+    Long queryOnlineListPageCount(AdminAppPageInfo adminPageInfo);
+
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    AdminAppVO findById(Long id);
 
     /**
      * 查询列表页

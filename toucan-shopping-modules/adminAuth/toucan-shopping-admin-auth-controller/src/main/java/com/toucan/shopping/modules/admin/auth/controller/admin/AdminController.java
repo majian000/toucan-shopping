@@ -819,6 +819,8 @@ public class AdminController {
                 return resultObjectVO;
             }
 
+            //删除账号应用关联
+            adminAppService.deleteByAdminId(adminList.get(0).getAdminId());
 
             //删除账号角色关联
             adminRoleService.deleteByAdminId(adminList.get(0).getAdminId());
@@ -887,6 +889,10 @@ public class AdminController {
                         resultObjectVO.setMsg("请重试!");
                         continue;
                     }
+
+                    //删除账号应用关联
+                    adminAppService.deleteByAdminId(adminList.get(0).getAdminId());
+
 
                     //删除账号角色关联
                     adminRoleService.deleteByAdminId(adminList.get(0).getAdminId());
