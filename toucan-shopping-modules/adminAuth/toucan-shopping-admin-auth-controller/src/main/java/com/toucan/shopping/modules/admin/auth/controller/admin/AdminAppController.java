@@ -255,6 +255,8 @@ public class AdminAppController {
             adminAppVO = adminAppService.findById(adminAppVO.getId());
             adminAppService.updateLoginStatus(adminAppVO.getAdminId(),adminAppVO.getAppCode(),(short)0);
 
+            //删除缓存
+            AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(adminAppVO.getAdminId(),adminAppVO.getAppCode());
 
         }catch(Exception e)
         {

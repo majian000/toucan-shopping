@@ -69,6 +69,15 @@ public interface FeignAdminAppService {
 
 
     /**
+     * 查询在线用户列表分页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/logout",produces = "application/json;charset=UTF-8")
+    ResultObjectVO logout(@RequestBody RequestJsonVO requestVo);
+
+
+    /**
      * 查询APP登录用户信息
      * @param requestVo
      * @return

@@ -138,7 +138,7 @@ public class OnlineAdminController extends UIController {
             AdminApp adminApp =new AdminApp();
             adminApp.setId(Long.parseLong(id));
             RequestJsonVO requestJsonVO=RequestJsonVOGenerator.generator(toucan.getAppCode(),adminApp);
-//            resultObjectVO = feignAdminAppService.deleteById(SignUtil.sign(requestVo),requestVo);
+            resultObjectVO = feignAdminAppService.logout(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

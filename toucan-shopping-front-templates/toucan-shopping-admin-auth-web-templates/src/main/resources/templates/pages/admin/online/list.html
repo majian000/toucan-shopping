@@ -200,21 +200,30 @@
 
         table.on('tool(adminOnlineTableFilter)', function (obj) {
             var data = obj.data;
-            if (obj.event == 'edit') {
+            if (obj.event == 'logout') {
+                layer.confirm('确定将'+obj.username+'退出登录?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]/admin/online/"+data.id,
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        success:function(data){
+                            layer.msg(data.msg);
 
-                var index = layer.open({
-                    title: '编辑用户',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
+                            //执行搜索重载
+                            table.reload('adminOnlineTable', {
+                                page: {
+                                    curr: 1
+                                }
+                                , where: data.field
+                            }, 'data');
 
-                    area: ['100%', '100%'],
-                    content: '[[@{/}]]adminOnline/editPage/'+data.id
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
                 });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
             }
         });
 
