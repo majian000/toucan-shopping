@@ -138,24 +138,22 @@
 
 
     <select id="queryLoginListPage" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
-        SELECT t.admin_id,GROUP_CONCAT(t.app_code) as appCodes,t.login_status  from t_sa_admin_app t
+        SELECT t.admin_id,t.app_code,t.login_status  from t_sa_admin_app t
         <where>
             1=1
             <include refid="queryListPageWhere" />
         </where>
-        GROUP BY t.admin_id
         limit #{start},#{limit}
     </select>
 
 
     <select id="queryLoginListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminPageInfo">
         select count(*) from (
-            SELECT t.admin_id,GROUP_CONCAT(t.app_code),t.login_status  from t_sa_admin_app t
+            SELECT t.admin_id,t.app_code,t.login_status  from t_sa_admin_app t
             <where>
                 1=1
                 <include refid="queryListPageWhere" />
             </where>
-            GROUP BY t.admin_id
         )ds
 
     </select>

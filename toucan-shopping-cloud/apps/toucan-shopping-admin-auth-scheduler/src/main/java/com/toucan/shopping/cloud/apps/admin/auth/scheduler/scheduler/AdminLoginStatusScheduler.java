@@ -63,7 +63,7 @@ public class AdminLoginStatusScheduler {
     /**
      * 15分钟刷新一次
      */
-    @Scheduled(cron = "0 0/15 * * * ? ")
+    @Scheduled(cron = "0 0/2 * * * ? ")
     public void refershForDB() {
         if (toucan.getAdminAuthScheduler().isLoopLoginCache()) {
             logger.info("刷新登录用户状态(从数据库) 开始.......");
@@ -88,14 +88,18 @@ public class AdminLoginStatusScheduler {
                                 String[] appCodeArray = adminAppVO.getAppCodes().split(",");
                                 for(String appCode:appCodeArray) {
                                     Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(adminAppVO.getAdminId(),appCode);;
+
+                                    AdminAppVO offlineAdminApp = new AdminAppVO();
+                                    offlineAdminApp.setAdminId(adminAppVO.getAdminId());
+                                    offlineAdminApp.setAppCode(appCode);
                                     //自动超时下线
                                     if(loginTokenObject==null)
                                     {
-                                        AdminAppVO offlineAdminApp = new AdminAppVO();
-                                        offlineAdminApp.setAdminId(adminAppVO.getAdminId());
-                                        offlineAdminApp.setAppCode(appCode);
-                                        offlineAdminApps.add(offlineAdminApp);
+                                        offlineAdminApp.setLoginStatus((short)0);
+                                    }else{
+                                        offlineAdminApp.setLoginStatus((short)1);
                                     }
+                                    offlineAdminApps.add(offlineAdminApp);
                                 }
                             }
                         }

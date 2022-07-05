@@ -303,7 +303,7 @@ public class AdminAppController {
                 for(AdminAppVO adminAppVO:adminApps) {
                     if(adminAppVO!=null) {
                         try {
-                            adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), (short) 0);
+                            adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus());
                         }catch(Exception e)
                         {
                             logger.warn(e.getMessage(),e);
