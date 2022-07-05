@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.admin.auth.cache.service;
 
 
+import java.util.List;
+
 /**
  * 账号登录缓存
  * @author majian

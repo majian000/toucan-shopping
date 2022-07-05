@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
+import com.toucan.shopping.cloud.apps.admin.auth.scheduler.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.cache.service.FunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.page.FunctionTreeInfo;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
@@ -47,9 +48,6 @@ public class FunctionToESCacheScheduler {
     private FeignFunctionService feignFunctionService;
 
 
-    @Autowired
-    private FunctionCacheService functionCacheService;
-
 
     public PageInfo queryPage(FunctionTreeInfo queryPageInfo) throws Exception
     {
@@ -75,12 +73,12 @@ public class FunctionToESCacheScheduler {
             try {
 
                 //删除索引
-                functionCacheService.deleteIndex();
+                AdminAuthCacheHelper.getFunctionCacheService().deleteIndex();
 
 
                 //如果不存在索引就创建一个
-                while (!functionCacheService.existsIndex()) {
-                    functionCacheService.createIndex();
+                while (!AdminAuthCacheHelper.getFunctionCacheService().existsIndex()) {
+                    AdminAuthCacheHelper.getFunctionCacheService().createIndex();
                 }
 
 
@@ -100,12 +98,12 @@ public class FunctionToESCacheScheduler {
 
                         logger.info("缓存功能项关联列表 到Elasticsearch {}", functionListJson);
                         for (FunctionVO functionVO : functionVOS) {
-                            List<FunctionCacheVO> functionCacheVOS = functionCacheService.queryById(functionVO.getId());
+                            List<FunctionCacheVO> functionCacheVOS = AdminAuthCacheHelper.getFunctionCacheService().queryById(functionVO.getId());
                             //如果缓存不存在功能项将缓存起来
                             if (CollectionUtils.isEmpty(functionCacheVOS)) {
                                 FunctionCacheVO functionCacheVO = new FunctionCacheVO();
                                 BeanUtils.copyProperties(functionCacheVO, functionVO);
-                                functionCacheService.save(functionCacheVO);
+                                AdminAuthCacheHelper.getFunctionCacheService().save(functionCacheVO);
                             }
                         }
                     }

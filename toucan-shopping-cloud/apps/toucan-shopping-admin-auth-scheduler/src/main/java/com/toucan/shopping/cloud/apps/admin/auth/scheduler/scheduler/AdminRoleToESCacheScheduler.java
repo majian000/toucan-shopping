@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminRoleService;
+import com.toucan.shopping.cloud.apps.admin.auth.scheduler.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.cache.service.AdminRoleCacheService;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.vo.AdminRoleCacheVO;
@@ -44,8 +45,6 @@ public class AdminRoleToESCacheScheduler {
     private FeignAdminRoleService feignAdminRoleService;
 
 
-    @Autowired
-    private AdminRoleCacheService adminRoleCacheService;
 
 
     public PageInfo queryPage(AdminRolePageInfo queryPageInfo) throws Exception
@@ -72,12 +71,12 @@ public class AdminRoleToESCacheScheduler {
             try {
 
                 //删除索引
-                adminRoleCacheService.deleteIndex();
+                AdminAuthCacheHelper.getAdminRoleCacheService().deleteIndex();
 
 
                 //如果不存在索引就创建一个
-                while (!adminRoleCacheService.existsIndex()) {
-                    adminRoleCacheService.createIndex();
+                while (!AdminAuthCacheHelper.getAdminRoleCacheService().existsIndex()) {
+                    AdminAuthCacheHelper.getAdminRoleCacheService().createIndex();
                 }
 
 
@@ -97,12 +96,12 @@ public class AdminRoleToESCacheScheduler {
 
                         logger.info("缓存账号角色列表 到Elasticsearch {}", adminRoleListJson);
                         for (AdminRoleVO adminRoleVO : adminRoleVOS) {
-                            List<AdminRoleCacheVO> adminRoleCacheVOS = adminRoleCacheService.queryById(adminRoleVO.getId());
+                            List<AdminRoleCacheVO> adminRoleCacheVOS = AdminAuthCacheHelper.getAdminRoleCacheService().queryById(adminRoleVO.getId());
                             //如果缓存不存在账号角色将缓存起来
                             if (org.apache.commons.collections.CollectionUtils.isEmpty(adminRoleCacheVOS)) {
                                 AdminRoleCacheVO adminRoleCacheVO = new AdminRoleCacheVO();
                                 BeanUtils.copyProperties(adminRoleCacheVO, adminRoleVO);
-                                adminRoleCacheService.save(adminRoleCacheVO);
+                                AdminAuthCacheHelper.getAdminRoleCacheService().save(adminRoleCacheVO);
                             }
                         }
                     }

@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminAppService;
+import com.toucan.shopping.cloud.apps.admin.auth.scheduler.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo;
 import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
@@ -41,8 +42,6 @@ public class AdminLoginStatusScheduler {
     @Autowired
     private FeignAdminAppService feignAdminAppService;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
 
 
@@ -59,23 +58,24 @@ public class AdminLoginStatusScheduler {
         return null;
     }
 
+
+
     /**
-     * 10分钟刷新一次
+     * 15分钟刷新一次
      */
-    @Scheduled(cron = "0 0/3 * * * ? ")
-    public void rerun() {
+    @Scheduled(cron = "0 0/15 * * * ? ")
+    public void refershForDB() {
         if (toucan.getAdminAuthScheduler().isLoopLoginCache()) {
-            logger.info("刷新登录用户状态 开始.......");
+            logger.info("刷新登录用户状态(从数据库) 开始.......");
             try {
                 int page = 1;
                 int limit = 500;
                 PageInfo pageInfo = null;
                 do {
-                    logger.info(" 查询账号登录列表 页码:{} 每页显示 {} ", page, limit);
+                    logger.info(" 查询账号列表 页码:{} 每页显示 {} ", page, limit);
                     AdminAppPageInfo query = new AdminAppPageInfo();
                     query.setLimit(limit);
                     query.setPage(page);
-                    query.setLoginStatus((short)1);
                     pageInfo = queryPage(query);
                     page++;
                     if (pageInfo != null && CollectionUtils.isNotEmpty(pageInfo.getList())) {
@@ -87,9 +87,7 @@ public class AdminLoginStatusScheduler {
                             if(StringUtils.isNotEmpty(adminAppVO.getAdminId())&&StringUtils.isNotEmpty(adminAppVO.getAppCodes())) {
                                 String[] appCodeArray = adminAppVO.getAppCodes().split(",");
                                 for(String appCode:appCodeArray) {
-                                    Object loginTokenObject = redisTemplate.opsForHash().get(
-                                            AdminAuthRedisKey.getLoginTokenGroupKey(adminAppVO.getAdminId()),
-                                            AdminAuthRedisKey.getLoginTokenAppKey(adminAppVO.getAdminId(), appCode));
+                                    Object loginTokenObject = AdminAuthCacheHelper.getAdminLoginCacheService().getLoginToken(adminAppVO.getAdminId(),appCode);;
                                     //自动超时下线
                                     if(loginTokenObject==null)
                                     {
@@ -112,7 +110,7 @@ public class AdminLoginStatusScheduler {
             {
                 logger.error(e.getMessage(),e);
             }
-            logger.info("刷新登录用户状态 结束.......");
+            logger.info("刷新登录用户状态(从数据库) 结束.......");
         }
     }
 }

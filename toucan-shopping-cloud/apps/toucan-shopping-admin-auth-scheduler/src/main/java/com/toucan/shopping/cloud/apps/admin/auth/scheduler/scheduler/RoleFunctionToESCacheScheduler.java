@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.admin.auth.scheduler.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignRoleFunctionService;
+import com.toucan.shopping.cloud.apps.admin.auth.scheduler.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.cache.service.RoleFunctionCacheService;
 import com.toucan.shopping.modules.admin.auth.page.AdminRolePageInfo;
 import com.toucan.shopping.modules.admin.auth.page.RoleFunctionPageInfo;
@@ -47,9 +48,6 @@ public class RoleFunctionToESCacheScheduler {
     private FeignRoleFunctionService feignRoleFunctionService;
 
 
-    @Autowired
-    private RoleFunctionCacheService roleFunctionCacheService;
-
 
     public PageInfo queryPage(RoleFunctionPageInfo queryPageInfo) throws Exception
     {
@@ -75,12 +73,12 @@ public class RoleFunctionToESCacheScheduler {
             try {
 
                 //删除索引
-                roleFunctionCacheService.deleteIndex();
+                AdminAuthCacheHelper.getRoleFunctionCacheService().deleteIndex();
 
 
                 //如果不存在索引就创建一个
-                while (!roleFunctionCacheService.existsIndex()) {
-                    roleFunctionCacheService.createIndex();
+                while (!AdminAuthCacheHelper.getRoleFunctionCacheService().existsIndex()) {
+                    AdminAuthCacheHelper.getRoleFunctionCacheService().createIndex();
                 }
 
 
@@ -100,12 +98,12 @@ public class RoleFunctionToESCacheScheduler {
 
                         logger.info("缓存角色-功能项关联列表 到Elasticsearch {}", roleFunctionListJson);
                         for (RoleFunctionVO roleFunctionVO : roleFunctionVOS) {
-                            List<RoleFunctionCacheVO> roleFunctionCacheVOS = roleFunctionCacheService.queryById(roleFunctionVO.getId());
+                            List<RoleFunctionCacheVO> roleFunctionCacheVOS = AdminAuthCacheHelper.getRoleFunctionCacheService().queryById(roleFunctionVO.getId());
                             //如果缓存不存在角色功能项将缓存起来
                             if (CollectionUtils.isEmpty(roleFunctionCacheVOS)) {
                                 RoleFunctionCacheVO roleFunctionCacheVO = new RoleFunctionCacheVO();
                                 BeanUtils.copyProperties(roleFunctionCacheVO, roleFunctionVO);
-                                roleFunctionCacheService.save(roleFunctionCacheVO);
+                                AdminAuthCacheHelper.getRoleFunctionCacheService().save(roleFunctionCacheVO);
                             }
                         }
                     }

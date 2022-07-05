@@ -111,6 +111,16 @@
             <artifactId>toucan-shopping-cloud-config-bootstrap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.adminAuth</groupId>
+            <artifactId>toucan-shopping-admin-auth-cache</artifactId>
+        </dependency>
+
     </dependencies>
 
 

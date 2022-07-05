@@ -19,6 +19,15 @@ public class AdminAuthRedisKey {
         return "TOUCAN_ADMIN_AUTH:LOGIN_TOKENS:"+adminIdOrUserId+"_LOGIN_TOKENS";
     }
 
+    /**
+     * 拿到登录Token前缀key
+     * @return
+     */
+    public static String getLoginTokenPrefixKey()
+    {
+        return "TOUCAN_ADMIN_AUTH:LOGIN_TOKENS";
+    }
+
 
     /**
      * 登录token app键

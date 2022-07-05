@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service("adminLoginCacheRedisService")
@@ -48,4 +49,5 @@ public class AdminLoginCacheRedisServiceImpl implements AdminLoginCacheService {
         redisTemplate.expire(AdminAuthRedisKey.getLoginTokenGroupKey(adminId),
                 AdminAuthRedisKey.LOGIN_TIMEOUT_SECOND, TimeUnit.SECONDS);
     }
+
 }
