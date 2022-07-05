@@ -201,9 +201,9 @@
         table.on('tool(adminOnlineTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event == 'logout') {
-                layer.confirm('确定将'+obj.username+'退出登录?', function (index) {
+                layer.confirm('确定将'+data.username+'退出登录?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]/admin/online/logout/"+data.id,
+                        url:"[[@{/}]]admin/online/logout/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
