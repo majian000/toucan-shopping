@@ -128,7 +128,7 @@
           where id = #{id}
     </update>
 
-    <update id="deleteById" parameterType="java.lang.Integer">
+    <update id="deleteById" parameterType="java.lang.Long">
         update t_app set delete_status=1 where id = #{id}
     </update>
 
