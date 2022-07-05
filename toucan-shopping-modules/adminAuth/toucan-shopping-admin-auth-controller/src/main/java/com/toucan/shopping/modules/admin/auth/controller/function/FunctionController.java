@@ -471,36 +471,68 @@ public class FunctionController {
                 }
                 resultObjectVO.setData(functionTreeVOS);
             }else if(queryPageInfo.getPid()==null) { //页面初始化
-                //当前用户下关联所有应用
-                List<AdminAppVO> adminApps = adminAppService.findAppListByAdminAppEntity(queryAdminApp);
-                if (!CollectionUtils.isEmpty(adminApps)) {
-                    List<Object> appFunctionTreeVOS = new ArrayList<Object>();
-                    //虚拟一个应用节点的ID
-                    long rootNodeId = -1L;
-                    for (AdminAppVO adminAppVO : adminApps) {
+                if(StringUtils.isEmpty(queryAdminApp.getAppCode()))
+                {
+                    //从权限中台列表进入,查询当前所有应用
+                    App query=new App();
+                    query.setEnableStatus((short)1);
+                    List<App> apps = appService.findListByEntity(query);
+                    if (!CollectionUtils.isEmpty(apps)) {
+                        List<Object> appFunctionTreeVOS = new ArrayList<Object>();
+                        //虚拟一个应用节点的ID
+                        long rootNodeId = -1L;
+                        for (App app : apps) {
+                            AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
+                            appFunctionTreeVO.setId(rootNodeId);
+                            appFunctionTreeVO.setAppCode(app.getCode());
+                            appFunctionTreeVO.setName(app.getCode() + " " + app.getName());
+                            appFunctionTreeVO.setPid(-1L);
+                            appFunctionTreeVO.setEnableStatus((short) 1);
+
+                            //设置是否有子节点
+                            Function queryFunction = new Function();
+                            queryFunction.setAppCode(app.getCode());
+                            queryFunction.setPid(-1L);
+                            List<Function> functions = functionService.findListByEntity(queryFunction);
+                            if(!CollectionUtils.isEmpty(functions))
+                            {
+                                appFunctionTreeVO.setHaveChild(true);
+                            }
+
+                            appFunctionTreeVOS.add(appFunctionTreeVO);
+
+                            rootNodeId -= 1;
+
+                        }
+                        resultObjectVO.setData(appFunctionTreeVOS);
+                    }
+                }else {
+                    //当前用户下关联那个应用
+                    App app = appService.findByAppCode(queryAdminApp.getAppCode());
+                    if (app!=null) {
+                        List<Object> appFunctionTreeVOS = new ArrayList<Object>();
+                        //虚拟一个应用节点的ID
+                        long rootNodeId = -1L;
                         AppFunctionTreeVO appFunctionTreeVO = new AppFunctionTreeVO();
                         appFunctionTreeVO.setId(rootNodeId);
-                        appFunctionTreeVO.setAppCode(adminAppVO.getAppCode());
-                        appFunctionTreeVO.setName(adminAppVO.getAppCode() + " " + adminAppVO.getName());
+                        appFunctionTreeVO.setAppCode(app.getCode());
+                        appFunctionTreeVO.setName(app.getCode() + " " + app.getName());
                         appFunctionTreeVO.setPid(-1L);
                         appFunctionTreeVO.setEnableStatus((short) 1);
 
                         //设置是否有子节点
                         Function queryFunction = new Function();
-                        queryFunction.setAppCode(adminAppVO.getAppCode());
+                        queryFunction.setAppCode(app.getCode());
                         queryFunction.setPid(-1L);
                         List<Function> functions = functionService.findListByEntity(queryFunction);
-                        if(!CollectionUtils.isEmpty(functions))
-                        {
+                        if (!CollectionUtils.isEmpty(functions)) {
                             appFunctionTreeVO.setHaveChild(true);
                         }
 
                         appFunctionTreeVOS.add(appFunctionTreeVO);
 
-                        rootNodeId -= 1;
-
+                        resultObjectVO.setData(appFunctionTreeVOS);
                     }
-                    resultObjectVO.setData(appFunctionTreeVOS);
                 }
             }else{
                 //查询查询这个APP下的功能项列表
