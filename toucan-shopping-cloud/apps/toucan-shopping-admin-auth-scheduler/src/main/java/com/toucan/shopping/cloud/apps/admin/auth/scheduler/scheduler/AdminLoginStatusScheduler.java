@@ -61,9 +61,9 @@ public class AdminLoginStatusScheduler {
 
 
     /**
-     * 15分钟刷新一次
+     * 10分钟刷新一次
      */
-    @Scheduled(cron = "0 0/2 * * * ? ")
+    @Scheduled(cron = "0 0/10 * * * ? ")
     public void refershForDB() {
         if (toucan.getAdminAuthScheduler().isLoopLoginCache()) {
             logger.info("刷新登录用户状态(从数据库) 开始.......");
