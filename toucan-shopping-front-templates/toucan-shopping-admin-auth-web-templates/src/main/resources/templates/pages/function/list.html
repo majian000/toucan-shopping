@@ -297,24 +297,43 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm("确定删除"+data.name+"?", function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]function/delete/"+data.id,
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        success:function(data){
-                            layer.msg(data.msg);
+                if(data.id>0) {
+                    layer.confirm("确定删除" + data.name + "?", function (index) {
+                        $.ajax({
+                            url: "[[@{/}]]function/delete/" + data.id,
+                            contentType: "application/json; charset=utf-8",
+                            type: 'DELETE',
+                            success: function (data) {
+                                layer.msg(data.msg);
 
-                            //执行搜索重载
-                            loadTreeTable();
+                                //执行搜索重载
+                                loadTreeTable();
 
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
+                            },
+                            complete: function (data) {
+                                layer.close(index);
+                            }
+                        });
                     });
-                });
+                }else{
+                    layer.confirm("确定删除应用" + data.name + "下所有功能项节点?", function (index) {
+                        $.ajax({
+                            url: "[[@{/}]]function/delete/by/app/code/" + data.appCode,
+                            contentType: "application/json; charset=utf-8",
+                            type: 'DELETE',
+                            success: function (data) {
+                                layer.msg(data.msg);
+
+                                //执行搜索重载
+                                loadTreeTable();
+
+                            },
+                            complete: function (data) {
+                                layer.close(index);
+                            }
+                        });
+                    });
+                }
             }
         });
 

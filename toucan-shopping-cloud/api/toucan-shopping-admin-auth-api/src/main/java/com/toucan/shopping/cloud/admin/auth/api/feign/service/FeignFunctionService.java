@@ -63,6 +63,15 @@ public interface FeignFunctionService {
 
 
     /**
+     * 删除指定功能项
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/by/app/code",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo);
+
+
+    /**
      * 根据ID查询
      * @param signHeader
      * @param requestVo

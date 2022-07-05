@@ -299,6 +299,44 @@ public class FunctionController extends UIController {
 
 
     /**
+     * 清空该应用下所有功能项
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/delete/by/app/code/{appCode}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByAppCode(HttpServletRequest request,  @PathVariable String appCode)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(StringUtils.isEmpty(appCode))
+            {
+                resultObjectVO.setMsg("请传入应用编码");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
+            Function entity =new Function();
+            entity.setAppCode(appCode);
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+
+            String entityJson = JSONObject.toJSONString(entity);
+            RequestJsonVO requestVo = new RequestJsonVO();
+            requestVo.setAppCode(appCode);
+            requestVo.setEntityJson(entityJson);
+            resultObjectVO = feignFunctionService.deleteByAppCode(requestVo);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+    /**
      * 删除应用
      * @param request
      * @return

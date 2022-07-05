@@ -710,6 +710,83 @@ public class FunctionController {
     }
 
 
+
+
+    /**
+     * 清空该应用下所有功能项
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/delete/by/app/code",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteByAppCode(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Function entity = JSONObject.parseObject(requestVo.getEntityJson(),Function.class);
+            if(entity.getAppCode()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到功能项ID");
+                return resultObjectVO;
+            }
+
+
+            List<FunctionVO> chidlren =functionService.queryListByAppCode(entity.getAppCode());
+
+            for(Function f:chidlren) {
+                //删除当前功能项
+                int row = functionService.deleteById(f.getId());
+                if (row < 1) {
+                    resultObjectVO.setCode(ResultVO.FAILD);
+                    resultObjectVO.setMsg("请重试!");
+                    continue;
+                }
+
+                //删除功能项下所有角色关联
+                roleFunctionService.deleteByFunctionId(f.getFunctionId());
+
+
+
+                try {
+                    FunctionCacheService functionCacheService = AdminAuthCacheHelper.getFunctionCacheService();
+                    RoleFunctionCacheService roleFunctionCacheService = AdminAuthCacheHelper.getRoleFunctionCacheService();
+                    //刷新缓存
+                    if(functionCacheService!=null) {
+                        functionCacheService.deleteById(String.valueOf(f.getId()));
+                        List<String> deleteFaildIdList = new ArrayList<String>();
+                        if(roleFunctionCacheService!=null) {
+                            roleFunctionCacheService.deleteByFunctionId(f.getFunctionId(), deleteFaildIdList);
+                        }
+                    }
+                }catch(Exception e)
+                {
+                    resultObjectVO.setCode(ResultVO.SUCCESS);
+                    resultObjectVO.setMsg("更新缓存出现异常");
+                    logger.warn(e.getMessage(),e);
+                }
+
+            }
+
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
     /**
      * 批量删除功能项
      * @param requestVo
