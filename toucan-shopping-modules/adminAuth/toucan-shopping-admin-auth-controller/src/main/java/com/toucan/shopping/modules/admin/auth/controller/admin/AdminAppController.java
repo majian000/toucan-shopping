@@ -399,7 +399,13 @@ public class AdminAppController {
                 for(AdminAppVO adminAppVO:adminApps) {
                     if(adminAppVO!=null) {
                         try {
-                            adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus());
+                            if(adminAppVO.getLoginStatus().intValue()==0)
+                            {
+                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),null);
+                            }else{
+                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),new Date());
+                            }
+
                         }catch(Exception e)
                         {
                             logger.warn(e.getMessage(),e);

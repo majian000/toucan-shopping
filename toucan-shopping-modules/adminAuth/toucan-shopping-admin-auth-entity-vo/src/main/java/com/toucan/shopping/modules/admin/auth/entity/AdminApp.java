@@ -67,7 +67,7 @@ public class AdminApp {
 
 
     /**
-     * 登录状态(0未登录 1登陆中)
+     * 登录状态(0:离线 1:在线)
      */
     private Short loginStatus;
 
