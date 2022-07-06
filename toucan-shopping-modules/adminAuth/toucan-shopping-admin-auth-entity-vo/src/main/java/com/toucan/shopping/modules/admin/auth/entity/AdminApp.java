@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -30,6 +31,8 @@ public class AdminApp {
     /**
      * 创建时间
      */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate;
 
 
@@ -44,6 +47,12 @@ public class AdminApp {
     private String createAdminId;
 
 
+    /**
+     * 登录时间
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date loginDate;
 
 
     /**
@@ -61,5 +70,7 @@ public class AdminApp {
      * 登录状态(0未登录 1登陆中)
      */
     private Short loginStatus;
+
+
 
 }

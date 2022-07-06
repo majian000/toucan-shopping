@@ -30,7 +30,8 @@
         saa.create_date,
         saa.delete_status,
         saa.create_admin_id,
-        saa.login_status
+        saa.login_status,
+        saa.login_date
     </sql>
 
 
