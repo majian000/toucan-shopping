@@ -334,7 +334,7 @@ public class AdminController {
             AdminAuthCacheHelper.getAdminLoginCacheService().loginToken(admin.getAdminId(),requestVo.getAppCode(),loginToken);
 
             //设置登录状态
-            adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1);
+            adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1,new Date());
             resultObjectVO.setData(admin);
 
         }catch(Exception e)
@@ -391,7 +391,7 @@ public class AdminController {
                     AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(admin.getAdminId(),requestVo.getAppCode());
 
                     //更新登录状态
-                    adminAppService.updateLoginStatus(admin.getAdminId(),requestVo.getAppCode(),(short)0);
+                    adminAppService.updateLoginStatus(admin.getAdminId(),requestVo.getAppCode(),(short)0,null);
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                 }

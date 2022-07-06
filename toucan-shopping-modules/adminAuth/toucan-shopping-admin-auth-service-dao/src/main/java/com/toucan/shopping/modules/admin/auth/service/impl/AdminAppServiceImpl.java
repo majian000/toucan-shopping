@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -53,6 +54,11 @@ public class AdminAppServiceImpl implements AdminAppService {
     @Override
     public int updateLoginStatus(String adminId, String appCode, Short loginStatus) {
         return adminAppMapper.updateLoginStatus(adminId,appCode,loginStatus);
+    }
+
+    @Override
+    public int updateLoginStatus(String adminId, String appCode, Short loginStatus, Date loginDate) {
+        return adminAppMapper.updateLoginStatusAndLoginDate(adminId,appCode,loginStatus,loginDate);
     }
 
     @Override

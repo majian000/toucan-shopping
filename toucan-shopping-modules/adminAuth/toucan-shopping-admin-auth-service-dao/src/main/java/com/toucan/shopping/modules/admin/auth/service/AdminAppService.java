@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminAppVO;
 import com.toucan.shopping.modules.admin.auth.vo.AppLoginUserVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AdminAppService {
@@ -90,6 +91,15 @@ public interface AdminAppService {
      * @return
      */
     int updateLoginStatus(String adminId,String appCode,Short loginStatus);
+
+    /**
+     * 更新登录状态
+     * @param adminId
+     * @param appCode
+     * @param loginStatus
+     * @return
+     */
+    int updateLoginStatus(String adminId, String appCode, Short loginStatus, Date loginDate);
 
 
     /**

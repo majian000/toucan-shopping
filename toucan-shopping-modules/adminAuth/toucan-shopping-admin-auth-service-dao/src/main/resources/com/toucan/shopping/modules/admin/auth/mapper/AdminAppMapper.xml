@@ -10,6 +10,7 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="login_status" jdbcType="INTEGER" property="loginStatus" />
+        <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
 
     </resultMap>
 
@@ -141,6 +142,11 @@
 
     <update id="updateLoginStatus">
         update t_sa_admin_app set login_status=#{loginStatus} where admin_id = #{adminId} and app_code = #{appCode} and delete_status=0
+    </update>
+
+
+    <update id="updateLoginStatusAndLoginDate">
+        update t_sa_admin_app set login_status=#{loginStatus},login_date=#{loginDate} where admin_id = #{adminId} and app_code = #{appCode} and delete_status=0
     </update>
 
 
