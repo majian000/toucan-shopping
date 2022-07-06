@@ -65,9 +65,9 @@ public class AdminLoginStatusScheduler {
      * 10分钟刷新一次
      */
     @Scheduled(cron = "0 0/10 * * * ? ")
-    public void refershForDB() {
+    public void refersh() {
         if (toucan.getAdminAuthScheduler().isLoopLoginCache()) {
-            logger.info("刷新登录用户状态(从数据库) 开始.......");
+            logger.info("刷新登录用户状态 开始.......");
             try {
                 int page = 1;
                 int limit = 500;
@@ -117,7 +117,7 @@ public class AdminLoginStatusScheduler {
             {
                 logger.error(e.getMessage(),e);
             }
-            logger.info("刷新登录用户状态(从数据库) 结束.......");
+            logger.info("刷新登录用户状态 结束.......");
         }
     }
 }
