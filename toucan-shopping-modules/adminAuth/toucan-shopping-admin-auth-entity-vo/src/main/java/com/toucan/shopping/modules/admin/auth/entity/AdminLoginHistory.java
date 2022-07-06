@@ -9,24 +9,38 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 用户应用关联表
+ * 账号登录历史
  */
 @Data
-public class AdminApp {
-
+public class AdminLoginHistory {
+    /**
+     * 主键 雪花算法生成
+     */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
     /**
-     * 管理员ID
+     * 账号ID
      */
     private String adminId;
 
     /**
-     * 所属应用
+     * 应用编码
      */
     private String appCode;
+
+    /**
+     * 登录IP地址
+     */
+    private String ip;
+
+
+    /**
+     * 登录源头 1:PC
+     */
+    private Integer loginSrcType;
+
 
     /**
      * 创建时间
@@ -40,37 +54,5 @@ public class AdminApp {
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
-
-    /**
-     * 创建人
-     */
-    private String createAdminId;
-
-
-    /**
-     * 登录状态(0:离线 1:在线)
-     */
-    private Short loginStatus;
-
-    /**
-     * 登录时间
-     */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date loginDate;
-
-
-    /**
-     * 保存状态,在批量保存的时候返回哪些保存失败了
-     */
-    public int success=0;
-
-    /**
-     * 状态消息 返回为什么失败
-     */
-    private String msg;
-
-
-
 
 }

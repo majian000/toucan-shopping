@@ -8,11 +8,9 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.cloud.apps.admin.auth.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.modules.admin.auth.entity.Admin;
+import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.GlobalUUID;
-import com.toucan.shopping.modules.common.util.SignUtil;
-import com.toucan.shopping.modules.common.util.VerifyCodeUtil;
+import com.toucan.shopping.modules.common.util.*;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
@@ -66,7 +64,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/submit",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO login(@RequestHeader("Cookie") String cookie,HttpServletResponse response, @RequestBody AdminVO adminVo)
+    public ResultObjectVO login(@RequestHeader("Cookie") String cookie,HttpServletRequest request,HttpServletResponse response, @RequestBody AdminVO adminVo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -107,12 +105,15 @@ public class LoginController {
 
             //删除缓存中验证码
             stringRedisTemplate.delete(vcodeRedisKey);
-            String entityJson = JSONObject.toJSONString(adminVo);
-            RequestJsonVO requestVo = new RequestJsonVO();
-            requestVo.setAppCode(appCode);
-            requestVo.setSign(SignUtil.sign(appCode, entityJson));
-            requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignAdminService.login(requestVo.getSign(),requestVo);
+            adminVo.setLoginSrcType(1);
+            try {
+                adminVo.setLoginIp(IPUtil.getRemoteAddr(request));
+            }catch(Exception e)
+            {
+                logger.warn(e.getMessage(),e);
+            }
+            RequestJsonVO requestVo = RequestJsonVOGenerator.generator(appCode,adminVo);
+            resultObjectVO = feignAdminService.login(requestVo.sign(),requestVo);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)

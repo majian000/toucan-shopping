@@ -10,6 +10,8 @@ import com.toucan.shopping.modules.admin.auth.helper.AdminAuthCacheHelper;
 import com.toucan.shopping.modules.admin.auth.page.AdminPageInfo;
 import com.toucan.shopping.modules.admin.auth.redis.AdminAuthRedisKey;
 import com.toucan.shopping.modules.admin.auth.service.*;
+import com.toucan.shopping.modules.admin.auth.service.impl.AdminLoginHistoryAsyncService;
+import com.toucan.shopping.modules.admin.auth.service.impl.AdminLoginHistoryServiceImpl;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
@@ -58,6 +60,9 @@ public class AdminController {
 
     @Autowired
     private AppService appService;
+
+    @Autowired
+    private AdminLoginHistoryAsyncService adminLoginHistoryAsyncService;
 
     /**
      * 保存管理员账户
@@ -260,7 +265,7 @@ public class AdminController {
 
         try {
             String entityJson = requestVo.getEntityJson();
-            Admin admin =JSONObject.parseObject(entityJson,Admin.class);
+            AdminVO admin =JSONObject.parseObject(entityJson,AdminVO.class);
             if(StringUtils.isEmpty(admin.getUsername()))
             {
                 resultObjectVO.setCode(AdminResultVO.NOT_FOUND_USERNAME);
@@ -336,6 +341,9 @@ public class AdminController {
             //设置登录状态
             adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1,new Date());
             resultObjectVO.setData(admin);
+
+            //保存登录日志
+            adminLoginHistoryAsyncService.asyncSave(adminPersistence.get(0).getAdminId(),requestVo.getAppCode(),admin.getLoginIp(),admin.getLoginSrcType());
 
         }catch(Exception e)
         {

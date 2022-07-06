@@ -30,4 +30,15 @@ public class AdminVO extends Admin {
      */
     private List<String> appCodes;
 
+    /**
+     * 登录IP
+     */
+    private String loginIp;
+
+
+    /**
+     * 登录源头 1:PC
+     */
+    private Integer loginSrcType;
+
 }

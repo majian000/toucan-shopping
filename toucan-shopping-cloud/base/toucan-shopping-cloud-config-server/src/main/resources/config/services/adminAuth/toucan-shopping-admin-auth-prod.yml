@@ -15,6 +15,14 @@ spring:
   mvc: #启动初始化servletdispatcher
     servlet:
       load-on-startup: 100
+  task:
+    execution:
+      pool:
+        core-threads: 5 #核心线程
+        max-threads: 10 #最大线程
+        queue-capacity: 150 #缓冲队列
+        keep-alive: 20 #允许空闲时间(秒)
+        name-prefix: async-thread-pool
 eureka:
   instance:
     lease-expiration-duration-in-seconds: 10 #10秒没发心跳将剔除
