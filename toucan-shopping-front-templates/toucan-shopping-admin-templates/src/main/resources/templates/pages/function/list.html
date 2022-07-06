@@ -287,6 +287,11 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
+                if(data.type==null)
+                {
+                    layer.msg("不能删除该节点");
+                    return false;
+                }
                 layer.confirm("确定删除"+data.name+"?", function (index) {
                     $.ajax({
                         url:"[[@{/}]]function/delete/"+data.id,
