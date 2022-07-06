@@ -97,10 +97,8 @@ public class AdminLoginStatusScheduler {
                                     if(loginTokenObject==null)
                                     {
                                         offlineAdminApp.setLoginStatus((short)0);
-                                        offlineAdminApp.setLoginDate(null);
                                     }else{
                                         offlineAdminApp.setLoginStatus((short)1);
-                                        offlineAdminApp.setLoginDate(new Date());
                                     }
                                     offlineAdminApps.add(offlineAdminApp);
                                 }

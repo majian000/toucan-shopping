@@ -92,14 +92,6 @@ public interface AdminAppService {
      */
     int updateLoginStatus(String adminId,String appCode,Short loginStatus);
 
-    /**
-     * 更新登录状态
-     * @param adminId
-     * @param appCode
-     * @param loginStatus
-     * @return
-     */
-    int updateLoginStatus(String adminId, String appCode, Short loginStatus, Date loginDate);
 
 
     /**

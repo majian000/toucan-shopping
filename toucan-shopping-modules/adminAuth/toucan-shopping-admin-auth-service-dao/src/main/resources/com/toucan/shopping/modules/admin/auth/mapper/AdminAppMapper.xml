@@ -10,7 +10,6 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="login_status" jdbcType="INTEGER" property="loginStatus" />
-        <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
 
     </resultMap>
 
@@ -30,10 +29,19 @@
         saa.create_date,
         saa.delete_status,
         saa.create_admin_id,
-        saa.login_status,
-        saa.login_date
+        saa.login_status
     </sql>
 
+
+    <sql id="queryOnlineListColumns">
+        max(saa.id) as id,
+        max(saa.admin_id) as admin_id,
+        max(saa.app_code) as app_code,
+        max(saa.create_date) as  create_date,
+        max(saa.delete_status) as delete_status,
+        max(saa.create_admin_id) as create_admin_id,
+        max(saa.login_status) as login_status
+    </sql>
 
 
     <sql id="queryListPageWhere">
@@ -146,10 +154,6 @@
     </update>
 
 
-    <update id="updateLoginStatusAndLoginDate">
-        update t_sa_admin_app set login_status=#{loginStatus},login_date=#{loginDate} where admin_id = #{adminId} and app_code = #{appCode} and delete_status=0
-    </update>
-
 
     <select id="queryListPage" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
         select <include refid="queryColumns" /> from t_sa_admin_app saa
@@ -173,26 +177,32 @@
 
 
     <select id="queryOnlineListPage" resultMap="adminAppVOMap" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
-        select <include refid="queryColumns" />,ta.name as appName,tsa.admin_id as adminId,tsa.username   from t_sa_admin_app saa
+        select <include refid="queryOnlineListColumns" />,max(ta.name) as appName,max(tsa.admin_id) as adminId,max(tsa.username) as username,max(talh.create_date) as loginDate
+           from t_sa_admin_app saa
         left join t_app ta on saa.app_code=ta.code  and ta.delete_status=0
         left join t_sa_admin tsa on saa.admin_id = tsa.admin_id and tsa.delete_status=0
+        left join t_sa_admin_login_history talh on talh.admin_id = saa.admin_id and talh.app_code=saa.app_code and talh.delete_status=0
         <where>
             1=1
             <include refid="queryOnlineListPageWhere" />
         </where>
+        group by saa.app_code,saa.admin_id
         limit #{start},#{limit}
     </select>
 
 
     <select id="queryOnlineListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.admin.auth.page.AdminAppPageInfo">
         select count(*) from (
-            select <include refid="queryColumns" />,ta.name as appName,tsa.admin_id as adminId,tsa.username   from t_sa_admin_app saa
+            select <include refid="queryOnlineListColumns" />,max(ta.name) as appName,max(tsa.admin_id) as adminId,max(tsa.username) as username,max(talh.create_date) as loginDate
+            from t_sa_admin_app saa
             left join t_app ta on saa.app_code=ta.code  and ta.delete_status=0
             left join t_sa_admin tsa on saa.admin_id = tsa.admin_id and tsa.delete_status=0
+            left join t_sa_admin_login_history talh on talh.admin_id = saa.admin_id and talh.app_code=saa.app_code and talh.delete_status=0
             <where>
                 1=1
                 <include refid="queryOnlineListPageWhere" />
             </where>
+            group by saa.app_code,saa.admin_id
         )ds
     </select>
 

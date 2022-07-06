@@ -142,14 +142,14 @@
                     {field: 'adminId',  title: '账号ID'},
                     {field: 'username',  title: '账号'},
                     {field: 'appName', title: '应用'},
-                    {field: 'loginStatus', title: '登录状态',
+                    {field: 'loginStatus', title: '当前状态',
                         templet: function (row) {
                             if(row.loginStatus == "1"){
                                 return "<a style='color:green'>在线</a>"
                             }
                             return "离线"
                         }},
-                    {field: 'loginDate',  title: '登录时间'},
+                    {field: 'loginDate',  title: '最后登录时间'},
                     {title: '操作', minWidth: 360, toolbar: '#adminOnlineTableBar', align: "center"}
                 ]
             ],

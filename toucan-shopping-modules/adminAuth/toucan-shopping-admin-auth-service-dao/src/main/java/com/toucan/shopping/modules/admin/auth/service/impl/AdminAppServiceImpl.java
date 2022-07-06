@@ -56,10 +56,6 @@ public class AdminAppServiceImpl implements AdminAppService {
         return adminAppMapper.updateLoginStatus(adminId,appCode,loginStatus);
     }
 
-    @Override
-    public int updateLoginStatus(String adminId, String appCode, Short loginStatus, Date loginDate) {
-        return adminAppMapper.updateLoginStatusAndLoginDate(adminId,appCode,loginStatus,loginDate);
-    }
 
     @Override
     public List<AppLoginUserVO> queryAppLoginUserCountList(AppLoginUserVO appLoginUserVO) {

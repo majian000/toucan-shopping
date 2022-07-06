@@ -122,15 +122,6 @@ public interface AdminAppMapper {
     int updateLoginStatus(String adminId,String appCode,Short loginStatus);
 
 
-    /**
-     * 更新登录状态
-     * @param adminId
-     * @param appCode
-     * @param loginStatus
-     * @param loginDate
-     * @return
-     */
-    int updateLoginStatusAndLoginDate(String adminId, String appCode, Short loginStatus, Date loginDate);
 
     /**
      * 查询应用登录用户数

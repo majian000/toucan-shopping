@@ -399,12 +399,7 @@ public class AdminAppController {
                 for(AdminAppVO adminAppVO:adminApps) {
                     if(adminAppVO!=null) {
                         try {
-                            if(adminAppVO.getLoginStatus().intValue()==0)
-                            {
-                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),adminAppVO.getLoginDate());
-                            }else{
-                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),adminAppVO.getLoginDate());
-                            }
+                            adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus());
 
                         }catch(Exception e)
                         {

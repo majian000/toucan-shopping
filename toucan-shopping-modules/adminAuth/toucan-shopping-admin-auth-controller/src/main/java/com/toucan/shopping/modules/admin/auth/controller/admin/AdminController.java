@@ -339,7 +339,7 @@ public class AdminController {
             AdminAuthCacheHelper.getAdminLoginCacheService().loginToken(admin.getAdminId(),requestVo.getAppCode(),loginToken);
 
             //设置登录状态
-            adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1,new Date());
+            adminAppService.updateLoginStatus(queryAdminApp.getAdminId(),queryAdminApp.getAppCode(),(short)1);
             resultObjectVO.setData(admin);
 
             //保存登录日志
@@ -399,7 +399,7 @@ public class AdminController {
                     AdminAuthCacheHelper.getAdminLoginCacheService().deleteLoginToken(admin.getAdminId(),requestVo.getAppCode());
 
                     //更新登录状态
-                    adminAppService.updateLoginStatus(admin.getAdminId(),requestVo.getAppCode(),(short)0,null);
+                    adminAppService.updateLoginStatus(admin.getAdminId(),requestVo.getAppCode(),(short)0);
                 }else{
                     resultObjectVO.setCode(ResultObjectVO.FAILD);
                 }
