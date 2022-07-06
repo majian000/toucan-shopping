@@ -23,6 +23,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,8 +97,10 @@ public class AdminLoginStatusScheduler {
                                     if(loginTokenObject==null)
                                     {
                                         offlineAdminApp.setLoginStatus((short)0);
+                                        offlineAdminApp.setLoginDate(null);
                                     }else{
                                         offlineAdminApp.setLoginStatus((short)1);
+                                        offlineAdminApp.setLoginDate(new Date());
                                     }
                                     offlineAdminApps.add(offlineAdminApp);
                                 }

@@ -401,9 +401,9 @@ public class AdminAppController {
                         try {
                             if(adminAppVO.getLoginStatus().intValue()==0)
                             {
-                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),null);
+                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),adminAppVO.getLoginDate());
                             }else{
-                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),new Date());
+                                adminAppService.updateLoginStatus(adminAppVO.getAdminId(), adminAppVO.getAppCode(), adminAppVO.getLoginStatus(),adminAppVO.getLoginDate());
                             }
 
                         }catch(Exception e)
