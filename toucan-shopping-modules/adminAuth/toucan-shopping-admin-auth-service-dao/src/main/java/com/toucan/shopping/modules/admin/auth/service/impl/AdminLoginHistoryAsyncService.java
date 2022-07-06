@@ -42,10 +42,10 @@ public class AdminLoginHistoryAsyncService {
         adminLoginHistory.setDeleteStatus((short)0);
 
         adminLoginHistoryService.save(adminLoginHistory);
-        for(int i=0;i<50000000;i++)
-        {
-            logger.info("测试打印 {}",i);
-        }
+//        for(int i=0;i<50000000;i++)
+//        {
+//            logger.info("测试打印 {}",i);
+//        }
     }
 
 }
