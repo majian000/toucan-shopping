@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.admin.auth.app.config;
 
 
+import com.toucan.shopping.modules.admin.auth.constant.LoginHistoryAsyncConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,7 @@ public class ThreadPoolTaskConfig {
     private String threadNamePrefix;
 
 
-    @Bean("taskExecutor")
+    @Bean(LoginHistoryAsyncConstant.DEFAULT_TASK_EXECUTE_NAME)
     public ThreadPoolTaskExecutor taskExecutor(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(corePoolSize);

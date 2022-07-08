@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.admin.auth.service.impl;
 
 
+import com.toucan.shopping.modules.admin.auth.constant.LoginHistoryAsyncConstant;
 import com.toucan.shopping.modules.admin.auth.entity.AdminLoginHistory;
 import com.toucan.shopping.modules.admin.auth.service.AdminLoginHistoryService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -28,7 +29,7 @@ public class AdminLoginHistoryAsyncService {
      * 保存登录历史
      * 异步调用
      */
-    @Async("taskExecutor")
+    @Async(LoginHistoryAsyncConstant.DEFAULT_TASK_EXECUTE_NAME)
     public void asyncSave(String adminId,String appCode,String ip,Integer loginSrcType)
     {
         logger.info("异步保存登录日志 adminId {} ",adminId);
