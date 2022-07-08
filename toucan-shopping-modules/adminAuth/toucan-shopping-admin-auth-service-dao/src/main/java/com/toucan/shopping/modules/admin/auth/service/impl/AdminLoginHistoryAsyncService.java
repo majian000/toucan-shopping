@@ -8,6 +8,8 @@ import com.toucan.shopping.modules.common.generator.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,7 @@ public class AdminLoginHistoryAsyncService {
      * 异步调用
      */
     @Async(LoginHistoryAsyncConstant.DEFAULT_TASK_EXECUTE_NAME)
+    @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 10000, multiplier = 1, maxDelay = 60000))
     public void asyncSave(String adminId,String appCode,String ip,Integer loginSrcType)
     {
         logger.info("异步保存登录日志 adminId {} ",adminId);
