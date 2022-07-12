@@ -37,3 +37,18 @@ function getPreviewType()
     }
     return 2;
 }
+
+
+/**
+ * 判断是skuId查询还是商品id查询
+ * @returns {number}
+ */
+function getShopProductPreviewType()
+{
+    var urlParam = window.location.href;
+    if(urlParam.indexOf("/pid/")!=-1)
+    {
+        return 1;
+    }
+    return 2;
+}

@@ -6,7 +6,7 @@ $(function(){
     tabsEvent();
     var id = getProductId();
     if(id!=null&&id!="") {
-        var type= getPreviewType();
+        var type= getShopProductPreviewType();
         var requestPath = basePath + "/api/product/detail";
         if(type==1)
         {
