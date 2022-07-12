@@ -37,6 +37,10 @@ public class ShoppingPC {
      */
     private String productApprovePreviewPage;
 
+    /**
+     * 商品详情页
+     */
+    private String productDetailPage;
 
 
 }

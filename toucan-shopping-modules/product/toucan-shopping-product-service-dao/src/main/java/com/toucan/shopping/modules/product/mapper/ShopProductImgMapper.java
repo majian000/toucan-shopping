@@ -22,5 +22,6 @@ public interface ShopProductImgMapper {
 
     int deleteByShopProductId(Long shopProductId);
 
+    List<ShopProductImg> queryListOrderByImgSortAsc(ShopProductImgVO queryModel);
 
 }

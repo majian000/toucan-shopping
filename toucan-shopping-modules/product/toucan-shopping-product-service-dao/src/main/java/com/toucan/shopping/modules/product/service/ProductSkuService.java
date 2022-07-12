@@ -16,12 +16,20 @@ public interface ProductSkuService {
 
 
 
+    ProductSkuVO queryVOById(Long id);
+
     /**
      * 查询列表页
      * @param queryPageInfo
      * @return
      */
     PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo);
+
+
+    List<ProductSkuVO> queryVOListByShopProductId(Long approveId);
+
+
+    ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
 
     /**
      * 保存sku

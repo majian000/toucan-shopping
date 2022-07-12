@@ -27,6 +27,12 @@ public class BasePathInterceptor implements HandlerInterceptor {
         {
             httpServletRequest.setAttribute("productApprovePreviewPage", toucan.getShoppingPC().getProductApprovePreviewPage());
         }
+        //商品详情页
+        if(toucan.getShoppingPC()!=null&&toucan.getShoppingPC().getProductDetailPage()!=null)
+        {
+            httpServletRequest.setAttribute("productDetailPage", toucan.getShoppingPC().getProductDetailPage());
+        }
+
         return true;
     }
 }

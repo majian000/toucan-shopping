@@ -28,12 +28,27 @@ public class ProductSkuServiceImpl implements ProductSkuService {
 
 
     @Override
+    public ProductSkuVO queryVOById(Long id) {
+        return productSkuMapper.queryVOById(id);
+    }
+
+    @Override
     public PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<ProductSkuVO> pageInfo = new PageInfo();
         pageInfo.setList(productSkuMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(productSkuMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
+    }
+
+    @Override
+    public List<ProductSkuVO> queryVOListByShopProductId(Long shopProductId) {
+        return productSkuMapper.queryVOListByShopProductId(shopProductId);
+    }
+
+    @Override
+    public ProductSkuVO queryFirstOneByShopProductId(Long shopProductId) {
+        return productSkuMapper.queryFirstOneByShopProductId(shopProductId);
     }
 
     @Transactional

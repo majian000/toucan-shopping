@@ -21,4 +21,7 @@ public interface ShopProductImgService {
 
     int deleteByShopProductId(Long shopProductId);
 
+
+    List<ShopProductImg> queryListOrderByImgSortAsc(ShopProductImgVO queryModel);
+
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +53,51 @@ public class ProductSkuVO  extends ProductSku {
     private Long brandId; //品牌ID
 
 
+
+
+    private String productAttributes; //这个商品所有属性
+
+
+
+    private String httpProductPreviewPath; //商品主图HTTP路径
+
+    /**
+     * 商品预览图路径
+     */
+    private List<String> previewPhotoPaths;
+
+
+    /**
+     * 商品预览图路径
+     */
+    private List<String> httpPreviewPhotoPaths;
+
+
+    /**
+     * SKU预览图路径
+     */
+    private List<String> httpSkuPreviewPhotoPaths;
+
+    /**
+     * 主图文件路径
+     */
+    private String mainPhotoFilePath;
+
+    /**
+     * 商品主图
+     */
+    private String httpMainPhotoFilePath;
+
+
+    /**
+     * 商品介绍
+     */
+    private ShopProductDescriptionVO shopProductDescriptionVO;
+
+    /**
+     * SKU列表
+     */
+    private List<ProductSkuVO> productSkuVOList;
 
 
 }

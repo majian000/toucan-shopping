@@ -77,4 +77,33 @@
 
 
 
+    <select id="queryListOrderByImgSortAsc" resultMap="shopProductImgMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductImgVO">
+        select t.* from t_shop_product_img t
+        <where>
+            1=1
+
+            <if test="id!=null  ">
+                and t.id=#{id}
+            </if>
+
+            <if test="shopProductId!=null  ">
+                and t.shop_product_id=#{shopProductId}
+            </if>
+
+
+            <if test="shopProductIdList!=null and shopProductIdList.size>0 ">
+                and t.shop_product_id in
+                <foreach item="item" index="index" collection="shopProductIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+            and t.delete_status = 0
+
+        </where>
+        order by t.img_sort asc
+    </select>
+
+
+
 </mapper>

@@ -146,10 +146,26 @@
     </select>
 
 
+    <select id="queryVOListByShopProductId" resultMap="productSkuVOMap" parameterType="java.lang.Long">
+        select * from t_product_sku where shop_product_id=#{shopProductId} and delete_status=0
+    </select>
+
 
     <update id="deleteByShopProductId">
         update t_product_sku  set delete_status=1 where shop_product_id=#{shopProductId}  and delete_status=0
     </update>
+
+
+
+    <select id="queryVOById" resultMap="productSkuVOMap" parameterType="java.lang.Long">
+        select * from t_product_sku where id=#{skuId} and delete_status=0 limit 0,1
+    </select>
+
+
+
+    <select id="queryFirstOneByShopProductId" resultMap="productSkuVOMap" parameterType="java.lang.Long">
+        select * from t_product_sku where shop_product_id=#{shopProductId}  and delete_status=0 order by create_date asc limit 0,1
+    </select>
 
 
 </mapper>

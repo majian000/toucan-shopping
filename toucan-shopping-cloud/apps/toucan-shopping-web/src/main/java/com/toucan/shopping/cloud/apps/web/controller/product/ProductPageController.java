@@ -51,4 +51,11 @@ public class ProductPageController extends BaseController {
     }
 
 
+
+    @RequestMapping("/detail/pid/{id}")
+    public String previewPageByProductApproveId(@PathVariable String id)
+    {
+        return "product/detail";
+    }
+
 }
