@@ -28,8 +28,8 @@ public class ProductSkuServiceImpl implements ProductSkuService {
 
 
     @Override
-    public ProductSkuVO queryVOById(Long id) {
-        return productSkuMapper.queryVOById(id);
+    public ProductSkuVO queryVOByIdAndShelves(Long id) {
+        return productSkuMapper.queryVOByIdAndShelves(id);
     }
 
     @Override
@@ -42,8 +42,8 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     }
 
     @Override
-    public List<ProductSkuVO> queryVOListByShopProductId(Long shopProductId) {
-        return productSkuMapper.queryVOListByShopProductId(shopProductId);
+    public List<ProductSkuVO> queryShelvesVOListByShopProductId(Long shopProductId) {
+        return productSkuMapper.queryShelvesVOListByShopProductId(shopProductId);
     }
 
     @Override

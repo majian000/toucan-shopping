@@ -16,7 +16,7 @@ public interface ProductSkuService {
 
 
 
-    ProductSkuVO queryVOById(Long id);
+    ProductSkuVO queryVOByIdAndShelves(Long id);
 
     /**
      * 查询列表页
@@ -26,7 +26,7 @@ public interface ProductSkuService {
     PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo);
 
 
-    List<ProductSkuVO> queryVOListByShopProductId(Long approveId);
+    List<ProductSkuVO> queryShelvesVOListByShopProductId(Long approveId);
 
 
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);

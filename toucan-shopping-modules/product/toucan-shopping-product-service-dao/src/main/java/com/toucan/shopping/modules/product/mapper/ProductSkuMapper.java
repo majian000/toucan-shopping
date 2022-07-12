@@ -24,12 +24,12 @@ public interface ProductSkuMapper {
 
     ProductSku queryByUuid(String uuid);
 
-    List<ProductSkuVO> queryVOListByShopProductId(Long shopProductId);
+    List<ProductSkuVO> queryShelvesVOListByShopProductId(Long shopProductId);
 
     int deleteByShopProductId(Long shopProductId);
 
 
-    ProductSkuVO queryVOById(Long id);
+    ProductSkuVO queryVOByIdAndShelves(Long id);
 
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
 

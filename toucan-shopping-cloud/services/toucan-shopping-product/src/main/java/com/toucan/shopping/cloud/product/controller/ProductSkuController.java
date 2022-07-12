@@ -90,7 +90,7 @@ public class ProductSkuController {
     private ProductSkuVO queryProductSkuByCacheOrDB(Long skuId) throws InvocationTargetException, IllegalAccessException {
         ProductSkuVO shopProductSkuVO = productSkuRedisService.queryProductSku(String.valueOf(skuId));
         if(shopProductSkuVO==null) { //查询数据库然后同步缓存
-            shopProductSkuVO = productSkuService.queryVOById(skuId);
+            shopProductSkuVO = productSkuService.queryVOByIdAndShelves(skuId); //查询已上架的SKU
 
             if(shopProductSkuVO!=null) { //如果数据库中这条记录没被删除,就刷新到缓存
                 ShopProductVO shopProductVO = shopProductService.findById(shopProductSkuVO.getShopProductId());
@@ -169,7 +169,7 @@ public class ProductSkuController {
                     }
 
                     //查询商品SKU列表
-                    shopProductSkuVO.setProductSkuVOList(productSkuService.queryVOListByShopProductId(shopProductVO.getId()));
+                    shopProductSkuVO.setProductSkuVOList(productSkuService.queryShelvesVOListByShopProductId(shopProductVO.getId()));
 
                     //刷新到缓存
                     productSkuRedisService.addToCache(shopProductSkuVO);

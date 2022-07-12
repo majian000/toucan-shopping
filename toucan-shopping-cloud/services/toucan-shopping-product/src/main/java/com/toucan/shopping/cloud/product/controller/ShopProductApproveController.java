@@ -1092,6 +1092,14 @@ public class ShopProductApproveController {
 
                         productSku.setShopProductId(shopProduct.getId());
                         productSku.setShopProductUuid(shopProduct.getUuid());
+
+                        //立即上架
+                        if(shopProductApprove.getShelvesStatus()!=null&&shopProductApprove.getShelvesStatus().intValue()==2)
+                        {
+                            productSku.setStatus((short)1);
+                        }else{
+                            productSku.setStatus((short)0);
+                        }
                         productSkus.add(productSku);
                     }
                 }
