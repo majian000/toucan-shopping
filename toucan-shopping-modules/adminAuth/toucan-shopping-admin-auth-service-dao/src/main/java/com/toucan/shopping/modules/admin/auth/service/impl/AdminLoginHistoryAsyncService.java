@@ -32,7 +32,7 @@ public class AdminLoginHistoryAsyncService {
      * 异步调用
      */
     @Async(LoginHistoryAsyncConstant.DEFAULT_TASK_EXECUTE_NAME)
-    @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 10000, multiplier = 1, maxDelay = 60000))
+    @Retryable(value = RuntimeException.class, maxAttempts = 3, backoff = @Backoff(delay = 10000, multiplier = 1, maxDelay = 60000))
     public void asyncSave(String adminId,String appCode,String ip,Integer loginSrcType)
     {
         logger.info("异步保存登录日志 adminId {} ",adminId);
