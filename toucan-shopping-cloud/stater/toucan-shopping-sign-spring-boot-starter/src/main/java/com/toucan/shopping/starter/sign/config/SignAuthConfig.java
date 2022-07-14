@@ -3,6 +3,7 @@ package com.toucan.shopping.starter.sign.config;
 import com.toucan.shopping.starter.sign.filter.RequestWrapperFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ import javax.servlet.Filter;
         name = "enabled",
         havingValue = "true"
 )
-@EnableEurekaClient
+@EnableDiscoveryClient
 public class SignAuthConfig {
 
     /**
