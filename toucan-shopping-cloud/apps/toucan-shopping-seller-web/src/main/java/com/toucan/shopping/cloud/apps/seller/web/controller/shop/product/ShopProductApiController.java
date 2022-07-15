@@ -207,17 +207,17 @@ public class ShopProductApiController extends BaseController {
     /**
      * 店铺商品 上架/下架
      *
-     * @param shopProductId
+     * @param shopProductVO
      * @return
      */
     @UserAuth
-    @RequestMapping(value = "/shelves/{shopProductId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/shelves", method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO shelves(HttpServletRequest request,@PathVariable Long shopProductId)
+    public ResultObjectVO shelves(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-            if(shopProductId==null)
+            if(shopProductVO==null||shopProductVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("商品ID不能为空");
@@ -233,8 +233,7 @@ public class ShopProductApiController extends BaseController {
             if(resultObjectVO.isSuccess()) {
                 if (resultObjectVO.getData() != null) {
                     SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
-                    ShopProductVO shopProductVO = new ShopProductVO();
-                    shopProductVO.setId(shopProductId);
+                    //设置店铺ID
                     shopProductVO.setShopId(sellerShopVORet.getId());
 
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);

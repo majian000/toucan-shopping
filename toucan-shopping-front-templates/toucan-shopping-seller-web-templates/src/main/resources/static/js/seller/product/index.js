@@ -74,9 +74,9 @@ function drawTable(pageResult)
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"previewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
             if(row.status==1)
             {
-                tableHtml+=     "                                &nbsp;<a href=\""+basePath+"/page/shop/product/shelves/"+row.id+"\" style=\"color:red\">下架</a>\n" ;
+                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:red;cursor: pointer;\">下架</a>\n" ;
             }else{
-                tableHtml+=     "                                &nbsp;<a href=\""+basePath+"/page/shop/product/shelves/"+row.id+"\" style=\"color:blue\">上架</a>\n" ;
+                tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
             tableHtml+=     "                                &nbsp;&nbsp;\n" ;
             tableHtml+=    "                            </div></td>\n" ;
@@ -99,6 +99,63 @@ function bindPreviewEvent()
 
         window.open(shoppingPcPath+productDetailPage+attrId);
     });
+
+    $(".shelvesBtn").unbind("click");
+    $(".shelvesBtn").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        var attrStatus = $(this).attr("attr-status");
+        var optText="";
+        if(attrStatus=="1")
+        {
+            optText="下架";
+        }else{
+            optText="上架";
+        }
+        layer.confirm("确定要"+optText+"?", {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index) {
+
+
+            $.ajax({
+                type: "POST",
+                url: basePath+"/api/shop/product/shelves",
+                contentType: "application/json;charset=utf-8",
+                data:  JSON.stringify({id:attrId}),
+                dataType: "json",
+                success: function (result) {
+                    if(result.code<=0)
+                    {
+                        $.message({
+                            message: "操作失败,请稍后重试",
+                            type: 'error'
+                        });
+                        return ;
+                    }
+
+                    $.message({
+                        message: "操作成功",
+                        type: 'success'
+                    });
+                },
+                error: function (result) {
+                    $.message({
+                        message: "操作失败,请稍后重试",
+                        type: 'error'
+                    });
+                },
+                complete:function()
+                {
+                    layer.close(index);
+                    $("#queryBtn").click();
+                }
+
+            });
+
+
+        });
+    });
+
 }
 
 
