@@ -54,7 +54,8 @@ function drawTable(pageResult)
     tableHtml+=" <tr class=\"tabTh\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:300px;\">商品名称</td>\n" +
-        "                            <td style=\"width:150px;\" >商品分类</td>\n" +
+        "                            <td style=\"width:75px;\" >商品分类</td>\n" +
+        "                            <td style=\"width:75px;\" >上架状态</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
         "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
@@ -67,6 +68,7 @@ function drawTable(pageResult)
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.categoryName+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.status==1?"<a style='color:green'>已上架</a>":"<a style='color:red'>已下架</a>")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">\n" ;
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"previewRow\" style=\"color:blue;cursor: pointer;\">商品预览</a>\n" ;
@@ -97,7 +99,7 @@ function bindPreviewEvent()
 function initPagination()
 {
 
-    $(".pageToolbar").html("<table id=\"productTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
+    $(".pageToolbar").html("<table id=\"productTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
         "                        <tbody id=\"productTableBody\">\n" +
         "                        </tbody>\n" +
         "                    </table>");

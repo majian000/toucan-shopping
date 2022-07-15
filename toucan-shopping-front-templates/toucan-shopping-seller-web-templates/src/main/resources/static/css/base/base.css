@@ -11,9 +11,9 @@ body{ font:12px/1.5 "微软雅黑", Arial, Helvetica, sans-serif; color:black; b
 img{border:0;vertical-align: middle;}
 .clear{clear:both;line-height:0;font-size:0;height:0}
 .clearfix:after{display:block;visibility:hidden;clear:both;height:0;content:"."}
-.w1200 { width:1200px; height:auto; display:table; margin:0 auto; position:relative; }
-.body_box { width:1200px; height:auto; display:table; padding-bottom:25px; margin:0 auto; }
-.right_content { width:975px; height:auto; display:table; float:right; }
+.w1200 { width:90%; height:auto; display:table; margin:0 auto; position:relative; }
+.body_box { width:90%; height:auto; display:table; padding-bottom:25px; margin:0 auto; }
+.right_content { width:80%; height:auto; display:table; padding-left:1%; }
 .right_bg { width:100%; height:auto; display:table; background:#fff; }
 .chec_text { color:#999; }
 .form_box { width:100%; height:auto; display:table; border-top:1px solid #eee; padding:30px 30px 20px 30px; }

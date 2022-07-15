@@ -171,7 +171,7 @@ function bindApproveDelEvent()
 function initPagination()
 {
 
-    $(".pageToolbar").html("<table id=\"productApproveTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
+    $(".pageToolbar").html("<table id=\"productApproveTable\" class=\"freezeTable\" border=\"1\" style=\"width:90%;\">\n" +
         "                        <tbody id=\"productApproveTableBody\">\n" +
         "                        </tbody>\n" +
         "                    </table>");
