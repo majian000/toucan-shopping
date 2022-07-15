@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.product.entity.ShopProductDescription;
 import com.toucan.shopping.modules.product.entity.ShopProductImg;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.redis.ProductApproveRedisLockKey;
+import com.toucan.shopping.modules.product.redis.ShopProductRedisLockKey;
 import com.toucan.shopping.modules.product.service.*;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -263,22 +264,17 @@ public class ShopProductController {
             resultObjectVO.setMsg("没有找到应用!");
             return resultObjectVO;
         }
-        String shopId ="";
+        String shopProductIdId ="";
         try {
             logger.info("商品上架/下架 {} ",requestJsonVO.getEntityJson());
             ShopProductVO queryShopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
-            if(queryShopProductVO.getShopId()==null) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空!");
-                return resultObjectVO;
-            }
             if(queryShopProductVO.getId()==null) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("商品ID不能为空!");
                 return resultObjectVO;
             }
-            shopId = String.valueOf(queryShopProductVO.getShopId());
-            skylarkLock.lock(ProductApproveRedisLockKey.getResaveProductLockKey(shopId), shopId);
+            shopProductIdId = String.valueOf(queryShopProductVO.getId());
+            skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(shopProductIdId), shopProductIdId);
 
             ShopProductVO shopProductVO = shopProductService.findById(queryShopProductVO.getId());
             if(shopProductVO==null)
@@ -304,7 +300,7 @@ public class ShopProductController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("修改失败");
         }finally{
-            skylarkLock.unLock(ProductApproveRedisLockKey.getResaveProductLockKey(shopId), shopId);
+            skylarkLock.unLock(ShopProductRedisLockKey.getResaveProductLockKey(shopProductIdId), shopProductIdId);
         }
         return resultObjectVO;
     }

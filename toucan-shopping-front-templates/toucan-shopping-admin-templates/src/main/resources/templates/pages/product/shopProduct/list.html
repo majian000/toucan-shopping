@@ -464,7 +464,7 @@
             }
             layer.confirm("确定要【"+statusValue+"】\""+row.name+"\"?", function (index) {
                 $.ajax({
-                    url:"[[@{/}]]shopProduct/shelves",
+                    url:"[[@{/}]]shop/product/shelves",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
                     data:{id:row.id,shopId:row.shopId},

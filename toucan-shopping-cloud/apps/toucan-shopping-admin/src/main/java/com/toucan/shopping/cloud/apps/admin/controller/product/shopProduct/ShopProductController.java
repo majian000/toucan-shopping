@@ -792,7 +792,7 @@ public class ShopProductController extends UIController {
      * @param shopProductVO
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/shelves",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO shelves(HttpServletRequest request, ShopProductVO shopProductVO)
@@ -803,12 +803,6 @@ public class ShopProductController extends UIController {
             {
                 resultObjectVO.setCode(TableVO.FAILD);
                 resultObjectVO.setMsg("商品ID不能为空");
-                return resultObjectVO;
-            }
-            if(shopProductVO.getShopId()==null)
-            {
-                resultObjectVO.setCode(TableVO.FAILD);
-                resultObjectVO.setMsg("店铺ID不能为空");
                 return resultObjectVO;
             }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
