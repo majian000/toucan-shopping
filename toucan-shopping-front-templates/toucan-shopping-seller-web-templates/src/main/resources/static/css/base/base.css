@@ -118,12 +118,12 @@ img{border:0;vertical-align: middle;}
 .right_content .bond_box .brand_bond .amount span,.right_content .bond_box .activity_bond .amount span { font-size:16px; margin-right:5px; }
 .right_content .bond_box .brand_bond .amount b,.right_content .bond_box .activity_bond .amount b { font-size:34px; }
 
-.index_body_info { width:975px; height:auto; display:table; }
+.index_body_info { width:100%; height:auto; display:table; }
 
 /*订单提醒*/
-.index_por_info { width:722px; height:auto; display:table; float:left; }
-.index_por_info .order_icon_box { width:722px; height:auto; display:table; padding-bottom:20px; }
-.index_por_info .order_icon_box ul li { width:97px; height:97px; float:left; margin-left:20px; }
+.index_por_info { width:80%; height:auto; display:table; float:left; }
+.index_por_info .order_icon_box { width:100%; height:auto; display:table; padding-bottom:20px; }
+.index_por_info .order_icon_box ul li { width:97px; height:97px; float:left; margin-left:3%; }
 .index_por_info .order_icon_box ul li a { width:97px; height:97px; border:1px solid #eee; display:block; border-radius:3px; }
 .index_por_info .order_icon_box ul li a:hover { background:#cd0035; border:1px solid #cd0035; color:#fff; }
 .index_por_info .order_icon_box ul li i { width:100%; height:60px; line-height:78px; font-size:32px; text-align:center; display:block; overflow:hidden; position:relative; }
@@ -132,7 +132,7 @@ img{border:0;vertical-align: middle;}
 .index_por_info .order_icon_box ul li span { width:100%; height:37px; text-align:center; display:block; }
 
 /*最新审核产品*/
-.to_new_product { width:722px; height:auto; display:table; padding-bottom:20px; padding-left:20px; }
+.to_new_product { width:100%; height:auto; display:table; padding-bottom:20px; padding-left:20px; }
 .to_new_product ul li { width:227px; padding:10px; height:auto; display:table; float:left; border-left:1px solid #eee; border-top:1px solid #eee; border-bottom:1px solid #eee; }
 .to_new_product ul li .pic_box { width:207px; height:207px; display:block; position:relative; overflow:hidden; background:#000; }
 .to_new_product ul li .pic_box .btn { bottom:-36px; left:50%; margin-left:-49px; position:absolute; padding:.2rem 1.4rem; }
