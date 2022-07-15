@@ -467,7 +467,7 @@
                     url:"[[@{/}]]product/shopProduct/shelves",
                     contentType: "application/json; charset=utf-8",
                     type:'POST',
-                    data:JSON.stringify({id:row.id}),
+                    data:JSON.stringify({id:row.id,shopId:row.shopId}),
                     success:function(data){
                         layer.msg(data.msg);
 

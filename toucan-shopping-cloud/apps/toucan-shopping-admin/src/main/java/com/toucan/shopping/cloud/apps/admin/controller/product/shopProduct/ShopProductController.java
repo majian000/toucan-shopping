@@ -805,6 +805,12 @@ public class ShopProductController extends UIController {
                 resultObjectVO.setMsg("商品ID不能为空");
                 return resultObjectVO;
             }
+            if(shopProductVO.getShopId()==null)
+            {
+                resultObjectVO.setCode(TableVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空");
+                return resultObjectVO;
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
             resultObjectVO = feignShopProductService.shelves(requestJsonVO);
         }catch(Exception e)

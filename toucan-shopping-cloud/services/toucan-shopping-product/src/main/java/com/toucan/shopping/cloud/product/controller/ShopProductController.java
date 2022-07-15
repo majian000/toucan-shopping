@@ -273,6 +273,11 @@ public class ShopProductController {
                 resultObjectVO.setMsg("商品ID不能为空!");
                 return resultObjectVO;
             }
+            if(queryShopProductVO.getShopId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
             shopProductIdId = String.valueOf(queryShopProductVO.getId());
             skylarkLock.lock(ShopProductRedisLockKey.getResaveProductLockKey(shopProductIdId), shopProductIdId);
 

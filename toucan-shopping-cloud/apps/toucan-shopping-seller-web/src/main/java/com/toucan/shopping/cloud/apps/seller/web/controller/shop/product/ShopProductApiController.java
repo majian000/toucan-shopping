@@ -83,18 +83,16 @@ public class ShopProductApiController extends BaseController {
     private ToucanStringRedisService toucanStringRedisService;
 
 
-    private String[] imageExtScope = new String[]{".JPG",".JPEG",".PNG"};
-
-
+    private String[] imageExtScope = new String[]{".JPG", ".JPEG", ".PNG"};
 
 
     /**
      * 查询类别信息
+     *
      * @param list
      * @param categoryIds
      */
-    void queryCategory(List<ShopProductVO> list,Long[] categoryIds)
-    {
+    void queryCategory(List<ShopProductVO> list, Long[] categoryIds) {
         try {
             //查询类别名称
             CategoryVO queryCategoryVO = new CategoryVO();
@@ -115,34 +113,30 @@ public class ShopProductApiController extends BaseController {
                     }
                 }
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
         }
     }
 
 
-
     /**
      * 查询列表
+     *
      * @param pageInfo
      * @return
      */
     @UserAuth
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO list(HttpServletRequest httpServletRequest,@RequestBody ShopProductPageInfo pageInfo)
-    {
+    public ResultObjectVO list(HttpServletRequest httpServletRequest, @RequestBody ShopProductPageInfo pageInfo) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try{
-            if(pageInfo==null)
-            {
+        try {
+            if (pageInfo == null) {
                 pageInfo = new ShopProductPageInfo();
             }
             String userMainId = UserAuthHeaderUtil.getUserMainId(httpServletRequest.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            if(StringUtils.isEmpty(userMainId))
-            {
-                logger.warn("查询商品审核 没有找到用户ID {} ",userMainId);
+            if (StringUtils.isEmpty(userMainId)) {
+                logger.warn("查询商品审核 没有找到用户ID {} ", userMainId);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("查询失败,请稍后重试");
                 return resultObjectVO;
@@ -151,16 +145,16 @@ public class ShopProductApiController extends BaseController {
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
-            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
-            if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(), requestJsonVO);
+            if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
-                if(sellerShopVO!=null) {
+                if (sellerShopVO != null) {
                     pageInfo.setShopId(sellerShopVO.getId());
                     pageInfo.setOrderColumn("update_date");
                     pageInfo.setOrderSort("desc");
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
                     resultObjectVO = feignShopProductService.queryListPage(requestJsonVO);
-                    if (resultObjectVO.isSuccess()&&resultObjectVO.getData() != null) {
+                    if (resultObjectVO.isSuccess() && resultObjectVO.getData() != null) {
                         Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
                         List<ShopProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), ShopProductVO.class);
                         if (CollectionUtils.isNotEmpty(list)) {
@@ -193,16 +187,15 @@ public class ShopProductApiController extends BaseController {
                             //查询类别名称
                             this.queryCategory(list, categoryIds);
 
-                            resultObjectDataMap.put("list",list);
+                            resultObjectDataMap.put("list", list);
 
                             resultObjectVO.setData(resultObjectDataMap);
                         }
                     }
                 }
             }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("查询失败,请稍后重试");
         }
@@ -211,9 +204,51 @@ public class ShopProductApiController extends BaseController {
     }
 
 
+    /**
+     * 店铺商品 上架/下架
+     *
+     * @param shopProductId
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/shelves/{shopProductId}", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO shelves(HttpServletRequest request,@PathVariable Long shopProductId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            if(shopProductId==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("商品ID不能为空");
+                return resultObjectVO;
+            }
+            String userMainId="-1";
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            //查询店铺
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+                    SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
+                    ShopProductVO shopProductVO = new ShopProductVO();
+                    shopProductVO.setId(shopProductId);
+                    shopProductVO.setShopId(sellerShopVORet.getId());
 
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
+                    resultObjectVO = feignShopProductService.shelves(requestJsonVO);
+                }
+            }
+        }catch(Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("查询失败,请稍后重试");
+        }
 
-
+        return resultObjectVO;
+    }
 
 
 }
