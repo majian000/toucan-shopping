@@ -795,7 +795,7 @@ public class ShopProductController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/shelves",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO shelves(HttpServletRequest request, ShopProductVO shopProductVO)
+    public ResultObjectVO shelves(HttpServletRequest request,@RequestBody ShopProductVO shopProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
