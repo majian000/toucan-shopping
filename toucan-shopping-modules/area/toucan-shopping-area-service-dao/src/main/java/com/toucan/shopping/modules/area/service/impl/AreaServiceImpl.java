@@ -28,6 +28,10 @@ public class AreaServiceImpl implements AreaService {
         return areaMapper.queryList(area);
     }
 
+    @Override
+    public List<Area> queryListByVO(AreaVO area) {
+        return areaMapper.queryListByVO(area);
+    }
 
     @Override
     public Long queryCount(Area area) {

@@ -14,6 +14,7 @@ public interface AreaMapper {
 
     List<Area> queryList(Area area);
 
+    List<Area> queryListByVO(AreaVO area);
 
     int insert(Area area);
 

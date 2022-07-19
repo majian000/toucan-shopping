@@ -27,6 +27,16 @@
     </resultMap>
 
 
+    <sql id="queryListVOWhere">
+        <if test="code!=null and code!=''">
+            and t.code = #{code}
+        </if>
+
+        <if test="name!=null and name!=''">
+            and ( t.province  like concat('%',#{name},'%') or t.city  like concat('%',#{name},'%') or t.area  like concat('%',#{name},'%') )
+        </if>
+    </sql>
+
     <sql id="queryListWhere">
         <if test="id!=null">
             and t.id = #{id}
@@ -80,6 +90,18 @@
         <where>
             1=1
             <include refid="queryListWhere" />
+
+            and t.delete_status = 0
+
+        </where>
+    </select>
+
+
+    <select id="queryListByVO" resultMap="areaMap" parameterType="com.toucan.shopping.modules.area.vo.AreaVO">
+        select t.* from t_area t
+        <where>
+            1=1
+            <include refid="queryListVOWhere" />
 
             and t.delete_status = 0
 

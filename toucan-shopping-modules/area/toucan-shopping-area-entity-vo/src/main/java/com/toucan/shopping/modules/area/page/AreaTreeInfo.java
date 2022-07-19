@@ -21,6 +21,8 @@ public class AreaTreeInfo extends PageInfo<Area> {
 
     // ===============查询条件===================
 
+    private String name;
+
     private String code;
 
 

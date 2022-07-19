@@ -708,11 +708,13 @@ public class AreaController {
 
             List<AreaTreeVO> areaVOs = new ArrayList<AreaTreeVO>();
             //按指定条件查询
-            if(StringUtils.isNotEmpty(queryPageInfo.getCode()))
+            if(StringUtils.isNotEmpty(queryPageInfo.getCode())||StringUtils.isNotEmpty(queryPageInfo.getName()))
             {
-                Area queryArea = new Area();
+                AreaVO queryArea = new AreaVO();
                 queryArea.setCode(queryPageInfo.getCode());
-                List<Area> areas = areaService.queryList(queryArea);
+                queryArea.setName(queryPageInfo.getName());
+
+                List<Area> areas = areaService.queryListByVO(queryArea);
                 for (int i = 0; i < areas.size(); i++) {
                     Area area = areas.get(i);
                     AreaTreeVO areaTreeVO = new AreaTreeVO();

@@ -15,6 +15,8 @@ public interface AreaService {
 
     List<Area> queryList(Area area);
 
+    List<Area> queryListByVO(AreaVO area);
+
     Long queryCount(Area area);
 
     /**
