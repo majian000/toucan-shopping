@@ -18,6 +18,7 @@
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
     </resultMap>
 
 
@@ -73,6 +74,10 @@
         </where>
     </select>
 
+    <select id="findById" resultMap="bannerMap" parameterType="java.lang.Long"  >
+        select t.* from t_banner t where t.id = #{id} and t.delete_status = 0 limit 0,1
+    </select>
+
     <select id="queryListPage" resultMap="bannerVOMap" parameterType="com.toucan.shopping.modules.content.page.BannerPageInfo">
          select t.* from t_banner t
         <where>
@@ -96,8 +101,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.Banner"  keyProperty="id" >
-        insert into t_banner(id,title,img_path,click_path,position,banner_sort,start_show_date,end_show_date,show_status,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{id},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{startShowDate},#{endShowDate},#{showStatus},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_banner(id,title,img_path,click_path,position,banner_sort,start_show_date,end_show_date,show_status,remark,app_code,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{title},#{imgPath},#{clickPath},#{position},#{bannerSort},#{startShowDate},#{endShowDate},#{showStatus},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
     <update id="update" parameterType="com.toucan.shopping.modules.content.entity.Banner">

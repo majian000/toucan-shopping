@@ -28,6 +28,7 @@ public interface BannerService {
 
     int update(Banner banner);
 
+    Banner findById(Long id);
 
     /**
      * 查询列表页

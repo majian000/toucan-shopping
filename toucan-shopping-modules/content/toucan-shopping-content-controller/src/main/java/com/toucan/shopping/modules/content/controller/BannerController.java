@@ -115,6 +115,7 @@ public class BannerController {
                 bannerArea.setAreaCode(areaCode);
                 bannerArea.setBannerId(banner.getId());
                 bannerArea.setCreateDate(new Date());
+                bannerArea.setAppCode(banner.getAppCode());
                 bannerAreas[i]=bannerArea;
             }
             //保存轮播图与地区关联
@@ -344,13 +345,15 @@ public class BannerController {
             bannerAreaService.deleteByBannerId(entity.getId());
 
             BannerArea[] bannerAreas=new BannerArea[entity.getAreaCodeArray().length];
+            Banner perBanner = bannerService.findById(entity.getId());
             for(int i=0;i<entity.getAreaCodeArray().length;i++)
             {
                 String areaCode = entity.getAreaCodeArray()[i];
                 BannerArea bannerArea = new BannerArea();
                 bannerArea.setId(idGenerator.id());
                 bannerArea.setAreaCode(areaCode);
-                bannerArea.setBannerId(entity.getId());
+                bannerArea.setBannerId(perBanner.getId());
+                bannerArea.setAppCode(perBanner.getAppCode());
                 bannerArea.setCreateDate(new Date());
                 bannerAreas[i]=bannerArea;
             }

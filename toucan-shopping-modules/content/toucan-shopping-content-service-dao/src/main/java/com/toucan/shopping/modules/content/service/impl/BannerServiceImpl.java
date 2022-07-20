@@ -50,6 +50,11 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
+    public Banner findById(Long id) {
+        return bannerMapper.findById(id);
+    }
+
+    @Override
     public PageInfo<BannerVO> queryListPage(BannerPageInfo queryPageInfo) {
         queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
         PageInfo<BannerVO> pageInfo = new PageInfo();

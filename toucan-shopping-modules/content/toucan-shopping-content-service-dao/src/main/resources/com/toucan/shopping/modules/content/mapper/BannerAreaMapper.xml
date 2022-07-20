@@ -11,6 +11,7 @@
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
     </resultMap>
 
     <select id="queryList" resultMap="bannerAreaMap" parameterType="com.toucan.shopping.modules.content.vo.BannerAreaVO">
@@ -39,16 +40,16 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.content.entity.BannerArea"  keyProperty="id" >
-        insert into t_banner_area(id,banner_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{id},#{bannerId},#{areaCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_banner_area(id,banner_id,area_code,app_code,create_date,update_date,create_admin_id,update_admin_id)
+        values(#{id},#{bannerId},#{areaCode},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
     </insert>
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_banner_area(id,banner_id,area_code,create_date,update_date,create_admin_id,update_admin_id)
+        insert into t_banner_area(id,banner_id,area_code,app_code,create_date,update_date,create_admin_id,update_admin_id)
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.bannerId},#{entity.areaCode},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId})
+            (#{entity.id},#{entity.bannerId},#{entity.areaCode},#{entity.appCode},#{entity.createDate},#{entity.updateDate},#{entity.createAdminId},#{entity.updateAdminId})
         </foreach>
 
     </insert>

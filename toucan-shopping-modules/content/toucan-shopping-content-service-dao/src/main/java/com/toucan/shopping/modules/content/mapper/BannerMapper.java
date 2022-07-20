@@ -22,6 +22,7 @@ public interface BannerMapper {
 
     int update(Banner banner);
 
+    Banner findById(Long id);
 
 
     /**

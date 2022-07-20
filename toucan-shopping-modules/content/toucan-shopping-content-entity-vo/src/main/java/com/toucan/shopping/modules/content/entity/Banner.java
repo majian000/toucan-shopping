@@ -51,6 +51,7 @@ public class Banner  {
 
     private String remark; //备注
 
+    private String appCode; //所属应用
     /**
      * 删除状态 0未删除 1已删除
      */
