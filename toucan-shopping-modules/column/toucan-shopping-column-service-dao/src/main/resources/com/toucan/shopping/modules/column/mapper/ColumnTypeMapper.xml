@@ -48,8 +48,8 @@
     </sql>
     
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.ColumnType" >
-        insert into t_column_type(id,code,name,app_code,create_date,delete_status)
-        values(#{id},#{code},#{name},#{appCode},#{createDate},#{deleteStatus})
+        insert into t_column_type(id,code,name,app_code,create_date,delete_status,create_admin_id,update_admin_id)
+        values(#{id},#{code},#{name},#{appCode},#{createDate},#{deleteStatus},#{createAdminId},#{updateAdminId})
     </insert>
 
 
@@ -61,7 +61,7 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.column.entity.ColumnType">
         update t_column_type set  name=#{name},code=#{code},app_code=#{appCode},
-        update_date=#{updateDate}
+        update_date=#{updateDate},update_admin_id = #{updateAdminId}
           where id = #{id}
     </update>
 

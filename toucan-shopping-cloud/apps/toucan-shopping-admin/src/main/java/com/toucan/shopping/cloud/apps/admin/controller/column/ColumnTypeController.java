@@ -11,9 +11,11 @@ import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -110,6 +112,20 @@ public class ColumnTypeController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+
+            if(StringUtils.isEmpty(entity.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("添加失败,请输入编码");
+                return resultObjectVO;
+            }
+            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,50))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("添加失败,编码只允许字母、数字、下划线组成,长度1-50位");
+                return resultObjectVO;
+            }
+
             entity.setAppCode("10001001");
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -135,6 +151,20 @@ public class ColumnTypeController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+
+            if(StringUtils.isEmpty(entity.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请输入编码");
+                return resultObjectVO;
+            }
+            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,50))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-50位");
+                return resultObjectVO;
+            }
+
             entity.setAppCode("10001001");
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignColumnTypeService.update(requestJsonVO);

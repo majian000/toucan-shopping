@@ -11,11 +11,13 @@ import com.toucan.shopping.cloud.message.api.feign.service.FeignMessageTypeServi
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.message.page.MessageTypePageInfo;
@@ -119,6 +121,19 @@ public class MessageTypeController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+
+            if(StringUtils.isEmpty(entity.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("添加失败,请输入编码");
+                return resultObjectVO;
+            }
+            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,50))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("添加失败,编码只允许字母、数字、下划线组成,长度1-50位");
+                return resultObjectVO;
+            }
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignMessageTypeService.save(requestJsonVO);
         }catch(Exception e)
@@ -142,6 +157,20 @@ public class MessageTypeController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+
+            if(StringUtils.isEmpty(entity.getCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请输入编码");
+                return resultObjectVO;
+            }
+            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,50))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-50位");
+                return resultObjectVO;
+            }
+
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignMessageTypeService.update(requestJsonVO);
         }catch(Exception e)

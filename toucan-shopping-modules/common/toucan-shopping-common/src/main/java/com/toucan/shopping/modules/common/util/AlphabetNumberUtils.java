@@ -10,20 +10,19 @@ import java.util.regex.Pattern;
 public class AlphabetNumberUtils {
 
 
-    private static final String regEx1 = "^[0-9a-zA-Z_]{1,8}$";
-    private static Pattern p = Pattern.compile(regEx1);
-
 
     /**
      * 返回是否是字母、数字下划线组成最大长度8位 最小长度1位
      * @param content
      * @return
      */
-    public static boolean isAlphabetNumber(String content)
+    public static boolean isAlphabetNumber(String content,int minLength,int maxLength)
     {
         if (null==content || "".equals(content)){
             return false;
         }
+        String regEx1 = "^[0-9a-zA-Z_]{"+minLength+","+maxLength+"}$";
+        Pattern p = Pattern.compile(regEx1);
         Matcher m = p.matcher(content);
         return m.matches();
     }

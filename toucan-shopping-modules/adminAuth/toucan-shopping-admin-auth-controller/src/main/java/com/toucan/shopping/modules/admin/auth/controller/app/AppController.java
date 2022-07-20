@@ -83,7 +83,7 @@ public class AppController {
                 return resultObjectVO;
             }
 
-            if(!AlphabetNumberUtils.isAlphabetNumber(app.getCode()))
+            if(!AlphabetNumberUtils.isAlphabetNumber(app.getCode(),1,8))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("添加失败,应用编码只允许字母、数字、下划线组成,长度1-8位");
