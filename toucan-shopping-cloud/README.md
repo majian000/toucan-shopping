@@ -97,7 +97,6 @@
  | services/toucan-shopping-order               | 8084                   | 订单服务、支付服务                                |
  | services/toucan-shopping-second-kill         | 8085                   | 秒杀服务                                          |
  | services/toucan-shopping-stock               | 8093                   | 库存服务                                          |
- | services/toucan-shopping-column              | 8096                   | 栏目、新闻资讯服务                                |
  | services/toucan-shopping-user                | 8087                   | 用户中心服务                                      |
  | services/toucan-shopping-admin-auth          | 8099                   | 权限中台服务                                      |
  | services/toucan-shopping-seller              | 8100                   | 卖家服务                                          |
