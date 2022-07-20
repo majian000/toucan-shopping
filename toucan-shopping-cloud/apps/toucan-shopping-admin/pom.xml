@@ -181,6 +181,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.toucan.shopping.modules.column</groupId>
+            <artifactId>toucan-shopping-column-entity-vo</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.toucan.shopping.modules.seller</groupId>
             <artifactId>toucan-shopping-seller-entity-vo</artifactId>
         </dependency>

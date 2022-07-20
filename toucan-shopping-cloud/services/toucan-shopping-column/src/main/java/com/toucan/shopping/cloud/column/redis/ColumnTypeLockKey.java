@@ -1,7 +1,7 @@
 package com.toucan.shopping.cloud.column.redis;
 
 /**
- * 消息类型
+ * 栏目类型
  */
 public class ColumnTypeLockKey {
 
@@ -11,7 +11,7 @@ public class ColumnTypeLockKey {
 
 
     /**
-     * 保存消息类型
+     * 保存栏目类型
      * @param key
      * @return
      */
