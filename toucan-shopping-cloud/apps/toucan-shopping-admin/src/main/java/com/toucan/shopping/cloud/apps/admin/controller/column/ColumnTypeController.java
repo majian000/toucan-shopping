@@ -109,6 +109,7 @@ public class ColumnTypeController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setAppCode("10001001");
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignColumnTypeService.save(requestJsonVO);
         }catch(Exception e)
@@ -132,6 +133,7 @@ public class ColumnTypeController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setAppCode("10001001");
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignColumnTypeService.update(requestJsonVO);
         }catch(Exception e)

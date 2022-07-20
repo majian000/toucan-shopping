@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * 消息类型服务
+ * 栏目类型服务
  */
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-content-proxy/messageType",fallbackFactory = FeignColumnTypeServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-content-proxy/columnType",fallbackFactory = FeignColumnTypeServiceFallbackFactory.class)
 public interface FeignColumnTypeService {
 
 
