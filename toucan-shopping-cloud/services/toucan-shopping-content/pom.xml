@@ -88,10 +88,6 @@
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-persistence</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.toucan.shopping.modules.common</groupId>
-            <artifactId>toucan-shopping-lock-redis</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.toucan.shopping.modules.content</groupId>
@@ -116,6 +112,11 @@
             <artifactId>toucan-shopping-xss-spring-boot-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.toucan.shopping.modules.skylark</groupId>
+            <artifactId>toucan-shopping-skylark-lock</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
@@ -134,6 +135,11 @@
         <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-db-sharding</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.toucan.shopping.modules.column</groupId>
+            <artifactId>toucan-shopping-column-controller</artifactId>
         </dependency>
 
 

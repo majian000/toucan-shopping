@@ -49,9 +49,9 @@ public class ColumnType {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateDate;
 
-    private Long createAdminId;
+    private String createAdminId;
 
-    private Long updateAdminId;
+    private String updateAdminId;
 
     /**
      * 删除状态 0未删除 1已删除

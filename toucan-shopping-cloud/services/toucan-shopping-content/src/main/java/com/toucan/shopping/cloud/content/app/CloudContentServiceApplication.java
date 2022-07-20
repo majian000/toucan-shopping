@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.toucan.shopping")
 @MapperScan({"com.toucan.shopping.modules.content.mapper",
+        "com.toucan.shopping.modules.column.mapper",
         "com.toucan.shopping.modules.common.persistence.mapper"})
 @ComponentScan("com.toucan.shopping")
 public class CloudContentServiceApplication {

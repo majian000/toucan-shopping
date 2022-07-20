@@ -26,10 +26,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 消息类型
+ * 栏目类型
  */
 @RestController
-@RequestMapping("/messageType")
+@RequestMapping("/columnType")
 public class ColumnTypeController {
 
 

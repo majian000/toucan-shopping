@@ -45,8 +45,6 @@
         <module>services/toucan-shopping-second-kill</module>
         <!--库存服务 -->
         <module>services/toucan-shopping-stock</module>
-        <!-- 栏目服务 -->
-        <module>services/toucan-shopping-column</module>
         <!--公共数据服务 -->
         <module>services/toucan-shopping-common-data</module>
         <!--内容服务-->
@@ -288,6 +286,13 @@
             <dependency>
                 <groupId>com.toucan.shopping.modules.adminAuth</groupId>
                 <artifactId>toucan-shopping-admin-auth-log-controller</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toucan.shopping.modules.column</groupId>
+                <artifactId>toucan-shopping-column-controller</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>

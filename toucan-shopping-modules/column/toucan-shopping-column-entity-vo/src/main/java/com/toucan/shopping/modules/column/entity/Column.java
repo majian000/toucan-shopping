@@ -19,8 +19,8 @@ public class Column {
     private Date createDate; //创建时间
     private Date updateDate; //创建时间
     private String appCode; //所属应用
-    private Long createAdminId; //创建人ID
-    private Long updateAdminId; //修改人ID
+    private String createAdminId; //创建人ID
+    private String updateAdminId; //修改人ID
     private String remark; //备注
     private String content; //内容
     private Integer columnSort; //排序
