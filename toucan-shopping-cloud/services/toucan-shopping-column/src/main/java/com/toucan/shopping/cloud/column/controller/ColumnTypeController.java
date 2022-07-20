@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 用户端栏目操作
+ * 栏目类型管理
  */
 @RestController
-@RequestMapping("/column")
-public class ColumnController {
+@RequestMapping("/column/type")
+public class ColumnTypeController {
 
 }

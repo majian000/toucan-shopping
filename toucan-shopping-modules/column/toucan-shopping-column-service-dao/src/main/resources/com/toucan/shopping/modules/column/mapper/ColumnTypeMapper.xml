@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.column.mapper.ColumnTypeMapper">
+
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.column.entity.ColumnType" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+
+    </resultMap>
+
+    <resultMap id="columnTypeVOMap" type="com.toucan.shopping.modules.column.vo.ColumnTypeVO" extends="entityMap" >
+    </resultMap>
+
+    <sql id="queryListPageWhere">
+
+        <if test="name!=null and name!='' ">
+            and t.name  like concat(#{name},'%')
+        </if>
+
+        <if test="code!=null and code!='' ">
+            and t.code =#{code}
+        </if>
+
+        <if test="appCode!=null and appCode!='-1' ">
+            and t.app_code =#{appCode}
+        </if>
+    </sql>
+
+
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+        <if test="code!=null">
+            and t.code = #{code}
+        </if>
+        <if test="name!=null">
+            and t.name = #{name}
+        </if>
+    </sql>
+    
+    <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.ColumnType" >
+        insert into t_column_type(id,code,name,app_code,create_date,delete_status)
+        values(#{id},#{code},#{name},#{appCode},#{createDate},#{deleteStatus})
+    </insert>
+
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        update t_column_type set delete_status=1 where id = #{id}
+    </update>
+
+
+
+    <update id="update" parameterType="com.toucan.shopping.modules.column.entity.ColumnType">
+        update t_column_type set  name=#{name},code=#{code},app_code=#{appCode},
+        update_date=#{updateDate}
+          where id = #{id}
+    </update>
+
+
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.column.entity.ColumnType">
+        select * from t_column_type t
+        <where>
+            1=1
+            <if test="id!=null">
+                and t.id = #{id}
+            </if>
+            <if test="code!=null">
+                and t.code = #{code}
+            </if>
+            and t.delete_status = 0
+        </where>
+
+    </select>
+
+    <select id="queryList" resultMap="columnTypeVOMap" parameterType="com.toucan.shopping.modules.column.vo.ColumnTypeVO">
+        select t.* from t_column_type t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+
+        </where>
+    </select>
+
+
+    <select id="queryListPage" resultMap="columnTypeVOMap" parameterType="com.toucan.shopping.modules.column.page.ColumnTypePageInfo">
+        select t.* from t_column_type t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.column.page.ColumnTypePageInfo">
+        select count(*) from t_column_type t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+</mapper>

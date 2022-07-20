@@ -125,7 +125,7 @@
         <!--栏目实体和VO -->
         <module>column/toucan-shopping-column-entity-vo</module>
         <!--栏目服务Service和DAO -->
-        <module>column/toucan-shopping-column-services-dao</module>
+        <module>column/toucan-shopping-column-service-dao</module>
 
         <!--订单实体和VO -->
         <module>order/toucan-shopping-order-entity-vo</module>
