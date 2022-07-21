@@ -146,6 +146,7 @@
             <if test="categoryId!=null">
                 and t.category_id = #{categoryId}
             </if>
+            and t.delete_status = 0
         </where>
     </select>
 
