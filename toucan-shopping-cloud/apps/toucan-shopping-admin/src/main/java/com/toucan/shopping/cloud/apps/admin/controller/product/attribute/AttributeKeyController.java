@@ -78,7 +78,7 @@ public class AttributeKeyController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryListByPid(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
     {

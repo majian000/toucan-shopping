@@ -129,10 +129,11 @@
 <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 <script>
     layui.config({
-        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+        base: basePath+'/lib/layui_ext/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
-        dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
+        dtree: 'dtree/dtree',
+        treeTable: 'treeTable/treeTable'
+    }).use(['form', 'table','tree','treeTable','dtree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
@@ -140,6 +141,8 @@
         var tree = layui.tree;
         var loadding;
         var dtree = layui.dtree;
+        var treetable = layui.treeTable;
+        var treetableHandler;
         var roleTree;
         var roleTreeDataArray = new Array();
 
@@ -167,92 +170,110 @@
             return formParam;
         }
 
-        table.render({
-            elem: '#attributeKeyTable',
-            url: "[[@{/}]]product/attribute/attributeKey/list",
-            method:'POST',
-            where:getFormParam(),
-            toolbar: '#toolbarDemo',
-            defaultToolbar: ['filter',  {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
-            done:function(res, curr, count)
-            {
-            },
-            cols: [
-                [
-                    {type: "checkbox", width: 50},
-                    {field: 'id', width: 200, title: '主键'},
-                    {field: 'categoryName',width: 350,  title: '所属分类'},
-                    {field: 'categoryPath',width: 350,  title: '所属分类路径'},
-                    {field: 'path',width: 350,  title: '属性路径'},
-                    {field: 'attributeName',width: 350,  title: '属性名'},
-                    {field: 'attributeType',width: 150,   title: '属性类型',
-                        templet: function (row) {
-                            if(row.attributeType == null){
-                                return "";
-                            }
-                            if(row.attributeType == "1"){
-                                return "全局属性";
-                            }
-                            if(row.attributeType == "2"){
-                                return "销售属性";
-                            }
-                            return row.attributeType;
-                        }},
-                    {field: 'queryStatus',width: 150,   title: '搜索状态',
-                        templet: function (row) {
-                            if(row.queryStatus == null){
-                                return "";
-                            }
-                            if(row.queryStatus == "1"){
-                                return "可被搜索";
-                            }
-                            if(row.queryStatus == "0"){
-                                return "不可搜索";
-                            }
-                            return row.queryStatus;
-                        }},
-                    {field: 'parentId', width: 350, title: '上级属性名ID'},
-                    {field: 'parentName',width: 350,  title: '上级属性名'},
-                    {field: 'attributeSort',  title: '排序'},
-                    {field: 'showStatus', width: 150,  title: '显示状态',
-                        templet: function (row) {
-                            if(row.showStatus == null){
-                                return "";
-                            }
-                            if(row.showStatus == "1"){
-                                return "显示";
-                            }
-                            if(row.showStatus == "0"){
-                                return "隐藏";
-                            }
-                            return row.showStatus;
-                        }},
-                    {field: 'createAdminName',width: 150,  title: '创建人'},
-                    {field: 'createDate',width: 200,  title: '创建时间'},
-                    {field: 'updateAdminName', width: 150,  title: '修改人'},
-                    {field: 'updateDate', width: 200, title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#attributeKeyTableBar', align: "center"}
-                ]
-            ],
-            limits: [15,30,100,200],
-            limit: 15,
-            page: true,
-            skin: 'line'
-        });
+
+        function loadTreeTable()
+        {
+            loadding = layer.load();
+            treetableHandler = treetable.render({
+                elem: '#attributeKeyTable',
+                tree: {
+                    iconIndex: 2
+                },
+                toolbar: '#toolbarDemo',
+                page: false,
+                cols: [
+                    [
+                        {type: "checkbox", width: 50},
+                        {field: 'id',  title: '主键'},
+                        {field: 'attributeName',width: 150,   title: '属性名'},
+                        {field: 'attributeType',width: 150,   title: '属性类型',
+                            templet: function (row) {
+                                if(row.attributeType == null){
+                                    return "";
+                                }
+                                if(row.attributeType == "1"){
+                                    return "普通属性";
+                                }
+                                if(row.attributeType == "2"){
+                                    return "颜色属性";
+                                }
+                                return row.attributeType;
+                            }},
+                        {field: 'attributeScope',width: 150,   title: '属性范围',
+                            templet: function (row) {
+                                if(row.attributeScope == null){
+                                    return "";
+                                }
+                                if(row.attributeScope == "1"){
+                                    return "全局属性";
+                                }
+                                if(row.attributeScope == "2"){
+                                    return "SKU属性";
+                                }
+                                return row.attributeScope;
+                            }},
+                        {field: 'queryStatus',width: 150,   title: '搜索状态',
+                            templet: function (row) {
+                                if(row.queryStatus == null){
+                                    return "";
+                                }
+                                if(row.queryStatus == "1"){
+                                    return "可被搜索";
+                                }
+                                if(row.queryStatus == "0"){
+                                    return "不可搜索";
+                                }
+                                return row.queryStatus;
+                            }},
+                        {field: 'categoryPath',  title: '分类路径'},
+                        {field: 'categoryName',  title: '所属分类'},
+                        {field: 'attributeSort',  title: '排序'},
+                        {field: 'showStatus', width: 150,  title: '显示状态',
+                            templet: function (row) {
+                                if(row.showStatus == null){
+                                    return "";
+                                }
+                                if(row.showStatus == "1"){
+                                    return "显示";
+                                }
+                                if(row.showStatus == "0"){
+                                    return "隐藏";
+                                }
+                                return row.showStatus;
+                            }},
+                        {field: 'createAdminName', title: '创建人'},
+                        {field: 'createDate',  title: '创建时间'},
+                        {field: 'updateAdminName',  title: '修改人'},
+                        {field: 'updateDate',  title: '修改时间'},
+                        {templet: '#attributeKeyTableBar', width: 350, align: 'center', title: '操作'}
+                    ]
+                ],
+                reqData: function (selectRow, callback) {
+                    $.ajax({
+                        url:"[[@{/}]]product/attribute/attributeKey/tree/table/by/pid",
+                        type:'POST',
+                        data:getFormParam(selectRow),
+                        success:function(res){
+                            callback(res.data);
+                        },
+                        complete:function(data)
+                        {
+                            layer.closeAll('loading');
+                            layer.close(loadding);
+                        }
+                    });
+                }
+            });
+
+        }
+
+
+        loadTreeTable();
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            //执行搜索重载
-            table.reload('attributeKeyTable', {
-                page: {
-                    curr: 1
-                }
-                , where: data.field
-            }, 'data');
+
+            loadTreeTable();
 
             return false;
         });
@@ -323,61 +344,6 @@
             layui.form.render();
         });
 
-
-
-
-        /**
-         * toolbar监听事件
-         */
-        table.on('toolbar(attributeKeyTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var selectCategoryId = $("#categoryId").val();
-                var index = layer.open({
-                    title: '添加属性名',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-
-                    area: ['100%', '100%'],
-                    content: "[[@{/product/attribute/attributeKey/addPage/}]]"+selectCategoryId
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
-                var checkStatus = table.checkStatus('attributeKeyTable')
-                    , data = checkStatus.data;
-                if(data==null||data.length<=0)
-                {
-                    layer.msg("请选择要操作的记录");
-                    return;
-                }
-                layer.confirm('确定删除属性名?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]product/attribute/attributeKey/delete/ids",
-                        contentType: "application/json; charset=utf-8",
-                        type:'DELETE',
-                        data:JSON.stringify(data),
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('attributeKeyTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
-            }
-        });
 
 
 
@@ -452,12 +418,60 @@
         }
 
 
+        /**
+         * toolbar监听事件
+         */
+        treetable.on('toolbar(attributeKeyTable)', function (obj) {
+
+            if (obj.event === 'add') {  // 监听添加操作
+                var selectCategoryId = $("#categoryId").val();
+                var index = layer.open({
+                    title: '添加属性名',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+
+                    area: ['100%', '100%'],
+                    content: "[[@{/product/attribute/attributeKey/addPage/}]]"+selectCategoryId
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var data = treetableHandler.checkStatus();
+                if(data==null||data.length<=0)
+                {
+                    layer.msg("请选择要操作的记录");
+                    return;
+                }
+                layer.confirm('确定删除属性名?', function (index) {
+                    $.ajax({
+                        url:"[[@{/}]]product/attribute/attributeKey/delete/ids",
+                        contentType: "application/json; charset=utf-8",
+                        type:'DELETE',
+                        data:JSON.stringify(data),
+                        success:function(data){
+                            layer.msg(data.msg);
+
+                            //执行搜索重载
+                            loadTreeTable();
+
+                        },
+                        complete:function(data)
+                        {
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
         //监听表格复选框选择
-        table.on('checkbox(attributeKeyTableFilter)', function (obj) {
+        treetable.on('checkbox(attributeKeyTable)', function (obj) {
             console.log(obj)
         });
 
-        table.on('tool(attributeKeyTableFilter)', function (obj) {
+        treetable.on('tool(attributeKeyTable)', function (obj) {
             var data = obj.data;
             if (obj.event == 'edit') {
 
@@ -484,12 +498,7 @@
                             layer.msg(data.msg);
 
                             //执行搜索重载
-                            table.reload('attributeKeyTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
+                            loadTreeTable();
 
                         },
                         complete:function(data)
