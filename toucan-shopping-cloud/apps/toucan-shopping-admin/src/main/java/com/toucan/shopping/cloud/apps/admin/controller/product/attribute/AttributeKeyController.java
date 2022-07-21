@@ -80,11 +80,34 @@ public class AttributeKeyController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO queryListByPid(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
+    public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AttributeKeyPageInfo pageInfo)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
+            RequestJsonVO requestJsonVO = null;
+            if(pageInfo.getCategoryId()!=null&&pageInfo.getCategoryId().longValue()!=-1) {
+                //查询分类以及子分类
+                CategoryVO categoryVO = new CategoryVO();
+                categoryVO.setId(pageInfo.getCategoryId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), categoryVO);
+                resultObjectVO = feignCategoryService.queryChildListByPid(requestJsonVO);
+                if (resultObjectVO.isSuccess()) {
+                    if (resultObjectVO.getData() != null) {
+                        List<CategoryVO> categoryVOS = resultObjectVO.formatDataList(CategoryVO.class);
+                        if (CollectionUtils.isNotEmpty(categoryVOS)) {
+                            List<Long> categoryIdList = new LinkedList<>();
+                            for (CategoryVO cv : categoryVOS) {
+                                categoryIdList.add(cv.getId());
+                            }
+                            categoryIdList.add(pageInfo.getCategoryId());
+                            pageInfo.setCategoryIdList(categoryIdList);
+                            pageInfo.setCategoryId(null);
+                        }
+                    }
+                }
+            }
+
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             resultObjectVO = feignAttributeKeyService.queryTreeTableByPid(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {

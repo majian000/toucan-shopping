@@ -92,6 +92,14 @@
             and t.attribute_type = #{attributeType}
         </if>
 
+
+        <if test="categoryIdList!=null and categoryIdList.size>0 ">
+            and t.category_id in
+            <foreach item="item" index="index" collection="categoryIdList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
         <if test="idArray!=null and idArray.length>0 ">
             and t.id in
             <foreach item="item" index="index" collection="idArray" open="("  close=")" separator=",">

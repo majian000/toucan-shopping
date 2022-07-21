@@ -99,4 +99,7 @@ public class AttributeKeyVO extends AttributeKey {
      */
     private String path;
 
+
+    private List<Long> categoryIdList; //分类ID列表
+
 }

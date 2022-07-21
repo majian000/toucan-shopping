@@ -191,10 +191,18 @@ public class AttributeKeyController {
                 }else{
                     queryAttributeKey.setParentId(-1L);
                 }
-                //设置分类
-                if(queryPageInfo.getCategoryId()!=null&&queryPageInfo.getCategoryId().longValue()!=-1) {
-                    queryAttributeKey.setCategoryId(queryPageInfo.getCategoryId());
+                List<Long> categoryIdList = new LinkedList<>();
+                if(CollectionUtils.isNotEmpty(queryPageInfo.getCategoryIdList()))
+                {
+                    for(Long categoryId:queryPageInfo.getCategoryIdList())
+                    {
+                        if(categoryId!=null&&categoryId.longValue()!=-1) {
+                            categoryIdList.add(categoryId);
+                        }
+                    }
                 }
+                //设置分类
+                queryAttributeKey.setCategoryIdList(categoryIdList);
                 List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(queryAttributeKey);
                 for (int i = 0; i < attributeKeyVOS.size(); i++) {
                     AttributeKeyVO attributeKeyVO = attributeKeyVOS.get(i);
