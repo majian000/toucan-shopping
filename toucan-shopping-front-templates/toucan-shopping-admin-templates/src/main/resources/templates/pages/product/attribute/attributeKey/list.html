@@ -425,7 +425,7 @@
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'deleteToolbar') {  // 监听删除操作
                 var data = treetableHandler.checkStatus();
                 if(data==null||data.length<=0)
                 {
