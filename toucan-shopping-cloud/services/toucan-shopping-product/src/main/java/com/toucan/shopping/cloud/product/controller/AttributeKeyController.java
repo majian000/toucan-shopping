@@ -192,7 +192,7 @@ public class AttributeKeyController {
                     queryAttributeKey.setParentId(-1L);
                 }
                 //设置分类
-                if(queryPageInfo.getCategoryId()!=null) {
+                if(queryPageInfo.getCategoryId()!=null&&queryPageInfo.getCategoryId().longValue()!=-1) {
                     queryAttributeKey.setCategoryId(queryPageInfo.getCategoryId());
                 }
                 List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(queryAttributeKey);
