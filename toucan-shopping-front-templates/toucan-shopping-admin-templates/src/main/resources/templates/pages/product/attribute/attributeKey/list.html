@@ -90,12 +90,6 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">上级属性ID</label>
-                                    <div class="layui-input-inline">
-                                        <input type="text" name="parentId" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
                                     <button type="submit" class="layui-btn layui-btn-primary"  id="queryButton" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                                     <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" ><i class="layui-icon"></i> 重 置</button>
                                 </div>
@@ -164,9 +158,14 @@
             return serializeObj;
         };
 
-        function getFormParam()
+        function getFormParam(row)
         {
             var formParam = $("#userSearchForm").serializeJson();
+            if(row!=null) {
+                formParam.parentId = row.id;
+            }else{
+                formParam.parentId=-1;
+            }
             return formParam;
         }
 
@@ -184,33 +183,23 @@
                 cols: [
                     [
                         {type: "checkbox", width: 50},
-                        {field: 'id',  title: '主键'},
-                        {field: 'attributeName',width: 150,   title: '属性名'},
+                        {field: 'id', width: 200, title: '主键'},
+                        {field: 'attributeName',width: 350,  title: '属性名'},
+                        {field: 'categoryName',width: 150,  title: '所属分类'},
+                        {field: 'categoryPath',width: 350,  title: '所属分类路径'},
+                        {field: 'path',width: 350,  title: '属性路径'},
                         {field: 'attributeType',width: 150,   title: '属性类型',
                             templet: function (row) {
                                 if(row.attributeType == null){
                                     return "";
                                 }
                                 if(row.attributeType == "1"){
-                                    return "普通属性";
-                                }
-                                if(row.attributeType == "2"){
-                                    return "颜色属性";
-                                }
-                                return row.attributeType;
-                            }},
-                        {field: 'attributeScope',width: 150,   title: '属性范围',
-                            templet: function (row) {
-                                if(row.attributeScope == null){
-                                    return "";
-                                }
-                                if(row.attributeScope == "1"){
                                     return "全局属性";
                                 }
-                                if(row.attributeScope == "2"){
-                                    return "SKU属性";
+                                if(row.attributeType == "2"){
+                                    return "销售属性";
                                 }
-                                return row.attributeScope;
+                                return row.attributeType;
                             }},
                         {field: 'queryStatus',width: 150,   title: '搜索状态',
                             templet: function (row) {
@@ -225,8 +214,8 @@
                                 }
                                 return row.queryStatus;
                             }},
-                        {field: 'categoryPath',  title: '分类路径'},
-                        {field: 'categoryName',  title: '所属分类'},
+                        {field: 'parentId', width: 350, title: '上级属性名ID'},
+                        {field: 'parentName',width: 350,  title: '上级属性名'},
                         {field: 'attributeSort',  title: '排序'},
                         {field: 'showStatus', width: 150,  title: '显示状态',
                             templet: function (row) {
@@ -241,10 +230,10 @@
                                 }
                                 return row.showStatus;
                             }},
-                        {field: 'createAdminName', title: '创建人'},
-                        {field: 'createDate',  title: '创建时间'},
-                        {field: 'updateAdminName',  title: '修改人'},
-                        {field: 'updateDate',  title: '修改时间'},
+                        {field: 'createAdminName',width: 150,  title: '创建人'},
+                        {field: 'createDate',width: 200,  title: '创建时间'},
+                        {field: 'updateAdminName', width: 150,  title: '修改人'},
+                        {field: 'updateDate', width: 200, title: '修改时间'},
                         {templet: '#attributeKeyTableBar', width: 350, align: 'center', title: '操作'}
                     ]
                 ],
