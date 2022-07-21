@@ -179,6 +179,7 @@ public class AttributeKeyController {
                 queryCriteria = true;
                 AttributeKeyVO queryAttributeKey = new AttributeKeyVO();
                 BeanUtils.copyProperties(queryAttributeKey,queryPageInfo);
+                queryAttributeKey.setParentId(null);
                 List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(queryAttributeKey);
                 for (int i = 0; i < attributeKeyVOS.size(); i++) {
                     attributeVOS.add(attributeKeyVOS.get(i));
@@ -217,15 +218,8 @@ public class AttributeKeyController {
                 }
             }
 
-            //将查询的这个节点设置为顶级节点
-            if(queryCriteria) {
-                if(!CollectionUtils.isEmpty(attributeVOS)) {
-                    for (AttributeKeyVO attributeKeyVO : attributeVOS) {
-                        attributeKeyVO.setParentId(-1L);
-                    }
-                }
-            }
 
+            //先查询出属性路径相关
             if(CollectionUtils.isNotEmpty(attributeVOS))
             {
                 List<Long> parentIdList =new LinkedList<>();
@@ -283,6 +277,16 @@ public class AttributeKeyController {
                                 attributeKeyVO.setParentName("根节点");
                             }
                         }
+                    }
+                }
+            }
+
+
+            //如果做了条件查询 就将查询的这些节点设置为顶级节点
+            if(queryCriteria) {
+                if(!CollectionUtils.isEmpty(attributeVOS)) {
+                    for (AttributeKeyVO attributeKeyVO : attributeVOS) {
+                        attributeKeyVO.setParentId(-1L);
                     }
                 }
             }
