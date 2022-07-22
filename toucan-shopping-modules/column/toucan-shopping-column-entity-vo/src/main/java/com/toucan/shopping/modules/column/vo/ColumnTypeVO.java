@@ -7,4 +7,8 @@ import lombok.Data;
 public class ColumnTypeVO extends ColumnType {
 
 
+    private String createAdminName; //创建人姓名
+    private String updateAdminName; //修改人姓名
+
+
 }

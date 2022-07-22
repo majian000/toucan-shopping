@@ -6,11 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
-import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
+import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
@@ -30,16 +31,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 栏目类型管理
+ * 栏目管理
  */
 @Controller
-@RequestMapping("/column/columnType")
-public class ColumnTypeController extends UIController {
+@RequestMapping("/column")
+public class ColumnController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -53,7 +53,7 @@ public class ColumnTypeController extends UIController {
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignColumnTypeService feignColumnTypeService;
+    private FeignColumnService feignColumnService;
 
     @Autowired
     private FeignAdminService feignAdminService;
@@ -64,8 +64,8 @@ public class ColumnTypeController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/columnType/listPage",feignFunctionService);
-        return "pages/column/columnType/list.html";
+        super.initButtons(request,toucan,"/column/column/listPage",feignFunctionService);
+        return "pages/column/column/list.html";
     }
 
 
@@ -74,7 +74,7 @@ public class ColumnTypeController extends UIController {
     public String addPage(HttpServletRequest request)
     {
 
-        return "pages/column/columnType/add.html";
+        return "pages/column/column/add.html";
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -82,26 +82,26 @@ public class ColumnTypeController extends UIController {
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
         try {
-            ColumnTypeVO queryEntity = new ColumnTypeVO();
+            ColumnVO queryEntity = new ColumnVO();
             queryEntity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-            ResultObjectVO resultObjectVO = feignColumnTypeService.findById(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                if(resultObjectVO.getData()!=null) {
-                    List<ColumnTypeVO> columnTypeVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ColumnTypeVO.class);
-                    if(!CollectionUtils.isEmpty(columnTypeVOS))
-                    {
-                        request.setAttribute("model",columnTypeVOS.get(0));
-                    }
-                }
-
-            }
+//            ResultObjectVO resultObjectVO = feignColumnService.findById(requestJsonVO);
+//            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+//            {
+//                if(resultObjectVO.getData()!=null) {
+//                    List<ColumnVO> columnVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ColumnVO.class);
+//                    if(!CollectionUtils.isEmpty(columnVOS))
+//                    {
+//                        request.setAttribute("model",columnVOS.get(0));
+//                    }
+//                }
+//
+//            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/column/columnType/edit.html";
+        return "pages/column/column/edit.html";
     }
 
 
@@ -115,28 +115,16 @@ public class ColumnTypeController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody ColumnTypeVO entity)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody ColumnVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
 
-            if(StringUtils.isEmpty(entity.getCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,请输入编码");
-                return resultObjectVO;
-            }
-            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,50))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("添加失败,编码只允许字母、数字、下划线组成,长度1-50位");
-                return resultObjectVO;
-            }
 
             entity.setAppCode("10001001");
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignColumnTypeService.save(requestJsonVO);
+//            resultObjectVO = feignColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -154,30 +142,15 @@ public class ColumnTypeController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnTypeVO entity)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
 
-            if(StringUtils.isEmpty(entity.getCode()))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,请输入编码");
-                return resultObjectVO;
-            }
-            if(!AlphabetNumberUtils.isAlphabetNumber(entity.getCode(),1,50))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("修改失败,编码只允许字母、数字、下划线组成,长度1-50位");
-                return resultObjectVO;
-            }
 
             entity.setAppCode("10001001");
-            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            entity.setUpdateDate(new Date());
-
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-            resultObjectVO = feignColumnTypeService.update(requestJsonVO);
+//            resultObjectVO = feignColumnService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -203,26 +176,26 @@ public class ColumnTypeController extends UIController {
         TableVO tableVO = new TableVO();
         try {
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignColumnTypeService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignColumnService.queryListPage(requestJsonVO);
             if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
             {
                 if(resultObjectVO.getData()!=null)
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<ColumnTypeVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ColumnTypeVO.class);
+                    List<ColumnVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ColumnVO.class);
 
                     //查询创建人和修改人
                     List<String> adminIdList = new ArrayList<String>();
                     for(int i=0;i<list.size();i++)
                     {
-                        ColumnTypeVO columnTypeVO = list.get(i);
-                        if(columnTypeVO.getCreateAdminId()!=null) {
-                            adminIdList.add(columnTypeVO.getCreateAdminId());
+                        ColumnVO columnVO = list.get(i);
+                        if(columnVO.getCreateAdminId()!=null) {
+                            adminIdList.add(columnVO.getCreateAdminId());
                         }
-                        if(columnTypeVO.getUpdateAdminId()!=null)
+                        if(columnVO.getUpdateAdminId()!=null)
                         {
-                            adminIdList.add(columnTypeVO.getUpdateAdminId());
+                            adminIdList.add(columnVO.getUpdateAdminId());
                         }
                     }
                     String[] createOrUpdateAdminIds = new String[adminIdList.size()];
@@ -236,17 +209,17 @@ public class ColumnTypeController extends UIController {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
                         if(!CollectionUtils.isEmpty(adminVOS))
                         {
-                            for(ColumnTypeVO columnTypeVO:list)
+                            for(ColumnVO columnVO:list)
                             {
                                 for(AdminVO adminVO:adminVOS)
                                 {
-                                    if(columnTypeVO.getCreateAdminId()!=null&&columnTypeVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                                    if(columnVO.getCreateAdminId()!=null&&columnVO.getCreateAdminId().equals(adminVO.getAdminId()))
                                     {
-                                        columnTypeVO.setCreateAdminName(adminVO.getUsername());
+                                        columnVO.setCreateAdminName(adminVO.getUsername());
                                     }
-                                    if(columnTypeVO.getUpdateAdminId()!=null&&columnTypeVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                                    if(columnVO.getUpdateAdminId()!=null&&columnVO.getUpdateAdminId().equals(adminVO.getAdminId()))
                                     {
-                                        columnTypeVO.setUpdateAdminName(adminVO.getUsername());
+                                        columnVO.setUpdateAdminName(adminVO.getUsername());
                                     }
                                 }
                             }
@@ -286,14 +259,14 @@ public class ColumnTypeController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            ColumnTypeVO columnTypeVO =new ColumnTypeVO();
-            columnTypeVO.setId(Long.parseLong(id));
+            ColumnVO columnVO =new ColumnVO();
+            columnVO.setId(Long.parseLong(id));
 
-            String entityJson = JSONObject.toJSONString(columnTypeVO);
+            String entityJson = JSONObject.toJSONString(columnVO);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-            resultObjectVO = feignColumnTypeService.deleteById(requestVo);
+//            resultObjectVO = feignColumnService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

@@ -1,6 +1,9 @@
 package com.toucan.shopping.modules.column.service;
 
 import com.toucan.shopping.modules.column.entity.Column;
+import com.toucan.shopping.modules.column.page.ColumnPageInfo;
+import com.toucan.shopping.modules.column.vo.ColumnVO;
+import com.toucan.shopping.modules.common.page.PageInfo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -16,4 +19,15 @@ public interface ColumnService {
      * @return
      */
     List<Column> queryAreaColumnList(String areaCode, Integer type, Integer position);
+
+
+
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<ColumnVO> queryListPage(ColumnPageInfo queryPageInfo);
+
+
 }

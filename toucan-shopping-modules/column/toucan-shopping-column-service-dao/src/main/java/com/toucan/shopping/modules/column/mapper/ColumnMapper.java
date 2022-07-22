@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.column.mapper;
 
 import com.toucan.shopping.modules.column.entity.Column;
+import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -21,5 +22,20 @@ public interface ColumnMapper {
      */
     List<Column> queryAreaColumnList(String areaCode,Integer type,Integer position);
 
+
+
+    /**
+     * 查询列表页
+     * @param pageInfo
+     * @return
+     */
+    List<ColumnVO> queryListPage(ColumnPageInfo pageInfo);
+
+    /**
+     * 返回列表页数量
+     * @param pageInfo
+     * @return
+     */
+    Long queryListPageCount(ColumnPageInfo pageInfo);
 
 }

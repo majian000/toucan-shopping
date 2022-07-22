@@ -19,6 +19,10 @@
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
     </resultMap>
 
+
+    <resultMap id="columnVOMap" type="com.toucan.shopping.modules.column.vo.ColumnVO" extends="columnMap" >
+    </resultMap>
+
     <select id="queryList" resultMap="columnMap" parameterType="com.toucan.shopping.modules.column.vo.ColumnVO">
         select tc.* from t_column tc
         <where>
@@ -56,6 +60,17 @@
         </where>
     </select>
 
+
+
+    <sql id="queryListPageWhere">
+
+        <if test="appCode!=null and appCode!='-1' ">
+            and t.app_code =#{appCode}
+        </if>
+    </sql>
+
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
         insert into t_column(title,content,column_sort,type,show_status,position,remark,app_code,create_date,update_date,create_admin_id,update_admin_id)
         values(#{title},#{content},#{columnSort},#{type},#{showStatus},#{position},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
@@ -85,5 +100,27 @@
           where id=#{id}
     </update>
 
+
+
+    <select id="queryListPage" resultMap="columnVOMap" parameterType="com.toucan.shopping.modules.column.page.ColumnPageInfo">
+        select t.* from t_column t
+        <where>
+            1=1 and t.delete_status = 0
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.id desc
+        limit #{start},#{limit}
+    </select>
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.column.page.ColumnPageInfo">
+        select count(*) from t_column t
+        <where>
+            1=1 and t.delete_status = 0
+
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
 
 </mapper>

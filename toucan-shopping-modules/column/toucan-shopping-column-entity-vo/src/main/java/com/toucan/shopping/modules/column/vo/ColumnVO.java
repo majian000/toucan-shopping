@@ -22,4 +22,8 @@ public class ColumnVO extends Column {
 
     private Long[] idArray; //ID数组
 
+
+    private String createAdminName; //创建人姓名
+    private String updateAdminName; //修改人姓名
+
 }
