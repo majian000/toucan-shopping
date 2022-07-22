@@ -22,6 +22,7 @@ public class Column {
     private String createAdminId; //创建人ID
     private String updateAdminId; //修改人ID
     private String remark; //备注
+    private String content; //内容
     private Integer columnSort; //排序
 
     /**
