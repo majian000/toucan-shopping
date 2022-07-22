@@ -106,6 +106,10 @@
             <artifactId>toucan-shopping-order-no</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.toucan.shopping.modules.column</groupId>
+            <artifactId>toucan-shopping-column-entity-vo</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.toucan.shopping.modules.common</groupId>
             <artifactId>toucan-shopping-common-web</artifactId>
         </dependency>
