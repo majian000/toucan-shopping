@@ -28,7 +28,7 @@
             and t.code =#{code}
         </if>
 
-        <if test="appCode!=null and appCode!='-1' ">
+        <if test="appCode!=null  ">
             and t.app_code =#{appCode}
         </if>
     </sql>
@@ -44,6 +44,10 @@
         </if>
         <if test="name!=null">
             and t.name = #{name}
+        </if>
+
+        <if test="appCode!=null  ">
+            and t.app_code =#{appCode}
         </if>
     </sql>
     

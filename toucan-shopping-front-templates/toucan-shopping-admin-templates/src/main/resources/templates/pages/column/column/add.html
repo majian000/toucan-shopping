@@ -23,10 +23,11 @@
 
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型编码</label>
+        <label class="layui-form-label required">栏目类型</label>
         <div class="layui-input-block">
-            <input type="code" name="code" lay-verify="required" maxlength="50" lay-reqtext="不能为空" placeholder="请输入编码" value="" class="layui-input">
-            <tip>填写的编码(应用编码只允许字母、数字、下划线组成,长度1-50位)</tip>
+            <select id="columnType" lay-verify="required" name="columnTypeCode"  lay-search="">
+                <option th:each="ct : ${columnTypes}" th:value="${ct.code}" th:text="${ct.name}">
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
