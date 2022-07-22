@@ -70,7 +70,7 @@ public class ColumnController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/column/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/column/listPage",feignFunctionService);
 
         initColumnTypes(request);
 

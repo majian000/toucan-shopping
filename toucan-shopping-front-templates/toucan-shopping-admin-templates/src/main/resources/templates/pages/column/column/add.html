@@ -26,15 +26,16 @@
         <label class="layui-form-label required">栏目类型</label>
         <div class="layui-input-block">
             <select id="columnType" lay-verify="required" name="columnTypeCode"  lay-search="">
+                <option value="">请选择</option>
                 <option th:each="ct : ${columnTypes}" th:value="${ct.code}" th:text="${ct.name}">
             </select>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">类型名称</label>
+        <label class="layui-form-label required">栏目标题</label>
         <div class="layui-input-block">
-            <input type="name" name="name" lay-verify="required" maxlength="25" lay-reqtext="不能为空" placeholder="请输入名称" value="" class="layui-input">
-            <tip>填写名称。</tip>
+            <input type="title" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入栏目标题" value="" class="layui-input">
+            <tip>填写栏目标题。</tip>
         </div>
     </div>
 
