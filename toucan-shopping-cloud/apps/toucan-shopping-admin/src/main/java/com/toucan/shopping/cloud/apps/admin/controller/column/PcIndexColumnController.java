@@ -38,11 +38,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 栏目管理
+ * 首页栏目管理
  */
 @Controller
-@RequestMapping("/column")
-public class ColumnController extends UIController {
+@RequestMapping("/column/pcIndexColumn")
+public class PcIndexColumnController extends UIController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -70,11 +70,11 @@ public class ColumnController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/pcIndexColumn/listPage",feignFunctionService);
 
         initColumnTypes(request);
 
-        return "pages/column/column/list.html";
+        return "pages/column/pcIndexColumn/list.html";
     }
 
     private void initColumnTypes(HttpServletRequest request)
@@ -102,7 +102,7 @@ public class ColumnController extends UIController {
     public String addPage(HttpServletRequest request)
     {
         initColumnTypes(request);
-        return "pages/column/column/add.html";
+        return "pages/column/pcIndexColumn/add.html";
     }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -129,7 +129,7 @@ public class ColumnController extends UIController {
         {
             logger.warn(e.getMessage(),e);
         }
-        return "pages/column/column/edit.html";
+        return "pages/column/pcIndexColumn/edit.html";
     }
 
 

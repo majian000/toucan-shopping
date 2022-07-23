@@ -102,7 +102,7 @@
 
         table.render({
             elem: '#columnTypeTable',
-            url: "[[@{/}]]column/list",
+            url: "[[@{/}]]column/pcIndexColumn/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -160,7 +160,7 @@
                     shade: 0.2,
                     maxmin:true,
                     area: ['100%', '100%'],
-                    content: "[[@{/column/addPage}]]"
+                    content: "[[@{/column/pcIndexColumn/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -175,7 +175,7 @@
                 }
                 layer.confirm('确定删除栏目?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]column/delete/ids",
+                        url:"[[@{/}]]column/pcIndexColumn/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -200,7 +200,7 @@
             }else if (obj.event === 'flushCache') {  // 监听删除操作
                 layer.confirm('确定刷新缓存?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]column/flush/cache",
+                        url:"[[@{/}]]column/pcIndexColumn/flush/cache",
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         data:null,
@@ -313,7 +313,7 @@
                     shade: 0.2,
                     maxmin:true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]column/editPage/'+data.id
+                    content: '[[@{/}]]column/pcIndexColumn/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -322,7 +322,7 @@
             } else if (obj.event == 'delete') {
                 layer.confirm('确定删除该栏目?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]column/delete/"+data.id,
+                        url:"[[@{/}]]column/pcIndexColumn/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){
