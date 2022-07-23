@@ -12,7 +12,6 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +40,7 @@ public class ColumnTypeController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private ColumnTypeService messageTypeService;
+    private ColumnTypeService columnTypeService;
 
 
 
@@ -91,7 +89,7 @@ public class ColumnTypeController {
 
             ColumnTypeVO query = new ColumnTypeVO();
             query.setCode(messageTypeVO.getCode());
-            List<ColumnTypeVO> messageTypes = messageTypeService.queryList(query);
+            List<ColumnTypeVO> messageTypes = columnTypeService.queryList(query);
             if(!CollectionUtils.isEmpty(messageTypes))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -102,7 +100,7 @@ public class ColumnTypeController {
             messageTypeVO.setId(idGenerator.id());
             messageTypeVO.setDeleteStatus((short)0);
             messageTypeVO.setCreateDate(new Date());
-            int ret = messageTypeService.save(messageTypeVO);
+            int ret = columnTypeService.save(messageTypeVO);
             if(ret<=0)
             {
                 logger.warn("保存消息类型失败 requestJson{} id{}",requestJsonVO.getEntityJson(),messageTypeVO.getId());
@@ -157,7 +155,7 @@ public class ColumnTypeController {
                     ResultObjectVO appResultObjectVO = new ResultObjectVO();
                     appResultObjectVO.setData(messageTypeVO);
 
-                    int row = messageTypeService.deleteById(messageTypeVO.getId());
+                    int row = columnTypeService.deleteById(messageTypeVO.getId());
                     if (row < 1) {
                         logger.warn("删除消息类型失败，id:{}",messageTypeVO.getId());
                         resultObjectVO.setCode(ResultVO.FAILD);
@@ -218,7 +216,7 @@ public class ColumnTypeController {
             }
 
 
-            int ret = messageTypeService.deleteById(messageTypeVO.getId());
+            int ret = columnTypeService.deleteById(messageTypeVO.getId());
             if(ret<=0)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -280,7 +278,7 @@ public class ColumnTypeController {
 
             ColumnTypeVO query = new ColumnTypeVO();
             query.setCode(entity.getCode());
-            List<ColumnTypeVO> messageTypes = messageTypeService.queryList(query);
+            List<ColumnTypeVO> messageTypes = columnTypeService.queryList(query);
             if(!CollectionUtils.isEmpty(messageTypes))
             {
                 for(ColumnTypeVO messageTypeVO:messageTypes) {
@@ -293,7 +291,7 @@ public class ColumnTypeController {
             }
 
             entity.setUpdateDate(new Date());
-            int row = messageTypeService.update(entity);
+            int row = columnTypeService.update(entity);
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
@@ -344,7 +342,7 @@ public class ColumnTypeController {
             //查询是否存在该对象
             ColumnTypeVO query=new ColumnTypeVO();
             query.setId(messageTypeVO.getId());
-            List<ColumnTypeVO> entitys = messageTypeService.queryList(query);
+            List<ColumnTypeVO> entitys = columnTypeService.queryList(query);
             if(CollectionUtils.isEmpty(entitys))
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -394,7 +392,7 @@ public class ColumnTypeController {
         }
         try {
             ColumnTypePageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnTypePageInfo.class);
-            PageInfo<ColumnTypeVO> pageInfo =  messageTypeService.queryListPage(queryPageInfo);
+            PageInfo<ColumnTypeVO> pageInfo =  columnTypeService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {
@@ -432,7 +430,7 @@ public class ColumnTypeController {
         }
         try {
             ColumnTypeVO query = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnTypeVO.class);
-            resultObjectVO.setData(messageTypeService.queryList(query));
+            resultObjectVO.setData(columnTypeService.queryList(query));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

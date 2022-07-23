@@ -24,18 +24,9 @@
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">名称</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="name" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">编码</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="code" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
+                        <input type="hidden" name="columnTypeCode" th:value="${columnTypeCode}">
+
+
                         <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
@@ -103,7 +94,7 @@
 
         table.render({
             elem: '#columnTypeTable',
-            url: "[[@{/}]]column/columnType/list",
+            url: "[[@{/}]]column/pcIndexColumn/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -156,12 +147,12 @@
         table.on('toolbar(columnTypeTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加栏目类型',
+                    title: '添加栏目',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     area: ['100%', '100%'],
-                    content: "[[@{/column/columnType/addPage}]]",
+                    content: "[[@{/column/pcIndexColumn/addPage}]]"
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -174,9 +165,9 @@
                     layer.msg("请选择要操作的记录");
                     return;
                 }
-                layer.confirm('确定删除栏目类型?', function (index) {
+                layer.confirm('确定删除栏目?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]column/columnType/delete/ids",
+                        url:"[[@{/}]]column/pcIndexColumn/delete/ids",
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         data:JSON.stringify(data),
@@ -201,7 +192,7 @@
             }else if (obj.event === 'flushCache') {  // 监听删除操作
                 layer.confirm('确定刷新缓存?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]column/columnType/flush/cache",
+                        url:"[[@{/}]]column/pcIndexColumn/flush/cache",
                         contentType: "application/json; charset=utf-8",
                         type:'POST',
                         data:null,
@@ -309,21 +300,21 @@
             if (obj.event == 'edit') {
 
                 var index = layer.open({
-                    title: '编辑栏目类型',
+                    title: '编辑栏目',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     area: ['100%', '100%'],
-                    content: '[[@{/}]]column/columnType/editPage/'+data.id
+                    content: '[[@{/}]]column/pcIndexColumn/editPage/'+data.id
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
                 return false;
             } else if (obj.event == 'delete') {
-                layer.confirm('确定删除该栏目类型?', function (index) {
+                layer.confirm('确定删除该栏目?', function (index) {
                     $.ajax({
-                        url:"[[@{/}]]column/columnType/delete/"+data.id,
+                        url:"[[@{/}]]column/pcIndexColumn/delete/"+data.id,
                         contentType: "application/json; charset=utf-8",
                         type:'DELETE',
                         success:function(data){

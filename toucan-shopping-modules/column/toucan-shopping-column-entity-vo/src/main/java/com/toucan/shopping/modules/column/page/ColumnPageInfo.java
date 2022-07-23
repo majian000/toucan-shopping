@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.column.page;
 
 import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
+import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class ColumnTypePageInfo extends PageInfo<ColumnTypeVO> {
+public class ColumnPageInfo extends PageInfo<ColumnVO> {
 
 
     // ===============查询条件===================
@@ -22,16 +23,6 @@ public class ColumnTypePageInfo extends PageInfo<ColumnTypeVO> {
     private Integer id;
 
 
-    /**
-     * 名称
-     */
-    private String name;
-
-
-    /**
-     * 编码
-     */
-    private String code;
 
     /**
      * 应用编码
