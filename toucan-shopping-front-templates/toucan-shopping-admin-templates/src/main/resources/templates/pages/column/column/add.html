@@ -40,9 +40,18 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">栏目内容</label>
+        <label class="layui-form-label required">顶部推荐标签</label>
         <div class="layui-input-block">
-            富文本
+            <table class="layui-hide" id="columnTopLabelTable" ></table>
+
+            <script type="text/html" id="columnTopLabelTableBar">
+                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">左侧推荐标签</label>
+        <div class="layui-input-block">
         </div>
     </div>
     <div class="layui-form-item">
@@ -58,8 +67,10 @@
     }).use(['form'], function () {
         var form = layui.form,
             layer = layui.layer,
+            table = layui.table,
             $ = layui.$;
 
+        var topLabelTable;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
@@ -87,6 +98,26 @@
             });
             return false;
         });
+
+        initTopLabelTable();
+        function initTopLabelTable()
+        {
+            topLabelTable = table.render({
+                elem: '#columnTopLabelTable',
+                done:function(res, curr, count)
+                {
+                },
+                cols: [
+                    [
+                        {field: 'labelName', width: 600, title: '标签名称'},
+                        {field: 'clickPath', width: 150, title: '点击跳转'},
+                        {title: '操作', minWidth: 300, toolbar: '#columnTopLabelTableBar', align: "center"}
+                    ]
+                ],
+                page: false,
+                skin: 'line'
+            });
+        }
 
 
     });
