@@ -42,6 +42,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">顶部推荐标签</label>
         <div class="layui-input-block">
+
+            <script type="text/html" id="columnTopLabelTableToolbar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加一行 </button>
+                </div>
+            </script>
+
             <table class="layui-hide" id="columnTopLabelTable" ></table>
 
             <script type="text/html" id="columnTopLabelTableBar">
@@ -64,7 +71,7 @@
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).use(['form'], function () {
+    }).use(['form', 'table'], function () {
         var form = layui.form,
             layer = layui.layer,
             table = layui.table,
@@ -104,9 +111,7 @@
         {
             topLabelTable = table.render({
                 elem: '#columnTopLabelTable',
-                done:function(res, curr, count)
-                {
-                },
+                toolbar: '#columnTopLabelTableToolbar',
                 cols: [
                     [
                         {field: 'labelName', width: 600, title: '标签名称'},
@@ -114,7 +119,10 @@
                         {title: '操作', minWidth: 300, toolbar: '#columnTopLabelTableBar', align: "center"}
                     ]
                 ],
-                page: false,
+                data: [{
+
+                    }
+                ],
                 skin: 'line'
             });
         }
