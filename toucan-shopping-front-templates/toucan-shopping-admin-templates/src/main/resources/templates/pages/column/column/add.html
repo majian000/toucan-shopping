@@ -59,6 +59,17 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">左侧推荐标签</label>
         <div class="layui-input-block">
+            <script type="text/html" id="columnLeftLabelTableToolbar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加一行 </button>
+                </div>
+            </script>
+
+            <table class="layui-hide" id="columnLeftLabelTable" ></table>
+
+            <script type="text/html" id="columnLeftLabelTableBar">
+                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
+            </script>
         </div>
     </div>
     <div class="layui-form-item">
@@ -78,6 +89,7 @@
             $ = layui.$;
 
         var topLabelTable;
+        var leftLabelTable;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
@@ -125,6 +137,24 @@
             });
         }
 
+        initLeftLabelTable();
+        function initLeftLabelTable()
+        {
+            leftLabelTable = table.render({
+                elem: '#columnLeftLabelTable',
+                toolbar: '#columnLeftLabelTableToolbar',
+                cols: [
+                    [
+                        {field: 'labelName', width: 600, title: '标签名称'},
+                        {field: 'clickPath', width: 150, title: '点击跳转'},
+                        {title: '操作', minWidth: 300, toolbar: '#columnLeftLabelTableBar', align: "center"}
+                    ]
+                ],
+                data: [
+                ],
+                skin: 'line'
+            });
+        }
 
     });
 </script>
