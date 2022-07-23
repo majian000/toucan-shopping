@@ -42,5 +42,9 @@ public class ShoppingPC {
      */
     private String productDetailPage;
 
+    /**
+     * 首页商品栏目编码
+     */
+    private String pcIndexColumnTypeCode;
 
 }

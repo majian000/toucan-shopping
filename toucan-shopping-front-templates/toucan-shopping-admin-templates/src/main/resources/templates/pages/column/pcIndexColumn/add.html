@@ -22,15 +22,8 @@
 <span th:replace="common_page::common"></span>
 
 <div class="layui-form layuimini-form">
-    <div class="layui-form-item">
-        <label class="layui-form-label required">栏目类型</label>
-        <div class="layui-input-block">
-            <select id="columnType" lay-verify="required" name="columnTypeCode"  lay-search="">
-                <option value="">请选择</option>
-                <option th:each="ct : ${columnTypes}" th:value="${ct.code}" th:text="${ct.name}">
-            </select>
-        </div>
-    </div>
+
+    <input type="hidden" name="columnTypeCode" th:value="${columnTypeCode}">
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目标题</label>
         <div class="layui-input-block">

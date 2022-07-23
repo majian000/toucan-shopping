@@ -10,18 +10,13 @@ import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
-import com.toucan.shopping.modules.column.entity.ColumnType;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
-import com.toucan.shopping.modules.column.vo.ColumnTypeVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.AlphabetNumberUtils;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
-import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -72,28 +67,20 @@ public class PcIndexColumnController extends UIController {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/pcIndexColumn/listPage",feignFunctionService);
 
-        initColumnTypes(request);
+        initColumnTypeCode(request);
 
         return "pages/column/pcIndexColumn/list.html";
     }
 
-    private void initColumnTypes(HttpServletRequest request)
+    private void initColumnTypeCode(HttpServletRequest request)
     {
         try {
-            ColumnType query = new ColumnType();
-            query.setAppCode("10001001");
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
-            ResultObjectVO resultObjectVO = feignColumnTypeService.queryList(requestJsonVO);
-            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-            {
-                List<ColumnTypeVO> columnTypes = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ColumnTypeVO.class);
-                request.setAttribute("columnTypes",columnTypes);
-            }
+            request.setAttribute("columnTypeCode",toucan.getShoppingPC().getPcIndexColumnTypeCode());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
 
-            request.setAttribute("columnTypes",new ArrayList<ColumnTypeVO>());
+            request.setAttribute("columnTypeCode","");
         }
     }
 
@@ -101,7 +88,7 @@ public class PcIndexColumnController extends UIController {
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
     {
-        initColumnTypes(request);
+        initColumnTypeCode(request);
         return "pages/column/pcIndexColumn/add.html";
     }
 

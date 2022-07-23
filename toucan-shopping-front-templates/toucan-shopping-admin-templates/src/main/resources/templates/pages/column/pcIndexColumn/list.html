@@ -24,16 +24,8 @@
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" id="userSearchForm" action="">
                     <div class="layui-form-item">
+                        <input type="hidden" name="columnTypeCode" th:value="${columnTypeCode}">
 
-                        <div class="layui-inline">
-                            <label class="layui-form-label">栏目类型</label>
-                            <div class="layui-input-inline">
-                                <select id="columnType" name="columnTypeCode"  lay-search="">
-                                    <option value="">请选择</option>
-                                    <option th:each="ct : ${columnTypes}" th:value="${ct.code}" th:text="${ct.name}">
-                                </select>
-                            </div>
-                        </div>
 
                         <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
