@@ -40,7 +40,7 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label required">顶部推荐标签</label>
+        <label class="layui-form-label ">顶部推荐标签</label>
         <div class="layui-input-block">
 
             <script type="text/html" id="columnTopLabelTableToolbar">
@@ -49,7 +49,7 @@
                 </div>
             </script>
 
-            <table class="layui-hide" id="columnTopLabelTable" ></table>
+            <table class="layui-hide" id="columnTopLabelTable"  lay-filter="columnTopLabelTableFilter" ></table>
 
             <script type="text/html" id="columnTopLabelTableBar">
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
@@ -57,7 +57,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">左侧推荐标签</label>
+        <label class="layui-form-label ">左侧推荐标签</label>
         <div class="layui-input-block">
             <script type="text/html" id="columnLeftLabelTableToolbar">
                 <div class="layui-btn-container">
@@ -65,7 +65,7 @@
                 </div>
             </script>
 
-            <table class="layui-hide" id="columnLeftLabelTable" ></table>
+            <table class="layui-hide" id="columnLeftLabelTable" lay-filter="columnLeftLabelTableFilter"  ></table>
 
             <script type="text/html" id="columnLeftLabelTableBar">
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
@@ -91,30 +91,36 @@
         var topLabelTable;
         var leftLabelTable;
 
+        var topLabelData = new Array();
+        var leftLabelData = new Array();
+        var labelIncrement= 0;
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            $.ajax({
-                url:"[[@{/column/save}]]",
-                contentType: "application/json; charset=utf-8",
-                type:'POST',
-                data:JSON.stringify(data.field),
-                success:function(data){
-                    if(data.code<=0) {
-                        layer.msg(data.msg);
-                        return false;
-                    }
-                    var index = layer.alert(data.msg, {
-                        title: '提示信息'
-                    }, function () {
-                        // 关闭弹出层
-                        layer.close(index);
-                        var iframeIndex = parent.layer.getFrameIndex(window.name);
-                        parent.location.reload();
-                        parent.layer.close(iframeIndex);
 
-                    });
-                }
-            });
+            console.log(topLabelData);
+            // $.ajax({
+            //     url:"[[@{/column/save}]]",
+            //     contentType: "application/json; charset=utf-8",
+            //     type:'POST',
+            //     data:JSON.stringify(data.field),
+            //     success:function(data){
+            //         if(data.code<=0) {
+            //             layer.msg(data.msg);
+            //             return false;
+            //         }
+            //         var index = layer.alert(data.msg, {
+            //             title: '提示信息'
+            //         }, function () {
+            //             // 关闭弹出层
+            //             layer.close(index);
+            //             var iframeIndex = parent.layer.getFrameIndex(window.name);
+            //             parent.location.reload();
+            //             parent.layer.close(iframeIndex);
+            //
+            //         });
+            //     }
+            // });
             return false;
         });
 
@@ -123,18 +129,55 @@
         {
             topLabelTable = table.render({
                 elem: '#columnTopLabelTable',
+                defaultToolbar:[],
                 toolbar: '#columnTopLabelTableToolbar',
                 cols: [
                     [
-                        {field: 'labelName', width: 600, title: '标签名称'},
-                        {field: 'clickPath', width: 150, title: '点击跳转'},
+                        {field: 'id',  title: '主键', hide: true},
+                        {field: 'labelName', width: 600,edit:"text", title: '标签名称'},
+                        {field: 'clickPath', width: 150,edit:"text", title: '点击跳转'},
                         {title: '操作', minWidth: 300, toolbar: '#columnTopLabelTableBar', align: "center"}
                     ]
                 ],
-                data: [
-                ],
+                data: topLabelData,
                 skin: 'line'
             });
+
+
+            /**
+             * toolbar监听事件
+             */
+            table.on('toolbar(columnTopLabelTableFilter)', function (obj) {
+                if (obj.event === 'add') {  // 监听添加操作
+                    labelIncrement++;
+                    topLabelData.push({id:labelIncrement,labelName:"标签名称",clickPath:"#"});
+                    initTopLabelTable();
+                }
+            });
+
+
+            table.on('tool(columnTopLabelTableFilter)', function (obj) {
+                var data = obj.data;
+                if (obj.event == 'delete') {
+                    layer.confirm('确定删除该标签?', function (index) {
+                        if(topLabelData!=null&&topLabelData.length>0)
+                        {
+                            for(var i=0;i<topLabelData.length;i++)
+                            {
+                                var row = topLabelData[i];
+                                if(data.id==row.id)
+                                {
+                                    topLabelData.splice(i, 1);
+                                    break;
+                                }
+                            }
+                        }
+                        initTopLabelTable();
+                        layer.close(index);
+                    });
+                }
+            });
+
         }
 
         initLeftLabelTable();
@@ -142,18 +185,60 @@
         {
             leftLabelTable = table.render({
                 elem: '#columnLeftLabelTable',
+                defaultToolbar:[],
                 toolbar: '#columnLeftLabelTableToolbar',
                 cols: [
                     [
-                        {field: 'labelName', width: 600, title: '标签名称'},
-                        {field: 'clickPath', width: 150, title: '点击跳转'},
+                        {field: 'id',  title: '主键', hide: true},
+                        {field: 'labelName', width: 600,edit:"text", title: '标签名称'},
+                        {field: 'clickPath', width: 150,edit:"text", title: '点击跳转'},
                         {title: '操作', minWidth: 300, toolbar: '#columnLeftLabelTableBar', align: "center"}
                     ]
                 ],
-                data: [
-                ],
+                data: leftLabelData,
                 skin: 'line'
             });
+
+
+
+
+            /**
+             * toolbar监听事件
+             */
+            table.on('toolbar(columnLeftLabelTableFilter)', function (obj) {
+                if (obj.event === 'add') {  // 监听添加操作
+                    labelIncrement++;
+
+                    leftLabelData.push({id:labelIncrement,labelName:"标签名称",clickPath:"#"});
+
+                    initLeftLabelTable();
+                }
+            });
+
+
+
+            table.on('tool(columnLeftLabelTableFilter)', function (obj) {
+                var data = obj.data;
+                 if (obj.event == 'delete') {
+                     layer.confirm('确定删除该标签?', function (index) {
+                         if(leftLabelData!=null&&leftLabelData.length>0)
+                         {
+                             for(var i=0;i<leftLabelData.length;i++)
+                             {
+                                 var row = leftLabelData[i];
+                                 if(data.id==row.id)
+                                 {
+                                     leftLabelData.splice(i, 1);
+                                     break;
+                                 }
+                             }
+                         }
+                         initLeftLabelTable();
+                         layer.close(index);
+                     });
+                }
+            });
+
         }
 
     });
