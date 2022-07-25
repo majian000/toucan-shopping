@@ -84,6 +84,18 @@ public class PcIndexColumnController extends UIController {
         }
     }
 
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/shopProductListPage/{categoryId}",method = RequestMethod.GET)
+    public String spuListPage(HttpServletRequest request,@PathVariable Long categoryId)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/column/pcIndexColumn/shopProductListPage/spuListPage",feignFunctionService);
+
+        request.setAttribute("categoryId",categoryId);
+        return "pages/column/pcIndexColumn/shop_product_list.html";
+    }
+
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
     public String addPage(HttpServletRequest request)
