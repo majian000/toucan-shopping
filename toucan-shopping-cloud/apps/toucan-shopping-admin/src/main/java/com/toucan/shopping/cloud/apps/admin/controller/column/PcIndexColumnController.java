@@ -6,17 +6,24 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
+import com.toucan.shopping.modules.area.vo.AreaTreeVO;
+import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
+import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.content.entity.BannerArea;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 首页栏目管理
@@ -58,6 +66,12 @@ public class PcIndexColumnController extends UIController {
 
     @Autowired
     private FeignColumnTypeService feignColumnTypeService;
+
+    @Autowired
+    private FeignAreaService feignAreaService;
+
+    @Autowired
+    private FeignColumnAreaService feignColumnAreaService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -265,6 +279,117 @@ public class PcIndexColumnController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return tableVO;
+    }
+
+
+
+
+    public void setTreeNodeSelect(AtomicLong id,AreaTreeVO parentTreeVO,List<AreaTreeVO> areaTreeVOList,List<ColumnArea> columnAreas)
+    {
+        for(AreaTreeVO areaTreeVO:areaTreeVOList)
+        {
+            areaTreeVO.setId(id.incrementAndGet());
+            areaTreeVO.setNodeId(areaTreeVO.getId());
+            areaTreeVO.setPid(parentTreeVO.getId());
+            areaTreeVO.setParentId(areaTreeVO.getPid());
+            for(ColumnArea columnArea:columnAreas) {
+                if(areaTreeVO.getCode().equals(columnArea.getAreaCode())) {
+                    //设置节点被选中
+                    areaTreeVO.getState().setChecked(true);
+                    break;
+                }
+            }
+            if(!CollectionUtils.isEmpty(areaTreeVO.getChildren()))
+            {
+                setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(),columnAreas);
+            }
+        }
+    }
+
+
+    /**
+     * 查询地区树
+     * @param request
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/query/area/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryAreaTree(HttpServletRequest request,String columnId)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            //查询地区树
+            AreaVO query = new AreaVO();
+            query.setAppCode("10001001");
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
+
+            resultObjectVO = feignAreaService.queryTree(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<AreaTreeVO> areaTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AreaTreeVO.class);
+
+                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
+                AtomicLong id = new AtomicLong();
+                ColumnAreaVO queryBannerAreaVo = new ColumnAreaVO();
+                if(StringUtils.isNotEmpty(columnId)) {
+                    queryBannerAreaVo.setColumnId(Long.parseLong(columnId));
+                }
+                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
+
+                resultObjectVO = feignColumnAreaService.queryColumnAreaList(requestJsonVO.sign(),requestJsonVO);
+                List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
+                if(resultObjectVO.isSuccess())
+                {
+                    //只保留省市节点
+                    AreaTreeVO rootTree = areaTreeVOList.get(0);
+                    if(!CollectionUtils.isEmpty(rootTree.getChildren())) {
+                        List<AreaTreeVO> rootChilren = JSONArray.parseArray(JSONObject.toJSONString(rootTree.getChildren()), AreaTreeVO.class);
+                        for (AreaTreeVO areaTreeVO : rootChilren) {
+                            //直辖市
+                            if (areaTreeVO.getIsMunicipality().shortValue() == 1) {
+                                areaTreeVO.setChildren(null);
+                            } else { //省
+                                //遍历所有市节点,删除区县节点
+                                if (!CollectionUtils.isEmpty(areaTreeVO.getChildren())) {
+                                    List<AreaTreeVO> chilren = JSONArray.parseArray(JSONObject.toJSONString(areaTreeVO.getChildren()), AreaTreeVO.class);
+                                    for (AreaVO cityTreeVO : chilren) {
+                                        //删除区县节点
+                                        cityTreeVO.setChildren(null);
+                                    }
+                                    areaTreeVO.setChildren(chilren);
+                                }
+                            }
+                        }
+                        rootTree.setChildren(rootChilren);
+                    }
+                    releaseAreaTreeVOList.add(rootTree);
+                    List<ColumnArea> columnAreas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ColumnArea.class);
+                    if(!CollectionUtils.isEmpty(columnAreas)) {
+                        for(AreaTreeVO areaTreeVO:releaseAreaTreeVOList) {
+                            areaTreeVO.setId(id.incrementAndGet());
+                            areaTreeVO.setNodeId(areaTreeVO.getId());
+                            areaTreeVO.setText(areaTreeVO.getTitle());
+                            for(ColumnArea columnArea:columnAreas) {
+                                if(areaTreeVO.getCode().equals(columnArea.getAreaCode())) {
+                                    //设置节点被选中
+                                    areaTreeVO.getState().setChecked(true);
+                                }
+                            }
+                            setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(), columnAreas);
+                        }
+                    }
+                }
+                resultObjectVO.setData(releaseAreaTreeVOList);
+            }
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请求失败");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
     }
 
 
