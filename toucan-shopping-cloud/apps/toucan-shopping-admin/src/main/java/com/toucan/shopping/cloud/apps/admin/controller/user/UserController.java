@@ -466,7 +466,7 @@ public class UserController extends UIController {
 
 
         //商城应用编码
-        String shoppingAppCode = "10001001";
+        String shoppingAppCode = toucan.getShoppingPC().getAppCode();
         String mobilePhone = user.getMobilePhone();
         String lockKey = toucan.getAppCode()+"_user_regist_mobile_"+mobilePhone;
         try {
@@ -592,7 +592,7 @@ public class UserController extends UIController {
             }
 
             //商城应用编码
-            user.setAppCode("10001001");
+            user.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),user);
             logger.info(" 修改详情 {} ", user.getUserMainId());
             UserVO userVO=null;
@@ -676,7 +676,7 @@ public class UserController extends UIController {
 
 
         //商城应用编码
-        String shoppingAppCode = "10001001";
+        String shoppingAppCode = toucan.getShoppingPC().getAppCode();
         try {
             UserRegistVO user = new UserRegistVO();
             user.setUserMainId(Long.parseLong(userMainId));
@@ -740,7 +740,7 @@ public class UserController extends UIController {
 
 
         //商城应用编码
-        String shoppingAppCode = "10001001";
+        String shoppingAppCode = toucan.getShoppingPC().getAppCode();
         String userMainId = String.valueOf(user.getUserMainId());
         String lockKey = toucan.getAppCode()+"_user_reset_password_"+user.getUserMainId();
         try {
@@ -805,7 +805,7 @@ public class UserController extends UIController {
 
 
         //商城应用编码
-        String shoppingAppCode = "10001001";
+        String shoppingAppCode = toucan.getShoppingPC().getAppCode();
         String mobilePhone = user.getMobilePhone();
         String lockKey = toucan.getAppCode()+"_user_regist_mobile_"+mobilePhone;
         try {
@@ -867,7 +867,7 @@ public class UserController extends UIController {
 
 
         //商城应用编码
-        String shoppingAppCode = "10001001";
+        String shoppingAppCode = toucan.getShoppingPC().getAppCode();
         String email = user.getEmail();
         String lockKey = toucan.getAppCode()+"_user_regist_email_"+email;
         try {
@@ -929,7 +929,7 @@ public class UserController extends UIController {
 
 
         //商城应用编码
-        String shoppingAppCode = "10001001";
+        String shoppingAppCode = toucan.getShoppingPC().getAppCode();
         String username = user.getUsername();
         String lockKey = toucan.getAppCode()+"_user_regist_username_"+username;
         try {
@@ -982,7 +982,7 @@ public class UserController extends UIController {
             User user =new User();
             user.setUserMainId(Long.parseLong(id));
 
-            String shoppingAppCode = "10001001";
+            String shoppingAppCode = toucan.getShoppingPC().getAppCode();
             String entityJson = JSONObject.toJSONString(user);
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(shoppingAppCode);
@@ -1018,7 +1018,7 @@ public class UserController extends UIController {
             UserVO userVO =new UserVO();
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setMobilePhone(mobilePhone);
-            userVO.setAppCode("10001001");
+            userVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
             resultObjectVO = feignUserService.disabledEnabledMobilePhoneByUserMainIdAndMobilePhone(SignUtil.sign(requestVo),requestVo);
@@ -1054,7 +1054,7 @@ public class UserController extends UIController {
             UserVO userVO =new UserVO();
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setEmail(email);
-            userVO.setAppCode("10001001");
+            userVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
             resultObjectVO = feignUserService.disabledEnabledEmailByUserMainIdAndEmail(SignUtil.sign(requestVo),requestVo);
@@ -1091,7 +1091,7 @@ public class UserController extends UIController {
             UserVO userVO =new UserVO();
             userVO.setUserMainId(Long.parseLong(id));
             userVO.setUsername(username);
-            userVO.setAppCode("10001001");
+            userVO.setAppCode(toucan.getShoppingPC().getAppCode());
 
             RequestJsonVO requestVo = RequestJsonVOGenerator.generator(toucan.getAppCode(),userVO);
             resultObjectVO = feignUserService.disabledEnabledUsernameByUserMainIdAndUsername(SignUtil.sign(requestVo),requestVo);
@@ -1126,7 +1126,7 @@ public class UserController extends UIController {
             {
                 for(UserVO userVO:userVOS)
                 {
-                    userVO.setAppCode("10001001");
+                    userVO.setAppCode(toucan.getShoppingPC().getAppCode());
                 }
             }
             String entityJson = JSONObject.toJSONString(userVOS);

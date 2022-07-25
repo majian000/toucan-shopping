@@ -47,4 +47,9 @@ public class ShoppingPC {
      */
     private String pcIndexColumnTypeCode;
 
+    /**
+     * 应用编码
+     */
+    private String appCode;
+
 }

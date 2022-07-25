@@ -113,7 +113,14 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
-            console.log(topLabelData);
+            var areaCodeArray = new Array();
+            for(var i=0;i<areaArray.length;i++)
+            {
+                areaCodeArray[i] = areaArray[i].code;
+            }
+            data.field.areaCodeArray=areaCodeArray;
+
+
             return false;
         });
 

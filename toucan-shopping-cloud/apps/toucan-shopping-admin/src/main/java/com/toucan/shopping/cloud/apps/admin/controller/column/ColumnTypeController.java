@@ -133,7 +133,7 @@ public class ColumnTypeController extends UIController {
                 return resultObjectVO;
             }
 
-            entity.setAppCode("10001001");
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignColumnTypeService.save(requestJsonVO);
@@ -172,7 +172,7 @@ public class ColumnTypeController extends UIController {
                 return resultObjectVO;
             }
 
-            entity.setAppCode("10001001");
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
 
