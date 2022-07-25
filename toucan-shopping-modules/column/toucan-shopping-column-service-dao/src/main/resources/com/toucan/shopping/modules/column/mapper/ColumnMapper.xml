@@ -10,6 +10,8 @@
         <result column="column_sort" jdbcType="INTEGER" property="columnSort" />
         <result column="position" jdbcType="INTEGER" property="position" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="start_show_date" jdbcType="TIMESTAMP" property="startShowDate" />
+        <result column="end_show_date" jdbcType="TIMESTAMP" property="endShowDate" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />

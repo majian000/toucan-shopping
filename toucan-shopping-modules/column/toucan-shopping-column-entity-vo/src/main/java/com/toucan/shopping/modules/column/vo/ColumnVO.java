@@ -23,9 +23,6 @@ public class ColumnVO extends Column {
 
     private Long[] idArray; //ID数组
 
-    private List<ColumnRecommendLabel> topLabels; //顶部标签
-
-    private List<ColumnRecommendLabel> leftLabels; //左侧标签
 
     private String createAdminName; //创建人姓名
     private String updateAdminName; //修改人姓名

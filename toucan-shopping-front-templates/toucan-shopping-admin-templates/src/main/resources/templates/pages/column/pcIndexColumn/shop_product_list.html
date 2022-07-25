@@ -92,18 +92,6 @@
                     </div>
                 </fieldset>
 
-                <script type="text/html" id="toolbarDemo">
-                    <div class="layui-btn-container">
-                        <span th:each="tb : ${toolbarButtons}" th:utext="${tb}"></span>
-
-                    </div>
-                </script>
-
-                <table class="layui-hide" id="shopProductTable" lay-filter="shopProductTableFilter"></table>
-
-                <script type="text/html" id="shopProductTableBar">
-                    <span th:each="btn : ${rowButtons}" th:utext="${btn}"></span>
-                </script>
             </div>
         </div>
     </div>
@@ -284,8 +272,7 @@
                     },
                     {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
                     {field: 'createDate', width: 150, title: '创建时间'},
-                    {field: 'updateDate', width: 150, title: '修改时间'},
-                    {title: '操作', minWidth: 300, toolbar: '#shopProductTableBar', align: "center"}
+                    {field: 'updateDate', width: 150, title: '修改时间'}
                 ]
             ],
             limits: [15,30,100,200],
