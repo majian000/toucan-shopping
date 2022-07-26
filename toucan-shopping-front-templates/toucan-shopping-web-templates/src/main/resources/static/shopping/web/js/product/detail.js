@@ -107,7 +107,7 @@ function bindAttributeCheckboxEvent()
                     var sku = g_productVo.productSkuVOList[p];
                     if(sku.attributeValueGroup==attributeValueGroup)
                     {
-                        var currentLocation=getHrefIngoreId();
+                        var currentLocation=getShopProductPreviewHrefIngoreId();
                         window.location.href = currentLocation+"/"+sku.id;
                     }
                 }

@@ -13,13 +13,24 @@ function getProductId()
     return id_op;
 }
 
-function getHrefIngoreId()
+function getApprovePreviewHrefIngoreId()
 {
     var urlParam = window.location.href;
     var currentLocation=urlParam.substring(0,urlParam.lastIndexOf("/"));
     if(currentLocation.indexOf("/paid")!=-1)
     {
         currentLocation = currentLocation.substring(0,currentLocation.indexOf("/paid"));
+    }
+    return currentLocation;
+}
+
+function getShopProductPreviewHrefIngoreId()
+{
+    var urlParam = window.location.href;
+    var currentLocation=urlParam.substring(0,urlParam.lastIndexOf("/"));
+    if(currentLocation.indexOf("/pid")!=-1)
+    {
+        currentLocation = currentLocation.substring(0,currentLocation.indexOf("/pid"));
     }
     return currentLocation;
 }
@@ -37,7 +48,6 @@ function getPreviewType()
     }
     return 2;
 }
-
 
 /**
  * 判断是skuId查询还是商品id查询
