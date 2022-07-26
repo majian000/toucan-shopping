@@ -31,6 +31,12 @@
             <artifactId>spring-retry</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>${nacos-server-version}</version>
+        </dependency>
+
         <!--增加hystrix支持熔断 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

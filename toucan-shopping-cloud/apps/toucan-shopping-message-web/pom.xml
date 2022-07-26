@@ -37,6 +37,12 @@
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>${nacos-server-version}</version>
+        </dependency>
+
         <!--使用配置中心 客户端-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
