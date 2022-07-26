@@ -23,6 +23,7 @@ spring:
       discovery:
         ip: ${toucan.ip}    #使用IP地址注册
         port: ${toucan.port}
+        register-enabled: false
         server-addr: http://${toucan.nacos.ip}:${toucan.nacos.port}
         metadata:
           preserved.heart.beat.interval: 4000 #心跳间隔。时间单位:秒。心跳间隔
