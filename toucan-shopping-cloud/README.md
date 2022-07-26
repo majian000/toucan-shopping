@@ -33,7 +33,7 @@
     4.kafka_2.12-2.7.0
     5.elasticsearch-7.10.2
     6.FastDFS_v5.08
-    7.nacos 下载地址:https://github.com/alibaba/nacos/releases
+    7.nacos-server-2.0.4 下载地址:https://github.com/alibaba/nacos/releases
 
 ##### 第三方配置
 
