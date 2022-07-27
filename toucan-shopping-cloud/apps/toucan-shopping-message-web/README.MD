@@ -5,11 +5,11 @@
     将消息中心独立出来一个Web项目 为了和商城Web端进行隔离
 
 #### 依赖服务
-1.toucan-shopping-config-server
+    1.toucan-shopping-config-server
 
     配置中心
     
-2.toucan-shopping-eureka
+    2.nacos-server-2.0.4
     
     服务注册中心
     

@@ -7,7 +7,7 @@
     1.toucan-shopping-config-server
     配置中心
     
-    2.toucan-shopping-eureka
+    2.nacos-server-2.0.4
     服务注册中心
     
     3.toucan-shopping-product
