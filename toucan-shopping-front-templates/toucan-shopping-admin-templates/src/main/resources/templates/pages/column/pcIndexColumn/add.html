@@ -404,12 +404,12 @@
                 maxmin:true,
                 btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
                 yes: function (index) {
-                    var spuObject = window["layui-layer-iframe" + index].getSelectSpu();
-                    setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
+                    // var spuObject = window["layui-layer-iframe" + index].getSelectSpu();
+                    // setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
                     layer.close(index);
                 },
                 area: ['80%', '80%'],
-                content: '[[@{/}]]column/pcIndexColumn/shopProductListPage/'+categoryId,
+                content: '[[@{/}]]component/selectShopProduct/shopProductListPage/'+categoryId,
                 zIndex: layer.zIndex,
                 success: function(layero){
                     layer.setTop(layero);

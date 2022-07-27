@@ -161,7 +161,7 @@
 
         table.render({
             elem: '#shopProductTable',
-            url: "[[@{/}]]product/shopProduct/list",
+            url: "[[@{/}]]component/selectShopProduct/list",
             method:'POST',
             where:getFormParam(),
             toolbar: '#toolbarDemo',
@@ -322,7 +322,7 @@
         var setting = {
             async: {
                 enable: true,
-                url:"[[@{/}]]product/shopProduct/query/category/tree/pid",
+                url:"[[@{/}]]component/selectShopProduct/query/category/tree/pid",
                 autoParam:["id", "pid", "name"],
                 dataFilter: filter
             },
@@ -358,7 +358,7 @@
 
             loaddingTree = layer.load();
             $.ajax({
-                url:"[[@{/}]]product/shopProduct/query/category/tree/pid",
+                url:"[[@{/}]]component/selectShopProduct/query/category/tree/pid",
                 type:"POST",
                 dataType: "json",
                 success: function(data){
@@ -403,7 +403,7 @@
                 maxmin:true,
 
                 area: ['100%', '100%'],
-                content: '[[@{/}]]product/shopProduct/detailPage/'+id
+                content: '[[@{/}]]component/selectShopProduct/detailPage/'+id
             });
             $(window).on("resize", function () {
                 layer.full(index);
