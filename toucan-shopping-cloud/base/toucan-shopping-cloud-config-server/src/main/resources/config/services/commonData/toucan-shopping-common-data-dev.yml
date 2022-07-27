@@ -15,16 +15,27 @@ spring:
   mvc: #启动初始化servletdispatcher
     servlet:
       load-on-startup: 100
-eureka:
-  instance:
-    lease-expiration-duration-in-seconds: 10 #10秒没发心跳将剔除
-    lease-renewal-interval-in-seconds: 3 #心跳3秒
-    prefer-ip-address: true
-    instance-id: 127.0.0.1:${server.port}    #使用IP地址注册
-  client:
-    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
-    serviceUrl:
-      defaultZone: http://localhost:8081/eureka
+  cloud:
+    nacos:
+      discovery:
+        ip: ${toucan.ip}    #使用IP地址注册
+        port: ${server.port}
+        server-addr: http://${toucan.nacos.ip}:${toucan.nacos.port}
+        metadata:
+          preserved.heart.beat.interval: 4000 #心跳间隔。时间单位:秒。心跳间隔
+          preserved.heart.beat.timeout: 4500 #心跳暂停。时间单位:秒。 即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例设为不健康：
+          preserved.ip.delete.timeout: 4500 #Ip删除超时。时间单位:秒。即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例删除：
+
+#eureka:
+#  instance:
+#    lease-expiration-duration-in-seconds: 10 #10秒没发心跳将剔除
+#    lease-renewal-interval-in-seconds: 3 #心跳3秒
+#    prefer-ip-address: true
+#    instance-id: 127.0.0.1:${server.port}    #使用IP地址注册
+#  client:
+#    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+#    serviceUrl:
+#      defaultZone: http://localhost:8081/eureka
 
 
 feign:

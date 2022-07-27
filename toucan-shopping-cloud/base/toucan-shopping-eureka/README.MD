@@ -1,5 +1,5 @@
 ###服务注册中心
-       
+    注意:新版本服务注册中心换成nacos
 
 #### 依赖服务
     1.toucan-shopping-config-server

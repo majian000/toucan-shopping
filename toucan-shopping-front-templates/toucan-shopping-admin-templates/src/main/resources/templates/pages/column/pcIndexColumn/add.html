@@ -65,6 +65,22 @@
             </script>
         </div>
     </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">关联城市</label>
+        <div class="layui-input-block">
+            <input type="text" readonly  id="selectArea" lay-verify="required"  placeholder="请选择关联城市" value="" class="layui-input" >
+        </div>
+    </div>
+    <div class="layui-form-item" id="connectProduct" >
+        <label class="layui-form-label required " >商品推荐</label>
+        <div class="layui-input-block">
+            <input type="text" id="shopProductRecommend"  lay-verify="required"  readonly required class="layui-input">
+            <input type="hidden" id="shopProductId" name="shopProductId">
+            <input type="hidden" id="shopProductUuid" name="shopProductUuid">
+            <tip>最多只显示6个。</tip>
+        </div>
+    </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
@@ -75,11 +91,17 @@
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
-    }).use(['form', 'table'], function () {
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form','dtree', 'table'], function () {
         var form = layui.form,
             layer = layui.layer,
             table = layui.table,
             $ = layui.$;
+        var dtree = layui.dtree;
+        var areaTree;
+        var areaTreeDataArray = new Array();
+        var areaArray =  new Array();
 
         var topLabelTable;
         var leftLabelTable;
@@ -91,29 +113,16 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
-            console.log(topLabelData);
-            // $.ajax({
-            //     url:"[[@{/column/save}]]",
-            //     contentType: "application/json; charset=utf-8",
-            //     type:'POST',
-            //     data:JSON.stringify(data.field),
-            //     success:function(data){
-            //         if(data.code<=0) {
-            //             layer.msg(data.msg);
-            //             return false;
-            //         }
-            //         var index = layer.alert(data.msg, {
-            //             title: '提示信息'
-            //         }, function () {
-            //             // 关闭弹出层
-            //             layer.close(index);
-            //             var iframeIndex = parent.layer.getFrameIndex(window.name);
-            //             parent.location.reload();
-            //             parent.layer.close(iframeIndex);
-            //
-            //         });
-            //     }
-            // });
+            var areaCodeArray = new Array();
+            for(var i=0;i<areaArray.length;i++)
+            {
+                areaCodeArray[i] = areaArray[i].code;
+            }
+            data.field.areaCodeArray=areaCodeArray;
+
+            data.field.topLabels = topLabelData;
+            data.field.leftLabels = leftLabelData;
+
             return false;
         });
 
@@ -233,6 +242,185 @@
             });
 
         }
+
+
+
+        /**
+         * 拿到所有选中节点的ID
+         * @param data
+         * @param idArray
+         */
+        function getCheckdNodeId(data,idArray)
+        {
+            for(var i=0;i<data.length;i++)
+            {
+                areaTreeDataArray.push(data[i]);
+                if(data[i].state.checked==true)
+                {
+                    idArray.push(data[i].id);
+                }
+                if(data[i].children!=null&&data[i].children.length>0)
+                {
+                    getCheckdNodeId(data[i].children,idArray);
+                }
+            }
+        }
+
+
+        /**
+         * 拿到指定节点对象
+         */
+        function getNodeObject(nodeId)
+        {
+            for(var i=0;i<areaTreeDataArray.length;i++)
+            {
+                if(areaTreeDataArray[i].id==nodeId)
+                {
+                    return areaTreeDataArray[i];
+                }
+            }
+            return null;
+        }
+
+
+        /**
+         * 拿到上级节点信息
+         */
+        function getParentNode(areaArray,areaNames,pid)
+        {
+            for(var i=0;i<areaTreeDataArray.length;i++)
+            {
+
+                if(areaTreeDataArray[i].id==pid)
+                {
+                    var exists=false;
+                    //判断上级节点ID是否已经保存了
+                    for(var j=0;j<areaArray.length;j++)
+                    {
+                        if(areaArray[j].id==pid) {
+                            exists = true;
+                        }
+                    }
+                    //避免上级节点ID重复保存两份
+                    if(!exists)
+                    {
+                        areaArray.push({id:areaTreeDataArray[i].id,areaCode:areaTreeDataArray[i].areaCode});
+                        areaNames+=" "+areaTreeDataArray[i].text;
+                    }
+                    if(areaTreeDataArray[i].pid!=-1) {
+                        //找到这个节点的上级节点
+                        getParentNode(areaArray,areaNames, areaTreeDataArray[i].pid);
+                    }
+                }
+            }
+        }
+
+
+
+        $("#selectArea").click(function(){
+            loadding = layer.load();
+            index = layer.open({
+                title: '选择关联城市',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+                area: ['20%', '60%'],
+                btn: ['确定'],
+                content: "<ul id='areaTree' class='dtree' data-id='0' ></ul>",
+                success:function(layero){
+                    loadding = layer.load();
+                    $.ajax({
+                        url:"[[@{/}]]banner/query/area/tree",
+                        type:'POST',
+                        data:{bannerId:null},
+                        success:function(data){
+                            if(data.code==1)
+                            {
+                                //已选择节点
+                                var idArray = new Array();
+                                areaTreeDataArray = new Array();
+                                getCheckdNodeId(data.data,idArray);
+                                areaTree = dtree.render({
+                                    elem: "#areaTree",//html中的id值
+                                    data:data.data,
+                                    width:'100%',
+                                    checkbarType: "no-all",
+                                    checkbar: true,  //开启复选框
+                                    checkbarData: "choose",// 记录选中（默认）， "change"：记录变更， "all"：记录全部， "halfChoose"："记录选中和半选（V2.5.0新增）"
+                                    done: function (res, $ul, first) {
+                                        if (first) {
+                                            if(idArray!=null&&idArray.length>0) {
+                                                dtree.chooseDataInit("areaTree", idArray); //"001001,001002"被选中的子节点id
+                                                dtree.initNoAllCheck("areaTree");// 反选半选状态(原始数据中父节点的选中或半选状态并没有被带上)
+                                            }
+                                        }
+
+                                    }
+                                });
+                            }
+                        },
+                        complete:function()
+                        {
+                            layer.close(loadding);
+                        }
+                    });
+
+                },
+                yes: function(index, layero){
+                    var selectNodes = areaTree.getCheckbarNodesParam("areaTree");
+                    if(selectNodes==null||selectNodes.length<=0)
+                    {
+                        layer.msg("请选择地区");
+                        return false;
+                    }
+                    areaArray =  new Array();
+                    var areaNames = "";
+                    for (var i = 0; i < selectNodes.length; i++) {
+                        var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
+                        areaArray.push({id:selectNodeObject.id,code:selectNodeObject.code});
+                        areaNames+=" "+selectNodeObject.text;
+                        getParentNode(areaArray,areaNames,selectNodeObject.pid);
+                    }
+                    $("#selectArea").val(areaNames);
+                    for (var j = 0; j < areaArray.length; j++) {
+                        areaArray[j]={code:areaArray[j].code};
+                    }
+                    layer.close(index);
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
+
+        $("#shopProductRecommend").click(function(){
+            var categoryId = "-1";
+            var index = layer.open({
+                title: '店铺商品列表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
+                yes: function (index) {
+                    var spuObject = window["layui-layer-iframe" + index].getSelectSpu();
+                    setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
+                    layer.close(index);
+                },
+                area: ['80%', '80%'],
+                content: '[[@{/}]]column/pcIndexColumn/shopProductListPage/'+categoryId,
+                zIndex: layer.zIndex,
+                success: function(layero){
+                    layer.setTop(layero);
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+
+        });
+
 
     });
 </script>

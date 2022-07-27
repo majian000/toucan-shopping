@@ -20,10 +20,6 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
         <!--对Open Feign方式调用支持 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -33,6 +29,12 @@
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>${nacos-server-version}</version>
         </dependency>
 
         <!--增加hystrix支持熔断 -->

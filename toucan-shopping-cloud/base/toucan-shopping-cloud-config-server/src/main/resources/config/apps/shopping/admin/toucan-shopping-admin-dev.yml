@@ -18,14 +18,24 @@ spring:
     enabled: true
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     min-response-size: 1024 #只压缩1MB以上的内容
+  cloud:
+    nacos:
+      discovery:
+        ip: ${toucan.ip}    #使用IP地址注册
+        port: ${server.port}
+        register-enabled: false
+        server-addr: http://${toucan.nacos.ip}:${toucan.nacos.port}
+        metadata:
+          preserved.heart.beat.interval: 4000 #心跳间隔。时间单位:秒。心跳间隔
+          preserved.heart.beat.timeout: 4500 #心跳暂停。时间单位:秒。 即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例设为不健康：
+          preserved.ip.delete.timeout: 4500 #Ip删除超时。时间单位:秒。即服务端1.5秒收不到客户端心跳，会将该客户端注册的实例删除：
 
-
-eureka:
-  client:
-    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
-    registerWithEureka: false
-    serviceUrl:
-      defaultZone: http://localhost:8081/eureka
+#eureka:
+#  client:
+#    registryFetchIntervalSeconds: 3 #3秒更新本地服务列表
+#    registerWithEureka: false
+#    serviceUrl:
+#      defaultZone: http://localhost:8081/eureka
 
 
 
@@ -82,6 +92,7 @@ toucan:
   workerId: 0 #工作ID 0~31, 每个服务实例都有一个工作ID
   datacenterId: 0 #数据中心ID (0~31)
   shopping-pc: #PC端页面静态化
+    app-code: 10001001
     ip-list: localhost:8083,127.0.0.1:8083 #多个用,分割
     pc-index-column-type-code: PC_INDEX_SHANGPINTUIJIAN #PC端首页商品推荐栏目编码
   shopping-seller-web-pc: #PC端页面静态化

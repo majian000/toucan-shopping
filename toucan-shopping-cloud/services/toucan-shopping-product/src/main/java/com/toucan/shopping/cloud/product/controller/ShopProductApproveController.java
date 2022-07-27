@@ -1,7 +1,6 @@
 package com.toucan.shopping.cloud.product.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.netflix.discovery.converters.Auto;
 import com.toucan.shopping.cloud.product.service.ShopProductApproveSkuRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;

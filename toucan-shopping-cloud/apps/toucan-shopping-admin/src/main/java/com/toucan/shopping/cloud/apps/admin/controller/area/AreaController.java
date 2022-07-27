@@ -147,7 +147,7 @@ public class AreaController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setAppCode("10001001");
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignAreaService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -200,7 +200,7 @@ public class AreaController extends UIController {
         try {
             AreaVO query = new AreaVO();
             //设置为商城的应用编码
-            query.setAppCode("10001001");
+            query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,query);
             return feignAreaService.queryTree(SignUtil.sign(requestJsonVO),requestJsonVO);
         }catch(Exception e)
@@ -226,7 +226,7 @@ public class AreaController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            queryPageInfo.setAppCode("10001001");
+            queryPageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignAreaService.queryAreaTreeTable(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;
@@ -253,7 +253,7 @@ public class AreaController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            queryPageInfo.setAppCode("10001001");
+            queryPageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignAreaService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
             return resultObjectVO;
@@ -280,7 +280,7 @@ public class AreaController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AreaVO areaVO = new AreaVO();
-            areaVO.setAppCode("10001001");
+            areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
             areaVO.setPid(pid);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
             resultObjectVO = feignAreaService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -307,7 +307,7 @@ public class AreaController extends UIController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AreaVO areaVO = new AreaVO();
-            areaVO.setAppCode("10001001");
+            areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
             areaVO.setCode(parentCode);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
             resultObjectVO = feignAreaService.queryListByParentCode(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -340,7 +340,7 @@ public class AreaController extends UIController {
             }
             Area entity =new Area();
             entity.setId(Long.parseLong(id));
-            entity.setAppCode("10001001");
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
 
             String entityJson = JSONObject.toJSONString(entity);
@@ -379,7 +379,7 @@ public class AreaController extends UIController {
             }
             for(AreaVO areaVO:areaVOS)
             {
-                areaVO.setAppCode("10001001");
+                areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
             }
             String entityJson = JSONObject.toJSONString(areaVOS);
             RequestJsonVO requestVo = new RequestJsonVO();

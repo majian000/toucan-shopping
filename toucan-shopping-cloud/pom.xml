@@ -139,6 +139,10 @@
 
     </modules>
 
+    <properties>
+        <nacos-server-version>2.2.0.RELEASE</nacos-server-version>
+    </properties>
+
 
     <dependencies>
 

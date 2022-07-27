@@ -378,7 +378,7 @@ public class BannerController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setAppCode("10001001");
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignBannerService.save(SignUtil.sign(requestJsonVO),requestJsonVO);
@@ -532,7 +532,7 @@ public class BannerController extends UIController {
         try {
             //查询地区树
             AreaVO query = new AreaVO();
-            query.setAppCode("10001001");
+            query.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
 
             resultObjectVO = feignAreaService.queryTree(requestJsonVO.sign(),requestJsonVO);

@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.column.vo;
 
 import com.toucan.shopping.modules.column.entity.Column;
+import com.toucan.shopping.modules.column.entity.ColumnRecommendLabel;
 import lombok.Data;
 
 import java.util.Date;
