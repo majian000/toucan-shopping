@@ -1,5 +1,8 @@
 package com.toucan.shopping.modules.product.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toucan.shopping.modules.product.entity.ShopProduct;
 import lombok.Data;
 
@@ -82,4 +85,12 @@ public class ShopProductVO extends ShopProduct {
      * 商品介绍JSON字符串
      */
     private String shopProductDescriptionJson="{}";
+
+    /**
+     * layui 表格中多选框默认选中
+     */
+    @JsonProperty("LAY_CHECKED")
+    private boolean LAY_CHECKED = false;
+
+
 }

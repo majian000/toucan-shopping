@@ -36,6 +36,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
+import com.toucan.shopping.modules.product.page.SelectShopProductPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -119,10 +120,10 @@ public class SelectShopProductController extends UIController {
      * @param pageInfo
      * @return
      */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @AdminAuth
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, ShopProductPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request,@RequestBody SelectShopProductPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
@@ -242,6 +243,18 @@ public class SelectShopProductController extends UIController {
                         for (ShopProductVO shopProductVO : list) {
                             if (shopProductVO.getMainPhotoFilePath() != null) {
                                 shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductVO.getMainPhotoFilePath());
+                            }
+                            //设置默认选中状态
+                            if(StringUtils.isNotEmpty(pageInfo.getSelectProductIds()))
+                            {
+                                String[] selectProductIds = pageInfo.getSelectProductIds().split(",");
+                                for(String selectProductId:selectProductIds)
+                                {
+                                    if(selectProductId.equals(String.valueOf(shopProductVO.getId())))
+                                    {
+                                        shopProductVO.setLAY_CHECKED(true);
+                                    }
+                                }
                             }
                         }
 

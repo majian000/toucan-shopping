@@ -50,20 +50,24 @@
             <div class="layuimini-main">
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>已选商品 <a id="selectProductCountTip">0</a>个</legend>
-                    <div class="layui-card">
-                        <div class="layui-card-body">
-                            <table class="layui-hide" id="selectShopProductTable" lay-filter="selectShopProductTableFilter"  ></table>
+                </fieldset>
+                <table class="layui-hide" id="selectShopProductTable" lay-filter="selectShopProductTableFilter"  ></table>
 
-                            <script type="text/html" id="selectShopProductTableBar">
-                                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
-                            </script>
-                        </div>
-                    </div>
+                <script type="text/html" id="selectShopProductTableBar">
+                    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
+                </script>
+            </div>
+        </div>
+
+        <div class="layuimini-container">
+            <div class="layuimini-main">
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>商品搜索</legend>
                 </fieldset>
 
                 <fieldset class="table-search-fieldset">
                     <div style="margin: 10px 10px 10px 10px">
-                        <form class="layui-form layui-form-pane" id="userSearchForm" action="">
+                        <form class="layui-form layui-form-pane" id="tableSearchForm" action="">
                             <input type="hidden" id="categoryId" name="categoryId" th:value="${categoryId}">
                             <div class="layui-form-item">
 
@@ -139,6 +143,7 @@
         var loaddingTree;
         var dtree = layui.dtree;
         var selectShopProductTable;
+        var shopProductTable;
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -160,16 +165,28 @@
 
         function getFormParam()
         {
-            var formParam = $("#userSearchForm").serializeJson();
+            var formParam = $("#tableSearchForm").serializeJson();
+            var selectProductIdArray = null;
+            if(toucan_component_select_product.length>0)
+            {
+                selectProductIdArray = new Array();
+                for(var i=0;i<toucan_component_select_product.length;i++)
+                {
+                    var selectProduct = toucan_component_select_product[i];
+                    selectProductIdArray.push(selectProduct.id);
+                }
+                formParam.selectProductIds =selectProductIdArray.join(",");
+            }
             return formParam;
         }
 
 
-        table.render({
+        shopProductTable = table.render({
             elem: '#shopProductTable',
             url: "[[@{/}]]component/selectShopProduct/list",
             method:'POST',
             where:getFormParam(),
+            contentType:"application/json",
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter',  {
                 title: '提示',
@@ -180,6 +197,7 @@
             {
                 //隐藏全选按钮
                 $('th[data-field=0] div').replaceWith('<div class="layui-table-cell laytable-cell-5-0-0"><span>&nbsp;&nbsp;&nbsp;&ensp;</span></div>');
+
             },
             cols: [
                 [
@@ -308,21 +326,31 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
+
+            if (shopProductTable!= null) {
+                shopProductTable.where = {};  //置空where
+            }
             //执行搜索重载
-            table.reload('shopProductTable', {
+            shopProductTable.reload({
                 page: {
                     curr: 1
                 }
-                , where: data.field
-            }, 'data');
+                , where: getFormParam(),
+                done:function(res, curr, count)
+                {
+                    //隐藏全选按钮
+                    $('th[data-field=0] div').replaceWith('<div class="layui-table-cell laytable-cell-5-0-0"><span>&nbsp;&nbsp;&nbsp;&ensp;</span></div>');
+                }
+            });
 
             return false;
         });
 
 
+
         $("#data-reset-btn").click(function(){
             $("#categoryId").val("");
-            $("#userSearchForm")[0].reset();
+            $("#tableSearchForm")[0].reset();
             layui.form.render();
         });
 
@@ -384,23 +412,6 @@
         }
 
 
-        /**
-         * 移除已选商品
-         * @param selectRow
-         */
-        function removeSelectProduct(selectRow)
-        {
-            var newSelectProduct = new Array();
-            for(var i=0;i<toucan_component_select_product.length;i++)
-            {
-                var selectProduct = toucan_component_select_product[i];
-                if(selectProduct.id!=selectRow.id)
-                {
-                    newSelectProduct.push(selectProduct);
-                }
-            }
-            toucan_component_select_product = newSelectProduct;
-        }
 
         //监听表格复选框选择
         table.on('checkbox(shopProductTableFilter)', function (obj) {
@@ -411,7 +422,7 @@
                 for (var i = 0; i < toucan_component_select_product.length; i++) {
                     var selectProduct = toucan_component_select_product[i];
                     if (selectProduct.id == selectRow.id) {
-                        removeSelectProduct(selectRow);
+                        toucan_component_select_product.splice(i, 1);
                         isFind = true;
                         break;
                     }
@@ -465,8 +476,11 @@
                 defaultToolbar: [],
                 cols: [
                     [
-                        {field: 'id', title: '主键', hide: true},
-                        {field: 'name',   title: '商品名称'},
+                        {field: 'id',  title: '店铺商品ID', width: 150},
+                        {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
+                            templet: function (row) {
+                                return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
+                            }},
                         {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
                             templet: function (row) {
                                 if(row.httpMainPhotoFilePath!=null) {
@@ -474,7 +488,9 @@
                                 }
                                 return "";
                             }},
-                        {field: 'categoryPath',  title: '分类路径'},
+                        {field: 'uuid',width: 300,  title: '店铺商品UUID'},
+                        {field: 'categoryPath',width: 350,  title: '分类路径'},
+                        {field: 'categoryName',width: 150,  title: '分类名称'},
                         {title: '操作', minWidth: 300, toolbar: '#selectShopProductTableBar', align: "center"}
                     ]
                 ],
@@ -484,6 +500,34 @@
 
             $("#selectProductCountTip").text(toucan_component_select_product.length);
         }
+
+
+
+        table.on('tool(selectShopProductTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'delete') {
+                layer.confirm("确定删除"+data.name+"?", function (index) {
+                    if(toucan_component_select_product!=null&&toucan_component_select_product.length>0)
+                    {
+                        for(var i=0;i<toucan_component_select_product.length;i++)
+                        {
+                            var row = toucan_component_select_product[i];
+                            if(data.id==row.id)
+                            {
+                                toucan_component_select_product.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                    initSelectShopProductTable();
+                    layer.close(index);
+                    $("#queryButton").click();
+                });
+            }else if(obj.event=="openDetailDialogDevent")
+            {
+                openDetailDialog(data.id);
+            }
+        });
 
     });
 </script>
