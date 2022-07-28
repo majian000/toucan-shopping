@@ -117,6 +117,14 @@
 <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
 <script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 <script>
+
+    var toucan_component_select_product = new Array();
+
+    function getComponentSelectProduct()
+    {
+        return toucan_component_select_product;
+    }
+
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
@@ -131,8 +139,6 @@
         var loaddingTree;
         var dtree = layui.dtree;
         var selectShopProductTable;
-
-        var selectShopProductData = new Array();
 
         $.fn.serializeJson=function(){
             var serializeObj={};
@@ -376,10 +382,46 @@
         }
 
 
+        /**
+         * 移除已选商品
+         * @param selectRow
+         */
+        function removeSelectProduct(selectRow)
+        {
+            var newSelectProduct = new Array();
+            for(var i=0;i<toucan_component_select_product.length;i++)
+            {
+                var selectProduct = toucan_component_select_product[i];
+                if(selectProduct.id!=selectRow.id)
+                {
+                    newSelectProduct.push(selectProduct);
+                }
+            }
+            toucan_component_select_product = newSelectProduct;
+        }
 
         //监听表格复选框选择
         table.on('checkbox(shopProductTableFilter)', function (obj) {
-            console.log(obj)
+            //拿到当前所有选中行
+            var selectRow = obj.data;
+            var isFind=false;
+            if(!obj.checked) {
+                for (var i = 0; i < toucan_component_select_product.length; i++) {
+                    var selectProduct = toucan_component_select_product[i];
+                    if (selectProduct.id == selectRow.id) {
+                        removeSelectProduct(selectRow);
+                        isFind = true;
+                        break;
+                    }
+                }
+            }
+            if(!isFind)
+            {
+                toucan_component_select_product.push(selectRow);
+            }
+
+            //重新绘制已选商品
+            initSelectShopProductTable();
         });
 
         table.on('tool(shopProductTableFilter)', function (obj) {
@@ -422,13 +464,19 @@
                 cols: [
                     [
                         {field: 'id', title: '主键', hide: true},
-                        {field: 'name', width: 600, edit: "text", title: '商品名称'},
-                        {field: 'mianPhoto', width: 600, edit: "text", title: '主图'},
-                        {field: 'categoryPath', width: 150, edit: "text", title: '分类路径'},
+                        {field: 'name',   title: '商品名称'},
+                        {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
+                            templet: function (row) {
+                                if(row.httpMainPhotoFilePath!=null) {
+                                    return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
+                                }
+                                return "";
+                            }},
+                        {field: 'categoryPath',  title: '分类路径'},
                         {title: '操作', minWidth: 300, toolbar: '#selectShopProductTableBar', align: "center"}
                     ]
                 ],
-                data: selectShopProductData,
+                data: toucan_component_select_product,
                 skin: 'line'
             });
         }
