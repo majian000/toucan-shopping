@@ -88,6 +88,7 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/common/common.js}" charset="utf-8"></script>
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
@@ -410,14 +411,10 @@
                     layer.close(index);
                 },
                 area: ['80%', '80%'],
-                content: '[[@{/}]]component/selectShopProduct/shopProductListPage/'+categoryId,
+                content: '[[@{/}]]component/selectShopProduct/shopProductListPage?categoryId='+categoryId+'&selectProductIds=', //984146210711404606,996897344802783282
                 zIndex: layer.zIndex,
-                success: function(layero,index){
+                success: function(layero,index) {
                     layer.setTop(layero);
-
-                    var selectProducts = new Array();
-                    selectProducts.push({id:"996897344802783282"});
-                    window["layui-layer-iframe" + index].initComponentSelectProduct(selectProducts);
                 }
             });
             $(window).on("resize", function () {

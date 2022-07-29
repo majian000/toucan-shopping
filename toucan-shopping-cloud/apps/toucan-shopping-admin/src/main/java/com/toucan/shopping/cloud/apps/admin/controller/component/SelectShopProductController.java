@@ -104,13 +104,14 @@ public class SelectShopProductController extends UIController {
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/shopProductListPage/{categoryId}",method = RequestMethod.GET)
-    public String spuListPage(HttpServletRequest request,@PathVariable Long categoryId)
+    @RequestMapping(value = "/shopProductListPage",method = RequestMethod.GET)
+    public String spuListPage(HttpServletRequest request,@RequestParam Long categoryId,@RequestParam String selectProductIds)
     {
         //初始化工具条按钮、操作按钮
         super.initButtons(request,toucan,"/component/selectShopProduct/shopProductListPage",feignFunctionService);
 
         request.setAttribute("categoryId",categoryId);
+        request.setAttribute("selectProductIds",selectProductIds);
         return "pages/component/selectShopProduct/shop_product_list.html";
     }
 

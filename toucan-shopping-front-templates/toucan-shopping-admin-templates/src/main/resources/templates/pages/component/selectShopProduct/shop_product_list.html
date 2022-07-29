@@ -69,6 +69,7 @@
                     <div style="margin: 10px 10px 10px 10px">
                         <form class="layui-form layui-form-pane" id="tableSearchForm" action="">
                             <input type="hidden" id="categoryId" name="categoryId" th:value="${categoryId}">
+                            <input type="hidden" id="selectProductIds"  th:value="${selectProductIds}">
                             <div class="layui-form-item">
 
                                 <div class="layui-inline">
@@ -126,43 +127,12 @@
 
     /**
      * 拿到所选商品
+     */
     function getComponentSelectProduct()
     {
         return toucan_component_select_product;
     }
 
-    /**
-     * 初始化选择商品列表
-     * @param selectProducts
-     */
-    function initComponentSelectProduct(selectProducts)
-    {
-        if(selectProducts!=null&&selectProducts.length>0) {
-            var queryObj={};
-            queryObj.ids=new Array();
-            for(var i=0;i<selectProducts.length;i++)
-            {
-                queryObj.ids.push(selectProducts[i].id);
-            }
-            $.ajax({
-                url:"[[@{/}]]component/selectShopProduct/list/id",
-                type:"POST",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify(queryObj),
-                success: function(data){
-                    console.log(data);
-                },
-                error: function(){
-
-                },
-                complete:function()
-                {
-                }
-            });
-            console.log(selectProducts);
-        }
-    }
 
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
@@ -198,6 +168,7 @@
             return serializeObj;
         };
 
+
         function getFormParam()
         {
             var formParam = $("#tableSearchForm").serializeJson();
@@ -215,149 +186,187 @@
             return formParam;
         }
 
+        initSelectProductTable();
 
-        shopProductTable = table.render({
-            elem: '#shopProductTable',
-            url: "[[@{/}]]component/selectShopProduct/list",
-            method:'POST',
-            where:getFormParam(),
-            contentType:"application/json",
-            toolbar: '#toolbarDemo',
-            defaultToolbar: ['filter',  {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
-            done:function(res, curr, count)
-            {
-                //隐藏全选按钮
-                $('th[data-field=0] div').replaceWith('<div class="layui-table-cell laytable-cell-5-0-0"><span>&nbsp;&nbsp;&nbsp;&ensp;</span></div>');
+        function initSelectProductTable(){
+            var queryObj={};
+            queryObj.ids=new Array();
+            var selectProductIdsValue = $("#selectProductIds").val();
+            if(selectProductIdsValue!=null&&selectProductIdsValue!="") {
+                var selectProducts = selectProductIdsValue.split(",");
+                for (var i = 0; i < selectProducts.length; i++) {
+                    queryObj.ids.push(selectProducts[i]);
+                }
+                $.ajax({
+                    url: "[[@{/}]]component/selectShopProduct/list/id",
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(queryObj),
+                    success: function (resp) {
+                        toucan_component_select_product = resp.data;
+                        initShopProductTable();
+                    },
+                    error: function () {
 
-            },
-            cols: [
-                [
-                    {type: "checkbox", width: 50},
-                    {field: 'id',  title: '店铺商品ID', width: 150},
-                    {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
-                        templet: function (row) {
-                            return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
-                        }},
-                    {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
-                        templet: function (row) {
-                            if(row.httpMainPhotoFilePath!=null) {
-                                return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
-                    {field: 'uuid',width: 300,  title: '店铺商品UUID'},
-                    {field: 'categoryPath',width: 350,  title: '分类路径'},
-                    {field: 'categoryName',width: 150,  title: '分类名称'},
-                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
-                        templet: function (row) {
-                            if(row.brandHttpLogo!=null) {
-                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
-                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
-                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
-                    {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
-                    {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
-                    {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
-                    {field: 'productId',width: 150,  title: '平台商品ID'},
-                    {field: 'attributes',width: 550,  title: '属性列表'},
-                    {field: 'status',width: 150,   title: '上架状态',
-                        templet: function (row) {
-                            if(row.status == null){
-                                return "";
-                            }
-                            if(row.status == "0"){
-                                return "<a style='color:red'>未上架</a>";
-                            }
-                            if(row.status == "1"){
-                                return "<a style='color:green'>已上架</a>";
-                            }
-                            return row.status;
-                        }
                     },
-                    {field: 'shopId',width: 300,  title: '店铺ID'},
-                    {field: 'shopName',width: 300,  title: '店铺名称'},
-                    {field: 'sellerNo',width: 150,   title: '卖家编码'},
-                    {field: 'articleNumber',width: 150, title: '货号'},
-                    {field: 'payMethod',width: 150,   title: '付款方式',
-                        templet: function (row) {
-                            if(row.payMethod == null){
-                                return "";
-                            }
-                            if(row.payMethod == "1"){
-                                return "一口价(普通交易模式)";
-                            }
-                            return row.payMethod;
-                        }
-                    },
-                    {field: 'buckleInventoryMethod',width: 150,   title: '库存计数',
-                        templet: function (row) {
-                            if(row.buckleInventoryMethod == null){
-                                return "";
-                            }
-                            if(row.buckleInventoryMethod == "1"){
-                                return "买家拍下减库存";
-                            }
-                            if(row.buckleInventoryMethod == "2"){
-                                return "买家付款减库存";
-                            }
-                            return row.buckleInventoryMethod;
-                        }
-                    },
-                    {field: 'giveInvoice',width: 150,   title: '开发票',
-                        templet: function (row) {
-                            if(row.giveInvoice == null){
-                                return "";
-                            }
-                            if(row.giveInvoice == "1"){
-                                return "支持";
-                            }
-                            if(row.giveInvoice == "0"){
-                                return "不支持";
-                            }
-                            return row.giveInvoice;
-                        }
-                    },
-                    {field: 'changeOrReturn',width: 150,   title: '退换货承诺',
-                        templet: function (row) {
-                            if(row.changeOrReturn == null){
-                                return "";
-                            }
-                            if(row.changeOrReturn == "1"){
-                                return "承诺";
-                            }
-                            if(row.changeOrReturn == "0"){
-                                return "不承诺";
-                            }
-                            return row.changeOrReturn;
-                        }
-                    },
-                    {field: 'etractMethod',width: 150,   title: '提取方式',
-                        templet: function (row) {
-                            var etractMethodText = "";
-                            if(row.etractMethod!=null) {
-                                if (row.etractMethod.indexOf("1") != -1) {
-                                    etractMethodText += "用物流配送"
+                    complete: function () {
+                    }
+                });
+            }else{
+                initShopProductTable();
+            }
+
+        }
+
+        function initShopProductTable()
+        {
+            shopProductTable = table.render({
+                elem: '#shopProductTable',
+                url: "[[@{/}]]component/selectShopProduct/list",
+                method:'POST',
+                where:getFormParam(),
+                contentType:"application/json",
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter',  {
+                    title: '提示',
+                    layEvent: 'LAYTABLE_TIPS',
+                    icon: 'layui-icon-tips'
+                }],
+                done:function(res, curr, count)
+                {
+                    //隐藏全选按钮
+                    $('th[data-field=0] div').replaceWith('<div class="layui-table-cell laytable-cell-5-0-0"><span>&nbsp;&nbsp;&nbsp;&ensp;</span></div>');
+
+                },
+                cols: [
+                    [
+                        {type: "checkbox", width: 50},
+                        {field: 'id',  title: '店铺商品ID', width: 150},
+                        {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogDevent',
+                            templet: function (row) {
+                                return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
+                            }},
+                        {field: 'httpMainPhotoFilePath',width:150,  title: '商品主图',
+                            templet: function (row) {
+                                if(row.httpMainPhotoFilePath!=null) {
+                                    return "<a href='" + row.httpMainPhotoFilePath + "' target='_blank'><img src='" + row.httpMainPhotoFilePath + "' width='100' height='100'  /></a>";
                                 }
+                                return "";
+                            }},
+                        {field: 'uuid',width: 300,  title: '店铺商品UUID'},
+                        {field: 'categoryPath',width: 350,  title: '分类路径'},
+                        {field: 'categoryName',width: 150,  title: '分类名称'},
+                        {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
+                            templet: function (row) {
+                                if(row.brandHttpLogo!=null) {
+                                    return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
+                                }
+                                return "";
+                            }},
+                        {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
+                        {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
+                        {field: 'shopCategoryPath',width: 150,  title: '店铺内分类路径'},
+                        {field: 'shopCategoryName',width: 150,  title: '店铺内分类名称'},
+                        {field: 'productUuid',width: 150,  title: '平台商品的UUID'},
+                        {field: 'productId',width: 150,  title: '平台商品ID'},
+                        {field: 'attributes',width: 550,  title: '属性列表'},
+                        {field: 'status',width: 150,   title: '上架状态',
+                            templet: function (row) {
+                                if(row.status == null){
+                                    return "";
+                                }
+                                if(row.status == "0"){
+                                    return "<a style='color:red'>未上架</a>";
+                                }
+                                if(row.status == "1"){
+                                    return "<a style='color:green'>已上架</a>";
+                                }
+                                return row.status;
                             }
-                            return etractMethodText;
-                        }
-                    },
-                    {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
-                    {field: 'createDate', width: 150, title: '创建时间'},
-                    {field: 'updateDate', width: 150, title: '修改时间'}
-                ]
-            ],
-            limits: [15,30,100,200],
-            limit: 15,
-            page: true,
-            skin: 'line'
-        });
+                        },
+                        {field: 'shopId',width: 300,  title: '店铺ID'},
+                        {field: 'shopName',width: 300,  title: '店铺名称'},
+                        {field: 'sellerNo',width: 150,   title: '卖家编码'},
+                        {field: 'articleNumber',width: 150, title: '货号'},
+                        {field: 'payMethod',width: 150,   title: '付款方式',
+                            templet: function (row) {
+                                if(row.payMethod == null){
+                                    return "";
+                                }
+                                if(row.payMethod == "1"){
+                                    return "一口价(普通交易模式)";
+                                }
+                                return row.payMethod;
+                            }
+                        },
+                        {field: 'buckleInventoryMethod',width: 150,   title: '库存计数',
+                            templet: function (row) {
+                                if(row.buckleInventoryMethod == null){
+                                    return "";
+                                }
+                                if(row.buckleInventoryMethod == "1"){
+                                    return "买家拍下减库存";
+                                }
+                                if(row.buckleInventoryMethod == "2"){
+                                    return "买家付款减库存";
+                                }
+                                return row.buckleInventoryMethod;
+                            }
+                        },
+                        {field: 'giveInvoice',width: 150,   title: '开发票',
+                            templet: function (row) {
+                                if(row.giveInvoice == null){
+                                    return "";
+                                }
+                                if(row.giveInvoice == "1"){
+                                    return "支持";
+                                }
+                                if(row.giveInvoice == "0"){
+                                    return "不支持";
+                                }
+                                return row.giveInvoice;
+                            }
+                        },
+                        {field: 'changeOrReturn',width: 150,   title: '退换货承诺',
+                            templet: function (row) {
+                                if(row.changeOrReturn == null){
+                                    return "";
+                                }
+                                if(row.changeOrReturn == "1"){
+                                    return "承诺";
+                                }
+                                if(row.changeOrReturn == "0"){
+                                    return "不承诺";
+                                }
+                                return row.changeOrReturn;
+                            }
+                        },
+                        {field: 'etractMethod',width: 150,   title: '提取方式',
+                            templet: function (row) {
+                                var etractMethodText = "";
+                                if(row.etractMethod!=null) {
+                                    if (row.etractMethod.indexOf("1") != -1) {
+                                        etractMethodText += "用物流配送"
+                                    }
+                                }
+                                return etractMethodText;
+                            }
+                        },
+                        {field: 'createUserId',width: 300, title: '店铺掌柜ID'},
+                        {field: 'createDate', width: 150, title: '创建时间'},
+                        {field: 'updateDate', width: 150, title: '修改时间'}
+                    ]
+                ],
+                limits: [15,30,100,200],
+                limit: 15,
+                page: true,
+                skin: 'line'
+            });
+
+            initSelectShopProductTable();
+        }
+
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
@@ -503,7 +512,6 @@
         }
 
 
-        initSelectShopProductTable();
 
         function initSelectShopProductTable() {
             selectShopProductTable = table.render({
@@ -565,6 +573,8 @@
         });
 
     });
+
+
 </script>
 
 
