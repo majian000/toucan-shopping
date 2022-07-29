@@ -225,18 +225,6 @@ public class SelectShopProductController extends UIController {
                             if (shopProductVO.getMainPhotoFilePath() != null) {
                                 shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductVO.getMainPhotoFilePath());
                             }
-                            //设置默认选中状态
-                            if(StringUtils.isNotEmpty(queryShopProductVO.getSelectProductIds()))
-                            {
-                                String[] selectProductIds = queryShopProductVO.getSelectProductIds().split(",");
-                                for(String selectProductId:selectProductIds)
-                                {
-                                    if(selectProductId.equals(String.valueOf(shopProductVO.getId())))
-                                    {
-                                        shopProductVO.setLAY_CHECKED(true);
-                                    }
-                                }
-                            }
                         }
 
                         resultObjectVO.setData(list);

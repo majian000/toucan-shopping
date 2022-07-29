@@ -138,6 +138,28 @@
     function initComponentSelectProduct(selectProducts)
     {
         if(selectProducts!=null&&selectProducts.length>0) {
+            var queryObj={};
+            queryObj.ids=new Array();
+            for(var i=0;i<selectProducts.length;i++)
+            {
+                queryObj.ids.push(selectProducts[i].id);
+            }
+            $.ajax({
+                url:"[[@{/}]]component/selectShopProduct/list/id",
+                type:"POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(queryObj),
+                success: function(data){
+                    console.log(data);
+                },
+                error: function(){
+
+                },
+                complete:function()
+                {
+                }
+            });
             console.log(selectProducts);
         }
     }

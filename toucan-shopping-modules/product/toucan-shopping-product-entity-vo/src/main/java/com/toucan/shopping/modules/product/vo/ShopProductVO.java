@@ -98,10 +98,5 @@ public class ShopProductVO extends ShopProduct {
     private List<Long> ids;
 
 
-    /**
-     * 已选商品列表 多个用,分割
-     * 因为layui reload where存在数组缓存问题 所以改成字符串接收
-     */
-    private String selectProductIds;
 
 }
