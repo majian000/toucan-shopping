@@ -142,6 +142,77 @@ public class ShopProductController {
     }
 
 
+    /**
+     * 查询列表
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryList(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.warn("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.warn("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+        try {
+
+            ShopProductVO queryShopProduct = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
+            List<ShopProductVO> list =  shopProductService.queryList(queryShopProduct);
+
+            List<Long> shopProductIdList = new LinkedList<>();
+            for(ShopProductVO shopProductVO : list)
+            {
+                shopProductVO.setPreviewPhotoPaths(new LinkedList<>());
+
+                shopProductIdList.add(shopProductVO.getId());
+            }
+            ShopProductImgVO shopProductImgVO = new ShopProductImgVO();
+            shopProductImgVO.setShopProductIdList(shopProductIdList);
+            List<ShopProductImg> shopProductImgs = shopProductImgService.queryList(shopProductImgVO);
+            if(CollectionUtils.isNotEmpty(shopProductImgs))
+            {
+                for(ShopProductImg shopProductImg:shopProductImgs)
+                {
+                    for(ShopProductVO shopProductVO:list) {
+                        if (shopProductImg.getShopProductId() != null &&
+                                shopProductImg.getShopProductId().longValue()==shopProductVO.getId().longValue())
+                        {
+                            //如果是商品主图
+                            if(shopProductImg.getImgType().intValue()==1)
+                            {
+                                shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
+                            }else if(shopProductImg.getImgType().intValue()==2){
+                                shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
+                            }
+                            break;
+                        }
+
+                    }
+                }
+            }
+
+            resultObjectVO.setData(list);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
     /**
      * 根据ID查询

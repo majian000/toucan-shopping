@@ -124,9 +124,22 @@
 
     var toucan_component_select_product = new Array();
 
+    /**
+     * 拿到所选商品
     function getComponentSelectProduct()
     {
         return toucan_component_select_product;
+    }
+
+    /**
+     * 初始化选择商品列表
+     * @param selectProducts
+     */
+    function initComponentSelectProduct(selectProducts)
+    {
+        if(selectProducts!=null&&selectProducts.length>0) {
+            console.log(selectProducts);
+        }
     }
 
     layui.config({

@@ -42,6 +42,8 @@ public class ShopProductPageInfo extends PageInfo<ShopProductVO> {
 
     private String orderSort; //升序还是降序
 
+    private Long[] ids; //商品ID数组
+
     //==============================================
 
 }

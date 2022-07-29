@@ -404,15 +404,20 @@
                 maxmin:true,
                 btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
                 yes: function (index) {
-                    // var selectProducts = window["layui-layer-iframe" + index].getSelectProduct();
+                    var selectProducts = window["layui-layer-iframe" + index].getComponentSelectProduct();
+                    alert(selectProducts);
                     // setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
                     layer.close(index);
                 },
                 area: ['80%', '80%'],
                 content: '[[@{/}]]component/selectShopProduct/shopProductListPage/'+categoryId,
                 zIndex: layer.zIndex,
-                success: function(layero){
+                success: function(layero,index){
                     layer.setTop(layero);
+
+                    var selectProducts = new Array();
+                    selectProducts.push({id:11});
+                    window["layui-layer-iframe" + index].initComponentSelectProduct(selectProducts);
                 }
             });
             $(window).on("resize", function () {
