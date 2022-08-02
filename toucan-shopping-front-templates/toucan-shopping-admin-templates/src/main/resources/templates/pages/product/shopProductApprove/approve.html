@@ -97,7 +97,7 @@
                         <div class="layui-form-item" >
                             <label class="layui-form-label " >分类路径</label>
                             <div class="layui-input-block" >
-                                <input type="text"  th:value="${model.categoryPath}"  class="layui-input">
+                                <input type="text"  id="categoryPath" th:value="${model.categoryPath}"  class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item" >
@@ -333,8 +333,9 @@
 
         $("#selectSpu").click(function(){
             var categoryId = $("#categoryId").val();
+            var categoryPath = $("#categoryPath").val();
             var index = layer.open({
-                title: '平台商品列表',
+                title: categoryPath + '——平台商品列表 ',
                 type: 2,
                 shade: 0.2,
                 maxmin:true,

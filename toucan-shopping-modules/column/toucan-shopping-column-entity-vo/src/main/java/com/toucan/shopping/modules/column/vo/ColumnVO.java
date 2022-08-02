@@ -27,4 +27,7 @@ public class ColumnVO extends Column {
     private String createAdminName; //创建人姓名
     private String updateAdminName; //修改人姓名
 
+    private List<Long> productIds; //关联商品
+    private String selectProductIds; //选择关联商品 多个用,分割
+
 }

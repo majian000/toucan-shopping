@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.vo.index;
+package com.toucan.shopping.modules.column.vo;
 
 import com.toucan.shopping.modules.column.entity.ColumnRecommendLabel;
 import com.toucan.shopping.modules.column.vo.ColumnVO;

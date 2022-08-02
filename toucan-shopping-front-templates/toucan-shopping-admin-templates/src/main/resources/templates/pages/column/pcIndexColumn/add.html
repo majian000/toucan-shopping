@@ -24,6 +24,7 @@
 <div class="layui-form layuimini-form">
 
     <input type="hidden" name="columnTypeCode" th:value="${columnTypeCode}">
+
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目标题</label>
         <div class="layui-input-block">
@@ -76,8 +77,7 @@
         <label class="layui-form-label required " >商品推荐</label>
         <div class="layui-input-block">
             <input type="text" id="shopProductRecommend"  lay-verify="required"  readonly required class="layui-input">
-            <input type="hidden" id="shopProductId" name="shopProductId">
-            <input type="hidden" id="shopProductUuid" name="shopProductUuid">
+            <input type="hidden" id="selectProductIds" name="selectProductIds" />
             <tip>最多只显示6个。</tip>
         </div>
     </div>
@@ -398,6 +398,7 @@
 
         $("#shopProductRecommend").click(function(){
             var categoryId = "-1";
+            var selectProductIds=$("#selectProductIds").val();
             var index = layer.open({
                 title: '店铺商品列表',
                 type: 2,
@@ -406,12 +407,29 @@
                 btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
                 yes: function (index) {
                     var selectProducts = window["layui-layer-iframe" + index].getComponentSelectProduct();
-                    alert(selectProducts);
-                    // setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
+                    var selectProductName="";
+                    if(selectProducts!=null&&selectProducts.length>0) {
+                        for(var i=0;i<selectProducts.length;i++)
+                        {
+                            var selectProduct = selectProducts[i];
+                            if(selectProduct!=null)
+                            {
+                                selectProductIds+=selectProduct.id;
+                                selectProductName+=selectProduct.name;
+                            }
+                            if(i>=0&&((i+1)<selectProducts.length))
+                            {
+                                selectProductIds+=",";
+                                selectProductName+="，";
+                            }
+                        }
+                    }
+                    $("#selectProductIds").val(selectProductIds);
+                    $("#shopProductRecommend").val(selectProductName);
                     layer.close(index);
                 },
                 area: ['80%', '80%'],
-                content: '[[@{/}]]component/selectShopProduct/shopProductListPage?categoryId='+categoryId+'&selectProductIds=', //984146210711404606,996897344802783282
+                content: '[[@{/}]]component/selectShopProduct/shopProductListPage?categoryId='+categoryId+'&selectProductIds='+selectProductIds, //984146210711404606,996897344802783282
                 zIndex: layer.zIndex,
                 success: function(layero,index) {
                     layer.setTop(layero);
