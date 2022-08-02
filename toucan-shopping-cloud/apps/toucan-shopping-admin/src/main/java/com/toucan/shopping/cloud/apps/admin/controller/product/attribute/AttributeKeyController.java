@@ -565,12 +565,13 @@ public class AttributeKeyController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/query/tree/category/id",method = RequestMethod.GET)
     @ResponseBody
-    public ResultObjectVO queryTreeByCategoryId(Long categoryId)
+    public ResultObjectVO queryTreeByCategoryId(Long categoryId,Short attributeType)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             AttributeKeyVO attributeKeyVO = new AttributeKeyVO();
             attributeKeyVO.setCategoryId(categoryId);
+            attributeKeyVO.setAttributeType(attributeType);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode,attributeKeyVO);
             resultObjectVO = feignAttributeKeyService.queryTreeByCategoryId(requestJsonVO);
             return resultObjectVO;
