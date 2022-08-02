@@ -79,7 +79,7 @@ public class PcIndexColumnController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/pcIndexColumn/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/column/pcIndexColumn/listPage",feignFunctionService);
 
         initColumnTypeCode(request);
 
