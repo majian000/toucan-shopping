@@ -182,6 +182,8 @@
                     selectProductIdArray.push(selectProduct.id);
                 }
                 formParam.selectProductIds =selectProductIdArray.join(",");
+            }else{
+                formParam.selectProductIds="";
             }
             return formParam;
         }
