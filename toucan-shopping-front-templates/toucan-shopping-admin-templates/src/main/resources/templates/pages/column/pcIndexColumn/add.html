@@ -85,17 +85,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label ">左侧轮播图</label>
         <div class="layui-input-block">
-            <script type="text/html" id="bannerLeftLabelTableToolbar">
-                <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加一行 </button>
-                </div>
-            </script>
-
-            <table class="layui-hide" id="bannerLeftLabelTable" lay-filter="bannerLeftLabelTableFilter"  ></table>
-
-            <script type="text/html" id="bannerLeftLabelTableBar">
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a> &nbsp;&nbsp;
-            </script>
+            <button type="button" class="layui-btn" id="addLeftBanner">添加轮播图</button>
         </div>
     </div>
     <div class="layui-form-item">
@@ -123,14 +113,11 @@
 
         var topLabelTable;
         var leftLabelTable;
-        var bannerLeftTable;
 
         var topLabelData = new Array();
         var leftLabelData = new Array();
-        var leftBannerData = new Array();
 
         var labelIncrement= 0;
-        var bannerIncrement= 0;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
@@ -265,70 +252,6 @@
 
         }
 
-        initLeftBannerTable();
-        function initLeftBannerTable()
-        {
-            leftLabelTable = table.render({
-                elem: '#bannerLeftLabelTable',
-                defaultToolbar:[],
-                toolbar: '#bannerLeftLabelTableToolbar',
-                cols: [
-                    [
-                        {field: 'id',  title: '主键', hide: true},
-                        {field: 'title', width: 600,edit:"text", title: '标题'},
-                        {field: 'click_path', width: 150,edit:"text", title: '点击跳转'},
-                        {field: 'clickPath', width: 650,templet: function (row) {
-                                return "<input type='file' />"
-                            }, title: '上传图片'},
-                        {field: 'preview', width: 150,edit:"file", title: '预览'},
-                        {title: '操作', minWidth: 300, toolbar: '#bannerLeftLabelTableBar', align: "center"}
-                    ]
-                ],
-                data: leftBannerData,
-                skin: 'line'
-            });
-
-
-
-
-            /**
-             * toolbar监听事件
-             */
-            table.on('toolbar(bannerLeftLabelTableFilter)', function (obj) {
-                if (obj.event === 'add') {  // 监听添加操作
-                    bannerIncrement++;
-
-                    leftBannerData.push({id:bannerIncrement,labelName:"标签名称",clickPath:"#"});
-
-                    initLeftBannerTable();
-                }
-            });
-
-
-
-            table.on('tool(bannerLeftLabelTableFilter)', function (obj) {
-                var data = obj.data;
-                if (obj.event == 'delete') {
-                    layer.confirm('确定删除该轮播图?', function (index) {
-                        if(leftLabelData!=null&&leftLabelData.length>0)
-                        {
-                            for(var i=0;i<leftLabelData.length;i++)
-                            {
-                                var row = leftLabelData[i];
-                                if(data.id==row.id)
-                                {
-                                    leftLabelData.splice(i, 1);
-                                    break;
-                                }
-                            }
-                        }
-                        initLeftBannerTable();
-                        layer.close(index);
-                    });
-                }
-            });
-
-        }
 
 
 
