@@ -13,7 +13,6 @@ import java.util.Date;
 public class ColumnBanner {
     private Long id; //主键
     private Long columnId; //栏目主键
-    private Long bannerId; //轮播图主键
     private Date createDate; //创建时间
     private Date updateDate; //创建时间
     private Long createAdminId; //创建人ID
@@ -22,6 +21,10 @@ public class ColumnBanner {
     private Integer position; //位置 1顶部 2左侧 3右侧顶部 4右侧底部
     private String appCode; //所属应用
 
+    private String title; //标题
+    private String imgPath; //图片路径
+    private String clickPath; //点击路径
+    private Integer bannerSort; //排序 从大到小
     /**
      * 删除状态 0未删除 1已删除
      */
