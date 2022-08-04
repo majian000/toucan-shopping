@@ -141,19 +141,19 @@ public class PcIndexColumnController extends UIController {
 
     /**
      * 保存
-     * @param entity
+     * @param pcIndexColumnVO
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody ColumnVO entity)
+    public ResultObjectVO save(HttpServletRequest request,@RequestBody PcIndexColumnVO pcIndexColumnVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            pcIndexColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            pcIndexColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pcIndexColumnVO);
 //            resultObjectVO = feignColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
