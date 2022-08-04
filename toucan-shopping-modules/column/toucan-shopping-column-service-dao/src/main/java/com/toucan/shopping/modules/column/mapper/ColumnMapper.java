@@ -38,4 +38,8 @@ public interface ColumnMapper {
      */
     Long queryListPageCount(ColumnPageInfo pageInfo);
 
+    int insert(Column column);
+
+    List<ColumnVO> queryList(ColumnVO query);
+
 }

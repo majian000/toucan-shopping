@@ -40,4 +40,11 @@ public class Column {
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
+
+    /**
+     * 栏目类型编码
+     */
+    private String columnTypeCode;
+
+
 }

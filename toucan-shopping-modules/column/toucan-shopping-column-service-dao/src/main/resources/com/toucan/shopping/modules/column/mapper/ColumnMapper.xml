@@ -18,6 +18,9 @@
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="column_type_code" jdbcType="VARCHAR" property="columnTypeCode" />
+
+
     </resultMap>
 
 
@@ -35,10 +38,27 @@
     </sql>
 
 
+    <sql id="queryListWhere">
+        and t.delete_status = 0
+        <if test="id!=null">
+            and t.id = #{id}
+        </if>
+        <if test="title!=null">
+            and t.title = #{title}
+        </if>
+        <if test="columnTypeCode!=null">
+            and t.column_type_code = #{columnTypeCode}
+        </if>
+
+        <if test="appCode!=null  ">
+            and t.app_code =#{appCode}
+        </if>
+    </sql>
+
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.Column" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_column(id,title,column_sort,type,show_status,position,remark,app_code,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{id},#{title},#{columnSort},#{type},#{showStatus},#{position},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+        insert into t_column(id,title,column_sort,type,show_status,position,remark,app_code,create_date,update_date,create_admin_id,update_admin_id,column_type_code,start_show_date,end_show_date)
+        values(#{id},#{title},#{columnSort},#{type},#{showStatus},#{position},#{remark},#{appCode},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{columnTypeCode},#{startShowDate},#{endShowDate})
     </insert>
 
 
@@ -86,6 +106,17 @@
             <include refid="queryListPageWhere" />
         </where>
 
+    </select>
+
+
+    <select id="queryList" resultMap="columnVOMap" parameterType="com.toucan.shopping.modules.column.vo.ColumnVO">
+        select t.* from t_column t
+        <where>
+            1=1
+
+            <include refid="queryListWhere" />
+
+        </where>
     </select>
 
 </mapper>

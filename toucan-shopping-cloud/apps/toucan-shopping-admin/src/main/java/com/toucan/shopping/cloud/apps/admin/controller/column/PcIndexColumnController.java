@@ -14,6 +14,7 @@ import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
@@ -153,11 +154,13 @@ public class PcIndexColumnController extends UIController {
         try {
             pcIndexColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
             pcIndexColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            pcIndexColumnVO.setPosition(1);
+            pcIndexColumnVO.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pcIndexColumnVO);
 //            resultObjectVO = feignColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setMsg("请稍后重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }

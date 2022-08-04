@@ -7,6 +7,7 @@ import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
+import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,10 @@ public class ColumnAreaController {
 
     @Autowired
     private ColumnAreaService columnAreaService;
+
+    @Autowired
+    private SkylarkLock skylarkLock;
+
 
     /**
      * 查询指定栏目下所有地区关联

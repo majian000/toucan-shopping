@@ -30,4 +30,7 @@ public interface ColumnService {
     PageInfo<ColumnVO> queryListPage(ColumnPageInfo queryPageInfo);
 
 
+    List<ColumnVO> queryList(ColumnVO query);
+
+    int save(Column column);
 }

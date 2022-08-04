@@ -196,12 +196,19 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="showStatus" value="1" title="显示" checked="">
+            <input type="radio" name="showStatus" value="0" title="隐藏">
+        </div>
+    </div>
 
 
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="bannerSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="number" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
             <tip>值越大越靠前</tip>
         </div>
 
@@ -709,7 +716,7 @@
                 "               <input type='hidden' attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
                 "       </td>\n" +
                 "        <td><input type='text' id='left_banner_title_"+leftBannerIncrement+"'  maxlength='100' class='layui-input' /></td>\n" +
-                "        <td><input type='text' name='left_banner_clickPath_"+leftBannerIncrement+"'  maxlength='255' class='layui-input'  /></td>\n" +
+                "        <td><input type='text' id='left_banner_clickPath_"+leftBannerIncrement+"'  maxlength='255' class='layui-input'  /></td>\n" +
                 "        <td> <button type='button' class='leftBannerTableDelRow' id='left_banner_delete_"+leftBannerIncrement+"' attr-index='"+leftBannerIncrement+"' >删除</button></td>\n" +
                 "      </tr>");
 
