@@ -15,5 +15,8 @@ public class PcIndexColumnVO extends ColumnVO {
 
     private List<ColumnBannerVO> columnLeftBannerVOS; //栏目左侧轮播图
 
+    private ColumnBannerVO rightTopBanner; //右侧顶部图片
+
+    private ColumnBannerVO rightBottomBanner; //右侧底部图片
 
 }

@@ -83,11 +83,99 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label ">左侧轮播图</label>
+        <label class="layui-form-label required">左侧轮播图</label>
         <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="addLeftBanner">添加轮播图</button>
+            <button type="button" class="layui-btn" id="addLeftBanner">添加一行</button>
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="leftBanner">
+
+                </tbody>
+            </table>
         </div>
     </div>
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">右侧顶部图片</label>
+        <div class="layui-input-block">
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                </tr>
+                </thead>
+                <tbody id="rightBanner">
+                    <tr >
+                        <td><img id='right_banner_preview' src='/images/imgadd.png'></td>
+                        <td><input type='file' class='rightTopBannerImgs' name='rightTopBanner.img' id='right_banner_img' /></td>
+                        <td><input type='text' name='rightTopBanner.title'  maxlength='100' class='layui-input' /></td>
+                        <td><input type='text' name='rightTopBanner.clickPath'  maxlength='255' class='layui-input'  /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">右侧底部图片</label>
+        <div class="layui-input-block">
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                </tr>
+                </thead>
+                <tbody id="rightBottomBanner">
+                <tr >
+                    <td><img id='right_bottom_banner_preview' src='/images/imgadd.png'></td>
+                    <td><input type='file' class='rightBottomBannerImgs'  name='rightTopBanner.img' id='right_bottom_banner_img' /></td>
+                    <td><input type='text' name='rightTopBanner.title'  maxlength='100' class='layui-input' /></td>
+                    <td><input type='text' name='rightTopBanner.clickPath'  maxlength='255' class='layui-input'  /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
@@ -118,9 +206,59 @@
         var leftLabelData = new Array();
 
         var labelIncrement= 0;
+        var leftBannerIncrement = 0;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
+
+            var bannerImgs = $(".leftBannerImgs");
+            if(bannerImgs==null||bannerImgs.length<=0)
+            {
+                layer.msg("请上传左侧轮播图");
+                return false;
+            }
+            for(var p=0;p<bannerImgs.length;p++)
+            {
+                var leftBanner = bannerImgs[p];
+                if(leftBanner==null||leftBanner.val()==null||leftBanner.val()=="")
+                {
+                    layer.msg("请上传左侧轮播图");
+                    return false;
+                }
+            }
+
+            bannerImgs = $(".rightTopBannerImgs");
+            if(bannerImgs==null||bannerImgs.length<=0)
+            {
+                layer.msg("请上传右侧顶部图片");
+                return false;
+            }
+            for(var p=0;p<bannerImgs.length;p++)
+            {
+                var rightTopBanner = bannerImgs[p];
+                if(rightTopBanner==null||rightTopBanner.val()==null||rightTopBanner.val()=="")
+                {
+                    layer.msg("请上传右侧顶部图片");
+                    return false;
+                }
+            }
+
+
+            bannerImgs = $(".rightBottomBannerImgs");
+            if(bannerImgs==null||bannerImgs.length<=0)
+            {
+                layer.msg("请上传右侧底部图片");
+                return false;
+            }
+            for(var p=0;p<bannerImgs.length;p++)
+            {
+                var rightBottomBanner = bannerImgs[p];
+                if(rightBottomBanner==null||rightBottomBanner.val()==null||rightBottomBanner.val()=="")
+                {
+                    layer.msg("请上传右侧底部图片");
+                    return false;
+                }
+            }
 
             var areaCodeArray = new Array();
             for(var i=0;i<areaArray.length;i++)
@@ -450,6 +588,172 @@
             });
 
         });
+
+        appendLeftBannner();
+
+        /**
+         * 添加一行轮播图
+         **/
+        function appendLeftBannner()
+        {
+            leftBannerIncrement++;
+            $("#leftBanner").append("<tr id='banner_tr_"+leftBannerIncrement+"'>\n" +
+                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/imgadd.png'></td>\n" +
+                "        <td><input type='file' class='leftBannerImgs' name='columnLeftBannerVOS["+leftBannerIncrement+"].img' id='left_banner_img_"+leftBannerIncrement+"' /></td>\n" +
+                "        <td><input type='text' name='columnLeftBannerVOS["+leftBannerIncrement+"].title'  maxlength='100' class='layui-input' /></td>\n" +
+                "        <td><input type='text' name='columnLeftBannerVOS["+leftBannerIncrement+"].clickPath'  maxlength='255' class='layui-input'  /></td>\n" +
+                "        <td> <button type='button' class='leftBannerTableDelRow' id='left_banner_delete_"+leftBannerIncrement+"' attr-index='"+leftBannerIncrement+"' >删除</button></td>\n" +
+                "      </tr>");
+
+
+            letBannerTableUploadPreview(leftBannerIncrement);
+            bindLeftBannerTableDeleteRowEvent();
+        }
+
+        $("#addLeftBanner").click(function(){
+            appendLeftBannner();
+        });
+
+
+
+        /**
+         * 初始化左侧轮播图列表中点击上传图片
+         * @param pos
+         */
+        function letBannerTableUploadPreview(pos)
+        {
+
+            if($("#left_banner_img_"+pos)!=null) {
+                $("#left_banner_img_" + pos).on("change", function () {
+                    // Get a reference to the fileList
+                    var files = !!this.files ? this.files : [];
+
+                    // If no files were selected, or no FileReader support, return
+                    if (!files.length || !window.FileReader) {
+                        $("#left_banner_preview_" + pos).attr("src", "/images/imgadd.png");
+                        return;
+                    }
+
+                    // Only proceed if the selected file is an image
+                    if (/^image/.test(files[0].type)) {
+                        // Create a new instance of the FileReader
+                        var reader = new FileReader();
+
+                        // Read the local file as a DataURL
+                        reader.readAsDataURL(files[0]);
+
+                        // When loaded, set image data as background of div
+                        reader.onloadend = function () {
+                            $("#left_banner_preview_" + pos).attr("src", this.result);
+                        }
+
+                    }
+
+                });
+            }
+
+        }
+
+
+        rightTopBannerTableUploadPreview();
+
+        /**
+         * 初始化右侧顶部轮播图列表中点击上传图片
+         * @param pos
+         */
+        function rightTopBannerTableUploadPreview()
+        {
+
+            if($("#right_banner_img")!=null) {
+                $("#right_banner_img" ).on("change", function () {
+                    // Get a reference to the fileList
+                    var files = !!this.files ? this.files : [];
+
+                    // If no files were selected, or no FileReader support, return
+                    if (!files.length || !window.FileReader) {
+                        $("#right_banner_preview").attr("src", "/images/imgadd.png");
+                        return;
+                    }
+
+                    // Only proceed if the selected file is an image
+                    if (/^image/.test(files[0].type)) {
+                        // Create a new instance of the FileReader
+                        var reader = new FileReader();
+
+                        // Read the local file as a DataURL
+                        reader.readAsDataURL(files[0]);
+
+                        // When loaded, set image data as background of div
+                        reader.onloadend = function () {
+                            $("#right_banner_preview").attr("src", this.result);
+                        }
+
+                    }
+
+                });
+            }
+
+        }
+
+
+        rightBottomBannerTableUploadPreview();
+
+
+        /**
+         * 初始化右侧底部轮播图列表中点击上传图片
+         */
+        function rightBottomBannerTableUploadPreview()
+        {
+
+            if($("#right_bottom_banner_img")!=null) {
+                $("#right_bottom_banner_img" ).on("change", function () {
+                    // Get a reference to the fileList
+                    var files = !!this.files ? this.files : [];
+
+                    // If no files were selected, or no FileReader support, return
+                    if (!files.length || !window.FileReader) {
+                        $("#right_bottom_banner_preview").attr("src", "/images/imgadd.png");
+                        return;
+                    }
+
+                    // Only proceed if the selected file is an image
+                    if (/^image/.test(files[0].type)) {
+                        // Create a new instance of the FileReader
+                        var reader = new FileReader();
+
+                        // Read the local file as a DataURL
+                        reader.readAsDataURL(files[0]);
+
+                        // When loaded, set image data as background of div
+                        reader.onloadend = function () {
+                            $("#right_bottom_banner_preview").attr("src", this.result);
+                        }
+
+                    }
+
+                });
+            }
+
+        }
+
+        /**
+         * 初始化删除事件
+         */
+        function bindLeftBannerTableDeleteRowEvent()
+        {
+            $(".leftBannerTableDelRow").unbind("click");
+            //SKU信息
+            $(".leftBannerTableDelRow").bind("click", function () {
+                var attrIndex = $(this).attr("attr-index");
+                layer.confirm('确定删除?', {
+                    btn: ['确定','关闭'], //按钮
+                    title:'提示信息'
+                }, function(index) {
+                    $("#banner_tr_" +attrIndex ).remove();
+                    layer.close(index);
+                });
+            });
+        }
 
 
     });
