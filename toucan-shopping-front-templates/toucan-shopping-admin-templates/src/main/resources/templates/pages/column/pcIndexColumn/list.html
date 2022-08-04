@@ -110,12 +110,43 @@
                 [
                     {type: "checkbox", width: 50},
                     {field: 'id',  title: '主键'},
-                    {field: 'code',  title: '类型编码'},
-                    {field: 'name',  title: '类型名称'},
-                    {field: 'createAdminName', title: '创建人'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'title',width:300, title: '标题'},
+                    {field: 'startShowDate',width:200,  title: '开始展示时间'},
+                    {field: 'endShowDate', width:200, title: '结束展示时间'},
+                    {field: 'type',width:200,  title: '栏目类型',
+                        templet: function (row) {
+                            if(row.type=="1") {
+                                return "PC端";
+                            }
+                            if(row.type=="2") {
+                                return "移动端";
+                            }
+                            return row.type;
+                        }},
+                    {field: 'columnSort', width:200, title: '排序'},
+                    {field: 'showStatus', width:200, title: '显示状态',
+                        templet: function (row) {
+                            if(row.showStatus=="1") {
+                                return "显示";
+                            }
+                            if(row.showStatus=="0") {
+                                return "隐藏";
+                            }
+                            return row.showStatus;
+                        }},
+                    {field: 'position',width:200, title: '位置',
+                        templet: function (row) {
+                            if(row.position=="1") {
+                                return "首页";
+                            }
+                            return row.position;
+                        }},
+                    {field: 'remark',  title: '备注'},
+                    {field: 'columnTypeCode', width:200,  title: '栏目类型编码'},
+                    {field: 'createAdminName', width:200,title: '创建人'},
+                    {field: 'createDate', width:200, title: '创建时间'},
+                    {field: 'updateAdminName', width:200, title: '修改人'},
+                    {field: 'updateDate', width:200, title: '修改时间'},
                     {title: '操作', minWidth: 300, toolbar: '#columnTypeTableBar', align: "center"}
                 ]
             ],
