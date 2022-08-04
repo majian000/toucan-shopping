@@ -16,6 +16,7 @@ import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
+import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
@@ -157,7 +158,7 @@ public class PcIndexColumnController extends UIController {
             pcIndexColumnVO.setPosition(1);
             pcIndexColumnVO.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pcIndexColumnVO);
-//            resultObjectVO = feignColumnService.save(requestJsonVO);
+            resultObjectVO = feignColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试");
@@ -204,13 +205,15 @@ public class PcIndexColumnController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, ColumnTypePageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, ColumnPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
+            pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
+            pageInfo.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignColumnService.queryListPage(requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
                 {

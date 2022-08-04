@@ -357,7 +357,7 @@
             data.field.rightBottomBanner.title = $("#right_bottom_banner_title").val();
             data.field.rightBottomBanner.clickPath = $("#right_bottom_banner_clickPath").val();
 
-
+            loadding = layer.load();
             $.ajax({
                 url:"[[@{/column/pcIndexColumn/save}]]",
                 contentType: "application/json; charset=utf-8",
@@ -378,6 +378,10 @@
                         parent.layer.close(iframeIndex);
 
                     });
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
                 }
             });
 

@@ -22,6 +22,8 @@ public class ColumnPageInfo extends PageInfo<ColumnVO> {
 
     private Integer id;
 
+    private String columnTypeCode;
+
 
 
     /**
