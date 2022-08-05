@@ -34,8 +34,8 @@ public class ColumnArea {
     private Date updateDate; //创建时间
     private String createAdminId; //创建人ID
     private String updateAdminId; //修改人ID
-    private String remark; //备注
 
+    private String appCode;
     /**
      * 删除状态 0未删除 1已删除
      */
