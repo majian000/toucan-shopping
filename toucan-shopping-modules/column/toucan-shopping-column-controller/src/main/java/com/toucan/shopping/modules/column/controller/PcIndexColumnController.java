@@ -5,12 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.entity.ColumnBanner;
 import com.toucan.shopping.modules.column.entity.ColumnRecommendLabel;
+import com.toucan.shopping.modules.column.entity.ColumnRecommendProduct;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
-import com.toucan.shopping.modules.column.service.ColumnAreaService;
-import com.toucan.shopping.modules.column.service.ColumnBannerService;
-import com.toucan.shopping.modules.column.service.ColumnRecommendLabelService;
-import com.toucan.shopping.modules.column.service.ColumnService;
+import com.toucan.shopping.modules.column.service.*;
 import com.toucan.shopping.modules.column.vo.ColumnBannerVO;
 import com.toucan.shopping.modules.column.vo.ColumnRecommendLabelVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
@@ -51,6 +49,9 @@ public class PcIndexColumnController {
 
     @Autowired
     private ColumnRecommendLabelService columnRecommendLabelService;
+
+    @Autowired
+    private ColumnRecommendProductService columnRecommendProductService;
 
     @Autowired
     private ColumnAreaService columnAreaService;
@@ -282,6 +283,23 @@ public class PcIndexColumnController {
 
             //保存栏目地区关联
             columnAreaService.saves(columnAreas);
+
+            List<ColumnRecommendProduct> columnRecommendProducts = new LinkedList<>();
+            if(StringUtils.isNotEmpty(pcIndexColumnVO.getSelectProductIds()))
+            {
+                String[] selectProductIds = pcIndexColumnVO.getSelectProductIds().split(",");
+                for(String selectProductId:selectProductIds)
+                {
+                    ColumnRecommendProduct columnRecommendProduct = new ColumnRecommendProduct();
+                    columnRecommendProduct.setId(idGenerator.id());
+                    columnRecommendProduct.setColumnId(pcIndexColumnVO.getId());
+                    columnRecommendProduct.setShopProductId(selectProductId);
+                    columnRecommendProduct.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendProduct.setCreateDate(new Date());
+                    columnRecommendProducts.add(columnRecommendProduct);
+                }
+            }
+            columnRecommendProductService.saves(columnRecommendProducts);
 
 
             resultObjectVO.setData(pcIndexColumnVO);
