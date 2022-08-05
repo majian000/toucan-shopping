@@ -33,4 +33,13 @@ public interface ColumnService {
     List<ColumnVO> queryList(ColumnVO query);
 
     int save(Column column);
+
+
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 }

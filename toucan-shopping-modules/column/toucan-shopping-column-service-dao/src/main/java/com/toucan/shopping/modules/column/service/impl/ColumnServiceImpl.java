@@ -41,4 +41,9 @@ public class ColumnServiceImpl implements ColumnService {
     public int save(Column column) {
         return columnMapper.insert(column);
     }
+
+    @Override
+    public int deleteById(Long id) {
+        return columnMapper.deleteById(id);
+    }
 }

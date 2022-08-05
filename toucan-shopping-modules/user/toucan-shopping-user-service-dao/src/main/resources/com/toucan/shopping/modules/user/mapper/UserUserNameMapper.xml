@@ -5,7 +5,6 @@
     <resultMap id="userUserNameMap" type="com.toucan.shopping.modules.user.entity.UserUserName" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="username" jdbcType="VARCHAR" property="username" />
-        <result column="enable_status" jdbcType="INTEGER" property="enableStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
 

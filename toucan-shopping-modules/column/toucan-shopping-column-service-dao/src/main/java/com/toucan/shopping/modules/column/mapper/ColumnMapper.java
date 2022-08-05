@@ -42,4 +42,12 @@ public interface ColumnMapper {
 
     List<ColumnVO> queryList(ColumnVO query);
 
+
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 }

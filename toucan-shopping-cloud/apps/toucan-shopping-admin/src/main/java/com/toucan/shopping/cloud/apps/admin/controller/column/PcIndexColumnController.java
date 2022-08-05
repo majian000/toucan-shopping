@@ -10,6 +10,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -62,7 +63,7 @@ public class PcIndexColumnController extends UIController {
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignColumnService feignColumnService;
+    private FeignPcIndexColumnService feignPcIndexColumnService;
 
     @Autowired
     private FeignAdminService feignAdminService;
@@ -119,7 +120,7 @@ public class PcIndexColumnController extends UIController {
             ColumnVO queryEntity = new ColumnVO();
             queryEntity.setId(id);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-//            ResultObjectVO resultObjectVO = feignColumnService.findById(requestJsonVO);
+//            ResultObjectVO resultObjectVO = feignPcIndexColumnService.findById(requestJsonVO);
 //            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
 //            {
 //                if(resultObjectVO.getData()!=null) {
@@ -158,7 +159,7 @@ public class PcIndexColumnController extends UIController {
             pcIndexColumnVO.setPosition(1);
             pcIndexColumnVO.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pcIndexColumnVO);
-            resultObjectVO = feignColumnService.save(requestJsonVO);
+            resultObjectVO = feignPcIndexColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请稍后重试");
@@ -184,7 +185,7 @@ public class PcIndexColumnController extends UIController {
 
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignColumnService.update(requestJsonVO);
+//            resultObjectVO = feignPcIndexColumnService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -211,8 +212,10 @@ public class PcIndexColumnController extends UIController {
         try {
             pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             pageInfo.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
+            pageInfo.setPosition(1);
+
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignColumnService.queryListPage(requestJsonVO);
+            ResultObjectVO resultObjectVO = feignPcIndexColumnService.queryListPage(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
@@ -413,7 +416,7 @@ public class PcIndexColumnController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-//            resultObjectVO = feignColumnService.deleteById(requestVo);
+            resultObjectVO = feignPcIndexColumnService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
