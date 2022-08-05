@@ -19,4 +19,9 @@ public class ColumnAreaServiceImpl implements ColumnAreaService {
     public List<ColumnArea> queryList(ColumnArea columnArea) {
         return null;
     }
+
+    @Override
+    public int saves(List<ColumnArea> entitys) {
+        return columnAreaMapper.inserts(entitys);
+    }
 }

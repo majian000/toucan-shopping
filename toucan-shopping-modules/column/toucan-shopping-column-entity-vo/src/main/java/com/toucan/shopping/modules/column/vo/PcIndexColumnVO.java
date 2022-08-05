@@ -9,14 +9,16 @@ import java.util.List;
 @Data
 public class PcIndexColumnVO extends ColumnVO {
 
-    private List<ColumnRecommendLabel> topLabels; //顶部标签
+    private List<ColumnRecommendLabelVO> topLabels; //顶部标签
 
-    private List<ColumnRecommendLabel> leftLabels; //左侧标签
+    private List<ColumnRecommendLabelVO> leftLabels; //左侧标签
 
     private List<ColumnBannerVO> columnLeftBannerVOS; //栏目左侧轮播图
 
     private ColumnBannerVO rightTopBanner; //右侧顶部图片
 
     private ColumnBannerVO rightBottomBanner; //右侧底部图片
+
+    private List<String> areaCodeList; //地区编码列表
 
 }

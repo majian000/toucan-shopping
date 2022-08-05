@@ -2,12 +2,17 @@ package com.toucan.shopping.modules.column.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.entity.ColumnBanner;
+import com.toucan.shopping.modules.column.entity.ColumnRecommendLabel;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
+import com.toucan.shopping.modules.column.service.ColumnAreaService;
 import com.toucan.shopping.modules.column.service.ColumnBannerService;
+import com.toucan.shopping.modules.column.service.ColumnRecommendLabelService;
 import com.toucan.shopping.modules.column.service.ColumnService;
 import com.toucan.shopping.modules.column.vo.ColumnBannerVO;
+import com.toucan.shopping.modules.column.vo.ColumnRecommendLabelVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -44,6 +49,11 @@ public class PcIndexColumnController {
     @Autowired
     private ColumnBannerService columnBannerService;
 
+    @Autowired
+    private ColumnRecommendLabelService columnRecommendLabelService;
+
+    @Autowired
+    private ColumnAreaService columnAreaService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -209,8 +219,69 @@ public class PcIndexColumnController {
             columnBannerService.saves(columnBanners);
 
 
+            List<ColumnRecommendLabel> columnRecommendLabels = new LinkedList<>();
 
 
+            //栏目顶部标签
+            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getTopLabels()))
+            {
+                for(ColumnRecommendLabelVO columnRecommendLabelVO:pcIndexColumnVO.getTopLabels())
+                {
+                    ColumnRecommendLabel columnRecommendLabel = new ColumnRecommendLabel();
+                    BeanUtils.copyProperties(columnRecommendLabel,columnRecommendLabelVO);
+                    columnRecommendLabel.setId(idGenerator.id());
+                    columnRecommendLabel.setColumnId(pcIndexColumnVO.getId());
+                    columnRecommendLabel.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendLabel.setCreateDate(new Date());
+                    columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendLabel.setPosition((short)1);
+
+                    columnRecommendLabels.add(columnRecommendLabel);
+
+                }
+            }
+
+            //栏目左侧标签
+            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getLeftLabels()))
+            {
+                for(ColumnRecommendLabelVO columnRecommendLabelVO:pcIndexColumnVO.getLeftLabels())
+                {
+                    ColumnRecommendLabel columnRecommendLabel = new ColumnRecommendLabel();
+                    BeanUtils.copyProperties(columnRecommendLabel,columnRecommendLabelVO);
+                    columnRecommendLabel.setId(idGenerator.id());
+                    columnRecommendLabel.setColumnId(pcIndexColumnVO.getId());
+                    columnRecommendLabel.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnRecommendLabel.setCreateDate(new Date());
+                    columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnRecommendLabel.setPosition((short)2);
+
+                    columnRecommendLabels.add(columnRecommendLabel);
+
+                }
+            }
+
+            //保存栏目推荐标签
+            columnRecommendLabelService.saves(columnRecommendLabels);
+
+
+            List<ColumnArea> columnAreas = new LinkedList<>();
+            //保存栏目地区
+            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getAreaCodeList()))
+            {
+                for(String areaCode:pcIndexColumnVO.getAreaCodeList())
+                {
+                    ColumnArea columnArea = new ColumnArea();
+                    columnArea.setId(idGenerator.id());
+                    columnArea.setColumnId(pcIndexColumnVO.getId());
+                    columnArea.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnArea.setCreateDate(new Date());
+                    columnArea.setAreaCode(areaCode);
+                    columnAreas.add(columnArea);
+                }
+            }
+
+            //保存栏目地区关联
+            columnAreaService.saves(columnAreas);
 
 
             resultObjectVO.setData(pcIndexColumnVO);

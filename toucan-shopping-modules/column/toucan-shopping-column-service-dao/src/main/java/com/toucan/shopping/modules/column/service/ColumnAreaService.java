@@ -7,4 +7,8 @@ import java.util.List;
 public interface ColumnAreaService {
 
     List<ColumnArea> queryList(ColumnArea columnArea);
+
+
+    int saves(List<ColumnArea> entitys);
+
 }
