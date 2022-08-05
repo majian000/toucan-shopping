@@ -2,9 +2,12 @@ package com.toucan.shopping.modules.column.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.column.entity.ColumnBanner;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
+import com.toucan.shopping.modules.column.service.ColumnBannerService;
 import com.toucan.shopping.modules.column.service.ColumnService;
+import com.toucan.shopping.modules.column.vo.ColumnBannerVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
@@ -13,6 +16,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,6 +40,10 @@ public class PcIndexColumnController {
 
     @Autowired
     private ColumnService columnService;
+
+    @Autowired
+    private ColumnBannerService columnBannerService;
+
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -135,7 +144,7 @@ public class PcIndexColumnController {
             if(!CollectionUtils.isEmpty(columnVOS))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("该编码已存在");
+                resultObjectVO.setMsg("该栏目已存在");
                 return resultObjectVO;
             }
 
@@ -149,6 +158,61 @@ public class PcIndexColumnController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
+
+
+            List<ColumnBanner> columnBanners = new LinkedList<>();
+            List<ColumnBannerVO> columnLeftBannerVOS = pcIndexColumnVO.getColumnLeftBannerVOS();
+            //左侧顶部轮播图
+            if(!CollectionUtils.isEmpty(columnLeftBannerVOS))
+            {
+                for(ColumnBannerVO columnBannerVO:columnLeftBannerVOS)
+                {
+                    ColumnBanner columnBanner = new ColumnBanner();
+                    BeanUtils.copyProperties(columnBanner,columnBannerVO);
+                    columnBanner.setId(idGenerator.id());
+                    columnBanner.setColumnId(pcIndexColumnVO.getId());
+                    columnBanner.setPosition(2);
+                    columnBanner.setCreateDate(new Date());
+                    columnBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+                    columnBanner.setAppCode(pcIndexColumnVO.getAppCode());
+                    columnBanner.setBannerSort(0);
+                    columnBanners.add(columnBanner);
+                }
+            }
+
+            //右侧顶部图片预览
+            ColumnBanner rightTopBanner = new ColumnBanner();
+            BeanUtils.copyProperties(rightTopBanner,pcIndexColumnVO.getRightTopBanner());
+            rightTopBanner.setId(idGenerator.id());
+            rightTopBanner.setColumnId(pcIndexColumnVO.getId());
+            rightTopBanner.setPosition(3);
+            rightTopBanner.setCreateDate(new Date());
+            rightTopBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+            rightTopBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            rightTopBanner.setBannerSort(0);
+            columnBanners.add(rightTopBanner);
+
+
+            //右侧底部图片预览
+            ColumnBanner rightBottomBanner = new ColumnBanner();
+            BeanUtils.copyProperties(rightBottomBanner,pcIndexColumnVO.getRightBottomBanner());
+            rightBottomBanner.setId(idGenerator.id());
+            rightBottomBanner.setColumnId(pcIndexColumnVO.getId());
+            rightBottomBanner.setPosition(3);
+            rightBottomBanner.setCreateDate(new Date());
+            rightBottomBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+            rightBottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            rightBottomBanner.setBannerSort(0);
+            columnBanners.add(rightBottomBanner);
+
+            //保存栏目轮播图
+            columnBannerService.saves(columnBanners);
+
+
+
+
+
+
             resultObjectVO.setData(pcIndexColumnVO);
 
         }catch(Exception e)
@@ -206,9 +270,10 @@ public class PcIndexColumnController {
             if(ret<=0)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("不存在该类型!");
+                resultObjectVO.setMsg("不存在该栏目!");
                 return resultObjectVO;
             }
+
 
         }catch(Exception e)
         {

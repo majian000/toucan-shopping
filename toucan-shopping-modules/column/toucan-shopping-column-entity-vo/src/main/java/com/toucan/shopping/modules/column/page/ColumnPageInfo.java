@@ -30,6 +30,9 @@ public class ColumnPageInfo extends PageInfo<ColumnVO> {
 
     private Integer position; //栏目位置 1 PC门户首页
 
+    private String title; //标题
+
+    private Short showStatus;  //显示状态 0隐藏 1显示
 
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

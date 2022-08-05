@@ -55,27 +55,18 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.ColumnBanner" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_column_banner(column_id,banner_id,remark,position,create_date,update_date,create_admin_id,update_admin_id,title,img_path,click_path,banner_sort)
-        values(#{columnId},#{bannerId},#{remark},#{position},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId},#{title},#{imgPath},#{clickPath},#{bannerSort})
+
+
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_column_banner(id,column_id,position,remark,create_date,create_admin_id,delete_status,app_code,title,img_path,click_path,banner_sort)
+
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.columnId},#{entity.position},#{entity.remark},#{entity.createDate},
+            #{entity.createAdminId},#{entity.deleteStatus},#{entity.appCode},#{entity.title},#{entity.imgPath},#{entity.clickPath},#{entity.bannerSort})
+        </foreach>
+
     </insert>
-
-
-    <select id="queryById" resultMap="columnBannerMap" parameterType="java.lang.Long">
-        select * from t_column_banner where id=#{id} and delete_status=0
-    </select>
-
-
-    <update id="deleteById">
-        update t_column_banner  set delete_status=1 where id=#{id}  and delete_status=0
-    </update>
-
-
-    <update id="update" parameterType="com.toucan.shopping.modules.column.entity.ColumnBanner">
-        update t_column_banner set column_id=#{columnId},banner_id=#{bannerId},remark=#{remark},position=#{position},
-        update_admin_id=#{updateAdminId},update_date=#{updateDate}
-          where id=#{id}
-    </update>
 
 
 </mapper>
