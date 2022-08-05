@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.column.mapper.ColumnRecommendLabelMapper">
+
+    <resultMap id="columnRecommendLabelMap" type="com.toucan.shopping.modules.column.entity.ColumnRecommendLabel" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="column_id" jdbcType="BIGINT" property="columnId" />
+        <result column="label_name" jdbcType="VARCHAR" property="labelName" />
+        <result column="click_path" jdbcType="VARCHAR" property="clickPath" />
+        <result column="position" jdbcType="INTEGER" property="position" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="label_sort" jdbcType="BIGINT" property="labelSort" />
+    </resultMap>
+
+
+    <resultMap id="columnRecommendLabelVOMap" type="com.toucan.shopping.modules.column.vo.ColumnRecommendLabelVO" extends="columnRecommendLabelMap" >
+
+    </resultMap>
+
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_column_recommend_label(id,column_id,label_name,click_path,position,remark,create_date,create_admin_id,app_code,label_sort)
+
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.columnId},#{entity.labelName},#{entity.clickPath},#{entity.position},#{entity.remark},#{entity.createDate},#{entity.createAdminId}
+            ,#{entity.appCode},#{entity.labelSort})
+        </foreach>
+
+    </insert>
+
+    <update id="deleteByColumnId" parameterType="java.lang.Long">
+         update t_column_recommend_label set delete_status = 1 where column_id = #{columnId}
+    </update>
+
+
+    <select id="queryListByColumnId" resultMap="columnRecommendLabelVOMap">
+        select * from t_column_recommend_label where delete_status = 0 and column_id = #{columnId}
+    </select>
+
+
+
+</mapper>

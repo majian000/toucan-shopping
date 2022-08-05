@@ -10,4 +10,11 @@ import java.util.List;
 public interface ColumnAreaMapper {
 
     List<ColumnArea> queryList(ColumnArea entity);
+
+
+    int inserts(List<ColumnArea> entitys);
+
+
+    int deleteByColumnId(Long columnId);
+
 }

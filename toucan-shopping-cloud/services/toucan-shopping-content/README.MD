@@ -9,7 +9,7 @@
 
     配置中心
     
-##### toucan-shopping-eureka
+##### nacos-server-2.0.4
     
     服务注册中心
 

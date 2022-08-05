@@ -26,5 +26,7 @@ public interface FeignColumnService {
 
 
 
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 }

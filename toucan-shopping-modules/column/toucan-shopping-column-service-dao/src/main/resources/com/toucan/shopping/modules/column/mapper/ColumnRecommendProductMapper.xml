@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toucan.shopping.modules.column.mapper.ColumnRecommendProductMapper">
+
+    <resultMap id="columnRecommendProductMap" type="com.toucan.shopping.modules.column.entity.ColumnRecommendProduct" >
+        <id column="id" jdbcType="BIGINT"  property="id" />
+        <result column="column_id" jdbcType="BIGINT" property="columnId" />
+        <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
+        <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
+        <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
+        <result column="product_sort" jdbcType="BIGINT" property="productSort" />
+    </resultMap>
+
+    <resultMap id="columnRecommendProductVOMap" type="com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO" extends="columnRecommendProductMap">
+
+    </resultMap>
+
+
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_column_recommend_product(id,column_id,shop_product_id,remark,create_date,create_admin_id,app_code,product_sort)
+
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.columnId},#{entity.shopProductId},#{entity.remark},#{entity.createDate},#{entity.createAdminId}
+            ,#{entity.appCode},#{entity.productSort})
+        </foreach>
+
+    </insert>
+
+    <update id="deleteByColumnId" parameterType="java.lang.Long">
+         update t_column_recommend_product set delete_status = 1 where column_id = #{columnId}
+    </update>
+
+    <select id="queryListSortDescByColumnId" parameterType="java.lang.Long" resultMap="columnRecommendProductVOMap">
+        select * from t_column_recommend_product  where column_id = #{columnId} and delete_status = 0 order by product_sort desc
+    </select>
+
+
+</mapper>

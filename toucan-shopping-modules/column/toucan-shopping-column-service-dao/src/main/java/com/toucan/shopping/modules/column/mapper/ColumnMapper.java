@@ -23,6 +23,12 @@ public interface ColumnMapper {
     List<Column> queryAreaColumnList(String areaCode,Integer type,Integer position);
 
 
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    ColumnVO findById(Long id);
 
     /**
      * 查询列表页
@@ -37,5 +43,17 @@ public interface ColumnMapper {
      * @return
      */
     Long queryListPageCount(ColumnPageInfo pageInfo);
+
+    int insert(Column column);
+
+    List<ColumnVO> queryList(ColumnVO query);
+
+
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
 
 }

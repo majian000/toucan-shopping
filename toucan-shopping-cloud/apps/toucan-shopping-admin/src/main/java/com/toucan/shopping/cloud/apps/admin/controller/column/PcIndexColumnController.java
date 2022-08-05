@@ -10,14 +10,18 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
+import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
+import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
+import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -59,7 +63,7 @@ public class PcIndexColumnController extends UIController {
     private FeignFunctionService feignFunctionService;
 
     @Autowired
-    private FeignColumnService feignColumnService;
+    private FeignPcIndexColumnService feignPcIndexColumnService;
 
     @Autowired
     private FeignAdminService feignAdminService;
@@ -79,7 +83,7 @@ public class PcIndexColumnController extends UIController {
     public String listPage(HttpServletRequest request)
     {
         //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/pcIndexColumn/listPage",feignFunctionService);
+        super.initButtons(request,toucan,"/column/pcIndexColumn/listPage",feignFunctionService);
 
         initColumnTypeCode(request);
 
@@ -99,16 +103,6 @@ public class PcIndexColumnController extends UIController {
     }
 
 
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/shopProductListPage/{categoryId}",method = RequestMethod.GET)
-    public String spuListPage(HttpServletRequest request,@PathVariable Long categoryId)
-    {
-        //初始化工具条按钮、操作按钮
-        super.initButtons(request,toucan,"/column/pcIndexColumn/shopProductListPage/spuListPage",feignFunctionService);
-
-        request.setAttribute("categoryId",categoryId);
-        return "pages/column/pcIndexColumn/shop_product_list.html";
-    }
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/addPage",method = RequestMethod.GET)
@@ -122,26 +116,7 @@ public class PcIndexColumnController extends UIController {
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
-        try {
-            ColumnVO queryEntity = new ColumnVO();
-            queryEntity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-//            ResultObjectVO resultObjectVO = feignColumnService.findById(requestJsonVO);
-//            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-//            {
-//                if(resultObjectVO.getData()!=null) {
-//                    List<ColumnVO> columnVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ColumnVO.class);
-//                    if(!CollectionUtils.isEmpty(columnVOS))
-//                    {
-//                        request.setAttribute("model",columnVOS.get(0));
-//                    }
-//                }
-//
-//            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
+        request.setAttribute("id",id);
         return "pages/column/pcIndexColumn/edit.html";
     }
 
@@ -150,23 +125,25 @@ public class PcIndexColumnController extends UIController {
 
     /**
      * 保存
-     * @param entity
+     * @param pcIndexColumnVO
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody ColumnVO entity)
+    public ResultObjectVO save(HttpServletRequest request,@RequestBody PcIndexColumnVO pcIndexColumnVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignColumnService.save(requestJsonVO);
+            pcIndexColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            pcIndexColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            pcIndexColumnVO.setPosition(1);
+            pcIndexColumnVO.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pcIndexColumnVO);
+            resultObjectVO = feignPcIndexColumnService.save(requestJsonVO);
         }catch(Exception e)
         {
-            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setMsg("请稍后重试");
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             logger.warn(e.getMessage(),e);
         }
@@ -189,7 +166,7 @@ public class PcIndexColumnController extends UIController {
 
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignColumnService.update(requestJsonVO);
+//            resultObjectVO = feignPcIndexColumnService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -210,13 +187,17 @@ public class PcIndexColumnController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, ColumnTypePageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, ColumnPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
+            pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
+            pageInfo.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
+            pageInfo.setPosition(1);
+
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
-            ResultObjectVO resultObjectVO = feignColumnService.queryListPage(requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            ResultObjectVO resultObjectVO = feignPcIndexColumnService.queryListPage(requestJsonVO);
+            if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null)
                 {
@@ -416,7 +397,8 @@ public class PcIndexColumnController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
-//            resultObjectVO = feignColumnService.deleteById(requestVo);
+
+            resultObjectVO = feignPcIndexColumnService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

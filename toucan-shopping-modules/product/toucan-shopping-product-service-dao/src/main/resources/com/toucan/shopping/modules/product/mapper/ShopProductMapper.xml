@@ -93,6 +93,13 @@
             and t.product_approve_id = #{productApproveId}
         </if>
 
+        <if test="ids!=null and ids.size>0 ">
+            and t.id in
+            <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
 
         and t.delete_status = 0
     </sql>

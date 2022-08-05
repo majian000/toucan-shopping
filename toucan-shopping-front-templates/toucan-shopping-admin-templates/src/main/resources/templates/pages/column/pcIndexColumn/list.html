@@ -28,7 +28,39 @@
 
 
                         <div class="layui-inline">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">显示状态</label>
+                            <div class="layui-input-inline">
+                                <select id="showStatus" name="showStatus"  lay-search="">
+                                    <option value="-1">全部</option>
+                                    <option value="1">显示</option>
+                                    <option value="0">隐藏</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">展示时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="startShowDate" name="startShowDate" class="layui-input"  readonly >
+                            </div>
+                        </div>
+                        至&nbsp;&nbsp;
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" id="endShowDate" name="endShowDate" class="layui-input"  readonly >
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
                             <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="data-reset-btn" > 重 置</button>
                         </div>
                     </div>
                 </form>
@@ -57,7 +89,7 @@
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form', 'table','tree','dtree'], function () {
+    }).use(['form', 'table','tree','dtree','laydate'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
@@ -86,6 +118,20 @@
             return serializeObj;
         };
 
+        var laydate = layui.laydate;
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
         function getFormParam()
         {
             var formParam = $("#userSearchForm").serializeJson();
@@ -109,13 +155,44 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '主键'},
-                    {field: 'code',  title: '类型编码'},
-                    {field: 'name',  title: '类型名称'},
-                    {field: 'createAdminName', title: '创建人'},
-                    {field: 'createDate',  title: '创建时间'},
-                    {field: 'updateAdminName',  title: '修改人'},
-                    {field: 'updateDate',  title: '修改时间'},
+                    {field: 'id', width:200, title: '主键'},
+                    {field: 'title',width:300, title: '标题'},
+                    {field: 'startShowDate',width:200,  title: '开始展示时间'},
+                    {field: 'endShowDate', width:200, title: '结束展示时间'},
+                    {field: 'type',width:200,  title: '栏目类型',
+                        templet: function (row) {
+                            if(row.type=="1") {
+                                return "PC端";
+                            }
+                            if(row.type=="2") {
+                                return "移动端";
+                            }
+                            return row.type;
+                        }},
+                    {field: 'columnSort', width:200, title: '排序'},
+                    {field: 'showStatus', width:200, title: '显示状态',
+                        templet: function (row) {
+                            if(row.showStatus=="1") {
+                                return "显示";
+                            }
+                            if(row.showStatus=="0") {
+                                return "隐藏";
+                            }
+                            return row.showStatus;
+                        }},
+                    {field: 'position',width:200, title: '位置',
+                        templet: function (row) {
+                            if(row.position=="1") {
+                                return "首页";
+                            }
+                            return row.position;
+                        }},
+                    {field: 'columnTypeCode', width:200,  title: '栏目类型编码'},
+                    {field: 'createAdminName', width:200,title: '创建人'},
+                    {field: 'createDate', width:200, title: '创建时间'},
+                    {field: 'updateAdminName', width:200, title: '修改人'},
+                    {field: 'updateDate', width:200, title: '修改时间'},
+                    {field: 'remark', width:200, title: '备注'},
                     {title: '操作', minWidth: 300, toolbar: '#columnTypeTableBar', align: "center"}
                 ]
             ],

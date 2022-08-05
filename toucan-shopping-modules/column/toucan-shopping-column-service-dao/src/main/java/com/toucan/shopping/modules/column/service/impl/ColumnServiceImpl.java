@@ -31,4 +31,24 @@ public class ColumnServiceImpl implements ColumnService {
         pageInfo.setTotal(columnMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
     }
+
+    @Override
+    public List<ColumnVO> queryList(ColumnVO query) {
+        return columnMapper.queryList(query);
+    }
+
+    @Override
+    public ColumnVO findById(Long id) {
+        return columnMapper.findById(id);
+    }
+
+    @Override
+    public int save(Column column) {
+        return columnMapper.insert(column);
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return columnMapper.deleteById(id);
+    }
 }

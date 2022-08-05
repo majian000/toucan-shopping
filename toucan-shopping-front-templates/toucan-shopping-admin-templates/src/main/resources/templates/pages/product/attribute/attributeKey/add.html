@@ -25,7 +25,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">属性类型</label>
         <div class="layui-input-block">
-            <select id="attributeType"  name="attributeType" lay-search="" lay-filter="attributeType">
+            <select id="attributeType"   name="attributeType" lay-search="" lay-filter="attributeType">
                 <option value="1" selected>全局属性</option>
                 <option value="2" >销售属性</option>
             </select>
@@ -183,6 +183,7 @@
 
         $("#selectParentId").click(function(){
             var categoryId = $("#categoryId").val();
+            var attributeType = $('#attributeType option:selected').val();
             if(categoryId==null)
             {
                 layer.msg("请选择分类");
@@ -208,7 +209,7 @@
                         url:"[[@{/}]]product/attribute/attributeKey/query/tree/category/id",
                         contentType: "application/json; charset=utf-8",
                         type:'GET',
-                        data:{categoryId:categoryId},
+                        data:{categoryId:categoryId,attributeType:attributeType},
                         success:function(data){
                             if(data.code==1)
                             {

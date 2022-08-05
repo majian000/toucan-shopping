@@ -21,9 +21,11 @@
 
 <span th:replace="common_page::common"></span>
 
+
 <div class="layui-form layuimini-form">
 
     <input type="hidden" name="columnTypeCode" th:value="${columnTypeCode}">
+
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目标题</label>
         <div class="layui-input-block">
@@ -67,6 +69,20 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label required">开始展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">结束展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label required">关联城市</label>
         <div class="layui-input-block">
             <input type="text" readonly  id="selectArea" lay-verify="required"  placeholder="请选择关联城市" value="" class="layui-input" >
@@ -76,11 +92,143 @@
         <label class="layui-form-label required " >商品推荐</label>
         <div class="layui-input-block">
             <input type="text" id="shopProductRecommend"  lay-verify="required"  readonly required class="layui-input">
-            <input type="hidden" id="shopProductId" name="shopProductId">
-            <input type="hidden" id="shopProductUuid" name="shopProductUuid">
+            <input type="hidden" id="selectProductIds" name="selectProductIds" />
             <tip>最多只显示6个。</tip>
         </div>
     </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">左侧轮播图</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="addLeftBanner">添加一行</button>
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="leftBanner">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">右侧顶部图片</label>
+        <div class="layui-input-block">
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                </tr>
+                </thead>
+                <tbody id="rightBanner">
+                    <tr >
+                        <td><img id='right_banner_preview' src='/images/imgadd.png'></td>
+                        <td>
+                            <input type='file' class='rightTopBannerImgs' id='right_banner_img' />
+                            <input type='hidden' id='right_banner_img_hidden'  />
+                        </td>
+                        <td><input type='text' id="right_banner_title"  maxlength='100' class='layui-input' /></td>
+                        <td><input type='text'  id="right_banner_clickPath"  maxlength='255' class='layui-input'  /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">右侧底部图片</label>
+        <div class="layui-input-block">
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                </tr>
+                </thead>
+                <tbody id="rightBottomBanner">
+                <tr >
+                    <td><img id='right_bottom_banner_preview' src='/images/imgadd.png'></td>
+                    <td>
+                        <input type='file' class='rightBottomBannerImgs'   id='right_bottom_banner_img' />
+                        <input type='hidden' id='right_bottom_img_hidden'  />
+                    </td>
+                    <td><input type='text' id="right_bottom_banner_title"  maxlength='100' class='layui-input' /></td>
+                    <td><input type='text'   id="right_bottom_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="showStatus" value="1" title="显示" checked="">
+            <input type="radio" name="showStatus" value="0" title="隐藏">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">栏目类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="type" value="1" title="PC端" checked="">
+            <!--<input type="radio" name="type" value="2" title="移动端">-->
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <tip>值越大越靠前</tip>
+        </div>
+
+    </div>
+
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
@@ -88,12 +236,14 @@
     </div>
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/common/common.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-form/jquery-form.js}" charset="utf-8"></script>
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
     }).extend({
         dtree: 'dtree' //定义该组件模块名
-    }).use(['form','dtree', 'table'], function () {
+    }).use(['form','dtree', 'table','laydate'], function () {
         var form = layui.form,
             layer = layui.layer,
             table = layui.table,
@@ -102,26 +252,157 @@
         var areaTree;
         var areaTreeDataArray = new Array();
         var areaArray =  new Array();
+        var loadding;
 
         var topLabelTable;
         var leftLabelTable;
 
         var topLabelData = new Array();
         var leftLabelData = new Array();
+
         var labelIncrement= 0;
+        var leftBannerIncrement = 0;
+        var laydate = layui.laydate;
+
+
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+        });
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
+            var bannerImgs = $(".leftBannerImgs");
+            if(bannerImgs==null||bannerImgs.length<=0)
+            {
+                layer.msg("请上传左侧轮播图");
+                return false;
+            }
+            for(var p=0;p<bannerImgs.length;p++)
+            {
+                var leftBanner = $(bannerImgs[p]);
+                if(leftBanner==null||leftBanner.val()==null||leftBanner.val()=="")
+                {
+                    layer.msg("请上传左侧轮播图");
+                    return false;
+                }
+            }
+
+            bannerImgs = $(".rightTopBannerImgs");
+            if(bannerImgs==null||bannerImgs.length<=0)
+            {
+                layer.msg("请上传右侧顶部图片");
+                return false;
+            }
+            for(var p=0;p<bannerImgs.length;p++)
+            {
+                var rightTopBanner = $(bannerImgs[p]);
+                if(rightTopBanner==null||rightTopBanner.val()==null||rightTopBanner.val()=="")
+                {
+                    layer.msg("请上传右侧顶部图片");
+                    return false;
+                }
+            }
+
+
+            bannerImgs = $(".rightBottomBannerImgs");
+            if(bannerImgs==null||bannerImgs.length<=0)
+            {
+                layer.msg("请上传右侧底部图片");
+                return false;
+            }
+            for(var p=0;p<bannerImgs.length;p++)
+            {
+                var rightBottomBanner = $(bannerImgs[p]);
+                if(rightBottomBanner==null||rightBottomBanner.val()==null||rightBottomBanner.val()=="")
+                {
+                    layer.msg("请上传右侧底部图片");
+                    return false;
+                }
+            }
+
             var areaCodeArray = new Array();
+            var areaNameArray = new Array();
             for(var i=0;i<areaArray.length;i++)
             {
                 areaCodeArray[i] = areaArray[i].code;
+                areaNameArray[i] = areaArray[i].name;
             }
-            data.field.areaCodeArray=areaCodeArray;
+            data.field.areaCodeList=areaCodeArray;
+            data.field.areaNameList=areaNameArray;
 
             data.field.topLabels = topLabelData;
             data.field.leftLabels = leftLabelData;
+
+            var columnLeftBannerVOS = new Array();
+            var leftBannerHiddens = $(".leftBannerHiddens");
+            if(leftBannerHiddens!=null&&leftBannerHiddens.length>0)
+            {
+                for(var j=0;j<leftBannerHiddens.length;j++)
+                {
+                    var columnLeftBanner={};
+                    var attrIndex = $(leftBannerHiddens).attr("attr-index");
+                    columnLeftBanner.imgPath = $(leftBannerHiddens).val();
+                    columnLeftBanner.title = $("#left_banner_title_"+attrIndex).val();
+                    columnLeftBanner.clickPath = $("#left_banner_clickPath_"+attrIndex).val();
+                    columnLeftBannerVOS.push(columnLeftBanner);
+                }
+            }else{
+                layer.msg("请上传左侧轮播图");
+                return false;
+            }
+            data.field.columnLeftBannerVOS = columnLeftBannerVOS;
+
+            //右侧顶部图片
+            data.field.rightTopBanner={};
+            data.field.rightTopBanner.imgPath = $("#right_banner_img_hidden").val();
+            data.field.rightTopBanner.title = $("#right_banner_title").val();
+            data.field.rightTopBanner.clickPath = $("#right_banner_clickPath").val();
+
+
+            //右侧底部图片
+            data.field.rightBottomBanner={};
+            data.field.rightBottomBanner.imgPath = $("#right_bottom_img_hidden").val();
+            data.field.rightBottomBanner.title = $("#right_bottom_banner_title").val();
+            data.field.rightBottomBanner.clickPath = $("#right_bottom_banner_clickPath").val();
+
+            loadding = layer.load();
+            $.ajax({
+                url:"[[@{/column/pcIndexColumn/save}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code<=0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
+                }
+            });
+
 
             return false;
         });
@@ -245,6 +526,8 @@
 
 
 
+
+
         /**
          * 拿到所有选中节点的ID
          * @param data
@@ -304,7 +587,7 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        areaArray.push({id:areaTreeDataArray[i].id,areaCode:areaTreeDataArray[i].areaCode});
+                        areaArray.push({id:areaTreeDataArray[i].id,code:areaTreeDataArray[i].areaCode,name:areaTreeDataArray[i].text});
                         areaNames+=" "+areaTreeDataArray[i].text;
                     }
                     if(areaTreeDataArray[i].pid!=-1) {
@@ -377,13 +660,13 @@
                     var areaNames = "";
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        areaArray.push({id:selectNodeObject.id,code:selectNodeObject.code});
+                        areaArray.push({id:selectNodeObject.id,code:selectNodeObject.code,name:selectNodeObject.text});
                         areaNames+=" "+selectNodeObject.text;
                         getParentNode(areaArray,areaNames,selectNodeObject.pid);
                     }
                     $("#selectArea").val(areaNames);
                     for (var j = 0; j < areaArray.length; j++) {
-                        areaArray[j]={code:areaArray[j].code};
+                        areaArray[j]={code:areaArray[j].code,name:areaArray[j].name};
                     }
                     layer.close(index);
                 }
@@ -397,6 +680,7 @@
 
         $("#shopProductRecommend").click(function(){
             var categoryId = "-1";
+            var selectProductIds=$("#selectProductIds").val();
             var index = layer.open({
                 title: '店铺商品列表',
                 type: 2,
@@ -404,14 +688,32 @@
                 maxmin:true,
                 btn: ["<i class='layui-icon layui-icon-ok'></i>确定", "关闭" ],
                 yes: function (index) {
-                    var spuObject = window["layui-layer-iframe" + index].getSelectSpu();
-                    setSpu(spuObject.spuId,spuObject.spuUuid,spuObject.spuName);
+                    var selectProducts = window["layui-layer-iframe" + index].getComponentSelectProduct();
+                    var selectProductName="";
+                    if(selectProducts!=null&&selectProducts.length>0) {
+                        for(var i=0;i<selectProducts.length;i++)
+                        {
+                            var selectProduct = selectProducts[i];
+                            if(selectProduct!=null)
+                            {
+                                selectProductIds+=selectProduct.id;
+                                selectProductName+=selectProduct.name;
+                            }
+                            if(i>=0&&((i+1)<selectProducts.length))
+                            {
+                                selectProductIds+=",";
+                                selectProductName+="，";
+                            }
+                        }
+                    }
+                    $("#selectProductIds").val(selectProductIds);
+                    $("#shopProductRecommend").val(selectProductName);
                     layer.close(index);
                 },
                 area: ['80%', '80%'],
-                content: '[[@{/}]]column/pcIndexColumn/shopProductListPage/'+categoryId,
+                content: '[[@{/}]]component/selectShopProduct/shopProductListPage?categoryId='+categoryId+'&selectProductIds='+selectProductIds, //984146210711404606,996897344802783282
                 zIndex: layer.zIndex,
-                success: function(layero){
+                success: function(layero,index) {
                     layer.setTop(layero);
                 }
             });
@@ -420,6 +722,130 @@
             });
 
         });
+
+        appendLeftBannner();
+
+        /**
+         * 添加一行轮播图
+         **/
+        function appendLeftBannner()
+        {
+            leftBannerIncrement++;
+            $("#leftBanner").append("<tr id='banner_tr_"+leftBannerIncrement+"'>\n" +
+                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/imgadd.png'></td>\n" +
+                "        <td>" +
+                "               <input type='file' class='leftBannerImgs'  id='left_banner_img_"+leftBannerIncrement+"' />" +
+                "               <input type='hidden' attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
+                "       </td>\n" +
+                "        <td><input type='text' id='left_banner_title_"+leftBannerIncrement+"'  maxlength='100' class='layui-input' /></td>\n" +
+                "        <td><input type='text' id='left_banner_clickPath_"+leftBannerIncrement+"'  maxlength='255' class='layui-input'  /></td>\n" +
+                "        <td> <button type='button' class='leftBannerTableDelRow' id='left_banner_delete_"+leftBannerIncrement+"' attr-index='"+leftBannerIncrement+"' >删除</button></td>\n" +
+                "      </tr>");
+
+
+            letBannerTableUploadPreview(leftBannerIncrement);
+            bindLeftBannerTableDeleteRowEvent();
+        }
+
+        $("#addLeftBanner").click(function(){
+            appendLeftBannner();
+        });
+
+
+        function uploadImg(fileId,previewImg,imgHidden)
+        {
+            loadding = layer.load();
+            var formData = new FormData();
+            formData.append("file",$(fileId)[0].files[0]);
+            $.ajax({
+                url:'/common/img/upload',
+                type:'post',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success:function(res){
+                    $(previewImg).attr("src", res.data.httpPath);
+                    $(imgHidden).val(res.data.path);
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
+                }
+            });
+        }
+
+
+        /**
+         * 初始化左侧轮播图列表中点击上传图片
+         * @param pos
+         */
+        function letBannerTableUploadPreview(pos)
+        {
+
+            if($("#left_banner_img_"+pos)!=null) {
+                $("#left_banner_img_" + pos).on("change", function () {
+                    uploadImg("#left_banner_img_"+pos,"#left_banner_preview_"+pos,"#left_banner_img_hidden_"+pos);
+                });
+            }
+
+        }
+
+
+        rightTopBannerTableUploadPreview();
+
+        /**
+         * 初始化右侧顶部轮播图列表中点击上传图片
+         * @param pos
+         */
+        function rightTopBannerTableUploadPreview()
+        {
+
+            if($("#right_banner_img")!=null) {
+                $("#right_banner_img" ).on("change", function () {
+                    uploadImg("#right_banner_img","#right_banner_preview","#right_banner_img_hidden");
+                });
+            }
+
+        }
+
+
+        rightBottomBannerTableUploadPreview();
+
+
+        /**
+         * 初始化右侧底部轮播图列表中点击上传图片
+         */
+        function rightBottomBannerTableUploadPreview()
+        {
+
+            if($("#right_bottom_banner_img")!=null) {
+                $("#right_bottom_banner_img" ).on("change", function () {
+
+                    uploadImg("#right_bottom_banner_img","#right_bottom_banner_preview","#right_bottom_img_hidden");
+
+                });
+            }
+
+        }
+
+        /**
+         * 初始化删除事件
+         */
+        function bindLeftBannerTableDeleteRowEvent()
+        {
+            $(".leftBannerTableDelRow").unbind("click");
+            //SKU信息
+            $(".leftBannerTableDelRow").bind("click", function () {
+                var attrIndex = $(this).attr("attr-index");
+                layer.confirm('确定删除?', {
+                    btn: ['确定','关闭'], //按钮
+                    title:'提示信息'
+                }, function(index) {
+                    $("#banner_tr_" +attrIndex ).remove();
+                    layer.close(index);
+                });
+            });
+        }
 
 
     });

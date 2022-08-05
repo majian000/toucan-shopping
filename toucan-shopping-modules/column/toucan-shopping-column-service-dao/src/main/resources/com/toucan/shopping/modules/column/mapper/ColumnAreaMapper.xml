@@ -6,12 +6,13 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="column_id" jdbcType="BIGINT" property="columnId" />
         <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
-        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
     </resultMap>
 
     <select id="queryList" resultMap="columnAreaMap" parameterType="com.toucan.shopping.modules.column.entity.ColumnArea">
@@ -33,27 +34,24 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.ColumnArea" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_column_area(column_id,area_code,remark,create_date,update_date,create_admin_id,update_admin_id)
-        values(#{columnId},#{areaCode},#{remark},#{createDate},#{updateDate},#{createAdminId},#{updateAdminId})
+
+
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_column_area(id,column_id,area_code,area_name,create_date,create_admin_id,app_code)
+
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.columnId},#{entity.areaCode},#{entity.areaName},#{entity.createDate},#{entity.createAdminId},#{entity.appCode})
+        </foreach>
+
     </insert>
 
 
-    <select id="queryById" resultMap="columnAreaMap" parameterType="java.lang.Long">
-        select * from t_column_area where id=#{id} and delete_status=0
-    </select>
-
-
-    <update id="deleteById">
-        update t_column_area  set delete_status=1 where id=#{id}  and delete_status=0
+    <update id="deleteByColumnId" parameterType="java.lang.Long">
+         update t_column_area set delete_status = 1 where column_id = #{columnId} and delete_status = 0
     </update>
 
 
-    <update id="update" parameterType="com.toucan.shopping.modules.column.entity.ColumnArea">
-        update t_column_area set column_id=#{columnId},area_code=#{areaCode},remark=#{remark},
-        update_admin_id=#{updateAdminId},update_date=#{updateDate}
-          where id=#{id}
-    </update>
 
 
 </mapper>

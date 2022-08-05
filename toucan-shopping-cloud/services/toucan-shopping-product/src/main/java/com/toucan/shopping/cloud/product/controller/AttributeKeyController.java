@@ -202,6 +202,10 @@ public class AttributeKeyController {
                         }
                     }
                 }
+                if(queryPageInfo.getCategoryId()!=null)
+                {
+                    categoryIdList.add(queryPageInfo.getCategoryId());
+                }
                 //设置分类
                 queryAttributeKey.setCategoryIdList(categoryIdList);
                 List<AttributeKeyVO> attributeKeyVOS = attributeKeyService.queryList(queryAttributeKey);

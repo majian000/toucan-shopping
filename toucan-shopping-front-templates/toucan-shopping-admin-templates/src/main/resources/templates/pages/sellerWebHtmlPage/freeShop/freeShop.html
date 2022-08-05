@@ -21,26 +21,26 @@
     <div class="layuimini-main" >
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
-                <li class="layui-this">预览文件</li>
-                <li>最终效果</li>
+                <!--<li class="layui-this">预览文件</li>-->
+                <li class="layui-this">最终效果</li>
             </ul>
             <div class="layui-tab-content" >
 
-                <div class="layui-tab-item layui-show">
-                    <span th:each="pb : ${previewTabButtons}" th:utext="${pb}"></span>
+                <!--<div class="layui-tab-item layui-show">-->
+                    <!--<span th:each="pb : ${previewTabButtons}" th:utext="${pb}"></span>-->
 
-                    <div class="layui-tab">
-                        <ul class="layui-tab-title">
-                            <li th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>
-                        </ul>
-                        <div class="layui-tab-content">
-                            <div  th:class="${iterStat.index eq 0}?'layui-tab-item layui-show':'layui-tab-item' " th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:utext="${rhg.content}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <!--<div class="layui-tab">-->
+                        <!--<ul class="layui-tab-title">-->
+                            <!--<li th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:class="${iterStat.index eq 0}?'layui-this' " th:utext="${rhg.name}"></li>-->
+                        <!--</ul>-->
+                        <!--<div class="layui-tab-content">-->
+                            <!--<div  th:class="${iterStat.index eq 0}?'layui-tab-item layui-show':'layui-tab-item' " th:each="rhg,iterStat : ${previewHtmlGenerators}"  th:utext="${rhg.content}">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
 
-                <div class="layui-tab-item">
+                <div class="layui-tab-item layui-show ">
                     <span th:each="rb : ${releaseTabButtons}" th:utext="${rb}"></span>
                     <div class="layui-tab">
                         <ul class="layui-tab-title">
@@ -68,23 +68,23 @@
             ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
         //生成预览
-        $("#preview_btn").click(function() {
-            var loadding = layer.load();
-            $.ajax({
-                url:"[[@{/}]]seller/web/freeShop/html/generate/preview",
-                type:'POST',
-                success:function(data){
-                    layer.msg(data.msg);
-                    if(data.code=="1")
-                    {
-                        window.location.reload();
-                    }
-                },
-                complete:function(data){
-                    layer.close(loadding);
-                }
-            });
-        });
+        // $("#preview_btn").click(function() {
+        //     var loadding = layer.load();
+        //     $.ajax({
+        //         url:"[[@{/}]]seller/web/freeShop/html/generate/preview",
+        //         type:'POST',
+        //         success:function(data){
+        //             layer.msg(data.msg);
+        //             if(data.code=="1")
+        //             {
+        //                 window.location.reload();
+        //             }
+        //         },
+        //         complete:function(data){
+        //             layer.close(loadding);
+        //         }
+        //     });
+        // });
 
         //生成最终文件
         $("#release_btn").click(function() {
