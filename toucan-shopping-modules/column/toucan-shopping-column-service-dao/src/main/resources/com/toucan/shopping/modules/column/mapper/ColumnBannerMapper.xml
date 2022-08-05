@@ -58,12 +58,12 @@
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_column_banner(id,column_id,position,remark,create_date,create_admin_id,delete_status,app_code,title,img_path,click_path,banner_sort)
+        insert into t_column_banner(id,column_id,position,remark,create_date,create_admin_id,app_code,title,img_path,click_path,banner_sort)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.columnId},#{entity.position},#{entity.remark},#{entity.createDate},
-            #{entity.createAdminId},#{entity.deleteStatus},#{entity.appCode},#{entity.title},#{entity.imgPath},#{entity.clickPath},#{entity.bannerSort})
+            #{entity.createAdminId},#{entity.appCode},#{entity.title},#{entity.imgPath},#{entity.clickPath},#{entity.bannerSort})
         </foreach>
 
     </insert>
