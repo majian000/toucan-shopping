@@ -209,7 +209,7 @@ public class PcIndexColumnController {
             BeanUtils.copyProperties(rightBottomBanner,pcIndexColumnVO.getRightBottomBanner());
             rightBottomBanner.setId(idGenerator.id());
             rightBottomBanner.setColumnId(pcIndexColumnVO.getId());
-            rightBottomBanner.setPosition(3);
+            rightBottomBanner.setPosition(4);
             rightBottomBanner.setCreateDate(new Date());
             rightBottomBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
             rightBottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
