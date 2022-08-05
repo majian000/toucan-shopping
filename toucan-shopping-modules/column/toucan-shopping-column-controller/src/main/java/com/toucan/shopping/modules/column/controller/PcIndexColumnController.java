@@ -472,7 +472,7 @@ public class PcIndexColumnController {
             columnRecommendProductService.queryListSortDescByColumnId(pcIndexColumnVO.getId());
 
 
-            resultObjectVO.setData(columnVO);
+            resultObjectVO.setData(pcIndexColumnVO);
 
         }catch(Exception e)
         {

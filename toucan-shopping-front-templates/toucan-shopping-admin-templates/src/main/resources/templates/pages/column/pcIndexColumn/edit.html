@@ -25,7 +25,7 @@
 <div class="layui-form layuimini-form">
 
 
-    <input type="hidden" name="id" id="id" th:value="${model.id}">
+    <input type="hidden" name="id" id="dataId" th:value="${id}">
 
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目标题</label>
@@ -238,7 +238,6 @@
 </div>
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/common/common.js}" charset="utf-8"></script>
-<script th:src="@{/lib/jquery-form/jquery-form.js}" charset="utf-8"></script>
 <script>
     layui.config({
         base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
@@ -264,6 +263,7 @@
         var labelIncrement= 0;
         var leftBannerIncrement = 0;
         var laydate = layui.laydate;
+
 
 
 
@@ -845,6 +845,29 @@
                     $("#banner_tr_" +attrIndex ).remove();
                     layer.close(index);
                 });
+            });
+        }
+
+
+
+        loadPage();
+
+        function loadPage()
+        {
+            var dataId  =$("#dataId").val();
+            loadding = layer.load();
+            $.ajax({
+                url:"[[@{/column/pcIndexColumn/findById}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify({id:dataId}),
+                success:function(data){
+                    console.log(data);
+                },
+                complete:function()
+                {
+                    layer.close(loadding);
+                }
             });
         }
 

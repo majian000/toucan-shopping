@@ -266,31 +266,6 @@
                         }
                     });
                 });
-            }else if (obj.event === 'flushCache') {  // 监听删除操作
-                layer.confirm('确定刷新缓存?', function (index) {
-                    $.ajax({
-                        url:"[[@{/}]]column/pcIndexColumn/flush/cache",
-                        contentType: "application/json; charset=utf-8",
-                        type:'POST',
-                        data:null,
-                        success:function(data){
-                            layer.msg(data.msg);
-
-                            //执行搜索重载
-                            table.reload('columnTypeTable', {
-                                page: {
-                                    curr: 1
-                                }
-                                , where: data.field
-                            }, 'data');
-
-                        },
-                        complete:function(data)
-                        {
-                            layer.close(index);
-                        }
-                    });
-                });
             }
         });
 

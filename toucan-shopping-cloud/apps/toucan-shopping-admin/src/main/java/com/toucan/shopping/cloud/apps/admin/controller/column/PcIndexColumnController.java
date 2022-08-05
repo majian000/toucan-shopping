@@ -178,6 +178,30 @@ public class PcIndexColumnController extends UIController {
 
 
 
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/findById",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(HttpServletRequest request, @RequestBody PcIndexColumnVO entity)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            entity.setAppCode(toucan.getShoppingPC().getAppCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
+            resultObjectVO = feignPcIndexColumnService.findById(requestJsonVO);
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 
     /**
      * 查询列表
