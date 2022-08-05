@@ -29,5 +29,9 @@
 
     </insert>
 
+    <update id="deleteByColumnId" parameterType="java.lang.Long">
+         update t_column_recommend_product set delete_status = 1 where column_id = #{columnId}
+    </update>
+
 
 </mapper>

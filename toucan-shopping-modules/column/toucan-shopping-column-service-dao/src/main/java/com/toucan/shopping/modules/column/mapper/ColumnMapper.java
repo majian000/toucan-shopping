@@ -23,6 +23,12 @@ public interface ColumnMapper {
     List<Column> queryAreaColumnList(String areaCode,Integer type,Integer position);
 
 
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    ColumnVO findById(Long id);
 
     /**
      * 查询列表页

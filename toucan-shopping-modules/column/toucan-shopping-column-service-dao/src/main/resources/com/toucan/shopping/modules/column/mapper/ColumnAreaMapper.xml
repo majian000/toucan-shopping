@@ -46,6 +46,11 @@
     </insert>
 
 
+    <update id="deleteByColumnId" parameterType="java.lang.Long">
+         update t_column_area set delete_status = 1 where column_id = #{columnId}
+    </update>
+
+
 
 
 </mapper>

@@ -32,6 +32,13 @@ public interface ColumnService {
 
     List<ColumnVO> queryList(ColumnVO query);
 
+    /**
+     * 根据ID查询
+     * @param id
+     * @return
+     */
+    ColumnVO findById(Long id);
+
     int save(Column column);
 
 

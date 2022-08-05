@@ -12,4 +12,6 @@ public interface ColumnBannerMapper {
 
     int inserts(List<ColumnBanner> entitys);
 
+    int deleteByColumnId(Long columnId);
+
 }

@@ -11,4 +11,7 @@ public interface ColumnAreaService {
 
     int saves(List<ColumnArea> entitys);
 
+
+    int deleteByColumnId(Long columnId);
+
 }

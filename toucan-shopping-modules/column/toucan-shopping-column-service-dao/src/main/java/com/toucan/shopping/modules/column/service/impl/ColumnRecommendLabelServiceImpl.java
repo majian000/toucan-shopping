@@ -21,4 +21,9 @@ public class ColumnRecommendLabelServiceImpl implements ColumnRecommendLabelServ
     public int saves(List<ColumnRecommendLabel> entitys) {
         return columnRecommendLabelMapper.inserts(entitys);
     }
+
+    @Override
+    public int deleteByColumnId(Long columnId) {
+        return columnRecommendLabelMapper.deleteByColumnId(columnId);
+    }
 }

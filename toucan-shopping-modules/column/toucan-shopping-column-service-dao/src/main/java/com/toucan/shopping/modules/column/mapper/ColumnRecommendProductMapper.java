@@ -16,4 +16,5 @@ public interface ColumnRecommendProductMapper {
 
     int inserts(List<ColumnRecommendProduct> entitys);
 
+    int deleteByColumnId(Long columnId);
 }

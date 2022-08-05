@@ -141,4 +141,8 @@
         </where>
     </select>
 
+    <select id="findById" resultMap="columnVOMap" parameterType="java.lang.Long">
+        select t.* from t_column t where t.id = #{id} where t.delete_status=0 limit 0,1
+    </select>
+
 </mapper>

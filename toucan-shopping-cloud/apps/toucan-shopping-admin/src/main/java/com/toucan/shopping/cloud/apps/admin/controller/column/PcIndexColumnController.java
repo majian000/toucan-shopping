@@ -416,6 +416,7 @@ public class PcIndexColumnController extends UIController {
             RequestJsonVO requestVo = new RequestJsonVO();
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
+
             resultObjectVO = feignPcIndexColumnService.deleteById(requestVo);
         }catch(Exception e)
         {

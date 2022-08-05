@@ -331,8 +331,8 @@ public class ColumnTypeController {
         }
 
         try {
-            ColumnTypeVO messageTypeVO = JSONObject.parseObject(requestVo.getEntityJson(),ColumnTypeVO.class);
-            if(messageTypeVO.getId()==null)
+            ColumnTypeVO columnTypeVO = JSONObject.parseObject(requestVo.getEntityJson(),ColumnTypeVO.class);
+            if(columnTypeVO.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("没有找到ID");
@@ -341,7 +341,7 @@ public class ColumnTypeController {
 
             //查询是否存在该对象
             ColumnTypeVO query=new ColumnTypeVO();
-            query.setId(messageTypeVO.getId());
+            query.setId(columnTypeVO.getId());
             List<ColumnTypeVO> entitys = columnTypeService.queryList(query);
             if(CollectionUtils.isEmpty(entitys))
             {

@@ -9,4 +9,7 @@ public interface ColumnBannerService {
 
     int saves(List<ColumnBanner> entitys);
 
+
+    int deleteByColumnId(Long columnId);
+
 }

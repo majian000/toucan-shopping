@@ -22,4 +22,9 @@ public class ColumnBannerServiceImpl implements ColumnBannerService {
     public int saves(List<ColumnBanner> entitys) {
         return columnBannerMapper.inserts(entitys);
     }
+
+    @Override
+    public int deleteByColumnId(Long columnId) {
+        return columnBannerMapper.deleteByColumnId(columnId);
+    }
 }

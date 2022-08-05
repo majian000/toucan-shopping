@@ -16,4 +16,7 @@ public interface ColumnRecommendLabelMapper {
 
     int inserts(List<ColumnRecommendLabel> entitys);
 
+
+    int deleteByColumnId(Long columnId);
+
 }

@@ -24,4 +24,10 @@ public class ColumnAreaServiceImpl implements ColumnAreaService {
     public int saves(List<ColumnArea> entitys) {
         return columnAreaMapper.inserts(entitys);
     }
+
+
+    @Override
+    public int deleteByColumnId(Long columnId) {
+        return columnAreaMapper.deleteByColumnId(columnId);
+    }
 }

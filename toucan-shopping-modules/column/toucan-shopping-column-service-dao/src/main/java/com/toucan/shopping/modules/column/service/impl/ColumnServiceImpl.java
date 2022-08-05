@@ -38,6 +38,11 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
+    public ColumnVO findById(Long id) {
+        return columnMapper.findById(id);
+    }
+
+    @Override
     public int save(Column column) {
         return columnMapper.insert(column);
     }

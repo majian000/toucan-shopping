@@ -14,4 +14,7 @@ public interface ColumnAreaMapper {
 
     int inserts(List<ColumnArea> entitys);
 
+
+    int deleteByColumnId(Long columnId);
+
 }

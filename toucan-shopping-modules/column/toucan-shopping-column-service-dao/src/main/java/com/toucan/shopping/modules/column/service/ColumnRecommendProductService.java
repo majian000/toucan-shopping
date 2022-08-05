@@ -9,4 +9,7 @@ public interface ColumnRecommendProductService {
 
     int saves(List<ColumnRecommendProduct> entitys);
 
+
+    int deleteByColumnId(Long columnId);
+
 }

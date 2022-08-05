@@ -9,4 +9,6 @@ public interface ColumnRecommendLabelService {
 
     int saves(List<ColumnRecommendLabel> entitys);
 
+
+    int deleteByColumnId(Long columnId);
 }

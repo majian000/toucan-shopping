@@ -21,4 +21,10 @@ public class ColumnRecommendProductServiceImpl implements ColumnRecommendProduct
     public int saves(List<ColumnRecommendProduct> entitys) {
         return columnRecommendProductMapper.inserts(entitys);
     }
+
+
+    @Override
+    public int deleteByColumnId(Long columnId) {
+        return columnRecommendProductMapper.deleteByColumnId(columnId);
+    }
 }

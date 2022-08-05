@@ -368,12 +368,71 @@ public class PcIndexColumnController {
                 return resultObjectVO;
             }
 
+            columnBannerService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnAreaService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnRecommendLabelService.deleteByColumnId(pcIndexColumnVO.getId());
+            columnRecommendProductService.deleteByColumnId(pcIndexColumnVO.getId());
+
 
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请重试!");
             logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ColumnVO columnVO = JSONObject.parseObject(requestVo.getEntityJson(),ColumnVO.class);
+            if(columnVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该对象
+            columnVO = columnService.findById(columnVO.getId());
+            if(columnVO==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("不存在!");
+                return resultObjectVO;
+            }
+
+            PcIndexColumnVO pcIndexColumnVO = new PcIndexColumnVO();
+            BeanUtils.copyProperties(pcIndexColumnVO,columnVO);
+
+
+            resultObjectVO.setData(columnVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

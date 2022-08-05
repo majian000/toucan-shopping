@@ -38,4 +38,14 @@ public interface FeignPcIndexColumnService {
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
+
 }
