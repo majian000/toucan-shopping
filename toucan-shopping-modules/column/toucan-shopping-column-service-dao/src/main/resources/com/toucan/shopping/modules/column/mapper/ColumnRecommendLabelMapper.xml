@@ -19,6 +19,9 @@
     </resultMap>
 
 
+    <resultMap id="columnRecommendLabelVOMap" type="com.toucan.shopping.modules.column.vo.ColumnRecommendLabelVO" extends="columnRecommendLabelMap" >
+
+    </resultMap>
 
     <insert id="inserts"   keyProperty="id" >
         insert into t_column_recommend_label(id,column_id,label_name,click_path,position,remark,create_date,create_admin_id,app_code,label_sort)
@@ -34,6 +37,12 @@
     <update id="deleteByColumnId" parameterType="java.lang.Long">
          update t_column_recommend_label set delete_status = 1 where column_id = #{columnId}
     </update>
+
+
+    <select id="queryListByColumnId" resultMap="columnRecommendLabelVOMap">
+        select * from t_column_recommend_label where delete_status = 0 and column_id = #{columnId}
+    </select>
+
 
 
 </mapper>

@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.column.mapper.ColumnRecommendLabelMapper;
 import com.toucan.shopping.modules.column.mapper.ColumnRecommendProductMapper;
 import com.toucan.shopping.modules.column.service.ColumnRecommendLabelService;
 import com.toucan.shopping.modules.column.service.ColumnRecommendProductService;
+import com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,10 @@ public class ColumnRecommendProductServiceImpl implements ColumnRecommendProduct
     @Override
     public int deleteByColumnId(Long columnId) {
         return columnRecommendProductMapper.deleteByColumnId(columnId);
+    }
+
+    @Override
+    public List<ColumnRecommendProductVO> queryListSortDescByColumnId(Long columnId) {
+        return columnRecommendProductMapper.queryListSortDescByColumnId(columnId);
     }
 }

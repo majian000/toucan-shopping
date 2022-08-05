@@ -434,9 +434,43 @@ public class PcIndexColumnController {
                 pcIndexColumnVO.setColumnLeftBannerVOS(new LinkedList<>());
                 for(ColumnBannerVO columnBannerVO:columnBannerVOS)
                 {
-//                    if(columnBannerVO.get)
+                    //左侧顶部
+                    if(columnBannerVO.getPosition().intValue()==2)
+                    {
+                        pcIndexColumnVO.getColumnLeftBannerVOS().add(columnBannerVO);
+                    }else if(columnBannerVO.getPosition().intValue()==3)  //右侧顶部
+                    {
+                        pcIndexColumnVO.setRightTopBanner(columnBannerVO);
+                    }else if(columnBannerVO.getPosition().intValue()==4)  //右侧底部
+                    {
+                        pcIndexColumnVO.setRightBottomBanner(columnBannerVO);
+                    }
                 }
             }
+
+            //查询栏目标签
+            List<ColumnRecommendLabelVO> columnRecommendLabelVOS = columnRecommendLabelService.queryListByColumnId(pcIndexColumnVO.getId());
+            if(!CollectionUtils.isEmpty(columnRecommendLabelVOS))
+            {
+
+                pcIndexColumnVO.setTopLabels(new LinkedList<>());
+                pcIndexColumnVO.setLeftLabels(new LinkedList<>());
+                for(ColumnRecommendLabelVO columnRecommendLabelVO:columnRecommendLabelVOS)
+                {
+                    //顶部标签
+                    if(columnRecommendLabelVO.getPosition().intValue()==1)
+                    {
+                        pcIndexColumnVO.getTopLabels().add(columnRecommendLabelVO);
+                    }else if(columnRecommendLabelVO.getPosition().intValue()==2) //左侧
+                    {
+                        pcIndexColumnVO.getLeftLabels().add(columnRecommendLabelVO);
+                    }
+                }
+            }
+
+            //查询推荐商品
+            columnRecommendProductService.queryListSortDescByColumnId(pcIndexColumnVO.getId());
+
 
             resultObjectVO.setData(columnVO);
 

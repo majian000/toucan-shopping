@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toucan.shopping.modules.column.mapper.ColumnRecommendProductMapper">
 
-    <resultMap id="columnRecommendLabelMap" type="com.toucan.shopping.modules.column.entity.ColumnRecommendProduct" >
+    <resultMap id="columnRecommendProductMap" type="com.toucan.shopping.modules.column.entity.ColumnRecommendProduct" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="column_id" jdbcType="BIGINT" property="columnId" />
         <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
@@ -16,6 +16,9 @@
         <result column="product_sort" jdbcType="BIGINT" property="productSort" />
     </resultMap>
 
+    <resultMap id="columnRecommendProductVOMap" type="com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO" extends="columnRecommendProductMap">
+
+    </resultMap>
 
 
     <insert id="inserts"   keyProperty="id" >
@@ -32,6 +35,10 @@
     <update id="deleteByColumnId" parameterType="java.lang.Long">
          update t_column_recommend_product set delete_status = 1 where column_id = #{columnId}
     </update>
+
+    <select id="queryListSortDescByColumnId" parameterType="java.lang.Long" resultMap="columnRecommendProductVOMap">
+        select * from t_column_recommend_product  where column_id = #{columnId} and delete_status = 0 order by product_sort desc
+    </select>
 
 
 </mapper>
