@@ -236,6 +236,7 @@ public class PcIndexColumnController {
                     columnRecommendLabel.setCreateDate(new Date());
                     columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
                     columnRecommendLabel.setPosition((short)1);
+                    columnRecommendLabel.setLabelSort(0L);
 
                     columnRecommendLabels.add(columnRecommendLabel);
 
@@ -255,6 +256,7 @@ public class PcIndexColumnController {
                     columnRecommendLabel.setCreateDate(new Date());
                     columnRecommendLabel.setAppCode(pcIndexColumnVO.getAppCode());
                     columnRecommendLabel.setPosition((short)2);
+                    columnRecommendLabel.setLabelSort(0L);
 
                     columnRecommendLabels.add(columnRecommendLabel);
 
@@ -277,6 +279,7 @@ public class PcIndexColumnController {
                     columnArea.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
                     columnArea.setCreateDate(new Date());
                     columnArea.setAreaCode(areaCode);
+                    columnArea.setAppCode(pcIndexColumnVO.getAppCode());
                     columnAreas.add(columnArea);
                 }
             }
@@ -296,6 +299,8 @@ public class PcIndexColumnController {
                     columnRecommendProduct.setShopProductId(selectProductId);
                     columnRecommendProduct.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
                     columnRecommendProduct.setCreateDate(new Date());
+                    columnRecommendProduct.setProductSort(0L);
+                    columnRecommendProduct.setAppCode(pcIndexColumnVO.getAppCode());
                     columnRecommendProducts.add(columnRecommendProduct);
                 }
             }
