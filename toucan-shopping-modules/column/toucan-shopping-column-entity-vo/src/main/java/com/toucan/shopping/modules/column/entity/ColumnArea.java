@@ -24,6 +24,7 @@ public class ColumnArea {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long columnId; //栏目主键
     private String areaCode; //地区编码
+    private String areaName; //地区编码
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

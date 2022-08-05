@@ -24,6 +24,7 @@
 
 <div class="layui-form layuimini-form">
 
+
     <input type="hidden" name="id" id="id" th:value="${model.id}">
 
     <div class="layui-form-item">
@@ -331,11 +332,14 @@
             }
 
             var areaCodeArray = new Array();
+            var areaNameArray = new Array();
             for(var i=0;i<areaArray.length;i++)
             {
                 areaCodeArray[i] = areaArray[i].code;
+                areaNameArray[i] = areaArray[i].name;
             }
             data.field.areaCodeList=areaCodeArray;
+            data.field.areaNameList=areaNameArray;
 
             data.field.topLabels = topLabelData;
             data.field.leftLabels = leftLabelData;
@@ -584,7 +588,7 @@
                     //避免上级节点ID重复保存两份
                     if(!exists)
                     {
-                        areaArray.push({id:areaTreeDataArray[i].id,areaCode:areaTreeDataArray[i].areaCode});
+                        areaArray.push({id:areaTreeDataArray[i].id,code:areaTreeDataArray[i].areaCode,name:areaTreeDataArray[i].text});
                         areaNames+=" "+areaTreeDataArray[i].text;
                     }
                     if(areaTreeDataArray[i].pid!=-1) {
@@ -657,13 +661,13 @@
                     var areaNames = "";
                     for (var i = 0; i < selectNodes.length; i++) {
                         var selectNodeObject = getNodeObject(selectNodes[i].nodeId);
-                        areaArray.push({id:selectNodeObject.id,code:selectNodeObject.code});
+                        areaArray.push({id:selectNodeObject.id,code:selectNodeObject.code,name:selectNodeObject.text});
                         areaNames+=" "+selectNodeObject.text;
                         getParentNode(areaArray,areaNames,selectNodeObject.pid);
                     }
                     $("#selectArea").val(areaNames);
                     for (var j = 0; j < areaArray.length; j++) {
-                        areaArray[j]={code:areaArray[j].code};
+                        areaArray[j]={code:areaArray[j].code,name:areaArray[j].name};
                     }
                     layer.close(index);
                 }

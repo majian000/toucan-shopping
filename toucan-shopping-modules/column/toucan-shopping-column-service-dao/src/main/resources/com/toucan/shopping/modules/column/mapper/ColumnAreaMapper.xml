@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="column_id" jdbcType="BIGINT" property="columnId" />
         <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
@@ -36,11 +37,11 @@
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_column_area(id,column_id,area_code,create_date,create_admin_id,app_code)
+        insert into t_column_area(id,column_id,area_code,area_name,create_date,create_admin_id,app_code)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.columnId},#{entity.areaCode},#{entity.createDate},#{entity.createAdminId},#{entity.appCode})
+            (#{entity.id},#{entity.columnId},#{entity.areaCode},#{entity.areaName},#{entity.createDate},#{entity.createAdminId},#{entity.appCode})
         </foreach>
 
     </insert>

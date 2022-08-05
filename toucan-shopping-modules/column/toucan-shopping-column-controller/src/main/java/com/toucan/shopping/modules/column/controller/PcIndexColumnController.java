@@ -271,14 +271,17 @@ public class PcIndexColumnController {
             //保存栏目地区
             if(!CollectionUtils.isEmpty(pcIndexColumnVO.getAreaCodeList()))
             {
-                for(String areaCode:pcIndexColumnVO.getAreaCodeList())
+                for(int i=0;i<pcIndexColumnVO.getAreaCodeList().size();i++)
                 {
+                    String areaCode = pcIndexColumnVO.getAreaCodeList().get(i);
+                    String areaName = pcIndexColumnVO.getAreaNameList().get(i);
                     ColumnArea columnArea = new ColumnArea();
                     columnArea.setId(idGenerator.id());
                     columnArea.setColumnId(pcIndexColumnVO.getId());
                     columnArea.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
                     columnArea.setCreateDate(new Date());
                     columnArea.setAreaCode(areaCode);
+                    columnArea.setAreaName(areaName);
                     columnArea.setAppCode(pcIndexColumnVO.getAppCode());
                     columnAreas.add(columnArea);
                 }
@@ -424,6 +427,16 @@ public class PcIndexColumnController {
             PcIndexColumnVO pcIndexColumnVO = new PcIndexColumnVO();
             BeanUtils.copyProperties(pcIndexColumnVO,columnVO);
 
+            //查询轮播图以及预览图相关
+            List<ColumnBannerVO> columnBannerVOS = columnBannerService.queryListByColumnId(pcIndexColumnVO.getId());
+            if(!CollectionUtils.isEmpty(columnBannerVOS))
+            {
+                pcIndexColumnVO.setColumnLeftBannerVOS(new LinkedList<>());
+                for(ColumnBannerVO columnBannerVO:columnBannerVOS)
+                {
+//                    if(columnBannerVO.get)
+                }
+            }
 
             resultObjectVO.setData(columnVO);
 

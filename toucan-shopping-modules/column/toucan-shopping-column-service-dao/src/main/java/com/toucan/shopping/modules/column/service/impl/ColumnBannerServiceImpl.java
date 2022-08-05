@@ -27,4 +27,9 @@ public class ColumnBannerServiceImpl implements ColumnBannerService {
     public int deleteByColumnId(Long columnId) {
         return columnBannerMapper.deleteByColumnId(columnId);
     }
+
+    @Override
+    public List<ColumnBannerVO> queryListByColumnId(Long columnId) {
+        return columnBannerMapper.queryListByColumnId(columnId);
+    }
 }

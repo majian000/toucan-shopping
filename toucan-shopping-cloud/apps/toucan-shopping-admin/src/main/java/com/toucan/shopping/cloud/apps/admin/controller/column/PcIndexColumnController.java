@@ -116,26 +116,7 @@ public class PcIndexColumnController extends UIController {
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
-        try {
-            ColumnVO queryEntity = new ColumnVO();
-            queryEntity.setId(id);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryEntity);
-//            ResultObjectVO resultObjectVO = feignPcIndexColumnService.findById(requestJsonVO);
-//            if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-//            {
-//                if(resultObjectVO.getData()!=null) {
-//                    List<ColumnVO> columnVOS = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ColumnVO.class);
-//                    if(!CollectionUtils.isEmpty(columnVOS))
-//                    {
-//                        request.setAttribute("model",columnVOS.get(0));
-//                    }
-//                }
-//
-//            }
-        }catch(Exception e)
-        {
-            logger.warn(e.getMessage(),e);
-        }
+        request.setAttribute("id",id);
         return "pages/column/pcIndexColumn/edit.html";
     }
 

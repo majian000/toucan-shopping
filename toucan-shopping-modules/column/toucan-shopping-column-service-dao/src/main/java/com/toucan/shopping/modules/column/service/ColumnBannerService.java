@@ -12,4 +12,6 @@ public interface ColumnBannerService {
 
     int deleteByColumnId(Long columnId);
 
+    List<ColumnBannerVO> queryListByColumnId(Long columnId);
+
 }
