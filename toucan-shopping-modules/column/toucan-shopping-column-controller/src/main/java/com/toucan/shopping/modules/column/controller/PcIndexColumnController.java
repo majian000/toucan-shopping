@@ -9,10 +9,7 @@ import com.toucan.shopping.modules.column.entity.ColumnRecommendProduct;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.redis.ColumnLockKey;
 import com.toucan.shopping.modules.column.service.*;
-import com.toucan.shopping.modules.column.vo.ColumnBannerVO;
-import com.toucan.shopping.modules.column.vo.ColumnRecommendLabelVO;
-import com.toucan.shopping.modules.column.vo.ColumnVO;
-import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
+import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -469,8 +466,26 @@ public class PcIndexColumnController {
             }
 
             //查询推荐商品
-            columnRecommendProductService.queryListSortDescByColumnId(pcIndexColumnVO.getId());
+            StringBuilder productIds = new StringBuilder();
+            List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListSortDescByColumnId(pcIndexColumnVO.getId());
+            if(!CollectionUtils.isEmpty(columnRecommendProductVOS))
+            {
+                for(int i=0;i<columnRecommendProductVOS.size();i++)
+                {
+                    ColumnRecommendProductVO columnRecommendProductVO = columnRecommendProductVOS.get(i);
+                    productIds.append(columnRecommendProductVO.getId());
+                    if(i+1<columnRecommendProductVOS.size())
+                    {
+                        productIds.append(",");
+                    }
+                }
+            }
+            pcIndexColumnVO.setSelectProductIds(productIds.toString());
+            pcIndexColumnVO.setColumnRecommendProducts(columnRecommendProductVOS);
 
+            //查询栏目地区
+            List<ColumnAreaVO> columnAreaVOS = columnAreaService.queryListByColumnId(pcIndexColumnVO.getId());
+            pcIndexColumnVO.setColumnAreas(columnAreaVOS);
 
             resultObjectVO.setData(pcIndexColumnVO);
 

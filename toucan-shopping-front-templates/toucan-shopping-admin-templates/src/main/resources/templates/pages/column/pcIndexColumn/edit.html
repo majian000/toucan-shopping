@@ -30,7 +30,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">栏目标题</label>
         <div class="layui-input-block">
-            <input type="title" name="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入栏目标题" value="" class="layui-input">
+            <input type="title" name="title" id="title" lay-verify="required" maxlength="100" lay-reqtext="不能为空" placeholder="请输入栏目标题" value="" class="layui-input">
             <tip>填写栏目标题。</tip>
         </div>
     </div>
@@ -86,6 +86,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">关联城市</label>
         <div class="layui-input-block">
+            <input type="hidden" >
             <input type="text" readonly  id="selectArea" lay-verify="required"  placeholder="请选择关联城市" value="" class="layui-input" >
         </div>
     </div>
@@ -149,7 +150,7 @@
                 </thead>
                 <tbody id="rightBanner">
                 <tr >
-                    <td><img id='right_banner_preview' src='/images/imgadd.png'></td>
+                    <td><img id='right_banner_preview' src='/images/imgadd.png' style="width:260px;height:220px;"></td>
                     <td>
                         <input type='file' class='rightTopBannerImgs' id='right_banner_img' />
                         <input type='hidden' id='right_banner_img_hidden'  />
@@ -184,7 +185,7 @@
                 </thead>
                 <tbody id="rightBottomBanner">
                 <tr >
-                    <td><img id='right_bottom_banner_preview' src='/images/imgadd.png'></td>
+                    <td><img id='right_bottom_banner_preview' src='/images/imgadd.png' style="width:260px;height:220px;" ></td>
                     <td>
                         <input type='file' class='rightBottomBannerImgs'   id='right_bottom_banner_img' />
                         <input type='hidden' id='right_bottom_img_hidden'  />
@@ -200,8 +201,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="showStatus" value="1" title="显示" checked="">
-            <input type="radio" name="showStatus" value="0" title="隐藏">
+            <input type="radio" name="showStatus" id="showStatus1" value="1" title="显示" checked="">
+            <input type="radio" name="showStatus" id="showStatus0" value="0" title="隐藏">
         </div>
     </div>
 
@@ -216,7 +217,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">排序</label>
         <div class="layui-input-block">
-            <input type="number" name="columnSort"    placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
+            <input type="number" name="columnSort"  id="columnSort"   placeholder="请输入排序" value="" class="layui-input" lay-verify="number">
             <tip>值越大越靠前</tip>
         </div>
 
@@ -226,7 +227,7 @@
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注信息</label>
         <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
+            <textarea name="remark" id="remark" class="layui-textarea" maxlength="255" placeholder="请输入备注信息"></textarea>
         </div>
     </div>
 
@@ -733,7 +734,7 @@
         {
             leftBannerIncrement++;
             $("#leftBanner").append("<tr id='banner_tr_"+leftBannerIncrement+"'>\n" +
-                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/imgadd.png'></td>\n" +
+                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/imgadd.png' style='width:260px;height:220px;'></td>\n" +
                 "        <td>" +
                 "               <input type='file' class='leftBannerImgs'  id='left_banner_img_"+leftBannerIncrement+"' />" +
                 "               <input type='hidden' attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
@@ -861,8 +862,60 @@
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify({id:dataId}),
-                success:function(data){
-                    console.log(data);
+                success:function(resp){
+                    // console.log(resp);
+                    var entity = resp.data;
+                    $("#title").val(entity.title);
+                    $("#startShowDate").val(entity.startShowDate);
+                    $("#endShowDate").val(entity.endShowDate);
+                    $("#columnSort").val(entity.columnSort);
+                    $("#remark").val(entity.remark);
+                    $("#showStatus"+entity.showStatus).attr('checked', 'true');
+
+
+                    //设置栏目地区
+                    if(entity.columnAreas!=null&&entity.columnAreas.length>0)
+                    {
+                        var areaNames="";
+                        for(var i=0;i<entity.columnAreas.length;i++) {
+                            areaArray.push({name:entity.columnAreas[i].areaName,code:entity.columnAreas[i].areaCode});
+                            areaNames+=entity.columnAreas[i].areaName;
+                            if(i+1<entity.columnAreas.length)
+                            {
+                                areaNames+=",";
+                            }
+                        }
+                        $("#selectArea").val(areaNames);
+                    }
+
+                    //设置推荐商品
+                    if(entity.columnRecommendProducts!=null&&entity.columnRecommendProducts.length>0)
+                    {
+                        var shopProductNames = "";
+                        for(var j=0;j<entity.columnRecommendProducts.length;j++)
+                        {
+                            shopProductNames+=entity.columnRecommendProducts[j].shopProductName;
+                            if(j+1<entity.columnRecommendProducts.length)
+                            {
+                                shopProductNames+="，";
+                            }
+                        }
+                        $("#shopProductRecommend").val(shopProductNames);
+                        $("#selectProductIds").val(entity.selectProductIds);
+                    }
+
+                    //设置右侧顶部图片
+                    $("#right_banner_preview").attr("src",entity.rightTopBanner.httpImgPath);
+                    $("#right_banner_title").val(entity.rightTopBanner.title);
+                    $("#right_banner_clickPath").val(entity.rightTopBanner.clickPath);
+
+                    //设置右侧底部图片
+                    $("#right_bottom_banner_preview").attr("src",entity.rightBottomBanner.httpImgPath);
+                    $("#right_bottom_banner_title").val(entity.rightTopBanner.title);
+                    $("#right_bottom_banner_clickPath").val(entity.rightTopBanner.clickPath);
+
+                    layui.form.render();
+                    layer.close(loadding);
                 },
                 complete:function()
                 {

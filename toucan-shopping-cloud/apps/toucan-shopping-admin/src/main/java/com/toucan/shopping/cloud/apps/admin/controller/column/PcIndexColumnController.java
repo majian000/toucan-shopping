@@ -11,6 +11,7 @@ import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaServic
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnTypeService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -20,6 +21,7 @@ import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
+import com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -28,7 +30,9 @@ import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.content.entity.BannerArea;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.layui.vo.TableVO;
+import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +44,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -76,6 +81,12 @@ public class PcIndexColumnController extends UIController {
 
     @Autowired
     private FeignColumnAreaService feignColumnAreaService;
+
+    @Autowired
+    private FeignShopProductService feignShopProductService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -193,6 +204,46 @@ public class PcIndexColumnController extends UIController {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
             resultObjectVO = feignPcIndexColumnService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                PcIndexColumnVO pcIndexColumnVO = resultObjectVO.formatData(PcIndexColumnVO.class);
+                if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
+                {
+                    ShopProductVO queryShopProductVO = new ShopProductVO();
+                    List<Long> shopProductIds = new LinkedList<>();
+                    for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts()) {
+                        shopProductIds.add(Long.parseLong(columnRecommendProductVO.getShopProductId()));
+                    }
+                    queryShopProductVO.setIds(shopProductIds);
+                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryShopProductVO);
+                    resultObjectVO = feignShopProductService.queryList(requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        List<ShopProductVO> shopProductVOS = resultObjectVO.formatDataList(ShopProductVO.class);
+
+                        for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts())
+                        {
+                            if(!CollectionUtils.isEmpty(shopProductVOS))
+                            {
+                                for(ShopProductVO shopProductVO:shopProductVOS)
+                                {
+                                    if(columnRecommendProductVO.getShopProductId().equals(String.valueOf(shopProductVO.getId())))
+                                    {
+                                        columnRecommendProductVO.setShopProductName(shopProductVO.getName());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
+                pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
+
+
+                resultObjectVO.setData(pcIndexColumnVO);
+            }
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

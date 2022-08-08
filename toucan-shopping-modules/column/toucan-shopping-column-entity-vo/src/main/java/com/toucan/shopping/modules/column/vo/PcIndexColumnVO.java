@@ -23,6 +23,7 @@ public class PcIndexColumnVO extends ColumnVO {
 
     private List<String> areaNameList; //地区名称列表
 
+    private List<ColumnRecommendProductVO> columnRecommendProducts; //推荐商品
     
 
 }

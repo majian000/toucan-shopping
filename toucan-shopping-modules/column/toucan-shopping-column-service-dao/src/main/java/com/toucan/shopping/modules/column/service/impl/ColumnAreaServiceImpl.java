@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.column.service.impl;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.mapper.ColumnAreaMapper;
 import com.toucan.shopping.modules.column.service.ColumnAreaService;
+import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,10 @@ public class ColumnAreaServiceImpl implements ColumnAreaService {
     @Override
     public int deleteByColumnId(Long columnId) {
         return columnAreaMapper.deleteByColumnId(columnId);
+    }
+
+    @Override
+    public List<ColumnAreaVO> queryListByColumnId(Long columnId) {
+        return columnAreaMapper.queryListByColumnId(columnId);
     }
 }

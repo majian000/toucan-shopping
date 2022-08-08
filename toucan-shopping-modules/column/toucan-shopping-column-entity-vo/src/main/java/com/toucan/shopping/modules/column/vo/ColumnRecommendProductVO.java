@@ -9,4 +9,6 @@ import lombok.Data;
 @Data
 public class ColumnRecommendProductVO extends ColumnRecommendProduct {
 
+    private String shopProductName; //店铺商品名称
+
 }
