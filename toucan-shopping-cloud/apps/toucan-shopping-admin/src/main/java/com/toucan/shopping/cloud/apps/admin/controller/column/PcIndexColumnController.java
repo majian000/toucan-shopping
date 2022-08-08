@@ -129,6 +129,13 @@ public class PcIndexColumnController extends UIController {
     }
 
 
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/showPage/{id}",method = RequestMethod.GET)
+    public String showPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        request.setAttribute("id",id);
+        return "pages/column/pcIndexColumn/show.html";
+    }
 
 
     /**

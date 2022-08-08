@@ -387,6 +387,20 @@
                         }
                     });
                 });
+            }else if (obj.event == 'show') {
+
+                var index = layer.open({
+                    title: '查看栏目',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['100%', '100%'],
+                    content: '[[@{/}]]column/pcIndexColumn/showPage/'+data.id
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
             }
         });
 
