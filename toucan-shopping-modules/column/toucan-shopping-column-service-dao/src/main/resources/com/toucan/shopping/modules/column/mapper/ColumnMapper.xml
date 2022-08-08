@@ -84,9 +84,6 @@
     </insert>
 
 
-    <select id="queryById" resultMap="columnMap" parameterType="java.lang.Long">
-        select * from t_column where id=#{id} and delete_status=0
-    </select>
 
 
     <update id="deleteById">
@@ -102,7 +99,8 @@
 
 
     <update id="update" parameterType="com.toucan.shopping.modules.column.entity.Column">
-        update t_column set title=#{title},content=#{content},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        update t_column set title=#{title},column_sort=#{columnSort},type=#{type},show_status=#{showStatus},position=#{position},remark=#{remark},
+        column_type_code=#{columnTypeCode},start_show_date=#{startShowDate},end_show_date=#{endShowDate},
         update_admin_id=#{updateAdminId},update_date=#{updateDate}
           where id=#{id}
     </update>

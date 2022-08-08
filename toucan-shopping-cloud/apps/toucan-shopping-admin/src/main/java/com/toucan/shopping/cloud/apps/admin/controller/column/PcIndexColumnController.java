@@ -20,10 +20,7 @@ import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
 import com.toucan.shopping.modules.column.entity.ColumnArea;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.page.ColumnTypePageInfo;
-import com.toucan.shopping.modules.column.vo.ColumnAreaVO;
-import com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO;
-import com.toucan.shopping.modules.column.vo.ColumnVO;
-import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
+import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
@@ -169,15 +166,16 @@ public class PcIndexColumnController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request, @RequestBody ColumnVO entity)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody PcIndexColumnVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-
-
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
+            entity.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
+            entity.setPosition(1);
+            entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignPcIndexColumnService.update(requestJsonVO);
+            resultObjectVO = feignPcIndexColumnService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
@@ -241,6 +239,10 @@ public class PcIndexColumnController extends UIController {
                 pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
                 pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
 
+                for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
+                {
+                    columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnBannerVO.getImgPath());
+                }
 
                 resultObjectVO.setData(pcIndexColumnVO);
             }

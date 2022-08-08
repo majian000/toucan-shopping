@@ -39,7 +39,19 @@ public interface ColumnService {
      */
     ColumnVO findById(Long id);
 
+    /**
+     * 保存
+     * @param column
+     * @return
+     */
     int save(Column column);
+
+    /**
+     * 修改
+     * @param column
+     * @return
+     */
+    int update(Column column);
 
 
     /**

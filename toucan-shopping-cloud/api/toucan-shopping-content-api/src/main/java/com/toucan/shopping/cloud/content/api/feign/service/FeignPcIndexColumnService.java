@@ -30,6 +30,9 @@ public interface FeignPcIndexColumnService {
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
     /**
      * 根据ID删除
      * @param requestJsonVO

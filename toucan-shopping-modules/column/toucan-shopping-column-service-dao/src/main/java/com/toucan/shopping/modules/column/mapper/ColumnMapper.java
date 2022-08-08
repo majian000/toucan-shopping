@@ -46,6 +46,8 @@ public interface ColumnMapper {
 
     int insert(Column column);
 
+    int update(Column column);
+
     List<ColumnVO> queryList(ColumnVO query);
 
 

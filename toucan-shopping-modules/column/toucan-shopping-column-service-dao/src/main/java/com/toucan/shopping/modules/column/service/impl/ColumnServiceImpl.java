@@ -48,6 +48,11 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
+    public int update(Column column) {
+        return columnMapper.update(column);
+    }
+
+    @Override
     public int deleteById(Long id) {
         return columnMapper.deleteById(id);
     }

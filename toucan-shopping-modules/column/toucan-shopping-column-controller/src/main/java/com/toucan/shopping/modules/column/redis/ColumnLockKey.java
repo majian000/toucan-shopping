@@ -1,13 +1,13 @@
 package com.toucan.shopping.modules.column.redis;
 
 /**
- * 栏目类型
+ * 栏目
  */
 public class ColumnLockKey {
 
 
     /**
-     * 保存栏目类型
+     * 保存栏目
      * @param key
      * @return
      */
@@ -17,4 +17,13 @@ public class ColumnLockKey {
     }
 
 
+    /**
+     * 修改栏目
+     * @param key
+     * @return
+     */
+    public static String getUpdateLockKey(String key)
+    {
+        return "TOUCAN_SHOPPING_WEB:SERVICES:COLUMN:UPDATE:"+key+"_LOCK";
+    }
 }

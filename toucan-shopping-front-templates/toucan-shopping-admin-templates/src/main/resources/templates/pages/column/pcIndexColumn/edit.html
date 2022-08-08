@@ -155,8 +155,8 @@
                 <tr >
                     <td><img id='right_banner_preview' src='/images/imgadd.png' style="width:260px;height:220px;"></td>
                     <td>
-                        <input type='file' class='rightTopBannerImgs' id='right_banner_img' />
-                        <input type='hidden' id='right_banner_img_hidden'  />
+                        <input type='file'  id='right_banner_img' />
+                        <input type='hidden'  class='rightTopBannerImgs' id='right_banner_img_hidden'  />
                     </td>
                     <td><input type='text' id="right_banner_title"  maxlength='100' class='layui-input' /></td>
                     <td><input type='text'  id="right_banner_clickPath"  maxlength='255' class='layui-input'  /></td>
@@ -190,8 +190,8 @@
                 <tr >
                     <td><img id='right_bottom_banner_preview' src='/images/imgadd.png' style="width:260px;height:220px;" ></td>
                     <td>
-                        <input type='file' class='rightBottomBannerImgs'   id='right_bottom_banner_img' />
-                        <input type='hidden' id='right_bottom_img_hidden'  />
+                        <input type='file'    id='right_bottom_banner_img' />
+                        <input type='hidden' class='rightBottomBannerImgs'  id='right_bottom_img_hidden'  />
                     </td>
                     <td><input type='text' id="right_bottom_banner_title"  maxlength='100' class='layui-input' /></td>
                     <td><input type='text'   id="right_bottom_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
@@ -286,7 +286,8 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 
-            var bannerImgs = $(".leftBannerImgs");
+            var bannerImgs = $(".leftBannerHiddens");
+            console.log(bannerImgs);
             if(bannerImgs==null||bannerImgs.length<=0)
             {
                 layer.msg("请上传左侧轮播图");
@@ -382,7 +383,7 @@
 
             loadding = layer.load();
             $.ajax({
-                url:"[[@{/column/pcIndexColumn/save}]]",
+                url:"[[@{/column/pcIndexColumn/update}]]",
                 contentType: "application/json; charset=utf-8",
                 type:'POST',
                 data:JSON.stringify(data.field),
@@ -728,7 +729,7 @@
 
         });
 
-        appendLeftBannner();
+
 
         /**
          * 添加一行轮播图
@@ -739,8 +740,8 @@
             $("#leftBanner").append("<tr id='banner_tr_"+leftBannerIncrement+"'>\n" +
                 "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/imgadd.png' style='width:260px;height:220px;'></td>\n" +
                 "        <td>" +
-                "               <input type='file' class='leftBannerImgs'  id='left_banner_img_"+leftBannerIncrement+"' />" +
-                "               <input type='hidden' attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
+                "               <input type='file'   id='left_banner_img_"+leftBannerIncrement+"' />" +
+                "               <input type='hidden'  attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
                 "       </td>\n" +
                 "        <td><input type='text' id='left_banner_title_"+leftBannerIncrement+"'  maxlength='100' class='layui-input' /></td>\n" +
                 "        <td><input type='text' id='left_banner_clickPath_"+leftBannerIncrement+"'  maxlength='255' class='layui-input'  /></td>\n" +
@@ -907,15 +908,54 @@
                         $("#selectProductIds").val(entity.selectProductIds);
                     }
 
+                    //设置顶部标签
+                    if(entity.topLabels!=null) {
+                        for(var p=0;p<entity.topLabels.length;p++) {
+                            labelIncrement++;
+                            var topLabel = entity.topLabels[p];
+                            topLabelData.push({id: labelIncrement, labelName: topLabel.labelName, clickPath: topLabel.clickPath});
+                        }
+                        initTopLabelTable();
+                    }
+
+                    //设置左侧标签
+                    if(entity.leftLabels!=null) {
+                        for(var p=0;p<entity.leftLabels.length;p++) {
+                            labelIncrement++;
+                            var leftLabel = entity.leftLabels[p];
+                            leftLabelData.push({id: labelIncrement, labelName: leftLabel.labelName, clickPath: leftLabel.clickPath});
+                        }
+                        initLeftLabelTable();
+                    }
+
+                    //设置左侧轮播图
+                    if(entity.columnLeftBannerVOS!=null&&entity.columnLeftBannerVOS.length>0)
+                    {
+                        for(var p=0;p<entity.columnLeftBannerVOS.length;p++)
+                        {
+                            appendLeftBannner();
+                            var leftBanner = entity.columnLeftBannerVOS[p];
+
+                            $("#left_banner_preview_"+leftBannerIncrement).attr("src",leftBanner.httpImgPath);
+                            $("#left_banner_img_hidden_"+leftBannerIncrement).val(leftBanner.imgPath);
+                            $("#left_banner_title_"+leftBannerIncrement).val(leftBanner.title);
+                            $("#left_banner_clickPath_"+leftBannerIncrement).val(leftBanner.clickPath);
+                        }
+                    }else {
+                        appendLeftBannner();
+                    }
+
                     //设置右侧顶部图片
                     $("#right_banner_preview").attr("src",entity.rightTopBanner.httpImgPath);
+                    $("#right_banner_img_hidden").val(entity.rightTopBanner.imgPath);
                     $("#right_banner_title").val(entity.rightTopBanner.title);
                     $("#right_banner_clickPath").val(entity.rightTopBanner.clickPath);
 
                     //设置右侧底部图片
                     $("#right_bottom_banner_preview").attr("src",entity.rightBottomBanner.httpImgPath);
-                    $("#right_bottom_banner_title").val(entity.rightTopBanner.title);
-                    $("#right_bottom_banner_clickPath").val(entity.rightTopBanner.clickPath);
+                    $("#right_bottom_banner_title").val(entity.rightBottomBanner.title);
+                    $("#right_bottom_banner_clickPath").val(entity.rightBottomBanner.clickPath);
+                    $("#right_bottom_img_hidden").val(entity.rightBottomBanner.imgPath);
 
                     layui.form.render();
                     layer.close(loadding);
