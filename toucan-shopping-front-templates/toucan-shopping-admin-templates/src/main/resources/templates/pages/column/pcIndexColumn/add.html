@@ -115,7 +115,7 @@
                 <thead>
                 <tr>
                     <th>图片预览</th>
-                    <th>图片上传</th>
+                    <th>图片上传(推荐260px*220px)</th>
                     <th>标题</th>
                     <th>点击跳转</th>
                     <th>操作</th>
@@ -144,7 +144,7 @@
                 <thead>
                 <tr>
                     <th>图片预览</th>
-                    <th>图片上传</th>
+                    <th>图片上传(推荐260px*220px)</th>
                     <th>标题</th>
                     <th>点击跳转</th>
                 </tr>
@@ -179,7 +179,7 @@
                 <thead>
                 <tr>
                     <th>图片预览</th>
-                    <th>图片上传</th>
+                    <th>图片上传(推荐260px*220px)</th>
                     <th>标题</th>
                     <th>点击跳转</th>
                 </tr>
@@ -193,6 +193,44 @@
                     </td>
                     <td><input type='text' id="right_bottom_banner_title"  maxlength='100' class='layui-input' /></td>
                     <td><input type='text'   id="right_bottom_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">底部图片</label>
+        <div class="layui-input-block">
+
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传(推荐1200px*110px)</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="bottomBanner">
+                <tr >
+                    <td><img id='bottom_banner_preview' src='/images/imgadd.png'  style="width:260px;height:220px;"   ></td>
+                    <td>
+                        <input type='file' class='bottomBannerImgs'   id='bottom_banner_img' />
+                        <input type='hidden' id='bottom_img_hidden'  />
+                    </td>
+                    <td><input type='text' id="bottom_banner_title"  maxlength='100' class='layui-input' /></td>
+                    <td><input type='text'   id="bottom_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
+                    <td> <button type='button' id='bottom_banner_delete_btn'  >清空</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -376,6 +414,13 @@
             data.field.rightBottomBanner.imgPath = $("#right_bottom_img_hidden").val();
             data.field.rightBottomBanner.title = $("#right_bottom_banner_title").val();
             data.field.rightBottomBanner.clickPath = $("#right_bottom_banner_clickPath").val();
+
+
+            //底部图片
+            data.field.bottomBanner={};
+            data.field.bottomBanner.imgPath = $("#bottom_img_hidden").val();
+            data.field.bottomBanner.title = $("#bottom_banner_title").val();
+            data.field.bottomBanner.clickPath = $("#bottom_banner_clickPath").val();
 
             loadding = layer.load();
             $.ajax({
@@ -680,6 +725,14 @@
         });
 
 
+        $("#bottom_banner_delete_btn").click(function(){
+            $("#bottom_img_hidden").val("");
+            $("#bottom_banner_title").val("");
+            $("#bottom_banner_clickPath").val("");
+            $("#bottom_banner_img").val("");
+            $("#bottom_banner_preview").attr("src",basePath+"/images/imgadd.png");
+        });
+
         $("#shopProductRecommend").click(function(){
             var categoryId = "-1";
             var selectProductIds=$("#selectProductIds").val();
@@ -756,24 +809,25 @@
 
         function uploadImg(fileId,previewImg,imgHidden)
         {
-            loadding = layer.load();
-            var formData = new FormData();
-            formData.append("file",$(fileId)[0].files[0]);
-            $.ajax({
-                url:'/common/img/upload',
-                type:'post',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success:function(res){
-                    $(previewImg).attr("src", res.data.httpPath);
-                    $(imgHidden).val(res.data.path);
-                },
-                complete:function()
-                {
-                    layer.close(loadding);
-                }
-            });
+            if($(fileId)[0].files[0]!=null) {
+                loadding = layer.load();
+                var formData = new FormData();
+                formData.append("file", $(fileId)[0].files[0]);
+                $.ajax({
+                    url: '/common/img/upload',
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        $(previewImg).attr("src", res.data.httpPath);
+                        $(imgHidden).val(res.data.path);
+                    },
+                    complete: function () {
+                        layer.close(loadding);
+                    }
+                });
+            }
         }
 
 
@@ -824,6 +878,24 @@
                 $("#right_bottom_banner_img" ).on("change", function () {
 
                     uploadImg("#right_bottom_banner_img","#right_bottom_banner_preview","#right_bottom_img_hidden");
+
+                });
+            }
+
+        }
+
+        bottomBannerTableUploadPreview();
+
+        /**
+         * 初始化底部轮播图列表中点击上传图片
+         */
+        function bottomBannerTableUploadPreview()
+        {
+
+            if($("#bottom_banner_img")!=null) {
+                $("#bottom_banner_img" ).on("change", function () {
+
+                    uploadImg("#bottom_banner_img","#bottom_banner_preview","#bottom_img_hidden");
 
                 });
             }

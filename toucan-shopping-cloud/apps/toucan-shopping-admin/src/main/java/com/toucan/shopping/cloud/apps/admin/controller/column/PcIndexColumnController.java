@@ -245,6 +245,10 @@ public class PcIndexColumnController extends UIController {
 
                 pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
                 pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
+                if(pcIndexColumnVO.getBottomBanner()!=null&&pcIndexColumnVO.getBottomBanner().getImgPath()!=null)
+                {
+                    pcIndexColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getBottomBanner().getImgPath());
+                }
 
                 for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
                 {
