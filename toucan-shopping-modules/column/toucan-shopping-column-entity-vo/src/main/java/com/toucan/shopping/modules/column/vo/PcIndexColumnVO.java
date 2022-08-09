@@ -13,6 +13,8 @@ public class PcIndexColumnVO extends ColumnVO {
 
     private List<ColumnRecommendLabelVO> leftLabels; //左侧标签
 
+    private ColumnBannerVO topBanner; //顶部图片
+
     private List<ColumnBannerVO> columnLeftBannerVOS; //栏目左侧轮播图
 
     private ColumnBannerVO rightTopBanner; //右侧顶部图片

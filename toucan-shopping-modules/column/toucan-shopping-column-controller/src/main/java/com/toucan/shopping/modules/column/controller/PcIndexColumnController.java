@@ -169,7 +169,22 @@ public class PcIndexColumnController {
 
 
             List<ColumnBanner> columnBanners = new LinkedList<>();
+
+            //顶部图片预览
+            ColumnBanner topBanner = new ColumnBanner();
+            BeanUtils.copyProperties(topBanner,pcIndexColumnVO.getTopBanner());
+            topBanner.setId(idGenerator.id());
+            topBanner.setColumnId(pcIndexColumnVO.getId());
+            topBanner.setPosition(1);
+            topBanner.setCreateDate(new Date());
+            topBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+            topBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            topBanner.setBannerSort(0);
+            columnBanners.add(topBanner);
+
             List<ColumnBannerVO> columnLeftBannerVOS = pcIndexColumnVO.getColumnLeftBannerVOS();
+
+
             //左侧顶部轮播图
             if(!CollectionUtils.isEmpty(columnLeftBannerVOS))
             {
@@ -409,6 +424,20 @@ public class PcIndexColumnController {
             columnBannerService.deleteByColumnId(pcIndexColumnVO.getId());
 
             List<ColumnBanner> columnBanners = new LinkedList<>();
+
+
+            //顶部图片预览
+            ColumnBanner topBanner = new ColumnBanner();
+            BeanUtils.copyProperties(topBanner,pcIndexColumnVO.getTopBanner());
+            topBanner.setId(idGenerator.id());
+            topBanner.setColumnId(pcIndexColumnVO.getId());
+            topBanner.setPosition(1);
+            topBanner.setCreateDate(new Date());
+            topBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+            topBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            topBanner.setBannerSort(0);
+            columnBanners.add(topBanner);
+
             List<ColumnBannerVO> columnLeftBannerVOS = pcIndexColumnVO.getColumnLeftBannerVOS();
             //左侧顶部轮播图
             if(!CollectionUtils.isEmpty(columnLeftBannerVOS))
@@ -452,6 +481,19 @@ public class PcIndexColumnController {
             rightBottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
             rightBottomBanner.setBannerSort(0);
             columnBanners.add(rightBottomBanner);
+
+            //底部图片预览
+            ColumnBanner bottomBanner = new ColumnBanner();
+            BeanUtils.copyProperties(bottomBanner,pcIndexColumnVO.getBottomBanner());
+            bottomBanner.setId(idGenerator.id());
+            bottomBanner.setColumnId(pcIndexColumnVO.getId());
+            bottomBanner.setPosition(5);
+            bottomBanner.setCreateDate(new Date());
+            bottomBanner.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
+            bottomBanner.setAppCode(pcIndexColumnVO.getAppCode());
+            bottomBanner.setBannerSort(0);
+            columnBanners.add(bottomBanner);
+
 
             //保存栏目轮播图
             columnBannerService.saves(columnBanners);
@@ -680,7 +722,10 @@ public class PcIndexColumnController {
                 for(ColumnBannerVO columnBannerVO:columnBannerVOS)
                 {
                     //左侧顶部
-                    if(columnBannerVO.getPosition().intValue()==2)
+                    if(columnBannerVO.getPosition().intValue()==1)
+                    {
+                        pcIndexColumnVO.setTopBanner(columnBannerVO);
+                    }else if(columnBannerVO.getPosition().intValue()==2)
                     {
                         pcIndexColumnVO.getColumnLeftBannerVOS().add(columnBannerVO);
                     }else if(columnBannerVO.getPosition().intValue()==3)  //右侧顶部

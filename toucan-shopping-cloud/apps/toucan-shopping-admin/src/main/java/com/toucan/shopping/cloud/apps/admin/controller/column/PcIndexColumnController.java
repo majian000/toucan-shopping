@@ -245,15 +245,23 @@ public class PcIndexColumnController extends UIController {
 
                 pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
                 pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
+                for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
+                {
+                    columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnBannerVO.getImgPath());
+                }
+
+                //顶部预览图
+                if(pcIndexColumnVO.getTopBanner()!=null&&pcIndexColumnVO.getTopBanner().getImgPath()!=null)
+                {
+                    pcIndexColumnVO.getTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getTopBanner().getImgPath());
+                }
+
+                //底部预览图
                 if(pcIndexColumnVO.getBottomBanner()!=null&&pcIndexColumnVO.getBottomBanner().getImgPath()!=null)
                 {
                     pcIndexColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getBottomBanner().getImgPath());
                 }
 
-                for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
-                {
-                    columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnBannerVO.getImgPath());
-                }
 
                 resultObjectVO.setData(pcIndexColumnVO);
             }

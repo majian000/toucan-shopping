@@ -100,6 +100,47 @@
         </div>
     </div>
 
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">顶部图片预览</label>
+        <div class="layui-input-block">
+            <img id='top_banner_preview' src='#'  style="width:1200px;height:110px;"   >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">顶部图片</label>
+        <div class="layui-input-block">
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片上传(推荐1200px*110px)</th>
+                    <th>标题</th>
+                    <th>点击跳转</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="topBanner">
+                <tr >
+                    <td>
+                        <input type='file' class='topBannerImgs'   id='top_banner_img' />
+                        <input type='hidden' id='top_img_hidden'  />
+                    </td>
+                    <td><input type='text' id="top_banner_title"  maxlength='100' class='layui-input' /></td>
+                    <td><input type='text'   id="top_banner_clickPath"   maxlength='255' class='layui-input'  /></td>
+                    <td> <button type='button' id='top_banner_delete_btn'  >清空</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label required">左侧轮播图</label>
         <div class="layui-input-block">
@@ -151,7 +192,7 @@
                 </thead>
                 <tbody id="rightBanner">
                     <tr >
-                        <td><img id='right_banner_preview' src='/images/imgadd.png'  style="width:260px;height:220px;" ></td>
+                        <td><img id='right_banner_preview' src='#'  style="width:260px;height:220px;" ></td>
                         <td>
                             <input type='file' class='rightTopBannerImgs' id='right_banner_img' />
                             <input type='hidden' id='right_banner_img_hidden'  />
@@ -186,7 +227,7 @@
                 </thead>
                 <tbody id="rightBottomBanner">
                 <tr >
-                    <td><img id='right_bottom_banner_preview' src='/images/imgadd.png'  style="width:260px;height:220px;" ></td>
+                    <td><img id='right_bottom_banner_preview' src='#'  style="width:260px;height:220px;" ></td>
                     <td>
                         <input type='file' class='rightBottomBannerImgs'   id='right_bottom_banner_img' />
                         <input type='hidden' id='right_bottom_img_hidden'  />
@@ -201,12 +242,17 @@
 
 
     <div class="layui-form-item">
+        <label class="layui-form-label">底部图片预览</label>
+        <div class="layui-input-block">
+             <img id='bottom_banner_preview' src='#'  style="width:1200px;height:110px;"   >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">底部图片</label>
         <div class="layui-input-block">
-
             <table class="layui-table">
                 <colgroup>
-                    <col >
                     <col >
                     <col >
                     <col>
@@ -214,7 +260,6 @@
                 </colgroup>
                 <thead>
                 <tr>
-                    <th>图片预览</th>
                     <th>图片上传(推荐1200px*110px)</th>
                     <th>标题</th>
                     <th>点击跳转</th>
@@ -223,7 +268,6 @@
                 </thead>
                 <tbody id="bottomBanner">
                 <tr >
-                    <td><img id='bottom_banner_preview' src='/images/imgadd.png'  style="width:260px;height:220px;"   ></td>
                     <td>
                         <input type='file' class='bottomBannerImgs'   id='bottom_banner_img' />
                         <input type='hidden' id='bottom_img_hidden'  />
@@ -276,6 +320,8 @@
         </div>
     </div>
 </div>
+
+
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script th:src="@{/js/common/common.js}" charset="utf-8"></script>
 <script>
@@ -415,6 +461,12 @@
             data.field.rightBottomBanner.title = $("#right_bottom_banner_title").val();
             data.field.rightBottomBanner.clickPath = $("#right_bottom_banner_clickPath").val();
 
+
+            //顶部图片
+            data.field.topBanner={};
+            data.field.topBanner.imgPath = $("#top_img_hidden").val();
+            data.field.topBanner.title = $("#top_banner_title").val();
+            data.field.topBanner.clickPath = $("#top_banner_clickPath").val();
 
             //底部图片
             data.field.bottomBanner={};
@@ -730,7 +782,16 @@
             $("#bottom_banner_title").val("");
             $("#bottom_banner_clickPath").val("");
             $("#bottom_banner_img").val("");
-            $("#bottom_banner_preview").attr("src",basePath+"/images/imgadd.png");
+            $("#bottom_banner_preview").attr("src",basePath+"#");
+        });
+
+
+        $("#top_banner_delete_btn").click(function(){
+            $("#top_img_hidden").val("");
+            $("#top_banner_title").val("");
+            $("#top_banner_clickPath").val("");
+            $("#top_banner_img").val("");
+            $("#top_banner_preview").attr("src",basePath+"#");
         });
 
         $("#shopProductRecommend").click(function(){
@@ -787,7 +848,7 @@
         {
             leftBannerIncrement++;
             $("#leftBanner").append("<tr id='banner_tr_"+leftBannerIncrement+"'>\n" +
-                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/imgadd.png'  style='width:260px;height:220px;' ></td>\n" +
+                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"#'  style='width:260px;height:220px;' ></td>\n" +
                 "        <td>" +
                 "               <input type='file' class='leftBannerImgs'  id='left_banner_img_"+leftBannerIncrement+"' />" +
                 "               <input type='hidden' attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
@@ -878,6 +939,25 @@
                 $("#right_bottom_banner_img" ).on("change", function () {
 
                     uploadImg("#right_bottom_banner_img","#right_bottom_banner_preview","#right_bottom_img_hidden");
+
+                });
+            }
+
+        }
+
+
+        topBannerTableUploadPreview();
+
+        /**
+         * 初始化顶部轮播图列表中点击上传图片
+         */
+        function topBannerTableUploadPreview()
+        {
+
+            if($("#top_banner_img")!=null) {
+                $("#top_banner_img" ).on("change", function () {
+
+                    uploadImg("#top_banner_img","#top_banner_preview","#top_img_hidden");
 
                 });
             }
