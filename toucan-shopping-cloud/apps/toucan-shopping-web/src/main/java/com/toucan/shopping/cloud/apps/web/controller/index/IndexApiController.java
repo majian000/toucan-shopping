@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.web.controller.index;
 import com.toucan.shopping.cloud.apps.web.service.IndexService;
 import com.toucan.shopping.cloud.apps.web.vo.index.HotProductVo;
 import com.toucan.shopping.cloud.apps.web.vo.index.LikeProductVo;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import org.slf4j.Logger;
@@ -151,9 +152,18 @@ public class IndexApiController {
 
     @RequestMapping("/banners")
     @ResponseBody
-    public ResultObjectVO dynamicIndex(HttpServletRequest request) {
+    public ResultObjectVO banners(HttpServletRequest request) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         resultObjectVO.setData(indexService.queryBanners());
+        return resultObjectVO;
+    }
+
+
+    @RequestMapping("/columns")
+    @ResponseBody
+    public ResultObjectVO columns(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setData(indexService.queryColumns());
         return resultObjectVO;
     }
 }

@@ -7,6 +7,9 @@ import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
+import com.toucan.shopping.modules.column.vo.ColumnVO;
+import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
@@ -26,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -51,6 +55,9 @@ public class IndexServiceImpl implements IndexService {
 
     @Autowired
     private CategoryRedisService categoryRedisService;
+
+    @Autowired
+    private FeignPcIndexColumnService feignPcIndexColumnService;
 
     /**
      * 查询轮播图
@@ -178,6 +185,25 @@ public class IndexServiceImpl implements IndexService {
             return new ArrayList<CategoryVO>();
         }
 
+    }
+
+    @Override
+    public List<PcIndexColumnVO> queryColumns() {
+        try {
+            ColumnVO query = new ColumnVO();
+            query.setAppCode(toucan.getAppCode());
+            query.setShowStatus(1);
+            query.setType(1);
+            query.setPosition(1);
+            query.setColumnTypeCode(toucan.getShoppingPC().getPcIndexColumnTypeCode());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+            ResultObjectVO resultObjectVO = feignPcIndexColumnService.queryPcIndexColumns(requestJsonVO);
+            return resultObjectVO.formatDataList(PcIndexColumnVO.class);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return new LinkedList<>();
+        }
     }
 
 }
