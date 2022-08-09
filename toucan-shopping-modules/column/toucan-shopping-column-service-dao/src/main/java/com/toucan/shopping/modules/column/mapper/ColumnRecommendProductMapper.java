@@ -21,5 +21,6 @@ public interface ColumnRecommendProductMapper {
 
     List<ColumnRecommendProductVO> queryListSortDescByColumnId(Long columnId);
 
+    List<ColumnRecommendProductVO> queryListSortDescByColumnIds(List<Long> columnIds);
 
 }

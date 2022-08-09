@@ -3,6 +3,7 @@ package com.toucan.shopping.modules.column.mapper;
 import com.toucan.shopping.modules.column.entity.Column;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
+import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -50,6 +51,8 @@ public interface ColumnMapper {
 
     List<ColumnVO> queryList(ColumnVO query);
 
+
+    List<PcIndexColumnVO> queryPcIndexColumns(ColumnVO query);
 
     /**
      * 根据ID删除

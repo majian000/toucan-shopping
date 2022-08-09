@@ -33,4 +33,9 @@ public class ColumnRecommendProductServiceImpl implements ColumnRecommendProduct
     public List<ColumnRecommendProductVO> queryListSortDescByColumnId(Long columnId) {
         return columnRecommendProductMapper.queryListSortDescByColumnId(columnId);
     }
+
+    @Override
+    public List<ColumnRecommendProductVO> queryListSortDescByColumnIds(List<Long> columnIds) {
+        return columnRecommendProductMapper.queryListSortDescByColumnIds(columnIds);
+    }
 }

@@ -41,4 +41,13 @@
     </select>
 
 
+    <select id="queryListSortDescByColumnIds" resultMap="columnRecommendProductVOMap">
+        select * from t_column_recommend_product where delete_status = 0
+        and column_id in
+        <foreach item="item" index="index" collection="columnIds" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        order by product_sort desc
+    </select>
+
 </mapper>

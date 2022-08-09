@@ -27,6 +27,11 @@
     <resultMap id="columnVOMap" type="com.toucan.shopping.modules.column.vo.ColumnVO" extends="columnMap" >
     </resultMap>
 
+    <resultMap id="pcIndexColumnVOMap" type="com.toucan.shopping.modules.column.vo.PcIndexColumnVO" extends="columnVOMap" >
+    </resultMap>
+
+
+
 
 
 
@@ -135,6 +140,23 @@
             1=1
 
             <include refid="queryListWhere" />
+
+        </where>
+    </select>
+
+
+
+    <select id="queryPcIndexColumns" resultMap="pcIndexColumnVOMap" parameterType="com.toucan.shopping.modules.column.vo.ColumnVO">
+        select t.* from t_column t
+        <where>
+            1=1
+            and t.column_type_code = #{columnTypeCode}
+            and t.show_status = #{showStatus}
+            and t.position = #{position}
+            and t.delete_status = 0
+            and t.type = #{type}
+            <![CDATA[ and ba.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and ba.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
 
         </where>
     </select>

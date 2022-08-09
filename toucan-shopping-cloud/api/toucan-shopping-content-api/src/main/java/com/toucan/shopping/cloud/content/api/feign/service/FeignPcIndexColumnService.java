@@ -42,6 +42,14 @@ public interface FeignPcIndexColumnService {
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 查询PC端首页栏目
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/pc/index/columns",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryPcIndexColumns(@RequestBody RequestJsonVO requestVo);
+
 
     /**
      * 根据ID查询

@@ -84,6 +84,21 @@ public class FeignPcIndexColumnServiceFallbackFactory implements FallbackFactory
             }
 
             @Override
+            public ResultObjectVO queryPcIndexColumns(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignPcIndexColumnService.queryPcIndexColumns失败  params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO findById(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)

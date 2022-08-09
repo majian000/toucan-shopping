@@ -44,5 +44,12 @@
     </select>
 
 
+    <select id="queryListByColumnIds" resultMap="columnRecommendLabelVOMap">
+        select * from t_column_recommend_label where delete_status = 0
+        and column_id in
+        <foreach item="item" index="index" collection="columnIds" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>

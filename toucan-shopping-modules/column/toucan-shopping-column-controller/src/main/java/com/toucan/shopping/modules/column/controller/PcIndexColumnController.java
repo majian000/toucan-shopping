@@ -675,6 +675,134 @@ public class PcIndexColumnController {
 
 
 
+    /**
+     * 查询PC端首页栏目
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/pc/index/columns",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryPcIndexColumns(@RequestBody RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo == null || requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+        if (requestVo == null || requestVo.getAppCode() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        try {
+            ColumnVO columnVO = requestVo.formatEntity(ColumnVO.class);
+            List<PcIndexColumnVO> pcIndexColumnVOS = columnService.queryPcIndexColumns(columnVO);
+            List<Long> columnIds = new LinkedList<>();
+            if(!CollectionUtils.isEmpty(pcIndexColumnVOS))
+            {
+                for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS)
+                {
+                    columnIds.add(pcIndexColumnVO.getId());
+
+                    pcIndexColumnVO.setColumnLeftBannerVOS(new LinkedList<>());
+                    pcIndexColumnVO.setTopLabels(new LinkedList<>());
+                    pcIndexColumnVO.setLeftLabels(new LinkedList<>());
+                    pcIndexColumnVO.setColumnRecommendProducts(new LinkedList<>());
+                    pcIndexColumnVO.setColumnAreas(new LinkedList<>());
+                }
+            }
+            if(!CollectionUtils.isEmpty(columnIds))
+            {
+
+                //查询轮播图以及预览图相关
+                List<ColumnBannerVO> columnBannerVOS = columnBannerService.queryListByColumnIds(columnIds);
+                if(!CollectionUtils.isEmpty(columnBannerVOS))
+                {
+                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                        for (ColumnBannerVO columnBannerVO : columnBannerVOS) {
+                            if(pcIndexColumnVO.getId().longValue()==columnBannerVO.getColumnId().longValue()) {
+                                //左侧顶部
+                                if (columnBannerVO.getPosition().intValue() == 1) {
+                                    pcIndexColumnVO.setTopBanner(columnBannerVO);
+                                } else if (columnBannerVO.getPosition().intValue() == 2) {
+                                    pcIndexColumnVO.getColumnLeftBannerVOS().add(columnBannerVO);
+                                } else if (columnBannerVO.getPosition().intValue() == 3)  //右侧顶部
+                                {
+                                    pcIndexColumnVO.setRightTopBanner(columnBannerVO);
+                                } else if (columnBannerVO.getPosition().intValue() == 4)  //右侧底部
+                                {
+                                    pcIndexColumnVO.setRightBottomBanner(columnBannerVO);
+                                } else if (columnBannerVO.getPosition().intValue() == 5)  //底部
+                                {
+                                    pcIndexColumnVO.setBottomBanner(columnBannerVO);
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                //查询栏目标签
+                List<ColumnRecommendLabelVO> columnRecommendLabelVOS = columnRecommendLabelService.queryListByColumnIds(columnIds);
+                if(!CollectionUtils.isEmpty(columnRecommendLabelVOS))
+                {
+                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                        for (ColumnRecommendLabelVO columnRecommendLabelVO : columnRecommendLabelVOS) {
+                            if(pcIndexColumnVO.getId().longValue()==columnRecommendLabelVO.getColumnId().longValue()) {
+                                //顶部标签
+                                if (columnRecommendLabelVO.getPosition().intValue() == 1) {
+                                    pcIndexColumnVO.getTopLabels().add(columnRecommendLabelVO);
+                                } else if (columnRecommendLabelVO.getPosition().intValue() == 2) //左侧
+                                {
+                                    pcIndexColumnVO.getLeftLabels().add(columnRecommendLabelVO);
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+
+                //查询推荐商品
+                List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListSortDescByColumnIds(columnIds);
+                if(!CollectionUtils.isEmpty(columnRecommendProductVOS))
+                {
+                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                        for (int i = 0; i < columnRecommendProductVOS.size(); i++) {
+                            ColumnRecommendProductVO columnRecommendProductVO = columnRecommendProductVOS.get(i);
+                            if(pcIndexColumnVO.getId().longValue()==columnRecommendProductVO.getColumnId().longValue()) {
+                                pcIndexColumnVO.getColumnRecommendProducts().add(columnRecommendProductVO);
+                            }
+                        }
+                    }
+                }
+
+                //查询栏目地区
+                List<ColumnAreaVO> columnAreaVOS = columnAreaService.queryListByColumnIds(columnIds);
+                if(!CollectionUtils.isEmpty(columnAreaVOS))
+                {
+                    for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
+                        for(ColumnAreaVO columnAreaVO:columnAreaVOS)
+                        {
+                            if(pcIndexColumnVO.getId().longValue()==columnAreaVO.getColumnId().longValue()) {
+                                pcIndexColumnVO.getColumnAreas().add(columnAreaVO);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            resultObjectVO.setData(pcIndexColumnVOS);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
     /**

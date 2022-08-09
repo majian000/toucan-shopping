@@ -17,4 +17,6 @@ public interface ColumnAreaService {
 
     List<ColumnAreaVO> queryListByColumnId(Long columnId);
 
+    List<ColumnAreaVO> queryListByColumnIds(List<Long> columnIds);
+
 }

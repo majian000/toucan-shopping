@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.column.mapper.ColumnMapper;
 import com.toucan.shopping.modules.column.page.ColumnPageInfo;
 import com.toucan.shopping.modules.column.service.ColumnService;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
+import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class ColumnServiceImpl implements ColumnService {
     @Override
     public List<ColumnVO> queryList(ColumnVO query) {
         return columnMapper.queryList(query);
+    }
+
+
+    @Override
+    public List<PcIndexColumnVO> queryPcIndexColumns(ColumnVO query) {
+        return columnMapper.queryPcIndexColumns(query);
     }
 
     @Override

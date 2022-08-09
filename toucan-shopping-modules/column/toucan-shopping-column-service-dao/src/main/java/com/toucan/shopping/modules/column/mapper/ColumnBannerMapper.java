@@ -16,4 +16,6 @@ public interface ColumnBannerMapper {
     int deleteByColumnId(Long columnId);
 
     List<ColumnBannerVO> queryListByColumnId(Long columnId);
+
+    List<ColumnBannerVO> queryListByColumnIds(List<Long> columnIds);
 }

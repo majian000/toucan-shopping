@@ -14,4 +14,6 @@ public interface ColumnBannerService {
 
     List<ColumnBannerVO> queryListByColumnId(Long columnId);
 
+    List<ColumnBannerVO> queryListByColumnIds(List<Long> columnIds);
+
 }

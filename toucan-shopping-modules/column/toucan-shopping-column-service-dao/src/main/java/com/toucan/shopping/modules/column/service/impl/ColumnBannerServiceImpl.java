@@ -32,4 +32,9 @@ public class ColumnBannerServiceImpl implements ColumnBannerService {
     public List<ColumnBannerVO> queryListByColumnId(Long columnId) {
         return columnBannerMapper.queryListByColumnId(columnId);
     }
+
+    @Override
+    public List<ColumnBannerVO> queryListByColumnIds(List<Long> columnIds) {
+        return columnBannerMapper.queryListByColumnIds(columnIds);
+    }
 }

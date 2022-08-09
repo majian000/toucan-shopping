@@ -36,4 +36,9 @@ public class ColumnAreaServiceImpl implements ColumnAreaService {
     public List<ColumnAreaVO> queryListByColumnId(Long columnId) {
         return columnAreaMapper.queryListByColumnId(columnId);
     }
+
+    @Override
+    public List<ColumnAreaVO> queryListByColumnIds(List<Long> columnIds) {
+        return columnAreaMapper.queryListByColumnIds(columnIds);
+    }
 }
