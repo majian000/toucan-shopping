@@ -93,20 +93,103 @@
             <input type="text" readonly  id="selectArea" lay-verify="required"  placeholder="请选择关联城市" value="" class="layui-input" >
         </div>
     </div>
+
     <div class="layui-form-item" id="connectProduct" >
         <label class="layui-form-label required " >商品推荐</label>
         <div class="layui-input-block">
-            <input type="text" id="shopProductRecommend"  lay-verify="required"  readonly required class="layui-input">
-            <input type="hidden" id="selectProductIds" name="selectProductIds" />
-            <tip>最多只显示6个。</tip>
-        </div>
-    </div>
 
+            <table class="layui-table">
+                <colgroup>
+                    <col >
+                    <col >
+                    <col >
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>图片预览</th>
+                    <th>图片上传(推荐185px*155px)</th>
+                    <th>商品名称</th>
+                    <th>商品价格</th>
+                    <th>点击跳转</th>
+                </tr>
+                </thead>
+                <tbody id="recommendProducts">
+                <tr >
+                    <td><img id='recommend_product_preview_0' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="0" id='recommend_product_img_0' />
+                        <input type='hidden' id='recommend_product_img_hidden_0'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_0"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_0"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_0"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_1' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'   attr-index="1" id='recommend_product_img_1' />
+                        <input type='hidden' id='recommend_product_img_hidden_1'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_1"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_1"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_1"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_2' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file' attr-index="2" id='recommend_product_img_2' />
+                        <input type='hidden' id='recommend_product_img_hidden_2'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_2"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_2"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_2"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_3' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="3" id='recommend_product_img_3' />
+                        <input type='hidden' id='recommend_product_img_hidden_3'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_3"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_3"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_3"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_4' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="4" id='recommend_product_img_4' />
+                        <input type='hidden' id='recommend_product_img_hidden_4'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_4"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_4"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_4"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+
+                <tr >
+                    <td><img id='recommend_product_preview_5' src='/images/img_260_220.png'  style="width:185px;height:155px;" ></td>
+                    <td>
+                        <input type='file'  attr-index="5" id='recommend_product_img_5' />
+                        <input type='hidden' id='recommend_product_img_hidden_5'  />
+                    </td>
+                    <td><input type='text' id="recommend_product_name_5"  maxlength='255' class='layui-input' /></td>
+                    <td><input type='text' id="recommend_product_price_5"  maxlength='50' class='layui-input' /></td>
+                    <td><input type='text'  id="recommend_product_clickPath_5"  maxlength='500' class='layui-input'  /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">顶部图片预览</label>
         <div class="layui-input-block">
-            <img id='top_banner_preview' src='#'  style="width:1200px;height:110px;"   >
+            <img id='top_banner_preview' src='/images/img_260_220.png'  style="width:1200px;height:110px;"   >
         </div>
     </div>
 
@@ -195,7 +278,7 @@
                 </thead>
                 <tbody id="rightBanner">
                 <tr >
-                    <td><img id='right_banner_preview' src='#' style="width:260px;height:220px;"></td>
+                    <td><img id='right_banner_preview' src='/images/img_260_220.png' style="width:260px;height:220px;"></td>
                     <td>
                         <input type='file'  id='right_banner_img' />
                         <input type='hidden'  class='rightTopBannerImgs' id='right_banner_img_hidden'  />
@@ -230,7 +313,7 @@
                 </thead>
                 <tbody id="rightBottomBanner">
                 <tr >
-                    <td><img id='right_bottom_banner_preview' src='#' style="width:260px;height:220px;" ></td>
+                    <td><img id='right_bottom_banner_preview' src='/images/img_260_220.png' style="width:260px;height:220px;" ></td>
                     <td>
                         <input type='file'    id='right_bottom_banner_img' />
                         <input type='hidden' class='rightBottomBannerImgs'  id='right_bottom_img_hidden'  />
@@ -247,7 +330,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">底部图片预览</label>
         <div class="layui-input-block">
-            <img id='bottom_banner_preview' src='#'  style="width:1200px;height:110px;"   >
+            <img id='bottom_banner_preview' src='/images/img_260_220.png'  style="width:1200px;height:110px;"   >
         </div>
     </div>
 
@@ -447,6 +530,44 @@
                 return false;
             }
             data.field.columnLeftBannerVOS = columnLeftBannerVOS;
+
+            var columnRecommendProductVOS = new Array();
+            for(var j=0;j<6;j++)
+            {
+                var recommendProduct={};
+                var recommendProductImg = $("#recommend_product_img_hidden_"+j).val();
+                if(recommendProductImg==null||recommendProductImg=="")
+                {
+                    layer.msg("请上传商品图片");
+                    return false;
+                }
+                recommendProduct.imgPath = recommendProductImg;
+                recommendProduct.productName=$("#recommend_product_name_"+j).val();
+                if(recommendProduct.productName==null||recommendProduct.productName=="")
+                {
+                    layer.msg("商品名称不能为空");
+                    return false;
+                }
+                recommendProduct.productPrice=$("#recommend_product_price_"+j).val();
+                if(recommendProduct.productPrice==null||recommendProduct.productPrice=="")
+                {
+                    layer.msg("商品价格不能为空");
+                    return false;
+                }
+                recommendProduct.clickPath=$("#recommend_product_clickPath_"+j).val();
+                if(recommendProduct.clickPath==null||recommendProduct.clickPath=="")
+                {
+                    layer.msg("商品点击跳转不能为空");
+                    return false;
+                }
+                columnRecommendProductVOS.push(recommendProduct);
+            }
+            if(columnRecommendProductVOS.length<6)
+            {
+                layer.msg("请配置商品推荐,数量至少6个");
+                return false;
+            }
+            data.field.columnRecommendProducts = columnRecommendProductVOS;
 
             //右侧顶部图片
             data.field.rightTopBanner={};
@@ -848,7 +969,7 @@
         {
             leftBannerIncrement++;
             $("#leftBanner").append("<tr id='banner_tr_"+leftBannerIncrement+"'>\n" +
-                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"#' style='width:260px;height:220px;'></td>\n" +
+                "        <td><img id='left_banner_preview_"+leftBannerIncrement+"' src='"+basePath+"/images/img_260_220.png' style='width:260px;height:220px;'></td>\n" +
                 "        <td>" +
                 "               <input type='file'   id='left_banner_img_"+leftBannerIncrement+"' />" +
                 "               <input type='hidden'  attr-index='"+leftBannerIncrement+"'  class='leftBannerHiddens' id='left_banner_img_hidden_"+leftBannerIncrement+"' />" +
@@ -906,6 +1027,23 @@
                 });
             }
 
+        }
+
+
+        recommendProductUploadPreview();
+
+        /**
+         * 初始化推荐商品
+         */
+        function recommendProductUploadPreview()
+        {
+            for(var pos=0;pos<6;pos++)
+            {
+                $("#recommend_product_img_" + pos).on("change", function () {
+                    var attrIndex = $(this).attr("attr-index");
+                    uploadImg("#recommend_product_img_"+attrIndex,"#recommend_product_preview_"+attrIndex,"#recommend_product_img_hidden_"+attrIndex);
+                });
+            }
         }
 
 
@@ -1046,17 +1184,15 @@
                     //设置推荐商品
                     if(entity.columnRecommendProducts!=null&&entity.columnRecommendProducts.length>0)
                     {
-                        var shopProductNames = "";
                         for(var j=0;j<entity.columnRecommendProducts.length;j++)
                         {
-                            shopProductNames+=entity.columnRecommendProducts[j].shopProductName;
-                            if(j+1<entity.columnRecommendProducts.length)
-                            {
-                                shopProductNames+="，";
-                            }
+                            var recommendProduct=entity.columnRecommendProducts[j];
+                            $("#recommend_product_preview_"+j).attr("src",recommendProduct.httpImgPath);
+                            $("#recommend_product_img_hidden_"+j).val(recommendProduct.imgPath);
+                            $("#recommend_product_name_"+j).val(recommendProduct.productName);
+                            $("#recommend_product_price_"+j).val(recommendProduct.productPrice);
+                            $("#recommend_product_clickPath_"+j).val(recommendProduct.clickPath);
                         }
-                        $("#shopProductRecommend").val(shopProductNames);
-                        $("#selectProductIds").val(entity.selectProductIds);
                     }
 
                     //设置顶部标签

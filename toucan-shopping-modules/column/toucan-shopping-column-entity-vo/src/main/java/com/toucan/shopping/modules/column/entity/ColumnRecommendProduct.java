@@ -25,9 +25,6 @@ public class ColumnRecommendProduct {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long columnId; //栏目主键
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    @JSONField(serializeUsing = ToStringSerializer.class)
-    private String shopProductId; //店铺商品主键
 
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -50,4 +47,24 @@ public class ColumnRecommendProduct {
      * 删除状态 0未删除 1已删除
      */
     private Short deleteStatus;
+
+    /**
+     * 商品名称
+     */
+    private String productName;
+
+    /**
+     * 商品单价
+     */
+    private String productPrice;
+
+    /**
+     * 点击跳转
+     */
+    private String clickPath;
+
+    /**
+     * 商品预览图
+     */
+    private String imgPath;
 }

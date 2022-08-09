@@ -316,16 +316,15 @@ public class PcIndexColumnController {
             //保存栏目地区关联
             columnAreaService.saves(columnAreas);
 
+            //保存商品推荐
             List<ColumnRecommendProduct> columnRecommendProducts = new LinkedList<>();
-            if(StringUtils.isNotEmpty(pcIndexColumnVO.getSelectProductIds()))
+            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
             {
-                String[] selectProductIds = pcIndexColumnVO.getSelectProductIds().split(",");
-                for(String selectProductId:selectProductIds)
-                {
+                for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts()) {
                     ColumnRecommendProduct columnRecommendProduct = new ColumnRecommendProduct();
+                    BeanUtils.copyProperties(columnRecommendProduct,columnRecommendProductVO);
                     columnRecommendProduct.setId(idGenerator.id());
                     columnRecommendProduct.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendProduct.setShopProductId(selectProductId);
                     columnRecommendProduct.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
                     columnRecommendProduct.setCreateDate(new Date());
                     columnRecommendProduct.setProductSort(0L);
@@ -576,16 +575,15 @@ public class PcIndexColumnController {
             //删除栏目推荐商品
             columnRecommendProductService.deleteByColumnId(pcIndexColumnVO.getId());
 
+            //保存商品推荐
             List<ColumnRecommendProduct> columnRecommendProducts = new LinkedList<>();
-            if(StringUtils.isNotEmpty(pcIndexColumnVO.getSelectProductIds()))
+            if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
             {
-                String[] selectProductIds = pcIndexColumnVO.getSelectProductIds().split(",");
-                for(String selectProductId:selectProductIds)
-                {
+                for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts()) {
                     ColumnRecommendProduct columnRecommendProduct = new ColumnRecommendProduct();
+                    BeanUtils.copyProperties(columnRecommendProduct,columnRecommendProductVO);
                     columnRecommendProduct.setId(idGenerator.id());
                     columnRecommendProduct.setColumnId(pcIndexColumnVO.getId());
-                    columnRecommendProduct.setShopProductId(selectProductId);
                     columnRecommendProduct.setCreateAdminId(pcIndexColumnVO.getCreateAdminId());
                     columnRecommendProduct.setCreateDate(new Date());
                     columnRecommendProduct.setProductSort(0L);
@@ -764,7 +762,7 @@ public class PcIndexColumnController {
 
 
                 //查询推荐商品
-                List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListSortDescByColumnIds(columnIds);
+                List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListCreateDateAscByColumnIds(columnIds);
                 if(!CollectionUtils.isEmpty(columnRecommendProductVOS))
                 {
                     for(PcIndexColumnVO pcIndexColumnVO:pcIndexColumnVOS) {
@@ -890,21 +888,7 @@ public class PcIndexColumnController {
             }
 
             //查询推荐商品
-            StringBuilder productIds = new StringBuilder();
-            List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListSortDescByColumnId(pcIndexColumnVO.getId());
-            if(!CollectionUtils.isEmpty(columnRecommendProductVOS))
-            {
-                for(int i=0;i<columnRecommendProductVOS.size();i++)
-                {
-                    ColumnRecommendProductVO columnRecommendProductVO = columnRecommendProductVOS.get(i);
-                    productIds.append(columnRecommendProductVO.getShopProductId());
-                    if(i+1<columnRecommendProductVOS.size())
-                    {
-                        productIds.append(",");
-                    }
-                }
-            }
-            pcIndexColumnVO.setSelectProductIds(productIds.toString());
+            List<ColumnRecommendProductVO> columnRecommendProductVOS = columnRecommendProductService.queryListCreateDateAscByColumnId(pcIndexColumnVO.getId());
             pcIndexColumnVO.setColumnRecommendProducts(columnRecommendProductVOS);
 
             //查询栏目地区

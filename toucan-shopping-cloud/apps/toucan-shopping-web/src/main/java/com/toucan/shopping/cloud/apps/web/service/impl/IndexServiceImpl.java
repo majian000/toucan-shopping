@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
+import com.toucan.shopping.modules.column.vo.ColumnBannerVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
@@ -19,6 +20,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.entity.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +60,9 @@ public class IndexServiceImpl implements IndexService {
 
     @Autowired
     private FeignPcIndexColumnService feignPcIndexColumnService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 查询轮播图
@@ -198,12 +203,55 @@ public class IndexServiceImpl implements IndexService {
             query.setColumnTypeCode(toucan.getShoppingPC().getPcIndexColumnTypeCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
             ResultObjectVO resultObjectVO = feignPcIndexColumnService.queryPcIndexColumns(requestJsonVO);
-            return resultObjectVO.formatDataList(PcIndexColumnVO.class);
+            if(resultObjectVO.isSuccess()) {
+                List<PcIndexColumnVO> pcIndexColumnVOS = resultObjectVO.formatDataList(PcIndexColumnVO.class);
+                if(!CollectionUtils.isEmpty(pcIndexColumnVOS)) {
+                    for (PcIndexColumnVO pcIndexColumnVO : pcIndexColumnVOS) {
+
+                        //顶部预览图
+                        if(pcIndexColumnVO.getTopBanner()!=null)
+                        {
+                            pcIndexColumnVO.getTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getTopBanner().getImgPath());
+                        }
+
+                        //左侧轮播图
+                        if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnLeftBannerVOS()))
+                        {
+                            for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
+                            {
+                                columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnBannerVO.getImgPath());
+                            }
+                        }
+
+                        //右侧顶部预览图
+                        if(pcIndexColumnVO.getRightTopBanner()!=null)
+                        {
+                            pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
+                        }
+
+                        //右侧底部预览图
+                        if(pcIndexColumnVO.getRightBottomBanner()!=null)
+                        {
+                            pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
+                        }
+
+                        //底部预览图
+                        if(pcIndexColumnVO.getBottomBanner()!=null)
+                        {
+                            pcIndexColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getBottomBanner().getImgPath());
+                        }
+
+                    }
+                }
+
+                return pcIndexColumnVOS;
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
-            return new LinkedList<>();
+            return null;
         }
+        return null;
     }
 
 }

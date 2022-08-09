@@ -212,39 +212,12 @@ public class PcIndexColumnController extends UIController {
             if(resultObjectVO.isSuccess())
             {
                 PcIndexColumnVO pcIndexColumnVO = resultObjectVO.formatData(PcIndexColumnVO.class);
-                if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
-                {
-                    ShopProductVO queryShopProductVO = new ShopProductVO();
-                    List<Long> shopProductIds = new LinkedList<>();
-                    for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts()) {
-                        shopProductIds.add(Long.parseLong(columnRecommendProductVO.getShopProductId()));
-                    }
-                    queryShopProductVO.setIds(shopProductIds);
-                    requestJsonVO = RequestJsonVOGenerator.generator(appCode, queryShopProductVO);
-                    resultObjectVO = feignShopProductService.queryList(requestJsonVO);
-                    if(resultObjectVO.isSuccess())
-                    {
-                        List<ShopProductVO> shopProductVOS = resultObjectVO.formatDataList(ShopProductVO.class);
 
-                        for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts())
-                        {
-                            if(!CollectionUtils.isEmpty(shopProductVOS))
-                            {
-                                for(ShopProductVO shopProductVO:shopProductVOS)
-                                {
-                                    if(columnRecommendProductVO.getShopProductId().equals(String.valueOf(shopProductVO.getId())))
-                                    {
-                                        columnRecommendProductVO.setShopProductName(shopProductVO.getName());
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
+                //右侧顶部预览图
                 pcIndexColumnVO.getRightTopBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightTopBanner().getImgPath());
+                //右侧底部预览图
                 pcIndexColumnVO.getRightBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getRightBottomBanner().getImgPath());
+                //左侧轮播图
                 for(ColumnBannerVO columnBannerVO:pcIndexColumnVO.getColumnLeftBannerVOS())
                 {
                     columnBannerVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnBannerVO.getImgPath());
@@ -260,6 +233,15 @@ public class PcIndexColumnController extends UIController {
                 if(pcIndexColumnVO.getBottomBanner()!=null&&pcIndexColumnVO.getBottomBanner().getImgPath()!=null)
                 {
                     pcIndexColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getBottomBanner().getImgPath());
+                }
+
+                //商品推荐图
+                if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
+                {
+                    for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts())
+                    {
+                        columnRecommendProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnRecommendProductVO.getImgPath());
+                    }
                 }
 
 

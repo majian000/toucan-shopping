@@ -30,12 +30,12 @@ public class ColumnRecommendProductServiceImpl implements ColumnRecommendProduct
     }
 
     @Override
-    public List<ColumnRecommendProductVO> queryListSortDescByColumnId(Long columnId) {
-        return columnRecommendProductMapper.queryListSortDescByColumnId(columnId);
+    public List<ColumnRecommendProductVO> queryListCreateDateAscByColumnId(Long columnId) {
+        return columnRecommendProductMapper.queryListCreateDateAscByColumnId(columnId);
     }
 
     @Override
-    public List<ColumnRecommendProductVO> queryListSortDescByColumnIds(List<Long> columnIds) {
-        return columnRecommendProductMapper.queryListSortDescByColumnIds(columnIds);
+    public List<ColumnRecommendProductVO> queryListCreateDateAscByColumnIds(List<Long> columnIds) {
+        return columnRecommendProductMapper.queryListCreateDateAscByColumnIds(columnIds);
     }
 }

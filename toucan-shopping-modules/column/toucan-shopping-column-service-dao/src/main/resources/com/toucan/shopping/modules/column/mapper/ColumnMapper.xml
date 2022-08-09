@@ -155,8 +155,8 @@
             and t.position = #{position}
             and t.delete_status = 0
             and t.type = #{type}
-            <![CDATA[ and ba.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
-            <![CDATA[ and ba.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
 
         </where>
     </select>

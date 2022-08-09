@@ -5,7 +5,6 @@
     <resultMap id="columnRecommendProductMap" type="com.toucan.shopping.modules.column.entity.ColumnRecommendProduct" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="column_id" jdbcType="BIGINT" property="columnId" />
-        <result column="shop_product_id" jdbcType="BIGINT" property="shopProductId" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -14,6 +13,10 @@
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="product_sort" jdbcType="BIGINT" property="productSort" />
+        <result column="product_name" jdbcType="VARCHAR" property="productName" />
+        <result column="product_price" jdbcType="VARCHAR" property="productPrice" />
+        <result column="click_path" jdbcType="VARCHAR" property="clickPath" />
+        <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
     </resultMap>
 
     <resultMap id="columnRecommendProductVOMap" type="com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO" extends="columnRecommendProductMap">
@@ -22,12 +25,12 @@
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_column_recommend_product(id,column_id,shop_product_id,remark,create_date,create_admin_id,app_code,product_sort)
+        insert into t_column_recommend_product(id,column_id,remark,create_date,create_admin_id,app_code,product_sort,product_name,product_price,click_path,img_path)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
-            (#{entity.id},#{entity.columnId},#{entity.shopProductId},#{entity.remark},#{entity.createDate},#{entity.createAdminId}
-            ,#{entity.appCode},#{entity.productSort})
+            (#{entity.id},#{entity.columnId},#{entity.remark},#{entity.createDate},#{entity.createAdminId}
+            ,#{entity.appCode},#{entity.productSort},#{entity.productName},#{entity.productPrice},#{entity.clickPath},#{entity.imgPath})
         </foreach>
 
     </insert>
@@ -36,18 +39,18 @@
          update t_column_recommend_product set delete_status = 1 where column_id = #{columnId}
     </update>
 
-    <select id="queryListSortDescByColumnId" parameterType="java.lang.Long" resultMap="columnRecommendProductVOMap">
-        select * from t_column_recommend_product  where column_id = #{columnId} and delete_status = 0 order by product_sort desc
+    <select id="queryListCreateDateAscByColumnId" parameterType="java.lang.Long" resultMap="columnRecommendProductVOMap">
+        select * from t_column_recommend_product  where column_id = #{columnId} and delete_status = 0 order by create_date asc
     </select>
 
 
-    <select id="queryListSortDescByColumnIds" resultMap="columnRecommendProductVOMap">
+    <select id="queryListCreateDateAscByColumnIds" resultMap="columnRecommendProductVOMap">
         select * from t_column_recommend_product where delete_status = 0
         and column_id in
         <foreach item="item" index="index" collection="columnIds" open="("  close=")" separator=",">
             #{item}
         </foreach>
-        order by product_sort desc
+        order by create_date asc
     </select>
 
 </mapper>

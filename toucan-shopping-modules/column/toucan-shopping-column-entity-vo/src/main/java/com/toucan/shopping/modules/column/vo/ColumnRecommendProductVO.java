@@ -11,4 +11,7 @@ public class ColumnRecommendProductVO extends ColumnRecommendProduct {
 
     private String shopProductName; //店铺商品名称
 
+
+    private String httpImgPath; //外网访问地址
+
 }
