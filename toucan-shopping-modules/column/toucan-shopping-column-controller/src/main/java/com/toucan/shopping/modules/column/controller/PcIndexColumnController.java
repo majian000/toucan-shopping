@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -103,6 +104,7 @@ public class PcIndexColumnController {
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @Transactional
     public ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -290,7 +292,9 @@ public class PcIndexColumnController {
             }
 
             //保存栏目推荐标签
-            columnRecommendLabelService.saves(columnRecommendLabels);
+            if(!CollectionUtils.isEmpty(columnRecommendLabels)) {
+                columnRecommendLabelService.saves(columnRecommendLabels);
+            }
 
 
             List<ColumnArea> columnAreas = new LinkedList<>();
@@ -354,6 +358,7 @@ public class PcIndexColumnController {
 
     @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @Transactional
     public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -543,7 +548,9 @@ public class PcIndexColumnController {
             }
 
             //保存栏目推荐标签
-            columnRecommendLabelService.saves(columnRecommendLabels);
+            if(!CollectionUtils.isEmpty(columnRecommendLabels)) {
+                columnRecommendLabelService.saves(columnRecommendLabels);
+            }
 
             //删除栏目地区
             columnAreaService.deleteByColumnId(pcIndexColumnVO.getId());
