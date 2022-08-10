@@ -9,6 +9,7 @@ import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryServ
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
 import com.toucan.shopping.modules.column.vo.ColumnBannerVO;
+import com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO;
 import com.toucan.shopping.modules.column.vo.ColumnVO;
 import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
@@ -239,6 +240,15 @@ public class IndexServiceImpl implements IndexService {
                         if(pcIndexColumnVO.getBottomBanner()!=null)
                         {
                             pcIndexColumnVO.getBottomBanner().setHttpImgPath(imageUploadService.getImageHttpPrefix()+pcIndexColumnVO.getBottomBanner().getImgPath());
+                        }
+
+                        //推荐商品
+                        if(!CollectionUtils.isEmpty(pcIndexColumnVO.getColumnRecommendProducts()))
+                        {
+                            for(ColumnRecommendProductVO columnRecommendProductVO:pcIndexColumnVO.getColumnRecommendProducts())
+                            {
+                                columnRecommendProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+columnRecommendProductVO.getImgPath());
+                            }
                         }
 
                     }

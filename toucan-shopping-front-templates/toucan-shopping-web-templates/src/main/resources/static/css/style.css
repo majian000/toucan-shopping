@@ -743,7 +743,8 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	width:33px; height:34px; line-height:40px; overflow:hidden; background:url(../images/floor.png) no-repeat center top; color:#FFF; font-size:14px; text-transform:uppercase; text-indent:6px; float:left; display:inline; margin-right:15px;
 }
 .fresh_left{
-	width:211px; height:441px; overflow:hidden; background-color:#a6e5be; float:left;
+	width:211px; height:441px; overflow:hidden;  float:left;
+	/*background-color:#a6e5be;*/
 }
 .fre_ban{
 	width:211px; height:286px; overflow:hidden;

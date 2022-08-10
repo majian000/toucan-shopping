@@ -1,7 +1,7 @@
 // JavaScript Document
 
 var jq = jQuery.noConflict();
-jQuery(document).ready(function() {
+function fbanf1() {
 	jq('a[href="#"]').each(function() {
 		jq(this).attr('href', 'javascript:void(0)')
 	});
@@ -159,8 +159,8 @@ jQuery(document).ready(function() {
 		jq(this).parent().parent().find('.t').show();
 		jq(this).parent().hide()
 	})
-});
-jQuery(document).ready(function() {
+}
+function fbanf2() {
 	var t = false;
 	var str = '';
 	var speed = 500;
@@ -248,8 +248,8 @@ jQuery(document).ready(function() {
 		start()
 	});
 	start()
-});
-jQuery(document).ready(function() {
+}
+function fbanf3() {
 	var isshowcity = false;
 	var ishovercitys = false;
 	jq('.s_city .s').click(function() {
@@ -278,8 +278,8 @@ jQuery(document).ready(function() {
 			isshowcity = false
 		}
 	})
-});
-jQuery(document).ready(function() {
+}
+function fbanf4() {
 	jq('.sd').each(function(i) {
 		jq(this).find('.hztitle').click(function() {
 			jq('.sd').eq(i).find('p').toggle()
@@ -291,7 +291,15 @@ jQuery(document).ready(function() {
 	function() {
 		jq(this).removeClass("hztitle-2")
 	})
-});
+}
+
+function initfban()
+{
+	fbanf1();
+	fbanf2();
+	fbanf3();
+	fbanf4();
+}
 function artHeight() {
 	var rh = jq('.artists_r').height();
 	var lh = jq('.artists_l').height();

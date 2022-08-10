@@ -15,9 +15,11 @@ $(function(){
                     {
                         var column = result.data[i];
 
-                        if(column.topBanner!=null) {
+                        if(column.topBanner!=null
+                            &&column.topBanner.imgPath!=null
+                            &&column.topBanner.imgPath!="") {
                             columnsHtml += "<div class=\"content mar_20\">\n" +
-                                "    <img src=\""+column.topBanner.httpImgPath+"\" width=\"1200\" height=\"110\" />\n" +
+                                "    <img src=\""+column.topBanner.httpImgPath+"\" title=\""+column.topBanner.title+"\" width=\"1200\" height=\"110\" />\n" +
                                 "</div>";
                         }
 
@@ -75,62 +77,57 @@ $(function(){
                                 "        </div>\n" +
                                 "    </div>\n" +
                                 "    <div class=\"fresh_mid\">\n" +
-                                "        <ul>\n" +
-                                "            <li>\n" +
-                                "                <div class=\"name\"><a href=\"#\">新鲜美味  进口美食</a></div>\n" +
-                                "                <div class=\"price\">\n" +
-                                "                    <font>￥<span>198.00</span></font> &nbsp; 26R\n" +
-                                "                </div>\n" +
-                                "                <div class=\"img\"><a href=\"#\"><img src=\"${basePath}/static/images/fre_1.jpg\" width=\"185\" height=\"155\" /></a></div>\n" +
-                                "            </li>\n" +
-                                "            <li>\n" +
-                                "                <div class=\"name\"><a href=\"#\">新鲜美味  进口美食</a></div>\n" +
-                                "                <div class=\"price\">\n" +
-                                "                    <font>￥<span>198.00</span></font> &nbsp; 26R\n" +
-                                "                </div>\n" +
-                                "                <div class=\"img\"><a href=\"#\"><img src=\"${basePath}/static/images/fre_2.jpg\" width=\"185\" height=\"155\" /></a></div>\n" +
-                                "            </li>\n" +
-                                "            <li>\n" +
-                                "                <div class=\"name\"><a href=\"#\">新鲜美味  进口美食</a></div>\n" +
-                                "                <div class=\"price\">\n" +
-                                "                    <font>￥<span>198.00</span></font> &nbsp; 26R\n" +
-                                "                </div>\n" +
-                                "                <div class=\"img\"><a href=\"#\"><img src=\"${basePath}/static/images/fre_3.jpg\" width=\"185\" height=\"155\" /></a></div>\n" +
-                                "            </li>\n" +
-                                "            <li>\n" +
-                                "                <div class=\"name\"><a href=\"#\">新鲜美味  进口美食</a></div>\n" +
-                                "                <div class=\"price\">\n" +
-                                "                    <font>￥<span>198.00</span></font> &nbsp; 26R\n" +
-                                "                </div>\n" +
-                                "                <div class=\"img\"><a href=\"#\"><img src=\"${basePath}/static/images/fre_4.jpg\" width=\"185\" height=\"155\" /></a></div>\n" +
-                                "            </li>\n" +
-                                "            <li>\n" +
-                                "                <div class=\"name\"><a href=\"#\">新鲜美味  进口美食</a></div>\n" +
-                                "                <div class=\"price\">\n" +
-                                "                    <font>￥<span>198.00</span></font> &nbsp; 26R\n" +
-                                "                </div>\n" +
-                                "                <div class=\"img\"><a href=\"#\"><img src=\"${basePath}/static/images/fre_5.jpg\" width=\"185\" height=\"155\" /></a></div>\n" +
-                                "            </li>\n" +
-                                "            <li>\n" +
-                                "                <div class=\"name\"><a href=\"#\">新鲜美味  进口美食</a></div>\n" +
-                                "                <div class=\"price\">\n" +
-                                "                    <font>￥<span>198.00</span></font> &nbsp; 26R\n" +
-                                "                </div>\n" +
-                                "                <div class=\"img\"><a href=\"#\"><img src=\"${basePath}/static/images/fre_6.jpg\" width=\"185\" height=\"155\" /></a></div>\n" +
-                                "            </li>\n" +
-                                "        </ul>\n" +
+                                "        <ul>\n" ;
+                                if(column.columnRecommendProducts!=null&&column.columnRecommendProducts.length>0)
+                                {
+                                    for(var s=0;s<column.columnRecommendProducts.length;s++) {
+                                        var recommendProduct = column.columnRecommendProducts[s];
+                                        columnsHtml += "            <li>\n" +
+                                            "                <div class=\"name\"><a href=\"#\">"+recommendProduct.productName+"</a></div>\n" +
+                                            "                <div class=\"price\">\n" +
+                                            "                    <font>￥<span>"+recommendProduct.productPrice+"</span></font> &nbsp;\n" +
+                                            "                </div>\n" +
+                                            "                <div class=\"img\"><a href=\""+recommendProduct.clickPath+"\"><img src=\""+recommendProduct.httpImgPath+"\" width=\"185\" height=\"155\" /></a></div>\n" +
+                                            "            </li>\n";
+                                    }
+                                }
+
+                                columnsHtml+=      "        </ul>\n" +
                                 "    </div>\n" +
                                 "    <div class=\"fresh_right\">\n" +
-                                "        <ul>\n" +
-                                "            <li><a href=\"#\"><img src=\"${basePath}/static/images/fre_b1.jpg\" width=\"260\" height=\"220\" /></a></li>\n" +
-                                "            <li><a href=\"#\"><img src=\"${basePath}/static/images/fre_b2.jpg\" width=\"260\" height=\"220\" /></a></li>\n" +
-                                "        </ul>\n" +
+                                "        <ul>\n" ;
+                                if(column.rightTopBanner!=null)
+                                {
+                                    columnsHtml+=  "            <li><a href=\""+column.rightTopBanner.clickPath+"\"><img src=\""+column.rightTopBanner.httpImgPath+"\" title=\""+column.rightTopBanner.title+"\" width=\"260\" height=\"220\" /></a></li>\n" ;
+                                }
+                                if(column.rightBottomBanner!=null)
+                                {
+                                    columnsHtml+=  "            <li><a href=\""+column.rightBottomBanner.clickPath+"\"><img src=\""+column.rightBottomBanner.httpImgPath+"\" title=\""+column.rightBottomBanner.title+"\" width=\"260\" height=\"220\" /></a></li>\n" ;
+                                }
+                                columnsHtml+=        "        </ul>\n" +
                                 "    </div>\n" +
                                 "</div>\n";
+
+
+                                if(column.bottomBanner!=null
+                                    &&column.bottomBanner.imgPath!=null
+                                    &&column.bottomBanner.imgPath!="") {
+                                    columnsHtml += "<div class=\"content mar_20\">\n" +
+                                        "    <img src=\""+column.bottomBanner.httpImgPath+"\" title=\""+column.bottomBanner.title+"\" width=\"1200\" height=\"110\" />\n" +
+                                        "</div>";
+                                }
                     }
                 }
 
                 $("#indexColumns").html(columnsHtml);
+
+
+                initfban();
+                initf_ban();
+                initmban();
+                initbban();
+                inithban();
+                inittban();
             }
         }
     });
