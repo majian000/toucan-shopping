@@ -749,25 +749,25 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 .fre_ban{
 	width:211px; height:286px; overflow:hidden;
 }
-.fre_ban #imgPlay1{
+.fre_ban .imgPlays{
 	width:211px; height:286px; overflow:hidden; margin:0 auto; zoom:1; position:relative;
 }
 .fre_ban #imgPlay .imgs img{
 	width:211px;
 }
-.fre_ban #imgPlay1 .imgs li{
+.fre_ban .imgPlays .imgs li{
 	position:relative; float:left; width:211px; height:286px;
 }
-.fre_ban #imgPlay1 .imgs{
+.fre_ban .imgPlays .imgs{
 	width: 5760px;
 }
-.fre_ban #imgPlay1 .btn{
+.fre_ban .imgPlays .btn{
 	width:112px; height:29px; overflow:hidden; text-indent:-9999px; position:absolute; right:12px; bottom:12px;
 }
-.fre_ban #imgPlay1 .btn a{
+.fre_ban .imgPlays .btn a{
 	width:46px; height:71px; overflow:hidden; display:block; background: url(../images/b_left.png) no-repeat;
 }
-.fre_ban #imgPlay1 .btn a:hover{
+.fre_ban .imgPlays .btn a:hover{
 	background: url(../images/b_left.png) no-repeat;
 }
 .fre_ban .prevf{
@@ -1851,31 +1851,31 @@ ul.p_sell li .times{
 .sell_ban{
 	width:300px; height:352px; overflow:hidden; padding:10px; margin-top:40px; border:1px solid #eaeaea;
 }
-.sell_ban #imgPlays{
+.sell_ban .imgPlays{
 	width:300px; height:352px; overflow:hidden; margin:0 auto; zoom:1; position:relative;
 }
-.sell_ban #imgPlays .imgs img{
+.sell_ban .imgPlays .imgs img{
 	width:300px;
 }
-.sell_ban #imgPlays .imgs li{
+.sell_ban .imgPlays .imgs li{
 	position:relative; float:left; width:300px; height:352px;
 }
-.sell_ban #imgPlays .imgs{
+.sell_ban .imgPlays .imgs{
 	width: 5760px;
 }
-.sell_ban #imgPlays .btn{
+.sell_ban .imgPlays .btn{
 	width:112px; height:29px; overflow:hidden; text-indent:-9999px; position:absolute; right:12px; bottom:12px;
 }
-.sell_ban #imgPlays .btn a{
+.sell_ban .imgPlays .btn a{
 	width:46px; height:71px; overflow:hidden; display:block; background: url(../images/b_left.png) no-repeat;
 }
-.sell_ban #imgPlays .btn a:hover{
+.sell_ban .imgPlays .btn a:hover{
 	background: url(../images/b_left.png) no-repeat;
 }
-.sell_ban #imgPlays .prev_s{
+.sell_ban .imgPlays .prev_s{
 	width:32px; height:60px; overflow:hidden; background: url(../images/b_left.png) no-repeat; cursor:pointer; text-indent:-9999px; position:absolute; left:0; top:145px;
 }
-.sell_ban #imgPlays .next_s{
+.sell_ban .imgPlays .next_s{
 	width:32px; height:60px; overflow:hidden; background: url(../images/b_right.png) no-repeat; cursor:pointer; text-indent:-9999px; position:absolute; right:0; top:145px;
 }
 

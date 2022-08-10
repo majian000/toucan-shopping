@@ -9,8 +9,10 @@ $(function(){
             if(result.code>0)
             {
                 var columnsHtml="";
+                var coulumnCount = 0;
                 if(result.data!=null&&result.data.length>0)
                 {
+                    coulumnCount = result.data.length;
                     for(var i=0;i<result.data.length;i++)
                     {
                         var column = result.data[i];
@@ -46,12 +48,12 @@ $(function(){
                                 "<div class=\"content\">\n" +
                                 "    <div class=\"fresh_left\">\n" +
                                 "        <div class=\"fre_ban\">\n" +
-                                "            <div id=\"imgPlay1\">\n" +
-                                "                <ul class=\"imgs\" id=\"actor1\">\n" ;
+                                "            <div id=\"imgPlay"+i+"\" class='imgPlays'>\n" +
+                                "                <ul class=\"imgs\" id=\"actor"+i+"\">\n" ;
                                 if(column.columnLeftBannerVOS!=null&&column.columnLeftBannerVOS.length>0) {
                                     for (var s = 0; s < column.columnLeftBannerVOS.length; s++) {
                                         var leftBanner = column.columnLeftBannerVOS[s];
-                                        columnsHtml+=  "   <li><a href=\""+leftBanner.clickPath+"\" target=\"_blank\"><img src=\""+leftBanner.httpImgPath+"\" width=\"211\" height=\"286\" title=\""+leftBanner.title+"\" /></a></li>\n" ;
+                                        columnsHtml+=  "   <li><img src=\""+leftBanner.httpImgPath+"\" width=\"211\" height=\"286\" title=\""+leftBanner.title+"\" /></li>\n" ;
                                     }
                                 }
                              columnsHtml+=       "                </ul>\n" +
@@ -122,12 +124,9 @@ $(function(){
                 $("#indexColumns").html(columnsHtml);
 
 
-                initfban();
-                initf_ban();
-                initmban();
-                initbban();
-                inithban();
-                inittban();
+                for(var c=0;c<coulumnCount;c++) {
+                    initfban("actor"+c,"imgPlay"+c);
+                }
             }
         }
     });
