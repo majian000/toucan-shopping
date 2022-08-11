@@ -53,7 +53,7 @@ $(function(){
                                 if(column.columnLeftBannerVOS!=null&&column.columnLeftBannerVOS.length>0) {
                                     for (var s = 0; s < column.columnLeftBannerVOS.length; s++) {
                                         var leftBanner = column.columnLeftBannerVOS[s];
-                                        columnsHtml+=  "   <li><img src=\""+leftBanner.httpImgPath+"\" width=\"211\" height=\"286\" title=\""+leftBanner.title+"\" /></li>\n" ;
+                                        columnsHtml+=  "   <li><a href=\""+leftBanner.clickPath+"\" target=\"_blank\"><img src=\""+leftBanner.httpImgPath+"\" width=\"211\" height=\"286\" title=\""+leftBanner.title+"\" /></a></li>\n" ;
                                     }
                                 }
                              columnsHtml+=       "                </ul>\n" +
