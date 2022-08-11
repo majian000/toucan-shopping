@@ -20,8 +20,17 @@ $(function(){
                         if(column.topBanner!=null
                             &&column.topBanner.imgPath!=null
                             &&column.topBanner.imgPath!="") {
+
+                            var targetBlankHtml="";
+                            if(column.topBanner.clickPath!=null
+                                &&column.topBanner.clickPath!=""
+                                &&column.topBanner.clickPath!="#")
+                            {
+                                targetBlankHtml = " target=\"_blank\"";
+                            }
+
                             columnsHtml += "<div class=\"content mar_20\">\n" +
-                                "    <a href=\""+column.topBanner.clickPath+"\"  target=\"_blank\" ><img src=\""+column.topBanner.httpImgPath+"\" title=\""+column.topBanner.title+"\" width=\"1200\" height=\"110\" /></a>\n" +
+                                "    <a href=\""+column.topBanner.clickPath+"\"  "+targetBlankHtml+" ><img src=\""+column.topBanner.httpImgPath+"\" title=\""+column.topBanner.title+"\" width=\"1200\" height=\"110\" /></a>\n" +
                                 "</div>";
                         }
 
@@ -34,7 +43,15 @@ $(function(){
                                 for(var p=0;p<column.topLabels.length;p++)
                                 {
                                     var topLabek = column.topLabels[p];
-                                    columnsHtml+="<a href=\""+topLabek.clickPath+"\" target=\"_blank\" >"+topLabek.labelName+"</a>";
+
+                                    var targetBlankHtml="";
+                                    if(topLabek.clickPath!=null
+                                        &&topLabek.clickPath!=""
+                                        &&topLabek.clickPath!="#")
+                                    {
+                                        targetBlankHtml = " target=\"_blank\"";
+                                    }
+                                    columnsHtml+="<a href=\""+topLabek.clickPath+"\" "+targetBlankHtml+" >"+topLabek.labelName+"</a>";
                                     if(p+1<column.topLabels.length)
                                     {
                                         columnsHtml+="&nbsp; &nbsp; &nbsp;";
@@ -53,7 +70,14 @@ $(function(){
                                 if(column.columnLeftBannerVOS!=null&&column.columnLeftBannerVOS.length>0) {
                                     for (var s = 0; s < column.columnLeftBannerVOS.length; s++) {
                                         var leftBanner = column.columnLeftBannerVOS[s];
-                                        columnsHtml+=  "   <li><a href=\""+leftBanner.clickPath+"\" target=\"_blank\"><img src=\""+leftBanner.httpImgPath+"\" width=\"211\" height=\"286\" title=\""+leftBanner.title+"\" /></a></li>\n" ;
+                                        var targetBlankHtml="";
+                                        if(leftBanner.clickPath!=null
+                                            &&leftBanner.clickPath!=""
+                                            &&leftBanner.clickPath!="#")
+                                        {
+                                            targetBlankHtml = " target=\"_blank\"";
+                                        }
+                                        columnsHtml+=  "   <li><a href=\""+leftBanner.clickPath+"\" "+targetBlankHtml+"><img src=\""+leftBanner.httpImgPath+"\" width=\"211\" height=\"286\" title=\""+leftBanner.title+"\" /></a></li>\n" ;
                                     }
                                 }
                              columnsHtml+=       "                </ul>\n" +
@@ -67,8 +91,15 @@ $(function(){
                                     {
                                         for(var p=0;p<column.leftLabels.length;p++)
                                         {
-                                            var topLabek = column.leftLabels[p];
-                                            columnsHtml+="<a href=\""+topLabek.clickPath+"\" target=\"_blank\">"+topLabek.labelName+"</a>";
+                                            var leftLabel = column.leftLabels[p];
+                                            var targetBlankHtml="";
+                                            if(leftLabel.clickPath!=null
+                                                &&leftLabel.clickPath!=""
+                                                &&leftLabel.clickPath!="#")
+                                            {
+                                                targetBlankHtml = " target=\"_blank\"";
+                                            }
+                                            columnsHtml+="<a href=\""+leftLabel.clickPath+"\" "+targetBlankHtml+">"+leftLabel.labelName+"</a>";
                                             if(p+1<column.leftLabels.length)
                                             {
                                                 columnsHtml+="&nbsp; &nbsp; &nbsp;";
@@ -84,12 +115,20 @@ $(function(){
                                 {
                                     for(var s=0;s<column.columnRecommendProducts.length;s++) {
                                         var recommendProduct = column.columnRecommendProducts[s];
+
+                                        var targetBlankHtml="";
+                                        if(recommendProduct.clickPath!=null
+                                            &&recommendProduct.clickPath!=""
+                                            &&recommendProduct.clickPath!="#")
+                                        {
+                                            targetBlankHtml = " target=\"_blank\"";
+                                        }
                                         columnsHtml += "            <li>\n" +
-                                            "                <div class=\"name\"><a href=\""+recommendProduct.clickPath+"\" target=\"_blank\">"+recommendProduct.productName+"</a></div>\n" +
+                                            "                <div class=\"name\"><a href=\""+recommendProduct.clickPath+"\" "+targetBlankHtml+">"+recommendProduct.productName+"</a></div>\n" +
                                             "                <div class=\"price\">\n" +
                                             "                    <font>￥<span>"+recommendProduct.productPrice+"</span></font> &nbsp;\n" +
                                             "                </div>\n" +
-                                            "                <div class=\"img\"><a href=\""+recommendProduct.clickPath+"\" target=\"_blank\"><img src=\""+recommendProduct.httpImgPath+"\" width=\"185\" height=\"155\" /></a></div>\n" +
+                                            "                <div class=\"img\"><a href=\""+recommendProduct.clickPath+"\" "+targetBlankHtml+"><img src=\""+recommendProduct.httpImgPath+"\" width=\"185\" height=\"155\" /></a></div>\n" +
                                             "            </li>\n";
                                     }
                                 }
@@ -100,11 +139,27 @@ $(function(){
                                 "        <ul>\n" ;
                                 if(column.rightTopBanner!=null)
                                 {
-                                    columnsHtml+=  "            <li><a href=\""+column.rightTopBanner.clickPath+"\" target=\"_blank\"><img src=\""+column.rightTopBanner.httpImgPath+"\" title=\""+column.rightTopBanner.title+"\" width=\"260\" height=\"220\" /></a></li>\n" ;
+
+                                    var targetBlankHtml="";
+                                    if(column.rightTopBanner.clickPath!=null
+                                        &&column.rightTopBanner.clickPath!=""
+                                        &&column.rightTopBanner.clickPath!="#")
+                                    {
+                                        targetBlankHtml = " target=\"_blank\"";
+                                    }
+                                    columnsHtml+=  "            <li><a href=\""+column.rightTopBanner.clickPath+"\" "+targetBlankHtml+"><img src=\""+column.rightTopBanner.httpImgPath+"\" title=\""+column.rightTopBanner.title+"\" width=\"260\" height=\"220\" /></a></li>\n" ;
                                 }
                                 if(column.rightBottomBanner!=null)
                                 {
-                                    columnsHtml+=  "            <li><a href=\""+column.rightBottomBanner.clickPath+"\" target=\"_blank\"><img src=\""+column.rightBottomBanner.httpImgPath+"\" title=\""+column.rightBottomBanner.title+"\" width=\"260\" height=\"220\" /></a></li>\n" ;
+
+                                    var targetBlankHtml="";
+                                    if(column.rightBottomBanner.clickPath!=null
+                                        &&column.rightBottomBanner.clickPath!=""
+                                        &&column.rightBottomBanner.clickPath!="#")
+                                    {
+                                        targetBlankHtml = " target=\"_blank\"";
+                                    }
+                                    columnsHtml+=  "            <li><a href=\""+column.rightBottomBanner.clickPath+"\" "+targetBlankHtml+"><img src=\""+column.rightBottomBanner.httpImgPath+"\" title=\""+column.rightBottomBanner.title+"\" width=\"260\" height=\"220\" /></a></li>\n" ;
                                 }
                                 columnsHtml+=        "        </ul>\n" +
                                 "    </div>\n" +
@@ -114,8 +169,17 @@ $(function(){
                                 if(column.bottomBanner!=null
                                     &&column.bottomBanner.imgPath!=null
                                     &&column.bottomBanner.imgPath!="") {
+
+                                    var targetBlankHtml="";
+                                    if(column.bottomBanner.clickPath!=null
+                                        &&column.bottomBanner.clickPath!=""
+                                        &&column.bottomBanner.clickPath!="#")
+                                    {
+                                        targetBlankHtml = " target=\"_blank\"";
+                                    }
+
                                     columnsHtml += "<div class=\"content mar_20\">\n" +
-                                        "    <a href=\""+column.topBanner.clickPath+"\"  target=\"_blank\" > <img src=\""+column.bottomBanner.httpImgPath+"\" title=\""+column.bottomBanner.title+"\" width=\"1200\" height=\"110\" /></a>\n" +
+                                        "    <a href=\""+column.topBanner.clickPath+"\"  "+targetBlankHtml+" > <img src=\""+column.bottomBanner.httpImgPath+"\" title=\""+column.bottomBanner.title+"\" width=\"1200\" height=\"110\" /></a>\n" +
                                         "</div>";
                                 }
                     }
