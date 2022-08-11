@@ -2,10 +2,10 @@ package com.toucan.shopping.modules.column.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.column.page.ColumnPageInfo;
-import com.toucan.shopping.modules.column.redis.ColumnLockKey;
-import com.toucan.shopping.modules.column.service.ColumnService;
-import com.toucan.shopping.modules.column.vo.ColumnVO;
+import com.toucan.shopping.modules.column.page.HotProductPageInfo;
+import com.toucan.shopping.modules.column.redis.HotProductLockKey;
+import com.toucan.shopping.modules.column.service.HotProductService;
+import com.toucan.shopping.modules.column.vo.HotProductVO;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -26,18 +26,18 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 栏目控制器
+ * 热门商品
  * @author majian
  */
 @RestController
-@RequestMapping("/column")
-public class ColumnController {
+@RequestMapping("/hot/product")
+public class HotProductController {
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private ColumnService columnService;
+    private HotProductService hotProductService;
 
     @Autowired
     private SkylarkLock skylarkLock;
@@ -72,8 +72,8 @@ public class ColumnController {
             return resultObjectVO;
         }
         try {
-            ColumnPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnPageInfo.class);
-            PageInfo<ColumnVO> pageInfo =  columnService.queryListPage(queryPageInfo);
+            HotProductPageInfo queryPageInfo = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductPageInfo.class);
+            PageInfo<HotProductVO> pageInfo =  hotProductService.queryListPage(queryPageInfo);
             resultObjectVO.setData(pageInfo);
         }catch(Exception e)
         {
@@ -102,39 +102,32 @@ public class ColumnController {
             resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
-        ColumnVO columnVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ColumnVO.class);
-        if(StringUtils.isEmpty(columnVO.getTitle()))
+        HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
+        if(StringUtils.isEmpty(hotProductVO.getProductName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目标题不能为空");
+            resultObjectVO.setMsg("商品名称不能为空");
             return resultObjectVO;
         }
-        if(StringUtils.isEmpty(columnVO.getColumnTypeCode()))
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("栏目类型编码不能为空");
-            return resultObjectVO;
-        }
-        if(StringUtils.isEmpty(columnVO.getAppCode()))
+        if(StringUtils.isEmpty(hotProductVO.getAppCode()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("所属应用不能为空");
             return resultObjectVO;
         }
-        String lockKey = columnVO.getAppCode()+"_"+columnVO.getColumnTypeCode();
+        String lockKey = hotProductVO.getAppCode();
         try {
-            boolean lockStatus = skylarkLock.lock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
+            boolean lockStatus = skylarkLock.lock(HotProductLockKey.getSaveLockKey(lockKey), lockKey);
             if (!lockStatus) {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
 
-            ColumnVO query = new ColumnVO();
-            query.setTitle(columnVO.getTitle());
-            query.setColumnTypeCode(columnVO.getColumnTypeCode());
-            query.setAppCode(columnVO.getAppCode());
-            List<ColumnVO> columnVOS = columnService.queryList(query);
+            HotProductVO query = new HotProductVO();
+            query.setProductName(hotProductVO.getProductName());
+            query.setAppCode(hotProductVO.getAppCode());
+            List<HotProductVO> columnVOS = hotProductService.queryList(query);
             if(!CollectionUtils.isEmpty(columnVOS))
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -142,17 +135,17 @@ public class ColumnController {
                 return resultObjectVO;
             }
 
-            columnVO.setId(idGenerator.id());
-            columnVO.setDeleteStatus((short)0);
-            columnVO.setCreateDate(new Date());
-            int ret = columnService.save(columnVO);
+            hotProductVO.setId(idGenerator.id());
+            hotProductVO.setDeleteStatus((short)0);
+            hotProductVO.setCreateDate(new Date());
+            int ret = hotProductService.save(hotProductVO);
             if(ret<=0)
             {
-                logger.warn("保存栏目失败 requestJson{} id{}",requestJsonVO.getEntityJson(),columnVO.getId());
+                logger.warn("保存热门商品失败 requestJson{} id{}",requestJsonVO.getEntityJson(),hotProductVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
-            resultObjectVO.setData(columnVO);
+            resultObjectVO.setData(hotProductVO);
 
         }catch(Exception e)
         {
@@ -160,7 +153,7 @@ public class ColumnController {
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
         }finally{
-            skylarkLock.unLock(ColumnLockKey.getSaveLockKey(lockKey), lockKey);
+            skylarkLock.unLock(HotProductLockKey.getSaveLockKey(lockKey), lockKey);
         }
         return resultObjectVO;
     }

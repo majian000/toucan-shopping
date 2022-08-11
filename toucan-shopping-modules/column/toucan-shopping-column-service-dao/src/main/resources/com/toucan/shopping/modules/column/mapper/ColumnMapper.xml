@@ -54,10 +54,10 @@
         </if>
 
         <if test="startShowDate!=null">
-            <![CDATA[ and ba.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.start_show_date >=  DATE_FORMAT(#{startShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
         <if test="endShowDate!=null">
-            <![CDATA[ and ba.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.end_show_date <=  DATE_FORMAT(#{endShowDate} , '%Y-%m-%d %H:%i:%s')    ]]>
         </if>
 
 
