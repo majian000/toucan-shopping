@@ -86,9 +86,9 @@
          insert into t_hot_product(id,remark,create_date,create_admin_id,app_code,product_sort,
         product_name,product_price,click_path,img_path,position,type,show_status,hot_product_sort,start_show_date,end_show_date)
 
-         values((#{id},#{remark},#{createDate},#{createAdminId}
+         values(#{id},#{remark},#{createDate},#{createAdminId}
             ,#{appCode},#{productSort},#{productName},#{productPrice},#{clickPath},#{imgPath},#{position},
-            #{type},#{showStatus},#{hotProductSort},#{startShowDate},#{endShowDate}))
+            #{type},#{showStatus},#{hotProductSort},#{startShowDate},#{endShowDate})
     </insert>
 
 
@@ -125,6 +125,10 @@
             <include refid="queryListWhere" />
 
         </where>
+    </select>
+
+    <select id="findById" resultMap="hotProductMap" parameterType="java.lang.Long">
+        select t.* from t_hot_product t where t.delete_status=0 and t.id = #{id} limit 0,1
     </select>
 
 

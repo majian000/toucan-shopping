@@ -37,4 +37,6 @@ public interface HotProductMapper {
 
     List<HotProductVO> queryList(HotProductVO query);
 
+    HotProduct findById(Long id);
+
 }

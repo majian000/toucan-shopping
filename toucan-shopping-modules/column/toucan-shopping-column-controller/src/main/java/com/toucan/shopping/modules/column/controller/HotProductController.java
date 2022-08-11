@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.column.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.modules.column.entity.HotProduct;
 import com.toucan.shopping.modules.column.page.HotProductPageInfo;
 import com.toucan.shopping.modules.column.redis.HotProductLockKey;
 import com.toucan.shopping.modules.column.service.HotProductService;
@@ -17,10 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -154,6 +152,56 @@ public class HotProductController {
             resultObjectVO.setMsg("请稍后重试");
         }finally{
             skylarkLock.unLock(HotProductLockKey.getSaveLockKey(lockKey), lockKey);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            HotProduct hotProduct = JSONObject.parseObject(requestVo.getEntityJson(),HotProduct.class);
+            if(hotProduct.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询是否存在该对象
+            hotProduct = hotProductService.findById(hotProduct.getId());
+            if(hotProduct==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("不存在!");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(hotProduct);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
         }
         return resultObjectVO;
     }

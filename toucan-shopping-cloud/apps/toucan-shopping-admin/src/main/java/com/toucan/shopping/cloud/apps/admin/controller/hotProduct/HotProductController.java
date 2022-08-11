@@ -7,19 +7,17 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignAdminService;
 import com.toucan.shopping.cloud.admin.auth.api.feign.service.FeignFunctionService;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
-import com.toucan.shopping.cloud.content.api.feign.service.FeignColumnAreaService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService;
 import com.toucan.shopping.modules.admin.auth.vo.AdminVO;
 import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
-import com.toucan.shopping.modules.column.constant.PcIndexColumnConstant;
-import com.toucan.shopping.modules.column.entity.ColumnArea;
-import com.toucan.shopping.modules.column.page.ColumnPageInfo;
+import com.toucan.shopping.modules.column.page.HotProductPageInfo;
 import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.AuthHeaderUtil;
+import com.toucan.shopping.modules.common.util.ImageUtils;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
@@ -32,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -67,9 +66,6 @@ public class HotProductController extends UIController {
     @Autowired
     private FeignAreaService feignAreaService;
 
-    @Autowired
-    private FeignColumnAreaService feignColumnAreaService;
-
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -100,9 +96,27 @@ public class HotProductController extends UIController {
     @RequestMapping(value = "/editPage/{id}",method = RequestMethod.GET)
     public String editPage(HttpServletRequest request,@PathVariable Long id)
     {
-        request.setAttribute("id",id);
+        try {
+            HotProductVO hotProductVO = new HotProductVO();
+            hotProductVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
+            ResultObjectVO resultObjectVO = feignHotProductService.findById(requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                hotProductVO = resultObjectVO.formatData(HotProductVO.class);
+                if(hotProductVO!=null)
+                {
+                    hotProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+hotProductVO.getImgPath());
+                }
+                request.setAttribute("model", hotProductVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
         return "pages/hotProduct/edit.html";
     }
+
+
 
 
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
@@ -116,21 +130,19 @@ public class HotProductController extends UIController {
 
     /**
      * 保存
-     * @param pcIndexColumnVO
+     * @param hotProductVO
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/save",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request,@RequestBody PcIndexColumnVO pcIndexColumnVO)
+    public ResultObjectVO save(HttpServletRequest request,@RequestBody HotProductVO hotProductVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
-            pcIndexColumnVO.setAppCode(toucan.getShoppingPC().getAppCode());
-            pcIndexColumnVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
-            pcIndexColumnVO.setPosition(1);
-            pcIndexColumnVO.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, pcIndexColumnVO);
+            hotProductVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            hotProductVO.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
             resultObjectVO = feignHotProductService.save(requestJsonVO);
         }catch(Exception e)
         {
@@ -149,13 +161,11 @@ public class HotProductController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO update(HttpServletRequest request, @RequestBody PcIndexColumnVO entity)
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody HotProductVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            entity.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
-            entity.setPosition(1);
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
 //            resultObjectVO = feignHotProductService.update(requestJsonVO);
@@ -178,7 +188,7 @@ public class HotProductController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
     @RequestMapping(value = "/findById",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO findById(HttpServletRequest request, @RequestBody PcIndexColumnVO entity)
+    public ResultObjectVO findById(HttpServletRequest request, @RequestBody HotProductVO entity)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
@@ -206,13 +216,11 @@ public class HotProductController extends UIController {
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public TableVO list(HttpServletRequest request, ColumnPageInfo pageInfo)
+    public TableVO list(HttpServletRequest request, HotProductPageInfo pageInfo)
     {
         TableVO tableVO = new TableVO();
         try {
             pageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
-            pageInfo.setColumnTypeCode(PcIndexColumnConstant.PC_INDEX_PRODUCT_RECOMMENT_COLUMN_TYPE_CODE);
-            pageInfo.setPosition(1);
 
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),pageInfo);
             ResultObjectVO resultObjectVO = feignHotProductService.queryListPage(requestJsonVO);
@@ -222,13 +230,13 @@ public class HotProductController extends UIController {
                 {
                     Map<String,Object> resultObjectDataMap = (Map<String,Object>)resultObjectVO.getData();
                     tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total")!=null?resultObjectDataMap.get("total"):"0")));
-                    List<ColumnVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),ColumnVO.class);
+                    List<HotProductVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")),HotProductVO.class);
 
                     //查询创建人和修改人
                     List<String> adminIdList = new ArrayList<String>();
                     for(int i=0;i<list.size();i++)
                     {
-                        ColumnVO columnVO = list.get(i);
+                        HotProductVO columnVO = list.get(i);
                         if(columnVO.getCreateAdminId()!=null) {
                             adminIdList.add(columnVO.getCreateAdminId());
                         }
@@ -248,18 +256,22 @@ public class HotProductController extends UIController {
                         List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
                         if(!CollectionUtils.isEmpty(adminVOS))
                         {
-                            for(ColumnVO columnVO:list)
+                            for(HotProductVO hotProductVO:list)
                             {
                                 for(AdminVO adminVO:adminVOS)
                                 {
-                                    if(columnVO.getCreateAdminId()!=null&&columnVO.getCreateAdminId().equals(adminVO.getAdminId()))
+                                    if(hotProductVO.getCreateAdminId()!=null&&hotProductVO.getCreateAdminId().equals(adminVO.getAdminId()))
                                     {
-                                        columnVO.setCreateAdminName(adminVO.getUsername());
+                                        hotProductVO.setCreateAdminName(adminVO.getUsername());
                                     }
-                                    if(columnVO.getUpdateAdminId()!=null&&columnVO.getUpdateAdminId().equals(adminVO.getAdminId()))
+                                    if(hotProductVO.getUpdateAdminId()!=null&&hotProductVO.getUpdateAdminId().equals(adminVO.getAdminId()))
                                     {
-                                        columnVO.setUpdateAdminName(adminVO.getUsername());
+                                        hotProductVO.setUpdateAdminName(adminVO.getUsername());
                                     }
+                                }
+
+                                if(StringUtils.isNotEmpty(hotProductVO.getImgPath())) {
+                                    hotProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix() + hotProductVO.getImgPath());
                                 }
                             }
                         }
@@ -282,113 +294,6 @@ public class HotProductController extends UIController {
 
 
 
-    public void setTreeNodeSelect(AtomicLong id,AreaTreeVO parentTreeVO,List<AreaTreeVO> areaTreeVOList,List<ColumnArea> columnAreas)
-    {
-        for(AreaTreeVO areaTreeVO:areaTreeVOList)
-        {
-            areaTreeVO.setId(id.incrementAndGet());
-            areaTreeVO.setNodeId(areaTreeVO.getId());
-            areaTreeVO.setPid(parentTreeVO.getId());
-            areaTreeVO.setParentId(areaTreeVO.getPid());
-            for(ColumnArea columnArea:columnAreas) {
-                if(areaTreeVO.getCode().equals(columnArea.getAreaCode())) {
-                    //设置节点被选中
-                    areaTreeVO.getState().setChecked(true);
-                    break;
-                }
-            }
-            if(!CollectionUtils.isEmpty(areaTreeVO.getChildren()))
-            {
-                setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(),columnAreas);
-            }
-        }
-    }
-
-
-    /**
-     * 查询地区树
-     * @param request
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
-    @RequestMapping(value = "/query/area/tree",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO queryAreaTree(HttpServletRequest request,String columnId)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            //查询地区树
-            AreaVO query = new AreaVO();
-            query.setAppCode(toucan.getShoppingPC().getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),query);
-
-            resultObjectVO = feignAreaService.queryTree(requestJsonVO.sign(),requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                List<AreaTreeVO> areaTreeVOList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), AreaTreeVO.class);
-
-                //重新设置ID,由于这个树是多个表合并而成,可能会存在ID重复
-                AtomicLong id = new AtomicLong();
-                ColumnAreaVO queryBannerAreaVo = new ColumnAreaVO();
-                if(StringUtils.isNotEmpty(columnId)) {
-                    queryBannerAreaVo.setColumnId(Long.parseLong(columnId));
-                }
-                requestJsonVO = RequestJsonVOGenerator.generator(appCode,queryBannerAreaVo);
-
-                resultObjectVO = feignColumnAreaService.queryColumnAreaList(requestJsonVO.sign(),requestJsonVO);
-                List<AreaTreeVO> releaseAreaTreeVOList = new ArrayList<AreaTreeVO>();
-                if(resultObjectVO.isSuccess())
-                {
-                    //只保留省市节点
-                    AreaTreeVO rootTree = areaTreeVOList.get(0);
-                    if(!CollectionUtils.isEmpty(rootTree.getChildren())) {
-                        List<AreaTreeVO> rootChilren = JSONArray.parseArray(JSONObject.toJSONString(rootTree.getChildren()), AreaTreeVO.class);
-                        for (AreaTreeVO areaTreeVO : rootChilren) {
-                            //直辖市
-                            if (areaTreeVO.getIsMunicipality().shortValue() == 1) {
-                                areaTreeVO.setChildren(null);
-                            } else { //省
-                                //遍历所有市节点,删除区县节点
-                                if (!CollectionUtils.isEmpty(areaTreeVO.getChildren())) {
-                                    List<AreaTreeVO> chilren = JSONArray.parseArray(JSONObject.toJSONString(areaTreeVO.getChildren()), AreaTreeVO.class);
-                                    for (AreaVO cityTreeVO : chilren) {
-                                        //删除区县节点
-                                        cityTreeVO.setChildren(null);
-                                    }
-                                    areaTreeVO.setChildren(chilren);
-                                }
-                            }
-                        }
-                        rootTree.setChildren(rootChilren);
-                    }
-                    releaseAreaTreeVOList.add(rootTree);
-                    List<ColumnArea> columnAreas = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ColumnArea.class);
-                    if(!CollectionUtils.isEmpty(columnAreas)) {
-                        for(AreaTreeVO areaTreeVO:releaseAreaTreeVOList) {
-                            areaTreeVO.setId(id.incrementAndGet());
-                            areaTreeVO.setNodeId(areaTreeVO.getId());
-                            areaTreeVO.setText(areaTreeVO.getTitle());
-                            for(ColumnArea columnArea:columnAreas) {
-                                if(areaTreeVO.getCode().equals(columnArea.getAreaCode())) {
-                                    //设置节点被选中
-                                    areaTreeVO.getState().setChecked(true);
-                                }
-                            }
-                            setTreeNodeSelect(id,areaTreeVO,(List)areaTreeVO.getChildren(), columnAreas);
-                        }
-                    }
-                }
-                resultObjectVO.setData(releaseAreaTreeVOList);
-            }
-            return resultObjectVO;
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请求失败");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
 
 
     /**
@@ -409,7 +314,7 @@ public class HotProductController extends UIController {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 return resultObjectVO;
             }
-            ColumnVO columnVO =new ColumnVO();
+            HotProductVO columnVO =new HotProductVO();
             columnVO.setId(Long.parseLong(id));
 
             String entityJson = JSONObject.toJSONString(columnVO);
@@ -427,6 +332,47 @@ public class HotProductController extends UIController {
         return resultObjectVO;
     }
 
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping("/upload/img")
+    @ResponseBody
+    public ResultObjectVO  uploadImg(@RequestParam("file") MultipartFile file)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        resultObjectVO.setCode(0);
+        try{
+            String fileName = file.getOriginalFilename();
+            String fileExt = "jpg";
+            if(StringUtils.isNotEmpty(fileName)&&fileName.indexOf(".")!=-1)
+            {
+                fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+            }
+            if(!ImageUtils.isImage(file.getOriginalFilename()))
+            {
+                throw new RuntimeException("只能上传JPG、JPEG、PNG、GIF、BMP格式");
+            }
+            String groupPath = imageUploadService.uploadFile(file.getBytes(),fileExt);
+
+            if(StringUtils.isEmpty(groupPath))
+            {
+                throw new RuntimeException("上传失败");
+            }
+            HotProductVO hotProductVO = new HotProductVO();
+            hotProductVO.setImgPath(groupPath);
+            hotProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+groupPath);
+            resultObjectVO.setData(hotProductVO);
+        }catch (Exception e)
+        {
+            resultObjectVO.setCode(1);
+            resultObjectVO.setMsg("上传失败");
+            logger.warn(e.getMessage(),e);
+        }
+
+        return resultObjectVO;
+    }
 
 
 }

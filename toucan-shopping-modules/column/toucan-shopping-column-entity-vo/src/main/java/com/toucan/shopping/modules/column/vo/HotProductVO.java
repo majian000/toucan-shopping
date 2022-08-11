@@ -14,4 +14,8 @@ public class HotProductVO extends HotProduct {
 
     private String httpImgPath; //外网访问地址
 
+
+    private String createAdminName; //创建人姓名
+    private String updateAdminName; //修改人姓名
+
 }

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
+    <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<span th:replace="common_page::common"></span>
+
+<div class="layui-form layuimini-form">
+    <input type="hidden" name="id" id="id" th:value="${model.id}">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="productName" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入商品名称" th:value="${model.productName}" class="layui-input">
+            <tip>填写商品名称。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品价格</label>
+        <div class="layui-input-block">
+            <input type="text" name="productPrice" lay-verify="required" maxlength="50" lay-reqtext="不能为空" placeholder="请输入商品价格" th:value="${model.productPrice}" class="layui-input">
+            <tip>填写商品价格。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">点击跳转</label>
+        <div class="layui-input-block">
+            <input type="text" name="clickPath" lay-verify="required" maxlength="255" lay-reqtext="不能为空" placeholder="请输入点击跳转" th:value="${model.clickPath}"  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">预览图</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="uploadBannerImg">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        <input type="hidden" id="imgPath" name="imgPath" th:value="${model.imgPath}" >
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">预览</label>
+        <div class="layui-input-block">
+            <img  id="previewBannerImg" th:src="${model.httpImgPath}" th:width="240" th:height="220">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">开始展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" th:value="${model.startShowDate}" readonly >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">结束展示时间</label>
+        <div class="layui-input-block">
+            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" th:value="${model.endShowDate}" readonly >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">显示状态</label>
+        <div class="layui-input-block" th:if="${model.showStatus eq 1}">
+            <select name="showStatus" lay-verify="required" lay-search="">
+                <option value="1" selected>显示</option>
+                <option value="0">隐藏</option>
+            </select>
+        </div>
+        <div class="layui-input-block" th:if="${model.showStatus eq 0}">
+            <select name="showStatus" lay-verify="required" lay-search="">
+                <option value="1" >显示</option>
+                <option value="0" selected>隐藏</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block" th:if="${model.type eq 1}" >
+            <input type="radio" name="type" value="1" title="PC端" checked="">
+            <input type="radio" name="type" value="2" title="移动端">
+        </div>
+
+        <div class="layui-input-block" th:if="${model.type eq 2}" >
+            <input type="radio" name="type" value="1" title="PC端" >
+            <input type="radio" name="type" value="2" title="移动端" checked="" >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置</label>
+        <div class="layui-input-block" th:if="${model.position eq 1}" >
+            <input type="radio" name="position" value="1" title="门户首页" checked="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="hotProductSort"    placeholder="请输入排序" th:value="${model.hotProductSort}"  class="layui-input" lay-verify="number">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" maxlength="255" th:text="${model.remark}" placeholder="请输入备注信息"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script>
+    layui.config({
+        base: basePath+'/lib/layui_ext/dtree/' //配置 layui 第三方扩展组件存放的基础目录
+    }).extend({
+        dtree: 'dtree' //定义该组件模块名
+    }).use(['form','tree','dtree','upload','laydate'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        var upload = layui.upload;
+        var dtree = layui.dtree;
+        var areaTree;
+        var areaTreeDataArray = new Array();
+        var areaArray =  new Array();
+        var laydate = layui.laydate;
+        var loadding;
+
+        var selectAreaCodes = $("#selectAreaCodes").val();
+        if(selectAreaCodes!=null)
+        {
+            var selectAreaCodeArray =selectAreaCodes.split(",");
+            if(selectAreaCodeArray!=null) {
+                for (var i = 0; i < selectAreaCodeArray.length; i++) {
+                    areaArray[i]={code:selectAreaCodeArray[i]};
+                }
+            }
+        }
+
+
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#startShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //初始化时间控件
+        laydate.render({
+            elem: '#endShowDate' //指定元素
+            ,type: 'datetime'
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            loadding = layer.load();
+            if(data.field.imgPath==null||data.field.imgPath=="")
+            {
+                layer.close(loadding);
+                layer.msg("请上传轮播图");
+                return false;
+            }
+
+            $.ajax({
+                url:"[[@{/hotProduct/update}]]",
+                contentType: "application/json; charset=utf-8",
+                type:'POST',
+                data:JSON.stringify(data.field),
+                success:function(data){
+                    if(data.code<=0) {
+                        layer.msg(data.msg);
+                        layer.close(loadding);
+                        return false;
+                    }
+                    var index = layer.alert(data.msg, {
+                        title: '提示信息'
+                    }, function () {
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+
+                    });
+                    layer.close(loadding);
+                },
+                complete:function(data)
+                {
+                    layer.close(loadding);
+                }
+            });
+            return false;
+        });
+
+
+
+
+
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadBannerImg' //绑定元素
+            ,url: '/hotProduct/upload/img' //上传接口
+            ,done: function(res){
+                if(res.code==1)
+                {
+                    layer.msg(res.msg);
+                }
+                $("#previewBannerImg").attr("src",res.data.httpImgPath);
+                $("#imgPath").val(res.data.imgPath);
+            },
+            before:function()
+            {
+                loadding = layer.load();
+            }
+            ,error: function(){
+                layer.msg("上传异常");
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

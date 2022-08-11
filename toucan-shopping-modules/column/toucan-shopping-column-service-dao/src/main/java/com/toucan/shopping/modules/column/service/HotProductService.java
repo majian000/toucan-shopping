@@ -28,4 +28,6 @@ public interface HotProductService {
 
     List<HotProductVO> queryList(HotProductVO query);
 
+    HotProduct findById(Long id);
+
 }

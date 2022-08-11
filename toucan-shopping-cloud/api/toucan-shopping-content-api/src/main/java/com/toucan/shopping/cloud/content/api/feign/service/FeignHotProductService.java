@@ -1,5 +1,6 @@
 package com.toucan.shopping.cloud.content.api.feign.service;
 
+import com.toucan.shopping.cloud.content.api.feign.fallback.FeignHotProductServiceFallbackFactory;
 import com.toucan.shopping.cloud.content.api.feign.fallback.FeignPcIndexColumnServiceFallbackFactory;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * 热门商品服务
  */
-@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-content-proxy/hot/product",fallbackFactory = FeignPcIndexColumnServiceFallbackFactory.class)
+@FeignClient(value = "toucan-shopping-gateway",path = "/toucan-shopping-content-proxy/hot/product",fallbackFactory = FeignHotProductServiceFallbackFactory.class)
 public interface FeignHotProductService {
 
 
@@ -27,5 +28,15 @@ public interface FeignHotProductService {
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
 }

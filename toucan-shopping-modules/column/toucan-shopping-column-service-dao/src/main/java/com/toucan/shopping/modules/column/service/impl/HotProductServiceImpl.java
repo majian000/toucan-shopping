@@ -41,4 +41,9 @@ public class HotProductServiceImpl implements HotProductService {
     public List<HotProductVO> queryList(HotProductVO query) {
         return hotProductMapper.queryList(query);
     }
+
+    @Override
+    public HotProduct findById(Long id) {
+        return hotProductMapper.findById(id);
+    }
 }
