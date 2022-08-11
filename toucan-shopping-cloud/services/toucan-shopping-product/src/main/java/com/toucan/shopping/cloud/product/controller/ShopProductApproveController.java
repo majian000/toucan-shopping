@@ -1056,6 +1056,8 @@ public class ShopProductApproveController {
             shopProduct.setId(shopProductId);
             shopProduct.setUuid(UUID.randomUUID().toString().replace("-", ""));
             shopProduct.setProductApproveId(shopProductApprove.getId());
+            shopProduct.setProductId(shopProductApproveVO.getProductId());
+            shopProduct.setProductUuid(shopProductApproveVO.getProductUuid());
             ret = shopProductService.save(shopProduct);
 
             if(ret>0) {
