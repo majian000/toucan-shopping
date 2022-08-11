@@ -39,4 +39,12 @@ public interface HotProductService {
      */
     int update(HotProduct hotProduct);
 
+
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
 }

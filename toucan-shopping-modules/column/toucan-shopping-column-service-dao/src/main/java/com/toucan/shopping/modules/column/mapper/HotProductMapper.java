@@ -40,4 +40,6 @@ public interface HotProductMapper {
     HotProduct findById(Long id);
 
     int update(HotProduct hotProduct);
+
+    int deleteById(Long id);
 }

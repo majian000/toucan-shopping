@@ -51,4 +51,9 @@ public class HotProductServiceImpl implements HotProductService {
     public int update(HotProduct hotProduct) {
         return hotProductMapper.update(hotProduct);
     }
+
+    @Override
+    public int deleteById(Long id) {
+        return hotProductMapper.deleteById(id);
+    }
 }

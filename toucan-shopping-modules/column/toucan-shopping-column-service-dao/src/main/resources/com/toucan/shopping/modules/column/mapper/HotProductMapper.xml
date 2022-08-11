@@ -138,4 +138,9 @@
     </update>
 
 
+    <update id="deleteById">
+        update t_hot_product  set delete_status=1 where id=#{id}  and delete_status=0
+    </update>
+
+
 </mapper>

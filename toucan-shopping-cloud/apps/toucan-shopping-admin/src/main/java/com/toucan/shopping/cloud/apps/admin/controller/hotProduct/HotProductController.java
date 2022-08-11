@@ -123,7 +123,23 @@ public class HotProductController extends UIController {
     @RequestMapping(value = "/showPage/{id}",method = RequestMethod.GET)
     public String showPage(HttpServletRequest request,@PathVariable Long id)
     {
-        request.setAttribute("id",id);
+        try {
+            HotProductVO hotProductVO = new HotProductVO();
+            hotProductVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, hotProductVO);
+            ResultObjectVO resultObjectVO = feignHotProductService.findById(requestJsonVO);
+            if (resultObjectVO.isSuccess()) {
+                hotProductVO = resultObjectVO.formatData(HotProductVO.class);
+                if(hotProductVO!=null)
+                {
+                    hotProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+hotProductVO.getImgPath());
+                }
+                request.setAttribute("model", hotProductVO);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
         return "pages/hotProduct/show.html";
     }
 
@@ -179,33 +195,6 @@ public class HotProductController extends UIController {
     }
 
 
-
-    /**
-     * 修改
-     * @param entity
-     * @return
-     */
-    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/findById",method = RequestMethod.POST)
-    @ResponseBody
-    public ResultObjectVO findById(HttpServletRequest request, @RequestBody HotProductVO entity)
-    {
-        ResultObjectVO resultObjectVO = new ResultObjectVO();
-        try {
-            entity.setAppCode(toucan.getShoppingPC().getAppCode());
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignHotProductService.findById(requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-            }
-        }catch(Exception e)
-        {
-            resultObjectVO.setMsg("请重试");
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            logger.warn(e.getMessage(),e);
-        }
-        return resultObjectVO;
-    }
 
 
     /**
@@ -322,7 +311,7 @@ public class HotProductController extends UIController {
             requestVo.setAppCode(appCode);
             requestVo.setEntityJson(entityJson);
 
-//            resultObjectVO = feignHotProductService.deleteById(requestVo);
+            resultObjectVO = feignHotProductService.deleteById(requestVo);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");
