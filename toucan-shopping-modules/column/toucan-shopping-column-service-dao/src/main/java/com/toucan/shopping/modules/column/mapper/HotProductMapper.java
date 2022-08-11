@@ -39,4 +39,5 @@ public interface HotProductMapper {
 
     HotProduct findById(Long id);
 
+    int update(HotProduct hotProduct);
 }

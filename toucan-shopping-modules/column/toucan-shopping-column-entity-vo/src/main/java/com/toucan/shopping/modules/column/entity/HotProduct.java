@@ -32,7 +32,6 @@ public class HotProduct {
     private String createAdminId; //创建人ID
     private String updateAdminId; //修改人ID
 
-    private Long productSort; //排序
 
     private String remark; //备注
 

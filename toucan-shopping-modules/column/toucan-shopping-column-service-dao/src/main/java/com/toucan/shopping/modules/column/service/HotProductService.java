@@ -30,4 +30,13 @@ public interface HotProductService {
 
     HotProduct findById(Long id);
 
+
+
+    /**
+     * 修改
+     * @param hotProduct
+     * @return
+     */
+    int update(HotProduct hotProduct);
+
 }

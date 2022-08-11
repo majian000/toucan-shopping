@@ -39,4 +39,8 @@ public interface FeignHotProductService {
     @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
 
+
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
 }

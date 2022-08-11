@@ -168,7 +168,7 @@ public class HotProductController extends UIController {
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
-//            resultObjectVO = feignHotProductService.update(requestJsonVO);
+            resultObjectVO = feignHotProductService.update(requestJsonVO);
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

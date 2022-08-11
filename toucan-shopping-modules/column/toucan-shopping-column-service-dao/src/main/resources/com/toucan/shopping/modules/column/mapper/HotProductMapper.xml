@@ -11,7 +11,6 @@
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
-        <result column="product_sort" jdbcType="BIGINT" property="productSort" />
         <result column="product_name" jdbcType="VARCHAR" property="productName" />
         <result column="product_price" jdbcType="VARCHAR" property="productPrice" />
         <result column="click_path" jdbcType="VARCHAR" property="clickPath" />
@@ -70,24 +69,24 @@
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_hot_product(id,remark,create_date,create_admin_id,app_code,product_sort,
+        insert into t_hot_product(id,remark,create_date,create_admin_id,app_code,
         product_name,product_price,click_path,img_path,position,type,show_status,hot_product_sort,start_show_date,end_show_date)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.remark},#{entity.createDate},#{entity.createAdminId}
-            ,#{entity.appCode},#{entity.productSort},#{entity.productName},#{entity.productPrice},#{entity.clickPath},#{entity.imgPath},#{entity.position},
+            ,#{entity.appCode},#{entity.productName},#{entity.productPrice},#{entity.clickPath},#{entity.imgPath},#{entity.position},
             #{entity.type},#{entity.showStatus},#{entity.hotProductSort},#{entity.startShowDate},#{entity.endShowDate})
         </foreach>
 
     </insert>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.HotProduct" useGeneratedKeys="true" keyProperty="id" >
-         insert into t_hot_product(id,remark,create_date,create_admin_id,app_code,product_sort,
+         insert into t_hot_product(id,remark,create_date,create_admin_id,app_code,
         product_name,product_price,click_path,img_path,position,type,show_status,hot_product_sort,start_show_date,end_show_date)
 
          values(#{id},#{remark},#{createDate},#{createAdminId}
-            ,#{appCode},#{productSort},#{productName},#{productPrice},#{clickPath},#{imgPath},#{position},
+            ,#{appCode},#{productName},#{productPrice},#{clickPath},#{imgPath},#{position},
             #{type},#{showStatus},#{hotProductSort},#{startShowDate},#{endShowDate})
     </insert>
 
@@ -130,6 +129,13 @@
     <select id="findById" resultMap="hotProductMap" parameterType="java.lang.Long">
         select t.* from t_hot_product t where t.delete_status=0 and t.id = #{id} limit 0,1
     </select>
+
+    <update id="update" parameterType="com.toucan.shopping.modules.column.entity.HotProduct">
+        update t_hot_product set remark =#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId},
+        product_name=#{productName},product_price=#{productPrice},click_path=#{clickPath},img_path=#{imgPath},
+        position=#{position},type=#{type},show_status=#{showStatus},hot_product_sort=#{hotProductSort},start_show_date=#{startShowDate},end_show_date=#{endShowDate}
+         where id = #{id} and delete_status=0
+    </update>
 
 
 </mapper>

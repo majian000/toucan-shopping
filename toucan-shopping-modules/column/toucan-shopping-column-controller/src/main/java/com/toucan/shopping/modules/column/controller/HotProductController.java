@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -205,6 +206,90 @@ public class HotProductController {
         }
         return resultObjectVO;
     }
+
+
+
+
+
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    @Transactional
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        HotProductVO hotProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), HotProductVO.class);
+        if(StringUtils.isEmpty(hotProductVO.getProductName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("商品名称不能为空");
+            return resultObjectVO;
+        }
+        if(hotProductVO.getId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(hotProductVO.getAppCode()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("所属应用不能为空");
+            return resultObjectVO;
+        }
+        String lockKey = hotProductVO.getAppCode();
+        try {
+            boolean lockStatus = skylarkLock.lock(HotProductLockKey.getUpdateLockKey(lockKey), lockKey);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            HotProductVO query = new HotProductVO();
+            query.setProductName(hotProductVO.getProductName());
+            query.setAppCode(hotProductVO.getAppCode());
+            List<HotProductVO> hotProductVOS = hotProductService.queryList(query);
+            if(!CollectionUtils.isEmpty(hotProductVOS))
+            {
+                if(hotProductVOS.get(0).getId().longValue()!=hotProductVO.getId().longValue()) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("该商品已存在");
+                    return resultObjectVO;
+                }
+            }
+
+            hotProductVO.setUpdateDate(new Date());
+            int ret = hotProductService.update(hotProductVO);
+            if(ret<=0)
+            {
+                logger.warn("修改热门商品失败 requestJson{} id{}",requestJsonVO.getEntityJson(),hotProductVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            }
+
+            resultObjectVO.setData(hotProductVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }finally{
+            skylarkLock.unLock(HotProductLockKey.getUpdateLockKey(lockKey), lockKey);
+        }
+        return resultObjectVO;
+    }
+
 
 
 

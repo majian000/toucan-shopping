@@ -63,14 +63,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">开始展示时间</label>
         <div class="layui-input-block">
-            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" th:value="${model.startShowDate}" readonly >
+            <input type="text" id="startShowDate" name="startShowDate" class="layui-input" lay-verify="required" th:value="${#dates.format(model.startShowDate,'yyyy-MM-dd HH:mm:ss')}" readonly >
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label required">结束展示时间</label>
         <div class="layui-input-block">
-            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" th:value="${model.endShowDate}" readonly >
+            <input type="text" id="endShowDate" name="endShowDate" class="layui-input" lay-verify="required" th:value="${#dates.format(model.endShowDate,'yyyy-MM-dd HH:mm:ss')}" readonly >
         </div>
     </div>
     <div class="layui-form-item">
@@ -227,12 +227,14 @@
                 }
                 $("#previewBannerImg").attr("src",res.data.httpImgPath);
                 $("#imgPath").val(res.data.imgPath);
+                layer.close(loadding);
             },
             before:function()
             {
                 loadding = layer.load();
             }
             ,error: function(){
+                layer.close(loadding);
                 layer.msg("上传异常");
             }
         });
