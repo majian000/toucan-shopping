@@ -144,4 +144,24 @@
     </update>
 
 
+
+
+    <select id="queryPcIndexHotProducts" resultMap="hotProductVOMap" parameterType="com.toucan.shopping.modules.column.vo.HotProductVO">
+        select t.* from t_hot_product t
+        <where>
+            1=1
+            and t.app_code = #{appCode}
+            and t.show_status = #{showStatus}
+            and t.position = #{position}
+            and t.delete_status = 0
+            and t.type = #{type}
+            <![CDATA[ and t.start_show_date <=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+            <![CDATA[ and t.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
+
+        </where>
+
+        order by t.hot_product_sort desc
+    </select>
+
+
 </mapper>

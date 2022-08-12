@@ -347,6 +347,37 @@ public class HotProductController {
 
 
 
+    /**
+     * 查询PC端首页热门商品
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/pc/index/hot/products",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryPcIndexHotProducts(@RequestBody RequestJsonVO requestVo) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestVo == null || requestVo.getEntityJson() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+        if (requestVo == null || requestVo.getAppCode() == null) {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        try {
+            HotProductVO hotProductVO = requestVo.formatEntity(HotProductVO.class);
+            resultObjectVO.setData(hotProductService.queryPcIndexHotProducts(hotProductVO));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

@@ -52,4 +52,14 @@ public interface FeignHotProductService {
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 查询PC端首页热门商品
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/pc/index/hot/products",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryPcIndexHotProducts(@RequestBody RequestJsonVO requestVo);
+
 }

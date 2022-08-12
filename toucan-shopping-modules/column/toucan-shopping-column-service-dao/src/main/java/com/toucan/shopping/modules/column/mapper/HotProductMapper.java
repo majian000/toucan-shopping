@@ -42,4 +42,6 @@ public interface HotProductMapper {
     int update(HotProduct hotProduct);
 
     int deleteById(Long id);
+
+    List<HotProductVO> queryPcIndexHotProducts(HotProductVO hotProductVO);
 }

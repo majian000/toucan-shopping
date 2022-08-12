@@ -7,11 +7,9 @@ import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignBannerService;
+import com.toucan.shopping.cloud.content.api.feign.service.FeignHotProductService;
 import com.toucan.shopping.cloud.content.api.feign.service.FeignPcIndexColumnService;
-import com.toucan.shopping.modules.column.vo.ColumnBannerVO;
-import com.toucan.shopping.modules.column.vo.ColumnRecommendProductVO;
-import com.toucan.shopping.modules.column.vo.ColumnVO;
-import com.toucan.shopping.modules.column.vo.PcIndexColumnVO;
+import com.toucan.shopping.modules.column.vo.*;
 import com.toucan.shopping.modules.content.cache.service.BannerRedisService;
 import com.toucan.shopping.modules.content.vo.BannerVO;
 import com.toucan.shopping.modules.category.cache.service.CategoryRedisService;
@@ -61,6 +59,9 @@ public class IndexServiceImpl implements IndexService {
 
     @Autowired
     private FeignPcIndexColumnService feignPcIndexColumnService;
+
+    @Autowired
+    private FeignHotProductService feignHotProductService;
 
     @Autowired
     private ImageUploadService imageUploadService;
@@ -257,6 +258,36 @@ public class IndexServiceImpl implements IndexService {
                 return pcIndexColumnVOS;
             }
         }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public List<HotProductVO> queryHotProduces() {
+        try{
+            HotProductVO query = new HotProductVO();
+            query.setAppCode(toucan.getAppCode());
+            query.setShowStatus(1);
+            query.setType(1);
+            query.setPosition(1);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), query);
+            ResultObjectVO resultObjectVO = feignHotProductService.queryPcIndexHotProducts(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<HotProductVO> hotProductVOS = resultObjectVO.formatDataList(HotProductVO.class);
+                if(!CollectionUtils.isEmpty(hotProductVOS))
+                {
+                    for(HotProductVO hotProductVO:hotProductVOS)
+                    {
+                        hotProductVO.setHttpImgPath(imageUploadService.getImageHttpPrefix()+hotProductVO.getImgPath());
+                    }
+                }
+                return hotProductVOS;
+            }
+        }catch (Exception e)
         {
             logger.warn(e.getMessage(),e);
             return null;

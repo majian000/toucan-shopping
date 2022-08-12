@@ -30,7 +30,7 @@ $(function () {
                         "                                    </a>\n" +
                         "                                </div>\n" +
                         "                                <div class='price'>\n" +
-                        "                                    <font>￥<span>"+obj.price+"</span></font>\n" +
+                        "                                    <font>￥<span>"+obj.productPrice+"</span></font>\n" +
                         "                                </div>\n" +
                         "                            </div>\n" +
                         "                        </li>";

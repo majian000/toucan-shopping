@@ -150,6 +150,7 @@
         select t.* from t_column t
         <where>
             1=1
+            and t.app_code = #{appCode}
             and t.column_type_code = #{columnTypeCode}
             and t.show_status = #{showStatus}
             and t.position = #{position}
@@ -159,6 +160,7 @@
             <![CDATA[ and t.end_show_date >=  DATE_FORMAT(sysdate() , '%Y-%m-%d %H:%i:%s')    ]]>
 
         </where>
+            order by t.column_sort desc
     </select>
 
     <select id="findById" resultMap="columnVOMap" parameterType="java.lang.Long">

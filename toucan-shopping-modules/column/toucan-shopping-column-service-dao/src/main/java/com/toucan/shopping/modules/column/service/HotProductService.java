@@ -47,4 +47,11 @@ public interface HotProductService {
      */
     int deleteById(Long id);
 
+    /**
+     * 查询PC端首页热门商品
+     * @param hotProductVO
+     * @return
+     */
+    List<HotProductVO> queryPcIndexHotProducts(HotProductVO hotProductVO);
+
 }

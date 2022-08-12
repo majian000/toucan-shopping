@@ -56,4 +56,9 @@ public class HotProductServiceImpl implements HotProductService {
     public int deleteById(Long id) {
         return hotProductMapper.deleteById(id);
     }
+
+    @Override
+    public List<HotProductVO> queryPcIndexHotProducts(HotProductVO hotProductVO) {
+        return hotProductMapper.queryPcIndexHotProducts(hotProductVO);
+    }
 }

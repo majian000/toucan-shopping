@@ -40,18 +40,7 @@ public class IndexApiController {
     public ResultObjectVO queryHotProduct() {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-            List<HotProductVO> hotProductVoList = new ArrayList<HotProductVO>();
-
-
-            HotProductVO hotProductVo1= new HotProductVO();
-            hotProductVo1.setProductPrice("99.5");
-            hotProductVo1.setProductName("德亚全脂纯牛奶");
-            hotProductVo1.setProductDesc("200ml*48盒");
-            hotProductVo1.setHttpImgPath("http://8.140.187.184:8083/static/images/hot1.jpg");
-            hotProductVoList.add(hotProductVo1);
-
-
-            resultObjectVO.setData(hotProductVoList);
+            resultObjectVO.setData(indexService.queryHotProduces());
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
