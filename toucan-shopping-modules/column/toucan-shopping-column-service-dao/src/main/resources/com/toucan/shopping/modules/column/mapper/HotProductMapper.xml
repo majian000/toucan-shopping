@@ -13,6 +13,7 @@
         <result column="app_code" jdbcType="VARCHAR" property="appCode" />
         <result column="product_name" jdbcType="VARCHAR" property="productName" />
         <result column="product_price" jdbcType="VARCHAR" property="productPrice" />
+        <result column="product_desc" jdbcType="VARCHAR" property="productDesc" />
         <result column="click_path" jdbcType="VARCHAR" property="clickPath" />
         <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
         <result column="position" jdbcType="INTEGER" property="position" />
@@ -70,24 +71,24 @@
 
     <insert id="inserts"   keyProperty="id" >
         insert into t_hot_product(id,remark,create_date,create_admin_id,app_code,
-        product_name,product_price,click_path,img_path,position,type,show_status,hot_product_sort,start_show_date,end_show_date)
+        product_name,product_price,click_path,img_path,position,type,show_status,hot_product_sort,start_show_date,end_show_date,product_desc)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.remark},#{entity.createDate},#{entity.createAdminId}
             ,#{entity.appCode},#{entity.productName},#{entity.productPrice},#{entity.clickPath},#{entity.imgPath},#{entity.position},
-            #{entity.type},#{entity.showStatus},#{entity.hotProductSort},#{entity.startShowDate},#{entity.endShowDate})
+            #{entity.type},#{entity.showStatus},#{entity.hotProductSort},#{entity.startShowDate},#{entity.endShowDate},#{entity.productDesc})
         </foreach>
 
     </insert>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.column.entity.HotProduct" useGeneratedKeys="true" keyProperty="id" >
          insert into t_hot_product(id,remark,create_date,create_admin_id,app_code,
-        product_name,product_price,click_path,img_path,position,type,show_status,hot_product_sort,start_show_date,end_show_date)
+        product_name,product_price,click_path,img_path,position,type,show_status,hot_product_sort,start_show_date,end_show_date,product_desc)
 
          values(#{id},#{remark},#{createDate},#{createAdminId}
             ,#{appCode},#{productName},#{productPrice},#{clickPath},#{imgPath},#{position},
-            #{type},#{showStatus},#{hotProductSort},#{startShowDate},#{endShowDate})
+            #{type},#{showStatus},#{hotProductSort},#{startShowDate},#{endShowDate},#{productDesc})
     </insert>
 
 
@@ -133,7 +134,7 @@
     <update id="update" parameterType="com.toucan.shopping.modules.column.entity.HotProduct">
         update t_hot_product set remark =#{remark},update_date=#{updateDate},update_admin_id=#{updateAdminId},
         product_name=#{productName},product_price=#{productPrice},click_path=#{clickPath},img_path=#{imgPath},
-        position=#{position},type=#{type},show_status=#{showStatus},hot_product_sort=#{hotProductSort},start_show_date=#{startShowDate},end_show_date=#{endShowDate}
+        position=#{position},type=#{type},show_status=#{showStatus},hot_product_sort=#{hotProductSort},start_show_date=#{startShowDate},end_show_date=#{endShowDate},product_desc=#{productDesc}
          where id = #{id} and delete_status=0
     </update>
 

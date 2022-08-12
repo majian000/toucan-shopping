@@ -51,6 +51,8 @@ public class HotProduct {
      */
     private String productPrice;
 
+    private String productDesc; //商品介绍
+
     /**
      * 点击跳转
      */

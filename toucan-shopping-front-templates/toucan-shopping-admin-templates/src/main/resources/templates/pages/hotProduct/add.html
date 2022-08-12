@@ -37,6 +37,13 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label required">商品介绍</label>
+        <div class="layui-input-block">
+            <input type="text" name="productDesc" lay-verify="required" maxlength="50" lay-reqtext="不能为空" placeholder="请输入商品介绍" value="" class="layui-input">
+            <tip>填写商品介绍。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label required">点击跳转</label>
         <div class="layui-input-block">
             <input type="text" name="clickPath" lay-verify="required" maxlength="500" lay-reqtext="不能为空" placeholder="请输入点击跳转" value="" class="layui-input">

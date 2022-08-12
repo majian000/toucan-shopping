@@ -9,15 +9,24 @@ $(function () {
                 for(var i=0;i<result.data.length;i++)
                 {
                     var obj = result.data[i];
+
+                    var targetBlankHtml="";
+                    if(obj.clickPath!=null
+                        &&obj.clickPath!=""
+                        &&obj.clickPath!="#")
+                    {
+                        targetBlankHtml = " target=\"_blank\"";
+                    }
+
                     var template=" <li class='featureBox'>\n" +
                         "                            <div class='box'>\n" +
                         "                                <div class='imgbg'>\n" +
-                        "                                    <a href='#'><img src='"+obj.httpMainPhoto+"' width='160' height='136' /></a>\n" +
+                        "                                    <a href='"+obj.clickPath+"' "+targetBlankHtml+"><img src='"+obj.httpImgPath+"' width='160' height='136' /></a>\n" +
                         "                                </div>\n" +
                         "                                <div class='name'>\n" +
                         "                                    <a href='#'>\n" +
-                        "                                        <h2>"+obj.name+"</h2>\n" +
-                        "                                        "+obj.desc+"\n" +
+                        "                                        <h2>"+obj.productName+"</h2>\n" +
+                        "                                        "+obj.productDesc+"\n" +
                         "                                    </a>\n" +
                         "                                </div>\n" +
                         "                                <div class='price'>\n" +
