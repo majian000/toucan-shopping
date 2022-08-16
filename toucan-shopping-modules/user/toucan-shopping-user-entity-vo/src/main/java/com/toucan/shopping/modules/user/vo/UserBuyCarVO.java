@@ -12,4 +12,19 @@ import lombok.Data;
 public class UserBuyCarVO extends UserBuyCar {
 
 
+    /**
+     * 商品SKU名称
+     */
+    private String productSkuName;
+
+    /**
+     * 商品SKU预览图
+     */
+    private String httpProductImgPath;
+
+    /**
+     * 商品价格
+     */
+    private Double productPrice;
+
 }

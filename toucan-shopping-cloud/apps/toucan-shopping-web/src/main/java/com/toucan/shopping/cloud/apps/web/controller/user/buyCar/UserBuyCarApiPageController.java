@@ -13,17 +13,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户购物车
  */
 @Controller("buyCarApiController")
 @RequestMapping("/api/user/buyCar")
-public class UserBuyApiPageController {
+public class UserBuyCarApiPageController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -46,8 +48,14 @@ public class UserBuyApiPageController {
             UserBuyCarVO userBuyCarVO = new UserBuyCarVO();
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
-            resultObjectVO  = feignUserBuyCarService.listByUserMainId(requestJsonVO);
+            ResultObjectVO userBuyCarResultObjectVO  = feignUserBuyCarService.listByUserMainId(requestJsonVO);
+            if(userBuyCarResultObjectVO.isSuccess())
+            {
+                List<UserBuyCarVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarVO.class);
 
+
+                resultObjectVO.setData(userBuyCarVOList);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -55,4 +63,25 @@ public class UserBuyApiPageController {
         return resultObjectVO;
     }
 
+
+
+    @UserAuth
+    @RequestMapping("/save")
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody UserBuyCarVO userBuyCarVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try{
+            //从请求头中拿到uid
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
+            resultObjectVO  = feignUserBuyCarService.save(requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 }

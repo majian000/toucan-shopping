@@ -315,3 +315,38 @@ function tabsEvent()
         $(".step"+tabNumber+"Panel").show();
     });
 }
+
+function saveUserCar()
+{
+
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+    var params = {
+        shopProductSkuId:g_productVo.id,
+        buyCount:$("#buyCount").val()
+    };
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/save",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(params),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1 ||result.code == 201)
+            {
+                if(result.data!=null){
+                    $("#buyCarItemCount").html(result.data.length);
+                }
+                ShowDiv_1('userBuyCarMsg','fade1');
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+
+}

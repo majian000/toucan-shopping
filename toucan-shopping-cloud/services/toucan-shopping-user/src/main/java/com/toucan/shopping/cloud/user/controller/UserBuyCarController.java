@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,20 +56,20 @@ public class UserBuyCarController {
             resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
-        UserBuyCarVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarVO.class);
-        if(consigneeAddressVO.getShopProductSkuId()==null)
+        UserBuyCarVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarVO.class);
+        if(userBuyCarVO.getShopProductSkuId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("SKUID不能为空");
             return resultObjectVO;
         }
-        if(consigneeAddressVO.getUserMainId()==null)
+        if(userBuyCarVO.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("用户ID不能为空");
             return resultObjectVO;
         }
-        String userMainId = String.valueOf(consigneeAddressVO.getUserMainId());
+        String userMainId = String.valueOf(userBuyCarVO.getUserMainId());
         try {
             boolean lockStatus = skylarkLock.lock(UserBuyCarKey.getSaveLockKey(userMainId), userMainId);
             if (!lockStatus) {
@@ -77,8 +78,8 @@ public class UserBuyCarController {
                 return resultObjectVO;
             }
             //查询收货人数量,最多20个
-            UserBuyCar queryUserBuyCar = new UserBuyCar();
-            queryUserBuyCar.setUserMainId(consigneeAddressVO.getUserMainId());
+            UserBuyCarVO queryUserBuyCar = new UserBuyCarVO();
+            queryUserBuyCar.setUserMainId(userBuyCarVO.getUserMainId());
             List<UserBuyCar> userBuyCars = userBuyCarService.findListByEntity(queryUserBuyCar);
             if(!CollectionUtils.isEmpty(userBuyCars)&&userBuyCars.size()>=100)
             {
@@ -87,16 +88,33 @@ public class UserBuyCarController {
                 return resultObjectVO;
             }
 
-            consigneeAddressVO.setId(idGenerator.id());
-            consigneeAddressVO.setDeleteStatus((short)0);
-            int ret = userBuyCarService.save(consigneeAddressVO);
+            queryUserBuyCar.setShopProductSkuId(userBuyCarVO.getShopProductSkuId());
+            userBuyCars = userBuyCarService.findListByEntity(queryUserBuyCar);
+            if(!CollectionUtils.isEmpty(userBuyCars)){
+                UserBuyCar userBuyCar = userBuyCars.get(0);
+                if(userBuyCar.getBuyCount().intValue()!=userBuyCarVO.getBuyCount().intValue()) {
+                    userBuyCar.setBuyCount(userBuyCarVO.getBuyCount());
+                    userBuyCar.setUpdateDate(new Date());
+                    userBuyCarService.update(userBuyCar);
+                }
+
+                resultObjectVO.setData(userBuyCarService.findListByUserMainId(userBuyCarVO.getUserMainId()));
+                resultObjectVO.setCode(201);
+                resultObjectVO.setMsg("购物车中已存在该商品");
+                return resultObjectVO;
+            }
+            userBuyCarVO.setId(idGenerator.id());
+            userBuyCarVO.setDeleteStatus((short)0);
+            userBuyCarVO.setCreateDate(new Date());
+            int ret = userBuyCarService.save(userBuyCarVO);
             if(ret<=0)
             {
-                logger.warn("保存商品到购物车失败 requestJson{} id{}",requestJsonVO.getEntityJson(),consigneeAddressVO.getId());
+                logger.warn("保存商品到购物车失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userBuyCarVO.getId());
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请稍后重试");
             }
-            resultObjectVO.setData(consigneeAddressVO);
+
+            resultObjectVO.setData(userBuyCarService.findListByUserMainId(userBuyCarVO.getUserMainId()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -139,7 +157,7 @@ public class UserBuyCarController {
             }
 
             //查询是否存在该角色
-            UserBuyCar query=new UserBuyCar();
+            UserBuyCarVO query=new UserBuyCarVO();
             query.setId(entity.getId());
             List<UserBuyCar> adminList = userBuyCarService.findListByEntity(query);
             if(CollectionUtils.isEmpty(adminList))
@@ -190,12 +208,6 @@ public class UserBuyCarController {
             return resultObjectVO;
         }
         UserBuyCarVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarVO.class);
-        if(userBuyCarVO.getShopProductSkuId()==null)
-        {
-            resultObjectVO.setCode(ResultObjectVO.FAILD);
-            resultObjectVO.setMsg("SKUID不能为空");
-            return resultObjectVO;
-        }
         if(userBuyCarVO.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);

@@ -23,23 +23,24 @@
         update t_user_buy_car set delete_status=1 where id = #{id}
     </update>
 
+    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserBuyCar">
+          update t_user_buy_car set buy_count=#{buyCount} , update_date = #{updateDate} where id = #{id}
+    </update>
 
 
-    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.entity.UserBuyCar">
+
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.UserBuyCarVO">
         select * from t_user_buy_car t
         <where>
             1=1
-            <if test="ids!=null and ids.length>0 ">
-                and t.id in
-                <foreach item="item" index="index" collection="ids" open="("  close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
             <if test="id!=null">
                 and t.id = #{id}
             </if>
             <if test="userMainId!=null">
                 and t.user_main_id = #{userMainId}
+            </if>
+            <if test="shopProductSkuId!=null">
+                and t.shop_product_sku_id = #{shopProductSkuId}
             </if>
             and t.delete_status = 0
         </where>

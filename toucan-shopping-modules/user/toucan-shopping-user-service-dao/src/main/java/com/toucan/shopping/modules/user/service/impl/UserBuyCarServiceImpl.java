@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.user.mapper.ConsigneeAddressMapper;
 import com.toucan.shopping.modules.user.mapper.UserBuyCarMapper;
 import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
 import com.toucan.shopping.modules.user.service.UserBuyCarService;
+import com.toucan.shopping.modules.user.vo.UserBuyCarVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class UserBuyCarServiceImpl implements UserBuyCarService {
 
 
     @Override
-    public List<UserBuyCar> findListByEntity(UserBuyCar query) {
+    public List<UserBuyCar> findListByEntity(UserBuyCarVO query) {
         return userBuyCarMapper.findListByEntity(query);
     }
 
@@ -39,6 +40,11 @@ public class UserBuyCarServiceImpl implements UserBuyCarService {
     @Override
     public int save(UserBuyCar entity) {
         return userBuyCarMapper.insert(entity);
+    }
+
+    @Override
+    public int update(UserBuyCar entity) {
+        return userBuyCarMapper.update(entity);
     }
 
     @Override

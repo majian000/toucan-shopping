@@ -2,6 +2,7 @@ package com.toucan.shopping.modules.user.mapper;
 
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.entity.UserBuyCar;
+import com.toucan.shopping.modules.user.vo.UserBuyCarVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface UserBuyCarMapper {
 
 
-    List<UserBuyCar> findListByEntity(UserBuyCar query);
+    List<UserBuyCar> findListByEntity(UserBuyCarVO query);
 
     List<UserBuyCar> findListByUserMainId(Long userMainId);
 
@@ -24,4 +25,6 @@ public interface UserBuyCarMapper {
      * @return
      */
     int deleteById(Long id);
+
+    int update(UserBuyCar entity);
 }
