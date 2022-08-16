@@ -1,0 +1,29 @@
+package com.toucan.shopping.modules.user.service.impl;
+
+import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.mapper.ConsigneeAddressMapper;
+import com.toucan.shopping.modules.user.mapper.UserBuyCarMapper;
+import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
+import com.toucan.shopping.modules.user.service.UserBuyCarService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 用户购物车
+ * @author majian
+ */
+@Service
+public class UserBuyCarServiceImpl implements UserBuyCarService {
+
+    @Autowired
+    private UserBuyCarMapper userBuyCarMapper;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+
+
+}
