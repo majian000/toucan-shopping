@@ -206,6 +206,13 @@ table.c_tab tr th{
 .un_login{
 	overflow:hidden; text-align:center; margin:15px auto;
 }
+
+.buy_car_empty{
+	display:none;
+}
+.buy_car_login_tip{
+	display: none;
+}
 ul.cars{
 	overflow:hidden;
 }

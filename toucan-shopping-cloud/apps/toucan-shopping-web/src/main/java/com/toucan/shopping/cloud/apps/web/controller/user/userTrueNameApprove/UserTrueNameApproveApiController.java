@@ -1,4 +1,4 @@
-package com.toucan.shopping.cloud.apps.web.controller.user;
+package com.toucan.shopping.cloud.apps.web.controller.user.userTrueNameApprove;
 
 
 import com.toucan.shopping.cloud.apps.web.controller.BaseController;
