@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.user.service.impl;
 
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.entity.UserBuyCar;
 import com.toucan.shopping.modules.user.mapper.ConsigneeAddressMapper;
 import com.toucan.shopping.modules.user.mapper.UserBuyCarMapper;
 import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
@@ -25,5 +26,23 @@ public class UserBuyCarServiceImpl implements UserBuyCarService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
+    @Override
+    public List<UserBuyCar> findListByEntity(UserBuyCar query) {
+        return userBuyCarMapper.findListByEntity(query);
+    }
 
+    @Override
+    public List<UserBuyCar> findListByUserMainId(Long userMainId) {
+        return userBuyCarMapper.findListByUserMainId(userMainId);
+    }
+
+    @Override
+    public int save(UserBuyCar entity) {
+        return userBuyCarMapper.insert(entity);
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return userBuyCarMapper.deleteById(id);
+    }
 }
