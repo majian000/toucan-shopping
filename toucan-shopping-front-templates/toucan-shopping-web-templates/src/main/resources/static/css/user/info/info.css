@@ -509,12 +509,12 @@
     font-size:14px;
     line-height:30px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color: #ff471a;
 }
 
 .info-list .user-order-list .user-order-btn a:hover{
     color:#fff;
-    background-color:#0768cb;
+    background-color: #ff3200;
 }
 
 .user-right dl dt .dt-L{

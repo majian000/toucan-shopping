@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * 用户购物车
  */
-@Controller("buyCarPageController")
+@Controller("buyCarApiController")
 @RequestMapping("/api/user/buyCar")
 public class UserBuyApiPageController {
 
