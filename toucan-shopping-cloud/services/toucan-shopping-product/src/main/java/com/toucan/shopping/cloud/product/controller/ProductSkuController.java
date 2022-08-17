@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/productSku")
@@ -358,13 +359,13 @@ public class ProductSkuController {
 
 
     /**
-     * 根据ID查询
+     * 根据UUID查询
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/uuids",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryByIdList(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    public ResultObjectVO queryByUuidList(@RequestHeader( value = "toucan-sign-header",defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestJsonVO==null)
@@ -387,23 +388,16 @@ public class ProductSkuController {
                 List<ProductSku> productSkuList = new ArrayList<ProductSku>();
                 for(ProductSku productSku:productSkus) {
                     if(StringUtils.isNotEmpty(productSku.getUuid())) {
-                        String productSkuKey = ProductRedisKeyUtil.getProductKey(requestJsonVO.getAppCode(),productSku.getUuid());
+                        String productSkuKey = ProductRedisKeyUtil.getProductKeyByUuid(requestJsonVO.getAppCode(),productSku.getUuid());
                         Object productEntityObject = stringRedisTemplate.opsForValue().get(productSkuKey);
                         ProductSku productSkuEntity=null;
                         //如果缓存不存在 查询数据库 刷新到缓存
                         if(productEntityObject==null) {
-                            if(productSku.getId()!=null) {
-                                productSkuEntity = productSkuService.queryById(productSku.getId());
-                            }
-
-                            if(productSkuEntity==null) {
-                                if(productSku.getUuid()!=null) {
-                                    productSkuEntity = productSkuService.queryByUuid(productSku.getUuid());
-                                }
-                            }
+                            productSkuEntity = productSkuService.queryByUuid(productSku.getUuid());
                             //刷新到缓存
                             if(productSkuEntity!=null) {
                                 stringRedisTemplate.opsForValue().set(productSkuKey, JSONObject.toJSONString(productSkuEntity));
+                                stringRedisTemplate.expire(productSkuKey,ProductRedisKeyUtil.MAX_PRODUCT_SKU_SECONDS, TimeUnit.SECONDS);
                             }
                         }else{
                             productSkuEntity=JSONObject.parseObject(String.valueOf(productEntityObject),ProductSku.class);
@@ -430,6 +424,68 @@ public class ProductSkuController {
 
 
 
+    /**
+     * 根据ID查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/ids",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryByIdList(@RequestHeader( value = "toucan-sign-header",defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            List<ProductSku> productSkus = JSONArray.parseArray(requestJsonVO.getEntityJson(),ProductSku.class);
+            if(!CollectionUtils.isEmpty(productSkus)) {
+                List<ProductSku> productSkuList = new ArrayList<ProductSku>();
+                for(ProductSku productSku:productSkus) {
+                    if(productSku.getId()!=null) {
+                        String productSkuKey = ProductRedisKeyUtil.getProductKey(requestJsonVO.getAppCode(),String.valueOf(productSku.getId()));
+                        Object productEntityObject = stringRedisTemplate.opsForValue().get(productSkuKey);
+                        ProductSku productSkuEntity=null;
+                        //如果缓存不存在 查询数据库 刷新到缓存
+                        if(productEntityObject==null) {
+                            productSkuEntity = productSkuService.queryById(productSku.getId());
+                            //刷新到缓存
+                            if(productSkuEntity!=null) {
+                                stringRedisTemplate.opsForValue().set(productSkuKey, JSONObject.toJSONString(productSkuEntity));
+                                stringRedisTemplate.expire(productSkuKey,ProductRedisKeyUtil.MAX_PRODUCT_SKU_SECONDS, TimeUnit.SECONDS);
+                            }
+                        }else{
+                            productSkuEntity=JSONObject.parseObject(String.valueOf(productEntityObject),ProductSku.class);
+                        }
+                        if (productSkuEntity != null) {
+                            productSkuList.add(productSkuEntity);
+                        }
+                    }else{
+                        logger.warn("exists product sku uuid is null {}",requestJsonVO.getEntityJson());
+                    }
+                }
+                resultObjectVO.setData(productSkuList);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
+    }
 
 
 

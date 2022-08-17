@@ -3,6 +3,8 @@ package com.toucan.shopping.modules.product.util;
 public class ProductRedisKeyUtil {
 
 
+    //商品SKU 180秒过期
+    public static final int MAX_PRODUCT_SKU_SECONDS=180;
 
 
     /**
@@ -53,5 +55,16 @@ public class ProductRedisKeyUtil {
     }
 
 
+
+    /**
+     * 商品缓存key
+     * @param appCode
+     * @param uuid
+     * @return
+     */
+    public static String getProductKeyByUuid(String appCode,String uuid)
+    {
+        return  appCode+"_product_uuid_"+uuid;
+    }
 
 }

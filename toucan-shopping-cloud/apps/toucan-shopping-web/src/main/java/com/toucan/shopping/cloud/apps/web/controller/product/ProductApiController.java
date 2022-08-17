@@ -276,7 +276,7 @@ public class ProductApiController {
 
             //查询商品
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
-            resultObjectVO = feignProductSkuService.queryByIdList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+            resultObjectVO = feignProductSkuService.queryByUuidList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
             if(resultObjectVO.getCode().intValue()==ResultVO.SUCCESS.intValue()) {
                 List<ProductSku> queryProductSkuList = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ProductSku.class);
 

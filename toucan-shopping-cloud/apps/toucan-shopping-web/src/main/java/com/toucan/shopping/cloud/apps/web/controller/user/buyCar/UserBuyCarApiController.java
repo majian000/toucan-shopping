@@ -87,6 +87,14 @@ public class UserBuyCarApiController {
                                 {
                                     if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
                                         ubc.setProductSkuName(productSku.getName());
+                                        if(productSku.getStatus().intValue()==0)
+                                        {
+                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已下架");
+                                        }
+                                        if(productSku.getStockNum().longValue()<=0)
+                                        {
+                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已售罄");
+                                        }
                                         ubc.setProductPrice(productSku.getPrice());
                                         ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
                                         continue;
