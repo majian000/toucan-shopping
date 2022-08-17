@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.user.buyCar;
 
 
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -8,7 +9,11 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.entity.ProductSku;
+import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -25,12 +31,18 @@ import java.util.List;
  */
 @Controller("buyCarApiController")
 @RequestMapping("/api/user/buyCar")
-public class UserBuyCarApiPageController {
+public class UserBuyCarApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private FeignUserBuyCarService feignUserBuyCarService;
+
+    @Autowired
+    private FeignProductSkuService feignProductSkuService;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     @Autowired
     private Toucan toucan;
@@ -52,8 +64,38 @@ public class UserBuyCarApiPageController {
             if(userBuyCarResultObjectVO.isSuccess())
             {
                 List<UserBuyCarVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarVO.class);
+                List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
+                for(UserBuyCarVO ubc:userBuyCarVOList)
+                {
+                    ProductSkuVO productSkuVO = new ProductSkuVO();
+                    productSkuVO.setId(ubc.getShopProductSkuId());
+                    productSkus.add(productSkuVO);
+                }
 
+                if(CollectionUtils.isNotEmpty(productSkus)) {
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
 
+                    ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
+                    if(ResultProductSkuObjectVO.isSuccess())
+                    {
+                        List<ProductSku> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSku.class);
+                        if(CollectionUtils.isNotEmpty(productSkuList))
+                        {
+                            for(ProductSku productSku:productSkuList)
+                            {
+                                for(UserBuyCarVO ubc:userBuyCarVOList)
+                                {
+                                    if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
+                                        ubc.setProductSkuName(productSku.getName());
+                                        ubc.setProductPrice(productSku.getPrice());
+                                        ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 resultObjectVO.setData(userBuyCarVOList);
             }
         }catch(Exception e)

@@ -392,7 +392,15 @@ public class ProductSkuController {
                         ProductSku productSkuEntity=null;
                         //如果缓存不存在 查询数据库 刷新到缓存
                         if(productEntityObject==null) {
-                            productSkuEntity = productSkuService.queryByUuid(productSku.getUuid());
+                            if(productSku.getId()!=null) {
+                                productSkuEntity = productSkuService.queryById(productSku.getId());
+                            }
+
+                            if(productSkuEntity==null) {
+                                if(productSku.getUuid()!=null) {
+                                    productSkuEntity = productSkuService.queryByUuid(productSku.getUuid());
+                                }
+                            }
                             //刷新到缓存
                             if(productSkuEntity!=null) {
                                 stringRedisTemplate.opsForValue().set(productSkuKey, JSONObject.toJSONString(productSkuEntity));

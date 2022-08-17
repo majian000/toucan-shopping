@@ -19,10 +19,11 @@ $(function () {
                 var productPriceTotal = 0;
                 for(var i=0;i<result.data.length;i++)
                 {
+                    var buyCarItem = result.data[i];
                     productHtmls+="<li>\n" +
-                        "                <div class=\"img\"><a href=\"#\"><img src=\""+basePath+"/static/images/car1.jpg\" width=\"58\" height=\"58\" /></a></div>\n" +
-                        "                <div class=\"name\"><a href=\"#\">法颂浪漫梦境50ML 香水女士持久清新淡香 送2ML小样3只</a></div>\n" +
-                        "                <div class=\"price\"><font color=\"#ff4e00\">￥399</font> X1</div>\n" +
+                        "                <div class=\"img\"><a href=\"#\"><img src=\""+buyCarItem.httpProductImgPath+"\" width=\"58\" height=\"58\" /></a></div>\n" +
+                        "                <div class=\"name\"><a href=\"#\">"+buyCarItem.productSkuName+"</a></div>\n" +
+                        "                <div class=\"price\"><font color=\"#ff4e00\">￥"+buyCarItem.productPrice+"</font> X"+buyCarItem.buyCount+"</div>\n" +
                         "            </li>";
                 }
                 $(".cars").html(productHtmls);
