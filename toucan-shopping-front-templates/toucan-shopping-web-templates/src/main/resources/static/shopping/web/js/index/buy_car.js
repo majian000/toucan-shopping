@@ -25,8 +25,8 @@ function loadBuyCarPreviewPanel(){
                 {
                     var buyCarItem = result.data[i];
                     productHtmls+="<li>\n" +
-                        "                <div class=\"img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\"><img src=\""+buyCarItem.httpProductImgPath+"\" width=\"58\" height=\"58\" /></a></div>\n" +
-                        "                <div class=\"name\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\">"+buyCarItem.productSkuName+"</a></div>\n" +
+                        "                <div class=\"img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\"><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"58\" height=\"58\" /></a></div>\n" +
+                        "                <div class=\"name\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" title=\""+buyCarItem.productSkuName+"\">"+buyCarItem.productSkuName+"</a></div>\n" +
                         "                <div class=\"price\"><font color=\"#ff4e00\">￥"+buyCarItem.productPrice+"</font> x "+buyCarItem.buyCount+"</div>\n" +
                         "            </li>";
                     productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);

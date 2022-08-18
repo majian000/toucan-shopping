@@ -239,7 +239,19 @@ ul.cars li .img{
 	width:58px; height:58px; overflow:hidden; float:left; display:inline; margin-left:15px; border:1px solid #e2e2e2;
 }
 ul.cars li .name{
-	width:180px; height:40px; line-height:20px; overflow:hidden; color:#888888; font-family:"宋体"; float:left; display:inline; margin-left:8px;
+	width:180px;
+	height:40px;
+	line-height:20px;
+	overflow:hidden;
+	color:#888888;
+	font-family:"宋体";
+	float:left;
+	display:inline;
+	margin-left:8px;
+	text-overflow:ellipsis;
+	display:-webkit-box;
+	-webkit-box-orient:vertical;
+	-webkit-line-clamp:2;
 }
 ul.cars li .name a{
 	color:#888888;
