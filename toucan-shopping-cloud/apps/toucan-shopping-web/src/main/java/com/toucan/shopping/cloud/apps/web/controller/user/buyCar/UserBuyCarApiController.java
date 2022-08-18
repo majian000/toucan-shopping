@@ -128,6 +128,53 @@ public class UserBuyCarApiController {
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
             resultObjectVO  = feignUserBuyCarService.save(requestJsonVO);
+
+            //已存在改商品或者保存成功
+            if(resultObjectVO.isSuccess()||resultObjectVO.getCode().intValue()==201)
+            {
+                List<UserBuyCarVO> userBuyCarVOList = resultObjectVO.formatDataList(UserBuyCarVO.class);
+                List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
+                for(UserBuyCarVO ubc:userBuyCarVOList)
+                {
+                    ProductSkuVO productSkuVO = new ProductSkuVO();
+                    productSkuVO.setId(ubc.getShopProductSkuId());
+                    productSkus.add(productSkuVO);
+                }
+
+                if(CollectionUtils.isNotEmpty(productSkus)) {
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
+
+                    ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
+                    if(ResultProductSkuObjectVO.isSuccess())
+                    {
+                        List<ProductSku> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSku.class);
+                        if(CollectionUtils.isNotEmpty(productSkuList))
+                        {
+                            for(ProductSku productSku:productSkuList)
+                            {
+                                for(UserBuyCarVO ubc:userBuyCarVOList)
+                                {
+                                    if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
+                                        ubc.setProductSkuName(productSku.getName());
+                                        if(productSku.getStatus().intValue()==0)
+                                        {
+                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已下架");
+                                        }
+                                        if(productSku.getStockNum().longValue()<=0)
+                                        {
+                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已售罄");
+                                        }
+                                        ubc.setProductPrice(productSku.getPrice());
+                                        ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                resultObjectVO.setData(userBuyCarVOList);
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);

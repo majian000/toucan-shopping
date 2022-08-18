@@ -6,8 +6,9 @@ package com.toucan.shopping.modules.product.redis;
  */
 public class ProductSkuRedisKey {
 
-    public static String getPreviewSkuKey(String productApproveSkuId)
+    public static String getPreviewSkuKeyBySkuId(String id)
     {
-        return "TOUCAN_SHOPPING_WEB:SERVICES:PRODUCT:SKU:PREVIEW:"+productApproveSkuId;
+        return "TOUCAN_SHOPPING_WEB:SERVICES:PRODUCT:SKU:PREVIEW:ID:"+id;
     }
+
 }

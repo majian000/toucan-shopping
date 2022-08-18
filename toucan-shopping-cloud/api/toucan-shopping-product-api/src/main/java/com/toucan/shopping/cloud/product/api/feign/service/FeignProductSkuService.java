@@ -18,9 +18,6 @@ public interface FeignProductSkuService {
     ResultObjectVO queryById(@RequestBody RequestJsonVO requestJsonVO);
 
 
-    @RequestMapping(value = "/query/uuids",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryByUuidList(@RequestHeader( value = "toucan-sign-header",defaultValue = "-1") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
-
 
     /**
      * 根据ID查询

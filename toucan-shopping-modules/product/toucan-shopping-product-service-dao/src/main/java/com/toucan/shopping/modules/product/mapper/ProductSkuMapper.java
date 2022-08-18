@@ -31,7 +31,11 @@ public interface ProductSkuMapper {
 
     ProductSkuVO queryVOByIdAndShelves(Long id);
 
+    ProductSkuVO queryVOById(Long id);
+
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
+
+    int updateStatusByShopProductId(Long shopProductId, Long shopId, Integer status);
 
     /**
      * 查询列表页

@@ -14,9 +14,18 @@ public interface ProductSkuService {
 
     List<ProductSkuVO> queryList(ProductSkuVO productSkuVO);
 
-
-
     ProductSkuVO queryVOByIdAndShelves(Long id);
+
+    ProductSkuVO queryVOById(Long id);
+
+
+    /**
+     * 修改上架/下架状态
+     * @param shopProductId
+     * @param status
+     * @return
+     */
+    int updateStatusByShopProductId(Long shopProductId,Long shopId,Integer status);
 
     /**
      * 查询列表页

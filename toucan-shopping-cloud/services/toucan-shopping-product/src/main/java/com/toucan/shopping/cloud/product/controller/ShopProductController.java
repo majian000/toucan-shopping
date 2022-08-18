@@ -364,10 +364,12 @@ public class ShopProductController {
                     &&shopProductVO.getStatus().intValue()== ProductConstant.SHELVES_UP.intValue())
             {
                 shopProductService.updateStatus(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_DOWN); //下架
+                productSkuService.updateStatusByShopProductId(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_DOWN); //下架
             }else if(shopProductVO.getStatus()!=null
                     &&shopProductVO.getStatus().intValue()== ProductConstant.SHELVES_DOWN.intValue()) //如果当前是下架状态
             {
                 shopProductService.updateStatus(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_UP); //上架
+                productSkuService.updateStatusByShopProductId(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_UP); //上架
             }
 
         }catch(Exception e)

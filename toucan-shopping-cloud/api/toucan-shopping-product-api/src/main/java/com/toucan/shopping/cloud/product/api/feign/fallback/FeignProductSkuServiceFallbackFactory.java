@@ -55,21 +55,6 @@ public class FeignProductSkuServiceFallbackFactory implements FallbackFactory<Fe
             }
 
             @Override
-            public ResultObjectVO queryByUuidList(String signHeader,RequestJsonVO requestJsonVO) {
-                ResultObjectVO resultObjectVO = new ResultObjectVO();
-                if(requestJsonVO==null)
-                {
-                    resultObjectVO.setCode(ResultObjectVO.FAILD);
-                    resultObjectVO.setMsg("请求超时,请稍后重试");
-                    return resultObjectVO;
-                }
-                logger.warn("查询商品服务 sign {} , params {}",signHeader,JSONObject.toJSONString(requestJsonVO));
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请重试!");
-                return resultObjectVO;
-            }
-
-            @Override
             public ResultObjectVO queryByIdList(String signHeader, RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)

@@ -31,6 +31,15 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     public ProductSkuVO queryVOByIdAndShelves(Long id) {
         return productSkuMapper.queryVOByIdAndShelves(id);
     }
+    @Override
+    public ProductSkuVO queryVOById(Long id) {
+        return productSkuMapper.queryVOById(id);
+    }
+
+    @Override
+    public int updateStatusByShopProductId(Long shopProductId, Long shopId, Integer status) {
+        return productSkuMapper.updateStatusByShopProductId(shopProductId,shopId,status);
+    }
 
     @Override
     public PageInfo<ProductSkuVO> queryListPage(ProductSkuPageInfo queryPageInfo) {

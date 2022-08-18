@@ -8,7 +8,8 @@ import com.toucan.shopping.modules.product.vo.ProductSkuVO;
  */
 public interface ProductSkuRedisService {
 
-    ProductSkuVO queryProductSku(String id);
+    ProductSkuVO queryProductSkuById(String id);
+
 
     /**
      * 添加到缓存

@@ -2,7 +2,6 @@
 var g_productVo;
 
 $(function(){
-
     tabsEvent();
     var id = getProductId();
     if(id!=null&&id!="") {
@@ -339,7 +338,16 @@ function saveUserCar()
                 if(result.data!=null){
                     $("#buyCarItemCount").html(result.data.length);
                 }
+                var buyCarPriceTotal=0;
+                for(var i=0;i<result.data.length;i++)
+                {
+                    var buyCarItem = result.data[i];
+                    buyCarPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
+                }
+
+                $(".buy_car_price_total").html(buyCarPriceTotal);
                 ShowDiv_1('userBuyCarMsg','fade1');
+                loadBuyCarPreviewPanel();
             }
         },
         error: function (result) {
@@ -350,3 +358,4 @@ function saveUserCar()
     });
 
 }
+
