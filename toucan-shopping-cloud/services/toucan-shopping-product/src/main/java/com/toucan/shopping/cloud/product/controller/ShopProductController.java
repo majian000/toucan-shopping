@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.product.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.product.service.ProductSkuRedisService;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
@@ -52,8 +53,6 @@ public class ShopProductController {
     @Autowired
     private ShopProductImgService shopProductImgService;
 
-    @Autowired
-    private ShopProductApproveRecordService shopProductApproveRecordService;
 
     @Autowired
     private ProductSpuService productSpuService;
@@ -64,6 +63,8 @@ public class ShopProductController {
     @Autowired
     private ShopProductDescriptionImgService shopProductDescriptionImgService;
 
+    @Autowired
+    private ProductSkuRedisService productSkuRedisService;
 
 
 
@@ -371,7 +372,16 @@ public class ShopProductController {
                 shopProductService.updateStatus(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_UP); //上架
                 productSkuService.updateStatusByShopProductId(shopProductVO.getId(),shopProductVO.getShopId(),ProductConstant.SHELVES_UP); //上架
             }
-
+            ProductSkuVO productSkuVO = new ProductSkuVO();
+            productSkuVO.setShopProductId(shopProductVO.getId());
+            List<ProductSkuVO> productSkuVOS = productSkuService.queryList(productSkuVO);
+            if(CollectionUtils.isNotEmpty(productSkuVOS))
+            {
+                for(ProductSkuVO ps:productSkuVOS)
+                {
+                    productSkuRedisService.deleteCache(String.valueOf(ps.getId()));
+                }
+            }
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
