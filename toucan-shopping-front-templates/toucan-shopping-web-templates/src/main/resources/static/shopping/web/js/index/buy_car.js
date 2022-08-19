@@ -19,6 +19,7 @@ function loadBuyCarPreviewPanel(){
             {
                 $(".buy_car_empty").show();
             }else{
+                $(".buy_car_empty").hide();
                 var productHtmls="";
                 var productPriceTotal = 0;
                 for(var i=0;i<result.data.length;i++)
