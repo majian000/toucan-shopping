@@ -27,4 +27,9 @@ public class UserBuyCarVO extends UserBuyCar {
      */
     private Double productPrice;
 
+    /**
+     * 属性预览
+     */
+    private String attributePreview;
+
 }

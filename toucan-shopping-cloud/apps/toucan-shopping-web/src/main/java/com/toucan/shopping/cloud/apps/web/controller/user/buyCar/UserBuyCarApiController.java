@@ -1,6 +1,7 @@
 package com.toucan.shopping.cloud.apps.web.controller.user.buyCar;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -23,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户购物车
@@ -114,6 +117,83 @@ public class UserBuyCarApiController {
     }
 
 
+
+    @UserAuth
+    @RequestMapping("/list")
+    @ResponseBody
+    public ResultObjectVO list(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try{
+            //从请求头中拿到uid
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            UserBuyCarVO userBuyCarVO = new UserBuyCarVO();
+            userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
+            ResultObjectVO userBuyCarResultObjectVO  = feignUserBuyCarService.listByUserMainId(requestJsonVO);
+            if(userBuyCarResultObjectVO.isSuccess())
+            {
+                List<UserBuyCarVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarVO.class);
+                List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
+                for(UserBuyCarVO ubc:userBuyCarVOList)
+                {
+                    ProductSkuVO productSkuVO = new ProductSkuVO();
+                    productSkuVO.setId(ubc.getShopProductSkuId());
+                    productSkus.add(productSkuVO);
+                }
+
+                if(CollectionUtils.isNotEmpty(productSkus)) {
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
+
+                    ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
+                    if(ResultProductSkuObjectVO.isSuccess())
+                    {
+                        List<ProductSku> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSku.class);
+                        if(CollectionUtils.isNotEmpty(productSkuList))
+                        {
+                            for(ProductSku productSku:productSkuList)
+                            {
+                                for(UserBuyCarVO ubc:userBuyCarVOList)
+                                {
+                                    if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
+                                        ubc.setProductSkuName(productSku.getName());
+                                        if(productSku.getStatus().intValue()==0)
+                                        {
+                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已下架");
+                                        }
+                                        if(productSku.getStockNum().longValue()<=0)
+                                        {
+                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已售罄");
+                                        }
+                                        ubc.setProductPrice(productSku.getPrice());
+                                        ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
+
+                                        StringBuilder attributePreview = new StringBuilder();
+                                        HashMap<String,String> attributeMap = JSONObject.parseObject(productSku.getAttributes(), HashMap.class);
+                                        Set<String> attributeKeys = attributeMap.keySet();
+                                        for(String attributeKey:attributeKeys)
+                                        {
+                                            String attributeValue = attributeMap.get(attributeKey);
+                                            attributePreview.append(attributeKey+":"+attributeValue);
+                                            attributePreview.append(" ");
+                                        }
+                                        ubc.setAttributePreview(attributePreview.toString());
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                resultObjectVO.setData(userBuyCarVOList);
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     @UserAuth
     @RequestMapping("/save")
