@@ -285,4 +285,27 @@ public class UserBuyCarApiController {
         }
         return resultObjectVO;
     }
+
+
+
+    @UserAuth
+    @RequestMapping("/clear")
+    @ResponseBody
+    public ResultObjectVO clear(HttpServletRequest request) {
+
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId = "-1";
+        try {
+            UserBuyCarVO userBuyCarVO = new UserBuyCarVO();
+            //从请求头中拿到uid
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
+            resultObjectVO = feignUserBuyCarService.clearByUserMainId(requestJsonVO);
+
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
 }

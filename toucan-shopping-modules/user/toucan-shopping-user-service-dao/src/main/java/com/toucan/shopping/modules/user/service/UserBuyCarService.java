@@ -37,4 +37,9 @@ public interface UserBuyCarService {
      */
     int deleteByIdAndUserMainId(Long id,Long userMainId);
 
+    /**
+     * 根据ID删除
+     * @return
+     */
+    int deleteByUserMainId(Long userMainId);
 }

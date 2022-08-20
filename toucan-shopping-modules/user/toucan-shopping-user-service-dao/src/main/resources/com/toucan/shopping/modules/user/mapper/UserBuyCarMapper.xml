@@ -57,5 +57,8 @@
         update t_user_buy_car set delete_status=1 where id = #{id} and user_main_id = #{userMainId}  and delete_status=0
     </update>
 
+    <update id="deleteByUserMainId" parameterType="java.lang.Long">
+        update t_user_buy_car set delete_status=1 where user_main_id = #{userMainId} and delete_status=0
+    </update>
 
 </mapper>

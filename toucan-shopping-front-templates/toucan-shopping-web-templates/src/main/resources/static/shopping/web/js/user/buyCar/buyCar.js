@@ -5,6 +5,10 @@ $(function () {
     $(".mcar_remove").click(function(){
         removeBuyCar();
     });
+
+    $(".mcar_clear").click(function(){
+        clearBuyCar();
+    });
 });
 
 
@@ -41,7 +45,7 @@ function loadBuyCarPanel(){
             }
             productHtmls+="<tr height=\"70\">\n" +
                 "                <td colspan=\"6\" style=\"font-family:'Microsoft YaHei'; border-bottom:0;\">\n" +
-                "                    <label class=\"r_rad\"><input type=\"checkbox\" name=\"clear\" checked=\"checked\" /></label><label class=\"r_txt\">清空购物车</label>\n" +
+                "                    <label class=\"r_rad\" style=\"padding-top: 5px;\"><input type=\"checkbox\" name=\"clear\"  class=\"clear_buy_car\" /></label><label class=\"r_txt\"><a style=\"cursor:pointer;\" class=\"clear_buy_car\" >清空购物车</a></label>\n" +
                 "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+productPriceTotal+"</a></b></span>\n" +
                 "                </td>\n" +
                 "            </tr>\n" +
@@ -55,6 +59,7 @@ function loadBuyCarPanel(){
             $(".mcar_tab").append(productHtmls);
 
             bindBuyItemNumEvent();
+            bindClearBuyCar();
         }
     });
 
@@ -106,6 +111,38 @@ function removeBuyCar()
     });
 }
 
+function clearBuyCar()
+{
+    CloseDiv_1('buyCarClear','fadeClear');
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/clear",
+        contentType: "application/json;charset=utf-8",
+        data: {},
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                window.location.reload();
+            }else{
+                $.message({
+                    message: "清空失败,请稍后重试",
+                    type: 'error'
+                });
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
 function bindBuyItemNumEvent()
 {
     $(".mcar_pn").change(function(){
@@ -118,6 +155,13 @@ function bindBuyItemNumEvent()
         }
         $("#buyItemTotal_"+cid).html((parseInt(bnum)*parseFloat($("#productPrice_"+cid).val())));
         calculatePriceTotal();
+    });
+}
+
+function bindClearBuyCar()
+{
+    $(".clear_buy_car").click(function(){
+        ShowDiv('buyCarClear','fadeClear');
     });
 }
 

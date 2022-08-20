@@ -172,6 +172,45 @@ public class UserBuyCarController {
 
 
     /**
+     * 清空指定用户的购物车
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/clear/buy/car/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO clearByUserMainId(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            UserBuyCar entity = JSONObject.parseObject(requestVo.getEntityJson(),UserBuyCar.class);
+            if(entity.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到用户ID");
+                return resultObjectVO;
+            }
+
+
+            int row = userBuyCarService.deleteByUserMainId(entity.getUserMainId());
+            resultObjectVO.setData(entity);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+    /**
      * 根据用户ID查询
      * @param requestJsonVO
      * @return

@@ -35,4 +35,14 @@ public interface FeignUserBuyCarService {
     @RequestMapping(value="/list/userMainId",produces = "application/json;charset=UTF-8")
     ResultObjectVO listByUserMainId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 清空指定用户的购物车
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/clear/buy/car/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO clearByUserMainId(@RequestBody RequestJsonVO requestVo);
+
 }
