@@ -1,16 +1,18 @@
 package com.toucan.shopping.cloud.user.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.user.constant.UserBuyCarConstant;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.user.entity.UserBuyCar;
+import com.toucan.shopping.modules.user.entity.UserBuyCarItem;
 import com.toucan.shopping.modules.user.redis.UserBuyCarKey;
-import com.toucan.shopping.modules.user.service.UserBuyCarService;
-import com.toucan.shopping.modules.user.vo.UserBuyCarVO;
+import com.toucan.shopping.modules.user.service.UserBuyCarItemService;
+import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,7 @@ public class UserBuyCarController {
     private SkylarkLock skylarkLock;
 
     @Autowired
-    private UserBuyCarService userBuyCarService;
+    private UserBuyCarItemService userBuyCarItemService;
 
 
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
@@ -56,7 +58,7 @@ public class UserBuyCarController {
             resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
-        UserBuyCarVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarVO.class);
+        UserBuyCarItemVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
         if(userBuyCarVO.getShopProductSkuId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -77,11 +79,10 @@ public class UserBuyCarController {
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
-            //查询收货人数量,最多20个
-            UserBuyCarVO queryUserBuyCar = new UserBuyCarVO();
+            UserBuyCarItemVO queryUserBuyCar = new UserBuyCarItemVO();
             queryUserBuyCar.setUserMainId(userBuyCarVO.getUserMainId());
-            List<UserBuyCar> userBuyCars = userBuyCarService.findListByEntity(queryUserBuyCar);
-            if(!CollectionUtils.isEmpty(userBuyCars)&&userBuyCars.size()>=100)
+            List<UserBuyCarItem> userBuyCarItems = userBuyCarItemService.findListByEntity(queryUserBuyCar);
+            if(!CollectionUtils.isEmpty(userBuyCarItems)&& userBuyCarItems.size()>=UserBuyCarConstant.MAX_BUY_ITEM_COUNT)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("购物车中商品数量达到上限");
@@ -89,16 +90,16 @@ public class UserBuyCarController {
             }
 
             queryUserBuyCar.setShopProductSkuId(userBuyCarVO.getShopProductSkuId());
-            userBuyCars = userBuyCarService.findListByEntity(queryUserBuyCar);
-            if(!CollectionUtils.isEmpty(userBuyCars)){
-                UserBuyCar userBuyCar = userBuyCars.get(0);
-                if(userBuyCar.getBuyCount().intValue()!=userBuyCarVO.getBuyCount().intValue()) {
-                    userBuyCar.setBuyCount(userBuyCarVO.getBuyCount());
-                    userBuyCar.setUpdateDate(new Date());
-                    userBuyCarService.update(userBuyCar);
+            userBuyCarItems = userBuyCarItemService.findListByEntity(queryUserBuyCar);
+            if(!CollectionUtils.isEmpty(userBuyCarItems)){
+                UserBuyCarItem userBuyCarItem = userBuyCarItems.get(0);
+                if(userBuyCarItem.getBuyCount().intValue()!=userBuyCarVO.getBuyCount().intValue()) {
+                    userBuyCarItem.setBuyCount(userBuyCarVO.getBuyCount());
+                    userBuyCarItem.setUpdateDate(new Date());
+                    userBuyCarItemService.update(userBuyCarItem);
                 }
 
-                resultObjectVO.setData(userBuyCarService.findListByUserMainId(userBuyCarVO.getUserMainId()));
+                resultObjectVO.setData(userBuyCarItemService.findListByUserMainId(userBuyCarVO.getUserMainId()));
                 resultObjectVO.setCode(201);
                 resultObjectVO.setMsg("购物车中已存在该商品");
                 return resultObjectVO;
@@ -106,7 +107,7 @@ public class UserBuyCarController {
             userBuyCarVO.setId(idGenerator.id());
             userBuyCarVO.setDeleteStatus((short)0);
             userBuyCarVO.setCreateDate(new Date());
-            int ret = userBuyCarService.save(userBuyCarVO);
+            int ret = userBuyCarItemService.save(userBuyCarVO);
             if(ret<=0)
             {
                 logger.warn("保存商品到购物车失败 requestJson{} id{}",requestJsonVO.getEntityJson(),userBuyCarVO.getId());
@@ -114,7 +115,7 @@ public class UserBuyCarController {
                 resultObjectVO.setMsg("请稍后重试");
             }
 
-            resultObjectVO.setData(userBuyCarService.findListByUserMainId(userBuyCarVO.getUserMainId()));
+            resultObjectVO.setData(userBuyCarItemService.findListByUserMainId(userBuyCarVO.getUserMainId()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -148,7 +149,7 @@ public class UserBuyCarController {
         }
 
         try {
-            UserBuyCar entity = JSONObject.parseObject(requestVo.getEntityJson(),UserBuyCar.class);
+            UserBuyCarItem entity = JSONObject.parseObject(requestVo.getEntityJson(), UserBuyCarItem.class);
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -157,7 +158,7 @@ public class UserBuyCarController {
             }
 
 
-            int row = userBuyCarService.deleteByIdAndUserMainId(entity.getId(),entity.getUserMainId());
+            int row = userBuyCarItemService.deleteByIdAndUserMainId(entity.getId(),entity.getUserMainId());
             resultObjectVO.setData(entity);
 
         }catch(Exception e)
@@ -188,7 +189,7 @@ public class UserBuyCarController {
         }
 
         try {
-            UserBuyCar entity = JSONObject.parseObject(requestVo.getEntityJson(),UserBuyCar.class);
+            UserBuyCarItem entity = JSONObject.parseObject(requestVo.getEntityJson(), UserBuyCarItem.class);
             if(entity.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
@@ -197,7 +198,7 @@ public class UserBuyCarController {
             }
 
 
-            int row = userBuyCarService.deleteByUserMainId(entity.getUserMainId());
+            int row = userBuyCarItemService.deleteByUserMainId(entity.getUserMainId());
             resultObjectVO.setData(entity);
 
         }catch(Exception e)
@@ -230,7 +231,7 @@ public class UserBuyCarController {
             resultObjectVO.setMsg("没有找到应用编码");
             return resultObjectVO;
         }
-        UserBuyCarVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarVO.class);
+        UserBuyCarItemVO userBuyCarVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
         if(userBuyCarVO.getUserMainId()==null)
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -239,7 +240,7 @@ public class UserBuyCarController {
         }
         try {
             //查询购物车信息列表
-            resultObjectVO.setData(userBuyCarService.findListByUserMainId(userBuyCarVO.getUserMainId()));
+            resultObjectVO.setData(userBuyCarItemService.findListByUserMainId(userBuyCarVO.getUserMainId()));
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
@@ -250,6 +251,86 @@ public class UserBuyCarController {
     }
 
 
+
+
+    @RequestMapping(value="/updates",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO updates(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        List<UserBuyCarItemVO> userBuyCarVos = JSONArray.parseArray(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
+
+        if(!CollectionUtils.isEmpty(userBuyCarVos)) {
+            String userMainId = "-1";
+            for(UserBuyCarItemVO userBuyCarVO:userBuyCarVos)
+            {
+                if(userBuyCarVO.getId()==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("ID不能为空");
+                    return resultObjectVO;
+                }
+                if(userBuyCarVO.getUserMainId()==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("用户ID不能为空");
+                    return resultObjectVO;
+                }
+                if(userBuyCarVO.getBuyCount()==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("数量不能为空");
+                    return resultObjectVO;
+                }
+            }
+            try {
+                userMainId = String.valueOf(userBuyCarVos.get(0).getUserMainId());
+                boolean lockStatus = skylarkLock.lock(UserBuyCarKey.getUpdateLockKey(userMainId), userMainId);
+                if (!lockStatus) {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请稍后重试");
+                    return resultObjectVO;
+                }
+                //查询出库里的所有购物车项
+                List<UserBuyCarItem> userBuyCarItemList = userBuyCarItemService.findListByUserMainId(userBuyCarVos.get(0).getUserMainId());
+                for (UserBuyCarItemVO userBuyCarVO : userBuyCarVos){
+                    for (UserBuyCarItem userBuyCarItem : userBuyCarItemList) {
+                        if(userBuyCarVO.getId().longValue()==userBuyCarItem.getId().longValue())
+                        {
+                            //本次修改了数量,更新库中数据
+                            if(userBuyCarVO.getBuyCount().intValue()!=userBuyCarItem.getBuyCount().intValue())
+                            {
+                                userBuyCarItem.setBuyCount(userBuyCarVO.getBuyCount());
+                                userBuyCarItem.setUpdateDate(new Date());
+                                userBuyCarItemService.update(userBuyCarItem);
+                            }
+                            continue;
+                        }
+
+                    }
+                }
+
+
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            } finally {
+                skylarkLock.unLock(UserBuyCarKey.getUpdateLockKey(userMainId), userMainId);
+            }
+        }
+        return resultObjectVO;
+    }
 
 
 }

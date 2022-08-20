@@ -13,7 +13,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.user.vo.UserBuyCarVO;
+import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,15 +60,15 @@ public class UserBuyCarApiController {
         try{
             //从请求头中拿到uid
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            UserBuyCarVO userBuyCarVO = new UserBuyCarVO();
+            UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
             ResultObjectVO userBuyCarResultObjectVO  = feignUserBuyCarService.listByUserMainId(requestJsonVO);
             if(userBuyCarResultObjectVO.isSuccess())
             {
-                List<UserBuyCarVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarVO.class);
+                List<UserBuyCarItemVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarItemVO.class);
                 List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
-                for(UserBuyCarVO ubc:userBuyCarVOList)
+                for(UserBuyCarItemVO ubc:userBuyCarVOList)
                 {
                     ProductSkuVO productSkuVO = new ProductSkuVO();
                     productSkuVO.setId(ubc.getShopProductSkuId());
@@ -86,7 +86,7 @@ public class UserBuyCarApiController {
                         {
                             for(ProductSku productSku:productSkuList)
                             {
-                                for(UserBuyCarVO ubc:userBuyCarVOList)
+                                for(UserBuyCarItemVO ubc:userBuyCarVOList)
                                 {
                                     if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
                                         ubc.setProductSkuName(productSku.getName());
@@ -128,15 +128,15 @@ public class UserBuyCarApiController {
         try{
             //从请求头中拿到uid
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
-            UserBuyCarVO userBuyCarVO = new UserBuyCarVO();
+            UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),userBuyCarVO);
             ResultObjectVO userBuyCarResultObjectVO  = feignUserBuyCarService.listByUserMainId(requestJsonVO);
             if(userBuyCarResultObjectVO.isSuccess())
             {
-                List<UserBuyCarVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarVO.class);
+                List<UserBuyCarItemVO> userBuyCarVOList = userBuyCarResultObjectVO.formatDataList(UserBuyCarItemVO.class);
                 List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
-                for(UserBuyCarVO ubc:userBuyCarVOList)
+                for(UserBuyCarItemVO ubc:userBuyCarVOList)
                 {
                     ProductSkuVO productSkuVO = new ProductSkuVO();
                     productSkuVO.setId(ubc.getShopProductSkuId());
@@ -154,7 +154,7 @@ public class UserBuyCarApiController {
                         {
                             for(ProductSku productSku:productSkuList)
                             {
-                                for(UserBuyCarVO ubc:userBuyCarVOList)
+                                for(UserBuyCarItemVO ubc:userBuyCarVOList)
                                 {
                                     if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
                                         ubc.setProductSkuName(productSku.getName());
@@ -198,7 +198,7 @@ public class UserBuyCarApiController {
     @UserAuth
     @RequestMapping("/save")
     @ResponseBody
-    public ResultObjectVO save(HttpServletRequest request, @RequestBody UserBuyCarVO userBuyCarVO)
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody UserBuyCarItemVO userBuyCarVO)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId="-1";
@@ -212,9 +212,9 @@ public class UserBuyCarApiController {
             //已存在改商品或者保存成功
             if(resultObjectVO.isSuccess()||resultObjectVO.getCode().intValue()==201)
             {
-                List<UserBuyCarVO> userBuyCarVOList = resultObjectVO.formatDataList(UserBuyCarVO.class);
+                List<UserBuyCarItemVO> userBuyCarVOList = resultObjectVO.formatDataList(UserBuyCarItemVO.class);
                 List<ProductSkuVO> productSkus = new LinkedList<ProductSkuVO>();
-                for(UserBuyCarVO ubc:userBuyCarVOList)
+                for(UserBuyCarItemVO ubc:userBuyCarVOList)
                 {
                     ProductSkuVO productSkuVO = new ProductSkuVO();
                     productSkuVO.setId(ubc.getShopProductSkuId());
@@ -232,7 +232,7 @@ public class UserBuyCarApiController {
                         {
                             for(ProductSku productSku:productSkuList)
                             {
-                                for(UserBuyCarVO ubc:userBuyCarVOList)
+                                for(UserBuyCarItemVO ubc:userBuyCarVOList)
                                 {
                                     if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
                                         ubc.setProductSkuName(productSku.getName());
@@ -269,7 +269,7 @@ public class UserBuyCarApiController {
     @UserAuth
     @RequestMapping("/remove")
     @ResponseBody
-    public ResultObjectVO remove(HttpServletRequest request, @RequestBody UserBuyCarVO userBuyCarVO) {
+    public ResultObjectVO remove(HttpServletRequest request, @RequestBody UserBuyCarItemVO userBuyCarVO) {
 
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId = "-1";
@@ -296,13 +296,38 @@ public class UserBuyCarApiController {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         String userMainId = "-1";
         try {
-            UserBuyCarVO userBuyCarVO = new UserBuyCarVO();
+            UserBuyCarItemVO userBuyCarVO = new UserBuyCarItemVO();
             //从请求头中拿到uid
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             userBuyCarVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVO);
             resultObjectVO = feignUserBuyCarService.clearByUserMainId(requestJsonVO);
 
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+    @UserAuth
+    @RequestMapping("/updates")
+    @ResponseBody
+    public ResultObjectVO updates(HttpServletRequest request, @RequestBody List<UserBuyCarItemVO> userBuyCarVos) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId = "-1";
+        try {
+            if(CollectionUtils.isNotEmpty(userBuyCarVos)) {
+                //从请求头中拿到uid
+                userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+                for(UserBuyCarItemVO userBuyCarItemVO:userBuyCarVos) {
+                    userBuyCarItemVO.setUserMainId(Long.parseLong(userMainId));
+                }
+                RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarVos);
+                resultObjectVO = feignUserBuyCarService.updates(requestJsonVO);
+            }
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
         }

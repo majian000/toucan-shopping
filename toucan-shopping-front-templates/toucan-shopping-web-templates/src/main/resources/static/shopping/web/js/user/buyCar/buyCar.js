@@ -61,7 +61,7 @@ function loadBuyCarPanel(){
                     "            </tr>\n" +
                     "            <tr valign=\"top\" height=\"150\">\n" +
                     "                <td colspan=\"6\" align=\"right\">\n" +
-                    "                    <a href=\"#\"><img src=\""+basePath+"/static/images/buy1.gif\" /></a>&nbsp; &nbsp; <a href=\"#\"><img src=\""+basePath+"/static/images/buy2.gif\" /></a>\n" +
+                    "                    <a style=\"cursor:pointer;\" class=\"refersh_buy_car\" onclick=\"refershBuyCar(1);\"><img src=\""+basePath+"/static/images/buy1.gif\" /></a>&nbsp; &nbsp; <a style=\"cursor:pointer;\" onclick=\"refershBuyCar(2);\" ><img src=\""+basePath+"/static/images/buy2.gif\" /></a>\n" +
                     "                </td>\n" +
                     "            </tr>";
 
@@ -72,6 +72,61 @@ function loadBuyCarPanel(){
                 bindClearBuyCar();
             }
             loading.hideLoading();
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
+function refershBuyCar(srcType)
+{
+    var mcpns = $(".mcar_pn");
+    if(mcpns==null||mcpns.length<=0)
+    {
+        window.location.href=basePath+"/";
+    }
+
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+    var buyCarItems = new Array();
+    for(var i=0;i<mcpns.length;i++)
+    {
+        var mcpn = mcpns[i];
+        buyCarItems.push({
+                id:$(mcpn).attr("attr-cid"),
+                buyCount:$(mcpn).val()
+        });
+    }
+
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/updates",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(buyCarItems),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                //继续购物
+                if(srcType==1)
+                {
+                    window.location.href=basePath+"/";
+                }else if(srcType==2) //确认付款
+                {
+                    alert("确认结算");
+                }
+
+            }else{
+                $.message({
+                    message: "请稍后重试",
+                    type: 'error'
+                });
+            }
         },
         error: function (result) {
         },

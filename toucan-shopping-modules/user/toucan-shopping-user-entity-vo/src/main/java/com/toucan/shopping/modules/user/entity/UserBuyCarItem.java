@@ -13,7 +13,7 @@ import java.util.Date;
  * @author majian
  */
 @Data
-public class UserBuyCar {
+public class UserBuyCarItem {
     /**
      * 主键 雪花算法生成
      */

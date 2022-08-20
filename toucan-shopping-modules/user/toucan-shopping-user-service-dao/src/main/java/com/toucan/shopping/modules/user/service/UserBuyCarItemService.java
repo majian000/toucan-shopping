@@ -1,8 +1,7 @@
 package com.toucan.shopping.modules.user.service;
 
-import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
-import com.toucan.shopping.modules.user.entity.UserBuyCar;
-import com.toucan.shopping.modules.user.vo.UserBuyCarVO;
+import com.toucan.shopping.modules.user.entity.UserBuyCarItem;
+import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 
 import java.util.List;
 
@@ -10,18 +9,18 @@ import java.util.List;
  * 用户购物车
  * @author majian
  */
-public interface UserBuyCarService {
+public interface UserBuyCarItemService {
 
-    List<UserBuyCar> findListByEntity(UserBuyCarVO query);
-
-
-    List<UserBuyCar> findListByUserMainId(Long userMainId);
+    List<UserBuyCarItem> findListByEntity(UserBuyCarItemVO query);
 
 
+    List<UserBuyCarItem> findListByUserMainId(Long userMainId);
 
-    int save(UserBuyCar entity);
 
-    int update(UserBuyCar entity);
+
+    int save(UserBuyCarItem entity);
+
+    int update(UserBuyCarItem entity);
 
     /**
      * 根据ID删除

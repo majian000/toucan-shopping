@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.toucan.shopping.modules.user.mapper.UserBuyCarMapper">
+<mapper namespace="com.toucan.shopping.modules.user.mapper.UserBuyCarItemMapper">
 
-    <resultMap id="entityMap" type="com.toucan.shopping.modules.user.entity.UserBuyCar" >
+    <resultMap id="entityMap" type="com.toucan.shopping.modules.user.entity.UserBuyCarItem" >
         <id column="id" jdbcType="BIGINT"  property="id" />
         <result column="user_main_id" jdbcType="BIGINT" property="userMainId" />
         <result column="shop_product_sku_id" jdbcType="BIGINT" property="shopProductSkuId" />
@@ -13,24 +13,24 @@
 
     </resultMap>
 
-    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserBuyCar" >
-        insert into t_user_buy_car(id,user_main_id,shop_product_sku_id,buy_count,create_date,delete_status)
+    <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.UserBuyCarItem" >
+        insert into t_user_buy_car_item(id,user_main_id,shop_product_sku_id,buy_count,create_date,delete_status)
         values(#{id},#{userMainId},#{shopProductSkuId},#{buyCount},#{createDate},#{deleteStatus})
     </insert>
 
 
     <update id="deleteById" parameterType="java.lang.Long">
-        update t_user_buy_car set delete_status=1 where id = #{id}
+        update t_user_buy_car_item set delete_status=1 where id = #{id}
     </update>
 
-    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserBuyCar">
-          update t_user_buy_car set buy_count=#{buyCount} , update_date = #{updateDate} where id = #{id}
+    <update id="update" parameterType="com.toucan.shopping.modules.user.entity.UserBuyCarItem">
+          update t_user_buy_car_item set buy_count=#{buyCount} , update_date = #{updateDate} where id = #{id}
     </update>
 
 
 
-    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.UserBuyCarVO">
-        select * from t_user_buy_car t
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.UserBuyCarItemVO">
+        select * from t_user_buy_car_item t
         <where>
             1=1
             <if test="id!=null">
@@ -49,16 +49,16 @@
 
 
     <select id="findListByUserMainId" resultMap="entityMap" parameterType="java.lang.Long">
-        select * from t_user_buy_car t  where 1=1   and t.user_main_id = #{userMainId} and t.delete_status = 0   limit 0,100
+        select * from t_user_buy_car_item t  where 1=1   and t.user_main_id = #{userMainId} and t.delete_status = 0   limit 0,100
     </select>
 
 
     <update id="deleteByIdAndUserMainId" >
-        update t_user_buy_car set delete_status=1 where id = #{id} and user_main_id = #{userMainId}  and delete_status=0
+        update t_user_buy_car_item set delete_status=1 where id = #{id} and user_main_id = #{userMainId}  and delete_status=0
     </update>
 
     <update id="deleteByUserMainId" parameterType="java.lang.Long">
-        update t_user_buy_car set delete_status=1 where user_main_id = #{userMainId} and delete_status=0
+        update t_user_buy_car_item set delete_status=1 where user_main_id = #{userMainId} and delete_status=0
     </update>
 
 </mapper>

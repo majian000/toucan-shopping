@@ -1,6 +1,6 @@
 package com.toucan.shopping.modules.user.vo;
 
-import com.toucan.shopping.modules.user.entity.UserBuyCar;
+import com.toucan.shopping.modules.user.entity.UserBuyCarItem;
 import lombok.Data;
 
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author majian
  */
 @Data
-public class UserBuyCarVO extends UserBuyCar {
+public class UserBuyCarItemVO extends UserBuyCarItem {
 
 
     /**

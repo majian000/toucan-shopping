@@ -45,4 +45,9 @@ public interface FeignUserBuyCarService {
     @RequestMapping(value="/clear/buy/car/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO clearByUserMainId(@RequestBody RequestJsonVO requestVo);
 
+
+
+    @RequestMapping(value="/updates",produces = "application/json;charset=UTF-8")
+    ResultObjectVO updates(@RequestBody RequestJsonVO requestJsonVO);
+
 }
