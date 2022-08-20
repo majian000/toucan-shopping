@@ -15,55 +15,70 @@ $(function () {
 
 
 function loadBuyCarPanel(){
-    //查询信息
-    $.post(basePath + "/api/user/buyCar/list", {}, function (result) {
-        if(result.code == 1){
-            var productHtmls="";
-            var productPriceTotal = 0;
-            for(var i=0;i<result.data.length;i++)
-            {
-                var buyCarItem = result.data[i];
-                productHtmls+="  <tr>\n" +
-                    "                <td>\n" +
-                    "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
-                    "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
-                    "                </td>\n" +
-                    "                <td align=\"center\">"+buyCarItem.attributePreview+"</td>\n" +
-                    "                <td align=\"center\">\n" +
-                    "                    <div class=\"c_num\">\n" +
-                    "                        <input type=\"button\" value=\"\" onclick=\"subNum('"+buyCarItem.id+"');\" class=\"car_btn_1\" />\n" +
-                    "                        <input type=\"text\" value=\""+buyCarItem.buyCount+"\" id=\"num_"+buyCarItem.id+"\" attr-cid=\""+buyCarItem.id+"\" class=\"car_ipt mcar_pn\" />\n" +
-                    "                        <input type=\"button\" value=\"\" onclick=\"addNum('"+buyCarItem.id+"');\" class=\"car_btn_2\" />\n" +
-                    "                        <input type=\"hidden\" class='mcar_pp'  id=\"productPrice_"+buyCarItem.id+"\" value=\""+buyCarItem.productPrice+"\" />"+
-                    "                    </div>\n" +
-                    "                </td>\n" +
-                    "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(buyCarItem.buyCount*buyCarItem.productPrice)+"</a></td>\n" +
-                    "                <td align=\"center\"><a onclick=\"showRemoveBuyCar('"+buyCarItem.id+"','"+buyCarItem.productSkuName+"')\">删除</a></td>\n" +
-                    "            </tr>\n" +
-                    "           ";
-                productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
-            }
-            productHtmls+="<tr height=\"70\">\n" +
-                "                <td colspan=\"6\" style=\"font-family:'Microsoft YaHei'; border-bottom:0;\">\n" +
-                "                    <label class=\"r_rad\" style=\"padding-top: 5px;\"><input type=\"checkbox\" name=\"clear\"  class=\"clear_buy_car\" /></label><label class=\"r_txt\"><a style=\"cursor:pointer;\" class=\"clear_buy_car\" >清空购物车</a></label>\n" +
-                "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+productPriceTotal+"</a></b></span>\n" +
-                "                </td>\n" +
-                "            </tr>\n" +
-                "            <tr valign=\"top\" height=\"150\">\n" +
-                "                <td colspan=\"6\" align=\"right\">\n" +
-                "                    <a href=\"#\"><img src=\""+basePath+"/static/images/buy1.gif\" /></a>&nbsp; &nbsp; <a href=\"#\"><img src=\""+basePath+"/static/images/buy2.gif\" /></a>\n" +
-                "                </td>\n" +
-                "            </tr>";
-
-
-            $(".mcar_tab").append(productHtmls);
-
-            bindBuyItemNumEvent();
-            bindClearBuyCar();
-        }
+    loading.showLoading({
+        type:1,
+        tip:"查询中..."
     });
 
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/user/buyCar/list",
+        contentType: "application/json;charset=utf-8",
+        data: {},
+        dataType: "json",
+        success: function (result) {
+            if(result.code == 1){
+                var productHtmls="";
+                var productPriceTotal = 0;
+                for(var i=0;i<result.data.length;i++)
+                {
+                    var buyCarItem = result.data[i];
+                    productHtmls+="  <tr>\n" +
+                        "                <td>\n" +
+                        "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
+                        "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
+                        "                </td>\n" +
+                        "                <td align=\"center\">"+buyCarItem.attributePreview+"</td>\n" +
+                        "                <td align=\"center\">\n" +
+                        "                    <div class=\"c_num\">\n" +
+                        "                        <input type=\"button\" value=\"\" onclick=\"subNum('"+buyCarItem.id+"');\" class=\"car_btn_1\" />\n" +
+                        "                        <input type=\"text\" value=\""+buyCarItem.buyCount+"\" id=\"num_"+buyCarItem.id+"\" attr-cid=\""+buyCarItem.id+"\" class=\"car_ipt mcar_pn\" />\n" +
+                        "                        <input type=\"button\" value=\"\" onclick=\"addNum('"+buyCarItem.id+"');\" class=\"car_btn_2\" />\n" +
+                        "                        <input type=\"hidden\" class='mcar_pp'  id=\"productPrice_"+buyCarItem.id+"\" value=\""+buyCarItem.productPrice+"\" />"+
+                        "                    </div>\n" +
+                        "                </td>\n" +
+                        "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(buyCarItem.buyCount*buyCarItem.productPrice)+"</a></td>\n" +
+                        "                <td align=\"center\"><a onclick=\"showRemoveBuyCar('"+buyCarItem.id+"','"+buyCarItem.productSkuName+"')\">删除</a></td>\n" +
+                        "            </tr>\n" +
+                        "           ";
+                    productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
+                }
+                productHtmls+="<tr height=\"70\">\n" +
+                    "                <td colspan=\"6\" style=\"font-family:'Microsoft YaHei'; border-bottom:0;\">\n" +
+                    "                    <label class=\"r_rad\" style=\"padding-top: 5px;\"><input type=\"checkbox\" name=\"clear\"  class=\"clear_buy_car\" /></label><label class=\"r_txt\"><a style=\"cursor:pointer;\" class=\"clear_buy_car\" >清空购物车</a></label>\n" +
+                    "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+productPriceTotal+"</a></b></span>\n" +
+                    "                </td>\n" +
+                    "            </tr>\n" +
+                    "            <tr valign=\"top\" height=\"150\">\n" +
+                    "                <td colspan=\"6\" align=\"right\">\n" +
+                    "                    <a href=\"#\"><img src=\""+basePath+"/static/images/buy1.gif\" /></a>&nbsp; &nbsp; <a href=\"#\"><img src=\""+basePath+"/static/images/buy2.gif\" /></a>\n" +
+                    "                </td>\n" +
+                    "            </tr>";
 
+
+                $(".mcar_tab").append(productHtmls);
+
+                bindBuyItemNumEvent();
+                bindClearBuyCar();
+            }
+            loading.hideLoading();
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
 }
 
 
