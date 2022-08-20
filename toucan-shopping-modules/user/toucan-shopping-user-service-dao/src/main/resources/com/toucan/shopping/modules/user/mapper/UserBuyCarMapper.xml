@@ -51,4 +51,11 @@
     <select id="findListByUserMainId" resultMap="entityMap" parameterType="java.lang.Long">
         select * from t_user_buy_car t  where 1=1   and t.user_main_id = #{userMainId} and t.delete_status = 0   limit 0,100
     </select>
+
+
+    <update id="deleteByIdAndUserMainId" >
+        update t_user_buy_car set delete_status=1 where id = #{id} and user_main_id = #{userMainId}  and delete_status=0
+    </update>
+
+
 </mapper>

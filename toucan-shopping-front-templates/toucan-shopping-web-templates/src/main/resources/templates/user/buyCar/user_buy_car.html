@@ -63,6 +63,7 @@
     <!--Begin 弹出层-删除商品 Begin-->
     <div id="fade" class="black_overlay"></div>
     <div id="removeBuyCar" class="white_content">
+        <input type="hidden" id="removeBuyCarId"/>
         <div class="white_d">
             <div class="notice_t">
                 <span class="fr" style="margin-top:10px; cursor:pointer;" onclick="CloseDiv('removeBuyCar','fade')"><img src="${basePath}/static/images/close.gif" /></span>
@@ -71,10 +72,13 @@
 
                 <table border="0" align="center" style="font-size:16px;" cellspacing="0" cellpadding="0">
                     <tr valign="top">
-                        <td>您确定要把该商品移除购物车吗？</td>
+                        <td>您确定要把"<a id="removeBuyCarProductName"></a>"移除购物车吗？</td>
                     </tr>
                     <tr height="50" valign="bottom">
-                        <td><a href="#" class="b_sure">确定</a><a  style="cursor:pointer;" onclick="CloseDiv_1('removeBuyCar','fade')"  class="b_buy">取消</a></td>
+                        <td>
+                            <a  class="b_sure mcar_remove" style="cursor:pointer;margin-left: 25%;">确定</a>
+                            <a  style="cursor:pointer;" onclick="CloseDiv_1('removeBuyCar','fade')"  class="b_buy">取消</a>
+                        </td>
                     </tr>
                 </table>
 

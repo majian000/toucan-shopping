@@ -27,4 +27,6 @@ public interface UserBuyCarMapper {
     int deleteById(Long id);
 
     int update(UserBuyCar entity);
+
+    int deleteByIdAndUserMainId(Long id, Long userMainId);
 }

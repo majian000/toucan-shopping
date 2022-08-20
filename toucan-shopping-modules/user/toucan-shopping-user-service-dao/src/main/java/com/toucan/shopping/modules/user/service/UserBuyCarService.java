@@ -30,4 +30,11 @@ public interface UserBuyCarService {
      */
     int deleteById(Long id);
 
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteByIdAndUserMainId(Long id,Long userMainId);
+
 }

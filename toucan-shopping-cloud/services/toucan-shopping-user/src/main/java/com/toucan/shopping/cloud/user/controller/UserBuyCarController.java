@@ -136,9 +136,9 @@ public class UserBuyCarController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/remove/buy/car",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO removeBuyCar(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -156,24 +156,8 @@ public class UserBuyCarController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该角色
-            UserBuyCarVO query=new UserBuyCarVO();
-            query.setId(entity.getId());
-            List<UserBuyCar> adminList = userBuyCarService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(adminList))
-            {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("该商品不存在!");
-                return resultObjectVO;
-            }
 
-
-            int row = userBuyCarService.deleteById(entity.getId());
-            if (row < 1) {
-                resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("请重试!");
-                return resultObjectVO;
-            }
+            int row = userBuyCarService.deleteByIdAndUserMainId(entity.getId(),entity.getUserMainId());
             resultObjectVO.setData(entity);
 
         }catch(Exception e)

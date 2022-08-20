@@ -24,12 +24,12 @@ public interface FeignUserBuyCarService {
 
 
     /**
-     * 删除指定
+     * 移除购物车
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
-    ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo);
+    @RequestMapping(value="/remove/buy/car",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    ResultObjectVO removeBuyCar(@RequestBody RequestJsonVO requestVo);
 
 
     @RequestMapping(value="/list/userMainId",produces = "application/json;charset=UTF-8")

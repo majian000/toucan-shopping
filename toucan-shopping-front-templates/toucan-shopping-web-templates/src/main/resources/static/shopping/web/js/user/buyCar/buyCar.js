@@ -2,6 +2,9 @@ $(function () {
 
     loadBuyCarPanel();
 
+    $(".mcar_remove").click(function(){
+        removeBuyCar();
+    });
 });
 
 
@@ -31,7 +34,7 @@ function loadBuyCarPanel(){
                     "                    </div>\n" +
                     "                </td>\n" +
                     "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(buyCarItem.buyCount*buyCarItem.productPrice)+"</a></td>\n" +
-                    "                <td align=\"center\"><a onclick=\"ShowDiv('removeBuyCar','fade')\">删除</a></td>\n" +
+                    "                <td align=\"center\"><a onclick=\"showRemoveBuyCar('"+buyCarItem.id+"','"+buyCarItem.productSkuName+"')\">删除</a></td>\n" +
                     "            </tr>\n" +
                     "           ";
                 productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
@@ -58,6 +61,50 @@ function loadBuyCarPanel(){
 
 }
 
+
+function showRemoveBuyCar(cid,cname)
+{
+    $("#removeBuyCarId").val(cid);
+    $("#removeBuyCarProductName").html(cname);
+    ShowDiv('removeBuyCar','fade');
+}
+
+function removeBuyCar()
+{
+    CloseDiv_1('removeBuyCar','fade');
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+    var buyCarId = $("#removeBuyCarId").val();
+
+    var params = {
+        id:buyCarId
+    };
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/remove",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(params),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                window.location.reload();
+            }else{
+                $.message({
+                    message: "删除失败,请稍后重试",
+                    type: 'error'
+                });
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
 
 function bindBuyItemNumEvent()
 {

@@ -51,4 +51,9 @@ public class UserBuyCarServiceImpl implements UserBuyCarService {
     public int deleteById(Long id) {
         return userBuyCarMapper.deleteById(id);
     }
+
+    @Override
+    public int deleteByIdAndUserMainId(Long id, Long userMainId) {
+        return userBuyCarMapper.deleteByIdAndUserMainId(id,userMainId);
+    }
 }

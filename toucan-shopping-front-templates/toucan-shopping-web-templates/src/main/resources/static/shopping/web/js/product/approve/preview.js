@@ -2,8 +2,8 @@
 var g_productVo;
 
 $(function(){
-
     tabsEvent();
+    bindProductNumEvent();
     var id = getProductId();
     if(id!=null&&id!="") {
         var type= getPreviewType();
@@ -115,6 +115,19 @@ function bindAttributeCheckboxEvent()
         }
     });
 }
+
+
+function bindProductNumEvent()
+{
+    $("#buyCount").change(function(){
+        var bnum = $(this).val();
+        if(isNaN(bnum))
+        {
+            $(this).val("1");
+        }
+    });
+}
+
 
 function drawProductPage(productVO)
 {

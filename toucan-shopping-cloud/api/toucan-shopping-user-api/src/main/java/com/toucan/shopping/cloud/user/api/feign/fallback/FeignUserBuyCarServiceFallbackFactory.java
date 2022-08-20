@@ -40,7 +40,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
             }
 
             @Override
-            public ResultObjectVO deleteById(RequestJsonVO requestVo) {
+            public ResultObjectVO removeBuyCar(RequestJsonVO requestVo) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestVo==null)
                 {
@@ -48,7 +48,7 @@ public class FeignUserBuyCarServiceFallbackFactory implements FallbackFactory<Fe
                     resultObjectVO.setMsg("请求超时,请稍后重试");
                     return resultObjectVO;
                 }
-                logger.warn("调用FeignUserBuyCarService.deleteById失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                logger.warn("调用FeignUserBuyCarService.removeBuyCar失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
