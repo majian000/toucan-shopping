@@ -362,6 +362,8 @@ function saveUserCar()
                 $(".buy_car_price_total").html(buyCarPriceTotal);
                 ShowDiv_1('userBuyCarMsg','fade1');
                 loadBuyCarPreviewPanel();
+            }else if(result.code==403){
+                window.location.href=basePath+"/page/user/login";
             }
         },
         error: function (result) {
