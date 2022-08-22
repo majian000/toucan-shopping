@@ -333,4 +333,75 @@ public class UserBuyCarController {
     }
 
 
+
+
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        UserBuyCarItemVO userBuyCarItemVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), UserBuyCarItemVO.class);
+        String userMainId = "-1";
+        if(userBuyCarItemVO.getId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空");
+            return resultObjectVO;
+        }
+        if(userBuyCarItemVO.getUserMainId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("用户ID不能为空");
+            return resultObjectVO;
+        }
+        if(userBuyCarItemVO.getBuyCount()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("数量不能为空");
+            return resultObjectVO;
+        }
+        try {
+            userMainId = String.valueOf(userBuyCarItemVO.getUserMainId());
+            boolean lockStatus = skylarkLock.lock(UserBuyCarKey.getUpdateLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+            //查询出库里的所有购物车项
+            UserBuyCarItem userBuyCarItem = userBuyCarItemService.findById(userBuyCarItemVO.getId());
+            if(userBuyCarItemVO.getId().longValue()==userBuyCarItem.getId().longValue()
+                &&userBuyCarItemVO.getUserMainId().longValue()==userBuyCarItem.getUserMainId().longValue())
+            {
+                //本次修改了数量,更新库中数据
+                if(userBuyCarItemVO.getBuyCount().intValue()!=userBuyCarItem.getBuyCount().intValue())
+                {
+                    userBuyCarItem.setBuyCount(userBuyCarItemVO.getBuyCount());
+                    userBuyCarItem.setUpdateDate(new Date());
+                    userBuyCarItemService.update(userBuyCarItem);
+                }
+            }
+
+
+
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        } finally {
+            skylarkLock.unLock(UserBuyCarKey.getUpdateLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
+
 }

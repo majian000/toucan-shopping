@@ -333,4 +333,25 @@ public class UserBuyCarApiController {
         }
         return resultObjectVO;
     }
+
+
+
+
+    @UserAuth
+    @RequestMapping("/update")
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody UserBuyCarItemVO userBuyCarItemVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId = "-1";
+        try {
+            //从请求头中拿到uid
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            userBuyCarItemVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), userBuyCarItemVO);
+            resultObjectVO = feignUserBuyCarService.update(requestJsonVO);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return resultObjectVO;
+    }
 }

@@ -30,4 +30,6 @@ public interface UserBuyCarItemMapper {
     int deleteByIdAndUserMainId(Long id, Long userMainId);
 
     int deleteByUserMainId(Long userMainId);
+
+    UserBuyCarItem findById(Long id);
 }

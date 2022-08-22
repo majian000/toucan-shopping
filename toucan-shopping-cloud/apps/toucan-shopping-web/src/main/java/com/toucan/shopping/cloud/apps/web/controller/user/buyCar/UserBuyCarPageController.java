@@ -15,9 +15,17 @@ public class UserBuyCarPageController {
 
     @UserAuth
     @RequestMapping("/index")
-    public String page()
+    public String indexPage()
     {
         return "user/buyCar/user_buy_car";
+    }
+
+
+    @UserAuth
+    @RequestMapping("/confirm")
+    public String confirmPage()
+    {
+        return "user/buyCar/user_buy_confirm";
     }
 
 }

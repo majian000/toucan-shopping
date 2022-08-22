@@ -16,7 +16,7 @@ public interface UserBuyCarItemService {
 
     List<UserBuyCarItem> findListByUserMainId(Long userMainId);
 
-
+    UserBuyCarItem findById(Long id);
 
     int save(UserBuyCarItem entity);
 

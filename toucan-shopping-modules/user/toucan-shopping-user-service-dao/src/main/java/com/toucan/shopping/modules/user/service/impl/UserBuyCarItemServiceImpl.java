@@ -35,6 +35,11 @@ public class UserBuyCarItemServiceImpl implements UserBuyCarItemService {
     }
 
     @Override
+    public UserBuyCarItem findById(Long id) {
+        return userBuyCarItemMapper.findById(id);
+    }
+
+    @Override
     public int save(UserBuyCarItem entity) {
         return userBuyCarItemMapper.insert(entity);
     }

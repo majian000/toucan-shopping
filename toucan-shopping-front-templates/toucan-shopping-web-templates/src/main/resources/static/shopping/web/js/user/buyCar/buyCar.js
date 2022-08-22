@@ -83,57 +83,14 @@ function loadBuyCarPanel(){
 
 function refershBuyCar(srcType)
 {
-    var mcpns = $(".mcar_pn");
-    if(mcpns==null||mcpns.length<=0)
+    //继续购物
+    if(srcType==1)
     {
         window.location.href=basePath+"/";
-    }
-
-    loading.showLoading({
-        type:1,
-        tip:"提交中..."
-    });
-    var buyCarItems = new Array();
-    for(var i=0;i<mcpns.length;i++)
+    }else if(srcType==2) //确认付款
     {
-        var mcpn = mcpns[i];
-        buyCarItems.push({
-                id:$(mcpn).attr("attr-cid"),
-                buyCount:$(mcpn).val()
-        });
+        window.location.href=basePath+"/page/user/buyCar/confirm";
     }
-
-    $.ajax({
-        type: "POST",
-        url: basePath+"/api/user/buyCar/updates",
-        contentType: "application/json;charset=utf-8",
-        data: JSON.stringify(buyCarItems),
-        dataType: "json",
-        success: function (result) {
-            if(result.code==1)
-            {
-                //继续购物
-                if(srcType==1)
-                {
-                    window.location.href=basePath+"/";
-                }else if(srcType==2) //确认付款
-                {
-                    alert("确认结算");
-                }
-
-            }else{
-                $.message({
-                    message: "请稍后重试",
-                    type: 'error'
-                });
-            }
-        },
-        error: function (result) {
-        },
-        complete:function(data,status){
-            loading.hideLoading();
-        }
-    });
 }
 
 
@@ -213,6 +170,45 @@ function clearBuyCar()
     });
 }
 
+function updateRow(cid,bnum)
+{
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+
+    var buyCarItem = {
+        id:cid,
+        buyCount:bnum
+    };
+
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/update",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(buyCarItem),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                $(this).val(bnum);
+                $("#buyItemTotal_"+cid).html((parseInt(bnum)*parseFloat($("#productPrice_"+cid).val())));
+                calculatePriceTotal();
+            }else{
+                $.message({
+                    message: "请稍后重试",
+                    type: 'error'
+                });
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
 function bindBuyItemNumEvent()
 {
     $(".mcar_pn").change(function(){
@@ -220,11 +216,9 @@ function bindBuyItemNumEvent()
         var cid = $(this).attr("attr-cid");
         if(isNaN(bnum))
         {
-            $(this).val("1");
             bnum = "1";
         }
-        $("#buyItemTotal_"+cid).html((parseInt(bnum)*parseFloat($("#productPrice_"+cid).val())));
-        calculatePriceTotal();
+        updateRow(cid,bnum);
     });
 }
 
@@ -244,9 +238,7 @@ function subNum(cid)
         c=parseInt(c)-1;
         $("#num_"+cid).val(c);
     }
-
-    $("#buyItemTotal_"+cid).html((parseInt($("#num_"+cid).val())*parseFloat($("#productPrice_"+cid).val())));
-    calculatePriceTotal();
+    updateRow(cid,$("#num_"+cid).val());
 }
 
 
@@ -257,8 +249,7 @@ function addNum(cid)
     c=parseInt(c)+1;
     $("#num_"+cid).val(c);
 
-    $("#buyItemTotal_"+cid).html((parseInt($("#num_"+cid).val())*parseFloat($("#productPrice_"+cid).val())));
-    calculatePriceTotal();
+    updateRow(cid,$("#num_"+cid).val());
 }
 
 function calculatePriceTotal()
