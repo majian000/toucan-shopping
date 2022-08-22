@@ -1,6 +1,11 @@
 $(function () {
     loadBuyCarPanel();
 
+
+    $(".mcar_remove").click(function(){
+        removeBuyCar();
+    });
+
     $(".mcar_modifu").click(function(){
         var opt = $(this).attr("attr-opt");
         if(opt!=null&&opt=="1") {
@@ -250,3 +255,53 @@ function calculatePriceTotal()
     $(".product_price_total").html("￥"+productPriceTotal);
     $(".order_price_total").html("￥"+productPriceTotal);
 }
+
+
+
+
+function showRemoveBuyCar(cid,cname)
+{
+    $("#removeBuyCarId").val(cid);
+    $("#removeBuyCarProductName").html(cname);
+    ShowDiv('removeBuyCar','fade');
+}
+
+
+
+function removeBuyCar()
+{
+    CloseDiv_1('removeBuyCar','fade');
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+    var buyCarId = $("#removeBuyCarId").val();
+
+    var params = {
+        id:buyCarId
+    };
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/remove",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(params),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                window.location.reload();
+            }else{
+                $.message({
+                    message: "删除失败,请稍后重试",
+                    type: 'error'
+                });
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
