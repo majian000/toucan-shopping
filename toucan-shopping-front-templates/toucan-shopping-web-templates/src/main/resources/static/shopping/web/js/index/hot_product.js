@@ -24,9 +24,9 @@ $(function () {
                         "                                    <a href='"+obj.clickPath+"' "+targetBlankHtml+"><img src='"+obj.httpImgPath+"' width='160' height='136' /></a>\n" +
                         "                                </div>\n" +
                         "                                <div class='name'>\n" +
-                        "                                    <a href='#'>\n" +
-                        "                                        <h2>"+obj.productName+"</h2>\n" +
-                        "                                        "+obj.productDesc+"\n" +
+                        "                                    <a href='"+obj.clickPath+"' title='"+(obj.productDesc!=null?obj.productDesc:"")+"'>\n" +
+                        "                                        <h2 title='"+obj.productName+"'>"+obj.productName+"</h2>\n" +
+                        "                                        "+(obj.productDesc!=null?obj.productDesc:"")+"\n" +
                         "                                    </a>\n" +
                         "                                </div>\n" +
                         "                                <div class='price'>\n" +

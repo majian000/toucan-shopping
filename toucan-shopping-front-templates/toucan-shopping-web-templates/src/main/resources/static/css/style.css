@@ -629,7 +629,7 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	-moz-transform:scale(1.1,1.1); -webkit-transform:scale(1.1,1.1); -o-transform:scale(1.1,1.1); -ms-transform:scale(1.1,1.1); transform:scale(1.1,1.1);
 }
 .hot_pro #block .box .name{
-	height:40px; line-height:20px; overflow:hidden; color:#888888; font-size:12px; text-align:center; margin-top:10px;
+	height:40px; line-height:20px; overflow:hidden; color:#888888; font-size:12px; text-align:center; margin-top:10px;width: 90%;
 }
 .hot_pro #block .box .name h2{
 	height:20px; line-height:20px; overflow:hidden; color:#555555; font-size:16px; text-align:center;
