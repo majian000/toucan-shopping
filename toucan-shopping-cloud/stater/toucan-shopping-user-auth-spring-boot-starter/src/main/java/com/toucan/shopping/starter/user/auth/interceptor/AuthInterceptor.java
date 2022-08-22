@@ -118,7 +118,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
                                         resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     }
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    response.setStatus(HttpStatus.OK.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -133,7 +133,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
                                         resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     }
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    response.setStatus(HttpStatus.OK.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -146,7 +146,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
                                         resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     }
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    response.setStatus(HttpStatus.OK.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -174,7 +174,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
                                         resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     }
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    response.setStatus(HttpStatus.OK.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -185,7 +185,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     logger.info(" 校验用户ID和loginToken不一致 {} loginToken {}" ,authHeader,lt);
                                     resultVO.setCode(ResultVO.HTTPCODE_403);
                                     resultVO.setMsg("登录超时,请重新登录");
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    response.setStatus(HttpStatus.OK.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -209,7 +209,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                         logger.info(" 校验loginToken不一致 或用户会话超时 {} loginToken {}" ,authHeader,lt);
                                         resultVO.setCode(ResultVO.HTTPCODE_403);
                                         resultVO.setMsg("登录超时,请重新登录");
-                                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                                        response.setStatus(HttpStatus.OK.value());
                                         responseWrite(response, JSONObject.toJSONString(resultVO));
                                         return false;
                                     }
@@ -226,7 +226,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                                     if(StringUtils.isNotEmpty(toucan.getUserAuth().getLoginPage())) {
                                         resultVO.setData(toucan.getUserAuth().getLoginPage());
                                     }
-                                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                                    response.setStatus(HttpStatus.OK.value());
                                     responseWrite(response, JSONObject.toJSONString(resultVO));
                                     return false;
                                 }
@@ -326,7 +326,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                     resultVO.setCode(ResultVO.FAILD);
                     resultVO.setMsg("请求失败");
                     response.setContentType("application/json");
-                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.setStatus(HttpStatus.OK.value());
                     response.getWriter().write(JSONObject.toJSONString(resultVO));
                 }
                 if (authAnnotation.requestType() == UserAuth.REQUEST_FORM) {
