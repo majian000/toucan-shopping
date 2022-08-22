@@ -290,6 +290,7 @@ function removeBuyCar()
             if(result.code==1)
             {
                 $("#tr_"+buyCarId).remove();
+                calculatePriceTotal();
             }else{
                 $.message({
                     message: "删除失败,请稍后重试",
