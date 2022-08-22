@@ -1,5 +1,18 @@
 $(function () {
     loadBuyCarPanel();
+
+    $(".mcar_modifu").click(function(){
+        var opt = $(this).attr("attr-opt");
+        if(opt!=null&&opt=="1") {
+            $(this).html("关闭");
+            $(this).attr("attr-opt","2");
+            loadModifyBuyCarPanel();
+        }else{
+            $(this).html("修改");
+            $(this).attr("attr-opt","1");
+            loadBuyCarPanel();
+        }
+    });
 });
 
 
@@ -52,6 +65,11 @@ function loadBuyCarPanel(){
 
                 $(".mcar_tab").html(productHtmls);
 
+
+
+                $(".product_price_total").html("￥"+productPriceTotal);
+                $(".order_price_total").html("￥"+productPriceTotal);
+
             }
             loading.hideLoading();
         },
@@ -62,6 +80,7 @@ function loadBuyCarPanel(){
         }
     });
 }
+
 
 
 
@@ -111,6 +130,7 @@ function loadModifyBuyCarPanel(){
                         "           ";
                     productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
                 }
+
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"5\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
                     "                        商品总价：￥<a id=\"productPriceTotal\">"+productPriceTotal+"</a>\n" +
@@ -119,6 +139,10 @@ function loadModifyBuyCarPanel(){
 
 
                 $(".mcar_tab").html(productHtmls);
+
+
+                $(".product_price_total").html("￥"+productPriceTotal);
+                $(".order_price_total").html("￥"+productPriceTotal);
 
                 bindBuyItemNumEvent();
             }
@@ -130,4 +154,99 @@ function loadModifyBuyCarPanel(){
             loading.hideLoading();
         }
     });
+}
+
+
+
+function bindBuyItemNumEvent()
+{
+    $(".mcar_pn").change(function(){
+        var bnum = $(this).val();
+        var cid = $(this).attr("attr-cid");
+        if(isNaN(bnum))
+        {
+            bnum = "1";
+        }
+        updateRow(cid,bnum);
+    });
+}
+
+
+function subNum(cid)
+{
+    var c = $("#num_"+cid).val();
+    if(c<=1){
+        c=1;
+    }else{
+        c=parseInt(c)-1;
+        $("#num_"+cid).val(c);
+    }
+    updateRow(cid,$("#num_"+cid).val());
+}
+
+
+
+function addNum(cid)
+{
+    var c = $("#num_"+cid).val();
+    c=parseInt(c)+1;
+    $("#num_"+cid).val(c);
+
+    updateRow(cid,$("#num_"+cid).val());
+}
+
+
+
+function updateRow(cid,bnum)
+{
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+
+    var buyCarItem = {
+        id:cid,
+        buyCount:bnum
+    };
+
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/buyCar/update",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(buyCarItem),
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                $(this).val(bnum);
+                $("#buyItemTotal_"+cid).html((parseInt(bnum)*parseFloat($("#productPrice_"+cid).val())));
+                calculatePriceTotal();
+            }else{
+                $.message({
+                    message: "请稍后重试",
+                    type: 'error'
+                });
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
+
+function calculatePriceTotal()
+{
+    var pns = $(".mcar_pn"); //数量
+    var pps = $(".mcar_pp"); //单价
+    var productPriceTotal = 0;
+    for(var i=0;i<pns.length;i++)
+    {
+        productPriceTotal+= (parseInt($(pns[i]).val())*parseFloat($(pps[i]).val()));
+    }
+    $("#productPriceTotal").html(productPriceTotal);
+
+    $(".product_price_total").html("￥"+productPriceTotal);
+    $(".order_price_total").html("￥"+productPriceTotal);
 }
