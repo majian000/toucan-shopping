@@ -49,7 +49,7 @@ function loadBuyCarPanel(){
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
-                    productHtmls+="  <tr>\n" +
+                    productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
                         "                <td>\n" +
                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
                         "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
@@ -115,7 +115,7 @@ function loadModifyBuyCarPanel(){
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
-                    productHtmls+="  <tr>\n" +
+                    productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
                         "                <td>\n" +
                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
                         "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
@@ -289,7 +289,7 @@ function removeBuyCar()
         success: function (result) {
             if(result.code==1)
             {
-                window.location.reload();
+                $("#tr_"+buyCarId).remove();
             }else{
                 $.message({
                     message: "删除失败,请稍后重试",
