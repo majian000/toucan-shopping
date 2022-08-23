@@ -161,6 +161,26 @@ $(function () {
             }
         }
 
+        var roughWeights = $(".roughWeights");
+        if(roughWeights.length>0)
+        {
+            for(var i=0;i<roughWeights.length;i++)
+            {
+                var roughWeightVal = $(roughWeights[i]).val();
+                if(roughWeightVal!=null&&roughWeightVal!="")
+                {
+                    if((!checkInput.decimal3w[0].test(roughWeightVal)))
+                    {
+                        $.message({
+                            message: "销售规格中的毛重"+checkInput.decimal3w[1],
+                            type: 'error'
+                        });
+                        $(roughWeights[i]).focus();
+                        return ;
+                    }
+                }
+            }
+        }
 
         if(result) {
             $("#step5").hide();

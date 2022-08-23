@@ -115,6 +115,27 @@ function showSetp3Page()
             }
         }
     }
+
+    var roughWeights = $(".roughWeights");
+    if(roughWeights.length>0)
+    {
+        for(var i=0;i<roughWeights.length;i++)
+        {
+            var roughWeightVal = $(roughWeights[i]).val();
+            if(roughWeightVal!=null&&roughWeightVal!="")
+            {
+                if((!checkInput.decimal3w[0].test(roughWeightVal)))
+                {
+                    $.message({
+                        message: "销售规格中的毛重"+checkInput.decimal3w[1],
+                        type: 'error'
+                    });
+                    $(roughWeights[i]).focus();
+                    return ;
+                }
+            }
+        }
+    }
     if(result) {
         $("#step5").hide();
         $("#step4").hide();
@@ -289,6 +310,12 @@ function setSkuTableValue()
 
                         $("#productSkuVOList_"+skuRowIndex+"_price").val(skuVo.price);
                         $("#productSkuVOList_"+skuRowIndex+"_stockNum").val(skuVo.stockNum);
+                        if(skuVo.roughWeight!=null&&skuVo.roughWeight!="") {
+                            $("#productSkuVOList_" + skuRowIndex + "_roughWeight").val(skuVo.roughWeight);
+                        }
+                        if(skuVo.suttle!=null&&skuVo.suttle!="") {
+                            $("#productSkuVOList_" + skuRowIndex + "_suttle").val(skuVo.suttle);
+                        }
                         $("#skuPreview"+skuRowIndex).attr("src",skuVo.httpProductPreviewPath);
                         $("#skuPreviewPath_"+skuRowIndex).val(skuVo.productPreviewPath);
                         $("#skuTableuploading-tip" + skuRowIndex).show();
