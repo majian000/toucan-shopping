@@ -130,6 +130,11 @@ function drawProductPage(productVO)
         $("#MagicZoom").attr("href",productVO.httpMainPhotoFilePath);
         $("#MagicZoomImg").attr("src",productVO.httpMainPhotoFilePath);
 
+        if(productVO.roughWeight!=null)
+        {
+            $(".product_detail_rough_weight").html(productVO.roughWeight+"kg");
+        }
+
         photoPos++;
         $(".productPhotoPreview").append("<li onclick=\"showPic("+photoPos+")\" rel=\"MagicZoom\" >" +
             "<img src=\""+productVO.httpProductPreviewPath+"\" tsImgS=\""+productVO.httpProductPreviewPath+"\" width=\"79\" height=\"79\" />" +

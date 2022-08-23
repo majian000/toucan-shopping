@@ -131,6 +131,14 @@ public class ProductSkuController {
                         productNameAttribute.getValues().add(shopProductVO.getName());
                         attributes.add(productNameAttribute);
 
+
+                        if(shopProductSkuVO.getSuttle()!=null) {
+                            ProductSkuAttribute suttleAttribute = new ProductSkuAttribute("", new ArrayList<>());
+                            suttleAttribute.setKey("商品净重");
+                            suttleAttribute.getValues().add(String.valueOf(shopProductSkuVO.getSuttle())+"kg");
+                            attributes.add(suttleAttribute);
+                        }
+
                         Brand brand = brandService.findByIdIngoreDeleteStatus(shopProductVO.getBrandId());
                         if(brand!=null) {
                             ProductSkuAttribute brandNameAttribute = new ProductSkuAttribute("",new ArrayList<>());

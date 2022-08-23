@@ -1578,7 +1578,13 @@ ul.brand li .name span{
 	color:#3e3e3e; font-size:18px; font-weight:bold; margin:0; padding:0;
 }
 .des_price{
-	height:64px; line-height:32px; overflow:hidden; font-family:"宋体"; margin-top:25px; margin-bottom:20px;
+	height:64px; line-height:32px; overflow:hidden; font-family:"宋体"; margin-top:25px; margin-bottom:5px;
+}
+.des_rough_weight{
+	height: 34px;
+	line-height: 32px;
+	overflow: hidden;
+	font-family: "宋体";
 }
 .des_price b{
 	color:#ff3200; font-size:18px; font-family:"Microsoft YaHei";
