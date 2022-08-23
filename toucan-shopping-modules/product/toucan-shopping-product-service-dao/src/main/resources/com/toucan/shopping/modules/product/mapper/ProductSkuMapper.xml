@@ -29,6 +29,8 @@
         <result column="category_id" jdbcType="BIGINT" property="categoryId" />
         <result column="shop_category_id" jdbcType="BIGINT" property="shopCategoryId" />
         <result column="product_no" jdbcType="VARCHAR" property="productNo" />
+        <result column="rough_weight" jdbcType="DECIMAL" property="roughWeight" />
+        <result column="suttle" jdbcType="DECIMAL" property="suttle" />
 
     </resultMap>
 
@@ -81,18 +83,18 @@
     </select>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.product.entity.ProductSku"  >
-        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no)
-        values(#{id},#{uuid},#{productUuid},#{productId},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{onlyName},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId},#{productNo})
+        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no,rough_weight,suttle)
+        values(#{id},#{uuid},#{productUuid},#{productId},#{shopProductUuid},#{shopProductId},#{attributes},#{price},#{status},#{remark},#{appCode},#{createDate},#{createUserId},#{shopId},#{brankId},#{name},#{onlyName},#{stockNum},#{productPreviewPath},#{attributeValueGroup},#{categoryId},#{shopCategoryId},#{productNo},#{roughWeight},#{suttle})
     </insert>
 
 
     <insert id="inserts"   keyProperty="id" >
-        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no)
+        insert into t_product_sku(id,uuid,product_uuid,product_id,shop_product_uuid,shop_product_id,attributes,price,status,remark,app_code,create_date,create_user_id,shop_id,brank_id,name,only_name,stock_num,product_preview_path,attribute_value_group,category_id,shop_category_id,product_no,rough_weight,suttle)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.uuid},#{entity.productUuid},#{entity.productId},#{entity.shopProductUuid},#{entity.shopProductId},#{entity.attributes},#{entity.price},#{entity.status},#{entity.remark},
-            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.onlyName},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId},#{entity.productNo})
+            #{entity.appCode},#{entity.createDate},#{entity.createUserId},#{entity.shopId},#{entity.brankId},#{entity.name},#{entity.onlyName},#{entity.stockNum},#{entity.productPreviewPath},#{entity.attributeValueGroup},#{entity.categoryId},#{entity.shopCategoryId},#{entity.productNo},#{entity.roughWeight},#{entity.suttle})
         </foreach>
 
     </insert>

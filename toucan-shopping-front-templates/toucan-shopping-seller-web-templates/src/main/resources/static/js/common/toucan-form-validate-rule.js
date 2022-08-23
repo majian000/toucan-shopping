@@ -22,6 +22,9 @@ var checkInput = {
     money: [
         /^(([1-9]\d*)(\.\d{1,2})?)$|(0\.0?([1-9]\d?))$/, '请输入正确的金额'
     ],
+    decimal3w: [
+        /^(([1-9]\d*)(\.\d{1,3})?)$|(0\.0?([1-9]\d?))$/, '请输入整数或者3位小数'
+    ],
     required: function(value) {
         if (value == "" || value == null) {
             return "必填项不能为空";

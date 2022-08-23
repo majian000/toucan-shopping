@@ -98,4 +98,8 @@ public class ShopProductApproveSku {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopCategoryId; //店铺商品分类ID
 
+    private Double roughWeight; //毛重
+
+    private Double suttle; //净重
+
 }

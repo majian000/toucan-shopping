@@ -99,4 +99,8 @@ public class ProductSku {
 
     private String productNo; //商品编号
 
+    private Double roughWeight; //毛重
+
+    private Double suttle; //净重
+
 }
