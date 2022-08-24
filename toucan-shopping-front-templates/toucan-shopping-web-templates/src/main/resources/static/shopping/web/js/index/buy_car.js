@@ -68,7 +68,7 @@ function drawUserCenterBuyCar(result){
             for(var i=0;i<dataLength;i++)
             {
                 var buyCarItem = result.data[i];
-                productHtmls+=" <li style='height:200px;'>\n" +
+                productHtmls+=" <li style='height:200px;margin-left: 30px;'>\n" +
                     "     <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\"><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"160px\" height=\"160px\"></a>\n" +
                     "     <a class=\"mp_name\" href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" title=\""+buyCarItem.productSkuName+"\">"+buyCarItem.productSkuName+"</a>\n" +
                     "   </li>";
