@@ -30,6 +30,11 @@ function loadBuyCarPanel(){
             if(result.code == 1){
                 var productHtmls="";
                 var productPriceTotal = 0;
+                var dataLength = 0;
+                if(result.data!=null)
+                {
+                    dataLength = result.data.length;
+                }
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
@@ -61,7 +66,7 @@ function loadBuyCarPanel(){
                     "            </tr>\n" +
                     "            <tr valign=\"top\" height=\"150\">\n" +
                     "                <td colspan=\"6\" align=\"right\">\n" +
-                    "                    <a style=\"cursor:pointer;\" class=\"refersh_buy_car\" onclick=\"refershBuyCar(1);\"><img src=\""+basePath+"/static/images/buy1.gif\" /></a>&nbsp; &nbsp; <a style=\"cursor:pointer;\" onclick=\"refershBuyCar(2);\" ><img src=\""+basePath+"/static/images/buy2.gif\" /></a>\n" +
+                    "                    <a style=\"cursor:pointer;\" class=\"refersh_buy_car\" onclick=\"refershBuyCar(1,0);\"><img src=\""+basePath+"/static/images/buy1.gif\" /></a>&nbsp; &nbsp; <a style=\"cursor:pointer;\" onclick=\"refershBuyCar(2,"+dataLength+");\" ><img src=\""+basePath+"/static/images/buy2.gif\" /></a>\n" +
                     "                </td>\n" +
                     "            </tr>";
 
@@ -81,7 +86,7 @@ function loadBuyCarPanel(){
     });
 }
 
-function refershBuyCar(srcType)
+function refershBuyCar(srcType,itemCount)
 {
     //继续购物
     if(srcType==1)
@@ -89,6 +94,14 @@ function refershBuyCar(srcType)
         window.location.href=basePath+"/";
     }else if(srcType==2) //确认付款
     {
+        if(itemCount<=0)
+        {
+            $.message({
+                message: "您的购物车是空的,快去购物吧",
+                type: 'success'
+            });
+            return;
+        }
         window.location.href=basePath+"/page/user/buyCar/confirm";
     }
 }
