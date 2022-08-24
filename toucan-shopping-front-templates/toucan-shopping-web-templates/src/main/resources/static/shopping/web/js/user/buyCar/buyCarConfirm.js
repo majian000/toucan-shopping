@@ -1,3 +1,6 @@
+
+var g_buy_car_item_req = 0;
+
 $(function () {
     loadBuyCarPanel();
 
@@ -7,6 +10,10 @@ $(function () {
     });
 
     $(".mcar_modifu").click(function(){
+        if(g_buy_car_item_req==1)
+        {
+            return;
+        }
         var opt = $(this).attr("attr-opt");
         if(opt!=null&&opt=="1") {
             $(this).html("关闭");
@@ -204,6 +211,7 @@ function addNum(cid)
 
 function updateRow(cid,bnum)
 {
+    g_buy_car_item_req = 1;
     loading.showLoading({
         type:1,
         tip:"提交中..."
@@ -232,11 +240,13 @@ function updateRow(cid,bnum)
                     type: 'error'
                 });
             }
+            g_buy_car_item_req=0;
         },
         error: function (result) {
         },
         complete:function(data,status){
             loading.hideLoading();
+            g_buy_car_item_req=0;
         }
     });
 }
