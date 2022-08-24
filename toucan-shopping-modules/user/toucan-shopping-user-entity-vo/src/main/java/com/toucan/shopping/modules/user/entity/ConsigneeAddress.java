@@ -45,19 +45,35 @@ public class ConsigneeAddress {
     private String phone;
 
     /**
-     * 所在省份
+     * 所在省份编码
      */
     private String provinceCode;
 
     /**
-     * 所在地市
+     * 所在地市编码
      */
     private String cityCode;
 
     /**
-     * 所在区县
+     * 所在区县编码
      */
     private String areaCode;
+
+
+    /**
+     * 所在省份名称
+     */
+    private String provinceName;
+
+    /**
+     * 所在地市名称
+     */
+    private String cityName;
+
+    /**
+     * 所在区县名称
+     */
+    private String areaName;
 
 
     /**

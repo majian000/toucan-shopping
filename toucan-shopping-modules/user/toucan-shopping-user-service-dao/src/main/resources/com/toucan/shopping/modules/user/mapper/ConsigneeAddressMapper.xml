@@ -11,6 +11,9 @@
         <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
         <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
         <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
         <result column="default_status" jdbcType="INTEGER" property="defaultStatus" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
@@ -19,8 +22,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress" >
-        insert into t_consignee_address(id,user_main_id,name,address,phone,province_code,city_code,area_code,default_status,create_date,delete_status)
-        values(#{id},#{userMainId},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{defaultStatus},#{createDate},#{deleteStatus})
+        insert into t_consignee_address(id,user_main_id,name,address,phone,province_code,city_code,area_code,default_status,create_date,delete_status,province_name,city_name,area_name)
+        values(#{id},#{userMainId},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{defaultStatus},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName})
     </insert>
 
 
@@ -33,7 +36,7 @@
     <update id="update" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
         update t_consignee_address set  name=#{name},address=#{address},
         phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},default_status=#{defaultStatus}
-        update_date=#{updateDate}
+        update_date=#{updateDate},province_name=#{provinceName},city_name=#{cityName},area_name=#{areaName}
           where id = #{id} and user_main_id=#{userMainId}
     </update>
 

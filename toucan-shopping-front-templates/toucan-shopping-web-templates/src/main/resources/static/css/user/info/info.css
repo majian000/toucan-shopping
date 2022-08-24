@@ -531,6 +531,19 @@
     border-right:solid 1px #dfdfdf;
 }
 
+
+.uc_bcars li{
+    width:170px;
+}
+.uc_bcars .mp_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    overflow:hidden;
+    -webkit-box-orient: vertical;
+}
+
 .user-right dl dd .dt-L-div li{
     float:left;
     padding:10px 10px;

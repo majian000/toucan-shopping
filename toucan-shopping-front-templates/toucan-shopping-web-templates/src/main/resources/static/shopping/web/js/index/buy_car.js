@@ -38,8 +38,42 @@ function loadBuyCarPreviewPanel(){
                 $(".mcars").show();
                 $(".mcars_price_total").show();
                 $(".mcars_pay").show();
+
             }
+
+            drawUserCenterBuyCar(result);
         }
     });
 
+}
+
+
+/**
+ * 渲染个人中心购物车
+ */
+function drawUserCenterBuyCar(result){
+    var ucBCars = $(".uc_bcars");
+    if(ucBCars!=null&&ucBCars.length>0)
+    {
+        if(result.data==null||result.data.length<=0)
+        {
+            $(ucBCars).html(" <p class=\"no-news hidden\">您的购物车是空的，<a href=\""+basePath+"/index\">马上去购物~</a></p> ");
+        }else{
+            var productHtmls="";
+            var dataLength = result.data.length;
+            if(dataLength>2)
+            {
+                dataLength = 2;
+            }
+            for(var i=0;i<dataLength;i++)
+            {
+                var buyCarItem = result.data[i];
+                productHtmls+=" <li style='height:200px;'>\n" +
+                    "     <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\"><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"160px\" height=\"160px\"></a>\n" +
+                    "     <a class=\"mp_name\" href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" title=\""+buyCarItem.productSkuName+"\">"+buyCarItem.productSkuName+"</a>\n" +
+                    "   </li>";
+            }
+            $(ucBCars).html(productHtmls);
+        }
+    }
 }
