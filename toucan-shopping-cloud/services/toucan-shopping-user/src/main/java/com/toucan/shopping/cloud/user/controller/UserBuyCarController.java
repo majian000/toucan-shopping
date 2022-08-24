@@ -93,11 +93,14 @@ public class UserBuyCarController {
             userBuyCarItems = userBuyCarItemService.findListByEntity(queryUserBuyCar);
             if(!CollectionUtils.isEmpty(userBuyCarItems)){
                 UserBuyCarItem userBuyCarItem = userBuyCarItems.get(0);
-                if(userBuyCarItem.getBuyCount().intValue()!=userBuyCarVO.getBuyCount().intValue()) {
+                if(userBuyCarItem.getBuyCount()!=null)
+                {
+                    userBuyCarItem.setBuyCount(userBuyCarItem.getBuyCount().intValue()+userBuyCarVO.getBuyCount().intValue());
+                }else {
                     userBuyCarItem.setBuyCount(userBuyCarVO.getBuyCount());
-                    userBuyCarItem.setUpdateDate(new Date());
-                    userBuyCarItemService.update(userBuyCarItem);
                 }
+                userBuyCarItem.setUpdateDate(new Date());
+                userBuyCarItemService.update(userBuyCarItem);
 
                 resultObjectVO.setData(userBuyCarItemService.findListByUserMainId(userBuyCarVO.getUserMainId()));
                 resultObjectVO.setCode(201);
