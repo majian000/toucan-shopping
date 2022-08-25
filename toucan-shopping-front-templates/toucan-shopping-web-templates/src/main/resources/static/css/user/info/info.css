@@ -150,7 +150,7 @@
 }
 
 .form-group .input-k .jzzt a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -162,7 +162,7 @@
     font-size:16px;
     line-height:32px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
     FONT-FAMILY: "Microsoft Yahei";
 }
 
@@ -355,7 +355,7 @@
 }
 
 .user-right .personal-tou .personal-info p span a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 
 .user-right .personal-tou .personal-info p i{
@@ -406,7 +406,7 @@
 }
 
 .user-right .info-list a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 
 .user-right .info-list dl dt{
@@ -435,7 +435,7 @@
 }
 
 .user-right .info-list dl dt a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 
 .user-right .info-list dl dd{
@@ -600,7 +600,7 @@
 }
 
 .user-right-title span .active{
-    color:#1d7ad9;
+    color:#ff4e00;
 }
 /*payment.html*/
 .payment-con{
@@ -785,13 +785,13 @@
 
 .box-ft .next{
     color:#fff;
-    border:solid 1px #1d7ad9;
-    background-color:#1d7ad9;
+    border:solid 1px #ff4e00;
+    background-color:#ff4e00;
 }
 
 .box-ft .next:hover{
-    border:solid 1px #0864c2;
-    background-color:#0864c2;
+    border:solid 1px #ff4e00;
+    background-color:#ff4e00;
 }
 
 /* checkout.HTML */
@@ -949,7 +949,7 @@
 }
 
 .e-invoice-tip a{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -974,7 +974,7 @@
 }
 
 .checkout-box .box-bd .invoice-info-0 dl a{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -1052,7 +1052,7 @@
 }
 
 .box-bd .checkout-goods-list dd .item-row a:hover{
-    color:#1d7ad9;
+    color:#ff4e00;
     text-decoration:underline;
 }
 
@@ -1458,8 +1458,8 @@
     margin-top:5px;
     margin-right:10px;
     padding-left:40px;
-    background-color:#1d7ad9;
-    border:solid 1px #1d7ad9;
+    background-color:#ff4e00;
+    border:solid 1px #ff4e00;
     background-image: url(../../../images/cart3.png);
     background-repeat: no-repeat;
     background-position: 18px center;
@@ -1480,8 +1480,8 @@
     margin:auto;
     margin-top:5px;
     padding-left:40px;
-    background-color:#1d7ad9;
-    border:solid 1px #1d7ad9;
+    background-color:#ff4e00;
+    border:solid 1px #ff4e00;
 }
 
 .favorite .hidden-btn .btn3:hover{
@@ -1668,7 +1668,7 @@
     margin-right:30px;
     line-height:42px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
 }
 
 a.review-btn-tj{
@@ -1945,7 +1945,7 @@ a.review-btn-tj{
     padding-left:30px;
     margin-left:30px;
     _margin-left:15px;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
     FONT-FAMILY: "Microsoft Yahei";
     background-image: url(../../../images/cart3.png);
     background-repeat: no-repeat;
@@ -2094,7 +2094,7 @@ a.review-btn-tj{
     font-size:14px;
     line-height:32px;
     text-align:center;
-    background-color:#1d7ad9;
+    background-color:#ff4e00;
 }
 
 .order dd .order-btn .lifk-btn:hover{
