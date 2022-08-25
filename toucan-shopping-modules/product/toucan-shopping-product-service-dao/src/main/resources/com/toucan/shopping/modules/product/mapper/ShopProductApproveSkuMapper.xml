@@ -76,6 +76,14 @@
                 and t.app_code = #{appCode}
             </if>
 
+
+            <if test="productApproveIdList!=null and productApproveIdList.size>0 ">
+                and t.product_approve_id in
+                <foreach item="item" index="index" collection="productApproveIdList" open="("  close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
             and t.delete_status = 0
 
         </where>

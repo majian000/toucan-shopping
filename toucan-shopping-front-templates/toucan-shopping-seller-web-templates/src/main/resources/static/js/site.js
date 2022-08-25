@@ -13,14 +13,7 @@ $(function(){
         }
     });
 
-    //主页最新审核产品
-	$(".to_new_product li").hover(function(){
-        $(".btn",this).stop().animate({bottom:'10px'},{queue:false,duration:100});
-        $("img",this).stop().animate({opacity:'.95'},{queue:false,duration:100});
-	}, function(){
-        $(".btn",this).stop().animate({bottom:'-36px'},{queue:false,duration:100});
-        $("img",this).stop().animate({opacity:'1'},{queue:false,duration:100});
-    });
+
 
     //设置活动产品
 	$(".pic_box").hover(function(){
@@ -40,6 +33,19 @@ $(function(){
     });
 
 });
+
+
+function registNewwestProductEvent()
+{
+    //主页最新审核产品
+    $(".to_new_product li").hover(function(){
+        $(".btn",this).stop().animate({bottom:'10px'},{queue:false,duration:100});
+        $("img",this).stop().animate({opacity:'.95'},{queue:false,duration:100});
+    }, function(){
+        $(".btn",this).stop().animate({bottom:'-36px'},{queue:false,duration:100});
+        $("img",this).stop().animate({opacity:'1'},{queue:false,duration:100});
+    });
+}
 
 //通用TAB
 function cutover(id,etype) {

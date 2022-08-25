@@ -220,4 +220,14 @@
         limit 0,1
     </select>
 
+
+
+    <select id="queryNewestListByShopId" resultMap="shopProductVOMap" >
+        select t.* from t_shop_product_approve t
+        <where>
+            1=1 and t.shop_id = #{shopId}
+        </where>
+        limit 0,#{limit}
+    </select>
+
 </mapper>

@@ -13,6 +13,13 @@ public interface ShopProductApproveService {
 
     List<ShopProductApprove> queryAllList(ShopProductApprove queryModel);
 
+    /**
+     * 查询最新审核的4个
+     * @param shopId
+     * @return
+     */
+    List<ShopProductApproveVO> queryNewestListByShopId(Long shopId,Integer limit);
+
     int save(ShopProductApprove entity);
 
     /**

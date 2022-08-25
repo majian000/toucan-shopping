@@ -1172,4 +1172,74 @@ public class ShopProductApproveApiController extends BaseController {
     }
 
 
+    /**
+     * 根据用户ID查询所属的店铺ID
+     * @param userMainId
+     * @return
+     */
+    private Long queryShopIdByUserMainId(Long userMainId)
+    {
+        try{
+            //查询这个用户下的店铺
+            UserVO queryUserVO = new UserVO();
+            queryUserVO.setUserMainId(userMainId);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryUserVO);
+            ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(toucan.getAppCode(),requestJsonVO);
+            if(!resultObjectVO.isSuccess()) {
+                return -1L;
+            }
+            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+            if (sellerShopVO == null||(sellerShopVO.getEnableStatus()!=null&&sellerShopVO.getEnableStatus().intValue()==0)) {
+                return -1L;
+            }
+            return sellerShopVO.getId();
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return -1L;
+    }
+
+
+
+    /**
+     * 查询最新4个商品审核
+     * @param request
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value = "/queryProductApproveListTop4",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryProductApproveListTop4(HttpServletRequest request) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            ShopProductApprovePageInfo shopProductApprovePageInfo = new ShopProductApprovePageInfo();
+            shopProductApprovePageInfo.setLimit(4);
+            shopProductApprovePageInfo.setShopId(queryShopIdByUserMainId(Long.parseLong(UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader())))));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductApprovePageInfo);
+            resultObjectVO = feignShopProductApproveService.queryNewestListByShopId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                List<ShopProductApproveVO> shopProductApproveVOS = resultObjectVO.formatDataList(ShopProductApproveVO.class);
+                if(CollectionUtils.isNotEmpty(shopProductApproveVOS))
+                {
+                    for(ShopProductApproveVO shopProductApproveVO:shopProductApproveVOS)
+                    {
+                        if(StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath()))
+                        {
+                            shopProductApproveVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveVO.getMainPhotoFilePath());
+                        }
+                    }
+                }
+                resultObjectVO.setData(shopProductApproveVOS);
+            }
+        }catch(Exception e){
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+        return resultObjectVO;
+    }
+
+
 }

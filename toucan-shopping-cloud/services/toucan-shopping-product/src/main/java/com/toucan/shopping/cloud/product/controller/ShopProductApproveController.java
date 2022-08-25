@@ -831,6 +831,95 @@ public class ShopProductApproveController {
 
 
 
+
+    /**
+     * 查询这个店铺最新发布的那几条审核
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/newest/list/shopId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryNewestListByShopId(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try{
+            ShopProductApprovePageInfo shopProductApprovePageInfo = requestJsonVO.formatEntity(ShopProductApprovePageInfo.class);
+            if(shopProductApprovePageInfo==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("查询失败,无效查询对象!");
+            }
+            if(shopProductApprovePageInfo.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("查询失败,没有找到店铺ID!");
+            }
+            List<ShopProductApproveVO> shopProductApproves = shopProductApproveService.queryNewestListByShopId(shopProductApprovePageInfo.getShopId(),shopProductApprovePageInfo.getLimit());
+
+            List<Long> shopProductIdList = new LinkedList<>();
+            for(ShopProductApproveVO shopProductVO : shopProductApproves)
+            {
+                shopProductVO.setPreviewPhotoPaths(new LinkedList<>());
+                shopProductVO.setProductSkuVOList(new LinkedList<>());
+
+                shopProductIdList.add(shopProductVO.getId());
+            }
+            //查询商品图片
+            if(CollectionUtils.isNotEmpty(shopProductIdList)) {
+                ShopProductApproveImgVO shopProductImgVO = new ShopProductApproveImgVO();
+                shopProductImgVO.setProductApproveIdList(shopProductIdList);
+                List<ShopProductApproveImg> shopProductImgs = shopProductApproveImgService.queryList(shopProductImgVO);
+                if (CollectionUtils.isNotEmpty(shopProductImgs)) {
+                    for (ShopProductApproveImg shopProductImg : shopProductImgs) {
+                        for (ShopProductApproveVO shopProductVO : shopProductApproves) {
+                            if (shopProductImg.getProductApproveId() != null &&
+                                    shopProductImg.getProductApproveId().longValue() == shopProductVO.getId().longValue()) {
+                                //如果是商品主图
+                                if (shopProductImg.getImgType().intValue() == 1) {
+                                    shopProductVO.setMainPhotoFilePath(shopProductImg.getFilePath());
+                                } else if (shopProductImg.getImgType().intValue() == 2) {
+                                    shopProductVO.getPreviewPhotoPaths().add(shopProductImg.getFilePath());
+                                }
+                                break;
+                            }
+
+                        }
+                    }
+                }
+
+                //查询SKU
+                ShopProductApproveSkuVO queryShopProductApproveSku = new ShopProductApproveSkuVO();
+                queryShopProductApproveSku.setProductApproveIdList(shopProductIdList);
+                //查询SKU
+                List<ShopProductApproveSkuVO> productSkuVOS = shopProductApproveSkuService.queryList(queryShopProductApproveSku);
+
+                if(CollectionUtils.isNotEmpty(productSkuVOS))
+                {
+                    for (ShopProductApproveSkuVO productApproveSkuVO : productSkuVOS) {
+                        for (ShopProductApproveVO shopProductVO : shopProductApproves) {
+                            if (productApproveSkuVO.getProductApproveId() != null &&
+                                    productApproveSkuVO.getProductApproveId().longValue() == shopProductVO.getId().longValue()) {
+                                shopProductVO.getProductSkuVOList().add(productApproveSkuVO);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            resultObjectVO.setData(shopProductApproves);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
     /**
      * 根据ID和店铺ID删除
      * @param requestJsonVO

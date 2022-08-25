@@ -24,6 +24,11 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
     }
 
     @Override
+    public List<ShopProductApproveVO> queryNewestListByShopId(Long shopId, Integer limit) {
+        return shopProductApproveMapper.queryNewestListByShopId(shopId,limit);
+    }
+
+    @Override
     public int save(ShopProductApprove entity) {
         return shopProductApproveMapper.insert(entity);
     }

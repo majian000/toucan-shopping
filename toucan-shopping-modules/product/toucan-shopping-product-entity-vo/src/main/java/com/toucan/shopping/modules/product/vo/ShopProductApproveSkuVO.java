@@ -81,6 +81,10 @@ public class ShopProductApproveSkuVO extends ShopProductApproveSku {
      */
     private List<ShopProductApproveSkuVO> productSkuVOList;
 
+    /**
+     * 商品审核ID
+     */
+    private List<Long> productApproveIdList;
 
 
 }
