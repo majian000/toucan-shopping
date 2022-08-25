@@ -72,7 +72,7 @@
                             <div class="item">
                                 <span class="label msc_l"><span class="red">*</span>所在城市：</span>
                                 <div class="field">
-                                    <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" autocomplete="off"  readonly="true">
+                                    <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" class="l_ipt" autocomplete="off"  readonly="true">
                                 </div>
                             </div><!--item end-->
                             <div class="item">
@@ -114,6 +114,15 @@
     <#include "/footer.html"/>
 
 </body>
+<script>
+    var province=${areaList!''};
+    var provinceHiddenId="province";
+    var provinceCodeHiddenId="province_code";
+    var cityHiddenId="city";
+    var cityCodeHiddenId="city_code";
+    var areaHiddenId="area";
+    var areaCodeHiddenId="area_code";
+</script>
 
 <link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
 <script type="text/javascript" src="${basePath}/static/lib/citySet/citySet.js"></script>
