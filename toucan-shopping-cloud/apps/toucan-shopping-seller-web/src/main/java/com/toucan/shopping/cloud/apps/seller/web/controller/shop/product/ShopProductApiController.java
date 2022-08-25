@@ -164,6 +164,10 @@ public class ShopProductApiController extends BaseController {
                             for (int i = 0; i < list.size(); i++) {
                                 ShopProductVO shopProductVO = list.get(i);
 
+                                if(StringUtils.isNotEmpty(shopProductVO.getMainPhotoFilePath()))
+                                {
+                                    shopProductVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductVO.getMainPhotoFilePath());
+                                }
 
                                 //设置店铺分类ID
                                 categoryExists = false;

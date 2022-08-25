@@ -54,6 +54,7 @@ function drawTable(pageResult)
     tableHtml+=" <tr class=\"tabTh\">\n" +
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:100px;\" >审核状态</td>\n" +
+        "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:300px;\">商品名称</td>\n" +
         "                            <td style=\"width:150px;\" >商品分类</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
@@ -76,6 +77,7 @@ function drawTable(pageResult)
             {
                 tableHtml+=    "                            <td><div class=\"tabTdWrap\"><a style=\"color:red;\">审核驳回</a></div></td>\n" ;
             }
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img src=\""+row.httpMainPhotoFilePath+"\" style=\"width:65px;height:65px; margin-top: 4%; margin-bottom: 4%;\"></div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.categoryName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
