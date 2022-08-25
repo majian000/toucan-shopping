@@ -36,7 +36,7 @@
 
 <#include "/category_navigation.html">
 
-<#assign leftMenuName = "editInfo">
+<#assign leftMenuName = "consigneeAddress">
 
 <!------------main---------------->
 <div class="main">
@@ -58,63 +58,52 @@
                 <form id="userEditInfo" method="post" onsubmit="return false;">
                     <div class="toucan-form">
                         <div class="toucan-form-title">
-                            <h3 style="font-size:20px;">帐户信息</h3>
+                            <h3 style="font-size:20px;">新增收货地址</h3>
                         </div>
                         <div class="toucan-form-body">
 
-                        <div class="item">
-                            <span class="label"><span class="red">*</span>昵称：</span>
-                            <div class="field">
-                                <input type="text" id="nickname" name="nickName" maxlength="15" style="width:307px" class="l_ipt" tabindex="1" lay-verify="required|nickName" value="${userVO.nickName!''}" />
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>收货人姓名：</span>
+                                <div class="field">
+                                    <input type="text" id="name" name="name" maxlength="30" style="width:307px" class="l_ipt" tabindex="1" lay-verify="required"  />
+                                </div>
+                            </div><!--item end-->
+
+                            <div class="item">
+                                <span class="label msc_l"><span class="red">*</span>所在城市：</span>
+                                <div class="field">
+                                    <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" autocomplete="off"  readonly="true">
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label">详细地址：</span>
+                                <div class="field">
+                                    <textarea id="address" name="address"  maxlength="300"  tabindex="2" style="width: 334px; height: 85px;" ></textarea>
+                                </div>
+                            </div><!--item end-->
+                            <div class="item">
+                                <span class="label"><span class="red">*</span>验证码：</span>
+                                <div class="field" >
+                                    <span style="float:left;">
+                                        <input type="text" id="vcode" name="vcode" class="l_ipt" autocomplete="off" lay-verify="required"  MaxLength="4" tabindex="6" />
+                                    </span>
+                                    <span style="float:left;margin-left:5px;">
+                                        <img id="refreshCaptcha"  src="${basePath}/api/vcode/gen" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:40px;"/>
+                                    </span>
+                                </div>
+                            </div><!--item end-->
+
+                                <br>
+                                <br>
+                            <div class="item" style="width:150px;">
+                                <span class="label">&nbsp;</span>
+                                <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
+                            </div><!--item end-->
+
+                            <div class="item">
+                                <br>
+                                <a id="edit_info_msg" style="color:#ff4e00;"></a>
                             </div>
-                        </div><!--item end-->
-
-
-                        <div class="item">
-                            <span class="label">性别：</span>
-                            <div class="field">
-                                <#if userVO.sex?? && userVO.sex==1 >
-                                <input type="radio" class="l_radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
-                                <input type="radio" class="l_radio" name="sex" id="sex_0" value="0" /><label for="sex_1">女</label>
-                                <#elseif userVO.sex?? && userVO.sex==0 >
-                                <input type="radio" class="l_radio" name="sex" id="sex_1" value="1" /> <label for="sex_1">男</label>
-                                <input type="radio" class="l_radio" name="sex" id="sex_0" value="0" checked /><label for="sex_1">女</label>
-                                <#else>
-                                <input type="radio" class="l_radio" name="sex" id="sex_1" value="1" checked/> <label for="sex_1">男</label>
-                                <input type="radio" class="l_radio" name="sex" id="sex_0" value="0"  /><label for="sex_1">女</label>
-                                  </#if>
-                            </div>
-                        </div><!--item end-->
-
-                    <div class="item">
-                        <span class="label">个性签名：</span>
-                        <div class="field">
-                            <input type="text" id="personalizedSignature" name="personalizedSignature" style="width:307px" maxlength="50" class="l_ipt"  tabindex="1" value="${userVO.personalizedSignature!''}" />
-                        </div>
-                    </div><!--item end-->
-                    <div class="item">
-                        <span class="label"><span class="red">*</span>验证码：</span>
-                        <div class="field" >
-                            <span style="float:left;">
-                                <input type="text" id="vcode" name="vcode" class="l_ipt" autocomplete="off" lay-verify="required"  MaxLength="4" tabindex="6" />
-                            </span>
-                            <span style="float:left;margin-left:5px;">
-                                <img id="refreshCaptcha"  src="${basePath}/api/user/vcode" alt="点击图片刷新" title="点击图片刷新" style="cursor:pointer;width:100px;height:40px;"/>
-                            </span>
-                        </div>
-                    </div><!--item end-->
-
-                        <br>
-                        <br>
-                    <div class="item" style="width:150px;">
-                        <span class="label">&nbsp;</span>
-                        <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
-                    </div><!--item end-->
-
-                    <div class="item">
-                        <br>
-                        <a id="edit_info_msg" style="color:#ff4e00;"></a>
-                    </div>
 
                         </div>
                 </form>
@@ -126,7 +115,10 @@
 
 </body>
 
-<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/editInfo.js"></script>
+<link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
+<script type="text/javascript" src="${basePath}/static/lib/citySet/citySet.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/citySet/Popt.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/consigneeAddress/add.js"></script>
 <script>
     $(function () {
 
