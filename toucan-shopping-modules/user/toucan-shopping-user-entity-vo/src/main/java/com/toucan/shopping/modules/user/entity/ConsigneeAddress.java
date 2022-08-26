@@ -103,5 +103,9 @@ public class ConsigneeAddress {
     private Short deleteStatus;
 
 
+    /**
+     * 应用编码
+     */
+    private String appCode;
 
 }

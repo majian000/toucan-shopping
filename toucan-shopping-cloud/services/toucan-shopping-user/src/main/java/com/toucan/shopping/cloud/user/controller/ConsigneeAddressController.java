@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterConsigneeAddressKey;
 import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
@@ -238,6 +239,46 @@ public class ConsigneeAddressController {
     }
 
 
+
+
+    /**
+     * 查询列表页
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/list/page",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ConsigneeAddressPageInfo queryPageInfo = JSONObject.parseObject(requestVo.getEntityJson(), ConsigneeAddressPageInfo.class);
+
+            if(StringUtils.isEmpty(requestVo.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到应用编码");
+                return resultObjectVO;
+            }
+
+            //查询列表页
+            resultObjectVO.setData(consigneeAddressService.queryListPage(queryPageInfo));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 }

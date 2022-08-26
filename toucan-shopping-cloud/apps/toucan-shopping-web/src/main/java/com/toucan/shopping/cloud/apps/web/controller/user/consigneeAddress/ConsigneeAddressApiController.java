@@ -18,6 +18,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.redis.UserCenterConsigneeAddressKey;
 import com.toucan.shopping.modules.user.redis.UserCenterHeadSculptureApproveKey;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
@@ -103,6 +104,7 @@ public class ConsigneeAddressApiController extends BaseController {
             //从请求头中拿到uid
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             consigneeAddressVO.setUserMainId(Long.parseLong(userMainId));
+            consigneeAddressVO.setAppCode(toucan.getAppCode());
 
             if(consigneeAddressVO.getUserMainId()==null)
             {
@@ -131,6 +133,33 @@ public class ConsigneeAddressApiController extends BaseController {
     }
 
 
+
+
+    @UserAuth
+    @RequestMapping("/list")
+    @ResponseBody
+    public ResultObjectVO queryMyMessageList(HttpServletRequest request,@RequestBody ConsigneeAddressPageInfo queryPageInfo)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId = "-1";
+        try {
+            if(queryPageInfo==null) {
+                queryPageInfo = new ConsigneeAddressPageInfo();
+            }
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            queryPageInfo.setUserMainId(Long.parseLong(userMainId));
+            queryPageInfo.setAppCode(toucan.getAppCode());
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
+            resultObjectVO = feignConsigneeAddressService.queryListPage(requestJsonVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
 
 
 

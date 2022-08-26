@@ -1,7 +1,9 @@
 package com.toucan.shopping.modules.user.service.impl;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.mapper.ConsigneeAddressMapper;
+import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
 import com.toucan.shopping.modules.user.service.SmsService;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
@@ -49,4 +51,14 @@ public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
         return consigneeAddressMapper.findListByEntity(query);
     }
 
+
+
+    @Override
+    public PageInfo<ConsigneeAddress> queryListPage(ConsigneeAddressPageInfo queryPageInfo) {
+        PageInfo<ConsigneeAddress> pageInfo = new PageInfo();
+        queryPageInfo.setStart(queryPageInfo.getPage()*queryPageInfo.getLimit()-queryPageInfo.getLimit());
+        pageInfo.setList(consigneeAddressMapper.queryListPage(queryPageInfo));
+        pageInfo.setTotal(consigneeAddressMapper.queryListPageCount(queryPageInfo));
+        return pageInfo;
+    }
 }

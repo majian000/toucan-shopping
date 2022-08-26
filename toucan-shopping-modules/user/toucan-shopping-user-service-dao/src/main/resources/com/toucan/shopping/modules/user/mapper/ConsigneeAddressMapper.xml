@@ -18,12 +18,27 @@
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="app_code" jdbcType="VARCHAR" property="appCode" />
 
     </resultMap>
 
+
+
+
+
+    <sql id="queryListPageWhere">
+        and t.delete_status = 0
+
+        <if test="userMainId!=null">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+    </sql>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress" >
-        insert into t_consignee_address(id,user_main_id,name,address,phone,province_code,city_code,area_code,default_status,create_date,delete_status,province_name,city_name,area_name)
-        values(#{id},#{userMainId},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{defaultStatus},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName})
+        insert into t_consignee_address(id,user_main_id,name,address,phone,province_code,city_code,area_code,default_status,create_date,delete_status,province_name,city_name,area_name,app_code)
+        values(#{id},#{userMainId},#{name},#{address},#{phone},#{provinceCode},#{cityCode},#{areaCode},#{defaultStatus},#{createDate},#{deleteStatus},#{provinceName},#{cityName},#{areaName},#{appCode})
     </insert>
 
 
@@ -61,5 +76,31 @@
         </where>
 
     </select>
+
+
+
+    <select id="queryListPage" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo">
+        select t.* from t_consignee_address t
+        <where>
+            1=1
+
+            <include refid="queryListPageWhere" />
+        </where>
+        order by t.create_date desc
+        limit #{start},#{limit}
+    </select>
+
+
+
+    <select id="queryListPageCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo">
+        select count(*) from t_consignee_address t
+        <where>
+            1=1
+            <include refid="queryListPageWhere" />
+        </where>
+
+    </select>
+
+
 
 </mapper>

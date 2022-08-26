@@ -1,6 +1,8 @@
 package com.toucan.shopping.modules.user.service;
 
+import com.toucan.shopping.modules.common.page.PageInfo;
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.page.ConsigneeAddressPageInfo;
 import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserSmsVO;
 
@@ -31,5 +33,15 @@ public interface ConsigneeAddressService {
 
 
     List<ConsigneeAddress> findListByEntity(ConsigneeAddressVO query);
+
+
+    /**
+     * 查询列表页
+     * @param queryPageInfo
+     * @return
+     */
+    PageInfo<ConsigneeAddress> queryListPage(ConsigneeAddressPageInfo queryPageInfo);
+
+
 
 }

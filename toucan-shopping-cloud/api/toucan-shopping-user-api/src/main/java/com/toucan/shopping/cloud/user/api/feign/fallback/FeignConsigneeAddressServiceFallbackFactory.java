@@ -37,6 +37,21 @@ public class FeignConsigneeAddressServiceFallbackFactory implements FallbackFact
                 resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO queryListPage(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请求超时,请稍后重试");
+                    return resultObjectVO;
+                }
+                logger.warn("调用FeignConsigneeAddressService.queryListPage 失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求超时,请稍后重试");
+                return resultObjectVO;
+            }
         };
     }
 }
