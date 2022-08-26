@@ -41,7 +41,7 @@
     </update>
 
 
-    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
+    <select id="findListByEntity" resultMap="entityMap" parameterType="com.toucan.shopping.modules.user.vo.ConsigneeAddressVO">
         select * from t_consignee_address t
         <where>
             1=1

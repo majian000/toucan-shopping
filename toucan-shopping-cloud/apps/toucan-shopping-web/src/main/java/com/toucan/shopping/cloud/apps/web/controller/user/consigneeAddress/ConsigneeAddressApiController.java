@@ -90,7 +90,7 @@ public class ConsigneeAddressApiController extends BaseController {
             resultObjectVO.setMsg("提交失败,省/直辖市不能为空");
             return resultObjectVO;
         }
-        if(StringUtils.isEmpty(consigneeAddressVO.getCityCode())||StringUtils.isEmpty(consigneeAddressVO.getCityName()))
+        if(StringUtils.isEmpty(consigneeAddressVO.getAreaCode())||StringUtils.isEmpty(consigneeAddressVO.getAreaName()))
         {
             resultObjectVO.setCode(ResultObjectVO.FAILD);
             resultObjectVO.setMsg("提交失败,市区不能为空");
@@ -103,15 +103,6 @@ public class ConsigneeAddressApiController extends BaseController {
             //从请求头中拿到uid
             userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
             consigneeAddressVO.setUserMainId(Long.parseLong(userMainId));
-
-
-            boolean lockStatus = skylarkLock.lock(UserCenterConsigneeAddressKey.getSaveLockKey(userMainId), userMainId);
-            if (!lockStatus) {
-                resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("请稍后重试");
-                return resultObjectVO;
-            }
-
 
             if(consigneeAddressVO.getUserMainId()==null)
             {
@@ -135,8 +126,6 @@ public class ConsigneeAddressApiController extends BaseController {
             logger.warn(e.getMessage(),e);
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("请稍后重试");
-        }finally{
-            skylarkLock.unLock(UserCenterConsigneeAddressKey.getSaveLockKey(userMainId), userMainId);
         }
         return resultObjectVO;
     }

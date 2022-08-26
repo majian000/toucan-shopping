@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
 import com.toucan.shopping.modules.user.mapper.ConsigneeAddressMapper;
 import com.toucan.shopping.modules.user.service.ConsigneeAddressService;
 import com.toucan.shopping.modules.user.service.SmsService;
+import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserSmsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
     }
 
     @Override
-    public List<ConsigneeAddress> findListByEntity(ConsigneeAddress query) {
+    public List<ConsigneeAddress> findListByEntity(ConsigneeAddressVO query) {
         return consigneeAddressMapper.findListByEntity(query);
     }
 

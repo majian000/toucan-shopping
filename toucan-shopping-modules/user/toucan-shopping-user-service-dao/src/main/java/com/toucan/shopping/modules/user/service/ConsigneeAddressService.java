@@ -1,6 +1,7 @@
 package com.toucan.shopping.modules.user.service;
 
 import com.toucan.shopping.modules.user.entity.ConsigneeAddress;
+import com.toucan.shopping.modules.user.vo.ConsigneeAddressVO;
 import com.toucan.shopping.modules.user.vo.UserSmsVO;
 
 import java.util.List;
@@ -29,6 +30,6 @@ public interface ConsigneeAddressService {
     int update(ConsigneeAddress entity);
 
 
-    List<ConsigneeAddress> findListByEntity(ConsigneeAddress query);
+    List<ConsigneeAddress> findListByEntity(ConsigneeAddressVO query);
 
 }

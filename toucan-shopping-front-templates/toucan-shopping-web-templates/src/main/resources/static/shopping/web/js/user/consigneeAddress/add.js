@@ -34,9 +34,14 @@ $(function () {
                 if(result.code<=0)
                 {
                     $("#vcode").val("");
+
+                    $.message({
+                        message: result.msg,
+                        type: 'error'
+                    });
                     $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
                 }else{
-                    window.location.href=basePath+"/page/user/info";
+                    window.location.href=basePath+"/page/user/consigneeAddress/list";
                 }
             },
             error: function (result) {

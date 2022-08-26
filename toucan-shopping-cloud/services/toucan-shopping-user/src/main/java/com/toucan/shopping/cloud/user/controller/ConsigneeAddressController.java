@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.user.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.user.constant.ConsigneeAddressConstant;
 import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,18 +85,19 @@ public class ConsigneeAddressController {
                 return resultObjectVO;
             }
             //查询收货人数量,最多20个
-            ConsigneeAddress queryConsigneeAddress = new ConsigneeAddress();
+            ConsigneeAddressVO queryConsigneeAddress = new ConsigneeAddressVO();
             queryConsigneeAddress.setUserMainId(consigneeAddressVO.getUserMainId());
             List<ConsigneeAddress> consigneeAddresses = consigneeAddressService.findListByEntity(queryConsigneeAddress);
-            if(!CollectionUtils.isEmpty(consigneeAddresses)&&consigneeAddresses.size()>=20)
+            if(!CollectionUtils.isEmpty(consigneeAddresses)&&consigneeAddresses.size()>= ConsigneeAddressConstant.MAX_COUNT)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("收货信息数量达到上限");
+                resultObjectVO.setMsg("收货信息数量达到"+ConsigneeAddressConstant.MAX_COUNT+"个上限");
                 return resultObjectVO;
             }
 
             consigneeAddressVO.setId(idGenerator.id());
             consigneeAddressVO.setDeleteStatus((short)0);
+            consigneeAddressVO.setCreateDate(new Date());
             int ret = consigneeAddressService.save(consigneeAddressVO);
             if(ret<=0)
             {
@@ -144,8 +147,8 @@ public class ConsigneeAddressController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该角色
-            ConsigneeAddress query=new ConsigneeAddress();
+            //查询是否存在
+            ConsigneeAddressVO query=new ConsigneeAddressVO();
             query.setId(entity.getId());
             List<ConsigneeAddress> adminList = consigneeAddressService.findListByEntity(query);
             if(CollectionUtils.isEmpty(adminList))
@@ -222,7 +225,7 @@ public class ConsigneeAddressController {
         }
         try {
             //查询收货信息列表
-            ConsigneeAddress queryConsigneeAddress = new ConsigneeAddress();
+            ConsigneeAddressVO queryConsigneeAddress = new ConsigneeAddressVO();
             queryConsigneeAddress.setUserMainId(consigneeAddressVO.getUserMainId());
             resultObjectVO.setData(consigneeAddressService.findListByEntity(queryConsigneeAddress));
         }catch(Exception e)

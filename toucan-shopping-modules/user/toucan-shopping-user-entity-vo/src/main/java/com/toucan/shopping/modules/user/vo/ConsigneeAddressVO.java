@@ -20,4 +20,10 @@ public class ConsigneeAddressVO extends ConsigneeAddress {
      */
     private String vcode;
 
+    /**
+     * ID数组
+     */
+    private Long[] ids;
+
+
 }
