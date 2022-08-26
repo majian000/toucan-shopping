@@ -7,9 +7,11 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Service
 public class VerifyCodeServiceImpl implements VerifyCodeService {
 
 
