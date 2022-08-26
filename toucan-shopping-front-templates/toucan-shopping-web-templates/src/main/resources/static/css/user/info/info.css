@@ -286,6 +286,7 @@
     width:970px;
     float:right;
     overflow:hidden;
+    min-height:700px;
 }
 
 .user-right .personal-tou{

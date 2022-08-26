@@ -24,7 +24,7 @@ import java.util.List;
  * 收货地址 增删改查
  */
 @RestController
-@RequestMapping("/consigneeAddress")
+@RequestMapping("/consignee/address")
 public class ConsigneeAddressController {
 
 

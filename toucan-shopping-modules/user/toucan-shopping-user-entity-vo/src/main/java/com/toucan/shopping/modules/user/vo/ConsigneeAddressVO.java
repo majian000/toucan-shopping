@@ -15,5 +15,9 @@ import java.util.Date;
 @Data
 public class ConsigneeAddressVO extends ConsigneeAddress {
 
+    /**
+     * 验证码
+     */
+    private String vcode;
 
 }

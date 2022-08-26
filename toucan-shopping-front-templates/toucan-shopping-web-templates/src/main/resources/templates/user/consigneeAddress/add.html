@@ -55,10 +55,11 @@
         </div>
 
         <div class="user-right">
-                <form id="userEditInfo" method="post" onsubmit="return false;">
+                <form id="consigneeAddressForm" method="post" onsubmit="return false;">
                     <div class="toucan-form">
-                        <div class="toucan-form-title">
-                            <h3 style="font-size:20px;">新增收货地址</h3>
+                        <div class="toucan-form-title" style="height: 25px;">
+                            <h3 style="font-size:20px;width: 90%;float: left;">添加收货信息</h3>
+                            <a style="float:right;color:#0400ff;font-size: 15px;"  href="${basePath}/page/user/consigneeAddress/list">返回列表</a>
                         </div>
                         <div class="toucan-form-body">
 
@@ -73,12 +74,18 @@
                                 <span class="label msc_l"><span class="red">*</span>所在城市：</span>
                                 <div class="field">
                                     <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" class="l_ipt" autocomplete="off"  readonly="true">
+                                    <input type="hidden" id="province" name="provinceName" />
+                                    <input type="hidden" id="city" name="cityName"  />
+                                    <input type="hidden" id="area" name="areaName"   />
+                                    <input type="hidden" id="province_code" name="provinceCode"   />
+                                    <input type="hidden" id="city_code" name="cityCode"   />
+                                    <input type="hidden" id="area_code" name="areaCode" />
                                 </div>
                             </div><!--item end-->
                             <div class="item">
-                                <span class="label">详细地址：</span>
+                                <span class="label"><span class="red">*</span>详细地址：</span>
                                 <div class="field">
-                                    <textarea id="address" name="address"  maxlength="300"  tabindex="2" style="width: 334px; height: 85px;" ></textarea>
+                                    <textarea id="address" name="address" class="l_ipt"  maxlength="300"  tabindex="2" style="width: 334px; height: 85px;"  lay-verify="required"  ></textarea>
                                 </div>
                             </div><!--item end-->
                             <div class="item">
@@ -95,14 +102,10 @@
 
                                 <br>
                                 <br>
-                            <div class="item" style="width:150px;">
-                                <span class="label">&nbsp;</span>
-                                <input type="button" value="保存" class="log_btn" id="ueibtn" style="font-size:15px;" />
-                            </div><!--item end-->
-
-                            <div class="item">
-                                <br>
-                                <a id="edit_info_msg" style="color:#ff4e00;"></a>
+                            <div>
+                                <div class="item" style="width:150px;">
+                                    <input type="button" value="保存" class="log_btn" id="caibtn" style="font-size:15px;" />
+                                </div><!--item end-->
                             </div>
 
                         </div>

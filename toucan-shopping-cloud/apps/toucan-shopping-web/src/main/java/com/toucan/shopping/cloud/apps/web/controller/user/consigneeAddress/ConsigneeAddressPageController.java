@@ -54,4 +54,13 @@ public class ConsigneeAddressPageController extends BaseController {
     }
 
 
+
+
+    @UserAuth
+    @RequestMapping("/list")
+    public String listPage(HttpServletRequest request)
+    {
+        return "user/consigneeAddress/list";
+    }
+
 }
