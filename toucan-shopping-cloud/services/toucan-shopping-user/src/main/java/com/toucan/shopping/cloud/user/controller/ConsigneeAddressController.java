@@ -85,9 +85,10 @@ public class ConsigneeAddressController {
                 resultObjectVO.setMsg("请稍后重试");
                 return resultObjectVO;
             }
-            //查询收货人数量,最多20个
+            //查询收货人数量
             ConsigneeAddressVO queryConsigneeAddress = new ConsigneeAddressVO();
             queryConsigneeAddress.setUserMainId(consigneeAddressVO.getUserMainId());
+            queryConsigneeAddress.setAppCode(consigneeAddressVO.getAppCode());
             List<ConsigneeAddress> consigneeAddresses = consigneeAddressService.findListByEntity(queryConsigneeAddress);
             if(!CollectionUtils.isEmpty(consigneeAddresses)&&consigneeAddresses.size()>= ConsigneeAddressConstant.MAX_COUNT)
             {
@@ -96,9 +97,16 @@ public class ConsigneeAddressController {
                 return resultObjectVO;
             }
 
+
             consigneeAddressVO.setId(idGenerator.id());
             consigneeAddressVO.setDeleteStatus((short)0);
             consigneeAddressVO.setCreateDate(new Date());
+            if(CollectionUtils.isEmpty(consigneeAddresses))
+            {
+                consigneeAddressVO.setDeleteStatus((short)1);
+            }else{
+                consigneeAddressVO.setDeleteStatus((short)0);
+            }
             int ret = consigneeAddressService.save(consigneeAddressVO);
             if(ret<=0)
             {

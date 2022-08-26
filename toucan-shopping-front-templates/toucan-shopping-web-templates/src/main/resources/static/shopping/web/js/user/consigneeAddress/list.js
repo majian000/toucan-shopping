@@ -42,9 +42,17 @@ function queryConsignessAddressList(cpage)
                         var listHtml = "";
                         for (var i = 0; i < result.data.list.length; i++) {
                             var obj = result.data.list[i];
+                            var defaultStatusName="非默认";
+                            if(obj.defaultStatus!=null&&obj.defaultStatus=="1")
+                            {
+                                defaultStatusName="<a style='color:#ff4e00;'>默认</a>";
+                            }
                             listHtml+="<tr>\n" +
                                 "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                                 "                            "+(i+1)+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+defaultStatusName+"\n" +
                                 "                        </td>\n" +
                                 "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                                 "                            "+obj.name+"\n" +
@@ -64,7 +72,11 @@ function queryConsignessAddressList(cpage)
                                 "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                                 "                            "+obj.areaName+"\n" +
                                 "                        </td>\n" +
-                                "                        <td align=\"center\"> <a href=\"#\" style=\"color:#ff4e00;\">设为默认</a>&nbsp; &nbsp; <a href=\"#\">删除</a></td>\n" +
+                                "                        <td align=\"center\">" ;
+                                if(obj.defaultStatus==null||obj.defaultStatus=="0") {
+                                    listHtml+=" <a href=\"#\" style=\"color:#ff4e00;\">设为默认</a>&nbsp; &nbsp; " ;
+                                }
+                                listHtml+="<a href=\"#\">删除</a></td>\n" +
                                 "\n" +
                                 "                    </tr>";
                         }

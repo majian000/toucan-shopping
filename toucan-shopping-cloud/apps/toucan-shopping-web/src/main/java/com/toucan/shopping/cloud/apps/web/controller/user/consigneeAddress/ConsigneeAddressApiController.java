@@ -120,6 +120,7 @@ public class ConsigneeAddressApiController extends BaseController {
                 //删除缓存中验证码
                 toucanStringRedisService.delete(vcodeRedisKey);
 
+                consigneeAddressVO.setAppCode(toucan.getAppCode());
                 resultObjectVO = feignConsigneeAddressService.save(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
             }
 
