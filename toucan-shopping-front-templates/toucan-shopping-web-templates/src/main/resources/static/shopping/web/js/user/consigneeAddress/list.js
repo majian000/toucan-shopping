@@ -76,12 +76,28 @@ function queryConsignessAddressList(cpage)
                                 if(obj.defaultStatus==null||obj.defaultStatus=="0") {
                                     listHtml+=" <a href=\"#\" style=\"color:#ff4e00;\">设为默认</a>&nbsp; &nbsp; " ;
                                 }
-                                listHtml+="<a class=\"delete_ca\" style=\"cursor:pointer;\">删除</a></td>\n" +
+                                listHtml+="<a class=\"delete_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;\">删除</a></td>\n" +
                                 "\n" +
                                 "                    </tr>";
                         }
                         $("#consigneeAddressTable").html(listHtml);
                         bindDeleteConsigneeAddressEvent();
+
+                        $(".pagination").empty();
+                        new pagination({
+                            pagination: $('.pagination'),
+                            maxPage: 7, //最大页码数,支持奇数，左右对称
+                            startPage: 1,    //默认第一页
+                            currentPage: cpage,          //当前页码
+                            totalItemCount: total,    //项目总数,大于0，显示页码总数
+                            totalPageCount: totalPage,        //总页数
+                            callback: function (pageNum) {
+                                if (g_um_cpage != pageNum) {
+                                    queryConsignessAddressList(pageNum);
+                                }
+                            }
+                        });
+
                     }
                 }
             },
@@ -91,21 +107,6 @@ function queryConsignessAddressList(cpage)
                 if(total<=0)
                 {
                     $(".pagination").html("<a style='font-size:20px;'>您暂时没有收货信息~</a>");
-                }else {
-                    $(".pagination").empty();
-                    new pagination({
-                        pagination: $('.pagination'),
-                        maxPage: 7, //最大页码数,支持奇数，左右对称
-                        startPage: 1,    //默认第一页
-                        currentPage: cpage,          //当前页码
-                        totalItemCount: total,    //项目总数,大于0，显示页码总数
-                        totalPageCount: totalPage,        //总页数
-                        callback: function (pageNum) {
-                            if (g_um_cpage != pageNum) {
-                                queryConsignessAddressList(pageNum);
-                            }
-                        }
-                    });
                 }
             }
 
@@ -115,11 +116,41 @@ function queryConsignessAddressList(cpage)
 }
 
 
+function deleteConsigneeAddress()
+{
+    confirmMessageDialog.hide();
+    var consigneeAddressId = $("#caid").val();
+
+    loading.showLoading({
+        type:1,
+        tip:"删除中..."
+    });
+
+
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/user/consigneeAddress/delete",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({id: consigneeAddressId}),
+        dataType: "json",
+        success: function (result) {
+            if (result.code > 0) {
+                queryConsignessAddressList(1);
+            }
+            loading.hideLoading();
+        },
+        complete: function () {
+            loading.hideLoading();
+        }
+    });
+}
 
 
 function bindDeleteConsigneeAddressEvent()
 {
+    confirmMessageDialog.init("确定要删除吗?",deleteConsigneeAddress);
     $(".delete_ca").click(function(){
-       alert(1);
+        $("#cmd_extp").html("<input type=\"hidden\" id=\"caid\" value=\""+($(this).attr("attr-id"))+"\"  />");
+        confirmMessageDialog.show();
     });
 }
