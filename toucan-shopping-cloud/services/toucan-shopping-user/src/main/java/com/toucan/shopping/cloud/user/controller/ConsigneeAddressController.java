@@ -136,9 +136,9 @@ public class ConsigneeAddressController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delete/id/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     @ResponseBody
-    public ResultObjectVO deleteById(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO deleteByIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -152,23 +152,25 @@ public class ConsigneeAddressController {
             if(entity.getId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("没有找到ID");
+                resultObjectVO.setMsg("ID不能为空");
                 return resultObjectVO;
             }
 
-            //查询是否存在
-            ConsigneeAddressVO query=new ConsigneeAddressVO();
-            query.setId(entity.getId());
-            List<ConsigneeAddress> adminList = consigneeAddressService.findListByEntity(query);
-            if(CollectionUtils.isEmpty(adminList))
+            if(entity.getUserMainId()==null)
             {
                 resultObjectVO.setCode(ResultVO.FAILD);
-                resultObjectVO.setMsg("收货信息不存在!");
+                resultObjectVO.setMsg("用户ID不能为空");
                 return resultObjectVO;
             }
 
 
-            int row = consigneeAddressService.deleteById(entity.getId());
+            if(StringUtils.isEmpty(entity.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("应用编码不能为空");
+                return resultObjectVO;
+            }
+            int row = consigneeAddressService.deleteByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode());
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");

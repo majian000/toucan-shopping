@@ -24,6 +24,8 @@ public interface ConsigneeAddressMapper {
      */
     int deleteById(Long id);
 
+    int deleteByIdAndUserMainIdAndAppCode(Long id, Long uerMainId,String appCode);
+
     int update(ConsigneeAddress entity);
 
     List<ConsigneeAddress> findListByEntity(ConsigneeAddressVO query);

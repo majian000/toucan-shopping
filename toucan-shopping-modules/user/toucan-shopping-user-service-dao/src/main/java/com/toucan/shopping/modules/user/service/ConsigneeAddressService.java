@@ -24,6 +24,14 @@ public interface ConsigneeAddressService {
      */
     int deleteById(Long id);
 
+
+    /**
+     * 根据ID删除
+     * @param id
+     * @return
+     */
+    int deleteByIdAndUserMainIdAndAppCode(Long id,Long uerMainId,String appCode);
+
     /**
      * 修改
      * @param entity

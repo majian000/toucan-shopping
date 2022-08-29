@@ -167,4 +167,41 @@ public class ConsigneeAddressApiController extends BaseController {
 
 
 
+    @UserAuth
+    @RequestMapping(value="/delete")
+    @ResponseBody
+    public ResultObjectVO delete(HttpServletRequest request, @RequestBody ConsigneeAddressVO consigneeAddressVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (consigneeAddressVO == null) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("删除失败,没有找到收货信息");
+            return resultObjectVO;
+        }
+        if (consigneeAddressVO.getId()==null) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("删除失败,ID不能为空");
+            return resultObjectVO;
+        }
+
+        String userMainId="-1";
+        try {
+            //从请求头中拿到uid
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            consigneeAddressVO.setUserMainId(Long.parseLong(userMainId));
+            consigneeAddressVO.setAppCode(toucan.getAppCode());
+
+            if(consigneeAddressVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("提交失败,用户ID不能为空");
+                return resultObjectVO;
+            }
+            resultObjectVO = feignConsigneeAddressService.deleteByIdAndUserMainIdAndAppCode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 }

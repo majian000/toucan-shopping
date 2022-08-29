@@ -76,11 +76,12 @@ function queryConsignessAddressList(cpage)
                                 if(obj.defaultStatus==null||obj.defaultStatus=="0") {
                                     listHtml+=" <a href=\"#\" style=\"color:#ff4e00;\">设为默认</a>&nbsp; &nbsp; " ;
                                 }
-                                listHtml+="<a href=\"#\">删除</a></td>\n" +
+                                listHtml+="<a class=\"delete_ca\" style=\"cursor:pointer;\">删除</a></td>\n" +
                                 "\n" +
                                 "                    </tr>";
                         }
                         $("#consigneeAddressTable").html(listHtml);
+                        bindDeleteConsigneeAddressEvent();
                     }
                 }
             },
@@ -111,4 +112,14 @@ function queryConsignessAddressList(cpage)
         });
     }
 
+}
+
+
+
+
+function bindDeleteConsigneeAddressEvent()
+{
+    $(".delete_ca").click(function(){
+       alert(1);
+    });
 }
