@@ -202,7 +202,7 @@ function setDefaultConsigneeAddress()
 function bindSetDefaultEvent()
 {
     $(".default_ca").click(function(){
-        confirmMessageDialog.init("要将该数据设置默认吗?",setDefaultConsigneeAddress);
+        confirmMessageDialog.init("要设置成默认收货地址吗?",setDefaultConsigneeAddress);
         $("#cmd_extp").html("<input type=\"hidden\" id=\"caid\" value=\""+($(this).attr("attr-id"))+"\"  />");
         confirmMessageDialog.show();
     });
