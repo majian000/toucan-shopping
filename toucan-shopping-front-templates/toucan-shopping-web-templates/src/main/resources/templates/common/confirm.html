@@ -84,12 +84,17 @@
     var confirmMessageDialog = {
          init:function(content,yesCallback){
              if(content!=null) {
-                $("#ConfirmMessageDialogContent").html(content);
+                 $("#ConfirmMessageDialogContent").html(content);
              }
              $(".b_sure").unbind();
-              $(".b_sure").click(function(){
+             $(".b_sure").click(function(){
                   yesCallback();
-              });
+             });
+        },
+        setContentText:function(){
+            if(content!=null) {
+                $("#ConfirmMessageDialogContent").html(content);
+            }
         },
         show:function(){
             ShowDiv_1('ConfirmMessageDialog','ConfirmMessageDialogFadeClear');

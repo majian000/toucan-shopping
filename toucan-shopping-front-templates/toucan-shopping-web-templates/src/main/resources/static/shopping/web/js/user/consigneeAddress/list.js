@@ -149,8 +149,9 @@ function deleteConsigneeAddress()
 
 function bindDeleteConsigneeAddressEvent()
 {
-    confirmMessageDialog.init("确定要删除吗?",deleteConsigneeAddress);
+
     $(".delete_ca").click(function(){
+        confirmMessageDialog.init("确定要删除吗?",deleteConsigneeAddress);
         $("#cmd_extp").html("<input type=\"hidden\" id=\"caid\" value=\""+($(this).attr("attr-id"))+"\"  />");
         confirmMessageDialog.show();
     });
@@ -190,8 +191,8 @@ function setDefaultConsigneeAddress()
 
 function bindSetDefaultEvent()
 {
-    confirmMessageDialog.init("要将该数据设置默认吗?",setDefaultConsigneeAddress);
     $(".default_ca").click(function(){
+        confirmMessageDialog.init("要将该数据设置默认吗?",setDefaultConsigneeAddress);
         $("#cmd_extp").html("<input type=\"hidden\" id=\"caid\" value=\""+($(this).attr("attr-id"))+"\"  />");
         confirmMessageDialog.show();
     });
