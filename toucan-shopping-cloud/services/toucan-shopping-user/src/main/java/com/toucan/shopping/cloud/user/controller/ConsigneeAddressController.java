@@ -417,4 +417,82 @@ public class ConsigneeAddressController {
 
 
 
+
+
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求对象");
+            return resultObjectVO;
+        }
+        if (StringUtils.isEmpty(requestJsonVO.getAppCode())) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码");
+            return resultObjectVO;
+        }
+        ConsigneeAddressVO consigneeAddressVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ConsigneeAddressVO.class);
+        if(StringUtils.isEmpty(consigneeAddressVO.getAppCode()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("应用编码不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("收货人不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getAddress()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("收货地址不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getPhone()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("联系电话不能为空");
+            return resultObjectVO;
+        }
+        if(consigneeAddressVO.getId()==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空");
+            return resultObjectVO;
+        }
+        String userMainId = String.valueOf(consigneeAddressVO.getUserMainId());
+        try {
+            boolean lockStatus = skylarkLock.lock(UserCenterConsigneeAddressKey.getUpdateLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+            consigneeAddressVO.setUpdateDate(new Date());
+
+            int ret = consigneeAddressService.update(consigneeAddressVO);
+            if(ret<=0)
+            {
+                logger.warn("修改收货信息失败 requestJson{} id{}",requestJsonVO.getEntityJson(),consigneeAddressVO.getId());
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+            }
+            resultObjectVO.setData(consigneeAddressVO);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }finally{
+            skylarkLock.unLock(UserCenterConsigneeAddressKey.getUpdateLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
+
 }

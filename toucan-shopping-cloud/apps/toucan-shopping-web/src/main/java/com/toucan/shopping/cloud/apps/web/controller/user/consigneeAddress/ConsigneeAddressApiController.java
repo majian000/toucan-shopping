@@ -288,4 +288,68 @@ public class ConsigneeAddressApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+    @UserAuth
+    @RequestMapping(value="/update")
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody ConsigneeAddressVO consigneeAddressVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (consigneeAddressVO == null) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("设置失败,没有找到收货信息");
+            return resultObjectVO;
+        }
+        if (consigneeAddressVO.getId()==null) {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("设置失败,ID不能为空");
+            return resultObjectVO;
+        }
+
+        if(StringUtils.isEmpty(consigneeAddressVO.getName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("提交失败,收货人不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getAddress())||StringUtils.isEmpty(consigneeAddressVO.getAddress().replace(" ","")))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("提交失败,详细地址不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getProvinceCode())||StringUtils.isEmpty(consigneeAddressVO.getProvinceName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("提交失败,省/直辖市不能为空");
+            return resultObjectVO;
+        }
+        if(StringUtils.isEmpty(consigneeAddressVO.getAreaCode())||StringUtils.isEmpty(consigneeAddressVO.getAreaName()))
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("提交失败,市区不能为空");
+            return resultObjectVO;
+        }
+
+        String userMainId="-1";
+        try {
+            //从请求头中拿到uid
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            consigneeAddressVO.setUserMainId(Long.parseLong(userMainId));
+            consigneeAddressVO.setAppCode(toucan.getAppCode());
+
+            if(consigneeAddressVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("设置失败,用户ID不能为空");
+                return resultObjectVO;
+            }
+            resultObjectVO = feignConsigneeAddressService.update(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }

@@ -17,6 +17,8 @@ public interface ConsigneeAddressService {
 
     int save(ConsigneeAddress entity);
 
+
+
     /**
      * 根据ID删除
      * @param id

@@ -67,9 +67,9 @@
 
     <update id="update" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
         update t_consignee_address set  name=#{name},address=#{address},
-        phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},default_status=#{defaultStatus}
+        phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},
         update_date=#{updateDate},province_name=#{provinceName},city_name=#{cityName},area_name=#{areaName}
-          where id = #{id} and user_main_id=#{userMainId}
+          where id = #{id} and user_main_id=#{userMainId} and app_code=#{appCode}
     </update>
 
 

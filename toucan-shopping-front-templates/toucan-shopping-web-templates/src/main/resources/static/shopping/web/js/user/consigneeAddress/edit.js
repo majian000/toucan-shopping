@@ -75,8 +75,34 @@ function loadConsigneeAddressInfo()
         success: function (result) {
             if(result.code<=0)
             {
-
+                $.message({
+                    message: result.msg,
+                    type: 'error'
+                });
+                return ;
             }
+
+            $("#name").val(result.data.name);
+            $("#phone").val(result.data.phone);
+            $("#province").val(result.data.provinceName);
+            $("#city").val(result.data.cityName);
+            $("#area").val(result.data.areaName);
+            $("#province_code").val(result.data.provinceCode);
+            $("#city_code").val(result.data.cityCode);
+            $("#area_code").val(result.data.areaCode);
+            $("#address").val(result.data.address);
+
+            var ms_cityVal="";
+            ms_city = result.data.provinceName;
+            if(result.data.cityName!=null&&result.data.cityName!="")
+            {
+                ms_city+="/"+result.data.cityName;
+            }
+            if(result.data.areaName!=null&&result.data.areaName!="")
+            {
+                ms_city+="/"+result.data.areaName;
+            }
+            $("#ms_city").val(ms_city);
             loading.hideLoading();
         },
         error: function (result) {

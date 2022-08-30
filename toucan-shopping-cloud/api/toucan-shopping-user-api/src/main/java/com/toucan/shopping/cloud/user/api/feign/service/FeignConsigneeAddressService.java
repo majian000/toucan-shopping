@@ -33,6 +33,9 @@ public interface FeignConsigneeAddressService {
 
 
 
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
+
 
 
     /**
