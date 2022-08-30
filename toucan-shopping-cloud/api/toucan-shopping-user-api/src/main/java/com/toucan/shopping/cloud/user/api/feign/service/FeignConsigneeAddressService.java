@@ -53,4 +53,14 @@ public interface FeignConsigneeAddressService {
     @RequestMapping(value="/set/default/id/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO setDefaultByIdAndUserMainId(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 查询单条数据
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id/userMainId/appCode",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findByIdAndUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo);
+
 }

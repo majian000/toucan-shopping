@@ -361,4 +361,60 @@ public class ConsigneeAddressController {
     }
 
 
+
+
+    /**
+     * 查询单条数据
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id/userMainId/appCode",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findByIdAndUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            ConsigneeAddress entity = JSONObject.parseObject(requestVo.getEntityJson(),ConsigneeAddress.class);
+            if(entity.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空");
+                return resultObjectVO;
+            }
+
+            if(entity.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空");
+                return resultObjectVO;
+            }
+
+
+            if(StringUtils.isEmpty(entity.getAppCode()))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("应用编码不能为空");
+                return resultObjectVO;
+            }
+
+            resultObjectVO.setData(consigneeAddressService.findByIdAndUserMainIdAndAppCode(entity.getId(),entity.getUserMainId(),entity.getAppCode()));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
 }

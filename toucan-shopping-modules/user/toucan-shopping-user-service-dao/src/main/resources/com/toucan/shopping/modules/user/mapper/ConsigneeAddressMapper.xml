@@ -23,6 +23,9 @@
     </resultMap>
 
 
+    <resultMap id="entityVOMap" type="com.toucan.shopping.modules.user.vo.ConsigneeAddressVO">
+
+    </resultMap>
 
 
 
@@ -49,16 +52,16 @@
 
 
     <update id="deleteByIdAndUserMainIdAndAppCode" >
-        update t_consignee_address set delete_status=1 where id = #{id} and user_main_id = #{uerMainId} and app_code =#{appCode}
+        update t_consignee_address set delete_status=1 where id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode}
     </update>
 
 
     <update id="setDefaultByIdAndUserMainIdAndAppCode" >
-        update t_consignee_address set default_status=1 where id = #{id} and user_main_id = #{uerMainId} and app_code =#{appCode}
+        update t_consignee_address set default_status=1 where id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode}
     </update>
 
     <update id="setCancelDefaultByUserMainIdAndAppCode" >
-        update t_consignee_address set default_status=0 where  user_main_id = #{uerMainId} and app_code =#{appCode}
+        update t_consignee_address set default_status=0 where  user_main_id = #{userMainId} and app_code =#{appCode}
     </update>
 
 
@@ -115,6 +118,10 @@
 
     </select>
 
+
+    <select id="findByIdAndUserMainIdAndAppCode" resultMap="entityVOMap">
+        select * from t_consignee_address where  id = #{id} and user_main_id = #{userMainId} and app_code =#{appCode}  limit 0,1
+    </select>
 
 
 </mapper>

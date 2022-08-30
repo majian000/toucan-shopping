@@ -73,16 +73,20 @@ function queryConsignessAddressList(cpage)
                                 "                            "+obj.areaName+"\n" +
                                 "                        </td>\n" +
                                 "                        <td align=\"center\">" ;
+
                                 if(obj.defaultStatus==null||obj.defaultStatus=="0") {
                                     listHtml+=" <a attr-id=\""+obj.id+"\" class=\"default_ca\" style=\"color:#ff4e00;cursor:pointer;\">设为默认</a>&nbsp; &nbsp; " ;
                                 }
-                                listHtml+="<a class=\"delete_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;\">删除</a></td>\n" +
+                                listHtml+="<a class=\"update_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;\">修改</a>&nbsp; &nbsp; " ;
+                                listHtml+="<a class=\"delete_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;\">删除</a>" +
+                                    "</td>\n" +
                                 "\n" +
                                 "                    </tr>";
                         }
                         $("#consigneeAddressTable").html(listHtml);
                         bindDeleteConsigneeAddressEvent();
                         bindSetDefaultEvent();
+                        bindUpdateEvent();
 
                         $(".pagination").empty();
                         new pagination({
@@ -158,7 +162,13 @@ function bindDeleteConsigneeAddressEvent()
 }
 
 
+function bindUpdateEvent(){
 
+    $(".update_ca").click(function(){
+        var rowId= $(this).attr("attr-id");
+        window.location.href = basePath+"/page/user/consigneeAddress/edit/"+rowId;
+    });
+}
 
 function setDefaultConsigneeAddress()
 {

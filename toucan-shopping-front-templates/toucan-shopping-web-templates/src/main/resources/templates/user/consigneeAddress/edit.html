@@ -56,9 +56,10 @@
 
         <div class="user-right">
                 <form id="consigneeAddressForm" method="post" onsubmit="return false;">
+                    <input type="hidden" id="id" name="id" value="${id!'-1'}" />
                     <div class="toucan-form">
                         <div class="toucan-form-title" style="height: 25px;">
-                            <h3 style="font-size:20px;width: 90%;float: left;">添加信息</h3>
+                            <h3 style="font-size:20px;width: 90%;float: left;">修改信息</h3>
                             <a style="float:right;color:#0400ff;font-size: 15px;"  href="${basePath}/page/user/consigneeAddress/list">返回列表</a>
                         </div>
                         <div class="toucan-form-body">
@@ -136,7 +137,7 @@
 <link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
 <script type="text/javascript" src="${basePath}/static/lib/citySet/citySet.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/citySet/Popt.js"></script>
-<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/consigneeAddress/add.js"></script>
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/consigneeAddress/edit.js"></script>
 <script>
     $(function () {
 

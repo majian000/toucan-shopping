@@ -24,11 +24,11 @@ public interface ConsigneeAddressMapper {
      */
     int deleteById(Long id);
 
-    int deleteByIdAndUserMainIdAndAppCode(Long id, Long uerMainId,String appCode);
+    int deleteByIdAndUserMainIdAndAppCode(Long id, Long userMainId,String appCode);
 
-    int setDefaultByIdAndUserMainIdAndAppCode(Long id, Long uerMainId,String appCode);
+    int setDefaultByIdAndUserMainIdAndAppCode(Long id, Long userMainId,String appCode);
 
-    int setCancelDefaultByUserMainIdAndAppCode(Long uerMainId,String appCode);
+    int setCancelDefaultByUserMainIdAndAppCode(Long userMainId,String appCode);
 
     int update(ConsigneeAddress entity);
 
@@ -38,5 +38,7 @@ public interface ConsigneeAddressMapper {
     List<ConsigneeAddress> queryListPage(ConsigneeAddressPageInfo queryPageInfo);
 
     Long queryListPageCount(ConsigneeAddressPageInfo queryPageInfo);
+
+    ConsigneeAddressVO findByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode);
 
 }

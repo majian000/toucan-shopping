@@ -30,7 +30,16 @@ public interface ConsigneeAddressService {
      * @param id
      * @return
      */
-    int deleteByIdAndUserMainIdAndAppCode(Long id,Long uerMainId,String appCode);
+    int deleteByIdAndUserMainIdAndAppCode(Long id,Long userMainId,String appCode);
+
+    /**
+     * 查询指定数据
+     * @param id
+     * @param userMainId
+     * @param appCode
+     * @return
+     */
+    ConsigneeAddressVO findByIdAndUserMainIdAndAppCode(Long id,Long userMainId,String appCode);
 
 
 
@@ -39,7 +48,7 @@ public interface ConsigneeAddressService {
      * @param id
      * @return
      */
-    int setDefaultByIdAndUserMainIdAndAppCode(Long id,Long uerMainId,String appCode);
+    int setDefaultByIdAndUserMainIdAndAppCode(Long id,Long userMainId,String appCode);
 
     /**
      * 取消默认

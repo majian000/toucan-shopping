@@ -42,18 +42,23 @@ public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
     }
 
     @Override
-    public int deleteByIdAndUserMainIdAndAppCode(Long id, Long uerMainId,String appCode) {
-        return consigneeAddressMapper.deleteByIdAndUserMainIdAndAppCode(id,uerMainId,appCode);
+    public int deleteByIdAndUserMainIdAndAppCode(Long id, Long userMainId,String appCode) {
+        return consigneeAddressMapper.deleteByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
     }
 
     @Override
-    public int setDefaultByIdAndUserMainIdAndAppCode(Long id, Long uerMainId,String appCode) {
-        return consigneeAddressMapper.setDefaultByIdAndUserMainIdAndAppCode(id,uerMainId,appCode);
+    public ConsigneeAddressVO findByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode) {
+        return consigneeAddressMapper.findByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
     }
 
     @Override
-    public int setCancelDefaultByUserMainIdAndAppCode(Long uerMainId, String appCode) {
-        return consigneeAddressMapper.setCancelDefaultByUserMainIdAndAppCode(uerMainId,appCode);
+    public int setDefaultByIdAndUserMainIdAndAppCode(Long id, Long userMainId,String appCode) {
+        return consigneeAddressMapper.setDefaultByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
+    }
+
+    @Override
+    public int setCancelDefaultByUserMainIdAndAppCode(Long userMainId, String appCode) {
+        return consigneeAddressMapper.setCancelDefaultByUserMainIdAndAppCode(userMainId,appCode);
     }
 
     @Override

@@ -1,4 +1,7 @@
 $(function () {
+
+    loadConsigneeAddressInfo();
+
     $("#ms_city").click(function (e) {
         SelCity(this,e);
     });
@@ -22,11 +25,11 @@ $(function () {
 
         loading.showLoading({
             type:1,
-            tip:"提交中..."
+            tip:"修改中..."
         });
         $.ajax({
             type: "POST",
-            url: basePath+"/api/user/consigneeAddress/save",
+            url: basePath+"/api/user/consigneeAddress/update",
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify(params),
             dataType: "json",
@@ -39,13 +42,13 @@ $(function () {
                         message: result.msg,
                         type: 'error'
                     });
-                    $("#refreshCaptcha").attr("src",basePath+"/api/vcode/gen?"+new Date().getTime());
+                    $("#refreshCaptcha").attr("src",basePath+"/api/user/vcode?"+new Date().getTime());
                 }else{
                     window.location.href=basePath+"/page/user/consigneeAddress/list";
                 }
             },
             error: function (result) {
-                $("#edit_info_msg").text("添加失败,请稍后重试");
+                $("#edit_info_msg").text("修改失败,请稍后重试");
             },
             complete:function(data,status){
                 loading.hideLoading();
@@ -54,3 +57,33 @@ $(function () {
     });
 
 });
+
+
+
+function loadConsigneeAddressInfo()
+{
+    loading.showLoading({
+        type:1,
+        tip:"加载中..."
+    });
+    $.ajax({
+        type: "POST",
+        url: basePath+"/api/user/consigneeAddress/load",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({id:$("#id").val()}),
+        dataType: "json",
+        success: function (result) {
+            if(result.code<=0)
+            {
+
+            }
+            loading.hideLoading();
+        },
+        error: function (result) {
+            $("#edit_info_msg").text("修改失败,请稍后重试");
+        },
+        complete:function(data,status){
+            loading.hideLoading();
+        }
+    });
+}
