@@ -74,7 +74,7 @@ function queryConsignessAddressList(cpage)
                                 "                        </td>\n" +
                                 "                        <td align=\"center\">" ;
                                 if(obj.defaultStatus==null||obj.defaultStatus=="0") {
-                                    listHtml+=" <a href=\"#\" style=\"color:#ff4e00;\">设为默认</a>&nbsp; &nbsp; " ;
+                                    listHtml+=" <a attr-id=\""+obj.id+"\" class=\"default_ca\" style=\"color:#ff4e00;cursor:pointer;\">设为默认</a>&nbsp; &nbsp; " ;
                                 }
                                 listHtml+="<a class=\"delete_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;\">删除</a></td>\n" +
                                 "\n" +
@@ -82,6 +82,7 @@ function queryConsignessAddressList(cpage)
                         }
                         $("#consigneeAddressTable").html(listHtml);
                         bindDeleteConsigneeAddressEvent();
+                        bindSetDefaultEvent();
 
                         $(".pagination").empty();
                         new pagination({
@@ -150,6 +151,47 @@ function bindDeleteConsigneeAddressEvent()
 {
     confirmMessageDialog.init("确定要删除吗?",deleteConsigneeAddress);
     $(".delete_ca").click(function(){
+        $("#cmd_extp").html("<input type=\"hidden\" id=\"caid\" value=\""+($(this).attr("attr-id"))+"\"  />");
+        confirmMessageDialog.show();
+    });
+}
+
+
+
+
+function setDefaultConsigneeAddress()
+{
+    confirmMessageDialog.hide();
+    var consigneeAddressId = $("#caid").val();
+
+    loading.showLoading({
+        type:1,
+        tip:"设置中..."
+    });
+
+
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/user/consigneeAddress/set/default",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({id: consigneeAddressId}),
+        dataType: "json",
+        success: function (result) {
+            if (result.code > 0) {
+                queryConsignessAddressList(1);
+            }
+            loading.hideLoading();
+        },
+        complete: function () {
+            loading.hideLoading();
+        }
+    });
+}
+
+function bindSetDefaultEvent()
+{
+    confirmMessageDialog.init("要将该数据设置默认吗?",setDefaultConsigneeAddress);
+    $(".default_ca").click(function(){
         $("#cmd_extp").html("<input type=\"hidden\" id=\"caid\" value=\""+($(this).attr("attr-id"))+"\"  />");
         confirmMessageDialog.show();
     });

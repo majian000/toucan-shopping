@@ -80,11 +80,13 @@
         document.getElementById(bg_div).style.display='none';
     }
 
+
     var confirmMessageDialog = {
          init:function(content,yesCallback){
              if(content!=null) {
                 $("#ConfirmMessageDialogContent").html(content);
              }
+             $(".b_sure").unbind();
               $(".b_sure").click(function(){
                   yesCallback();
               });

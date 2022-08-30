@@ -43,4 +43,14 @@ public interface FeignConsigneeAddressService {
     @RequestMapping(value="/delete/id/userMainId/appCode",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteByIdAndUserMainIdAndAppCode(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 设置默认
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/set/default/id/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO setDefaultByIdAndUserMainId(@RequestBody RequestJsonVO requestVo);
+
 }

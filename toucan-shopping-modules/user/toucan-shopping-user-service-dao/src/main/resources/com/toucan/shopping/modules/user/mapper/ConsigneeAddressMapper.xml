@@ -53,6 +53,15 @@
     </update>
 
 
+    <update id="setDefaultByIdAndUserMainIdAndAppCode" >
+        update t_consignee_address set default_status=1 where id = #{id} and user_main_id = #{uerMainId} and app_code =#{appCode}
+    </update>
+
+    <update id="setCancelDefaultByUserMainIdAndAppCode" >
+        update t_consignee_address set default_status=0 where  user_main_id = #{uerMainId} and app_code =#{appCode}
+    </update>
+
+
     <update id="update" parameterType="com.toucan.shopping.modules.user.entity.ConsigneeAddress">
         update t_consignee_address set  name=#{name},address=#{address},
         phone=#{phone},province_code=#{provinceCode},city_code=#{cityCode},area_code=#{areaCode},default_status=#{defaultStatus}

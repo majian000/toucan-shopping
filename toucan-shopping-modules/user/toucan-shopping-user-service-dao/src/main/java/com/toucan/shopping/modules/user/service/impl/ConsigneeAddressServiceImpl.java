@@ -47,6 +47,16 @@ public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
     }
 
     @Override
+    public int setDefaultByIdAndUserMainIdAndAppCode(Long id, Long uerMainId,String appCode) {
+        return consigneeAddressMapper.setDefaultByIdAndUserMainIdAndAppCode(id,uerMainId,appCode);
+    }
+
+    @Override
+    public int setCancelDefaultByUserMainIdAndAppCode(Long uerMainId, String appCode) {
+        return consigneeAddressMapper.setCancelDefaultByUserMainIdAndAppCode(uerMainId,appCode);
+    }
+
+    @Override
     public int update(ConsigneeAddress entity) {
         return consigneeAddressMapper.update(entity);
     }

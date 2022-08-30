@@ -32,6 +32,23 @@ public interface ConsigneeAddressService {
      */
     int deleteByIdAndUserMainIdAndAppCode(Long id,Long uerMainId,String appCode);
 
+
+
+    /**
+     * 设置默认
+     * @param id
+     * @return
+     */
+    int setDefaultByIdAndUserMainIdAndAppCode(Long id,Long uerMainId,String appCode);
+
+    /**
+     * 取消默认
+     * @param uerMainId
+     * @param appCode
+     * @return
+     */
+    int setCancelDefaultByUserMainIdAndAppCode(Long uerMainId,String appCode);
+
     /**
      * 修改
      * @param entity
