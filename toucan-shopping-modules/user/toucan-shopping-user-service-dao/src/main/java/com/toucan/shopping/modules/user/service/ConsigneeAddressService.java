@@ -44,6 +44,23 @@ public interface ConsigneeAddressService {
     ConsigneeAddressVO findByIdAndUserMainIdAndAppCode(Long id,Long userMainId,String appCode);
 
 
+    /**
+     * 查询指定数据
+     * @param userMainId
+     * @param appCode
+     * @return
+     */
+    ConsigneeAddressVO findDefaultByUserMainIdAndAppCode(Long userMainId,String appCode);
+
+
+
+    /**
+     * 查询最新数据
+     * @param userMainId
+     * @param appCode
+     * @return
+     */
+    ConsigneeAddressVO findNewestOneByUserMainIdAndAppCode(Long userMainId,String appCode);
 
     /**
      * 设置默认

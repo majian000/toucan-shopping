@@ -352,4 +352,40 @@ public class ConsigneeAddressApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+
+
+    /**
+     * 查询设置为默认的收货信息,如果没有默认就查询最新一条
+     * @return
+     */
+    @RequestMapping(value="/find/default",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findDefault(HttpServletRequest request)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+
+        String userMainId="-1";
+        try {
+            //从请求头中拿到uid
+            ConsigneeAddressVO consigneeAddressVO = new ConsigneeAddressVO();
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            consigneeAddressVO.setUserMainId(Long.parseLong(userMainId));
+            consigneeAddressVO.setAppCode(toucan.getAppCode());
+
+            if(consigneeAddressVO.getUserMainId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("设置失败,用户ID不能为空");
+                return resultObjectVO;
+            }
+            resultObjectVO = feignConsigneeAddressService.findDefaultByUserMainIdAndAppcode(RequestJsonVOGenerator.generator(toucan.getAppCode(),consigneeAddressVO));
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }

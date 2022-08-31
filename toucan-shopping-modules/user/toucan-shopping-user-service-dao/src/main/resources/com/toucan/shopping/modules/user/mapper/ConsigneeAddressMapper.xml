@@ -124,4 +124,13 @@
     </select>
 
 
+    <select id="findDefaultByUserMainIdAndAppCode" resultMap="entityVOMap" >
+        select * from t_consignee_address where  user_main_id = #{userMainId} and app_code =#{appCode} and default_status = 1  limit 0,1
+    </select>
+
+    <select id="findNewestOneByUserMainIdAndAppCode" resultMap="entityVOMap" >
+        select * from t_consignee_address where  user_main_id = #{userMainId} and app_code =#{appCode} order by create_time desc  limit 0,1
+    </select>
+
+
 </mapper>

@@ -51,6 +51,19 @@ public class ConsigneeAddressServiceImpl implements ConsigneeAddressService {
         return consigneeAddressMapper.findByIdAndUserMainIdAndAppCode(id,userMainId,appCode);
     }
 
+
+    @Override
+    public ConsigneeAddressVO findDefaultByUserMainIdAndAppCode(Long userMainId,String appCode){
+        return consigneeAddressMapper.findDefaultByUserMainIdAndAppCode(userMainId,appCode);
+    }
+
+
+    @Override
+    public ConsigneeAddressVO findNewestOneByUserMainIdAndAppCode(Long userMainId,String appCode){
+        return consigneeAddressMapper.findNewestOneByUserMainIdAndAppCode(userMainId,appCode);
+    }
+
+
     @Override
     public int setDefaultByIdAndUserMainIdAndAppCode(Long id, Long userMainId,String appCode) {
         return consigneeAddressMapper.setDefaultByIdAndUserMainIdAndAppCode(id,userMainId,appCode);

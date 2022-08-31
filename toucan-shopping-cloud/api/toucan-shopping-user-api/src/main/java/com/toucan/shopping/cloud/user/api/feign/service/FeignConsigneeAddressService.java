@@ -66,4 +66,14 @@ public interface FeignConsigneeAddressService {
     @RequestMapping(value="/find/id/userMainId/appCode",produces = "application/json;charset=UTF-8")
     ResultObjectVO findByIdAndUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo);
 
+
+
+    /**
+     * 查询设置为默认的收货信息,如果没有默认就查询最新一条
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/default/by/userMainId/appCode",produces = "application/json;charset=UTF-8")
+    ResultObjectVO findDefaultByUserMainIdAndAppcode(@RequestBody RequestJsonVO requestVo);
+
 }

@@ -41,4 +41,8 @@ public interface ConsigneeAddressMapper {
 
     ConsigneeAddressVO findByIdAndUserMainIdAndAppCode(Long id, Long userMainId, String appCode);
 
+    ConsigneeAddressVO findDefaultByUserMainIdAndAppCode(Long userMainId,String appCode);
+
+    ConsigneeAddressVO findNewestOneByUserMainIdAndAppCode(Long userMainId,String appCode);
+
 }
