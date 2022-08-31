@@ -1,9 +1,12 @@
 
 var g_buy_car_item_req = 0;
 
-$(function () {
-    loadBuyCarPanel();
+var requestCompleted=2;
 
+$(function () {
+    startLoadding();
+    loadBuyCarPanel();
+    loadDefaultConsigneeAddress();
 
     $(".mcar_remove").click(function(){
         removeBuyCar();
@@ -30,13 +33,25 @@ $(function () {
 
 
 
-
-function loadBuyCarPanel(){
+function startLoadding()
+{
     loading.showLoading({
         type:1,
         tip:"查询中..."
     });
+}
 
+function hideLoadding()
+{
+    requestCompleted--;
+    if(requestCompleted<=0)
+    {
+        loading.hideLoading();
+    }
+}
+
+
+function loadBuyCarPanel(){
     $.ajax({
         type: "POST",
         url: basePath + "/api/user/buyCar/list",
@@ -83,12 +98,11 @@ function loadBuyCarPanel(){
                 $(".order_price_total").html("￥"+productPriceTotal);
 
             }
-            loading.hideLoading();
         },
         error: function (result) {
         },
         complete:function(data,status){
-            loading.hideLoading();
+            hideLoadding();
         }
     });
 }
@@ -316,3 +330,31 @@ function removeBuyCar()
     });
 }
 
+
+function loadDefaultConsigneeAddress(){
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/user/consigneeAddress/find/default",
+        contentType: "application/json;charset=utf-8",
+        data: {},
+        dataType: "json",
+        success: function (result) {
+            if(result.code==1)
+            {
+                $("#ca_name").html(result.data.name);
+                $("#ca_phone").html(result.data.phone);
+                $("#ca_provice_name").html(result.data.provinceName);
+                $("#ca_city_name").html(result.data.cityName);
+                $("#ca_area_name").html(result.data.areaName);
+                $("#ca_address").html(result.data.address);
+            }else{
+
+            }
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            hideLoadding();
+        }
+    });
+}
