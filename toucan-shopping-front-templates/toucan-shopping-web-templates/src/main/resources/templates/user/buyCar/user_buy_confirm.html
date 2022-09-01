@@ -16,6 +16,7 @@
     </script>
     <![endif]-->
 
+    <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
     <script type="text/javascript" src="${basePath}/static/js/n_navc.js"></script>
 
     <script type="text/javascript" src="${basePath}/static/js/shade.js"></script>
@@ -58,10 +59,10 @@
             </table>
             <form id="consigneeAddressForm">
                 <div class="two_t">
-                    <span class="fr"><a style="cursor:pointer;" id="caubtn" class="mac_modify" attr-opt="1">修改</a>&nbsp;<a href="#">选择</a></span>收货人信息
+                    <span class="fr"><a style="cursor:pointer;" id="caubtn" class="mac_modify" attr-opt="1">修改</a>&nbsp;<a class="ca_select" style="cursor:pointer;" >选择</a></span>收货人信息
                 </div>
                 <!--只读表单 -->
-                <table border="0" class="peo_tab" id="ca_form" style="width:1110px;" cellspacing="0" cellpadding="0">
+                <table border="0" class="default_tab" id="ca_form" style="width:1110px;" cellspacing="0" cellpadding="0">
 
                     <tr>
                         <td class="p_td"  width="160">收货人</td>
@@ -222,6 +223,11 @@
         </div>
     </div>
     <!--End 弹出层-删除商品 End-->
+
+
+    <!-- 选择收货信息 Begin -->
+
+    <!-- 选择收货信息 End -->
 
 
     <#include "/footer.html"/>

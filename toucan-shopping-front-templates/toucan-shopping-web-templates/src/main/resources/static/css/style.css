@@ -2206,6 +2206,86 @@ table.order_tab tr td{
 .order_tab .jslct dl dd.noborder {
 	border:none!important
 }
+
+
+table.default_tab{
+	border-collapse:collapse; border:1px solid #eaeaea;
+}
+table.default_tab tr td{
+	border-collapse:collapse; border:1px solid #eaeaea; padding:5px 10px;
+}
+
+.default_tab .jslct{
+	width:188px; height:23px; line-height:23px; display:inline-block; *display:inline; zoom:1; color:#555555; font-size:12px; font-family:"Microsoft YaHei"; position:relative; z-index:0; vertical-align:middle; cursor:default; background:url(../images/d_arrow.png) no-repeat 170px center; background-color:#f6f6f6; float:left; border:1px solid #d9d9d9;
+}
+.default_tab .jslct_hover {
+	border:1px solid #d9d9d9;
+}
+.default_tab .jslct div.jslct_t{
+	padding:0 25px 0 5px;
+	line-height:23px;
+	height:23px;
+	position:relative;
+	z-index:2;
+	*display:block!important;
+	*display:inline;
+	zoom:1;
+}
+.default_tab .jslct em {
+	font-style:normal;
+	margin:0;
+	padding:0;
+	line-height:23px;
+	display:block;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+}
+.default_tab .jslct dl, .default_tab .jslct dl dd {
+	padding:0;
+	margin:0;
+	list-style:none
+}
+.default_tab .jslct dl {
+	background:#f6f6f6;
+	position:absolute;
+	top:23px;
+	left:-1px;
+	border:1px solid #d9d9d9;
+	cursor:default;
+	line-height:22px;
+	padding:4px 4px 4px 4px;
+	z-index:1;
+	display:none;
+	width:180px;
+}
+.default_tab .jslct_hover dl {
+	border:1px solid #d9d9d9!important
+}
+.default_tab .jslct dl dd {
+	padding:0px 4px 2px 4px;
+	*padding:2px 4px 0 4px;
+	border-top:1px dotted #ccc!important;
+	border-top:1px dotted #d9d9d9;
+	white-space:nowrap;
+	background:#f6f6f6;
+	cursor:pointer;
+	*border-left:1px solid #fff;
+}
+.default_tab .jslct dl dd.hover {
+	background:#666;
+	color:#fff;
+}
+.default_tab .jslct .jslcted {
+	background:#efefef;
+}
+.default_tab .jslct dl dd.noborder {
+	border:none!important
+}
+
+
+
+
 .btn_u{
 	width:90px; height:25px; line-height:25px; overflow:hidden; background-color:#ff4e00; color:#FFF; font-size:12px; font-family:"宋体"; text-align:center; margin-left:10px; border:0; cursor:pointer;
 }

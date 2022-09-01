@@ -3,8 +3,10 @@ var g_buy_car_item_req = 0;
 
 var requestCompleted=2;
 
-var g_consigneeAddress;
-var g_updateConsigneeAddressStatus=0;
+var g_consigneeAddress; //收货人信息
+var g_updateConsigneeAddressStatus=0; //修改收货人信息状态
+
+var g_ca_cpage=1; //收货人当前页
 
 $(function () {
     startLoadding();
@@ -61,6 +63,12 @@ $(function () {
             updateConsigneeAddress(this);
         }
     });
+
+
+    $(".ca_select").click(function(){
+        queryConsignessAddressList(1);
+    });
+
 });
 
 
@@ -481,4 +489,148 @@ function drawConsigneeAddressEditControl(obj)
         }
         $("#ms_city").val(ms_cityVal);
     }
+}
+
+
+
+
+
+
+
+
+function queryConsignessAddressList(cpage)
+{
+
+    var consigneeAddressTableHtml="     <table border=\"0\" class=\"consignee_address_tab\" style=\"width:930px;margin-top: 20px;\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+        "                                <thead>\n" +
+        "                                <tr>\n" +
+        "                                    <td align=\"center\" style=\"width:5%\">序号</td>\n" +
+        "                                    <td align=\"center\" style=\"width:10%\">状态</td>\n" +
+        "                                    <td align=\"center\" style=\"width:10%\">姓名</td>\n" +
+        "                                    <td align=\"center\" style=\"width:15%\">地址</td>\n" +
+        "                                    <td align=\"center\" style=\"width:10%\">电话</td>\n" +
+        "                                    <td align=\"center\" style=\"width:10%\">省/直辖市</td>\n" +
+        "                                    <td align=\"center\" style=\"width:10%\">地市</td>\n" +
+        "                                    <td align=\"center\" style=\"width:10%\">区县</td>\n" +
+        "                                </tr>\n" +
+        "                                </thead>\n" +
+        "                                <tbody id=\"consigneeAddressTable\">\n" +
+        "\n" +
+        "                                </tbody>\n" +
+        "                            </table>\n" +
+        "\n" +
+        "\n" +
+        "                            <div class=\"pagination\" id=\"consignee_address_pagination\">\n" +
+        "                            </div>\n" +
+        "\n";
+
+    layer.open({
+        type: 1,
+        title:"选择收货人",
+        area: ['75%', '40%'], //宽高
+        content: consigneeAddressTableHtml
+    });
+
+
+    loading.showLoading({
+        type:1,
+        tip:"查询中..."
+    });
+
+    g_ca_cpage = cpage;
+
+    if(basePath!="") {
+        var totalPage = 1;
+        var total = 0;
+        $.ajax({
+            type: "POST",
+            url: basePath+"/api/user/consigneeAddress/list",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({page:cpage}),
+            dataType: "json",
+            success: function(result) {
+                if (result.code > 0) {
+                    total = result.data.total;
+                    if(result.data.total>0) {
+                        if (result.data.total % result.data.size == 0) {
+                            totalPage = result.data.total / result.data.size;
+                        } else {
+                            totalPage = result.data.total / result.data.size;
+                            totalPage = parseInt(totalPage);
+                            totalPage += 1;
+                        }
+                        var listHtml = "";
+                        for (var i = 0; i < result.data.list.length; i++) {
+                            var obj = result.data.list[i];
+                            var defaultStatusName="非默认";
+                            if(obj.defaultStatus!=null&&obj.defaultStatus=="1")
+                            {
+                                defaultStatusName="<a style='color:#ff4e00;'>默认</a>";
+                            }
+                            listHtml+="<tr>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+(i+1)+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+defaultStatusName+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+obj.name+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                           "+obj.address+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+obj.phone+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+obj.provinceName+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+obj.cityName+"\n" +
+                                "                        </td>\n" +
+                                "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
+                                "                            "+obj.areaName+"\n" +
+                                "                        </td>\n" +
+                                "                       " ;
+
+                                "                    </tr>";
+                        }
+                        $("#consigneeAddressTable").html(listHtml);
+
+                        $("#consignee_address_pagination").empty();
+                        new pagination({
+                            pagination: $('#consignee_address_pagination'),
+                            maxPage: 7, //最大页码数,支持奇数，左右对称
+                            startPage: 1,    //默认第一页
+                            currentPage: cpage,          //当前页码
+                            totalItemCount: total,    //项目总数,大于0，显示页码总数
+                            totalPageCount: totalPage,        //总页数
+                            callback: function (pageNum) {
+                                if (g_ca_cpage != pageNum) {
+                                    queryConsignessAddressList(pageNum);
+                                }
+                            }
+                        });
+
+                    }else{
+                        $("#consigneeAddressTable").html("");
+                        $("#consignee_address_pagination").html("<a style='font-size:20px;'>您暂时没有收货信息~</a>");
+                    }
+
+                }
+            },
+            complete:function()
+            {
+                alert(1);
+                loading.hideLoading();
+                if(total<=0)
+                {
+                    $("#consignee_address_pagination").html("<a style='font-size:20px;'>您暂时没有收货信息~</a>");
+                }
+            }
+
+        });
+    }
+
 }

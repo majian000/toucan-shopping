@@ -78,7 +78,7 @@ function queryConsignessAddressList(cpage)
                                     listHtml+=" <a attr-id=\""+obj.id+"\" class=\"default_ca\" style=\"color:#ff4e00;cursor:pointer;\">设为默认</a>&nbsp; &nbsp; " ;
                                 }
                                 listHtml+="<a class=\"update_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;\">修改</a>&nbsp; &nbsp; " ;
-                                listHtml+="<a class=\"delete_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;\">删除</a>" +
+                                listHtml+="<a class=\"delete_ca\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;color:red;\">删除</a>" +
                                     "</td>\n" +
                                 "\n" +
                                 "                    </tr>";
