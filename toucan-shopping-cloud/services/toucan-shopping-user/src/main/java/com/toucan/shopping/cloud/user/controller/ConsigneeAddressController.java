@@ -109,9 +109,9 @@ public class ConsigneeAddressController {
             consigneeAddressVO.setCreateDate(new Date());
             if(CollectionUtils.isEmpty(consigneeAddresses))
             {
-                consigneeAddressVO.setDeleteStatus((short)1);
+                consigneeAddressVO.setDefaultStatus((short)1);
             }else{
-                consigneeAddressVO.setDeleteStatus((short)0);
+                consigneeAddressVO.setDefaultStatus((short)0);
             }
             int ret = consigneeAddressService.save(consigneeAddressVO);
             if(ret<=0)

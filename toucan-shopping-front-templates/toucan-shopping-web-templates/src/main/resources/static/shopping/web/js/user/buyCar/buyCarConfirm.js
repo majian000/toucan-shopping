@@ -39,6 +39,15 @@ $(function () {
         }
     });
 
+    $(".confirm_payment_btn").click(function(){
+        if(g_updateConsigneeAddressStatus==1)
+        {
+            $.message({
+                message: "请先保存收货人信息",
+                type: 'error'
+            });
+        }
+    });
 
 
     $(".mac_modify").click(function(){
@@ -374,6 +383,11 @@ function loadDefaultConsigneeAddress(){
                 $("#ca_address").html(result.data.address);
             }else{
                 drawConsigneeAddressEditControl(null);
+
+                $(".mac_modify").html("保存");
+                $(".mac_modify").attr("attr-opt","2");
+
+                g_updateConsigneeAddressStatus=1;
             }
         },
         error: function (result) {
@@ -402,15 +416,28 @@ function updateConsigneeAddress(acobj)
 
         $.ajax({
             type: "POST",
-            url: basePath + "/api/user/consigneeAddress/update",
+            url: basePath + "/api/user/consigneeAddress/update/save",
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify(params),
             dataType: "json",
             success: function (result) {
                 if (result.code == 1) {
 
+                    g_consigneeAddress = result.data;
                     $(acobj).html("修改");
                     $(acobj).attr("attr-opt","1");
+                    //隐藏修改表单
+                    $("#ca_edit_form").hide();
+                    $("#ca_form").show();
+
+                    $("#ca_name").html(result.data.name);
+                    $("#ca_phone").html(result.data.phone);
+                    $("#ca_provice_name").html(result.data.provinceName);
+                    $("#ca_city_name").html(result.data.cityName);
+                    $("#ca_area_name").html(result.data.areaName);
+                    $("#ca_address").html(result.data.address);
+
+                    g_updateConsigneeAddressStatus=0;
                 }
             },
             error: function (result) {

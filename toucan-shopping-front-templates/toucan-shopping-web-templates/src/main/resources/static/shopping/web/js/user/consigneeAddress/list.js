@@ -103,6 +103,9 @@ function queryConsignessAddressList(cpage)
                             }
                         });
 
+                    }else{
+                        $("#consigneeAddressTable").html("");
+                        $(".pagination").html("<a style='font-size:20px;'>您暂时没有收货信息~</a>");
                     }
                 }
             },
