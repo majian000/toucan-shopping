@@ -48,7 +48,7 @@
     <div class="content mar_20">
         <div class="two_bg">
             <div class="two_t">
-                <span class="fr"><a href="#" class="mcar_modifu" attr-opt="1">修改</a></span>商品列表
+                <span class="fr"><a style="cursor:pointer;" class="mcar_modify" attr-opt="1">修改</a></span>商品列表
             </div>
             <table border="0" class="car_tab mcar_tab " style="width:1110px;" cellspacing="0" cellpadding="0">
 
@@ -57,25 +57,36 @@
             </table>
 
             <div class="two_t">
-                <span class="fr"><a href="#">修改</a></span>收货人信息
+                <span class="fr"><a style="cursor:pointer;" class="mac_modify" attr-opt="1">修改</a>&nbsp;<a href="#">选择</a></span>收货人信息
             </div>
             <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td class="p_td" width="160">收货人</td>
+                    <td class="p_td" id="ca_name_l" width="160">收货人</td>
                     <td width="395" id="ca_name" ></td>
-                    <td class="p_td" width="160">电话号</td>
+                    <td class="p_td" id="ca_phone_l" width="160">电话号</td>
                     <td width="395" id="ca_phone"></td>
                 </tr>
-                <tr>
-                    <td class="p_td">省/直辖市</td>
+                <tr id="ca_pc_tr">
+                    <td class="p_td" id="ca_provice_name_l">省/直辖市</td>
                     <td id="ca_provice_name"></td>
-                    <td class="p_td">地市</td>
+                    <td class="p_td" id="ca_city_name_l">地市</td>
                     <td id="ca_city_name"></td>
                 </tr>
                 <tr>
-                    <td class="p_td">区县</td>
+                    <td class="p_td" id="ca_area_name_l">区县</td>
                     <td id="ca_area_name"></td>
-                    <td class="p_td">详细信息</td>
+
+                    <td class="p_td" style="display:none"  id="ca_pcc_l"><a style="color:red">*</a>所在城市：</td>
+                    <td id="ca_pcc" style="display:none">
+                        <input name="" id="ms_city" style="width:40%" type="text" lay-verify="required" placeholder="请选择" class="l_ipt" autocomplete="off"  readonly="true">
+                        <input type="hidden" id="province" name="provinceName" />
+                        <input type="hidden" id="city" name="cityName"  />
+                        <input type="hidden" id="area" name="areaName"   />
+                        <input type="hidden" id="province_code" name="provinceCode"   />
+                        <input type="hidden" id="city_code" name="cityCode"   />
+                        <input type="hidden" id="area_code" name="areaCode" />
+                    </td>
+                    <td class="p_td" id="ca_address_l">详细信息</td>
                     <td id="ca_address"></td>
                 </tr>
             </table>
@@ -189,6 +200,20 @@
 
     <#include "/footer.html"/>
 </div>
+
+<script>
+    var province=${areaList!''};
+    var provinceHiddenId="province";
+    var provinceCodeHiddenId="province_code";
+    var cityHiddenId="city";
+    var cityCodeHiddenId="city_code";
+    var areaHiddenId="area";
+    var areaCodeHiddenId="area_code";
+</script>
+
+<link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
+<script type="text/javascript" src="${basePath}/static/lib/citySet/citySet.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/citySet/Popt.js"></script>
 
 <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/buyCar/buyCarConfirm.js"></script>
 

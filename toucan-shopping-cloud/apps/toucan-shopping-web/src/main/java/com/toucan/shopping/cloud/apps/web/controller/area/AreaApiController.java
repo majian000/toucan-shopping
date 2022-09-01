@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,19 +40,19 @@ public class AreaApiController extends BaseController {
      * @return
      */
     @UserAuth
-    @RequestMapping("/queryByPid")
-    public ResultObjectVO queryListByPid(@RequestParam String pid)
+    @RequestMapping("/query/pid")
+    public ResultObjectVO queryListByPid(@RequestBody Area area)
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try{
-            if(StringUtils.isEmpty(pid))
+            if(area.getPid()==null)
             {
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
                 resultObjectVO.setMsg("父节点ID不能为空");
                 return resultObjectVO;
             }
             Area query = new Area();
-            query.setPid(Long.parseLong(pid));
+            query.setPid(area.getPid());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(),query);
             resultObjectVO = feignAreaService.queryListByPid(requestJsonVO.sign(),requestJsonVO);
         }catch(Exception e)

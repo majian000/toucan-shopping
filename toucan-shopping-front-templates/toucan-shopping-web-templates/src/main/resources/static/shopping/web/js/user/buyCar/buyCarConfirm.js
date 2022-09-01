@@ -1,18 +1,28 @@
 
 var g_buy_car_item_req = 0;
+var g_consignee_address_item_req = 0;
 
 var requestCompleted=2;
+
+var g_consigneeAddress;
 
 $(function () {
     startLoadding();
     loadBuyCarPanel();
     loadDefaultConsigneeAddress();
 
+    $("#ms_city").click(function (e) {
+        SelCity(this,e);
+    });
+    $(".msc_l").click(function (e) {
+        SelCity(document.getElementById("ms_city"),e);
+    });
+
     $(".mcar_remove").click(function(){
         removeBuyCar();
     });
 
-    $(".mcar_modifu").click(function(){
+    $(".mcar_modify").click(function(){
         if(g_buy_car_item_req==1)
         {
             return;
@@ -26,6 +36,25 @@ $(function () {
             $(this).html("修改");
             $(this).attr("attr-opt","1");
             loadBuyCarPanel();
+        }
+    });
+
+
+
+    $(".mac_modify").click(function(){
+        if(g_consignee_address_item_req==1)
+        {
+            return;
+        }
+        var opt = $(this).attr("attr-opt");
+        if(opt!=null&&opt=="1") {
+            $(this).html("关闭");
+            $(this).attr("attr-opt","2");
+            drawConsigneeAddressEditControl();
+        }else{
+            $(this).html("修改");
+            $(this).attr("attr-opt","1");
+            updateConsigneeAddress();
         }
     });
 });
@@ -341,6 +370,7 @@ function loadDefaultConsigneeAddress(){
         success: function (result) {
             if(result.code==1)
             {
+                g_consigneeAddress = result.data;
                 $("#ca_name").html(result.data.name);
                 $("#ca_phone").html(result.data.phone);
                 $("#ca_provice_name").html(result.data.provinceName);
@@ -348,7 +378,7 @@ function loadDefaultConsigneeAddress(){
                 $("#ca_area_name").html(result.data.areaName);
                 $("#ca_address").html(result.data.address);
             }else{
-
+                drawConsigneeAddressEditControl(null);
             }
         },
         error: function (result) {
@@ -357,4 +387,62 @@ function loadDefaultConsigneeAddress(){
             hideLoadding();
         }
     });
+}
+
+
+function updateConsigneeAddress()
+{
+    // $.ajax({
+    //     type: "POST",
+    //     url: basePath + "/api/user/consigneeAddress/update",
+    //     contentType: "application/json;charset=utf-8",
+    //     data: {},
+    //     dataType: "json",
+    //     success: function (result) {
+    //         if(result.code==1)
+    //         {
+    //             g_consigneeAddress = result.data;
+    //             $("#ca_name").html(result.data.name);
+    //             $("#ca_phone").html(result.data.phone);
+    //             $("#ca_provice_name").html(result.data.provinceName);
+    //             $("#ca_city_name").html(result.data.cityName);
+    //             $("#ca_area_name").html(result.data.areaName);
+    //             $("#ca_address").html(result.data.address);
+    //         }else{
+    //             drawConsigneeAddressEditControl(null);
+    //         }
+    //     },
+    //     error: function (result) {
+    //     },
+    //     complete:function(data,status){
+    //         hideLoadding();
+    //     }
+    // });
+}
+
+function drawConsigneeAddressEditControl(obj)
+{
+
+    $("#ca_name_l").html("<a style='color:red'>*</a>收货人");
+    $("#ca_name").html(" <input type=\"text\" id=\"name\" name=\"name\" maxlength=\"30\" style=\"width:307px\" class=\"l_ipt\" tabindex=\"1\" lay-verify=\"required\"  />");
+    $("#ca_phone_l").html("<a style='color:red'>*</a>电话号");
+    $("#ca_phone").html(" <input type=\"text\" id=\"phone\" name=\"phone\" maxlength=\"20\" style=\"width:307px\" class=\"l_ipt\" tabindex=\"1\" lay-verify=\"required\"  />");
+
+    //隐藏省市区
+    $("#ca_pc_tr").hide();
+    $("#ca_area_name_l").hide();
+    $("#ca_area_name").hide();
+
+    $("#ca_pcc_l").show();
+    $("#ca_pcc").show();
+
+    $("#ca_address_l").html("<a style='color:red'>*</a>详细信息");
+    $("#ca_address").html(" <textarea id=\"address\" name=\"address\" class=\"l_ipt\"  maxlength=\"300\"  tabindex=\"2\" style=\"width: 334px; height: 85px;\"  lay-verify=\"required\"  ></textarea>");
+
+    if(g_consigneeAddress!=null)
+    {
+        $("#name").val(g_consigneeAddress.name);
+        $("#phone").val(g_consigneeAddress.phone);
+        $("#address").val(g_consigneeAddress.address);
+    }
 }
