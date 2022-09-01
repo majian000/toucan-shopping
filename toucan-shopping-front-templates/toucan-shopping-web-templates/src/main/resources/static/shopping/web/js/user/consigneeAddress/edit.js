@@ -93,16 +93,16 @@ function loadConsigneeAddressInfo()
             $("#address").val(result.data.address);
 
             var ms_cityVal="";
-            ms_city = result.data.provinceName;
+            ms_cityVal = result.data.provinceName;
             if(result.data.cityName!=null&&result.data.cityName!="")
             {
-                ms_city+="/"+result.data.cityName;
+                ms_cityVal+="/"+result.data.cityName;
             }
             if(result.data.areaName!=null&&result.data.areaName!="")
             {
-                ms_city+="/"+result.data.areaName;
+                ms_cityVal+="/"+result.data.areaName;
             }
-            $("#ms_city").val(ms_city);
+            $("#ms_city").val(ms_cityVal);
             loading.hideLoading();
         },
         error: function (result) {
