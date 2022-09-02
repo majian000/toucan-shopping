@@ -41,7 +41,7 @@ public class UserBuyCarPageController {
     @Autowired
     private Toucan toucan;
 
-    @UserAuth
+    @UserAuth(requestType =UserAuth.REQUEST_FORM)
     @RequestMapping("/confirm")
     public String confirmPage(HttpServletRequest request)
     {

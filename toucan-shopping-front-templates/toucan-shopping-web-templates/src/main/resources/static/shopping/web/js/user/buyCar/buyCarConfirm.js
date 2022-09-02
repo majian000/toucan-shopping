@@ -52,6 +52,15 @@ $(function () {
                 type: 'error'
             });
         }
+
+        if(!validConsigneeAddressForm())
+        {
+            $.message({
+                message: "请完善收货人信息",
+                type: 'error'
+            });
+        }
+
     });
 
 
@@ -77,6 +86,39 @@ $(function () {
 });
 
 
+/**
+ * 校验收货人表单
+ */
+function validConsigneeAddressForm()
+{
+    var caName = $("#ca_name").html();
+    if(caName==null||caName=="")
+    {
+        return false;
+    }
+    var caPhone = $("#ca_phone").html();
+    if(caPhone==null||caPhone=="")
+    {
+        return false;
+    }
+    var caProvinceName = $("#ca_provice_name").html();
+    if(caProvinceName==null||caProvinceName=="")
+    {
+        return false;
+    }
+    var caAreaName = $("#ca_area_name").html();
+    if(caAreaName==null||caAreaName=="")
+    {
+        return false;
+    }
+    var caAddress = $("#ca_address").html();
+    if(caAddress==null||caAddress=="")
+    {
+        return false;
+    }
+
+    return true;
+}
 
 
 function startLoadding()

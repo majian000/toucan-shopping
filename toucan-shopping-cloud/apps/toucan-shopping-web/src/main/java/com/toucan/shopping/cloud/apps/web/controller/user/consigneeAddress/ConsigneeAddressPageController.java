@@ -32,7 +32,7 @@ public class ConsigneeAddressPageController extends BaseController {
     @Autowired
     private FeignAreaService feignAreaService;
 
-    @UserAuth
+    @UserAuth(requestType =UserAuth.REQUEST_FORM)
     @RequestMapping("/add")
     public String addPage(HttpServletRequest request)
     {
@@ -55,7 +55,7 @@ public class ConsigneeAddressPageController extends BaseController {
     }
 
 
-    @UserAuth
+    @UserAuth(requestType =UserAuth.REQUEST_FORM)
     @RequestMapping("/edit/{id}")
     public String editPage(HttpServletRequest request, @PathVariable String id)
     {
@@ -80,7 +80,7 @@ public class ConsigneeAddressPageController extends BaseController {
         return "user/consigneeAddress/edit";
     }
 
-    @UserAuth
+    @UserAuth(requestType =UserAuth.REQUEST_FORM)
     @RequestMapping("/list")
     public String listPage(HttpServletRequest request)
     {
