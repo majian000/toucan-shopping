@@ -8,6 +8,9 @@ var g_updateConsigneeAddressStatus=0; //修改收货人信息状态
 
 var g_ca_cpage=1; //收货人当前页
 
+var g_selectConsigneeAddressPageData = null;
+var g_sleectConsigneeAddressDialogHandler = null;
+
 $(function () {
     startLoadding();
     loadBuyCarPanel();
@@ -59,6 +62,7 @@ $(function () {
             $(this).attr("attr-opt","2");
             drawConsigneeAddressEditControl();
             g_updateConsigneeAddressStatus=1;
+            $(".ca_select").hide();
         }else{
             updateConsigneeAddress(this);
         }
@@ -66,6 +70,7 @@ $(function () {
 
 
     $(".ca_select").click(function(){
+        openSelectConsigneeAdddressDialog();
         queryConsignessAddressList(1);
     });
 
@@ -306,6 +311,9 @@ function updateRow(cid,bnum)
     });
 }
 
+/**
+ * 计算商品总价
+ */
 function calculatePriceTotal()
 {
     var pns = $(".mcar_pn"); //数量
@@ -332,7 +340,9 @@ function showRemoveBuyCar(cid,cname)
 }
 
 
-
+/**
+ * 移除购物车项删除事件
+ */
 function removeBuyCar()
 {
     CloseDiv_1('removeBuyCar','fade');
@@ -372,6 +382,9 @@ function removeBuyCar()
 }
 
 
+/**
+ * 加载默认收货人信息
+ */
 function loadDefaultConsigneeAddress(){
     $.ajax({
         type: "POST",
@@ -383,12 +396,8 @@ function loadDefaultConsigneeAddress(){
             if(result.code==1)
             {
                 g_consigneeAddress = result.data;
-                $("#ca_name").html(result.data.name);
-                $("#ca_phone").html(result.data.phone);
-                $("#ca_provice_name").html(result.data.provinceName);
-                $("#ca_city_name").html(result.data.cityName);
-                $("#ca_area_name").html(result.data.areaName);
-                $("#ca_address").html(result.data.address);
+
+                drawReadOnlyConsigneeAddress(result.data);
             }else{
                 drawConsigneeAddressEditControl(null);
 
@@ -438,14 +447,11 @@ function updateConsigneeAddress(acobj)
                     $("#ca_edit_form").hide();
                     $("#ca_form").show();
 
-                    $("#ca_name").html(result.data.name);
-                    $("#ca_phone").html(result.data.phone);
-                    $("#ca_provice_name").html(result.data.provinceName);
-                    $("#ca_city_name").html(result.data.cityName);
-                    $("#ca_area_name").html(result.data.areaName);
-                    $("#ca_address").html(result.data.address);
+                    drawReadOnlyConsigneeAddress(result.data);
 
                     g_updateConsigneeAddressStatus=0;
+
+                    $(".ca_select").show();
                 }
             },
             error: function (result) {
@@ -456,6 +462,26 @@ function updateConsigneeAddress(acobj)
     }
 }
 
+
+/**
+ * 绘制收货人只读表单
+ * @param obj
+ */
+function drawReadOnlyConsigneeAddress(obj)
+{
+
+    $("#ca_name").html(obj.name);
+    $("#ca_phone").html(obj.phone);
+    $("#ca_provice_name").html(obj.provinceName);
+    $("#ca_city_name").html(obj.cityName);
+    $("#ca_area_name").html(obj.areaName);
+    $("#ca_address").html(obj.address);
+}
+
+/**
+ * 绘制收货人可编辑表单
+ * @param obj
+ */
 function drawConsigneeAddressEditControl(obj)
 {
     //隐藏只读表单
@@ -492,16 +518,13 @@ function drawConsigneeAddressEditControl(obj)
 }
 
 
-
-
-
-
-
-
-function queryConsignessAddressList(cpage)
+/**
+ * 打开选择收货人对话框
+ */
+function openSelectConsigneeAdddressDialog()
 {
 
-    var consigneeAddressTableHtml="     <table border=\"0\" class=\"consignee_address_tab\" style=\"width:930px;margin-top: 20px;\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+    var consigneeAddressTableHtml="     <table border=\"0\" class=\"default_tab\" style=\"width:930px;margin-top: 20px;\" cellspacing=\"0\" cellpadding=\"0\">\n" +
         "                                <thead>\n" +
         "                                <tr>\n" +
         "                                    <td align=\"center\" style=\"width:5%\">序号</td>\n" +
@@ -512,6 +535,7 @@ function queryConsignessAddressList(cpage)
         "                                    <td align=\"center\" style=\"width:10%\">省/直辖市</td>\n" +
         "                                    <td align=\"center\" style=\"width:10%\">地市</td>\n" +
         "                                    <td align=\"center\" style=\"width:10%\">区县</td>\n" +
+        "                                    <td align=\"center\" style=\"width:20%\">操作</td>"+
         "                                </tr>\n" +
         "                                </thead>\n" +
         "                                <tbody id=\"consigneeAddressTable\">\n" +
@@ -524,18 +548,22 @@ function queryConsignessAddressList(cpage)
         "                            </div>\n" +
         "\n";
 
-    layer.open({
+    g_sleectConsigneeAddressDialogHandler = layer.open({
         type: 1,
         title:"选择收货人",
-        area: ['75%', '40%'], //宽高
+        area: ['55%', '50%'], //宽高
         content: consigneeAddressTableHtml
     });
+}
 
 
-    loading.showLoading({
-        type:1,
-        tip:"查询中..."
-    });
+/**
+ * 查询收货人列表
+ * @param cpage
+ */
+function queryConsignessAddressList(cpage)
+{
+
 
     g_ca_cpage = cpage;
 
@@ -551,6 +579,7 @@ function queryConsignessAddressList(cpage)
             success: function(result) {
                 if (result.code > 0) {
                     total = result.data.total;
+                    g_selectConsigneeAddressPageData = result.data.list;
                     if(result.data.total>0) {
                         if (result.data.total % result.data.size == 0) {
                             totalPage = result.data.total / result.data.size;
@@ -569,7 +598,7 @@ function queryConsignessAddressList(cpage)
                             }
                             listHtml+="<tr>\n" +
                                 "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
-                                "                            "+(i+1)+"\n" +
+                                "                           "+(i+1)+"" +
                                 "                        </td>\n" +
                                 "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                                 "                            "+defaultStatusName+"\n" +
@@ -592,8 +621,9 @@ function queryConsignessAddressList(cpage)
                                 "                        <td align=\"center\"  style=\"font-family:'宋体';\">\n" +
                                 "                            "+obj.areaName+"\n" +
                                 "                        </td>\n" +
-                                "                       " ;
-
+                                "                        <td align=\"center\">" +
+                                "           <a class=\"select_cap\" attr-id=\""+obj.id+"\" style=\"cursor:pointer;color:blue;\">选择</a>" +
+                                "</td>\n" +
                                 "                    </tr>";
                         }
                         $("#consigneeAddressTable").html(listHtml);
@@ -613,6 +643,24 @@ function queryConsignessAddressList(cpage)
                             }
                         });
 
+                        $(".select_cap").unbind();
+                        $(".select_cap").click(function(){
+                            var attrId =$(this).attr("attr-id");
+                            if(g_selectConsigneeAddressPageData!=null&&g_selectConsigneeAddressPageData.length>0)
+                            {
+                                for(var i=0;i<g_selectConsigneeAddressPageData.length;i++)
+                                {
+                                    var selectObj = g_selectConsigneeAddressPageData[i];
+                                    if(selectObj.id==attrId)
+                                    {
+                                        g_consigneeAddress = selectObj;
+                                        drawReadOnlyConsigneeAddress(selectObj);
+                                        layer.close(g_sleectConsigneeAddressDialogHandler);
+                                    }
+                                }
+                            }
+                        });
+
                     }else{
                         $("#consigneeAddressTable").html("");
                         $("#consignee_address_pagination").html("<a style='font-size:20px;'>您暂时没有收货信息~</a>");
@@ -622,8 +670,6 @@ function queryConsignessAddressList(cpage)
             },
             complete:function()
             {
-                alert(1);
-                loading.hideLoading();
                 if(total<=0)
                 {
                     $("#consignee_address_pagination").html("<a style='font-size:20px;'>您暂时没有收货信息~</a>");

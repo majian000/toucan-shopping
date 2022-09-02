@@ -1178,6 +1178,26 @@ ul.menu_r li a:hover, ul.menu_r li a.now{
 	background: #f52b00;
 	border-color: #f52b00
 }
+.default_btn{
+	background: #f40;
+	border-color: #f40;
+	font-size: 16px;
+	background-color: #f40;
+	border: 1px solid #ff9000;
+	border-radius: 3px;
+	font-size: 20px;
+	height: 42px;
+	line-height: 42px;
+	outline: none;
+	color: #fff;
+	width: 100%;
+	cursor: pointer;
+}
+.default_btn:hover{
+	background: #f52b00;
+	border-color: #f52b00
+}
+
 .send_vcode_btn{
 	width:100px; height:35px; line-height:35px\9; overflow:hidden; background:url(../images/vcode_btn.gif) repeat-x center top; color:#FFF; font-size:16px; font-family:"Microsoft YaHei"; text-align:center; padding:0; border:0; cursor:pointer; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px;
 }
