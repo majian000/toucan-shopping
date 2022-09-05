@@ -36,21 +36,6 @@ public class ConsigneeAddressPageController extends BaseController {
     @RequestMapping("/add")
     public String addPage(HttpServletRequest request)
     {
-        try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), new AreaVO());
-            ResultObjectVO resultObjectVO = feignAreaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                request.setAttribute("areaList", JSONArray.toJSONString(resultObjectVO.getData()));
-            }else{
-                request.setAttribute("areaList","[]");
-            }
-        }catch(Exception e)
-        {
-            request.setAttribute("areaList","[]");
-            logger.warn("查询地区缓存失败 {} ",e.getMessage());
-            logger.warn(e.getMessage(),e);
-        }
         return "user/consigneeAddress/add";
     }
 

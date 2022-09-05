@@ -105,7 +105,7 @@ html { overflow-y:scroll; filter:progid:DXImageTransform.Microsoft.BasicImage(gr
 	width:254px; overflow:hidden; position:absolute; left:-50px; top:29px; z-index:900; display:none;
 }
 .s_city_t{
-	width:9px; height:7px; line-height:7px; overflow:hidden; background:url(../images/c_t.gif) no-repeat center top; position:absolute; left:55px; top:0;
+	width:9px; height:7px; line-height:7px; overflow:hidden; background:url(/static/images/c_t.gif) no-repeat center top; position:absolute; left:55px; top:0;
 }
 .s_city_c{
 	width:252px; height:460px; overflow:hidden; background-color:#FFF; font-family:"Microsoft YaHei"; margin-top:6px; border:1px solid #cdcdcd;
@@ -141,7 +141,7 @@ table.c_tab tr th{
 	width:116px; overflow:hidden; position:absolute; left:50%; top:29px; margin-left:-58px; z-index:900; display:none;
 }
 .ss_list_t{
-	height:7px; line-height:7px; overflow:hidden; background:url(../images/c_t.gif) no-repeat center top; position:absolute; left:0; top:0;
+	height:7px; line-height:7px; overflow:hidden; background:url(/static/images/c_t.gif) no-repeat center top; position:absolute; left:0; top:0;
 }
 .ss_list_c{
 	overflow:hidden; background-color:#FFF; font-family:"Microsoft YaHei"; margin-top:6px; padding:10px 0; border:1px solid #cdcdcd;

@@ -123,19 +123,30 @@
     <#include "/footer.html"/>
 
 </body>
+
+<div id="pcaDiv">
+
+</div>
 <script>
-    var province=${areaList!''};
-    var provinceHiddenId="province";
-    var provinceCodeHiddenId="province_code";
-    var cityHiddenId="city";
-    var cityCodeHiddenId="city_code";
-    var areaHiddenId="area";
-    var areaCodeHiddenId="area_code";
+
+    $(function () {
+        $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
+
+            document.getElementById("pcaDiv").innerHTML = data;
+
+            $("#ms_city").click(function (e) {
+                alert(province[0]);
+                SelCity(this,e);
+            });
+            $(".msc_l").click(function (e) {
+                SelCity(document.getElementById("ms_city"),e);
+            });
+        });
+    });
+
 </script>
 
-<link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
-<script type="text/javascript" src="${basePath}/static/lib/citySet/citySet.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/citySet/Popt.js"></script>
+
 <script type="text/javascript" src="${basePath}/static/shopping/web/js/user/consigneeAddress/add.js"></script>
 <script>
     $(function () {
