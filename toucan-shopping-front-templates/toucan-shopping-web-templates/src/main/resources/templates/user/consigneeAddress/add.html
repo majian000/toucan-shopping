@@ -125,17 +125,15 @@
 </body>
 
 <div id="pcaDiv">
-
 </div>
 <script>
 
     $(function () {
         $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
 
-            document.getElementById("pcaDiv").innerHTML = data;
+            $("#pcaDiv").html(data);
 
             $("#ms_city").click(function (e) {
-                alert(province[0]);
                 SelCity(this,e);
             });
             $(".msc_l").click(function (e) {

@@ -44,24 +44,7 @@ public class ConsigneeAddressPageController extends BaseController {
     @RequestMapping("/edit/{id}")
     public String editPage(HttpServletRequest request, @PathVariable String id)
     {
-
-        try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), new AreaVO());
-            ResultObjectVO resultObjectVO = feignAreaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                request.setAttribute("areaList", JSONArray.toJSONString(resultObjectVO.getData()));
-            }else{
-                request.setAttribute("areaList","[]");
-            }
-            request.setAttribute("id",String.valueOf(id));
-        }catch(Exception e)
-        {
-            request.setAttribute("areaList","[]");
-            request.setAttribute("id","-1");
-            logger.warn("查询地区缓存失败 {} ",e.getMessage());
-            logger.warn(e.getMessage(),e);
-        }
+        request.setAttribute("id",String.valueOf(id));
         return "user/consigneeAddress/edit";
     }
 
