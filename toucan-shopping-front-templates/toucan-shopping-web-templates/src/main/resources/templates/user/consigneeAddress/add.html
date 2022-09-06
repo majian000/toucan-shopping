@@ -129,9 +129,17 @@
 <script>
 
     $(function () {
+
+        loading.showLoading({
+            type:1,
+            tip:"加载中..."
+        });
+
         $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
 
             $("#pcaDiv").html(data);
+
+            loading.hideLoading();
 
             $("#ms_city").click(function (e) {
                 SelCity(this,e);

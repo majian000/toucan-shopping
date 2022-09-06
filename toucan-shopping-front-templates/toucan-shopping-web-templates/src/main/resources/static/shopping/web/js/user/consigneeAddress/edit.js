@@ -1,6 +1,5 @@
 $(function () {
 
-    loadConsigneeAddressInfo();
 
     $("#ms_city").click(function (e) {
         SelCity(this,e);
@@ -62,10 +61,6 @@ $(function () {
 
 function loadConsigneeAddressInfo()
 {
-    loading.showLoading({
-        type:1,
-        tip:"加载中..."
-    });
     $.ajax({
         type: "POST",
         url: basePath+"/api/user/consigneeAddress/load",
