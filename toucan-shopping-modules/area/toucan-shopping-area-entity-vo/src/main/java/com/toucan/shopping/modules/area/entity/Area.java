@@ -22,7 +22,10 @@ public class Area {
     private String code; //编码
     private String parentCode; //上级编码
     private String province; //省
-
+    private String bigAreaName; //大区域名称
+    private String bigAreaCode; //大区域编码 1:华东 2:华北 3:华中 4:华南 5:东北 6:西北 7:西南 8:港澳台
+    private String countryName; //国家名称
+    private String countryCode; //国家编码 CHN:中国
 
     /**
      * 上级节点ID

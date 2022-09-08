@@ -20,6 +20,10 @@
         <result column="create_admin_id" jdbcType="VARCHAR" property="createAdminId" />
         <result column="update_admin_id" jdbcType="VARCHAR" property="updateAdminId" />
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
+        <result column="big_area_name" jdbcType="VARCHAR" property="bigAreaName" />
+        <result column="big_area_code" jdbcType="VARCHAR" property="bigAreaCode" />
+        <result column="country_name" jdbcType="VARCHAR" property="countryName" />
+        <result column="country_code" jdbcType="VARCHAR" property="countryCode" />
     </resultMap>
 
     <resultMap id="areaVOMap" type="com.toucan.shopping.modules.area.vo.AreaVO" extends="areaMap">
@@ -123,8 +127,8 @@
 
 
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Area" useGeneratedKeys="true" keyProperty="id" >
-        insert into t_area(code,parent_code,pid,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id)
-        values(#{code},#{parentCode},#{pid},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId})
+        insert into t_area(code,parent_code,pid,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id,big_area_name,big_area_code,country_name,country_code)
+        values(#{code},#{parentCode},#{pid},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId},#{bigAreaName},#{bigAreaCode},#{countryName},#{countryCode})
     </insert>
 
 
@@ -145,9 +149,22 @@
     <update id="update" parameterType="com.toucan.shopping.modules.area.entity.Area">
         update t_area set code=#{code},parent_code=#{parentCode},province=#{province},city=#{city},area=#{area},area_sort=#{areaSort}
         ,type=#{type},remark=#{remark},pid=#{pid},
-        update_admin_id=#{updateAdminId},update_date=#{updateDate}
+        update_admin_id=#{updateAdminId},update_date=#{updateDate},big_area_name=#{bigAreaName},big_area_code=#{bigAreaCode},
+        country_name=#{countryName},country_code=#{countryCode}
           where id=#{id}
     </update>
+
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_area set code=#{item.code},parent_code=#{item.parentCode},province=#{item.province},city=#{item.city},area=#{item.area},area_sort=#{item.areaSort}
+            ,type=#{item.type},remark=#{item.remark},pid=#{item.pid},
+            update_admin_id=#{item.updateAdminId},update_date=#{item.updateDate},big_area_name=#{item.bigAreaName},big_area_code=#{item.bigAreaCode},
+            country_name=#{item.countryName},country_code=#{item.countryCode}
+            where id=#{item.id}
+        </foreach>
+    </update>
+
 
     <select id="queryByParentCode" resultMap="areaMap" >
         select t.* from t_area t

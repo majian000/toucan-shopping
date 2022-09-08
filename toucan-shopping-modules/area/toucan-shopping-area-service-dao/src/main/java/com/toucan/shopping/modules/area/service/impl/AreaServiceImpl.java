@@ -50,6 +50,11 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
+    public int updateBatch(List<Area> areas) {
+        return areaMapper.updateBatch(areas);
+    }
+
+    @Override
     public Area queryById(Long id) {
         return areaMapper.queryById(id);
     }

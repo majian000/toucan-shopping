@@ -29,6 +29,8 @@ public interface AreaService {
 
     int update(Area area);
 
+    int updateBatch(List<Area> areas);
+
     Area queryById(Long id);
 
     int deleteById(String appCode,Long id);

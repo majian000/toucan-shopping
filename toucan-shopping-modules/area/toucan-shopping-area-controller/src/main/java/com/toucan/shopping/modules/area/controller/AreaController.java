@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -604,6 +605,28 @@ public class AreaController {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
                 return resultObjectVO;
+            }
+
+            List<Area> children = new LinkedList<>();
+            areaService.queryChildren(children,query);
+            if(!CollectionUtils.isEmpty(children))
+            {
+                List<Area> releaseChildren = new LinkedList<>();
+                for(Area child:children)
+                {
+                    if((!child.getCountryCode().equals(entity.getCountryCode())||!child.getCountryName().equals(entity.getCountryName()))
+                            ||(!child.getBigAreaCode().equals(entity.getBigAreaCode())||!child.getBigAreaName().equals(entity.getBigAreaName())))
+                    {
+                        child.setCountryCode(entity.getCountryCode());
+                        child.setCountryName(entity.getCountryName());
+                        child.setBigAreaCode(entity.getBigAreaCode());
+                        child.setBigAreaName(entity.getBigAreaName());
+                        releaseChildren.add(child);
+                    }
+                }
+                if(!CollectionUtils.isEmpty(releaseChildren)) {
+                    areaService.updateBatch(releaseChildren);
+                }
             }
 
             try{

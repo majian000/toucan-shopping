@@ -7,6 +7,8 @@ import com.toucan.shopping.cloud.admin.auth.api.feign.service.*;
 import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.modules.area.entity.Area;
+import com.toucan.shopping.modules.area.enums.BigAreaCodeEnum;
+import com.toucan.shopping.modules.area.enums.CountryCodeEnum;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
@@ -147,6 +149,8 @@ public class AreaController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
+            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
             entity.setAppCode(toucan.getShoppingPC().getAppCode());
             entity.setCreateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);
@@ -175,6 +179,8 @@ public class AreaController extends UIController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            entity.setCountryName(CountryCodeEnum.getKey(entity.getCountryCode()).getName());
+            entity.setBigAreaName(BigAreaCodeEnum.getKey(entity.getCountryCode(),entity.getBigAreaCode()).getName());
             entity.setUpdateAdminId(AuthHeaderUtil.getAdminId(toucan.getAppCode(),request.getHeader(toucan.getAdminAuth().getHttpToucanAuthHeader())));
             entity.setUpdateDate(new Date());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(appCode, entity);

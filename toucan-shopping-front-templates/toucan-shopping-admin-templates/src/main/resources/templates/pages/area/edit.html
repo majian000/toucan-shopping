@@ -19,6 +19,33 @@
 <div class="layui-form layuimini-form">
     <input type="hidden" name="id" th:value="${model.id}" />
     <input type="hidden" id="selectType" th:value="${model.type}" />
+    <input type="hidden" id="selectBigAreaCode" th:value="${model.bigAreaCode}" />
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required">国家</label>
+        <div class="layui-input-block" >
+            <select id="countryCode"  name="countryCode"  lay-search="" >
+                <option value="CHN">中国</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label required">大区</label>
+        <div class="layui-input-block" >
+            <select  id="bigAreaCode"  name="bigAreaCode" lay-search="" >
+                <option value="1" selected>华东</option>
+                <option value="2" >华北</option>
+                <option value="3" >华中</option>
+                <option value="4" >华南</option>
+                <option value="5" >东北</option>
+                <option value="6" >西北</option>
+                <option value="7" >西南</option>
+                <option value="8" >港澳台</option>
+            </select>
+        </div>
+    </div>
+
     <div class="layui-form-item" >
         <label class="layui-form-label required">类型</label>
         <div class="layui-input-block" th:if="${model.type eq 1}" >
@@ -174,6 +201,9 @@
             $("#areaDiv").show();
 
         }
+
+        var selectBigAreaCode = $("#selectBigAreaCode").val();
+        $("#bigAreaCode").find("option:contains('"+selectBigAreaCode+"')").attr("selected",true);
 
         form.on('radio(type)', function (data) {
             var typeValue = data.value;
