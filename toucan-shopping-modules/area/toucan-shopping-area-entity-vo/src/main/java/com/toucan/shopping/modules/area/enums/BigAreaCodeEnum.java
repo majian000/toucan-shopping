@@ -6,14 +6,14 @@ package com.toucan.shopping.modules.area.enums;
  * @date 2022-9-8 15:10:22
  */
 public enum BigAreaCodeEnum {
-    BIG_AREA_CODE_1("CHN","1", "华东"),
-    BIG_AREA_CODE_2("CHN","2", "华北"),
-    BIG_AREA_CODE_3("CHN","3", "华中"),
-    BIG_AREA_CODE_4("CHN","4", "华南"),
-    BIG_AREA_CODE_5("CHN","5", "东北"),
-    BIG_AREA_CODE_6("CHN","6", "西北"),
-    BIG_AREA_CODE_7("CHN","7", "西南"),
-    BIG_AREA_CODE_8("CHN","8", "港澳台")
+    BIG_AREA_CODE_1("CHN","HUADONG", "华东"),
+    BIG_AREA_CODE_2("CHN","HUABEI", "华北"),
+    BIG_AREA_CODE_3("CHN","HUAZHONG", "华中"),
+    BIG_AREA_CODE_4("CHN","HUANAN", "华南"),
+    BIG_AREA_CODE_5("CHN","DONGBEI", "东北"),
+    BIG_AREA_CODE_6("CHN","XIBEI", "西北"),
+    BIG_AREA_CODE_7("CHN","XINAN", "西南"),
+    BIG_AREA_CODE_8("CHN","GANGAOTAI", "港澳台")
             ;
 
     private String countryCode;

@@ -1157,10 +1157,10 @@ public class AreaController {
             provinceVO.setPid(null);
             provinceVO.setAppCode(null);
             provinceVO.setParentName(null);
-            provinceVO.setCreateAdminUsername(null);
+            provinceVO.setCreateAdminName(null);
             provinceVO.setCreateDate(null);
             provinceVO.setCreateAdminId(null);
-            provinceVO.setUpdateAdminUsername(null);
+            provinceVO.setUpdateAdminName(null);
             provinceVO.setUpdateAdminId(null);
             provinceVO.setUpdateDate(null);
             provinceVO.setDeleteStatus(null);
@@ -1179,10 +1179,10 @@ public class AreaController {
                     cityOrAreaVO.setPid(null);
                     cityOrAreaVO.setAppCode(null);
                     cityOrAreaVO.setParentName(null);
-                    cityOrAreaVO.setCreateAdminUsername(null);
+                    cityOrAreaVO.setCreateAdminName(null);
                     cityOrAreaVO.setCreateDate(null);
                     cityOrAreaVO.setCreateAdminId(null);
-                    cityOrAreaVO.setUpdateAdminUsername(null);
+                    cityOrAreaVO.setUpdateAdminName(null);
                     cityOrAreaVO.setUpdateAdminId(null);
                     cityOrAreaVO.setUpdateDate(null);
                     cityOrAreaVO.setDeleteStatus(null);
@@ -1200,10 +1200,10 @@ public class AreaController {
                             areaVO.setPid(null);
                             areaVO.setAppCode(null);
                             areaVO.setParentName(null);
-                            areaVO.setCreateAdminUsername(null);
+                            areaVO.setCreateAdminName(null);
                             areaVO.setCreateDate(null);
                             areaVO.setCreateAdminId(null);
-                            areaVO.setUpdateAdminUsername(null);
+                            areaVO.setUpdateAdminName(null);
                             areaVO.setUpdateAdminId(null);
                             areaVO.setUpdateDate(null);
                             areaVO.setDeleteStatus(null);
