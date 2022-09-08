@@ -619,6 +619,8 @@ public class AreaController {
                         child.setCountryName(entity.getCountryName());
                         child.setBigAreaCode(entity.getBigAreaCode());
                         child.setBigAreaName(entity.getBigAreaName());
+                        child.setUpdateAdminId(entity.getUpdateAdminId());
+                        child.setUpdateDate(entity.getUpdateDate());
                         areaService.update(child);
                     }else if((!child.getCountryCode().equals(entity.getCountryCode())||!child.getCountryName().equals(entity.getCountryName()))
                             ||(!child.getBigAreaCode().equals(entity.getBigAreaCode())||!child.getBigAreaName().equals(entity.getBigAreaName())))
@@ -627,6 +629,8 @@ public class AreaController {
                         child.setCountryName(entity.getCountryName());
                         child.setBigAreaCode(entity.getBigAreaCode());
                         child.setBigAreaName(entity.getBigAreaName());
+                        child.setUpdateAdminId(entity.getUpdateAdminId());
+                        child.setUpdateDate(entity.getUpdateDate());
                         areaService.update(child);
                     }
                 }
