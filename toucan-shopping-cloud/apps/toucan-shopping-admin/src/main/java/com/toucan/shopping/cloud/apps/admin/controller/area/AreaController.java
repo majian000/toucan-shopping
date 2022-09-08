@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.area.entity.Area;
 import com.toucan.shopping.modules.area.enums.BigAreaCodeEnum;
 import com.toucan.shopping.modules.area.enums.CountryCodeEnum;
 import com.toucan.shopping.modules.area.page.AreaTreeInfo;
+import com.toucan.shopping.modules.area.vo.AreaTreeVO;
 import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.admin.AdminAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -256,7 +257,7 @@ public class AreaController extends UIController {
      * @return
      */
     @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
-    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.GET)
+    @RequestMapping(value = "/tree/table/by/pid",method = RequestMethod.POST)
     @ResponseBody
     public ResultObjectVO queryTreeTableByPid(HttpServletRequest request, AreaTreeInfo queryPageInfo)
     {
@@ -265,6 +266,54 @@ public class AreaController extends UIController {
             queryPageInfo.setAppCode(toucan.getShoppingPC().getAppCode());
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryPageInfo);
             resultObjectVO = feignAreaService.queryTreeTableByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
+            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
+            {
+                if(resultObjectVO.getData()!=null)
+                {
+                    List<AreaTreeVO> list = resultObjectVO.formatDataList(AreaTreeVO.class);
+                    //查询创建人和修改人
+                    List<String> adminIdList = new ArrayList<String>();
+                    for(int i=0;i<list.size();i++)
+                    {
+                        AreaTreeVO vo = list.get(i);
+                        if(vo.getCreateAdminId()!=null) {
+                            adminIdList.add(vo.getCreateAdminId());
+                        }
+                        if(vo.getUpdateAdminId()!=null)
+                        {
+                            adminIdList.add(vo.getUpdateAdminId());
+                        }
+                    }
+                    String[] createOrUpdateAdminIds = new String[adminIdList.size()];
+                    adminIdList.toArray(createOrUpdateAdminIds);
+                    AdminVO queryAdminVO = new AdminVO();
+                    queryAdminVO.setAdminIds(createOrUpdateAdminIds);
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
+                    resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
+                    if(resultObjectVO.isSuccess())
+                    {
+                        List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
+                        if(!CollectionUtils.isEmpty(adminVOS))
+                        {
+                            for(AreaTreeVO vo:list)
+                            {
+                                for(AdminVO adminVO:adminVOS)
+                                {
+                                    if(vo.getCreateAdminId()!=null&&vo.getCreateAdminId().equals(adminVO.getAdminId()))
+                                    {
+                                        vo.setCreateAdminName(adminVO.getUsername());
+                                    }
+                                    if(vo.getUpdateAdminId()!=null&&vo.getUpdateAdminId().equals(adminVO.getAdminId()))
+                                    {
+                                        vo.setUpdateAdminName(adminVO.getUsername());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    resultObjectVO.setData(list);
+                }
+            }
             return resultObjectVO;
         }catch(Exception e)
         {
@@ -293,54 +342,6 @@ public class AreaController extends UIController {
             areaVO.setPid(pid);
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
             resultObjectVO = feignAreaService.queryListByPid(SignUtil.sign(requestJsonVO),requestJsonVO);
-            if(resultObjectVO.getCode() == ResultObjectVO.SUCCESS)
-            {
-                if(resultObjectVO.getData()!=null)
-                {
-                    List<AreaVO> list = resultObjectVO.formatDataList(AreaVO.class);
-                    //查询创建人和修改人
-                    List<String> adminIdList = new ArrayList<String>();
-                    for(int i=0;i<list.size();i++)
-                    {
-                        AreaVO vo = list.get(i);
-                        if(vo.getCreateAdminId()!=null) {
-                            adminIdList.add(vo.getCreateAdminId());
-                        }
-                        if(vo.getUpdateAdminId()!=null)
-                        {
-                            adminIdList.add(vo.getUpdateAdminId());
-                        }
-                    }
-                    String[] createOrUpdateAdminIds = new String[adminIdList.size()];
-                    adminIdList.toArray(createOrUpdateAdminIds);
-                    AdminVO queryAdminVO = new AdminVO();
-                    queryAdminVO.setAdminIds(createOrUpdateAdminIds);
-                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryAdminVO);
-                    resultObjectVO = feignAdminService.queryListByEntity(requestJsonVO.sign(),requestJsonVO);
-                    if(resultObjectVO.isSuccess())
-                    {
-                        List<AdminVO> adminVOS = (List<AdminVO>)resultObjectVO.formatDataList(AdminVO.class);
-                        if(!CollectionUtils.isEmpty(adminVOS))
-                        {
-                            for(AreaVO vo:list)
-                            {
-                                for(AdminVO adminVO:adminVOS)
-                                {
-                                    if(vo.getCreateAdminId()!=null&&vo.getCreateAdminId().equals(adminVO.getAdminId()))
-                                    {
-                                        vo.setCreateAdminName(adminVO.getUsername());
-                                    }
-                                    if(vo.getUpdateAdminId()!=null&&vo.getUpdateAdminId().equals(adminVO.getAdminId()))
-                                    {
-                                        vo.setUpdateAdminName(adminVO.getUsername());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    resultObjectVO.setData(list);
-                }
-            }
             return resultObjectVO;
         }catch(Exception e)
         {

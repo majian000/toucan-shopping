@@ -121,7 +121,7 @@
                     [
                         {type: 'numbers'},
                         {type: 'checkbox'},
-                        {field: 'name', title: '名称'},
+                        {field: 'name', width: 200,title: '名称'},
                         {field: 'code', width: 100,  title: '编码'},
                         {field: 'areaSort', title: '排序'},
                         {field: 'isMunicipality', title: '直辖市', templet: function (d) {
@@ -145,7 +145,7 @@
                 reqData: function (selectRow, callback) {
                     $.ajax({
                         url:"[[@{/}]]area/tree/table/by/pid",
-                        type:'GET',
+                        type:'POST',
                         data:getFormParam(selectRow),
                         success:function(res){
                             callback(res.data);

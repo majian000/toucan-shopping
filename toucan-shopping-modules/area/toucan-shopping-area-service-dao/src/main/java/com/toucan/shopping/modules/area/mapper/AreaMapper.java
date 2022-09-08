@@ -26,7 +26,6 @@ public interface AreaMapper {
 
     int update(Area area);
 
-    int updateBatch(List<Area> areas);
 
     List<AreaVO> queryByCode(String code);
 

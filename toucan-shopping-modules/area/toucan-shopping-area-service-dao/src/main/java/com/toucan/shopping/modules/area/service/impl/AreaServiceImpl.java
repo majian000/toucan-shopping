@@ -49,10 +49,6 @@ public class AreaServiceImpl implements AreaService {
         return areaMapper.update(category);
     }
 
-    @Override
-    public int updateBatch(List<Area> areas) {
-        return areaMapper.updateBatch(areas);
-    }
 
     @Override
     public Area queryById(Long id) {

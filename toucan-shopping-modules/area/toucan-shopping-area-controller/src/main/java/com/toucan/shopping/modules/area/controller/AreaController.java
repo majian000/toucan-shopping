@@ -611,21 +611,24 @@ public class AreaController {
             areaService.queryChildren(children,query);
             if(!CollectionUtils.isEmpty(children))
             {
-                List<Area> releaseChildren = new LinkedList<>();
                 for(Area child:children)
                 {
-                    if((!child.getCountryCode().equals(entity.getCountryCode())||!child.getCountryName().equals(entity.getCountryName()))
+                    if(child.getBigAreaCode()==null||child.getCountryCode()==null)
+                    {
+                        child.setCountryCode(entity.getCountryCode());
+                        child.setCountryName(entity.getCountryName());
+                        child.setBigAreaCode(entity.getBigAreaCode());
+                        child.setBigAreaName(entity.getBigAreaName());
+                        areaService.update(child);
+                    }else if((!child.getCountryCode().equals(entity.getCountryCode())||!child.getCountryName().equals(entity.getCountryName()))
                             ||(!child.getBigAreaCode().equals(entity.getBigAreaCode())||!child.getBigAreaName().equals(entity.getBigAreaName())))
                     {
                         child.setCountryCode(entity.getCountryCode());
                         child.setCountryName(entity.getCountryName());
                         child.setBigAreaCode(entity.getBigAreaCode());
                         child.setBigAreaName(entity.getBigAreaName());
-                        releaseChildren.add(child);
+                        areaService.update(child);
                     }
-                }
-                if(!CollectionUtils.isEmpty(releaseChildren)) {
-                    areaService.updateBatch(releaseChildren);
                 }
             }
 

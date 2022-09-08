@@ -155,15 +155,6 @@
     </update>
 
 
-    <update id="updateBatch" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index" separator=";">
-            update t_area set code=#{item.code},parent_code=#{item.parentCode},province=#{item.province},city=#{item.city},area=#{item.area},area_sort=#{item.areaSort}
-            ,type=#{item.type},remark=#{item.remark},pid=#{item.pid},
-            update_admin_id=#{item.updateAdminId},update_date=#{item.updateDate},big_area_name=#{item.bigAreaName},big_area_code=#{item.bigAreaCode},
-            country_name=#{item.countryName},country_code=#{item.countryCode}
-            where id=#{item.id}
-        </foreach>
-    </update>
 
 
     <select id="queryByParentCode" resultMap="areaMap" >
