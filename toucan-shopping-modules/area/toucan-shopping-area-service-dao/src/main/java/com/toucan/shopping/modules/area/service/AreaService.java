@@ -19,6 +19,8 @@ public interface AreaService {
 
     Long queryCount(Area area);
 
+    Long queryOneChildCountByPid(Long pid,String appCode);
+
     /**
      * 保存实体
      * @param area
@@ -77,6 +79,7 @@ public interface AreaService {
      * @param query
      */
     void queryChildren(List<Area> children,Area query);
+
 
 
 }

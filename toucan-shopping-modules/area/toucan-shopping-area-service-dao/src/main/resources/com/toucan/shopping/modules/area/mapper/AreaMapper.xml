@@ -126,6 +126,14 @@
     </select>
 
 
+    <select id="queryOneChildCountByPid" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.area.entity.Area">
+        select count(*) from t_area t
+        <where>
+            1=1 and t.pid = #{pid} and t.app_code=#{appCode} and t.delete_status = 0
+        </where>
+    </select>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.area.entity.Area" useGeneratedKeys="true" keyProperty="id" >
         insert into t_area(code,parent_code,pid,province,city,area,area_sort,type,remark,create_date,update_date,app_code,create_admin_id,update_admin_id,big_area_name,big_area_code,country_name,country_code)
         values(#{code},#{parentCode},#{pid},#{province},#{city},#{area},#{areaSort},#{type},#{remark},#{createDate},#{updateDate},#{appCode},#{createAdminId},#{updateAdminId},#{bigAreaName},#{bigAreaCode},#{countryName},#{countryCode})

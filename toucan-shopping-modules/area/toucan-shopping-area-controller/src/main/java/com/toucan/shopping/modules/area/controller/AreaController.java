@@ -868,6 +868,75 @@ public class AreaController {
     }
 
 
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            Area queryArea = JSONObject.parseObject(requestJsonVO.getEntityJson(), Area.class);
+            List<AreaTreeVO> areaVOS = new ArrayList<AreaTreeVO>();
+            if(queryArea.getPid()==null)
+            {
+                AreaTreeVO areaVO = new AreaTreeVO();
+                areaVO.setId(-1L);
+                areaVO.setName("中国");
+                areaVO.setParentId(-1L);
+                Long childCount = areaService.queryOneChildCountByPid(-1L,queryArea.getAppCode());
+                if(childCount>0)
+                {
+                    areaVO.setIsParent(true);
+                }
+                areaVOS.add(areaVO);
+            }else {
+                List<Area> areas = areaService.queryList(queryArea);
+                for (int i = 0; i < areas.size(); i++) {
+                    Area area = areas.get(i);
+                    AreaTreeVO areaTreeVO = new AreaTreeVO();
+                    BeanUtils.copyProperties(areaTreeVO, area);
+                    if (area.getType() == 1) {
+                        areaTreeVO.setName(area.getProvince());
+                    } else if (area.getType() == 2) {
+                        areaTreeVO.setName(area.getCity());
+                    } else if (area.getType() == 3) {
+                        areaTreeVO.setName(area.getArea());
+                    }
+                    Long childCount = areaService.queryOneChildCountByPid(areaTreeVO.getId(),areaTreeVO.getAppCode());
+                    if(childCount>0)
+                    {
+                        areaTreeVO.setIsParent(true);
+                    }else{
+                        areaTreeVO.setIsParent(false);
+                    }
+                    areaVOS.add(areaTreeVO);
+                }
+            }
+
+            resultObjectVO.setData(areaVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
 
     /**
      * 查询指定节点下所有子节点

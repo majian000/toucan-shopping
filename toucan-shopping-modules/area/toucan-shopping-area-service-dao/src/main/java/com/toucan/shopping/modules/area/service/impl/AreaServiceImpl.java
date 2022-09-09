@@ -38,6 +38,11 @@ public class AreaServiceImpl implements AreaService {
         return areaMapper.queryCount(area);
     }
 
+    @Override
+    public Long queryOneChildCountByPid(Long pid,String appCode) {
+        return areaMapper.queryOneChildCountByPid(pid,appCode);
+    }
+
     @Transactional
     @Override
     public int save(Area area) {

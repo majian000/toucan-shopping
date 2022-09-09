@@ -352,6 +352,34 @@ public class AreaController extends UIController {
         return resultObjectVO;
     }
 
+
+    /**
+     * 查询树的子节点列表
+     * @param areaTreeVO
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH)
+    @RequestMapping(value = "/query/tree/child",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildById(HttpServletRequest request, AreaTreeVO areaTreeVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            AreaTreeVO areaVO = new AreaTreeVO();
+            areaVO.setAppCode(toucan.getShoppingPC().getAppCode());
+            areaVO.setPid(areaTreeVO.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),areaVO);
+            resultObjectVO = feignAreaService.queryTreeChildByPid(requestJsonVO);
+            return resultObjectVO;
+        }catch(Exception e)
+        {
+            resultObjectVO.setMsg("请重试");
+            resultObjectVO.setCode(TableVO.FAILD);
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
     /**
      * 查询列表
      * @param parentCode
