@@ -126,7 +126,7 @@
     </select>
 
 
-    <select id="queryOneChildCountByPid" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.area.entity.Area">
+    <select id="queryOneChildCountByPid" resultType="java.lang.Long" >
         select count(*) from t_area t
         <where>
             1=1 and t.pid = #{pid} and t.app_code=#{appCode} and t.delete_status = 0

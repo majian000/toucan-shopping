@@ -1218,4 +1218,69 @@ public class CategoryController {
 
 
 
+
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null||requestJsonVO.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            CategoryVO categoryVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), CategoryVO.class);
+            List<CategoryTreeVO> categoryTreeVOS = new ArrayList<CategoryTreeVO>();
+            List<Category> categoryList = categoryService.queryList(categoryVO);
+            if(categoryVO.getParentId()==null)
+            {
+                CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                categoryTreeVO.setId(-1L);
+                categoryTreeVO.setName("根节点");
+                categoryTreeVO.setParentId(-1L);
+                Long childCount = categoryService.queryOneChildCountByPid(-1L);
+                if(childCount>0)
+                {
+                    categoryTreeVO.setIsParent(true);
+                }
+                categoryTreeVOS.add(categoryTreeVO);
+            }else {
+                for (int i = 0; i < categoryList.size(); i++) {
+                    Category category = categoryList.get(i);
+                    CategoryTreeVO categoryTreeVO = new CategoryTreeVO();
+                    BeanUtils.copyProperties(categoryTreeVO, category);
+                    categoryTreeVO.setTitle(category.getName());
+                    Long childCount = categoryService.queryOneChildCountByPid(categoryTreeVO.getId());
+                    if (childCount > 0) {
+                        categoryTreeVO.setIsParent(true);
+                    } else {
+                        categoryTreeVO.setIsParent(false);
+                    }
+                    categoryTreeVOS.add(categoryTreeVO);
+                }
+            }
+
+            resultObjectVO.setData(categoryTreeVOS);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
+
+
+
+
 }

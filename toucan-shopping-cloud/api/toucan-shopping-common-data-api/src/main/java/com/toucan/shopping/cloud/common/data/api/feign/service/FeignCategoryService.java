@@ -27,6 +27,13 @@ public interface FeignCategoryService {
     @RequestMapping(value = "/find/idArray",method= RequestMethod.POST,produces = "application/json;charset=UTF-8")
     ResultObjectVO findByIdArray(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
 
+    /**
+     * 查询指定节点下子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询返回分类ID路径

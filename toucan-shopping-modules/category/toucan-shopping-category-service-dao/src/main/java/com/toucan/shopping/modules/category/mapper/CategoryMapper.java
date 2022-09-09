@@ -17,6 +17,8 @@ public interface CategoryMapper {
 
     int insert(Category category);
 
+    Long queryOneChildCountByPid(Long pid);
+
     int inserts(Category[] entitys);
 
     Category queryById(Long id);

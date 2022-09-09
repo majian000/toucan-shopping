@@ -16,6 +16,9 @@ public interface CategoryService {
 
     List<Category> queryPcIndexList(CategoryVO category);
 
+
+    Long queryOneChildCountByPid(Long pid);
+
     /**
      * 保存实体
      * @param category

@@ -41,6 +41,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.queryPcIndexList(category);
     }
 
+    @Override
+    public Long queryOneChildCountByPid(Long pid) {
+        return categoryMapper.queryOneChildCountByPid(pid);
+    }
+
 
     @Override
     public int save(Category category) {
