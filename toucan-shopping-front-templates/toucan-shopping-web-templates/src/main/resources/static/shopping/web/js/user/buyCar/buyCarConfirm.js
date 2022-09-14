@@ -486,6 +486,7 @@ function updateConsigneeAddress(acobj)
             params[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
         });
 
+
         $.ajax({
             type: "POST",
             url: basePath + "/api/user/consigneeAddress/update/save",
