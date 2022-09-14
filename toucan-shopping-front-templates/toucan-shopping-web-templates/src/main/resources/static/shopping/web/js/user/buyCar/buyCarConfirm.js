@@ -69,12 +69,24 @@ $(function () {
         if(opt!=null&&opt=="1") {
             $(this).html("保存");
             $(this).attr("attr-opt","2");
+            $(".mac_close").show();
             drawConsigneeAddressEditControl();
             g_updateConsigneeAddressStatus=1;
             $(".ca_select").hide();
         }else{
             updateConsigneeAddress(this);
         }
+    });
+
+    $(".mac_close").click(function(){
+        $(".mac_close").hide();
+        $(".mac_modify").html("修改");
+        $(".mac_modify").attr("attr-opt","1");
+        //隐藏修改表单
+        $("#ca_edit_form").hide();
+        $("#ca_form").show();
+        g_updateConsigneeAddressStatus=0;
+        $(".ca_select").show();
     });
 
 
@@ -443,6 +455,7 @@ function loadDefaultConsigneeAddress(){
             }else{
                 drawConsigneeAddressEditControl(null);
 
+
                 $(".mac_modify").html("保存");
                 $(".mac_modify").attr("attr-opt","2");
 
@@ -485,6 +498,7 @@ function updateConsigneeAddress(acobj)
                     g_consigneeAddress = result.data;
                     $(acobj).html("修改");
                     $(acobj).attr("attr-opt","1");
+                    $(".mac_close").hide();
                     //隐藏修改表单
                     $("#ca_edit_form").hide();
                     $("#ca_form").show();

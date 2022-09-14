@@ -45,21 +45,6 @@ public class UserBuyCarPageController {
     @RequestMapping("/confirm")
     public String confirmPage(HttpServletRequest request)
     {
-        try {
-            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), new AreaVO());
-            ResultObjectVO resultObjectVO = feignAreaService.queryFullCache(requestJsonVO.sign(), requestJsonVO);
-            if(resultObjectVO.isSuccess())
-            {
-                request.setAttribute("areaList", JSONArray.toJSONString(resultObjectVO.getData()));
-            }else{
-                request.setAttribute("areaList","[]");
-            }
-        }catch(Exception e)
-        {
-            request.setAttribute("areaList","[]");
-            logger.warn("查询地区缓存失败 {} ",e.getMessage());
-            logger.warn(e.getMessage(),e);
-        }
         return "user/buyCar/user_buy_confirm";
     }
 
