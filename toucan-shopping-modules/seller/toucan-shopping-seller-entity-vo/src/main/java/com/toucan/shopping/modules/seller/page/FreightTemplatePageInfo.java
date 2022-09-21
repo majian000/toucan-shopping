@@ -29,6 +29,10 @@ public class FreightTemplatePageInfo extends PageInfo<FreightTemplate> {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id;
 
+    /**
+     * 店铺ID
+     */
+    private Long shopId;
 
 
     //==============================================

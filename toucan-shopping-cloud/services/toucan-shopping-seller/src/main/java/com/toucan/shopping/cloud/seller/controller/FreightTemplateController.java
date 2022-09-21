@@ -34,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 运费模板
+ * @author majian
+ * @date 2022-9-21 14:13:19
  */
 @RestController
 @RequestMapping("/freightTemplate")
