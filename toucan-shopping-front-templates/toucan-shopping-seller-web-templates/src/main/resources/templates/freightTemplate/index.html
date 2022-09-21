@@ -35,8 +35,8 @@
 
 <#include "/top.html"/>
 
-<#assign leftName = "productList">
-<#assign menuType = "productMenu">
+<#assign leftName = "freightTemplateList">
+<#assign menuType = "deliveryMenu">
 
 <div class="body_box">
 
@@ -45,7 +45,7 @@
             <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="javascript:;">商品列表</a>
+            <a href="javascript:;">运费模板</a>
         </li>
     </ol>
 
@@ -56,17 +56,17 @@
 
     <div class="right_content" >
         <div class="right_bg mb-15" style="width:100%;min-height: 700px;">
-            <div class="title" style="border-bottom: 1px solid#9a9999;"><span>商品列表</span></div>
+            <div class="title" style="border-bottom: 1px solid#9a9999;"><span>运费模板</span></div>
             <div class="right_panel">
 
                 <div class="bootstrap-frm" style="width:100%;max-width:100%;"  >
-                    <form id="productForm">
+                    <form id="fireghtTemplateForm">
                         <label style="width:40%;float: left;">
-                            <span>商品名称 :</span>
+                            <span>模板名称 :</span>
                             <input type="text" id="name" maxlength="25"  name="name"   tabindex="1"  style="width:50%" />
                         </label>
                         <label style="width:40%;float: left;">
-                            <span>发布日期 :</span>
+                            <span>创建时间 :</span>
                             <input type="text" id="startDate"  style="width:30%" />
                             至
                             <input type="text" id="endDate"   style="width:30%" />
@@ -79,8 +79,8 @@
                     </form>
                 </div>
                 <div class="pageToolbar">
-                    <table id="productTable" class="freezeTable" border="1" width="900">
-                        <tbody id="productTableBody">
+                    <table id="fireghtTemplateTable" class="freezeTable" border="1" width="900">
+                        <tbody id="fireghtTemplateTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -93,7 +93,7 @@
 <script type="text/javascript" src="${basePath}/static/lib/pagination/toPage.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
 <script type="text/javascript" src="${basePath}/static/lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
-<script type="text/javascript" src="${basePath}/static/js/seller/product/index.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/freightTemplate/index.js"></script>
 
 
 
