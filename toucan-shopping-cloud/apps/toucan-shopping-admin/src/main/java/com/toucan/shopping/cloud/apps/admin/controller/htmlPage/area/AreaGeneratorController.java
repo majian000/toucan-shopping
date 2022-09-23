@@ -201,6 +201,51 @@ public class AreaGeneratorController extends UIController {
                     }
                 }
             }
+
+
+            if(toucan.getShoppingSellerWebPC()!=null&& StringUtils.isNotEmpty(toucan.getShoppingSellerWebPC().getIpList()))
+            {
+                String ipList = toucan.getShoppingSellerWebPC().getIpList();
+                if(ipList.indexOf(",")!=-1)
+                {
+                    String[] ips = ipList.split(",");
+                    if(ips!=null&&ips.length>0)
+                    {
+                        for(String ip:ips)
+                        {
+                            String responseString = HttpUtils.get("http://"+ip+previewApi,headers);
+                            if(StringUtils.isEmpty(responseString))
+                            {
+                                resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                                resultObjectVO.setCode(TableVO.FAILD);
+                                return resultObjectVO;
+                            }
+                            resultObjectVO = JSONObject.parseObject(responseString,ResultObjectVO.class);
+                            if(!resultObjectVO.isSuccess())
+                            {
+                                resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                                resultObjectVO.setCode(TableVO.FAILD);
+                                return resultObjectVO;
+                            }
+                        }
+                    }
+                }else{
+                    String responseString = HttpUtils.get("http://"+ipList+previewApi,headers);
+                    if(StringUtils.isEmpty(responseString))
+                    {
+                        resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                        resultObjectVO.setCode(TableVO.FAILD);
+                        return resultObjectVO;
+                    }
+                    resultObjectVO = JSONObject.parseObject(responseString,ResultObjectVO.class);
+                    if(!resultObjectVO.isSuccess())
+                    {
+                        resultObjectVO.setMsg(ipList+"生成预览文件失败,请重试");
+                        resultObjectVO.setCode(TableVO.FAILD);
+                        return resultObjectVO;
+                    }
+                }
+            }
         }catch(Exception e)
         {
             resultObjectVO.setMsg("请重试");

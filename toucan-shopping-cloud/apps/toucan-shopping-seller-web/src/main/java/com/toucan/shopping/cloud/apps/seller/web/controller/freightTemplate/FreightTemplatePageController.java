@@ -43,4 +43,12 @@ public class FreightTemplatePageController extends BaseController {
         return "freightTemplate/index";
     }
 
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/add")
+    public String add(HttpServletRequest request){
+
+        return "freightTemplate/add";
+    }
+
 }

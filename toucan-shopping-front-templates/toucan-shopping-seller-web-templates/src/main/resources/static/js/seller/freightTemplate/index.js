@@ -142,6 +142,9 @@ $(function () {
         initPagination();
     });
 
+    $('#addFreightTemplate').on('click', function(){
+        window.location.href=basePath+"/page/freightTemplate/add";
+    });
 
     $("#resetBtn").bind( 'click' ,function(){
         $("#freightTemplateForm").resetForm();

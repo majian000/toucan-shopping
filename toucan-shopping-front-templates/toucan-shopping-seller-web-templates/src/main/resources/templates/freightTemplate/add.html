@@ -1,0 +1,86 @@
+<html class="no-js css-menubar" lang="zh-cn"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+
+    <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "freightTemplateList">
+<#assign menuType = "deliveryMenu">
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="${basePath}/page/freightTemplate/index">运费模板</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">添加模板</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <div class="right_content">
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>添加模板</span></div>
+                <div class="right_panel">
+
+                    <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;">
+                        <label>
+                            <span><font color="#ff4e00">*</font>模板名称 :</span>
+                            <input type="text" id="freightTemplateName" maxlength="20"  name="name"  lay-verify="required" tabindex="1"  />
+                            <div id="freightTemplateName_error"></div>
+                        </label>
+                        <div style="width:100%;text-align:center;">
+                            <input type="button" id="saveBtn" class="button" value="保存"  />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" id="backBtn" class="button" value="返回"  />
+                        </div>
+                        <label>
+                            <span> </span>
+                            <a id="scaf_msg" ></a>
+                        </label>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="${basePath}/static/js/seller/freightTemplate/add.js"></script>
+
+
+
+<#include "/footer.html"/>
+
+</body></html>
+
+
