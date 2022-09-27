@@ -58,7 +58,7 @@ $(function () {
 
 
     $('#backBtn').on('click', function () {
-        window.location.href=basePath+"/page/freightTemplate/list";
+        window.location.href=basePath+"/page/freightTemplate/index";
     });
 
 

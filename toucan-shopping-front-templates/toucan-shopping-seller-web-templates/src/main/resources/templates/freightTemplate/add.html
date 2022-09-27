@@ -58,7 +58,31 @@
                             <input type="text" id="freightTemplateName" maxlength="20"  name="name"  lay-verify="required" tabindex="1"  />
                             <div id="freightTemplateName_error"></div>
                         </label>
-                        <div style="width:100%;text-align:center;">
+                        <label>
+                            <span><font color="#ff4e00">*</font>发货地 :</span>
+                            <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" autocomplete="off"  readonly="true">
+                            <input type="hidden" id="province" name="province" />
+                            <input type="hidden" id="city" name="city" />
+                            <input type="hidden" id="area" name="area"   />
+                            <input type="hidden" id="province_code" name="provinceCode"   />
+                            <input type="hidden" id="city_code" name="cityCode"  />
+                            <input type="hidden" id="area_code" name="areaCode"   />
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>是否包邮 :</span>
+                            <input type="radio" name="freightStatus" value="1" style="margin-top: 2%;" checked="checked" />自定义运费
+                            &nbsp;&nbsp;
+                            <input type="radio" name="freightStatus" value="2" style="margin-top: 2%;"  />包邮
+                        </label>
+                        <label>
+                            <span><font color="#ff4e00">*</font>计价方式 :</span>
+                            <input type="radio" name="valuationMethod" value="1" style="margin-top: 2%;" checked="checked" />按件数
+                            &nbsp;&nbsp;
+                            <input type="radio" name="valuationMethod" value="2" style="margin-top: 2%;"  />按重量
+                            &nbsp;&nbsp;
+                            <input type="radio" name="valuationMethod" value="2" style="margin-top: 2%;"  />按体积
+                        </label>
+                        <div style="width:100%;text-align:center;margin-top: 5%;">
                             <input type="button" id="saveBtn" class="button" value="保存"  />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="button" id="backBtn" class="button" value="返回"  />
@@ -74,6 +98,36 @@
 
     </div>
 </div>
+
+
+<div id="pcaDiv">
+</div>
+<script>
+
+    $(function () {
+
+        loading.showLoading({
+            type:1,
+            tip:"加载中..."
+        });
+
+        $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
+
+            $("#pcaDiv").html(data);
+
+            loading.hideLoading();
+
+            $("#ms_city").click(function (e) {
+                SelCity(this,e);
+            });
+            $(".msc_l").click(function (e) {
+                SelCity(document.getElementById("ms_city"),e);
+            });
+        });
+    });
+
+</script>
+
 
 <script type="text/javascript" src="${basePath}/static/js/seller/freightTemplate/add.js"></script>
 
