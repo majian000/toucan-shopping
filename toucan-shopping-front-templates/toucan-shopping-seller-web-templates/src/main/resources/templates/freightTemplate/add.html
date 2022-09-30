@@ -90,19 +90,20 @@
                         </label>
                         <label>
                             <span></span>
-                            <input type="checkbox"  value="1" name="transportModel" />快递
+                            <input type="checkbox"  value="1" name="transportModel" id="transportModel_express" ckass="transportModelChks" />快递
                         </label>
                         <label >
                             <span></span>
-                            <div>
-                                <span>
-                                    默认运费<input type="text" name="defaultWeight" style="width:40px;">件内<input type="text" name="defaultWeightMoney" style="width:40px;" />元
-                                    每增加<input type="text" name="defaultAppendWeight" style="width:40px;" />,增加运费<input type="text" name="defaultAppendWeightMoney"  style="width:40px;" />元
-                                </span>
-                                <span>
-                                     <table id="expressTable" class="freezeTable" border="1" style="width:100%;margin-left: 20%;">
+                            <div id="expressTableDiv" style="display: none;">
+                                <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    默认运费<input type="text" id="expressDefaultWeight" name="defaultWeight" style="width:60px;">件内<input type="text" id="expressDefaultWeightMoney" name="defaultWeightMoney" style="width:60px;" />元
+                                    每增加<input type="text" id="expressDefaultAppendWeight" name="defaultAppendWeight" style="width:60px;" />,增加运费<input type="text"  id="expressDefaultAppendWeightMoney" name="defaultAppendWeightMoney"  style="width:60px;" />元
+                                </div>
+                                <div  style="margin-left: 20%;"  >
+                                     <table id="expressTable" class="freezeTable" border="1" style="width:100%;margin-left: 0;">
                                     <tbody id="expressTableBody">
-                                    <tr>
+                                    <tr class="tabTh">
                                         <td style="text-align: center;">运送到</td>
                                         <td style="text-align:center">首重量(kg)</td>
                                         <td style="text-align:center">首费(元)</td>
@@ -110,9 +111,22 @@
                                         <td style="text-align:center">续费(元)</td>
                                         <td style="text-align:center">操作</td>
                                     </tr>
+                                    <!--<tr id="expressTable_row_1">-->
+                                        <!--<td style="text-align:center">北京市,长春市,天津市,张家口市</td>-->
+                                        <!--<td style="text-align:center"><input type="text" name="firstWeight" style="width:60px;"></td>-->
+                                        <!--<td style="text-align:center"><input type="text" name="firstWeightMoney" style="width:60px;"></td>-->
+                                        <!--<td style="text-align:center"><input type="text" name="appendWeight" style="width:60px;"></td>-->
+                                        <!--<td style="text-align:center"><input type="text" name="appendWeightMoney" style="width:60px;"></td>-->
+                                        <!--<td style="text-align:center"><a style="color:blue;cursor: pointer;">删除</a></td>-->
+                                    <!--</tr>-->
+                                    <tr id="expressTable_toolbar">
+                                        <td style="text-align:center;background-color: #e8f2ff;" colspan="6">
+                                            <a style="color:blue;cursor: pointer;" >添加一行</a>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
-                                </span>
+                                </div>
                             </div>
                         </label>
                         <div style="width:100%;text-align:center;margin-top: 5%;">

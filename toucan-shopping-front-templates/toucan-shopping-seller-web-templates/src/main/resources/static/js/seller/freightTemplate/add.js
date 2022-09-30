@@ -49,6 +49,29 @@ function scafbtn_click()
 }
 
 
+function resetexpressTable()
+{
+    $("#expressDefaultWeight").val("");
+    $("#expressDefaultWeightMoney").val("");
+    $("#expressDefaultAppendWeight").val("");
+    $("#expressDefaultAppendWeightMoney").val("");
+    $("#expressTableBody").html("<tr class=\"tabTh\">\n" +
+        "                                        <td style=\"text-align: center;\">运送到</td>\n" +
+        "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
+        "                                        <td style=\"text-align:center\">首费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\">续重量(kg)</td>\n" +
+        "                                        <td style=\"text-align:center\">续费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\">操作</td>\n" +
+        "                                    </tr>");
+
+    $("#expressTableBody").append("<tr id=\"expressTable_toolbar\">\n" +
+        "                                        <td style=\"text-align:center;background-color: #e8f2ff;\" colspan=\"6\">\n" +
+        "                                            <a style=\"color:blue;cursor: pointer;\" >添加一行</a>\n" +
+        "                                        </td>\n" +
+        "                                    </tr>");
+
+}
+
 
 $(function () {
 
@@ -61,7 +84,14 @@ $(function () {
         window.location.href=basePath+"/page/freightTemplate/index";
     });
 
-
+    $('#transportModel_express').on('click', function () {
+        if ($(this).prop("checked")) {
+            $("#expressTableDiv").show();
+        } else {
+            $("#expressTableDiv").hide();
+            resetexpressTable();
+        }
+    });
 
     $("#expressTable").FrozenTable(1,0,0);
 
