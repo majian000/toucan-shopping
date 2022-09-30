@@ -62,4 +62,7 @@ $(function () {
     });
 
 
+
+    $("#expressTable").FrozenTable(1,0,0);
+
 });
