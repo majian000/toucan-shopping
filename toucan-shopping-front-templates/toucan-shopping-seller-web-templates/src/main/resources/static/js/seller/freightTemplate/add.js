@@ -67,20 +67,6 @@ function resetexpressTable()
         "                                    </tr>");
 
 
-    $("#expressTableBody").append("<tr id=\"expressTable_row_"+expressTablePos+"\">\n" +
-        "                                        <td style=\"text-align:center\"><div id=\"expressTable_row_"+expressTablePos+"_areas\" class=\"form-control-static\">\n" +
-        "                                </div><input type=\"hidden\" id=\"expressTable_row_"+expressTablePos+"_areas\" name=\"expressAreaRules["+expressTablePos+"].selectAreas\" value=\"\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\">\n" +
-        "                                            <a data-row-id=\""+expressTablePos+"\" style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
-        "                                            &nbsp;\n" +
-        "                                            <a data-row-id=\""+expressTablePos+"\" class='expressTableDelRow' style=\"color:red;cursor: pointer;\">删除</a>\n" +
-        "                                        </td>\n" +
-        "                                    </tr>");
-
 
     bindExpressTableDelRowEvent();
 
@@ -100,7 +86,7 @@ function expressTableAddRowEvent()
         "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\">\n" +
-        "                                            <a data-row-id=\""+expressTablePos+"\" style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
+        "                                            <a data-row-id=\""+expressTablePos+"\" data-toggle=\"modal\" data-target=\"#myModal\" style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
         "                                            &nbsp;\n" +
         "                                            <a data-row-id=\""+expressTablePos+"\" class='expressTableDelRow' style=\"color:red;cursor: pointer;\">删除</a>\n" +
         "                                        </td>\n" +
@@ -114,20 +100,77 @@ function expressTableAddRowEvent()
  */
 function bindExpressTableDelRowEvent()
 {
+    $(".expressTableDelRow").unbind("click");
     $(".expressTableDelRow").on('click', function () {
         var attrId = $(this).attr("data-row-id");
         layer.confirm('确定删除?', {
             btn: ['确定','关闭'], //按钮
             title:'提示信息'
         }, function(index){
-            alert($("expressTable_row_"+attrId));
-            $("expressTable_row_"+attrId).remove();
+            $("#expressTable_row_"+attrId).remove();
+
             layer.close(index);
         });
     });
 }
 
 $(function () {
+
+    loading.showLoading({
+        type:1,
+        tip:"加载中..."
+    });
+
+    $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
+
+        $("#pcaDiv").html(data);
+
+
+        $("#ms_city").click(function (e) {
+            SelCity(this,e);
+        });
+        $(".msc_l").click(function (e) {
+            SelCity(document.getElementById("ms_city"),e);
+        });
+
+        //加载选择区域组件
+        loading.hideLoading();
+
+        //只保留省市节点,去掉区县节点
+        var reginDatas = JSON.parse(JSON.stringify(province));
+        for(var i=0;i<reginDatas.length;i++)
+        {
+            var reginData = reginDatas[i];
+            console.log(reginData.isMunicipality);
+            if(reginData.isMunicipality=="1")
+            {
+                alert(1);
+                reginData.children=null;
+                alert(reginData.children);
+            }else{
+                if(reginData.children!=null&&reginData.children.length>0)
+                {
+                    for(var j=0;j<reginData.children;j++)
+                    {
+                        reginData.children[j].children=null;
+                    }
+                }
+            }
+        }
+        console.log(reginDatas);
+        GetRegionPlug(reginDatas);
+        $(".btntest1").click(function() {
+            var areas = GetChecked().join(",");
+            $("#areas").html(areas);
+            $("#selectedareas").val(areas);
+            $('#myModal').modal('hide');
+        });
+
+
+    });
+
+
+
 
     $('#saveBtn').on('click', function () {
         scafbtn_click();

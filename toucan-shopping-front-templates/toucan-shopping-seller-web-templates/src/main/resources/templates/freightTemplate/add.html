@@ -133,22 +133,9 @@
                         </label>
 
 
-
-
-
-
-
-                        <!--地区选择插件 -->
-                        <div class="form-group">
-                            <div class="col-sm-9 col-xs-12">
-                                <div id="areas" class="form-control-static">
-                                </div>
-                                <a class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                                    选择区域
-                                </a>
-                                <input type="hidden" id="selectedareas" name="edareas" value="">
-                            </div>
+                        <div id="areas" style="display:none">
                         </div>
+                        <input type="hidden" id="selectedareas" name="edareas" value="" />
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                              aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -194,48 +181,10 @@
 
 <div id="pcaDiv">
 </div>
-<script>
-
-    $(function () {
-
-        loading.showLoading({
-            type:1,
-            tip:"加载中..."
-        });
-
-        $.get("/htmls/province/city/area",function (data) { //引入时的页面名称
-
-            $("#pcaDiv").html(data);
-
-            loading.hideLoading();
-
-            $("#ms_city").click(function (e) {
-                SelCity(this,e);
-            });
-            $(".msc_l").click(function (e) {
-                SelCity(document.getElementById("ms_city"),e);
-            });
-        });
-    });
-
-</script>
-
-
 
 
 <link rel="stylesheet" href="${basePath}/static/lib/areaPlugin/RegionalChoice.css">
 <script src="${basePath}/static/lib/areaPlugin/RegionalChoice.js"></script>
-<script>
-    $(function() {
-        GetRegionPlug();
-        $(".btntest1").click(function() {
-            var areas = GetChecked().join(",");
-            $("#areas").html(areas);
-            $("#selectedareas").val(areas);
-            $('#myModal').modal('hide');
-        })
-    })
-</script>
 
 
 <script type="text/javascript" src="${basePath}/static/js/seller/freightTemplate/add.js"></script>

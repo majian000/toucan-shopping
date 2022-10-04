@@ -1243,7 +1243,6 @@ public class AreaController {
             provinceVO.setCodeArray(null);
             provinceVO.setArea(null);
             provinceVO.setAreaSort(null);
-            provinceVO.setIsMunicipality(null);
             provinceVO.setCity(null);
             provinceVO.setProvince(null);
             provinceVO.setRemark(null);
@@ -1265,7 +1264,6 @@ public class AreaController {
                     cityOrAreaVO.setCodeArray(null);
                     cityOrAreaVO.setArea(null);
                     cityOrAreaVO.setAreaSort(null);
-                    cityOrAreaVO.setIsMunicipality(null);
                     cityOrAreaVO.setCity(null);
                     cityOrAreaVO.setProvince(null);
                     cityOrAreaVO.setRemark(null);
@@ -1286,7 +1284,6 @@ public class AreaController {
                             areaVO.setCodeArray(null);
                             areaVO.setArea(null);
                             areaVO.setAreaSort(null);
-                            areaVO.setIsMunicipality(null);
                             areaVO.setCity(null);
                             areaVO.setProvince(null);
                             areaVO.setRemark(null);

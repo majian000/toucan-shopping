@@ -110,6 +110,7 @@ a.btntest{
     display: inline-block;
     float: left;
     cursor: pointer;
+    width:100%;
 }
 .place-div .smallplace .citys{
     width: auto;
