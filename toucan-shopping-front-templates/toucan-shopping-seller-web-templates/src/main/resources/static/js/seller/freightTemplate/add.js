@@ -141,23 +141,19 @@ $(function () {
         for(var i=0;i<reginDatas.length;i++)
         {
             var reginData = reginDatas[i];
-            console.log(reginData.isMunicipality);
-            if(reginData.isMunicipality=="1")
+            if(reginData.isMunicipality==1)
             {
-                alert(1);
                 reginData.children=null;
-                alert(reginData.children);
             }else{
                 if(reginData.children!=null&&reginData.children.length>0)
                 {
-                    for(var j=0;j<reginData.children;j++)
+                    for(var j=0;j<reginData.children.length;j++)
                     {
                         reginData.children[j].children=null;
                     }
                 }
             }
         }
-        console.log(reginDatas);
         GetRegionPlug(reginDatas);
         $(".btntest1").click(function() {
             var areas = GetChecked().join(",");
