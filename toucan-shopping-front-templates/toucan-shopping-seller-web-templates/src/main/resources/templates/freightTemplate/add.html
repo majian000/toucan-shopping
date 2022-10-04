@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
     <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
     <link rel="stylesheet" href="${basePath}/static/css/freightTemplate/freightTemplate.css" />
+    <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
 </head>
 <body>
 
@@ -72,60 +73,52 @@
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>是否包邮 :</span>
-                            <input type="radio" name="freightStatus" value="1" style="margin-top: 2%;" checked="checked" />自定义运费
+                            <input type="radio" name="freightStatus" id="freightStatus_1" class="freightStatus" value="1" style="margin-top: 2%;" checked="checked" />自定义运费
                             &nbsp;&nbsp;
-                            <input type="radio" name="freightStatus" value="2" style="margin-top: 2%;"  />包邮
+                            <input type="radio" name="freightStatus" id="freightStatus_2" class="freightStatus" value="2" style="margin-top: 2%;"  />包邮
                         </label>
-                        <label>
+                        <label class="expressDiv">
                             <span><font color="#ff4e00">*</font>计价方式 :</span>
-                            <input type="radio" name="valuationMethod" value="1" style="margin-top: 2%;" checked="checked" />按件数
+                            <input type="radio" name="valuationMethod" class="valuationMethod" value="1" style="margin-top: 2%;" checked="checked" />按件数
                             &nbsp;&nbsp;
-                            <input type="radio" name="valuationMethod" value="2" style="margin-top: 2%;"  />按重量
+                            <input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按重量
                             &nbsp;&nbsp;
-                            <input type="radio" name="valuationMethod" value="2" style="margin-top: 2%;"  />按体积
+                            <!-- 商品属性目前没有体积,所以隐藏这种运费-->
+                            <!--<input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按体积-->
                         </label>
-                        <label>
+                        <label class="expressDiv">
                             <span>运送方式 :</span>
                             <div style="margin-top: 2%;padding-top: 1.5%;">除指定地区外，其余地区的运费采用“默认运费</div>
                         </label>
-                        <label>
+                        <label class="expressDiv">
                             <span></span>
                             <input type="checkbox"  value="1" name="transportModel" id="transportModel_express" ckass="transportModelChks" />快递
                         </label>
-                        <label >
+                        <label class="expressDiv">
                             <span></span>
                             <div id="expressTableDiv" style="display: none;">
                                 <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                    默认运费<input type="text" id="expressDefaultWeight" name="defaultWeight" style="width:60px;">件内<input type="text" id="expressDefaultWeightMoney" name="defaultWeightMoney" style="width:60px;" />元
-                                    每增加<input type="text" id="expressDefaultAppendWeight" name="defaultAppendWeight" style="width:60px;" />,增加运费<input type="text"  id="expressDefaultAppendWeightMoney" name="defaultAppendWeightMoney"  style="width:60px;" />元
+                                    默认运费<input type="text" id="expressDefaultWeight" name="expressDefaultRule.defaultWeight" style="width:60px;"><a class="dynamicUnitDefaultText">件内</a><input type="text" id="expressDefaultWeightMoney" name="expressDefaultRule.defaultWeightMoney" style="width:60px;" />元
+                                    &nbsp;&nbsp;&nbsp;
+                                    每增加<input type="text" id="expressDefaultAppendWeight" name="expressDefaultRule.defaultAppendWeight" style="width:60px;" /><a class="dynamicUnitDefaultAppendText">件内</a>,增加运费<input type="text"  id="expressDefaultAppendWeightMoney"  name="expressDefaultRule.defaultAppendWeightMoney"  style="width:60px;" />元
                                 </div>
                                 <div  style="margin-left: 20%;"  >
                                      <table id="expressTable" class="freezeTable" border="1" style="width:100%;margin-left: 0;">
                                     <tbody id="expressTableBody">
                                     <tr class="tabTh">
                                         <td style="text-align: center;">运送到</td>
-                                        <td style="text-align:center">首重量(kg)</td>
+                                        <td style="text-align:center"><a class="dynamicUnitRowFirstText">首件数(件)</a></td>
                                         <td style="text-align:center">首费(元)</td>
-                                        <td style="text-align:center">续重量(kg)</td>
+                                        <td style="text-align:center"><a class="dynamicUnitRowAppendText">续件数(件)</a></td>
                                         <td style="text-align:center">续费(元)</td>
                                         <td style="text-align:center">操作</td>
                                     </tr>
-                                    <!--<tr id="expressTable_row_1">-->
-                                        <!--<td style="text-align:center">北京市,长春市,天津市,张家口市</td>-->
-                                        <!--<td style="text-align:center"><input type="text" name="firstWeight" style="width:60px;"></td>-->
-                                        <!--<td style="text-align:center"><input type="text" name="firstWeightMoney" style="width:60px;"></td>-->
-                                        <!--<td style="text-align:center"><input type="text" name="appendWeight" style="width:60px;"></td>-->
-                                        <!--<td style="text-align:center"><input type="text" name="appendWeightMoney" style="width:60px;"></td>-->
-                                        <!--<td style="text-align:center"><a style="color:blue;cursor: pointer;">删除</a></td>-->
-                                    <!--</tr>-->
-                                    <tr id="expressTable_toolbar">
-                                        <td style="text-align:center;background-color: #e8f2ff;" colspan="6">
-                                            <a style="color:blue;cursor: pointer;" >添加一行</a>
-                                        </td>
-                                    </tr>
                                     </tbody>
                                 </table>
+                                    <div style="text-align:center;background-color: #e8f2ff;">
+                                        <a class="expressTableAddRow" style="color:blue;cursor: pointer;" >添加一行</a>
+                                    </div>
                                 </div>
                             </div>
                         </label>
@@ -151,7 +144,7 @@
                                 <div id="areas" class="form-control-static">
                                 </div>
                                 <a class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                                    添加不参加满包邮的地区
+                                    选择区域
                                 </a>
                                 <input type="hidden" id="selectedareas" name="edareas" value="">
                             </div>

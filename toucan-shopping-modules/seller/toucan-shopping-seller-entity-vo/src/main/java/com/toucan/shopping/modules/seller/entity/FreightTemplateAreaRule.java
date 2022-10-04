@@ -53,11 +53,11 @@ public class FreightTemplateAreaRule {
     private String areaName;
 
 
-    private Double firstWeight; //首重量 单位KG
+    private Double firstWeight; //首重量 单位KG/件
 
     private Double firstWeightMoney; //首重金额
 
-    private Double appendWeight; //续重量 单位KG
+    private Double appendWeight; //续重量 单位KG/件
 
     private Double appendWeightMoney; //续重金额
 

@@ -23,11 +23,11 @@ public class FreightTemplateDefaultRule {
 
     private String transportModel; //运送方式 1:快递 2:EMS 3:平邮 (多个用,分割)
 
-    private Double defaultWeight; //默认XXX.XX重量以内 单位KG
+    private Double defaultWeight; //默认XXX.XX重量以内 单位KG/件
 
     private Double defaultWeightMoney; //默认XXX.XX重量以内金额
 
-    private Double defaultAppendWeight; //默认增加XXX.XX重量以内 单位KG
+    private Double defaultAppendWeight; //默认增加XXX.XX重量以内 单位KG/件
 
     private Double defaultAppendWeightMoney; //默认增加XXX.XX重量以内金额
 
