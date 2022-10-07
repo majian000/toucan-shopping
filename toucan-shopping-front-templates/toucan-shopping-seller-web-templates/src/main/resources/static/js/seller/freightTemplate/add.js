@@ -1,6 +1,9 @@
 
 var expressTablePos=0;
 
+var expressRegionTableMap = new Map();
+var g_currentExpressId;
+
 function scafbtn_click()
 {
 
@@ -86,7 +89,7 @@ function expressTableAddRowEvent()
         "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\">\n" +
-        "                                            <a data-row-id=\""+expressTablePos+"\" data-toggle=\"modal\" data-target=\"#expressSelectRegionModal\" style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
+        "                                            <a data-row-id=\""+expressTablePos+"\" data-toggle=\"modal\" class='expressTableSelectRegion'  style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
         "                                            &nbsp;\n" +
         "                                            <a data-row-id=\""+expressTablePos+"\" class='expressTableDelRow' style=\"color:red;cursor: pointer;\">删除</a>\n" +
         "                                        </td>\n" +
@@ -111,6 +114,12 @@ function bindExpressTableDelRowEvent()
 
             layer.close(index);
         });
+    });
+    $(".expressTableSelectRegion").unbind("click");
+    $(".expressTableSelectRegion").on('click', function () {
+        var attrId = $(this).attr("data-row-id");
+        g_currentExpressId = attrId;
+        $('#expressSelectRegionModal').modal('show');
     });
 }
 
@@ -156,9 +165,12 @@ $(function () {
         }
         GetRegionPlug(reginDatas,"express-select-region");
         $(".expressSelectBtn").click(function() {
+            alert(g_currentExpressId);
             var areas = GetChecked("express-select-region").join(",");
-            $("#areas").html(areas);
-            $("#selectedareas").val(areas);
+
+            // $("#areas").html(areas);
+            // $("#selectedareas").val(areas);
+
             $('#expressSelectRegionModal').modal('hide');
         });
 

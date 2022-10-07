@@ -71,6 +71,7 @@ function GetPlace(datas) {
                             "type": "checkbox",
                             "class": "bigarea",
                             "data-name": item.name,
+                            "data-code": item.code,
                             "click": function () {
                                 var bool = $(this).prop("checked");
                                 var single = $(this).parents(".bigplace").next().find("input");
@@ -117,6 +118,7 @@ function GetSmallPlace(datas) {
                         "type": "checkbox",
                         "class": "bigcity",
                         "data-name": item.name,
+                        "data-code": item.code,
                         "click": function () {
                             var small = $(this).parent().next(".citys").find("input");
                             var smalllength = small.length;
@@ -237,13 +239,13 @@ function GetChecked(divSelector) {
                     if ($(this).parents(".place-tooltips").find(".citys").length == 0) {
                         //判断它没有下级地区的时候，将id放入数组
                         //console.log($(this).attr("id"));此时能获取到已选中的省市级id
-                        Checked.push($(this).attr("data-name"));
+                        Checked.push({name:$(this).attr("data-name"),code:$(this).attr("data-code")});
                     }
                 }
                 var s = $(this).parents(".place-tooltips").find(".city");
                 s.each(function (index, a) {
                     if ($(this).prop("checked")) {
-                        Checked.push($(this).attr("data-name"));
+                        Checked.push({name:$(this).attr("data-name"),code:$(this).attr("data-code")});
                         //console.log($(this).attr("id"));//此时能获取到已选中的县区级id
                     }
                 })
