@@ -86,7 +86,7 @@ function expressTableAddRowEvent()
         "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\">\n" +
-        "                                            <a data-row-id=\""+expressTablePos+"\" data-toggle=\"modal\" data-target=\"#myModal\" style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
+        "                                            <a data-row-id=\""+expressTablePos+"\" data-toggle=\"modal\" data-target=\"#expressSelectRegionModal\" style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
         "                                            &nbsp;\n" +
         "                                            <a data-row-id=\""+expressTablePos+"\" class='expressTableDelRow' style=\"color:red;cursor: pointer;\">删除</a>\n" +
         "                                        </td>\n" +
@@ -154,12 +154,12 @@ $(function () {
                 }
             }
         }
-        GetRegionPlug(reginDatas);
-        $(".btntest1").click(function() {
-            var areas = GetChecked().join(",");
+        GetRegionPlug(reginDatas,"express-select-region");
+        $(".expressSelectBtn").click(function() {
+            var areas = GetChecked("express-select-region").join(",");
             $("#areas").html(areas);
             $("#selectedareas").val(areas);
-            $('#myModal').modal('hide');
+            $('#expressSelectRegionModal').modal('hide');
         });
 
 

@@ -74,17 +74,15 @@
                         <label>
                             <span><font color="#ff4e00">*</font>是否包邮 :</span>
                             <input type="radio" name="freightStatus" id="freightStatus_1" class="freightStatus" value="1" style="margin-top: 2%;" checked="checked" />自定义运费
-                            &nbsp;&nbsp;
                             <input type="radio" name="freightStatus" id="freightStatus_2" class="freightStatus" value="2" style="margin-top: 2%;"  />包邮
                         </label>
                         <label class="expressDiv">
                             <span><font color="#ff4e00">*</font>计价方式 :</span>
-                            <input type="radio" name="valuationMethod" class="valuationMethod" value="1" style="margin-top: 2%;" checked="checked" />按件数
-                            &nbsp;&nbsp;
-                            <input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按重量
-                            &nbsp;&nbsp;
-                            <!-- 商品属性目前没有体积,所以隐藏这种运费-->
-                            <!--<input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按体积-->
+                               <input type="radio" name="valuationMethod" class="valuationMethod" value="1" style="margin-top: 2%;" checked="checked" />按件数
+                                &nbsp;&nbsp;
+                                <input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按重量
+                                <!-- 商品属性目前没有体积,所以隐藏这种运费-->
+                                <!--<input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按体积-->
                         </label>
                         <label class="expressDiv">
                             <span>运送方式 :</span>
@@ -92,7 +90,7 @@
                         </label>
                         <label class="expressDiv">
                             <span></span>
-                            <input type="checkbox"  value="1" name="transportModel" id="transportModel_express" ckass="transportModelChks" />快递
+                            <label><input type="checkbox"  value="1" name="transportModel" id="transportModel_express" ckass="transportModelChks" />快递</label>
                         </label>
                         <label class="expressDiv">
                             <span></span>
@@ -136,7 +134,7 @@
                         <div id="areas" style="display:none">
                         </div>
                         <input type="hidden" id="selectedareas" name="edareas" value="" />
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                        <div class="modal fade" id="expressSelectRegionModal" tabindex="-1" role="dialog" aria-labelledby="expressSelectRegionModalLabel"
                              aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -149,7 +147,7 @@
                                         </h4>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="test-div">
+                                        <div class="express-select-region">
 
                                         </div>
                                     </div>
@@ -157,7 +155,7 @@
                                         <button type="button" class="btn btn-default" data-dismiss="modal">
                                             关闭
                                         </button>
-                                        <button type="button" class="btn btn-primary btntest1">
+                                        <button type="button" class="btn btn-primary expressSelectBtn">
                                             确定
                                         </button>
                                     </div>
