@@ -153,6 +153,11 @@ $(function () {
             if(reginData.isMunicipality==1)
             {
                 reginData.children=null;
+                reginData.children = new Array();
+                var municipalityRegion = {};
+                municipalityRegion.code=reginData.code;
+                municipalityRegion.name=reginData.name;
+                reginData.children.push(municipalityRegion);
             }else{
                 if(reginData.children!=null&&reginData.children.length>0)
                 {
@@ -165,9 +170,31 @@ $(function () {
         }
         GetRegionPlug(reginDatas,"express-select-region");
         $(".expressSelectBtn").click(function() {
-            alert(g_currentExpressId);
-            var areas = GetChecked("express-select-region").join(",");
+            var selectRegions = GetChecked("express-select-region");
+            if(selectRegions!=null&&selectRegions.length>0) {
+                if (expressRegionTableMap == null || Object.getOwnPropertyNames(expressRegionTableMap).length <= 0) {
+                    expressRegionTableMap.set(g_currentExpressId, selectRegions);
+                } else {
 
+                }
+            }
+            var selectRegionNames="";
+            if(selectRegions!=null&&selectRegions.length>0)
+            {
+                for(var i=0;i<selectRegions.length;i++)
+                {
+                    if(selectRegions[i].name!=null)
+                    {
+                        selectRegionNames+=selectRegions[i].name;
+                    }
+                    if(i+1<selectRegions.length)
+                    {
+                        selectRegionNames+="，";
+                    }
+                }
+            }
+
+            $("#expressTable_row_"+g_currentExpressId+"_areas").html(selectRegionNames);
             // $("#areas").html(areas);
             // $("#selectedareas").val(areas);
 

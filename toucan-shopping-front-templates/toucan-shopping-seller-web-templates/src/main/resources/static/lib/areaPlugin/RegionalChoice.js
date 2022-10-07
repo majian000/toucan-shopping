@@ -69,7 +69,7 @@ function GetPlace(datas) {
                         $("<input/>", {
                             // "id":item.id,
                             "type": "checkbox",
-                            "class": "bigarea",
+                            "class": "bigarea chk"+item.code,
                             "data-name": item.name,
                             "data-code": item.code,
                             "click": function () {
@@ -116,7 +116,7 @@ function GetSmallPlace(datas) {
                     $("<input/>", {
                         // "id":item.id,
                         "type": "checkbox",
-                        "class": "bigcity",
+                        "class": "bigcity chk"+item.code,
                         "data-name": item.name,
                         "data-code": item.code,
                         "click": function () {
@@ -248,9 +248,9 @@ function GetChecked(divSelector) {
                         Checked.push({name:$(this).attr("data-name"),code:$(this).attr("data-code")});
                         //console.log($(this).attr("id"));//此时能获取到已选中的县区级id
                     }
-                })
+                });
             })
-        })
+        });
     });
     return Checked;
 }
