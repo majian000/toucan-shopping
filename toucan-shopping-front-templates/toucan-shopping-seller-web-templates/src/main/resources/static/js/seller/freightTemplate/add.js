@@ -119,6 +119,33 @@ function bindExpressTableDelRowEvent()
     $(".expressTableSelectRegion").on('click', function () {
         var attrId = $(this).attr("data-row-id");
         g_currentExpressId = attrId;
+
+        //将其他行选择的地市 设置为禁用
+        expressRegionTableMap.forEach((val,key) => {
+            if(key!=g_currentExpressId)
+            {
+                if(val!=null&&val.length>0) {
+                    for (var i = 0; i < val.length; i++) {
+                        var city  =val[i];
+                        if(i==0||(i>0&&val[i-1].parentCode!=city.parentCode)) {
+                            $(".chk" + city.parentCode).prop("disabled", true);
+                        }
+                        $(".chk"+city.code).prop("disabled",true);
+                    }
+                }
+            }else{
+                if(val!=null&&val.length>0) {
+                    for (var i = 0; i < val.length; i++) {
+                        var city  =val[i];
+                        if(i==0||(i>0&&val[i-1].parentCode!=city.parentCode)) {
+                            $(".chk" + city.parentCode).prop("disabled", false);
+                        }
+                        $(".chk"+city.code).prop("disabled",false);
+                    }
+                }
+            }
+        });
+
         $('#expressSelectRegionModal').modal('show');
     });
 }
@@ -168,6 +195,7 @@ $(function () {
                 }
             }
         }
+        //初始化地区选择器
         GetRegionPlug(reginDatas,"express-select-region");
         $(".expressSelectBtn").click(function() {
             var selectRegions = GetChecked("express-select-region");

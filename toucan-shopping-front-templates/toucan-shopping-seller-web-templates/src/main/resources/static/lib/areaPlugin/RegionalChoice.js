@@ -72,6 +72,7 @@ function GetPlace(datas) {
                             "class": "bigarea chk"+item.code,
                             "data-name": item.name,
                             "data-code": item.code,
+                            "data-parent-code": item.parentCode,
                             "click": function () {
                                 var bool = $(this).prop("checked");
                                 var single = $(this).parents(".bigplace").next().find("input");
@@ -119,6 +120,7 @@ function GetSmallPlace(datas) {
                         "class": "bigcity chk"+item.code,
                         "data-name": item.name,
                         "data-code": item.code,
+                        "data-parent-code": item.parentCode,
                         "click": function () {
                             var small = $(this).parent().next(".citys").find("input");
                             var smalllength = small.length;
@@ -239,13 +241,18 @@ function GetChecked(divSelector) {
                     if ($(this).parents(".place-tooltips").find(".citys").length == 0) {
                         //判断它没有下级地区的时候，将id放入数组
                         //console.log($(this).attr("id"));此时能获取到已选中的省市级id
-                        Checked.push({name:$(this).attr("data-name"),code:$(this).attr("data-code")});
+                        //没被禁用
+                        if(!($(this).prop("disabled"))) {
+                            Checked.push({name: $(this).attr("data-name"), code: $(this).attr("data-code"),parentCode:$(this).attr("data-parent-code")});
+                        }
                     }
                 }
                 var s = $(this).parents(".place-tooltips").find(".city");
                 s.each(function (index, a) {
                     if ($(this).prop("checked")) {
-                        Checked.push({name:$(this).attr("data-name"),code:$(this).attr("data-code")});
+                        if(!($(this).prop("disabled"))) {
+                            Checked.push({name: $(this).attr("data-name"), code: $(this).attr("data-code"),parentCode:$(this).attr("data-parent-code")});
+                        }
                         //console.log($(this).attr("id"));//此时能获取到已选中的县区级id
                     }
                 });
