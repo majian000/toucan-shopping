@@ -19,7 +19,7 @@ function GetRegionPlug(datas,divSelector) {
                             ShowTipNum(divSelector);
                         }
                     })
-                ).append(
+                )/*.append(
                     $("<a/>", {
                         "class": "clearCheck",
                         "text": "清空",
@@ -28,12 +28,12 @@ function GetRegionPlug(datas,divSelector) {
                             $("."+divSelector).find(".ratio").html("");
                         }
                     })
-                )
+                )*/
             ).append(
                 $("<div/>", {
                     "class": "placegroup"
                 }).append(
-                    GetPlace(datas)
+                    GetPlace(datas,divSelector)
                 )
             )
         )
@@ -52,7 +52,7 @@ function GetRegionPlug(datas,divSelector) {
     });
 }
 
-function GetPlace(datas) {
+function GetPlace(datas,divSelector) {
     // console.log(datas);
     return datas.map(function (item) {
         // console.log(item);
@@ -69,7 +69,7 @@ function GetPlace(datas) {
                         $("<input/>", {
                             // "id":item.id,
                             "type": "checkbox",
-                            "class": "bigarea chk"+item.code,
+                            "class": "bigarea chk-"+divSelector+item.code,
                             "data-name": item.name,
                             "data-code": item.code,
                             "data-parent-code": item.parentCode,
@@ -97,13 +97,13 @@ function GetPlace(datas) {
         ).append(
             function () {
                 if (item.children) {
-                    return GetSmallPlace(item.children)
+                    return GetSmallPlace(item.children,divSelector)
                 }
             }()
         )
     })
 }
-function GetSmallPlace(datas) {
+function GetSmallPlace(datas,divSelector) {
     return $("<div/>", {
         "class": "smallplace clearfloat"
     }).append(
@@ -117,7 +117,7 @@ function GetSmallPlace(datas) {
                     $("<input/>", {
                         // "id":item.id,
                         "type": "checkbox",
-                        "class": "bigcity chk"+item.code,
+                        "class": "bigcity chk-"+divSelector+item.code,
                         "data-name": item.name,
                         "data-code": item.code,
                         "data-parent-code": item.parentCode,

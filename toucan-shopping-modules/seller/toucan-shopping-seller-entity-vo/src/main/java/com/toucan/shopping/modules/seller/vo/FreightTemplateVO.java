@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 public class FreightTemplateVO extends FreightTemplate {
 
+    private List<String> transportModels; //运费规则 1:快递 2:EMS 3:平邮
+
     private FreightTemplateDefaultRuleVO expressDefaultRule; //快递默认运费规则
 
     private List<FreightTemplateAreaRuleVO> expressAreaRules; //快递地区规则

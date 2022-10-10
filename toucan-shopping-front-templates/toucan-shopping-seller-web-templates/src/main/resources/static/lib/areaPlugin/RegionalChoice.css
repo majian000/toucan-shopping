@@ -22,7 +22,7 @@ a.btntest{
 .place-div>div{
     width: 100%;
     background: #f5f5f5;
-    padding: 20px;
+    /*padding: 20px;*/
 }
 .place{
     display: inline-block;
@@ -42,7 +42,7 @@ a.btntest{
     background-color: #EDF6FF;
 }
 .place-div .placegroup{
-    margin-left: 15px;
+    /*margin-left: 15px;*/
     width: 100%;
     background-color: #fff;
     padding: 20px;
@@ -51,12 +51,12 @@ a.btntest{
 }
 .place-div .checkbtn{
     background-color: #FBFBFB;
-    margin: 0 10px 0 15px;
+    /*margin: 0 10px 0 15px;*/
     width: 100%;
 }
 .place-div .checkbtn img{
     height: 10px;
-    margin-left: 3px;
+    /*margin-left: 3px;*/
 }
 .place-div .checkbtn .allCheck img{
     height: 8px;

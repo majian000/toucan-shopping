@@ -118,9 +118,11 @@ function bindExpressTableDelRowEvent()
                         for (var i = 0; i < val.length; i++) {
                             var city  =val[i];
                             if(i==0||(i>0&&val[i-1].parentCode!=city.parentCode)) {
-                                $(".chk" + city.parentCode).attr("checked", false);
+                                $(".chk-express-select-region" + city.parentCode).attr("checked", false);
+                                $(".chk-express-select-region" + city.parentCode).prop("disabled", false);
                             }
-                            $(".chk"+city.code).attr("checked", false);
+                            $(".chk-express-select-region"+city.code).attr("checked", false);
+                            $(".chk-express-select-region"+city.code).prop("disabled", false);
                         }
                     }
                 }
@@ -142,9 +144,9 @@ function bindExpressTableDelRowEvent()
                     for (var i = 0; i < val.length; i++) {
                         var city  =val[i];
                         if(i==0||(i>0&&val[i-1].parentCode!=city.parentCode)) {
-                            $(".chk" + city.parentCode).prop("disabled", true);
+                            $(".chk-express-select-region" + city.parentCode).prop("disabled", true);
                         }
-                        $(".chk"+city.code).prop("disabled",true);
+                        $(".chk-express-select-region"+city.code).prop("disabled",true);
                     }
                 }
             }else{
@@ -152,15 +154,55 @@ function bindExpressTableDelRowEvent()
                     for (var i = 0; i < val.length; i++) {
                         var city  =val[i];
                         if(i==0||(i>0&&val[i-1].parentCode!=city.parentCode)) {
-                            $(".chk" + city.parentCode).prop("disabled", false);
+                            $(".chk-express-select-region" + city.parentCode).prop("disabled", false);
                         }
-                        $(".chk"+city.code).prop("disabled",false);
+                        $(".chk-express-select-region"+city.code).prop("disabled",false);
                     }
                 }
             }
         });
 
         $('#expressSelectRegionModal').modal('show');
+    });
+}
+
+
+/**
+ * 初始化快递 地区选择器
+ * @param reginDatas
+ */
+function initExpressDialog(reginDatas)
+{
+    //初始化地区选择器
+    GetRegionPlug(reginDatas,"express-select-region");
+    $(".expressSelectBtn").click(function() {
+        var selectRegions = GetChecked("express-select-region");
+        if(selectRegions!=null&&selectRegions.length>0) {
+            if (expressRegionTableMap == null || Object.getOwnPropertyNames(expressRegionTableMap).length <= 0) {
+                expressRegionTableMap.set(g_currentExpressId, selectRegions);
+            } else {
+
+            }
+        }
+        var selectRegionNames="";
+        if(selectRegions!=null&&selectRegions.length>0)
+        {
+            for(var i=0;i<selectRegions.length;i++)
+            {
+                if(selectRegions[i].name!=null)
+                {
+                    selectRegionNames+=selectRegions[i].name;
+                }
+                if(i+1<selectRegions.length)
+                {
+                    selectRegionNames+="，";
+                }
+            }
+        }
+
+        $("#expressTable_row_"+g_currentExpressId+"_areas").html(selectRegionNames);
+
+        $('#expressSelectRegionModal').modal('hide');
     });
 }
 
@@ -209,39 +251,10 @@ $(function () {
                 }
             }
         }
-        //初始化地区选择器
-        GetRegionPlug(reginDatas,"express-select-region");
-        $(".expressSelectBtn").click(function() {
-            var selectRegions = GetChecked("express-select-region");
-            if(selectRegions!=null&&selectRegions.length>0) {
-                if (expressRegionTableMap == null || Object.getOwnPropertyNames(expressRegionTableMap).length <= 0) {
-                    expressRegionTableMap.set(g_currentExpressId, selectRegions);
-                } else {
 
-                }
-            }
-            var selectRegionNames="";
-            if(selectRegions!=null&&selectRegions.length>0)
-            {
-                for(var i=0;i<selectRegions.length;i++)
-                {
-                    if(selectRegions[i].name!=null)
-                    {
-                        selectRegionNames+=selectRegions[i].name;
-                    }
-                    if(i+1<selectRegions.length)
-                    {
-                        selectRegionNames+="，";
-                    }
-                }
-            }
 
-            $("#expressTable_row_"+g_currentExpressId+"_areas").html(selectRegionNames);
-            // $("#areas").html(areas);
-            // $("#selectedareas").val(areas);
+        initExpressDialog(reginDatas);
 
-            $('#expressSelectRegionModal').modal('hide');
-        });
 
 
     });
