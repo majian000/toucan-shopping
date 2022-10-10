@@ -129,6 +129,17 @@ function GetSmallPlace(datas,divSelector) {
                                 small.prop("checked", true);
                                 $(this).parents(".place-tooltips").find(".ratio").html("(" + smalllength + "/" + smalllength + ")");
                                 $(this).parents(".smallplace").prev().find(".bigarea").prop("checked", true);
+                                var bigareacitys =$(this).parent().next(".citys").find("input");
+                                if(bigareacitys!=null&&bigareacitys.length>0)
+                                {
+                                    for(var i=0;i<bigareacitys.length;i++)
+                                    {
+                                        if($(bigareacitys[i]).prop("disabled"))
+                                        {
+                                            $(this).parents(".smallplace").prev().find(".bigarea").prop("disabled", true);
+                                        }
+                                    }
+                                }
                             } else {
                                 small.prop("checked", false);
                                 $(this).parents(".place-tooltips").find(".ratio").html("");

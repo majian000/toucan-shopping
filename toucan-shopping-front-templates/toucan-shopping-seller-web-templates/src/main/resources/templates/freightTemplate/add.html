@@ -84,14 +84,13 @@
                                 <!-- 商品属性目前没有体积,所以隐藏这种运费-->
                                 <!--<input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按体积-->
                         </label>
-
                         <label >
                             <span>运送方式 :</span>
                             <div style="margin-top: 2%;padding-top: 1.5%;">除指定地区外，其余地区的运费采用“默认运费</div>
                         </label>
+                        <!--  =====================快递======================= -->
                         <label >
-                            <span></span>
-                            <label><input type="checkbox"  value="1" name="transportModels" id="transportModel_express" ckass="transportModelChks" />快递</label>
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="1" name="transportModels" id="transportModel_express" ckass="transportModelChks" />快递</label>
                         </label>
                         <label>
                             <span></span>
@@ -121,9 +120,9 @@
                                 </div>
                             </div>
                         </label>
+                        <!--  =====================EMS======================= -->
                         <label >
-                            <span></span>
-                            <label><input type="checkbox"  value="2" name="transportModels" id="transportModel_ems" ckass="transportModelChks" />EMS</label>
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="2" name="transportModels" id="transportModel_ems" ckass="transportModelChks" />EMS</label>
                         </label>
                         <label>
                             <span></span>
@@ -153,6 +152,40 @@
                                 </div>
                             </div>
                         </label>
+                        <!--  =====================平邮======================= -->
+                        <label >
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="3" name="transportModels" id="transportModel_ordinaryMail" ckass="transportModelChks" />平邮</label>
+                        </label>
+
+                        <label>
+                            <span></span>
+                            <div id="ordinaryMailTableDiv" style="display: none;">
+                                <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    默认运费<input type="text" id="ordinaryMailDefaultWeight" name="ordinaryMailDefaultRule.defaultWeight" style="width:60px;" lay-verify="required|decimal3w" ><a class="dynamicUnitDefaultText">件内</a><input type="text" id="ordinaryMailDefaultWeightMoney" name="ordinaryMailDefaultRule.defaultWeightMoney" style="width:60px;" lay-verify="required|decimal3w" />元
+                                    &nbsp;&nbsp;&nbsp;
+                                    每增加<input type="text" id="ordinaryMailDefaultAppendWeight" name="ordinaryMailDefaultRule.defaultAppendWeight" style="width:60px;" lay-verify="required|decimal3w" /><a class="dynamicUnitDefaultAppendText">件内</a>,增加运费<input type="text"  id="ordinaryMailDefaultAppendWeightMoney"  name="ordinaryMailDefaultRule.defaultAppendWeightMoney"  style="width:60px;" lay-verify="required|decimal3w" />元
+                                </div>
+                                <div  style="margin-left: 20%;"  >
+                                    <table id="ordinaryMailTable" class="freezeTable" border="1" style="width:100%;margin-left: 0;">
+                                        <tbody id="ordinaryMailTableBody">
+                                        <tr class="tabTh">
+                                            <td style="text-align: center;    width: 30%;">运送到</td>
+                                            <td style="text-align:center"><a class="dynamicUnitRowFirstText">首件数(件)</a></td>
+                                            <td style="text-align:center">首费(元)</td>
+                                            <td style="text-align:center"><a class="dynamicUnitRowAppendText">续件数(件)</a></td>
+                                            <td style="text-align:center">续费(元)</td>
+                                            <td style="text-align:center">操作</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="text-align:center;background-color: #e8f2ff;">
+                                        <a class="ordinaryMailTableAddRow" style="color:blue;cursor: pointer;" >添加一行</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
                         <div style="width:100%;text-align:center;margin-top: 5%;">
                             <input type="button" id="saveBtn" class="button" value="保存"  />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -218,6 +251,38 @@
                                             关闭
                                         </button>
                                         <button type="button" class="btn btn-primary emsSelectBtn">
+                                            确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- 快递 地区选择器-->
+                        <div class="modal fade" id="ordinaryMailSelectRegionModal" tabindex="-1" role="dialog" aria-labelledby="ordinaryMailSelectRegionModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            ×
+                                        </button>
+                                        <h4 class="modal-title" >
+                                            选择区域
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="ordinaryMail-select-region">
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            关闭
+                                        </button>
+                                        <button type="button" class="btn btn-primary ordinaryMailSelectBtn">
                                             确定
                                         </button>
                                     </div>
