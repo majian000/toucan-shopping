@@ -84,10 +84,10 @@ function expressTableAddRowEvent()
     $("#expressTableBody").append("<tr id=\"expressTable_row_"+expressTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"expressTable_row_"+expressTablePos+"_areas\" class=\"form-control-static\">\n" +
         "                                </div><input type=\"hidden\" id=\"expressTable_row_"+expressTablePos+"_areas\" name=\"expressAreaRules["+expressTablePos+"].selectAreas\" value=\"\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" name=\"expressAreaRules["+expressTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\">\n" +
         "                                            <a data-row-id=\""+expressTablePos+"\" data-toggle=\"modal\" class='expressTableSelectRegion'  style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
         "                                            &nbsp;\n" +
@@ -111,7 +111,21 @@ function bindExpressTableDelRowEvent()
             title:'提示信息'
         }, function(index){
             $("#expressTable_row_"+attrId).remove();
-
+            expressRegionTableMap.forEach((val,key) => {
+                if(key==attrId)
+                {
+                    if(val!=null&&val.length>0) {
+                        for (var i = 0; i < val.length; i++) {
+                            var city  =val[i];
+                            if(i==0||(i>0&&val[i-1].parentCode!=city.parentCode)) {
+                                $(".chk" + city.parentCode).attr("checked", false);
+                            }
+                            $(".chk"+city.code).attr("checked", false);
+                        }
+                    }
+                }
+            });
+            expressRegionTableMap.set(attrId,null);
             layer.close(index);
         });
     });

@@ -55,10 +55,10 @@
                 <div class="title" style="border-bottom: 1px solid#9a9999;"><span>添加模板</span></div>
                 <div class="right_panel">
 
-                    <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;">
+                    <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 90%;">
                         <label>
                             <span><font color="#ff4e00">*</font>模板名称 :</span>
-                            <input type="text" id="freightTemplateName" maxlength="20"  name="name"  lay-verify="required" tabindex="1"  />
+                            <input type="text" id="freightTemplateName" maxlength="20"  name="name"  lay-verify="required" tabindex="1"  style="width: 50%;" />
                             <div id="freightTemplateName_error"></div>
                         </label>
                         <label>
@@ -97,15 +97,15 @@
                             <div id="expressTableDiv" style="display: none;">
                                 <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                    默认运费<input type="text" id="expressDefaultWeight" name="expressDefaultRule.defaultWeight" style="width:60px;"><a class="dynamicUnitDefaultText">件内</a><input type="text" id="expressDefaultWeightMoney" name="expressDefaultRule.defaultWeightMoney" style="width:60px;" />元
+                                    默认运费<input type="text" id="expressDefaultWeight" name="expressDefaultRule.defaultWeight" style="width:60px;" lay-verify="required|decimal3w" ><a class="dynamicUnitDefaultText">件内</a><input type="text" id="expressDefaultWeightMoney" name="expressDefaultRule.defaultWeightMoney" style="width:60px;" lay-verify="required|decimal3w" />元
                                     &nbsp;&nbsp;&nbsp;
-                                    每增加<input type="text" id="expressDefaultAppendWeight" name="expressDefaultRule.defaultAppendWeight" style="width:60px;" /><a class="dynamicUnitDefaultAppendText">件内</a>,增加运费<input type="text"  id="expressDefaultAppendWeightMoney"  name="expressDefaultRule.defaultAppendWeightMoney"  style="width:60px;" />元
+                                    每增加<input type="text" id="expressDefaultAppendWeight" name="expressDefaultRule.defaultAppendWeight" style="width:60px;" lay-verify="required|decimal3w" /><a class="dynamicUnitDefaultAppendText">件内</a>,增加运费<input type="text"  id="expressDefaultAppendWeightMoney"  name="expressDefaultRule.defaultAppendWeightMoney"  style="width:60px;" lay-verify="required|decimal3w" />元
                                 </div>
                                 <div  style="margin-left: 20%;"  >
                                      <table id="expressTable" class="freezeTable" border="1" style="width:100%;margin-left: 0;">
                                     <tbody id="expressTableBody">
                                     <tr class="tabTh">
-                                        <td style="text-align: center;">运送到</td>
+                                        <td style="text-align: center;    width: 30%;">运送到</td>
                                         <td style="text-align:center"><a class="dynamicUnitRowFirstText">首件数(件)</a></td>
                                         <td style="text-align:center">首费(元)</td>
                                         <td style="text-align:center"><a class="dynamicUnitRowAppendText">续件数(件)</a></td>
