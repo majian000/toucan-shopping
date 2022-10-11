@@ -35,31 +35,82 @@ function scafbtn_click()
         return;
     }
 
-
-    $.ajax({
-        type: "POST",
-        url: basePath+'/api/freightTemplate/save',
-        contentType: "application/json;charset=utf-8",
-        data:  getAjaxFormData("#scaf"),
-        dataType: "json",
-        success: function (data) {
-            if(data.code==1)
+    var expressTableAreas=$(".expressTableAreas");
+    if(expressTableAreas!=null&&expressTableAreas.length>0)
+    {
+        for(var i=0;i<expressTableAreas.length;i++)
+        {
+            if($(expressTableAreas[i]).val()=="")
             {
-                window.location.href=basePath+"/page/freightTemplate/list";
-            }else{
                 $.message({
-                    message: data.msg,
+                    message: "请在快递运送方式中选择指定区域",
                     type: 'error'
                 });
+                return;
             }
-        },
-        error: function (result) {
-            $.message({
-                message: "请稍后重试",
-                type: 'error'
-            });
         }
-    });
+    }
+
+
+    var emsTableAreas=$(".emsTableAreas");
+    if(emsTableAreas!=null&&emsTableAreas.length>0)
+    {
+        for(var i=0;i<emsTableAreas.length;i++)
+        {
+            if($(emsTableAreas[i]).val()=="")
+            {
+                $.message({
+                    message: "请在EMS运送方式中选择指定区域",
+                    type: 'error'
+                });
+                return;
+            }
+        }
+    }
+
+
+    var ordinaryMailTableAreas=$(".ordinaryMailTableAreas");
+    if(ordinaryMailTableAreas!=null&&ordinaryMailTableAreas.length>0)
+    {
+        for(var i=0;i<ordinaryMailTableAreas.length;i++)
+        {
+            if($(ordinaryMailTableAreas[i]).val()=="")
+            {
+                $.message({
+                    message: "请在平邮运送方式中选择指定区域",
+                    type: 'error'
+                });
+                return;
+            }
+        }
+    }
+
+    alert("submit");
+
+    // $.ajax({
+    //     type: "POST",
+    //     url: basePath+'/api/freightTemplate/save',
+    //     contentType: "application/json;charset=utf-8",
+    //     data:  getAjaxFormData("#scaf"),
+    //     dataType: "json",
+    //     success: function (data) {
+    //         if(data.code==1)
+    //         {
+    //             window.location.href=basePath+"/page/freightTemplate/list";
+    //         }else{
+    //             $.message({
+    //                 message: data.msg,
+    //                 type: 'error'
+    //             });
+    //         }
+    //     },
+    //     error: function (result) {
+    //         $.message({
+    //             message: "请稍后重试",
+    //             type: 'error'
+    //         });
+    //     }
+    // });
 
 
 
@@ -73,9 +124,13 @@ function scafbtn_click()
 function resetexpressTable()
 {
     $("#expressDefaultWeight").val("");
+    $("#expressDefaultWeight").removeAttr("lay-verify");
     $("#expressDefaultWeightMoney").val("");
+    $("#expressDefaultWeightMoney").removeAttr("lay-verify");
     $("#expressDefaultAppendWeight").val("");
+    $("#expressDefaultAppendWeight").removeAttr("lay-verify");
     $("#expressDefaultAppendWeightMoney").val("");
+    $("#expressDefaultAppendWeightMoney").removeAttr("lay-verify");
     $("#expressTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
         "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
@@ -111,7 +166,7 @@ function expressTableAddRowEvent()
     expressTablePos++;
     $("#expressTableBody").append("<tr id=\"expressTable_row_"+expressTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"expressTable_row_"+expressTablePos+"_areas\" class=\"form-control-static\">\n" +
-        "                                </div><input type=\"hidden\" id=\"expressTable_row_"+expressTablePos+"_areas\" name=\"expressAreaRules["+expressTablePos+"].selectAreas\" value=\"\"></td>\n" +
+        "                                </div><input type=\"hidden\" id=\"expressTable_row_"+expressTablePos+"_areas_hidden\" class=\"expressTableAreas\" name=\"expressAreaRules["+expressTablePos+"].selectAreas\" value=\"\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
@@ -243,6 +298,7 @@ function initExpressDialog(reginDatas)
         }
 
         $("#expressTable_row_"+g_currentExpressId+"_areas").html(selectRegionNames);
+        $("#expressTable_row_"+g_currentExpressId+"_areas_hidden").val(selectRegionNames);
 
         $('#expressSelectRegionModal').modal('hide');
     });
@@ -260,9 +316,13 @@ function initExpressDialog(reginDatas)
 function resetEmsTable()
 {
     $("#emsDefaultWeight").val("");
+    $("#emsDefaultWeight").removeAttr("lay-verify");
     $("#emsDefaultWeightMoney").val("");
+    $("#emsDefaultWeightMoney").removeAttr("lay-verify");
     $("#emsDefaultAppendWeight").val("");
+    $("#emsDefaultAppendWeight").removeAttr("lay-verify");
     $("#emsDefaultAppendWeightMoney").val("");
+    $("#emsDefaultAppendWeightMoney").removeAttr("lay-verify");
     $("#emsTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
         "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
@@ -300,7 +360,7 @@ function emsTableAddRowEvent()
     emsTablePos++;
     $("#emsTableBody").append("<tr id=\"emsTable_row_"+emsTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"emsTable_row_"+emsTablePos+"_areas\" class=\"form-control-static\">\n" +
-        "                                </div><input type=\"hidden\" id=\"emsTable_row_"+emsTablePos+"_areas\" name=\"emsAreaRules["+emsTablePos+"].selectAreas\" value=\"\"></td>\n" +
+        "                                </div><input type=\"hidden\" id=\"emsTable_row_"+emsTablePos+"_areas_hidden\" class=\"emsTableAreas\" name=\"emsAreaRules["+emsTablePos+"].selectAreas\" value=\"\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"emsAreaRules["+emsTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"emsAreaRules["+emsTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"emsAreaRules["+emsTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
@@ -435,6 +495,7 @@ function initEmsDialog(reginDatas)
         }
 
         $("#emsTable_row_"+g_currentEmsId+"_areas").html(selectRegionNames);
+        $("#emsTable_row_"+g_currentEmsId+"_areas_hidden").val(selectRegionNames);
 
         $('#emsSelectRegionModal').modal('hide');
     });
@@ -451,9 +512,13 @@ function initEmsDialog(reginDatas)
 function resetordinaryMailTable()
 {
     $("#ordinaryMailDefaultWeight").val("");
+    $("#ordinaryMailDefaultWeight").removeAttr("lay-verify");
     $("#ordinaryMailDefaultWeightMoney").val("");
+    $("#ordinaryMailDefaultWeightMoney").removeAttr("lay-verify");
     $("#ordinaryMailDefaultAppendWeight").val("");
+    $("#ordinaryMailDefaultAppendWeight").removeAttr("lay-verify");
     $("#ordinaryMailDefaultAppendWeightMoney").val("");
+    $("#ordinaryMailDefaultAppendWeightMoney").removeAttr("lay-verify");
     $("#ordinaryMailTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
         "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
@@ -491,7 +556,7 @@ function ordinaryMailTableAddRowEvent()
     ordinaryMailTablePos++;
     $("#ordinaryMailTableBody").append("<tr id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_areas\" class=\"form-control-static\">\n" +
-        "                                </div><input type=\"hidden\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_areas\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].selectAreas\" value=\"\"></td>\n" +
+        "                                </div><input type=\"hidden\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_areas_hidden\" class=\"ordinaryMailTableAreas\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].selectAreas\" value=\"\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
@@ -623,6 +688,7 @@ function initordinaryMailDialog(reginDatas)
         }
 
         $("#ordinaryMailTable_row_"+g_currentordinaryMailId+"_areas").html(selectRegionNames);
+        $("#ordinaryMailTable_row_"+g_currentordinaryMailId+"_areas_hidden").val(selectRegionNames);
 
         $('#ordinaryMailSelectRegionModal').modal('hide');
     });
@@ -707,16 +773,29 @@ $(function () {
 
     $('#transportModel_express').on('click', function () {
         if ($(this).prop("checked")) {
+            $("#expressDefaultWeight").attr("lay-verify","required|decimal3w");
+            $("#expressDefaultWeightMoney").attr("lay-verify","required|decimal3w");
+            $("#expressDefaultAppendWeight").attr("lay-verify","required|decimal3w");
+            $("#expressDefaultAppendWeightMoney").attr("lay-verify","required|decimal3w");
+
             $("#expressTableDiv").show();
+
         } else {
             $("#expressTableDiv").hide();
             resetexpressTable();
+
         }
     });
 
 
     $('#transportModel_ems').on('click', function () {
         if ($(this).prop("checked")) {
+
+            $("#emsDefaultWeight").attr("lay-verify","required|decimal3w");
+            $("#emsDefaultWeightMoney").attr("lay-verify","required|decimal3w");
+            $("#emsDefaultAppendWeight").attr("lay-verify","required|decimal3w");
+            $("#emsDefaultAppendWeightMoney").attr("lay-verify","required|decimal3w");
+
             $("#emsTableDiv").show();
         } else {
             $("#emsTableDiv").hide();
@@ -727,6 +806,12 @@ $(function () {
 
     $('#transportModel_ordinaryMail').on('click', function () {
         if ($(this).prop("checked")) {
+
+            $("#ordinaryMailDefaultWeight").attr("lay-verify","required|decimal3w");
+            $("#ordinaryMailDefaultWeightMoney").attr("lay-verify","required|decimal3w");
+            $("#ordinaryMailDefaultAppendWeight").attr("lay-verify","required|decimal3w");
+            $("#ordinaryMailDefaultAppendWeightMoney").attr("lay-verify","required|decimal3w");
+
             $("#ordinaryMailTableDiv").show();
         } else {
             $("#ordinaryMailTableDiv").hide();
