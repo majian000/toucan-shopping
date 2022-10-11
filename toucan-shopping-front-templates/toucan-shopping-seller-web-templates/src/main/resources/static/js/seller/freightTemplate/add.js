@@ -89,6 +89,18 @@ function resetexpressTable()
 
     bindExpressTableDelRowEvent();
 
+    var checkeds = $(".express-select-region").find("input:checked");
+    if(checkeds!=null&&checkeds.length>0)
+    {
+        for(var i=0;i<checkeds.length;i++)
+        {
+            $(checkeds[i]).prop("disabled", false);
+            $(checkeds[i]).prop("checked", false);
+        }
+    }
+
+    expressRegionTableMap = new Map();
+
 }
 
 /**
@@ -263,6 +275,19 @@ function resetEmsTable()
 
 
     bindEmsTableDelRowEvent();
+
+
+    var checkeds = $(".ems-select-region").find("input:checked");
+    if(checkeds!=null&&checkeds.length>0)
+    {
+        for(var i=0;i<checkeds.length;i++)
+        {
+            $(checkeds[i]).prop("disabled", false);
+            $(checkeds[i]).prop("checked", false);
+        }
+    }
+
+    emsRegionTableMap = new Map();
 
 }
 
@@ -441,6 +466,20 @@ function resetordinaryMailTable()
 
 
     bindordinaryMailTableDelRowEvent();
+
+
+    var checkeds = $(".ordinaryMail-select-region").find("input:checked");
+    if(checkeds!=null&&checkeds.length>0)
+    {
+        for(var i=0;i<checkeds.length;i++)
+        {
+            $(checkeds[i]).prop("disabled", false);
+            $(checkeds[i]).prop("checked", false);
+        }
+    }
+
+    ordinaryMailRegionTableMap = new Map();
+
 
 }
 

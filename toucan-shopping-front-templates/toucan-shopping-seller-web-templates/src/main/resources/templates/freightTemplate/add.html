@@ -73,26 +73,26 @@
                         </label>
                         <label>
                             <span><font color="#ff4e00">*</font>是否包邮 :</span>
-                            <input type="radio" name="freightStatus" id="freightStatus_1" class="freightStatus" value="1" style="margin-top: 2%;" checked="checked" />自定义运费
-                            <input type="radio" name="freightStatus" id="freightStatus_2" class="freightStatus" value="2" style="margin-top: 2%;"  />包邮
+                            <input type="radio" name="freightStatus" id="freightStatus_1" class="freightStatus" value="1" style="margin-top: 1%;" checked="checked" />自定义运费
+                            <input type="radio" name="freightStatus" id="freightStatus_2" class="freightStatus" value="2" style="margin-top: 1%;"  />包邮
                         </label>
                         <label class="expressDiv">
                             <span><font color="#ff4e00">*</font>计价方式 :</span>
-                               <input type="radio" name="valuationMethod" class="valuationMethod" value="1" style="margin-top: 2%;" checked="checked" />按件数
+                               <input type="radio" name="valuationMethod" class="valuationMethod" value="1" style="margin-top: 1%;" checked="checked" />按件数
                                 &nbsp;&nbsp;
-                                <input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按重量
+                                <input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 1%;"  />按重量
                                 <!-- 商品属性目前没有体积,所以隐藏这种运费-->
                                 <!--<input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按体积-->
                         </label>
-                        <label >
+                        <label class="expressDiv">
                             <span>运送方式 :</span>
                             <div style="margin-top: 2%;padding-top: 1.5%;">除指定地区外，其余地区的运费采用“默认运费</div>
                         </label>
                         <!--  =====================快递======================= -->
-                        <label >
+                        <label class="expressDiv" >
                             <label style="margin-left: 20%;"><input type="checkbox"  value="1" name="transportModels" id="transportModel_express" ckass="transportModelChks" />快递</label>
                         </label>
-                        <label>
+                        <label class="expressDiv">
                             <span></span>
                             <div id="expressTableDiv" style="display: none;">
                                 <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
@@ -121,10 +121,10 @@
                             </div>
                         </label>
                         <!--  =====================EMS======================= -->
-                        <label >
+                        <label class="expressDiv">
                             <label style="margin-left: 20%;"><input type="checkbox"  value="2" name="transportModels" id="transportModel_ems" ckass="transportModelChks" />EMS</label>
                         </label>
-                        <label>
+                        <label class="expressDiv">
                             <span></span>
                             <div id="emsTableDiv" style="display: none;">
                                 <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
@@ -153,11 +153,11 @@
                             </div>
                         </label>
                         <!--  =====================平邮======================= -->
-                        <label >
+                        <label class="expressDiv">
                             <label style="margin-left: 20%;"><input type="checkbox"  value="3" name="transportModels" id="transportModel_ordinaryMail" ckass="transportModelChks" />平邮</label>
                         </label>
 
-                        <label>
+                        <label class="expressDiv" >
                             <span></span>
                             <div id="ordinaryMailTableDiv" style="display: none;">
                                 <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
