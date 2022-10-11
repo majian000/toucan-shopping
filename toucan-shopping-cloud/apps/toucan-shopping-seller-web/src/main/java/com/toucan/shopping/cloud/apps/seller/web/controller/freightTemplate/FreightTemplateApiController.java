@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -89,6 +90,26 @@ public class FreightTemplateApiController extends BaseController {
         return resultObjectVO;
     }
 
+    /**
+     * 保存运费模板
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO save(HttpServletRequest request, @RequestBody FreightTemplateVO freightTemplateVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
 }

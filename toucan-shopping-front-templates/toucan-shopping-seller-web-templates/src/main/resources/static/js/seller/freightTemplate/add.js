@@ -85,32 +85,31 @@ function scafbtn_click()
         }
     }
 
-    alert("submit");
 
-    // $.ajax({
-    //     type: "POST",
-    //     url: basePath+'/api/freightTemplate/save',
-    //     contentType: "application/json;charset=utf-8",
-    //     data:  getAjaxFormData("#scaf"),
-    //     dataType: "json",
-    //     success: function (data) {
-    //         if(data.code==1)
-    //         {
-    //             window.location.href=basePath+"/page/freightTemplate/list";
-    //         }else{
-    //             $.message({
-    //                 message: data.msg,
-    //                 type: 'error'
-    //             });
-    //         }
-    //     },
-    //     error: function (result) {
-    //         $.message({
-    //             message: "请稍后重试",
-    //             type: 'error'
-    //         });
-    //     }
-    // });
+    $.ajax({
+        type: "POST",
+        url: basePath+'/api/freightTemplate/save',
+        contentType: "application/json;charset=utf-8",
+        data:  getAjaxFormData("#scaf"),
+        dataType: "json",
+        success: function (data) {
+            if(data.code==1)
+            {
+                window.location.href=basePath+"/page/freightTemplate/list";
+            }else{
+                $.message({
+                    message: data.msg,
+                    type: 'error'
+                });
+            }
+        },
+        error: function (result) {
+            $.message({
+                message: "请稍后重试",
+                type: 'error'
+            });
+        }
+    });
 
 
 
@@ -219,6 +218,32 @@ function bindExpressTableDelRowEvent()
     $(".expressTableSelectRegion").on('click', function () {
         var attrId = $(this).attr("data-row-id");
         g_currentExpressId = attrId;
+
+        //将所有多选框设置为不勾选
+        var checkeds = $(".express-select-region").find("input:checked");
+        if(checkeds!=null&&checkeds.length>0)
+        {
+            for(var i=0;i<checkeds.length;i++)
+            {
+                $(checkeds[i]).prop("disabled", false);
+                $(checkeds[i]).prop("checked", false);
+            }
+        }
+
+        //设置勾选
+        expressRegionTableMap.forEach((val,key) => {
+            if(val!=null&&val.length>0)
+            {
+                for (var i = 0; i < val.length; i++) {
+                    var city = val[i];
+                    if (i == 0 || (i > 0 && val[i - 1].parentCode != city.parentCode)) {
+                        $(".chk-express-select-region" + city.parentCode).prop("checked", true);
+                    }
+                    $(".chk-express-select-region" + city.code).prop("checked", true);
+                }
+            }
+        });
+
 
         //将其他行选择的地市 设置为禁用
         expressRegionTableMap.forEach((val,key) => {
@@ -416,6 +441,32 @@ function bindEmsTableDelRowEvent()
         var attrId = $(this).attr("data-row-id");
         g_currentEmsId = attrId;
 
+
+        //将所有多选框设置为不勾选
+        var checkeds = $(".ems-select-region").find("input:checked");
+        if(checkeds!=null&&checkeds.length>0)
+        {
+            for(var i=0;i<checkeds.length;i++)
+            {
+                $(checkeds[i]).prop("disabled", false);
+                $(checkeds[i]).prop("checked", false);
+            }
+        }
+
+        //设置勾选
+        emsRegionTableMap.forEach((val,key) => {
+            if(val!=null&&val.length>0)
+            {
+                for (var i = 0; i < val.length; i++) {
+                    var city = val[i];
+                    if (i == 0 || (i > 0 && val[i - 1].parentCode != city.parentCode)) {
+                        $(".chk-ems-select-region" + city.parentCode).prop("checked", true);
+                    }
+                    $(".chk-ems-select-region" + city.code).prop("checked", true);
+                }
+            }
+        });
+
         //将其他行选择的地市 设置为禁用
         emsRegionTableMap.forEach((val,key) => {
             if(key!=g_currentEmsId)
@@ -609,6 +660,32 @@ function bindordinaryMailTableDelRowEvent()
     $(".ordinaryMailTableSelectRegion").on('click', function () {
         var attrId = $(this).attr("data-row-id");
         g_currentordinaryMailId = attrId;
+
+
+        //将所有多选框设置为不勾选
+        var checkeds = $(".ordinaryMail-select-region").find("input:checked");
+        if(checkeds!=null&&checkeds.length>0)
+        {
+            for(var i=0;i<checkeds.length;i++)
+            {
+                $(checkeds[i]).prop("disabled", false);
+                $(checkeds[i]).prop("checked", false);
+            }
+        }
+
+        //设置勾选
+        ordinaryMailRegionTableMap.forEach((val,key) => {
+            if(val!=null&&val.length>0)
+        {
+            for (var i = 0; i < val.length; i++) {
+                var city = val[i];
+                if (i == 0 || (i > 0 && val[i - 1].parentCode != city.parentCode)) {
+                    $(".chk-ordinaryMail-select-region" + city.parentCode).prop("checked", true);
+                }
+                $(".chk-ordinaryMail-select-region" + city.code).prop("checked", true);
+            }
+        }
+    });
 
         //将其他行选择的地市 设置为禁用
         ordinaryMailRegionTableMap.forEach((val,key) => {
