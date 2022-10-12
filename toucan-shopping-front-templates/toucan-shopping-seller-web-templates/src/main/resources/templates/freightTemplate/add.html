@@ -56,13 +56,12 @@
                 <div class="right_panel">
 
                     <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 90%;">
-                        <label>
-                            <span><font color="#ff4e00">*</font>模板名称 :</span>
-                            <input type="text" id="freightTemplateName" maxlength="20"  name="name"  lay-verify="required" tabindex="1"  style="width: 50%;" />
-                            <div id="freightTemplateName_error"></div>
-                        </label>
-                        <label>
-                            <span><font color="#ff4e00">*</font>发货地 :</span>
+                        <div class="frm-div-row">
+                            <label class="frm-div-row-label" for="freightTemplateName" ><font color="#ff4e00">*</font>模板名称 :</label>
+                            <input type="text" id="freightTemplateName" maxlength="20"  name="name"  lay-verify="required" tabindex="1"  style="width: 30%;" />
+                        </div>
+                        <div class="frm-div-row">
+                            <label class="frm-div-row-label" for="ms_city" ><font color="#ff4e00">*</font>发货地 :</label>
                             <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" autocomplete="off"  readonly="true">
                             <input type="hidden" id="province" name="province" />
                             <input type="hidden" id="city" name="city" />
@@ -70,21 +69,27 @@
                             <input type="hidden" id="province_code" name="provinceCode"   />
                             <input type="hidden" id="city_code" name="cityCode"  />
                             <input type="hidden" id="area_code" name="areaCode"   />
-                        </label>
-                        <label>
-                            <span><font color="#ff4e00">*</font>是否包邮 :</span>
-                            <input type="radio" name="freightStatus" id="freightStatus_1" class="freightStatus" value="1" style="margin-top: 1%;" checked="checked" />自定义运费
-                            <input type="radio" name="freightStatus" id="freightStatus_2" class="freightStatus" value="2" style="margin-top: 1%;"  />包邮
-                        </label>
-                        <label class="expressDiv">
-                            <span><font color="#ff4e00">*</font>计价方式 :</span>
-                               <input type="radio" name="valuationMethod" class="valuationMethod" value="1" style="margin-top: 1%;" checked="checked" />按件数
-                                &nbsp;&nbsp;
-                                <input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 1%;"  />按重量
-                                <!-- 商品属性目前没有体积,所以隐藏这种运费-->
-                                <!--<input type="radio" name="valuationMethod" class="valuationMethod" value="2" style="margin-top: 2%;"  />按体积-->
-                        </label>
-                        <label class="expressDiv">
+                        </div>
+                        <div class="frm-div-row">
+                            <label class="frm-div-row-label" ><font color="#ff4e00">*</font>是否包邮 :</label>
+                            <div style="float: left;width: 50%;margin-top: 5px;">
+                                <input type="radio" name="freightStatus" id="freightStatus_1" class="freightStatus" value="1" style="margin-top: 1%;float: left;" checked="checked" />
+                                <label for="freightStatus_1" style="float: left;margin-top: 4px;">自定义运费</label>
+                                <input type="radio" name="freightStatus" id="freightStatus_2" class="freightStatus" value="2" style="margin-top: 1%;float: left;margin-left:3%;"  />
+                                <label for="freightStatus_2" style="margin-top: 4px;float: left;">包邮</label>
+                            </div>
+                        </div>
+                        <div class="frm-div-row expressDiv" style="float: left;width: 100%;">
+                            <label class="frm-div-row-label" ><font color="#ff4e00">*</font>计价方式 :</label>
+                            <div style="float: left;width: 50%;margin-top: 5px;">
+                                <input type="radio" name="valuationMethod" id="valuationMethod_1" class="valuationMethod" value="1" style="margin-top: 1%;float: left;" checked="checked" />
+                                <label for="valuationMethod_1" style="float: left;margin-top: 4px;">按件数</label>
+                                <input type="radio" name="valuationMethod" id="valuationMethod_2" class="valuationMethod" value="2" style="margin-top: 1%;float: left;margin-left:3%;"  />
+                                <label for="valuationMethod_2" style="margin-top: 4px;float: left;">按重量</label>
+                            </div>
+                        </div>
+
+                        <label class="expressDiv" style="margin-top: 5%;">
                             <span>运送方式 :</span>
                             <div style="margin-top: 2%;padding-top: 1.5%;">除指定地区外，其余地区的运费采用“默认运费</div>
                         </label>
