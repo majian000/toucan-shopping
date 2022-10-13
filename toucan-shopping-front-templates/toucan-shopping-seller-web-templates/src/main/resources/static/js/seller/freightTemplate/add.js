@@ -849,6 +849,7 @@ $(function () {
     });
 
     $('#transportModel_express').on('click', function () {
+        var transportModel_express = $(this);
         if ($(this).prop("checked")) {
             $("#expressDefaultWeight").attr("lay-verify","required|decimal3w");
             $("#expressDefaultWeightMoney").attr("lay-verify","required|decimal3w");
@@ -858,14 +859,23 @@ $(function () {
             $("#expressTableDiv").show();
 
         } else {
-            $("#expressTableDiv").hide();
-            resetexpressTable();
+            layer.confirm('将清空所有项,确定要清空吗?', {
+                btn: ['确定','关闭'], //按钮
+                title:'提示信息'
+            }, function(index){
+                $("#expressTableDiv").hide();
+                resetexpressTable();
+                layer.close(index);
+            }, function(){
+                $(transportModel_express).prop("checked",true);
+            });
 
         }
     });
 
 
     $('#transportModel_ems').on('click', function () {
+        var transportModel_ems = $(this);
         if ($(this).prop("checked")) {
 
             $("#emsDefaultWeight").attr("lay-verify","required|decimal3w");
@@ -875,13 +885,22 @@ $(function () {
 
             $("#emsTableDiv").show();
         } else {
-            $("#emsTableDiv").hide();
-            resetEmsTable();
+            layer.confirm('将清空所有项,确定要清空吗?', {
+                btn: ['确定','关闭'], //按钮
+                title:'提示信息'
+            }, function(index){
+                $("#emsTableDiv").hide();
+                resetEmsTable();
+                layer.close(index);
+            }, function(){
+                $(transportModel_ems).prop("checked",true);
+            });
         }
     });
 
 
     $('#transportModel_ordinaryMail').on('click', function () {
+        var transportModel_ordinaryMail = $(this);
         if ($(this).prop("checked")) {
 
             $("#ordinaryMailDefaultWeight").attr("lay-verify","required|decimal3w");
@@ -891,8 +910,16 @@ $(function () {
 
             $("#ordinaryMailTableDiv").show();
         } else {
-            $("#ordinaryMailTableDiv").hide();
-            resetordinaryMailTable();
+            layer.confirm('将清空所有项,确定要清空吗?', {
+                btn: ['确定','关闭'], //按钮
+                title:'提示信息'
+            }, function(index){
+                $("#ordinaryMailTableDiv").hide();
+                resetordinaryMailTable();
+                layer.close(index);
+            }, function(){
+                $(transportModel_ordinaryMail).prop("checked",true);
+            });
         }
     });
 
