@@ -62,13 +62,13 @@
                         </div>
                         <div class="frm-div-row">
                             <label class="frm-div-row-label" for="ms_city" ><font color="#ff4e00">*</font>发货地 :</label>
-                            <input name="" id="ms_city" style="width:40%" type="text" placeholder="请选择" autocomplete="off"  readonly="true">
-                            <input type="hidden" id="province" name="province" />
-                            <input type="hidden" id="city" name="city" />
-                            <input type="hidden" id="area" name="area"   />
-                            <input type="hidden" id="province_code" name="provinceCode"   />
-                            <input type="hidden" id="city_code" name="cityCode"  />
-                            <input type="hidden" id="area_code" name="areaCode"   />
+                            <input name="" id="ms_city" style="width:40%" type="text" lay-verify="required" placeholder="请选择" autocomplete="off"  readonly="true">
+                            <input type="hidden" id="province" name="deliverProvinceName" />
+                            <input type="hidden" id="city" name="deliverCityName" />
+                            <input type="hidden" id="area" name="deliverAreaName"   />
+                            <input type="hidden" id="province_code" name="deliverProvinceCode"   />
+                            <input type="hidden" id="city_code" name="deliverCityCode"  />
+                            <input type="hidden" id="area_code" name="deliverAreaCode"   />
                         </div>
                         <div class="frm-div-row">
                             <label class="frm-div-row-label" ><font color="#ff4e00">*</font>是否包邮 :</label>
@@ -95,7 +95,7 @@
                         </label>
                         <!--  =====================快递======================= -->
                         <label class="expressDiv" >
-                            <label style="margin-left: 20%;"><input type="checkbox"  value="1" name="transportModels" id="transportModel_express" ckass="transportModelChks" />快递</label>
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="1" name="transportModelExpress" id="transportModel_express" ckass="transportModelChks" />快递</label>
                         </label>
                         <label class="expressDiv">
                             <span></span>
@@ -127,7 +127,7 @@
                         </label>
                         <!--  =====================EMS======================= -->
                         <label class="expressDiv">
-                            <label style="margin-left: 20%;"><input type="checkbox"  value="2" name="transportModels" id="transportModel_ems" ckass="transportModelChks" />EMS</label>
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="2" name="transportModelEms" id="transportModel_ems" ckass="transportModelChks" />EMS</label>
                         </label>
                         <label class="expressDiv">
                             <span></span>
@@ -159,7 +159,7 @@
                         </label>
                         <!--  =====================平邮======================= -->
                         <label class="expressDiv">
-                            <label style="margin-left: 20%;"><input type="checkbox"  value="3" name="transportModels" id="transportModel_ordinaryMail" ckass="transportModelChks" />平邮</label>
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="3" name="transportModelOrdinaryMail" id="transportModel_ordinaryMail" ckass="transportModelChks" />平邮</label>
                         </label>
 
                         <label class="expressDiv" >

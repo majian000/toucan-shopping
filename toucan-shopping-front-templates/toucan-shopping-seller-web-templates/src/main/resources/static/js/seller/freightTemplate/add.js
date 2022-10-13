@@ -929,7 +929,19 @@ $(function () {
         {
             $(".expressDiv").show();
         }else{
-            $(".expressDiv").hide();
+            layer.confirm('将清空自定义运费,确定要清空吗?', {
+                btn: ['确定','关闭'], //按钮
+                title:'提示信息'
+            }, function(index){
+                resetexpressTable();
+                resetEmsTable();
+                resetordinaryMailTable();
+                $(".expressDiv").hide();
+                layer.close(index);
+
+            }, function(){
+                $("#freightStatus_1").prop("checked",true);
+            });
         }
     });
 
