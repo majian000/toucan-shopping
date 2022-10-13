@@ -85,12 +85,31 @@ function scafbtn_click()
         }
     }
 
+    var formDataJson = getAjaxFormDataOnlyObject("#scaf");
+    formDataJson.expressDefaultRule={
+        "defaultWeight":$("#expressDefaultWeight").val(),
+        "defaultWeightMoney":$("#expressDefaultWeightMoney").val(),
+        "defaultAppendWeight":$("#expressDefaultAppendWeight").val(),
+        "defaultAppendWeightMoney":$("#expressDefaultAppendWeightMoney").val()
+    };
+    formDataJson.emsDefaultRule={
+        "defaultWeight":$("#emsDefaultWeight").val(),
+        "defaultWeightMoney":$("#emsDefaultWeightMoney").val(),
+        "defaultAppendWeight":$("#emsDefaultAppendWeight").val(),
+        "defaultAppendWeightMoney":$("#emsDefaultAppendWeightMoney").val()
+    };
+    formDataJson.ordinaryMailDefaultRule={
+        "defaultWeight":$("#ordinaryMailDefaultWeight").val(),
+        "defaultWeightMoney":$("#ordinaryMailDefaultWeightMoney").val(),
+        "defaultAppendWeight":$("#ordinaryMailDefaultAppendWeight").val(),
+        "defaultAppendWeightMoney":$("#ordinaryMailDefaultAppendWeightMoney").val()
+    };
 
     $.ajax({
         type: "POST",
         url: basePath+'/api/freightTemplate/save',
         contentType: "application/json;charset=utf-8",
-        data:  getAjaxFormData("#scaf"),
+        data: JSON.stringify(formDataJson),
         dataType: "json",
         success: function (data) {
             if(data.code==1)
