@@ -105,6 +105,56 @@ function scafbtn_click()
         "defaultAppendWeightMoney":$("#ordinaryMailDefaultAppendWeightMoney").val()
     };
 
+    formDataJson.expressAreaRules = new Array();
+    for(var i=0;i<expressTablePos;i++)
+    {
+        //存在该行数据
+        if($("expressTable_row_"+i)!=null)
+        {
+            formDataJson.expressAreaRules.push({
+                selectAreas:$("#expressTable_row_"+i+"_areas_hidden").val(),
+                firstWeight:$("#expressTable_row_"+i+"_firstWeight").val(),
+                firstWeightMoney:$("#expressTable_row_"+i+"_firstWeightMoney").val(),
+                appendWeight:$("#expressTable_row_"+i+"_appendWeight").val(),
+                appendWeightMoney:$("#expressTable_row_"+i+"_appendWeightMoney").val()
+            });
+        }
+    }
+
+    formDataJson.emsAreaRules = new Array();
+    for(var p=0;p<emsTablePos;p++)
+    {
+        //存在该行数据
+        if($("emsTable_row_"+p)!=null)
+        {
+            formDataJson.emsAreaRules.push({
+                selectAreas:$("#emsTable_row_"+p+"_areas_hidden").val(),
+                firstWeight:$("#emsTable_row_"+p+"_firstWeight").val(),
+                firstWeightMoney:$("#emsTable_row_"+p+"_firstWeightMoney").val(),
+                appendWeight:$("#emsTable_row_"+p+"_appendWeight").val(),
+                appendWeightMoney:$("#emsTable_row_"+p+"_appendWeightMoney").val()
+            });
+        }
+    }
+
+
+
+    formDataJson.ordinaryMailAreaRules = new Array();
+    for(var s=0;s<ordinaryMailTablePos;s++)
+    {
+        //存在该行数据
+        if($("ordinaryMailTable_row_"+s)!=null)
+        {
+            formDataJson.ordinaryMailAreaRules.push({
+                selectAreas:$("#ordinaryMailTable_row_"+s+"_areas_hidden").val(),
+                firstWeight:$("#ordinaryMailTable_row_"+s+"_firstWeight").val(),
+                firstWeightMoney:$("#ordinaryMailTable_row_"+s+"_firstWeightMoney").val(),
+                appendWeight:$("#ordinaryMailTable_row_"+s+"_appendWeight").val(),
+                appendWeightMoney:$("#ordinaryMailTable_row_"+s+"_appendWeightMoney").val()
+            });
+        }
+    }
+
     $.ajax({
         type: "POST",
         url: basePath+'/api/freightTemplate/save',
@@ -184,11 +234,11 @@ function expressTableAddRowEvent()
     expressTablePos++;
     $("#expressTableBody").append("<tr id=\"expressTable_row_"+expressTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"expressTable_row_"+expressTablePos+"_areas\" class=\"form-control-static\">\n" +
-        "                                </div><input type=\"hidden\" id=\"expressTable_row_"+expressTablePos+"_areas_hidden\" class=\"expressTableAreas\" name=\"expressAreaRules["+expressTablePos+"].selectAreas\" value=\"\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"expressAreaRules["+expressTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
+        "                                </div><input type=\"hidden\" id=\"expressTable_row_"+expressTablePos+"_areas_hidden\" class=\"expressTableAreas\"  value=\"\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"expressTable_row_"+expressTablePos+"_firstWeight\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"expressTable_row_"+expressTablePos+"_firstWeightMoney\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"expressTable_row_"+expressTablePos+"_appendWeight\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"expressTable_row_"+expressTablePos+"_appendWeightMoney\"  style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\">\n" +
         "                                            <a data-row-id=\""+expressTablePos+"\" data-toggle=\"modal\" class='expressTableSelectRegion'  style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
         "                                            &nbsp;\n" +
@@ -404,11 +454,11 @@ function emsTableAddRowEvent()
     emsTablePos++;
     $("#emsTableBody").append("<tr id=\"emsTable_row_"+emsTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"emsTable_row_"+emsTablePos+"_areas\" class=\"form-control-static\">\n" +
-        "                                </div><input type=\"hidden\" id=\"emsTable_row_"+emsTablePos+"_areas_hidden\" class=\"emsTableAreas\" name=\"emsAreaRules["+emsTablePos+"].selectAreas\" value=\"\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"emsAreaRules["+emsTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"emsAreaRules["+emsTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"emsAreaRules["+emsTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"emsAreaRules["+emsTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
+        "                                </div><input type=\"hidden\" id=\"emsTable_row_"+emsTablePos+"_areas_hidden\" class=\"emsTableAreas\"  value=\"\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"emsTable_row_"+emsTablePos+"_firstWeight\" style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"emsTable_row_"+emsTablePos+"_firstWeightMoney\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"emsTable_row_"+emsTablePos+"_appendWeight\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"emsTable_row_"+emsTablePos+"_appendWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\">\n" +
         "                                            <a data-row-id=\""+emsTablePos+"\" data-toggle=\"modal\" class='emsTableSelectRegion'  style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
         "                                            &nbsp;\n" +
@@ -627,10 +677,10 @@ function ordinaryMailTableAddRowEvent()
     $("#ordinaryMailTableBody").append("<tr id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_areas\" class=\"form-control-static\">\n" +
         "                                </div><input type=\"hidden\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_areas_hidden\" class=\"ordinaryMailTableAreas\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].selectAreas\" value=\"\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].firstWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].firstWeightMoney\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].appendWeight\" style=\"width:60px;\"></td>\n" +
-        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].appendWeightMoney\" style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_firstWeight\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_firstWeightMoney\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_appendWeight\"  style=\"width:60px;\"></td>\n" +
+        "                                        <td style=\"text-align:center\"><input type=\"text\" lay-verify=\"required|decimal3w\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_appendWeightMoney\" style=\"width:60px;\"></td>\n" +
         "                                        <td style=\"text-align:center\">\n" +
         "                                            <a data-row-id=\""+ordinaryMailTablePos+"\" data-toggle=\"modal\" class='ordinaryMailTableSelectRegion'  style=\"color:blue;cursor: pointer;\">选择区域</a>\n" +
         "                                            &nbsp;\n" +
