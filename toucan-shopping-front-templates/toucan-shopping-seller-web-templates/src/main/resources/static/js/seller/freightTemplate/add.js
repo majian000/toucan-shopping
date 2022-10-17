@@ -109,7 +109,8 @@ function scafbtn_click()
     for(var i=0;i<expressTablePos;i++)
     {
         //存在该行数据
-        if($("expressTable_row_"+i)!=null)
+        var rowAreas = $("#expressTable_row_"+i+"_areas_hidden").val();
+        if(rowAreas!=null&&rowAreas!="")
         {
             formDataJson.expressAreaRules.push({
                 selectAreas:$("#expressTable_row_"+i+"_areas_hidden").val(),
@@ -124,8 +125,9 @@ function scafbtn_click()
     formDataJson.emsAreaRules = new Array();
     for(var p=0;p<emsTablePos;p++)
     {
+        var rowAreas = $("#emsTable_row_"+p+"_areas_hidden").val();
         //存在该行数据
-        if($("emsTable_row_"+p)!=null)
+        if(rowAreas!=null&&rowAreas!="")
         {
             formDataJson.emsAreaRules.push({
                 selectAreas:$("#emsTable_row_"+p+"_areas_hidden").val(),
@@ -142,8 +144,9 @@ function scafbtn_click()
     formDataJson.ordinaryMailAreaRules = new Array();
     for(var s=0;s<ordinaryMailTablePos;s++)
     {
+        var rowAreas = $("#ordinaryMailTable_row_"+s+"_areas_hidden").val();
         //存在该行数据
-        if($("ordinaryMailTable_row_"+s)!=null)
+        if(rowAreas!=null&&rowAreas!="")
         {
             formDataJson.ordinaryMailAreaRules.push({
                 selectAreas:$("#ordinaryMailTable_row_"+s+"_areas_hidden").val(),
@@ -231,7 +234,6 @@ function resetexpressTable()
  */
 function expressTableAddRowEvent()
 {
-    expressTablePos++;
     $("#expressTableBody").append("<tr id=\"expressTable_row_"+expressTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"expressTable_row_"+expressTablePos+"_areas\" class=\"form-control-static\">\n" +
         "                                </div><input type=\"hidden\" id=\"expressTable_row_"+expressTablePos+"_areas_hidden\" class=\"expressTableAreas\"  value=\"\"></td>\n" +
@@ -246,6 +248,7 @@ function expressTableAddRowEvent()
         "                                        </td>\n" +
         "                                    </tr>");
 
+    expressTablePos++;
     bindExpressTableDelRowEvent();
 }
 
@@ -451,7 +454,6 @@ function resetEmsTable()
  */
 function emsTableAddRowEvent()
 {
-    emsTablePos++;
     $("#emsTableBody").append("<tr id=\"emsTable_row_"+emsTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"emsTable_row_"+emsTablePos+"_areas\" class=\"form-control-static\">\n" +
         "                                </div><input type=\"hidden\" id=\"emsTable_row_"+emsTablePos+"_areas_hidden\" class=\"emsTableAreas\"  value=\"\"></td>\n" +
@@ -465,6 +467,7 @@ function emsTableAddRowEvent()
         "                                            <a data-row-id=\""+emsTablePos+"\" class='emsTableDelRow' style=\"color:red;cursor: pointer;\">删除</a>\n" +
         "                                        </td>\n" +
         "                                    </tr>");
+    emsTablePos++;
 
     bindEmsTableDelRowEvent();
 }
@@ -673,7 +676,6 @@ function resetordinaryMailTable()
  */
 function ordinaryMailTableAddRowEvent()
 {
-    ordinaryMailTablePos++;
     $("#ordinaryMailTableBody").append("<tr id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"\">\n" +
         "                                        <td style=\"text-align:center\"><div id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_areas\" class=\"form-control-static\">\n" +
         "                                </div><input type=\"hidden\" id=\"ordinaryMailTable_row_"+ordinaryMailTablePos+"_areas_hidden\" class=\"ordinaryMailTableAreas\" name=\"ordinaryMailAreaRules["+ordinaryMailTablePos+"].selectAreas\" value=\"\"></td>\n" +
@@ -687,6 +689,7 @@ function ordinaryMailTableAddRowEvent()
         "                                            <a data-row-id=\""+ordinaryMailTablePos+"\" class='ordinaryMailTableDelRow' style=\"color:red;cursor: pointer;\">删除</a>\n" +
         "                                        </td>\n" +
         "                                    </tr>");
+    ordinaryMailTablePos++;
 
     bindordinaryMailTableDelRowEvent();
 }
