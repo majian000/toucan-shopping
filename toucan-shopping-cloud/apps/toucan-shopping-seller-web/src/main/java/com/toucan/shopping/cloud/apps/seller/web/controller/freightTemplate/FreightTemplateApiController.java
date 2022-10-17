@@ -13,6 +13,7 @@ import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -101,6 +106,46 @@ public class FreightTemplateApiController extends BaseController {
     {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         try {
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            if(StringUtils.isEmpty(userMainId))
+            {
+                logger.warn("保存运费模板失败 没有找到用户ID {} ",userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请稍后重试");
+                return resultObjectVO;
+            }
+            freightTemplateVO.setUserMainId(Long.parseLong(userMainId));
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+                SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if(sellerShopVO!=null) {
+                    freightTemplateVO.setShopId(sellerShopVO.getId());
+                }
+            }
+            freightTemplateVO.setCreateDate(new Date());
+
+            List<String> transportModels= new LinkedList<>();
+            if(StringUtils.isNotEmpty(freightTemplateVO.getTransportModelExpress()))
+            {
+                transportModels.add(freightTemplateVO.getTransportModelExpress());
+            }
+            if(StringUtils.isNotEmpty(freightTemplateVO.getTransportModelEms()))
+            {
+                transportModels.add(freightTemplateVO.getTransportModelEms());
+            }
+            if(StringUtils.isNotEmpty(freightTemplateVO.getTransportModelOrdinaryMail()))
+            {
+                transportModels.add(freightTemplateVO.getTransportModelOrdinaryMail());
+            }
+            if(CollectionUtils.isNotEmpty(transportModels))
+            {
+                freightTemplateVO.setTransportModel(transportModels.stream().map(String::valueOf).collect(Collectors.joining(",")));
+            }
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), freightTemplateVO);
+            resultObjectVO = feignFreightTemplateService.save(requestJsonVO);
 
         }catch(Exception e)
         {

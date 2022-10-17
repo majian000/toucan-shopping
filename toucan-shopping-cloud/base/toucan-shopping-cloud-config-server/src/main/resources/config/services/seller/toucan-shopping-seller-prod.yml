@@ -47,6 +47,7 @@ toucan:
   seller:
     default-shop-logo: group1/M00/00/01/rB5PVWEniGuAEJw5AAA1H6b9sow877.png
     shop-category-max-count: 150 #默认店铺最大分类数量
+    freight-template-max-count: 120 #默认店铺最大运费模板数量
   machine-id: 2201 #机器编码
   app-code: 10001002 #用户中心 应用编码
   #雪花算法ID相关

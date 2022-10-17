@@ -40,6 +40,21 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 resultObjectVO.setMsg("保存登录历史失败");
                 return resultObjectVO;
             }
+
+            @Override
+            public ResultObjectVO save(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerLoginHistoryService.save失败 params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败");
+                return resultObjectVO;
+            }
         };
     }
 }

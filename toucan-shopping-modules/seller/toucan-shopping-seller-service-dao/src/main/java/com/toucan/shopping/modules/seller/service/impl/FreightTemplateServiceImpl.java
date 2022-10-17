@@ -9,6 +9,7 @@ import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.service.FreightTemplateService;
 import com.toucan.shopping.modules.seller.service.SellerShopService;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,16 @@ public class FreightTemplateServiceImpl implements FreightTemplateService {
         pageInfo.setList(freightTemplateMapper.queryListPage(queryPageInfo));
         pageInfo.setTotal(freightTemplateMapper.queryListPageCount(queryPageInfo));
         return pageInfo;
+    }
+
+    @Override
+    public Long queryCount(FreightTemplateVO freightTemplateVO) {
+        return freightTemplateMapper.queryCount(freightTemplateVO);
+    }
+
+    @Override
+    public int save(FreightTemplate entity) {
+        return freightTemplateMapper.insert(entity);
     }
 
 }

@@ -158,6 +158,21 @@ function scafbtn_click()
         }
     }
 
+    if(formDataJson.freightStatus=="1")
+    {
+        if((formDataJson.transportModelExpress==null||formDataJson.transportModelExpress=="")
+            &&(formDataJson.transportModelEms==null||formDataJson.transportModelEms=="")
+            &&(formDataJson.transportModelOrdinaryMail==null||formDataJson.transportModelOrdinaryMail==""))
+        {
+
+            $.message({
+                message: "请选择运送方式",
+                type: 'error'
+            });
+            return;
+        }
+    }
+
     $.ajax({
         type: "POST",
         url: basePath+'/api/freightTemplate/save',

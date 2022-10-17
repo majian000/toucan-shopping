@@ -37,9 +37,30 @@
     <sql id="queryWhere">
         and t.delete_status = 0
 
+        <if test="id!=null  ">
+            and t.id = #{id}
+        </if>
+
     </sql>
 
 
+    <sql id="queryVOWhere">
+        and t.delete_status = 0
+
+        <if test="id!=null  ">
+            and t.id = #{id}
+        </if>
+
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+
+        <if test="shopId!=null  ">
+            and t.shop_id = #{shopId}
+        </if>
+
+    </sql>
 
 
     <select id="queryListPage" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo">
@@ -63,5 +84,29 @@
         </where>
 
     </select>
+
+
+
+    <select id="queryCount" resultType="java.lang.Long" parameterType="com.toucan.shopping.modules.seller.vo.FreightTemplateVO">
+        select count(*) from t_freight_template t
+        <where>
+            1=1
+            <include refid="queryVOWhere" />
+        </where>
+
+    </select>
+
+
+
+    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.FreightTemplate" >
+        insert into t_freight_template(id,user_main_id,name,freight_status,deliver_province_code,
+        deliver_city_code,deliver_area_code,deliver_province_name,deliver_city_name,deliver_area_name,transport_model,
+        valuation_method,template_sort,shop_id,remark,delete_status,create_date,update_date)
+        values(#{id},#{userMainId},#{name},#{freightStatus},#{deliverProvinceCode},#{deliverCityCode},
+        #{deliverAreaCode},#{deliverProvinceName},#{deliverCityName},#{deliverAreaName},#{transportModel},
+        #{valuationMethod},#{templateSort},#{shopId},#{remark},#{deleteStatus},#{createDate},#{updateDate})
+    </insert>
+
+
 
 </mapper>
