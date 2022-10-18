@@ -145,4 +145,13 @@ public interface FeignAreaService {
     @RequestMapping(value="/query/tree/child",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     ResultObjectVO queryTreeChildByPid(@RequestBody RequestJsonVO requestJsonVO);
 
+
+    /**
+     * 根据所有市级名称查询出所有市级对象
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/city/list/by/names",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryCityListByNames(@RequestBody RequestJsonVO requestJsonVO);
+
 }

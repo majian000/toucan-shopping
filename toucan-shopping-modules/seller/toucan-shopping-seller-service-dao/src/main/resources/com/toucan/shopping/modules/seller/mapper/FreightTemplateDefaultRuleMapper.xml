@@ -35,5 +35,14 @@
 
 
 
+    <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.FreightTemplateDefaultRule" >
+        insert into t_freight_template_default_rule(id,user_main_id,shop_id,transport_model,
+        default_weight,default_weight_money,default_append_weight,default_append_weight_money,template_id,
+        delete_status,create_date,update_date)
+        values(#{id},#{userMainId},#{shopId},#{transportModel},#{defaultWeight},#{defaultWeightMoney},
+        #{defaultAppendWeight},#{defaultAppendWeightMoney},#{templateId},#{deleteStatus},#{createDate},#{updateDate})
+    </insert>
+
+
 
 </mapper>

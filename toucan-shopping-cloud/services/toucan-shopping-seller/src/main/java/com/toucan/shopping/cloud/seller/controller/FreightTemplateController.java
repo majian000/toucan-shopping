@@ -10,14 +10,19 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.constant.ShopConstant;
 import com.toucan.shopping.modules.seller.entity.FreightTemplate;
+import com.toucan.shopping.modules.seller.entity.FreightTemplateAreaRule;
+import com.toucan.shopping.modules.seller.entity.FreightTemplateDefaultRule;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.redis.FreightTemplateKey;
 import com.toucan.shopping.modules.seller.redis.SellerShopKey;
+import com.toucan.shopping.modules.seller.service.FreightTemplateDefaultRuleService;
 import com.toucan.shopping.modules.seller.service.FreightTemplateService;
 import com.toucan.shopping.modules.seller.service.SellerLoginHistoryService;
 import com.toucan.shopping.modules.seller.service.SellerShopService;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateDefaultRuleVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
@@ -31,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +61,8 @@ public class FreightTemplateController {
     @Autowired
     private FreightTemplateService freightTemplateService;
 
+    @Autowired
+    private FreightTemplateDefaultRuleService freightTemplateDefaultRuleService;
 
     @Autowired
     private Toucan toucan;
@@ -193,7 +201,65 @@ public class FreightTemplateController {
             if (row < 1) {
                 resultObjectVO.setCode(ResultVO.FAILD);
                 resultObjectVO.setMsg("请重试!");
+                return resultObjectVO;
             }
+
+            //快递默认运费规则
+            if(freightTemplateVO.getExpressDefaultRule()!=null
+                 &&freightTemplateVO.getExpressDefaultRule().getDefaultWeight()!=null) {
+
+                FreightTemplateDefaultRuleVO expressDefaultRule = freightTemplateVO.getExpressDefaultRule();
+                expressDefaultRule.setId(idGenerator.id());
+                expressDefaultRule.setUserMainId(freightTemplateVO.getUserMainId());
+                expressDefaultRule.setShopId(freightTemplateVO.getShopId());
+                expressDefaultRule.setCreateDate(new Date());
+                expressDefaultRule.setDeleteStatus((short)0);
+                expressDefaultRule.setTemplateId(freightTemplateVO.getId());
+                expressDefaultRule.setTransportModel("1");
+                freightTemplateDefaultRuleService.save(expressDefaultRule);
+
+                if(!CollectionUtils.isEmpty(freightTemplateVO.getExpressAreaRules()))
+                {
+                    List<FreightTemplateAreaRule> freightTemplateAreaRules = new LinkedList<>();
+                    for(FreightTemplateAreaRuleVO freightTemplateAreaRuleVO:freightTemplateVO.getExpressAreaRules())
+                    {
+                        if(StringUtils.isNotEmpty(freightTemplateAreaRuleVO.getSelectAreas())) {
+                            FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                        }
+                    }
+                }
+
+            }
+
+            //EMS默认运费规则
+            if(freightTemplateVO.getEmsDefaultRule()!=null
+                &&freightTemplateVO.getEmsDefaultRule().getDefaultWeight()!=null) {
+                FreightTemplateDefaultRuleVO emsDefaultRule = freightTemplateVO.getEmsDefaultRule();
+                emsDefaultRule.setId(idGenerator.id());
+                emsDefaultRule.setUserMainId(freightTemplateVO.getUserMainId());
+                emsDefaultRule.setShopId(freightTemplateVO.getShopId());
+                emsDefaultRule.setCreateDate(new Date());
+                emsDefaultRule.setDeleteStatus((short)0);
+                emsDefaultRule.setTemplateId(freightTemplateVO.getId());
+                emsDefaultRule.setTransportModel("2");
+                freightTemplateDefaultRuleService.save(emsDefaultRule);
+            }
+
+
+            //平邮默认运费规则
+            if(freightTemplateVO.getOrdinaryMailDefaultRule()!=null
+                &&freightTemplateVO.getOrdinaryMailDefaultRule().getDefaultWeight()!=null) {
+                FreightTemplateDefaultRuleVO ordinaryMailDefaultRule = freightTemplateVO.getOrdinaryMailDefaultRule();
+                ordinaryMailDefaultRule.setId(idGenerator.id());
+                ordinaryMailDefaultRule.setUserMainId(freightTemplateVO.getUserMainId());
+                ordinaryMailDefaultRule.setShopId(freightTemplateVO.getShopId());
+                ordinaryMailDefaultRule.setCreateDate(new Date());
+                ordinaryMailDefaultRule.setDeleteStatus((short)0);
+                ordinaryMailDefaultRule.setTemplateId(freightTemplateVO.getId());
+                ordinaryMailDefaultRule.setTransportModel("3");
+                freightTemplateDefaultRuleService.save(ordinaryMailDefaultRule);
+            }
+
         }catch(Exception e)
         {
             resultObjectVO.setCode(ResultVO.FAILD);

@@ -1,16 +1,20 @@
 package com.toucan.shopping.cloud.apps.seller.web.controller.freightTemplate;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
+import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
+import com.toucan.shopping.modules.area.vo.AreaVO;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.seller.entity.FreightTemplateAreaRule;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -21,9 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -46,6 +48,9 @@ public class FreightTemplateApiController extends BaseController {
 
     @Autowired
     private FeignSellerShopService feignSellerShopService;
+
+    @Autowired
+    private FeignAreaService feignAreaService;
 
 
     /**
@@ -143,6 +148,58 @@ public class FreightTemplateApiController extends BaseController {
             if(CollectionUtils.isNotEmpty(transportModels))
             {
                 freightTemplateVO.setTransportModel(transportModels.stream().map(String::valueOf).collect(Collectors.joining(",")));
+            }
+
+            if(freightTemplateVO.getFreightStatus().shortValue()==1) {
+                List<String> cityNameList = new LinkedList<>();
+                //查询出快递的所选城市
+                if (CollectionUtils.isNotEmpty(freightTemplateVO.getExpressAreaRules())) {
+                    for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getExpressAreaRules()) {
+                        String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
+                        if (StringUtils.isNotEmpty(selectAreas)) {
+                            cityNameList.addAll(Arrays.asList(selectAreas.split("，")));
+                        }
+                    }
+                }
+                //查询出EMS的所选城市
+                if (CollectionUtils.isNotEmpty(freightTemplateVO.getEmsAreaRules())) {
+                    for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getEmsAreaRules()) {
+                        String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
+                        if (StringUtils.isNotEmpty(selectAreas)) {
+                            cityNameList.addAll(Arrays.asList(selectAreas.split("，")));
+                        }
+                    }
+                }
+                //查询出平邮的所选城市
+                if (CollectionUtils.isNotEmpty(freightTemplateVO.getOrdinaryMailAreaRules())) {
+                    for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getOrdinaryMailAreaRules()) {
+                        String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
+                        if (StringUtils.isNotEmpty(selectAreas)) {
+                            cityNameList.addAll(Arrays.asList(selectAreas.split("，")));
+                        }
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(cityNameList)) {
+                    AreaVO queryAreaVO = new AreaVO();
+                    queryAreaVO.setCityNameList(cityNameList);
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAreaVO);
+                    resultObjectVO = feignAreaService.queryCityListByNames(requestJsonVO);
+                    if (resultObjectVO.isSuccess()) {
+
+                        List<AreaVO> areaVOS = resultObjectVO.formatDataList(AreaVO.class);
+                        if (CollectionUtils.isNotEmpty(areaVOS)) {
+                            Map<String, String> cityCodeToProvinceCode = new HashMap<>(); //市级编码对应的省级编码
+                            Map<String, String> cityNameToCityCode = new HashMap<>(); //市级名称对应市级编码
+                            for (AreaVO areaVO : areaVOS) {
+                                cityNameToCityCode.put(areaVO.getCity(), areaVO.getCode());
+                                cityCodeToProvinceCode.put(areaVO.getCode(), areaVO.getParentCode());
+                            }
+
+                            freightTemplateVO.setCityNameToCityCode(cityNameToCityCode);
+                            freightTemplateVO.setCityCodeToProvinceCode(cityCodeToProvinceCode);
+                        }
+                    }
+                }
             }
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), freightTemplateVO);
             resultObjectVO = feignFreightTemplateService.save(requestJsonVO);

@@ -39,6 +39,18 @@
         <if test="name!=null and name!=''">
             and ( t.province  like concat('%',#{name},'%') or t.city  like concat('%',#{name},'%') or t.area  like concat('%',#{name},'%') )
         </if>
+
+        <if test="type!=null">
+            and t.type = #{type}
+        </if>
+
+        <if test="cityNameList!=null and cityNameList.size>0 ">
+            and t.city in
+            <foreach item="item" index="index" collection="cityNameList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
     </sql>
 
     <sql id="queryListWhere">

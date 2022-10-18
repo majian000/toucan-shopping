@@ -5,6 +5,7 @@ import com.toucan.shopping.modules.seller.entity.SellerLoginHistory;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运费模板
@@ -32,6 +33,11 @@ public class FreightTemplateVO extends FreightTemplate {
     private FreightTemplateDefaultRuleVO ordinaryMailDefaultRule; //平邮默认运费规则
 
     private List<FreightTemplateAreaRuleVO> ordinaryMailAreaRules; //平邮地区规则
+
+
+    private Map<String,String> cityCodeToProvinceCode; //市级编码对应的省级编码
+
+    private Map<String,String> cityNameToCityCode; //市级名称对应市级编码
 
 
 

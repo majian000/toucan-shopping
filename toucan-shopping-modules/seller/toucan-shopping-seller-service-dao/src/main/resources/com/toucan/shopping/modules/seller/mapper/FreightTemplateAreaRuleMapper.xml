@@ -42,5 +42,19 @@
 
 
 
+    <insert id="inserts"   keyProperty="id" >
+        insert into t_freight_template_area_rule(id,user_main_id,shop_id,province_code,
+        city_code,area_code,province_name,city_name,area_name,first_weight,first_weight_money,append_weight,append_weight_money,
+        group_id,default_rule_id,template_id,delete_status,create_date,update_date)
+
+        values
+        <foreach collection="entitys" item="entity" separator=",">
+            (#{entity.id},#{entity.userMainId},#{entity.shopId},#{entity.provinceCode},#{entity.cityCode},#{entity.areaCode},#{entity.provinceName},
+            #{entity.cityName},#{entity.areaName},#{entity.firstWeight},#{entity.firstWeightMoney},#{entity.appendWeight},#{entity.appendWeightMoney},#{entity.groupId},
+            #{entity.defaultRuleId},#{entity.templateId},#{entity.deleteStatus},#{entity.createDate},#{entity.updateDate})
+        </foreach>
+
+    </insert>
+
 
 </mapper>
