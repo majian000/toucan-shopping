@@ -79,14 +79,6 @@ function drawTable(pageResult)
             {
                 deliverArea+="/"+row.deliverAreaName;
             }
-            var freightStatusName="";
-            if(row.freightStatus!=null&&row.freightStatus=="1")
-            {
-                freightStatusName="自定义运费";
-            }else if(row.freightStatus!=null&&row.freightStatus=="2")
-            {
-                freightStatusName="包邮";
-            }
             var transportModelName=row.transportModel;
             if(transportModelName==null) {
                 transportModelName="";
@@ -106,6 +98,18 @@ function drawTable(pageResult)
             valuationMethodName = valuationMethodName.replace('1', '按件数');
             valuationMethodName = valuationMethodName.replace('2', '按重量');
             valuationMethodName = valuationMethodName.replaceAll(",", "/");
+
+
+            var freightStatusName="";
+            if(row.freightStatus!=null&&row.freightStatus=="1")
+            {
+                freightStatusName="自定义运费";
+            }else if(row.freightStatus!=null&&row.freightStatus=="2")
+            {
+                freightStatusName="包邮";
+                valuationMethodName="";
+            }
+
 
             tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
