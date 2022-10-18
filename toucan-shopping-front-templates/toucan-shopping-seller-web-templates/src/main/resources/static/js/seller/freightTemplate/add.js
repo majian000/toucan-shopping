@@ -173,6 +173,10 @@ function scafbtn_click()
         }
     }
 
+    loading.showLoading({
+        type:6,
+        tip:"保存中..."
+    });
     $.ajax({
         type: "POST",
         url: basePath+'/api/freightTemplate/save',
@@ -182,8 +186,9 @@ function scafbtn_click()
         success: function (data) {
             if(data.code==1)
             {
-                window.location.href=basePath+"/page/freightTemplate/list";
+                window.location.href=basePath+"/page/freightTemplate/index";
             }else{
+                loading.hideLoading();
                 $.message({
                     message: data.msg,
                     type: 'error'
@@ -195,6 +200,7 @@ function scafbtn_click()
                 message: "请稍后重试",
                 type: 'error'
             });
+            loading.hideLoading();
         }
     });
 

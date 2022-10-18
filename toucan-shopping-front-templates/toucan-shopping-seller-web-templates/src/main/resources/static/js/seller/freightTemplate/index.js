@@ -55,12 +55,9 @@ function drawTable(pageResult)
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:100px;\" >名称</td>\n" +
         "                            <td style=\"width:100px;\" >发货地</td>\n" +
-        "                            <td style=\"width:300px;\">运送到</td>\n" +
+        "                            <td style=\"width:100px;\" >是否包邮</td>\n" +
         "                            <td style=\"width:100px;\" >运送方式</td>\n" +
-        "                            <td style=\"width:100px;\" >首件(个)</td>\n" +
-        "                            <td style=\"width:100px;\" >运费(元)</td>\n" +
-        "                            <td style=\"width:100px;\" >续件(个)</td>\n" +
-        "                            <td style=\"width:100px;\" >运费(元)</td>\n" +
+        "                            <td style=\"width:100px;\" >计价方式</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
         "                            <td style=\"width:200px;\">操作</td>\n" +
         "                        </tr>";
@@ -69,7 +66,57 @@ function drawTable(pageResult)
         for(var i=0;i<pageResult.list.length;i++)
         {
             var row = pageResult.list[i];
+            var deliverArea="";
+            if(row.deliverProvinceName!=null&&row.deliverProvinceName!="")
+            {
+                deliverArea+=row.deliverProvinceName;
+            }
+            if(row.deliverCityName!=null&&row.deliverCityName!="")
+            {
+                deliverArea+="/"+row.deliverCityName;
+            }
+            if(row.deliverAreaName!=null&&row.deliverAreaName!="")
+            {
+                deliverArea+="/"+row.deliverAreaName;
+            }
+            var freightStatusName="";
+            if(row.freightStatus!=null&&row.freightStatus=="1")
+            {
+                freightStatusName="自定义运费";
+            }else if(row.freightStatus!=null&&row.freightStatus=="2")
+            {
+                freightStatusName="包邮";
+            }
+            var transportModelName=row.transportModel;
+            if(transportModelName==null) {
+                transportModelName="";
+            }
+            transportModelName = transportModelName.replace('1', '快递');
+            transportModelName = transportModelName.replace('2', 'EMS');
+            transportModelName = transportModelName.replace('3', '平邮');
+            transportModelName = transportModelName.replaceAll(",", "/");
 
+            var valuationMethodName=row.valuationMethod;
+            if(valuationMethodName==null)
+            {
+                valuationMethodName="";
+            }
+            valuationMethodName+="";
+
+            valuationMethodName = valuationMethodName.replace('1', '按件数');
+            valuationMethodName = valuationMethodName.replace('2', '按重量');
+            valuationMethodName = valuationMethodName.replaceAll(",", "/");
+
+            tableHtml+=" <tr align=\"center\" class=\"tabTd\">\n" ;
+            tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+deliverArea+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+freightStatusName+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+transportModelName+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+valuationMethodName+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\"></div></td>\n" ;
+            tableHtml+=    "                        </tr>";
         }
 
     }
