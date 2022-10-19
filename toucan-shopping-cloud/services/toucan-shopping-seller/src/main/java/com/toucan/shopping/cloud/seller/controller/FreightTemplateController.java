@@ -8,6 +8,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
+import com.toucan.shopping.modules.seller.constant.FreightTemplateConstant;
 import com.toucan.shopping.modules.seller.constant.ShopConstant;
 import com.toucan.shopping.modules.seller.entity.FreightTemplate;
 import com.toucan.shopping.modules.seller.entity.FreightTemplateAreaRule;
@@ -17,10 +18,7 @@ import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
 import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.redis.FreightTemplateKey;
 import com.toucan.shopping.modules.seller.redis.SellerShopKey;
-import com.toucan.shopping.modules.seller.service.FreightTemplateDefaultRuleService;
-import com.toucan.shopping.modules.seller.service.FreightTemplateService;
-import com.toucan.shopping.modules.seller.service.SellerLoginHistoryService;
-import com.toucan.shopping.modules.seller.service.SellerShopService;
+import com.toucan.shopping.modules.seller.service.*;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateDefaultRuleVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
@@ -63,6 +61,9 @@ public class FreightTemplateController {
 
     @Autowired
     private FreightTemplateDefaultRuleService freightTemplateDefaultRuleService;
+
+    @Autowired
+    private FreightTemplateAreaRuleService freightTemplateAreaRuleService;
 
     @Autowired
     private Toucan toucan;
@@ -218,14 +219,47 @@ public class FreightTemplateController {
                 expressDefaultRule.setTransportModel("1");
                 freightTemplateDefaultRuleService.save(expressDefaultRule);
 
+                //保存快递的所有选择项
                 if(!CollectionUtils.isEmpty(freightTemplateVO.getExpressAreaRules()))
                 {
                     List<FreightTemplateAreaRule> freightTemplateAreaRules = new LinkedList<>();
                     for(FreightTemplateAreaRuleVO freightTemplateAreaRuleVO:freightTemplateVO.getExpressAreaRules())
                     {
                         if(StringUtils.isNotEmpty(freightTemplateAreaRuleVO.getSelectAreas())) {
-                            FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                            String[] selectAreaArray = freightTemplateAreaRuleVO.getSelectAreas().split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT);
+                            Long groupId = idGenerator.id();
+                            if(selectAreaArray!=null&&selectAreaArray.length>0)
+                            {
+                                //查询出这行选的所有地市
+                                for(String selectArea:selectAreaArray)
+                                {
+                                    FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                                    BeanUtils.copyProperties(freightTemplateAreaRule,freightTemplateAreaRuleVO);
+                                    freightTemplateAreaRule.setId(idGenerator.id());
+                                    freightTemplateAreaRule.setTransportModel("1");
+                                    freightTemplateAreaRule.setCityName(selectArea);
+                                    freightTemplateAreaRule.setGroupId(groupId);
+                                    freightTemplateAreaRule.setCityCode(freightTemplateVO.getCityNameToCityCode().get(selectArea));
+                                    freightTemplateAreaRule.setProvinceCode(freightTemplateVO.getCityCodeToProvinceCode().get(freightTemplateAreaRule.getCityCode()));
+                                    freightTemplateAreaRule.setProvinceName(freightTemplateVO.getCityNameToProvinceName().get(selectArea));
+                                    freightTemplateAreaRule.setAreaCode("");
+                                    freightTemplateAreaRule.setAreaName("");
+                                    freightTemplateAreaRule.setTemplateId(freightTemplateVO.getId());
+                                    freightTemplateAreaRule.setDefaultRuleId(expressDefaultRule.getId());
+                                    freightTemplateAreaRule.setUserMainId(freightTemplateVO.getUserMainId());
+                                    freightTemplateAreaRule.setShopId(freightTemplateVO.getShopId());
+                                    freightTemplateAreaRule.setCreateDate(new Date());
+                                    freightTemplateAreaRule.setDeleteStatus((short)0);
+                                    freightTemplateAreaRules.add(freightTemplateAreaRule);
+                                }
+                            }
                         }
+                    }
+
+                    //防止insert超过1000行 所以在这里先进行保存
+                    if(!CollectionUtils.isEmpty(freightTemplateAreaRules))
+                    {
+                        freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
                     }
                 }
 
@@ -243,6 +277,51 @@ public class FreightTemplateController {
                 emsDefaultRule.setTemplateId(freightTemplateVO.getId());
                 emsDefaultRule.setTransportModel("2");
                 freightTemplateDefaultRuleService.save(emsDefaultRule);
+
+
+                //保存EMS的所有选择项
+                if(!CollectionUtils.isEmpty(freightTemplateVO.getEmsAreaRules()))
+                {
+                    List<FreightTemplateAreaRule> freightTemplateAreaRules = new LinkedList<>();
+                    for(FreightTemplateAreaRuleVO freightTemplateAreaRuleVO:freightTemplateVO.getEmsAreaRules())
+                    {
+                        if(StringUtils.isNotEmpty(freightTemplateAreaRuleVO.getSelectAreas())) {
+                            String[] selectAreaArray = freightTemplateAreaRuleVO.getSelectAreas().split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT);
+                            Long groupId = idGenerator.id();
+                            if(selectAreaArray!=null&&selectAreaArray.length>0)
+                            {
+                                //查询出这行选的所有地市
+                                for(String selectArea:selectAreaArray)
+                                {
+                                    FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                                    BeanUtils.copyProperties(freightTemplateAreaRule,freightTemplateAreaRuleVO);
+                                    freightTemplateAreaRule.setId(idGenerator.id());
+                                    freightTemplateAreaRule.setTransportModel("2");
+                                    freightTemplateAreaRule.setCityName(selectArea);
+                                    freightTemplateAreaRule.setGroupId(groupId);
+                                    freightTemplateAreaRule.setCityCode(freightTemplateVO.getCityNameToCityCode().get(selectArea));
+                                    freightTemplateAreaRule.setProvinceCode(freightTemplateVO.getCityCodeToProvinceCode().get(freightTemplateAreaRule.getCityCode()));
+                                    freightTemplateAreaRule.setProvinceName(freightTemplateVO.getCityNameToProvinceName().get(selectArea));
+                                    freightTemplateAreaRule.setAreaCode("");
+                                    freightTemplateAreaRule.setAreaName("");
+                                    freightTemplateAreaRule.setTemplateId(freightTemplateVO.getId());
+                                    freightTemplateAreaRule.setDefaultRuleId(emsDefaultRule.getId());
+                                    freightTemplateAreaRule.setUserMainId(freightTemplateVO.getUserMainId());
+                                    freightTemplateAreaRule.setShopId(freightTemplateVO.getShopId());
+                                    freightTemplateAreaRule.setCreateDate(new Date());
+                                    freightTemplateAreaRule.setDeleteStatus((short)0);
+                                    freightTemplateAreaRules.add(freightTemplateAreaRule);
+                                }
+                            }
+                        }
+                    }
+
+                    //防止insert超过1000行 所以在这里先进行保存
+                    if(!CollectionUtils.isEmpty(freightTemplateAreaRules))
+                    {
+                        freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                    }
+                }
             }
 
 
@@ -258,6 +337,50 @@ public class FreightTemplateController {
                 ordinaryMailDefaultRule.setTemplateId(freightTemplateVO.getId());
                 ordinaryMailDefaultRule.setTransportModel("3");
                 freightTemplateDefaultRuleService.save(ordinaryMailDefaultRule);
+
+                //保存平邮的所有选择项
+                if(!CollectionUtils.isEmpty(freightTemplateVO.getOrdinaryMailAreaRules()))
+                {
+                    List<FreightTemplateAreaRule> freightTemplateAreaRules = new LinkedList<>();
+                    for(FreightTemplateAreaRuleVO freightTemplateAreaRuleVO:freightTemplateVO.getOrdinaryMailAreaRules())
+                    {
+                        if(StringUtils.isNotEmpty(freightTemplateAreaRuleVO.getSelectAreas())) {
+                            String[] selectAreaArray = freightTemplateAreaRuleVO.getSelectAreas().split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT);
+                            Long groupId = idGenerator.id();
+                            if(selectAreaArray!=null&&selectAreaArray.length>0)
+                            {
+                                //查询出这行选的所有地市
+                                for(String selectArea:selectAreaArray)
+                                {
+                                    FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                                    BeanUtils.copyProperties(freightTemplateAreaRule,freightTemplateAreaRuleVO);
+                                    freightTemplateAreaRule.setId(idGenerator.id());
+                                    freightTemplateAreaRule.setTransportModel("3");
+                                    freightTemplateAreaRule.setCityName(selectArea);
+                                    freightTemplateAreaRule.setGroupId(groupId);
+                                    freightTemplateAreaRule.setCityCode(freightTemplateVO.getCityNameToCityCode().get(selectArea));
+                                    freightTemplateAreaRule.setProvinceCode(freightTemplateVO.getCityCodeToProvinceCode().get(freightTemplateAreaRule.getCityCode()));
+                                    freightTemplateAreaRule.setProvinceName(freightTemplateVO.getCityNameToProvinceName().get(selectArea));
+                                    freightTemplateAreaRule.setAreaCode("");
+                                    freightTemplateAreaRule.setAreaName("");
+                                    freightTemplateAreaRule.setTemplateId(freightTemplateVO.getId());
+                                    freightTemplateAreaRule.setDefaultRuleId(ordinaryMailDefaultRule.getId());
+                                    freightTemplateAreaRule.setUserMainId(freightTemplateVO.getUserMainId());
+                                    freightTemplateAreaRule.setShopId(freightTemplateVO.getShopId());
+                                    freightTemplateAreaRule.setCreateDate(new Date());
+                                    freightTemplateAreaRule.setDeleteStatus((short)0);
+                                    freightTemplateAreaRules.add(freightTemplateAreaRule);
+                                }
+                            }
+                        }
+                    }
+
+                    //防止insert超过1000行 所以在这里先进行保存
+                    if(!CollectionUtils.isEmpty(freightTemplateAreaRules))
+                    {
+                        freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                    }
+                }
             }
 
         }catch(Exception e)

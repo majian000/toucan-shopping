@@ -52,6 +52,7 @@ public class FreightTemplateAreaRule {
      */
     private String areaName;
 
+    private String transportModel; //运送方式 1:快递 2:EMS 3:平邮
 
     private Double firstWeight; //首重量 单位KG/件
 

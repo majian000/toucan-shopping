@@ -11,6 +11,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.seller.constant.FreightTemplateConstant;
 import com.toucan.shopping.modules.seller.entity.FreightTemplateAreaRule;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
@@ -157,7 +158,7 @@ public class FreightTemplateApiController extends BaseController {
                     for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getExpressAreaRules()) {
                         String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
                         if (StringUtils.isNotEmpty(selectAreas)) {
-                            cityNameList.addAll(Arrays.asList(selectAreas.split("，")));
+                            cityNameList.addAll(Arrays.asList(selectAreas.split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT)));
                         }
                     }
                 }
@@ -166,7 +167,7 @@ public class FreightTemplateApiController extends BaseController {
                     for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getEmsAreaRules()) {
                         String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
                         if (StringUtils.isNotEmpty(selectAreas)) {
-                            cityNameList.addAll(Arrays.asList(selectAreas.split("，")));
+                            cityNameList.addAll(Arrays.asList(selectAreas.split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT)));
                         }
                     }
                 }
@@ -175,7 +176,7 @@ public class FreightTemplateApiController extends BaseController {
                     for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getOrdinaryMailAreaRules()) {
                         String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
                         if (StringUtils.isNotEmpty(selectAreas)) {
-                            cityNameList.addAll(Arrays.asList(selectAreas.split("，")));
+                            cityNameList.addAll(Arrays.asList(selectAreas.split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT)));
                         }
                     }
                 }
@@ -190,13 +191,16 @@ public class FreightTemplateApiController extends BaseController {
                         if (CollectionUtils.isNotEmpty(areaVOS)) {
                             Map<String, String> cityCodeToProvinceCode = new HashMap<>(); //市级编码对应的省级编码
                             Map<String, String> cityNameToCityCode = new HashMap<>(); //市级名称对应市级编码
+                            Map<String, String> cityNameToProvinceName = new HashMap<>(); //市级名称对应省级名称
                             for (AreaVO areaVO : areaVOS) {
                                 cityNameToCityCode.put(areaVO.getCity(), areaVO.getCode());
                                 cityCodeToProvinceCode.put(areaVO.getCode(), areaVO.getParentCode());
+                                cityNameToProvinceName.put(areaVO.getCity(),areaVO.getProvince());
                             }
 
                             freightTemplateVO.setCityNameToCityCode(cityNameToCityCode);
                             freightTemplateVO.setCityCodeToProvinceCode(cityCodeToProvinceCode);
+                            freightTemplateVO.setCityNameToProvinceName(cityNameToProvinceName);
                         }
                     }
                 }

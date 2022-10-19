@@ -12,6 +12,7 @@
         <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
         <result column="city_name" jdbcType="VARCHAR" property="cityName" />
         <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+        <result column="transport_model" jdbcType="VARCHAR" property="transportModel" />
         <result column="first_weight" jdbcType="DOUBLE" property="firstWeight" />
         <result column="first_weight_money" jdbcType="DOUBLE" property="firstWeightMoney" />
         <result column="append_weight" jdbcType="DOUBLE" property="appendWeight" />
@@ -45,13 +46,13 @@
     <insert id="inserts"   keyProperty="id" >
         insert into t_freight_template_area_rule(id,user_main_id,shop_id,province_code,
         city_code,area_code,province_name,city_name,area_name,first_weight,first_weight_money,append_weight,append_weight_money,
-        group_id,default_rule_id,template_id,delete_status,create_date,update_date)
+        group_id,default_rule_id,template_id,delete_status,create_date,update_date,transport_model)
 
         values
         <foreach collection="entitys" item="entity" separator=",">
             (#{entity.id},#{entity.userMainId},#{entity.shopId},#{entity.provinceCode},#{entity.cityCode},#{entity.areaCode},#{entity.provinceName},
             #{entity.cityName},#{entity.areaName},#{entity.firstWeight},#{entity.firstWeightMoney},#{entity.appendWeight},#{entity.appendWeightMoney},#{entity.groupId},
-            #{entity.defaultRuleId},#{entity.templateId},#{entity.deleteStatus},#{entity.createDate},#{entity.updateDate})
+            #{entity.defaultRuleId},#{entity.templateId},#{entity.deleteStatus},#{entity.createDate},#{entity.updateDate},#{entity.transportModel})
         </foreach>
 
     </insert>

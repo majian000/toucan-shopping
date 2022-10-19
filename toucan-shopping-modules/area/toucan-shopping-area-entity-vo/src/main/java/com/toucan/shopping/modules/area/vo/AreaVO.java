@@ -37,6 +37,7 @@ public class AreaVO extends Area {
     private String updateAdminName; //修改人姓名
 
 
-    private List<String> cityNameList; //地市名称列表
+    private List<String> cityNameList; //地市名称集合
 
+    private List<String> codeList; //编码集合
 }

@@ -51,6 +51,13 @@
             </foreach>
         </if>
 
+
+        <if test="codeList!=null and codeList.size>0 ">
+            and t.code in
+            <foreach item="item" index="index" collection="codeList" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
     </sql>
 
     <sql id="queryListWhere">

@@ -39,6 +39,7 @@ public class FreightTemplateVO extends FreightTemplate {
 
     private Map<String,String> cityNameToCityCode; //市级名称对应市级编码
 
+    private Map<String,String> cityNameToProvinceName; //市级名称对应省级名称
 
 
 
