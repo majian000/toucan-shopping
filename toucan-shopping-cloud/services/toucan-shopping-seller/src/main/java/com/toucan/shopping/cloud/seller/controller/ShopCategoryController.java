@@ -1546,7 +1546,7 @@ public class ShopCategoryController {
                 return resultObjectVO;
             }
 
-            //查询是否存在该功能项
+            //查询是否存在该数据
             ShopCategoryVO query=new ShopCategoryVO();
             query.setId(entity.getId());
             List<ShopCategory> ShopCategorys = shopCategoryService.queryList(query);

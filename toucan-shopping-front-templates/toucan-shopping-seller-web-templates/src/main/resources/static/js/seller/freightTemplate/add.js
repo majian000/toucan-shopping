@@ -1075,5 +1075,8 @@ $(function () {
         ordinaryMailTableAddRowEvent();
     });
 
+    $('#backBtn').on('click', function () {
+        window.location.href=basePath+"/page/freightTemplate/index";
+    });
 
 });

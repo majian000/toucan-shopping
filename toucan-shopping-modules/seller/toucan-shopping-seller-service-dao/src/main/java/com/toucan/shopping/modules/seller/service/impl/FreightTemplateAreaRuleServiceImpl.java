@@ -6,6 +6,7 @@ import com.toucan.shopping.modules.seller.mapper.FreightTemplateAreaRuleMapper;
 import com.toucan.shopping.modules.seller.mapper.FreightTemplateDefaultRuleMapper;
 import com.toucan.shopping.modules.seller.service.FreightTemplateAreaRuleService;
 import com.toucan.shopping.modules.seller.service.FreightTemplateDefaultRuleService;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,10 @@ public class FreightTemplateAreaRuleServiceImpl implements FreightTemplateAreaRu
     @Override
     public int saves(List<FreightTemplateAreaRule> entitys) {
         return freightTemplateAreaRuleMapper.inserts(entitys);
+    }
+
+    @Override
+    public List<FreightTemplateAreaRule> queryListByVO(FreightTemplateAreaRuleVO query) {
+        return freightTemplateAreaRuleMapper.queryListByVO(query);
     }
 }

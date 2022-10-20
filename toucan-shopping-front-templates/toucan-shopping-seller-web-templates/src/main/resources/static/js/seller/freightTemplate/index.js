@@ -119,13 +119,31 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+transportModelName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+valuationMethodName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
-            tableHtml+=    "                            <td><div class=\"tabTdWrap\"></div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
+
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"previewRow\" style=\"color:blue;cursor: pointer;\">查看</a>\n" ;
+            tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
 
     }
     $("#freightTemplateTableBody").html(tableHtml);
     $("#freightTemplateTable").FrozenTable(2,0,0);
+
+    bindRowEvent();
+}
+
+
+function bindRowEvent()
+{
+
+    $(".previewRow").unbind("click");
+    //SKU信息
+    $(".previewRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+
+        window.open(basePath+"/page/freightTemplate/show/"+attrId);
+    });
 }
 
 

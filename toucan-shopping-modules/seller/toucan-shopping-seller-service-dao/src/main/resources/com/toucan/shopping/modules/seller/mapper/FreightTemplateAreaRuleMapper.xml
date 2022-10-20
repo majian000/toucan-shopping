@@ -41,6 +41,34 @@
 
     </sql>
 
+    <sql id="queryVOWhere">
+        and t.delete_status = 0
+
+        <if test="id!=null  ">
+            and t.id = #{id}
+        </if>
+
+
+        <if test="templateId!=null  ">
+            and t.template_id = #{templateId}
+        </if>
+
+
+        <if test="transportModel!=null and transportModel!='' ">
+            and t.transport_model = #{transportModel}
+        </if>
+
+    </sql>
+
+
+    <select id="queryListByVO" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO">
+        select * from t_freight_template_area_rule t
+        <where>
+            1=1
+            <include refid="queryVOWhere" />
+        </where>
+
+    </select>
 
 
     <insert id="inserts"   keyProperty="id" >

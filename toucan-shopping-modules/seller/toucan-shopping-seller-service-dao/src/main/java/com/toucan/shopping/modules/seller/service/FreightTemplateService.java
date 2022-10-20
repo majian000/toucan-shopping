@@ -5,6 +5,8 @@ import com.toucan.shopping.modules.seller.entity.FreightTemplate;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 
+import java.util.List;
+
 /**
  * 运费模板
  */
@@ -14,6 +16,7 @@ public interface FreightTemplateService {
 
     Long queryCount(FreightTemplateVO freightTemplateVO);
 
+    List<FreightTemplate> queryListByVO(FreightTemplateVO query);
 
 
     int save(FreightTemplate entity);

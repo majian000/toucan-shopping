@@ -7,10 +7,12 @@ import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryServi
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.category.vo.CategoryVO;
 import com.toucan.shopping.modules.common.properties.Toucan;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,4 +53,10 @@ public class FreightTemplatePageController extends BaseController {
         return "freightTemplate/add";
     }
 
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/show/{id}")
+    public String show(HttpServletRequest request, @PathVariable String id ){
+        request.setAttribute("id",id);
+        return "freightTemplate/show";
+    }
 }

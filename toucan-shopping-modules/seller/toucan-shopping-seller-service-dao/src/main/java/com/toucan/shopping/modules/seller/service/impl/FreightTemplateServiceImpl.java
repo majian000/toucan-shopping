@@ -47,6 +47,11 @@ public class FreightTemplateServiceImpl implements FreightTemplateService {
     }
 
     @Override
+    public List<FreightTemplate> queryListByVO(FreightTemplateVO query) {
+        return freightTemplateMapper.queryListByVO(query);
+    }
+
+    @Override
     public int save(FreightTemplate entity) {
         return freightTemplateMapper.insert(entity);
     }

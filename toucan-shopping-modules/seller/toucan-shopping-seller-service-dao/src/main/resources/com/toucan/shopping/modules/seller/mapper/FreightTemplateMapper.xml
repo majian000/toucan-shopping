@@ -98,6 +98,16 @@
 
 
 
+    <select id="queryListByVO" resultMap="entityMap" parameterType="com.toucan.shopping.modules.seller.vo.FreightTemplateVO">
+        select * from t_freight_template t
+        <where>
+            1=1
+            <include refid="queryVOWhere" />
+        </where>
+
+    </select>
+
+
     <insert id="insert" parameterType="com.toucan.shopping.modules.seller.entity.FreightTemplate" >
         insert into t_freight_template(id,user_main_id,name,freight_status,deliver_province_code,
         deliver_city_code,deliver_area_code,deliver_province_name,deliver_city_name,deliver_area_name,transport_model,

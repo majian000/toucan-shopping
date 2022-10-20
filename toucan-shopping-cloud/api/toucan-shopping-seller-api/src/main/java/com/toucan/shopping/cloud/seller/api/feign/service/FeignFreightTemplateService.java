@@ -40,4 +40,14 @@ public interface FeignFreightTemplateService {
     @RequestMapping(value="/save",produces = "application/json;charset=UTF-8")
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
+
 }

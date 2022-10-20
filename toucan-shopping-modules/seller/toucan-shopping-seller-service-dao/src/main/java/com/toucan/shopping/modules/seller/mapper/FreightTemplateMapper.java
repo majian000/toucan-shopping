@@ -22,4 +22,6 @@ public interface FreightTemplateMapper {
 
     int insert(FreightTemplate entity);
 
+    List<FreightTemplate> queryListByVO(FreightTemplateVO query);
+
 }

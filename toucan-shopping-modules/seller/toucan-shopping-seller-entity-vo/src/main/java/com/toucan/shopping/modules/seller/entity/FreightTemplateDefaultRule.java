@@ -21,7 +21,7 @@ public class FreightTemplateDefaultRule {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long id; //主键
 
-    private String transportModel; //运送方式 1:快递 2:EMS 3:平邮 (多个用,分割)
+    private String transportModel; //运送方式 1:快递 2:EMS 3:平邮
 
     private Double defaultWeight; //默认XXX.XX重量以内 单位KG/件
 

@@ -218,4 +218,41 @@ public class FreightTemplateApiController extends BaseController {
     }
 
 
+
+
+    /**
+     * 根据ID查询
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/findById",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO findById(HttpServletRequest request,@RequestBody FreightTemplateVO freightTemplateVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        String userMainId="-1";
+        try {
+            if(freightTemplateVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("ID不能为空");
+                return resultObjectVO;
+            }
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            FreightTemplateVO queryVO = new FreightTemplateVO();
+            queryVO.setId(freightTemplateVO.getId());
+            queryVO.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryVO);
+            resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
 }
