@@ -9,18 +9,10 @@
     采用技术spring cloud、spring config、lombok、mybatis、nacos、hystrix、elasticsearch、kafka、shardingsphere、redis、mysql
 
 ### 产品预览图
-   ![image](https://thumbnail1.baidupcs.com/thumbnail/eba748febm59f07d1367f9dbc488011d?fid=3926776474-250528-251148589505939&rt=pr&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-FVhXVOtTG4pYLXtB2lqR%2fHkbc6M%3d&expires=8h&chkbd=0&chkv=0&dp-logid=9069144855140032037&dp-callid=0&time=1666159200&size=c1920_u1080&quality=90&vuk=3926776474&ft=image&autopolicy=1)
    
-   ![image](https://thumbnail1.baidupcs.com/thumbnail/767afc3dfga33b912ee9d6dca2db7722?fid=3926776474-250528-1029310809301392&rt=pr&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-P5RXwQy5djvHUKTHue3swdj6BtI%3d&expires=8h&chkbd=0&chkv=0&dp-logid=9069158907415410998&dp-callid=0&time=1666159200&size=c1920_u1080&quality=90&vuk=3926776474&ft=image&autopolicy=1)
-   
-   ![image](https://thumbnail1.baidupcs.com/thumbnail/795a866fdofded3b7c38cc34e75ef101?fid=3926776474-250528-455866950234692&rt=pr&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-QRIG1V7mM1aaNFCRwd3BDk%2bEVO8%3d&expires=8h&chkbd=0&chkv=0&dp-logid=9069158907415410998&dp-callid=0&time=1666159200&size=c1920_u1080&quality=90&vuk=3926776474&ft=image&autopolicy=1)
-   
-   ![image](https://thumbnail1.baidupcs.com/thumbnail/a949d38d7ha637cc7b23b1ad03d0c421?fid=3926776474-250528-844957580669362&rt=pr&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-0kXxXW2RMU5RYh3dGyBOzQ8jYyc%3d&expires=8h&chkbd=0&chkv=0&dp-logid=9069158907415410998&dp-callid=0&time=1666159200&size=c1920_u1080&quality=90&vuk=3926776474&ft=image&autopolicy=1)
-   
-   ![image](https://thumbnail1.baidupcs.com/thumbnail/1a0187bbcuc8aff9feafb72f08c23e7a?fid=3926776474-250528-496447544125662&rt=pr&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-HcXqWLdydCqfiKpWto5MfHRKIUA%3d&expires=8h&chkbd=0&chkv=0&dp-logid=9069158907415410998&dp-callid=0&time=1666159200&size=c1920_u1080&quality=90&vuk=3926776474&ft=image&autopolicy=1)
-   
-   ![image](https://thumbnail1.baidupcs.com/thumbnail/529a5233eq3cbe246642cb91aa879c16?fid=3926776474-250528-720424328158234&rt=pr&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-Jd7HPLA8SoecjWA%2fkGsi0x9SmXw%3d&expires=8h&chkbd=0&chkv=0&dp-logid=9069158907415410998&dp-callid=0&time=1666159200&size=c1920_u1080&quality=90&vuk=3926776474&ft=image&autopolicy=1)
-   
+    百度网盘
+    https://pan.baidu.com/s/1a92-dhro8CnIvMobWdH1bg?pwd=uqnw
+    由于没有合适的图床,所以将预览图存储在网盘中
 
 
 ### 访问
