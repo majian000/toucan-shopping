@@ -32,6 +32,15 @@
             and t.id = #{id}
         </if>
 
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+
+
+        <if test="shopId!=null  ">
+            and t.shop_id = #{shopId}
+        </if>
+
     </sql>
 
     <sql id="queryWhere">
@@ -58,6 +67,10 @@
 
         <if test="shopId!=null  ">
             and t.shop_id = #{shopId}
+        </if>
+
+        <if test="name!=null and name!='' ">
+            and t.name = #{name}
         </if>
 
     </sql>

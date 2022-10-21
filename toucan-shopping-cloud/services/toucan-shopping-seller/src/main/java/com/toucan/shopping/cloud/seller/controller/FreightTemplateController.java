@@ -193,6 +193,17 @@ public class FreightTemplateController {
                 return resultObjectVO;
             }
 
+            queryCountVO.setName(freightTemplateVO.getName());
+            count = freightTemplateService.queryCount(queryCountVO);
+            if(count>0)
+            {
+                //释放锁
+                skylarkLock.unLock(FreightTemplateKey.getSaveLockKey(userMainId), userMainId);
+
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("模板已存在,请检查名称是否重复");
+                return resultObjectVO;
+            }
 
             freightTemplateVO.setId(idGenerator.id());
             freightTemplateVO.setCreateDate(new Date());
@@ -462,6 +473,7 @@ public class FreightTemplateController {
 
             //查询默认运费规则
             FreightTemplateDefaultRuleVO queryFreightTemplateDefaultRuleVO= new FreightTemplateDefaultRuleVO();
+            queryFreightTemplateDefaultRuleVO.setTemplateId(freightTemplateVO.getId());
             List<FreightTemplateDefaultRule> freightTemplateDefaultRules = freightTemplateDefaultRuleService.queryListByVO(queryFreightTemplateDefaultRuleVO);
             if(!CollectionUtils.isEmpty(freightTemplateDefaultRules))
             {
@@ -497,7 +509,7 @@ public class FreightTemplateController {
                     List<FreightTemplateAreaRule> rows = expressRuleMap.get(expressKey);
                     BeanUtils.copyProperties(freightTemplateAreaRuleVO,rows.get(0));
                     String selectAreas = rows.stream().map(FreightTemplateAreaRule::getCityName).collect(Collectors.joining(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT));
-                    freightTemplateAreaRuleVO.setSelectAreaCodes(selectAreas);
+                    freightTemplateAreaRuleVO.setSelectAreas(selectAreas);
                     freightTemplateVO.getExpressAreaRules().add(freightTemplateAreaRuleVO);
                 }
             }
@@ -516,7 +528,7 @@ public class FreightTemplateController {
                     List<FreightTemplateAreaRule> rows = emsRuleMap.get(expressKey);
                     BeanUtils.copyProperties(freightTemplateAreaRuleVO,rows.get(0));
                     String selectAreas = rows.stream().map(FreightTemplateAreaRule::getCityName).collect(Collectors.joining(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT));
-                    freightTemplateAreaRuleVO.setSelectAreaCodes(selectAreas);
+                    freightTemplateAreaRuleVO.setSelectAreas(selectAreas);
                     freightTemplateVO.getEmsAreaRules().add(freightTemplateAreaRuleVO);
                 }
             }
@@ -536,7 +548,7 @@ public class FreightTemplateController {
                     List<FreightTemplateAreaRule> rows = emsRuleMap.get(expressKey);
                     BeanUtils.copyProperties(freightTemplateAreaRuleVO,rows.get(0));
                     String selectAreas = rows.stream().map(FreightTemplateAreaRule::getCityName).collect(Collectors.joining(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT));
-                    freightTemplateAreaRuleVO.setSelectAreaCodes(selectAreas);
+                    freightTemplateAreaRuleVO.setSelectAreas(selectAreas);
                     freightTemplateVO.getOrdinaryMailAreaRules().add(freightTemplateAreaRuleVO);
                 }
             }

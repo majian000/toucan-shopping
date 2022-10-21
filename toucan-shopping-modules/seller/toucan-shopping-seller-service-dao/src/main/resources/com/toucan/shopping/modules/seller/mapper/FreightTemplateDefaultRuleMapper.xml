@@ -26,10 +26,18 @@
             and t.id = #{id}
         </if>
 
+        <if test="templateId!=null  ">
+            and t.template_id = #{templateId}
+        </if>
+
     </sql>
 
     <sql id="queryWhere">
         and t.delete_status = 0
+
+        <if test="templateId!=null  ">
+            and t.template_id = #{templateId}
+        </if>
 
     </sql>
 
@@ -38,6 +46,10 @@
 
         <if test="id!=null  ">
             and t.id = #{id}
+        </if>
+
+        <if test="templateId!=null  ">
+            and t.template_id = #{templateId}
         </if>
 
     </sql>

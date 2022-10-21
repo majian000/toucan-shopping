@@ -41,14 +41,14 @@ public class FreightTemplateDefaultRule {
 
 
     /**
-     * 所属用户ID,用该字段分库分表
+     * 所属用户ID
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
     /**
-     * 关联店铺
+     * 关联店铺,用该字段分库分表
      */
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)

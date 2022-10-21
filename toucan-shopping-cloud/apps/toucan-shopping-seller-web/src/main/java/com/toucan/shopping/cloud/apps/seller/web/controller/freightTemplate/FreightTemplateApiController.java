@@ -75,10 +75,10 @@ public class FreightTemplateApiController extends BaseController {
             {
                 logger.warn("查询商品审核 没有找到用户ID {} ",userMainId);
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询失败,请稍后重试");
+                resultObjectVO.setMsg("查询失败,用户ID不能为空");
                 return resultObjectVO;
             }
-
+            pageInfo.setUserMainId(Long.parseLong(userMainId));
             SellerShop querySellerShop = new SellerShop();
             querySellerShop.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
@@ -87,10 +87,16 @@ public class FreightTemplateApiController extends BaseController {
                 SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
                 if(sellerShopVO!=null) {
                     pageInfo.setShopId(sellerShopVO.getId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
-                    resultObjectVO = feignFreightTemplateService.queryListPage(requestJsonVO);
                 }
             }
+            if(pageInfo.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("查询失败,没有找到店铺");
+                return resultObjectVO;
+            }
+            requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), pageInfo);
+            resultObjectVO = feignFreightTemplateService.queryListPage(requestJsonVO);
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
