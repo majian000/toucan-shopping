@@ -61,4 +61,14 @@ public class FreightTemplateServiceImpl implements FreightTemplateService {
         return freightTemplateMapper.deleteById(templateId);
     }
 
+    @Override
+    public FreightTemplate findByIdAndUserMainId(Long id, Long userMainId) {
+        return freightTemplateMapper.findByIdAndUserMainId(id,userMainId);
+    }
+
+    @Override
+    public int update(FreightTemplate entity) {
+        return freightTemplateMapper.update(entity);
+    }
+
 }

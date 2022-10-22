@@ -18,5 +18,11 @@ public interface FreightTemplateAreaRuleService {
 
     int deleteByTemplateId(Long templateId);
 
+    /**
+     * 将删除记录恢复
+     * @param idList
+     * @return
+     */
+    int updateResumeByIdList(List<Long> idList);
 
 }

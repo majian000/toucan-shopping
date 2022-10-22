@@ -30,8 +30,6 @@ public interface FeignFreightTemplateService {
 
 
 
-
-
     /**
      * 保存
      * @param requestJsonVO
@@ -41,6 +39,13 @@ public interface FeignFreightTemplateService {
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
+    /**
+     * 修改
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 根据ID查询

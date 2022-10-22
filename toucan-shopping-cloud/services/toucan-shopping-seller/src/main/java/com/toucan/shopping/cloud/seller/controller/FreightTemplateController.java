@@ -205,7 +205,8 @@ public class FreightTemplateController {
                 return resultObjectVO;
             }
 
-            freightTemplateVO.setId(idGenerator.id());
+            Long templateId = idGenerator.id();
+            freightTemplateVO.setId(templateId);
             freightTemplateVO.setCreateDate(new Date());
             freightTemplateVO.setDeleteStatus((short)0);
 
@@ -216,21 +217,24 @@ public class FreightTemplateController {
                 return resultObjectVO;
             }
 
-            Long templateId = idGenerator.id();
             try {
                 //快递默认运费规则
                 if (freightTemplateVO.getExpressDefaultRule() != null
                         && freightTemplateVO.getExpressDefaultRule().getDefaultWeight() != null) {
 
                     FreightTemplateDefaultRuleVO expressDefaultRule = freightTemplateVO.getExpressDefaultRule();
-                    expressDefaultRule.setId(templateId);
+                    expressDefaultRule.setId(idGenerator.id());
                     expressDefaultRule.setUserMainId(freightTemplateVO.getUserMainId());
                     expressDefaultRule.setShopId(freightTemplateVO.getShopId());
                     expressDefaultRule.setCreateDate(new Date());
                     expressDefaultRule.setDeleteStatus((short) 0);
                     expressDefaultRule.setTemplateId(freightTemplateVO.getId());
                     expressDefaultRule.setTransportModel("1");
-                    freightTemplateDefaultRuleService.save(expressDefaultRule);
+                    row = freightTemplateDefaultRuleService.save(expressDefaultRule);
+                    if(row<=0)
+                    {
+                        throw new IllegalArgumentException("保存失败");
+                    }
 
                     //保存快递的所有选择项
                     if (!CollectionUtils.isEmpty(freightTemplateVO.getExpressAreaRules())) {
@@ -267,7 +271,11 @@ public class FreightTemplateController {
 
                         //防止insert超过1000行 所以在这里先进行保存
                         if (!CollectionUtils.isEmpty(freightTemplateAreaRules)) {
-                            freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            row = freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            if(row<=0)
+                            {
+                                throw new IllegalArgumentException("保存失败");
+                            }
                         }
                     }
 
@@ -284,7 +292,11 @@ public class FreightTemplateController {
                     emsDefaultRule.setDeleteStatus((short) 0);
                     emsDefaultRule.setTemplateId(freightTemplateVO.getId());
                     emsDefaultRule.setTransportModel("2");
-                    freightTemplateDefaultRuleService.save(emsDefaultRule);
+                    row = freightTemplateDefaultRuleService.save(emsDefaultRule);
+                    if(row<=0)
+                    {
+                        throw new IllegalArgumentException("保存失败");
+                    }
 
 
                     //保存EMS的所有选择项
@@ -322,7 +334,11 @@ public class FreightTemplateController {
 
                         //防止insert超过1000行 所以在这里先进行保存
                         if (!CollectionUtils.isEmpty(freightTemplateAreaRules)) {
-                            freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            row = freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            if(row<=0)
+                            {
+                                throw new IllegalArgumentException("保存失败");
+                            }
                         }
                     }
                 }
@@ -339,7 +355,11 @@ public class FreightTemplateController {
                     ordinaryMailDefaultRule.setDeleteStatus((short) 0);
                     ordinaryMailDefaultRule.setTemplateId(freightTemplateVO.getId());
                     ordinaryMailDefaultRule.setTransportModel("3");
-                    freightTemplateDefaultRuleService.save(ordinaryMailDefaultRule);
+                    row = freightTemplateDefaultRuleService.save(ordinaryMailDefaultRule);
+                    if(row<=0)
+                    {
+                        throw new IllegalArgumentException("保存失败");
+                    }
 
                     //保存平邮的所有选择项
                     if (!CollectionUtils.isEmpty(freightTemplateVO.getOrdinaryMailAreaRules())) {
@@ -376,7 +396,11 @@ public class FreightTemplateController {
 
                         //防止insert超过1000行 所以在这里先进行保存
                         if (!CollectionUtils.isEmpty(freightTemplateAreaRules)) {
-                            freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            row = freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            if(row<=0)
+                            {
+                                throw new IllegalArgumentException("保存失败");
+                            }
                         }
                     }
                 }
@@ -562,6 +586,393 @@ public class FreightTemplateController {
         }
         return resultObjectVO;
     }
+
+
+
+
+    /**
+     * 修改
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        FreightTemplateVO freightTemplateVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), FreightTemplateVO.class);
+        if(freightTemplateVO.getId()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空!");
+            return resultObjectVO;
+        }
+
+        String userMainId = String.valueOf(freightTemplateVO.getUserMainId());
+        try {
+
+            boolean lockStatus = skylarkLock.lock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+
+            if(StringUtils.isEmpty(freightTemplateVO.getName()))
+            {
+                //释放锁
+                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
+
+                logger.warn("名称为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("名称不能为空!");
+
+
+                return resultObjectVO;
+            }
+            if(freightTemplateVO.getUserMainId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
+
+                logger.warn("用户ID为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("用户ID不能为空!");
+                return resultObjectVO;
+            }
+
+            if(freightTemplateVO.getShopId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
+
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(freightTemplateVO));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+
+
+            FreightTemplateVO queryCountVO = new FreightTemplateVO();
+            queryCountVO.setUserMainId(freightTemplateVO.getUserMainId());
+            queryCountVO.setShopId(freightTemplateVO.getShopId());
+            Long count = freightTemplateService.queryCount(queryCountVO);
+            if(count+1>toucan.getSeller().getFreightTemplateMaxCount())
+            {
+                //释放锁
+                skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
+
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("数量已达到上限");
+                return resultObjectVO;
+            }
+
+            queryCountVO.setName(freightTemplateVO.getName());
+            List<FreightTemplate> freightTemplates = freightTemplateService.queryListByVO(queryCountVO);
+            if(!CollectionUtils.isEmpty(freightTemplates))
+            {
+                for(FreightTemplate freightTemplate:freightTemplates) {
+                    if(freightTemplate.getId().longValue()!=freightTemplateVO.getId().longValue()) {
+                        //释放锁
+                        skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
+
+                        resultObjectVO.setCode(ResultVO.FAILD);
+                        resultObjectVO.setMsg("模板已存在,请检查名称是否重复");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            //如果修改失败用于回滚数据
+            FreightTemplate persistentFreightTemplate = freightTemplateService.findByIdAndUserMainId(freightTemplateVO.getId(),freightTemplateVO.getUserMainId());
+            if(persistentFreightTemplate==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到该模板,请检查是否已被删除");
+                return resultObjectVO;
+            }
+            //查询模板默认规则
+            FreightTemplateDefaultRuleVO queryPerFreightTemplateDefaultRuleVO = new FreightTemplateDefaultRuleVO();
+            queryPerFreightTemplateDefaultRuleVO.setTemplateId(freightTemplateVO.getId());
+            queryPerFreightTemplateDefaultRuleVO.setUserMainId(freightTemplateVO.getUserMainId());
+            List<FreightTemplateDefaultRule> persistentFreightTemplateDefaultRules = freightTemplateDefaultRuleService.queryListByVO(queryPerFreightTemplateDefaultRuleVO);
+            //查询模板地区规则
+            FreightTemplateAreaRuleVO queryPerFreightTemplateAreaRuleVO = new FreightTemplateAreaRuleVO();
+            queryPerFreightTemplateAreaRuleVO.setTemplateId(freightTemplateVO.getId());
+            queryPerFreightTemplateAreaRuleVO.setUserMainId(freightTemplateVO.getUserMainId());
+            List<FreightTemplateAreaRule> persistentFreightTemplateAreaRules = freightTemplateAreaRuleService.queryListByVO(queryPerFreightTemplateAreaRuleVO);
+
+
+            freightTemplateVO.setUpdateDate(new Date());
+            int row = freightTemplateService.update(freightTemplateVO);
+            if (row < 1) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("修改失败,请稍后重试!");
+                return resultObjectVO;
+            }
+
+            try {
+
+                //删除库中的默认规则
+                freightTemplateAreaRuleService.deleteByTemplateId(persistentFreightTemplate.getId());
+                //删除库中的地区规则
+                freightTemplateDefaultRuleService.deleteByTemplateId(persistentFreightTemplate.getId());
+
+
+                //快递默认运费规则
+                if (freightTemplateVO.getExpressDefaultRule() != null
+                        && freightTemplateVO.getExpressDefaultRule().getDefaultWeight() != null) {
+
+                    FreightTemplateDefaultRuleVO expressDefaultRule = freightTemplateVO.getExpressDefaultRule();
+                    expressDefaultRule.setId(idGenerator.id());
+                    expressDefaultRule.setUserMainId(freightTemplateVO.getUserMainId());
+                    expressDefaultRule.setShopId(freightTemplateVO.getShopId());
+                    expressDefaultRule.setCreateDate(new Date());
+                    expressDefaultRule.setDeleteStatus((short) 0);
+                    expressDefaultRule.setTemplateId(freightTemplateVO.getId());
+                    expressDefaultRule.setTransportModel("1");
+                    row = freightTemplateDefaultRuleService.save(expressDefaultRule);
+                    if(row<=0)
+                    {
+                        throw new IllegalArgumentException("保存失败");
+                    }
+
+                    //保存快递的所有选择项
+                    if (!CollectionUtils.isEmpty(freightTemplateVO.getExpressAreaRules())) {
+                        List<FreightTemplateAreaRule> freightTemplateAreaRules = new LinkedList<>();
+                        for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getExpressAreaRules()) {
+                            if (StringUtils.isNotEmpty(freightTemplateAreaRuleVO.getSelectAreas())) {
+                                String[] selectAreaArray = freightTemplateAreaRuleVO.getSelectAreas().split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT);
+                                Long groupId = idGenerator.id();
+                                if (selectAreaArray != null && selectAreaArray.length > 0) {
+                                    //查询出这行选的所有地市
+                                    for (String selectArea : selectAreaArray) {
+                                        FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                                        BeanUtils.copyProperties(freightTemplateAreaRule, freightTemplateAreaRuleVO);
+                                        freightTemplateAreaRule.setId(idGenerator.id());
+                                        freightTemplateAreaRule.setTransportModel("1");
+                                        freightTemplateAreaRule.setCityName(selectArea);
+                                        freightTemplateAreaRule.setGroupId(groupId);
+                                        freightTemplateAreaRule.setCityCode(freightTemplateVO.getCityNameToCityCode().get(selectArea));
+                                        freightTemplateAreaRule.setProvinceCode(freightTemplateVO.getCityCodeToProvinceCode().get(freightTemplateAreaRule.getCityCode()));
+                                        freightTemplateAreaRule.setProvinceName(freightTemplateVO.getCityNameToProvinceName().get(selectArea));
+                                        freightTemplateAreaRule.setAreaCode("");
+                                        freightTemplateAreaRule.setAreaName("");
+                                        freightTemplateAreaRule.setTemplateId(freightTemplateVO.getId());
+                                        freightTemplateAreaRule.setDefaultRuleId(expressDefaultRule.getId());
+                                        freightTemplateAreaRule.setUserMainId(freightTemplateVO.getUserMainId());
+                                        freightTemplateAreaRule.setShopId(freightTemplateVO.getShopId());
+                                        freightTemplateAreaRule.setCreateDate(new Date());
+                                        freightTemplateAreaRule.setDeleteStatus((short) 0);
+                                        freightTemplateAreaRules.add(freightTemplateAreaRule);
+                                    }
+                                }
+                            }
+                        }
+
+                        //防止insert超过1000行 所以在这里先进行保存
+                        if (!CollectionUtils.isEmpty(freightTemplateAreaRules)) {
+                            row = freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            if(row<=0)
+                            {
+                                throw new IllegalArgumentException("保存失败");
+                            }
+                        }
+                    }
+
+                }
+
+                //EMS默认运费规则
+                if (freightTemplateVO.getEmsDefaultRule() != null
+                        && freightTemplateVO.getEmsDefaultRule().getDefaultWeight() != null) {
+                    FreightTemplateDefaultRuleVO emsDefaultRule = freightTemplateVO.getEmsDefaultRule();
+                    emsDefaultRule.setId(idGenerator.id());
+                    emsDefaultRule.setUserMainId(freightTemplateVO.getUserMainId());
+                    emsDefaultRule.setShopId(freightTemplateVO.getShopId());
+                    emsDefaultRule.setCreateDate(new Date());
+                    emsDefaultRule.setDeleteStatus((short) 0);
+                    emsDefaultRule.setTemplateId(freightTemplateVO.getId());
+                    emsDefaultRule.setTransportModel("2");
+                    row = freightTemplateDefaultRuleService.save(emsDefaultRule);
+                    if(row<=0)
+                    {
+                        throw new IllegalArgumentException("保存失败");
+                    }
+
+
+                    //保存EMS的所有选择项
+                    if (!CollectionUtils.isEmpty(freightTemplateVO.getEmsAreaRules())) {
+                        List<FreightTemplateAreaRule> freightTemplateAreaRules = new LinkedList<>();
+                        for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getEmsAreaRules()) {
+                            if (StringUtils.isNotEmpty(freightTemplateAreaRuleVO.getSelectAreas())) {
+                                String[] selectAreaArray = freightTemplateAreaRuleVO.getSelectAreas().split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT);
+                                Long groupId = idGenerator.id();
+                                if (selectAreaArray != null && selectAreaArray.length > 0) {
+                                    //查询出这行选的所有地市
+                                    for (String selectArea : selectAreaArray) {
+                                        FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                                        BeanUtils.copyProperties(freightTemplateAreaRule, freightTemplateAreaRuleVO);
+                                        freightTemplateAreaRule.setId(idGenerator.id());
+                                        freightTemplateAreaRule.setTransportModel("2");
+                                        freightTemplateAreaRule.setCityName(selectArea);
+                                        freightTemplateAreaRule.setGroupId(groupId);
+                                        freightTemplateAreaRule.setCityCode(freightTemplateVO.getCityNameToCityCode().get(selectArea));
+                                        freightTemplateAreaRule.setProvinceCode(freightTemplateVO.getCityCodeToProvinceCode().get(freightTemplateAreaRule.getCityCode()));
+                                        freightTemplateAreaRule.setProvinceName(freightTemplateVO.getCityNameToProvinceName().get(selectArea));
+                                        freightTemplateAreaRule.setAreaCode("");
+                                        freightTemplateAreaRule.setAreaName("");
+                                        freightTemplateAreaRule.setTemplateId(freightTemplateVO.getId());
+                                        freightTemplateAreaRule.setDefaultRuleId(emsDefaultRule.getId());
+                                        freightTemplateAreaRule.setUserMainId(freightTemplateVO.getUserMainId());
+                                        freightTemplateAreaRule.setShopId(freightTemplateVO.getShopId());
+                                        freightTemplateAreaRule.setCreateDate(new Date());
+                                        freightTemplateAreaRule.setDeleteStatus((short) 0);
+                                        freightTemplateAreaRules.add(freightTemplateAreaRule);
+                                    }
+                                }
+                            }
+                        }
+
+                        //防止insert超过1000行 所以在这里先进行保存
+                        if (!CollectionUtils.isEmpty(freightTemplateAreaRules)) {
+                            row = freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            if(row<=0)
+                            {
+                                throw new IllegalArgumentException("保存失败");
+                            }
+                        }
+                    }
+                }
+
+
+                //平邮默认运费规则
+                if (freightTemplateVO.getOrdinaryMailDefaultRule() != null
+                        && freightTemplateVO.getOrdinaryMailDefaultRule().getDefaultWeight() != null) {
+                    FreightTemplateDefaultRuleVO ordinaryMailDefaultRule = freightTemplateVO.getOrdinaryMailDefaultRule();
+                    ordinaryMailDefaultRule.setId(idGenerator.id());
+                    ordinaryMailDefaultRule.setUserMainId(freightTemplateVO.getUserMainId());
+                    ordinaryMailDefaultRule.setShopId(freightTemplateVO.getShopId());
+                    ordinaryMailDefaultRule.setCreateDate(new Date());
+                    ordinaryMailDefaultRule.setDeleteStatus((short) 0);
+                    ordinaryMailDefaultRule.setTemplateId(freightTemplateVO.getId());
+                    ordinaryMailDefaultRule.setTransportModel("3");
+                    row = freightTemplateDefaultRuleService.save(ordinaryMailDefaultRule);
+                    if(row<=0)
+                    {
+                        throw new IllegalArgumentException("保存失败");
+                    }
+
+                    //保存平邮的所有选择项
+                    if (!CollectionUtils.isEmpty(freightTemplateVO.getOrdinaryMailAreaRules())) {
+                        List<FreightTemplateAreaRule> freightTemplateAreaRules = new LinkedList<>();
+                        for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getOrdinaryMailAreaRules()) {
+                            if (StringUtils.isNotEmpty(freightTemplateAreaRuleVO.getSelectAreas())) {
+                                String[] selectAreaArray = freightTemplateAreaRuleVO.getSelectAreas().split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT);
+                                Long groupId = idGenerator.id();
+                                if (selectAreaArray != null && selectAreaArray.length > 0) {
+                                    //查询出这行选的所有地市
+                                    for (String selectArea : selectAreaArray) {
+                                        FreightTemplateAreaRule freightTemplateAreaRule = new FreightTemplateAreaRule();
+                                        BeanUtils.copyProperties(freightTemplateAreaRule, freightTemplateAreaRuleVO);
+                                        freightTemplateAreaRule.setId(idGenerator.id());
+                                        freightTemplateAreaRule.setTransportModel("3");
+                                        freightTemplateAreaRule.setCityName(selectArea);
+                                        freightTemplateAreaRule.setGroupId(groupId);
+                                        freightTemplateAreaRule.setCityCode(freightTemplateVO.getCityNameToCityCode().get(selectArea));
+                                        freightTemplateAreaRule.setProvinceCode(freightTemplateVO.getCityCodeToProvinceCode().get(freightTemplateAreaRule.getCityCode()));
+                                        freightTemplateAreaRule.setProvinceName(freightTemplateVO.getCityNameToProvinceName().get(selectArea));
+                                        freightTemplateAreaRule.setAreaCode("");
+                                        freightTemplateAreaRule.setAreaName("");
+                                        freightTemplateAreaRule.setTemplateId(freightTemplateVO.getId());
+                                        freightTemplateAreaRule.setDefaultRuleId(ordinaryMailDefaultRule.getId());
+                                        freightTemplateAreaRule.setUserMainId(freightTemplateVO.getUserMainId());
+                                        freightTemplateAreaRule.setShopId(freightTemplateVO.getShopId());
+                                        freightTemplateAreaRule.setCreateDate(new Date());
+                                        freightTemplateAreaRule.setDeleteStatus((short) 0);
+                                        freightTemplateAreaRules.add(freightTemplateAreaRule);
+                                    }
+                                }
+                            }
+                        }
+
+                        //防止insert超过1000行 所以在这里先进行保存
+                        if (!CollectionUtils.isEmpty(freightTemplateAreaRules)) {
+                            row = freightTemplateAreaRuleService.saves(freightTemplateAreaRules);
+                            if(row<=0)
+                            {
+                                throw new IllegalArgumentException("保存失败");
+                            }
+                        }
+
+                    }
+                }
+//                throw new IllegalArgumentException("测试回滚数据");
+            }catch(Exception e)
+            {
+                logger.warn("保存失败 开始回滚数据 修改前对象 {} ",JSONObject.toJSONString(persistentFreightTemplate));
+                logger.warn("保存失败 开始回滚数据 修改后对象 {} ",JSONObject.toJSONString(freightTemplateVO));
+                freightTemplateService.update(persistentFreightTemplate);
+
+                freightTemplateAreaRuleService.deleteByTemplateId(persistentFreightTemplate.getId());
+                freightTemplateDefaultRuleService.deleteByTemplateId(persistentFreightTemplate.getId());
+
+                //恢复库中的默认规则对象
+                if(!CollectionUtils.isEmpty(persistentFreightTemplateDefaultRules)) {
+
+                    logger.warn("保存失败 开始回滚数据 默认规则对象 修改前对象 {} ",JSONObject.toJSONString(persistentFreightTemplateDefaultRules));
+                    List<Long> idList = persistentFreightTemplateDefaultRules.stream().map(FreightTemplateDefaultRule::getId).collect(Collectors.toList());
+                    freightTemplateDefaultRuleService.updateResumeByIdList(idList);
+                }
+
+                //恢复库中的地区规则对象
+                if(!CollectionUtils.isEmpty(persistentFreightTemplateAreaRules)) {
+                    if(persistentFreightTemplateAreaRules.size()<100){
+                        List<Long> idList = persistentFreightTemplateAreaRules.stream().map(FreightTemplateAreaRule::getId).collect(Collectors.toList());
+                        freightTemplateAreaRuleService.updateResumeByIdList(idList);
+                    }else {
+                        List<Long> idList = new LinkedList<>();
+                        for (int i = 0; i < persistentFreightTemplateAreaRules.size(); i++) {
+                            idList.add(persistentFreightTemplateAreaRules.get(i).getId());
+                            //到了数据边界 开始恢复
+                            if((i+1)%100==0)
+                            {
+                                freightTemplateAreaRuleService.updateResumeByIdList(idList);
+                                idList.clear();
+                            }
+                        }
+                        //如果不整除的话 恢复剩余的
+                        if(!CollectionUtils.isEmpty(idList))
+                        {
+                            freightTemplateAreaRuleService.updateResumeByIdList(idList);
+                        }
+                    }
+                }
+                throw e;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试!");
+            logger.warn(e.getMessage(),e);
+        }finally{
+            skylarkLock.unLock(FreightTemplateKey.getUpdateLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
+
+
+
+
 
 
 }

@@ -18,4 +18,14 @@ public class FreightTemplateKey {
     }
 
 
+
+    /**
+     * 修改运费模板锁
+     * @param userMainId
+     * @return
+     */
+    public static String getUpdateLockKey(String userMainId)
+    {
+        return "TOUCAN_SHOPPING_WEB:SELLER:SHOP:FREIGHT:TEMPLATE:UPDATE:"+userMainId+"_LOCK";
+    }
 }

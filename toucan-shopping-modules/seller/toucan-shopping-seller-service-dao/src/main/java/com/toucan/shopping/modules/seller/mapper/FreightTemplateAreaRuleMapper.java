@@ -16,5 +16,6 @@ public interface FreightTemplateAreaRuleMapper {
 
     int deleteByTemplateId(Long templateId);
 
+    int updateResumeByIdList(List<Long> idList);
 
 }

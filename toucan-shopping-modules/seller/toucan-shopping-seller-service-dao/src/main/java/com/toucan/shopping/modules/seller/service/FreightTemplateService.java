@@ -21,4 +21,9 @@ public interface FreightTemplateService {
     int save(FreightTemplate entity);
 
     int deleteById(Long templateId);
+
+    FreightTemplate findByIdAndUserMainId(Long id,Long userMainId);
+
+    int update(FreightTemplate entity);
+
 }

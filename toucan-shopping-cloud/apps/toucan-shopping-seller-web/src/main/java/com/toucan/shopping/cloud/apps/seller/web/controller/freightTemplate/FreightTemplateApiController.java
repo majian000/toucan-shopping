@@ -261,4 +261,130 @@ public class FreightTemplateApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+
+    /**
+     * 修改运费模板
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/update",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO update(HttpServletRequest request, @RequestBody FreightTemplateVO freightTemplateVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            if(freightTemplateVO.getId()==null)
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,没有找到模板ID");
+                return resultObjectVO;
+            }
+            String userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+            if(StringUtils.isEmpty(userMainId))
+            {
+                logger.warn("保存运费模板失败 没有找到用户ID {} ",userMainId);
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败,请稍后重试");
+                return resultObjectVO;
+            }
+            freightTemplateVO.setUserMainId(Long.parseLong(userMainId));
+            SellerShop querySellerShop = new SellerShop();
+            querySellerShop.setUserMainId(Long.parseLong(userMainId));
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+            resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+            if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+                SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+                if(sellerShopVO!=null) {
+                    freightTemplateVO.setShopId(sellerShopVO.getId());
+                }
+            }
+            freightTemplateVO.setCreateDate(new Date());
+
+            List<String> transportModels= new LinkedList<>();
+            if(StringUtils.isNotEmpty(freightTemplateVO.getTransportModelExpress()))
+            {
+                transportModels.add(freightTemplateVO.getTransportModelExpress());
+            }
+            if(StringUtils.isNotEmpty(freightTemplateVO.getTransportModelEms()))
+            {
+                transportModels.add(freightTemplateVO.getTransportModelEms());
+            }
+            if(StringUtils.isNotEmpty(freightTemplateVO.getTransportModelOrdinaryMail()))
+            {
+                transportModels.add(freightTemplateVO.getTransportModelOrdinaryMail());
+            }
+            if(CollectionUtils.isNotEmpty(transportModels))
+            {
+                freightTemplateVO.setTransportModel(transportModels.stream().map(String::valueOf).collect(Collectors.joining(",")));
+            }
+
+            if(freightTemplateVO.getFreightStatus().shortValue()==1) {
+                List<String> cityNameList = new LinkedList<>();
+                //查询出快递的所选城市
+                if (CollectionUtils.isNotEmpty(freightTemplateVO.getExpressAreaRules())) {
+                    for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getExpressAreaRules()) {
+                        String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
+                        if (StringUtils.isNotEmpty(selectAreas)) {
+                            cityNameList.addAll(Arrays.asList(selectAreas.split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT)));
+                        }
+                    }
+                }
+                //查询出EMS的所选城市
+                if (CollectionUtils.isNotEmpty(freightTemplateVO.getEmsAreaRules())) {
+                    for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getEmsAreaRules()) {
+                        String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
+                        if (StringUtils.isNotEmpty(selectAreas)) {
+                            cityNameList.addAll(Arrays.asList(selectAreas.split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT)));
+                        }
+                    }
+                }
+                //查询出平邮的所选城市
+                if (CollectionUtils.isNotEmpty(freightTemplateVO.getOrdinaryMailAreaRules())) {
+                    for (FreightTemplateAreaRuleVO freightTemplateAreaRuleVO : freightTemplateVO.getOrdinaryMailAreaRules()) {
+                        String selectAreas = freightTemplateAreaRuleVO.getSelectAreas();
+                        if (StringUtils.isNotEmpty(selectAreas)) {
+                            cityNameList.addAll(Arrays.asList(selectAreas.split(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT)));
+                        }
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(cityNameList)) {
+                    AreaVO queryAreaVO = new AreaVO();
+                    queryAreaVO.setCityNameList(cityNameList);
+                    requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryAreaVO);
+                    resultObjectVO = feignAreaService.queryCityListByNames(requestJsonVO);
+                    if (resultObjectVO.isSuccess()) {
+
+                        List<AreaVO> areaVOS = resultObjectVO.formatDataList(AreaVO.class);
+                        if (CollectionUtils.isNotEmpty(areaVOS)) {
+                            Map<String, String> cityCodeToProvinceCode = new HashMap<>(); //市级编码对应的省级编码
+                            Map<String, String> cityNameToCityCode = new HashMap<>(); //市级名称对应市级编码
+                            Map<String, String> cityNameToProvinceName = new HashMap<>(); //市级名称对应省级名称
+                            for (AreaVO areaVO : areaVOS) {
+                                cityNameToCityCode.put(areaVO.getCity(), areaVO.getCode());
+                                cityCodeToProvinceCode.put(areaVO.getCode(), areaVO.getParentCode());
+                                cityNameToProvinceName.put(areaVO.getCity(),areaVO.getProvince());
+                            }
+
+                            freightTemplateVO.setCityNameToCityCode(cityNameToCityCode);
+                            freightTemplateVO.setCityCodeToProvinceCode(cityCodeToProvinceCode);
+                            freightTemplateVO.setCityNameToProvinceName(cityNameToProvinceName);
+                        }
+                    }
+                }
+            }
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), freightTemplateVO);
+            resultObjectVO = feignFreightTemplateService.update(requestJsonVO);
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
+
+
+
 }

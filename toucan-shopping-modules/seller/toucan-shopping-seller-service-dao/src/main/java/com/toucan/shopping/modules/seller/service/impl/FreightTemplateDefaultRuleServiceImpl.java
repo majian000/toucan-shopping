@@ -45,4 +45,9 @@ public class FreightTemplateDefaultRuleServiceImpl implements FreightTemplateDef
     public int deleteByTemplateId(Long templateId) {
         return freightTemplateDefaultRuleMapper.deleteByTemplateId(templateId);
     }
+
+    @Override
+    public int updateResumeByIdList(List<Long> idList) {
+        return freightTemplateDefaultRuleMapper.updateResumeByIdList(idList);
+    }
 }

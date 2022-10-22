@@ -42,4 +42,9 @@ public class FreightTemplateAreaRuleServiceImpl implements FreightTemplateAreaRu
     public int deleteByTemplateId(Long templateId) {
         return freightTemplateAreaRuleMapper.deleteByTemplateId(templateId);
     }
+
+    @Override
+    public int updateResumeByIdList(List<Long> idList) {
+        return freightTemplateAreaRuleMapper.updateResumeByIdList(idList);
+    }
 }

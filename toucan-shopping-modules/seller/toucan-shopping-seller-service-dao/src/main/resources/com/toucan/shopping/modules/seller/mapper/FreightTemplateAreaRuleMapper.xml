@@ -34,11 +34,18 @@
             and t.id = #{id}
         </if>
 
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
+
     </sql>
 
     <sql id="queryWhere">
         and t.delete_status = 0
 
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
     </sql>
 
     <sql id="queryVOWhere">
@@ -53,6 +60,9 @@
             and t.template_id = #{templateId}
         </if>
 
+        <if test="userMainId!=null  ">
+            and t.user_main_id = #{userMainId}
+        </if>
 
         <if test="transportModel!=null and transportModel!='' ">
             and t.transport_model = #{transportModel}
@@ -92,5 +102,12 @@
     </update>
 
 
+    <update id="updateResumeByIdList" parameterType="java.util.List">
+        update t_freight_template_area_rule  set delete_status=0 where
+        id in
+        <foreach item="item" index="index" collection="idList" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
 
 </mapper>

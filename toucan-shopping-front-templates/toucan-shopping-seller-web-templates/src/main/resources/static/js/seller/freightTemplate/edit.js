@@ -181,7 +181,7 @@ function scafbtn_click()
     });
     $.ajax({
         type: "POST",
-        url: basePath+'/api/freightTemplate/save',
+        url: basePath+'/api/freightTemplate/update',
         contentType: "application/json;charset=utf-8",
         data: JSON.stringify(formDataJson),
         dataType: "json",
@@ -1097,6 +1097,13 @@ $(function () {
                 {
                     deliverPath+="/"+retObj.deliverAreaName;
                 }
+                $("#province").val(retObj.deliverProvinceName);
+                $("#city").val(retObj.deliverCityName);
+                $("#area").val(retObj.deliverAreaName);
+                $("#province_code").val(retObj.deliverProvinceCode);
+                $("#city_code").val(retObj.deliverCityCode);
+                $("#area_code").val(retObj.deliverAreaCode);
+
                 $("#ms_city").val(deliverPath);
 
                 if(retObj.freightStatus==1)
@@ -1140,6 +1147,7 @@ $(function () {
                             expressTableAddRowEvent();
                             var tablePos =expressTablePos-1;
                             $("#expressTable_row_"+tablePos+"_areas").html(expressAreaRule.selectAreas);
+                            $("#expressTable_row_"+tablePos+"_areas_hidden").val(expressAreaRule.selectAreas);
                             $("#expressTable_row_"+tablePos+"_firstWeight").val(expressAreaRule.firstWeight);
                             $("#expressTable_row_"+tablePos+"_firstWeightMoney").val(expressAreaRule.firstWeightMoney);
                             $("#expressTable_row_"+tablePos+"_appendWeight").val(expressAreaRule.appendWeight);
@@ -1177,6 +1185,7 @@ $(function () {
                             emsTableAddRowEvent();
                             var tablePos =emsTablePos-1;
                             $("#emsTable_row_"+tablePos+"_areas").html(emsAreaRule.selectAreas);
+                            $("#emsTable_row_"+tablePos+"_areas_hidden").val(expressAreaRule.selectAreas);
                             $("#emsTable_row_"+tablePos+"_firstWeight").val(emsAreaRule.firstWeight);
                             $("#emsTable_row_"+tablePos+"_firstWeightMoney").val(emsAreaRule.firstWeightMoney);
                             $("#emsTable_row_"+tablePos+"_appendWeight").val(emsAreaRule.appendWeight);
@@ -1216,6 +1225,7 @@ $(function () {
                             ordinaryMailTableAddRowEvent();
                             var tablePos =ordinaryMailTablePos-1;
                             $("#ordinaryMailTable_row_"+tablePos+"_areas").html(ordinaryMailAreaRule.selectAreas);
+                            $("#ordinaryMailTable_row_"+tablePos+"_areas_hidden").val(expressAreaRule.selectAreas);
                             $("#ordinaryMailTable_row_"+tablePos+"_firstWeight").val(ordinaryMailAreaRule.firstWeight);
                             $("#ordinaryMailTable_row_"+tablePos+"_firstWeightMoney").val(ordinaryMailAreaRule.firstWeightMoney);
                             $("#ordinaryMailTable_row_"+tablePos+"_appendWeight").val(ordinaryMailAreaRule.appendWeight);
