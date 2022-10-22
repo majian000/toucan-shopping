@@ -40,4 +40,9 @@ public class FreightTemplateDefaultRuleServiceImpl implements FreightTemplateDef
     public List<FreightTemplateDefaultRule> queryListByVO(FreightTemplateDefaultRuleVO freightTemplateDefaultRuleVO) {
         return freightTemplateDefaultRuleMapper.queryListByVO(freightTemplateDefaultRuleVO);
     }
+
+    @Override
+    public int deleteByTemplateId(Long templateId) {
+        return freightTemplateDefaultRuleMapper.deleteByTemplateId(templateId);
+    }
 }

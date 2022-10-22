@@ -4,6 +4,7 @@ import com.toucan.shopping.modules.seller.entity.FreightTemplate;
 import com.toucan.shopping.modules.seller.entity.FreightTemplateAreaRule;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,6 @@ public class FreightTemplateAreaRuleVO extends FreightTemplateAreaRule {
 
     private String selectAreaCodes; //选择区域编码
 
+    private List<FreightTemplateAreaRule> selectItems; //所有选择项(可能存在选择多个省情况)
 
 }

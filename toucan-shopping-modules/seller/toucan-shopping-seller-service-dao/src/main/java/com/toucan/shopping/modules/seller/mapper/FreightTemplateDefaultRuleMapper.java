@@ -13,4 +13,8 @@ public interface FreightTemplateDefaultRuleMapper {
     int insert(FreightTemplateDefaultRule entity);
 
     List<FreightTemplateDefaultRule> queryListByVO(FreightTemplateDefaultRuleVO freightTemplateDefaultRuleVO);
+
+    int deleteByTemplateId(Long templateId);
+
+
 }

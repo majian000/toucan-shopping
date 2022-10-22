@@ -18,4 +18,6 @@ public interface FreightTemplateDefaultRuleService {
 
     List<FreightTemplateDefaultRule> queryListByVO(FreightTemplateDefaultRuleVO freightTemplateDefaultRuleVO);
 
+    int deleteByTemplateId(Long templateId);
+
 }

@@ -59,4 +59,14 @@ public class FreightTemplatePageController extends BaseController {
         request.setAttribute("id",id);
         return "freightTemplate/show";
     }
+
+
+    @UserAuth(requestType = UserAuth.REQUEST_FORM)
+    @RequestMapping("/edit/{id}")
+    public String edit(HttpServletRequest request, @PathVariable String id ){
+        request.setAttribute("id",id);
+        return "freightTemplate/edit";
+    }
+
+
 }

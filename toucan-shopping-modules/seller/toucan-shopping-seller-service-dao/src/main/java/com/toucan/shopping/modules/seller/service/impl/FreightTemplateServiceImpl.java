@@ -56,4 +56,9 @@ public class FreightTemplateServiceImpl implements FreightTemplateService {
         return freightTemplateMapper.insert(entity);
     }
 
+    @Override
+    public int deleteById(Long templateId) {
+        return freightTemplateMapper.deleteById(templateId);
+    }
+
 }

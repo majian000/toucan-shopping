@@ -120,7 +120,7 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+valuationMethodName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
-
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"editRow\" style=\"color:blue;cursor: pointer;\">修改</a>\n" ;
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"previewRow\" style=\"color:blue;cursor: pointer;\">查看</a>\n" ;
             tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
@@ -138,11 +138,16 @@ function bindRowEvent()
 {
 
     $(".previewRow").unbind("click");
-    //SKU信息
     $(".previewRow").bind("click", function () {
         var attrId = $(this).attr("attr-id");
+        window.location.href = basePath+"/page/freightTemplate/show/"+attrId;
+    });
 
-        window.open(basePath+"/page/freightTemplate/show/"+attrId);
+
+    $(".editRow").unbind("click");
+    $(".editRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        window.location.href = basePath+"/page/freightTemplate/edit/"+attrId;
     });
 }
 

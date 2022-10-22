@@ -13,4 +13,8 @@ public interface FreightTemplateAreaRuleMapper {
     int inserts(List<FreightTemplateAreaRule> entitys);
 
     List<FreightTemplateAreaRule> queryListByVO(FreightTemplateAreaRuleVO query);
+
+    int deleteByTemplateId(Long templateId);
+
+
 }

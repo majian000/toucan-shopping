@@ -16,4 +16,7 @@ public interface FreightTemplateAreaRuleService {
 
     List<FreightTemplateAreaRule> queryListByVO(FreightTemplateAreaRuleVO query);
 
+    int deleteByTemplateId(Long templateId);
+
+
 }

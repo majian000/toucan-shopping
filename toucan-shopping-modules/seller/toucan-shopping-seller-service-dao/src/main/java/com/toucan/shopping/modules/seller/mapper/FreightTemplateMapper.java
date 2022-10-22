@@ -24,4 +24,6 @@ public interface FreightTemplateMapper {
 
     List<FreightTemplate> queryListByVO(FreightTemplateVO query);
 
+    int deleteById(Long templateId);
+
 }

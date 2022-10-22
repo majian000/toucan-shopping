@@ -37,4 +37,9 @@ public class FreightTemplateAreaRuleServiceImpl implements FreightTemplateAreaRu
     public List<FreightTemplateAreaRule> queryListByVO(FreightTemplateAreaRuleVO query) {
         return freightTemplateAreaRuleMapper.queryListByVO(query);
     }
+
+    @Override
+    public int deleteByTemplateId(Long templateId) {
+        return freightTemplateAreaRuleMapper.deleteByTemplateId(templateId);
+    }
 }

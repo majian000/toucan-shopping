@@ -18,7 +18,7 @@ public interface FreightTemplateService {
 
     List<FreightTemplate> queryListByVO(FreightTemplateVO query);
 
-
     int save(FreightTemplate entity);
 
+    int deleteById(Long templateId);
 }

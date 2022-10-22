@@ -86,4 +86,11 @@
     </insert>
 
 
+
+    <update id="deleteByTemplateId" parameterType="java.lang.Long">
+        update t_freight_template_area_rule  set delete_status=1 where template_id=#{templateId}   and delete_status=0
+    </update>
+
+
+
 </mapper>

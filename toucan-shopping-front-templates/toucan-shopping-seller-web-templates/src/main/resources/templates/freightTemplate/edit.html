@@ -1,0 +1,326 @@
+<html class="no-js css-menubar" lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9,IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="" type="image/x-icon">
+
+    <#include "/title.html"/>
+
+    <#include "/shop_common.html"/>
+
+    <link rel="stylesheet" href="${basePath}/static/css/selectProviderCityArea/style.css" />
+    <link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/globalShopForm.css" />
+    <link rel="stylesheet" href="${basePath}/static/css/freightTemplate/freightTemplate.css" />
+    <script type="text/javascript" src="${basePath}/static/lib/layer/layer.js"></script>
+</head>
+<body>
+
+<#include "/top.html"/>
+
+<#assign leftName = "freightTemplateList">
+<#assign menuType = "deliveryMenu">
+
+<div class="body_box">
+
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li class="breadcrumb-item">
+            <a href="${basePath}/index" class="coolc icon-weizhi" href="javascript:;">管理中心</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="${basePath}/page/freightTemplate/index">运费模板</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="javascript:;">添加模板</a>
+        </li>
+    </ol>
+
+
+    <div class="left_menu">
+        <#include "/left.html"/>
+    </div>
+
+    <div class="right_content">
+        <div class="right_bg mb-15" style="width:100%">
+            <div class="index_top_left" style="width:100%">
+                <div class="title" style="border-bottom: 1px solid#9a9999;"><span>添加模板</span></div>
+                <div class="right_panel">
+
+                    <form id="scaf" method="post" class="bootstrap-frm" onsubmit="return false;" style="max-width: 90%;">
+                        <input type="hidden" id="id" value="${id!''}" />
+                        <div class="frm-div-row">
+                            <label class="frm-div-row-label" for="freightTemplateName" ><font color="#ff4e00">*</font>模板名称 :</label>
+                            <input type="text" id="freightTemplateName" maxlength="20"  name="name"  lay-verify="required" tabindex="1"  style="width: 30%;" />
+                        </div>
+                        <div class="frm-div-row">
+                            <label class="frm-div-row-label" for="ms_city" ><font color="#ff4e00">*</font>发货地 :</label>
+                            <input name="" id="ms_city" style="width:40%" type="text" lay-verify="required" placeholder="请选择" autocomplete="off"  readonly="true">
+                            <input type="hidden" id="province" name="deliverProvinceName" />
+                            <input type="hidden" id="city" name="deliverCityName" />
+                            <input type="hidden" id="area" name="deliverAreaName"   />
+                            <input type="hidden" id="province_code" name="deliverProvinceCode"   />
+                            <input type="hidden" id="city_code" name="deliverCityCode"  />
+                            <input type="hidden" id="area_code" name="deliverAreaCode"   />
+                        </div>
+                        <div class="frm-div-row">
+                            <label class="frm-div-row-label" ><font color="#ff4e00">*</font>是否包邮 :</label>
+                            <div style="float: left;width: 50%;margin-top: 5px;">
+                                <input type="radio" name="freightStatus" id="freightStatus_1" class="freightStatus" value="1" style="margin-top: 1%;float: left;" checked="checked" />
+                                <label for="freightStatus_1" style="float: left;margin-top: 4px;">自定义运费</label>
+                                <input type="radio" name="freightStatus" id="freightStatus_2" class="freightStatus" value="2" style="margin-top: 1%;float: left;margin-left:3%;"  />
+                                <label for="freightStatus_2" style="margin-top: 4px;float: left;">包邮</label>
+                            </div>
+                        </div>
+                        <div class="frm-div-row expressDiv" style="float: left;width: 100%;">
+                            <label class="frm-div-row-label" ><font color="#ff4e00">*</font>计价方式 :</label>
+                            <div style="float: left;width: 50%;margin-top: 5px;">
+                                <input type="radio" name="valuationMethod" id="valuationMethod_1" class="valuationMethod" value="1" style="margin-top: 1%;float: left;" checked="checked" />
+                                <label for="valuationMethod_1" style="float: left;margin-top: 4px;">按件数</label>
+                                <input type="radio" name="valuationMethod" id="valuationMethod_2" class="valuationMethod" value="2" style="margin-top: 1%;float: left;margin-left:3%;"  />
+                                <label for="valuationMethod_2" style="margin-top: 4px;float: left;">按重量</label>
+                            </div>
+                        </div>
+
+                        <label class="expressDiv" style="margin-top: 5%;">
+                            <span>运送方式 :</span>
+                            <div style="margin-top: 2%;padding-top: 1.5%;">除指定地区外，其余地区的运费采用“默认运费</div>
+                        </label>
+                        <!--  =====================快递======================= -->
+                        <label class="expressDiv" >
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="1" name="transportModelExpress" id="transportModel_express" ckass="transportModelChks" />快递</label>
+                        </label>
+                        <label class="expressDiv">
+                            <span></span>
+                            <div id="expressTableDiv" style="display: none;">
+                                <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    默认运费<input type="text" id="expressDefaultWeight"  style="width:60px;"  ><a class="dynamicUnitDefaultText">件内</a><input type="text" id="expressDefaultWeightMoney" style="width:60px;"/>元
+                                    &nbsp;&nbsp;&nbsp;
+                                    每增加<input type="text" id="expressDefaultAppendWeight"  style="width:60px;"  /><a class="dynamicUnitDefaultAppendText">件内</a>,增加运费<input type="text"  id="expressDefaultAppendWeightMoney"    style="width:60px;"  />元
+                                </div>
+                                <div  style="margin-left: 20%;"  >
+                                     <table id="expressTable" class="freezeTable" border="1" style="width:100%;margin-left: 0;">
+                                    <tbody id="expressTableBody">
+                                    <tr class="tabTh">
+                                        <td style="text-align: center;    width: 30%;">运送到</td>
+                                        <td style="text-align:center"><a class="dynamicUnitRowFirstText">首件数(件)</a></td>
+                                        <td style="text-align:center">首费(元)</td>
+                                        <td style="text-align:center"><a class="dynamicUnitRowAppendText">续件数(件)</a></td>
+                                        <td style="text-align:center">续费(元)</td>
+                                        <td style="text-align:center">操作</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                    <div style="text-align:center;background-color: #e8f2ff;">
+                                        <a class="expressTableAddRow" style="color:blue;cursor: pointer;" >添加一行</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                        <!--  =====================EMS======================= -->
+                        <label class="expressDiv">
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="2" name="transportModelEms" id="transportModel_ems" ckass="transportModelChks" />EMS</label>
+                        </label>
+                        <label class="expressDiv">
+                            <span></span>
+                            <div id="emsTableDiv" style="display: none;">
+                                <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    默认运费<input type="text" id="emsDefaultWeight"  style="width:60px;"  ><a class="dynamicUnitDefaultText">件内</a><input type="text" id="emsDefaultWeightMoney"  style="width:60px;"  />元
+                                    &nbsp;&nbsp;&nbsp;
+                                    每增加<input type="text" id="emsDefaultAppendWeight"  style="width:60px;"  /><a class="dynamicUnitDefaultAppendText">件内</a>,增加运费<input type="text"  id="emsDefaultAppendWeightMoney"   style="width:60px;"  />元
+                                </div>
+                                <div  style="margin-left: 20%;"  >
+                                    <table id="emsTable" class="freezeTable" border="1" style="width:100%;margin-left: 0;">
+                                        <tbody id="emsTableBody">
+                                        <tr class="tabTh">
+                                            <td style="text-align: center;    width: 30%;">运送到</td>
+                                            <td style="text-align:center"><a class="dynamicUnitRowFirstText">首件数(件)</a></td>
+                                            <td style="text-align:center">首费(元)</td>
+                                            <td style="text-align:center"><a class="dynamicUnitRowAppendText">续件数(件)</a></td>
+                                            <td style="text-align:center">续费(元)</td>
+                                            <td style="text-align:center">操作</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="text-align:center;background-color: #e8f2ff;">
+                                        <a class="emsTableAddRow" style="color:blue;cursor: pointer;" >添加一行</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                        <!--  =====================平邮======================= -->
+                        <label class="expressDiv">
+                            <label style="margin-left: 20%;"><input type="checkbox"  value="3" name="transportModelOrdinaryMail" id="transportModel_ordinaryMail" ckass="transportModelChks" />平邮</label>
+                        </label>
+
+                        <label class="expressDiv" >
+                            <span></span>
+                            <div id="ordinaryMailTableDiv" style="display: none;">
+                                <div style="background-color: #e8f2ff; height: 35px;margin-left: 20%;">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    默认运费<input type="text" id="ordinaryMailDefaultWeight"  style="width:60px;"  ><a class="dynamicUnitDefaultText">件内</a><input type="text" id="ordinaryMailDefaultWeightMoney"  style="width:60px;"  />元
+                                    &nbsp;&nbsp;&nbsp;
+                                    每增加<input type="text" id="ordinaryMailDefaultAppendWeight"  style="width:60px;"  /><a class="dynamicUnitDefaultAppendText">件内</a>,增加运费<input type="text"  id="ordinaryMailDefaultAppendWeightMoney"    style="width:60px;"  />元
+                                </div>
+                                <div  style="margin-left: 20%;"  >
+                                    <table id="ordinaryMailTable" class="freezeTable" border="1" style="width:100%;margin-left: 0;">
+                                        <tbody id="ordinaryMailTableBody">
+                                        <tr class="tabTh">
+                                            <td style="text-align: center;    width: 30%;">运送到</td>
+                                            <td style="text-align:center"><a class="dynamicUnitRowFirstText">首件数(件)</a></td>
+                                            <td style="text-align:center">首费(元)</td>
+                                            <td style="text-align:center"><a class="dynamicUnitRowAppendText">续件数(件)</a></td>
+                                            <td style="text-align:center">续费(元)</td>
+                                            <td style="text-align:center">操作</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="text-align:center;background-color: #e8f2ff;">
+                                        <a class="ordinaryMailTableAddRow" style="color:blue;cursor: pointer;" >添加一行</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <div style="width:100%;text-align:center;margin-top: 5%;">
+                            <input type="button" id="saveBtn" class="button" value="保存"  />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="button" id="backBtn" class="button" value="返回"  />
+                        </div>
+                        <label>
+                            <span> </span>
+                            <a id="scaf_msg" ></a>
+                        </label>
+
+                        <!-- 快递 地区选择器-->
+                        <div class="modal fade" id="expressSelectRegionModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="expressSelectRegionModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            ×
+                                        </button>
+                                        <h4 class="modal-title" >
+                                            选择区域
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="express-select-region">
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            关闭
+                                        </button>
+                                        <button type="button" class="btn btn-primary expressSelectBtn">
+                                            确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- EMS 地区选择器-->
+                        <div class="modal fade" id="emsSelectRegionModal"  data-backdrop="static"  data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="emsSelectRegionModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            ×
+                                        </button>
+                                        <h4 class="modal-title">
+                                            选择区域
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="ems-select-region">
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            关闭
+                                        </button>
+                                        <button type="button" class="btn btn-primary emsSelectBtn">
+                                            确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- 快递 地区选择器-->
+                        <div class="modal fade" id="ordinaryMailSelectRegionModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ordinaryMailSelectRegionModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            ×
+                                        </button>
+                                        <h4 class="modal-title" >
+                                            选择区域
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="ordinaryMail-select-region">
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            关闭
+                                        </button>
+                                        <button type="button" class="btn btn-primary ordinaryMailSelectBtn">
+                                            确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="pcaDiv">
+</div>
+
+
+<link rel="stylesheet" href="${basePath}/static/lib/areaPlugin/RegionalChoice.css">
+<script src="${basePath}/static/lib/areaPlugin/RegionalChoice.js"></script>
+
+
+<script type="text/javascript" src="${basePath}/static/js/seller/freightTemplate/edit.js"></script>
+
+
+
+<#include "/footer.html"/>
+
+</body></html>
+
+
