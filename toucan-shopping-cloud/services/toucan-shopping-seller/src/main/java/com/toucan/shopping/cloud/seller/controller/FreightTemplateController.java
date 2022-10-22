@@ -935,6 +935,7 @@ public class FreightTemplateController {
 
                 //恢复库中的地区规则对象
                 if(!CollectionUtils.isEmpty(persistentFreightTemplateAreaRules)) {
+                    logger.warn("保存失败 开始回滚数据 地区规则对象 修改前对象 {} ",JSONObject.toJSONString(persistentFreightTemplateAreaRules));
                     if(persistentFreightTemplateAreaRules.size()<100){
                         List<Long> idList = persistentFreightTemplateAreaRules.stream().map(FreightTemplateAreaRule::getId).collect(Collectors.toList());
                         freightTemplateAreaRuleService.updateResumeByIdList(idList);
