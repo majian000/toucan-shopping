@@ -217,12 +217,15 @@ $(function () {
     });
 
     $("#step4Next").bind( 'click' ,function(){
-        $("#refreshCaptcha").attr("src",basePath+"/api/shop/product/approve/vcode?"+new Date().getTime());
-        $("#step5").show();
-        $("#step4").hide();
-        $("#step3").hide();
-        $("#step2").hide();
-        $("#step1").hide();
+        var result = checkInputFunctionByContainerId("step4",2);
+        if(result) {
+            $("#refreshCaptcha").attr("src", basePath + "/api/shop/product/approve/vcode?" + new Date().getTime());
+            $("#step5").show();
+            $("#step4").hide();
+            $("#step3").hide();
+            $("#step2").hide();
+            $("#step1").hide();
+        }
     });
 
 
@@ -232,6 +235,12 @@ $(function () {
         $("#step3").hide();
         $("#step2").hide();
         $("#step1").hide();
+    });
+
+    $("#selectFreightTemplate").bind( 'click' ,function(){
+
+        openSelectFreightTemplateDialog();
+        initFreightTemplatePagination();
     });
 
     appendDescriptionTableRow();

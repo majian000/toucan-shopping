@@ -29,6 +29,8 @@ public class ShopProductApprove {
 
     private String productUuid; //平台维度的SPU的UUID
 
+    private Long freightTemplateId; //运费模板ID
+
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long productId; //平台维度的SPU的ID
