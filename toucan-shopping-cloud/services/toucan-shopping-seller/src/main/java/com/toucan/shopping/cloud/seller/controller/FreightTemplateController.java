@@ -19,6 +19,7 @@ import com.toucan.shopping.modules.seller.page.SellerShopPageInfo;
 import com.toucan.shopping.modules.seller.redis.FreightTemplateKey;
 import com.toucan.shopping.modules.seller.redis.SellerShopKey;
 import com.toucan.shopping.modules.seller.service.*;
+import com.toucan.shopping.modules.seller.util.FreightTemplateUtils;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateDefaultRuleVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
@@ -973,6 +974,108 @@ public class FreightTemplateController {
 
 
 
+    /**
+     * 根据ID删除
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用编码: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        FreightTemplate freightTemplate = JSONObject.parseObject(requestJsonVO.getEntityJson(), FreightTemplate.class);
+
+        if(freightTemplate.getId()==null)
+        {
+            logger.warn("ID为空 param:"+ requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空!");
+            return resultObjectVO;
+        }
+
+
+        if(freightTemplate.getUserMainId()==null)
+        {
+            logger.warn("用户ID为空 param:"+ requestJsonVO.getEntityJson());
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("用户ID不能为空!");
+            return resultObjectVO;
+        }
+
+
+        String userMainId = String.valueOf(freightTemplate.getUserMainId());
+        try {
+
+            String newSign = FreightTemplateUtils.getDeleteSignHeader(userMainId);
+            if(!signHeader.equals(newSign))
+            {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("签名校验失败,请稍后重试");
+                return resultObjectVO;
+            }
+
+            boolean lockStatus = skylarkLock.lock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
+            if (!lockStatus) {
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试");
+                return resultObjectVO;
+            }
+
+
+            SellerShop sellerShopEntity = sellerShopService.findByUserMainId(freightTemplate.getUserMainId());
+            if(sellerShopEntity!=null)
+            {
+                freightTemplate.setShopId(sellerShopEntity.getId());
+            }
+
+            if(freightTemplate.getShopId()==null)
+            {
+                //释放锁
+                skylarkLock.unLock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
+
+                logger.warn("店铺ID为空 param:"+ JSONObject.toJSONString(freightTemplate));
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有查询到关联店铺!");
+                return resultObjectVO;
+            }
+
+            int row = freightTemplateService.deleteByIdAndUserMainId(freightTemplate.getId(),freightTemplate.getUserMainId());
+            if (row <=0) {
+                //释放锁
+                skylarkLock.unLock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
+
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请重试!");
+                return resultObjectVO;
+            }
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }finally{
+            //释放锁
+            skylarkLock.unLock(FreightTemplateKey.getDeleteLockKey(userMainId), userMainId);
+        }
+        return resultObjectVO;
+    }
 
 
 

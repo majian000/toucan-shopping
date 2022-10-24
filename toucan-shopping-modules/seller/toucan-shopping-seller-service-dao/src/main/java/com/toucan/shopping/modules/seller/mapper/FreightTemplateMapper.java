@@ -26,6 +26,8 @@ public interface FreightTemplateMapper {
 
     int deleteById(Long templateId);
 
+    int deleteByIdAndUserMainId(Long templateId,Long userMainId);
+
     FreightTemplate findByIdAndUserMainId(Long id, Long userMainId);
 
     int update(FreightTemplate entity);
