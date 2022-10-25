@@ -434,9 +434,9 @@ public class FreightTemplateController {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @RequestMapping(value="/find/id/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+    public ResultObjectVO findByIdAndUserMainId(@RequestBody RequestJsonVO requestVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if(requestVo==null||requestVo.getEntityJson()==null)
         {
@@ -587,6 +587,146 @@ public class FreightTemplateController {
         }
         return resultObjectVO;
     }
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findById(@RequestBody RequestJsonVO requestVo){
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestVo==null||requestVo.getEntityJson()==null)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到实体对象");
+            return resultObjectVO;
+        }
+
+        try {
+            FreightTemplateVO query = JSONObject.parseObject(requestVo.getEntityJson(),FreightTemplateVO.class);
+            if(query.getId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("没有找到ID");
+                return resultObjectVO;
+            }
+
+            //查询运费模板
+            List<FreightTemplate> freightTemplates = freightTemplateService.queryListByVO(query);
+            if(CollectionUtils.isEmpty(freightTemplates))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("对象不存在!");
+                return resultObjectVO;
+            }
+
+            FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+            BeanUtils.copyProperties(freightTemplateVO,freightTemplates.get(0));
+
+            freightTemplateVO.setExpressAreaRules(new LinkedList<>());
+            freightTemplateVO.setEmsAreaRules(new LinkedList<>());
+            freightTemplateVO.setOrdinaryMailAreaRules(new LinkedList<>());
+
+            //查询默认运费规则
+            FreightTemplateDefaultRuleVO queryFreightTemplateDefaultRuleVO= new FreightTemplateDefaultRuleVO();
+            queryFreightTemplateDefaultRuleVO.setTemplateId(freightTemplateVO.getId());
+            List<FreightTemplateDefaultRule> freightTemplateDefaultRules = freightTemplateDefaultRuleService.queryListByVO(queryFreightTemplateDefaultRuleVO);
+            if(!CollectionUtils.isEmpty(freightTemplateDefaultRules))
+            {
+                for(FreightTemplateDefaultRule freightTemplateDefaultRule:freightTemplateDefaultRules)
+                {
+                    FreightTemplateDefaultRuleVO freightTemplateDefaultRuleVO = new FreightTemplateDefaultRuleVO();
+                    BeanUtils.copyProperties(freightTemplateDefaultRuleVO,freightTemplateDefaultRule);
+                    if("1".equals(freightTemplateDefaultRuleVO.getTransportModel()))
+                    {
+                        freightTemplateVO.setExpressDefaultRule(freightTemplateDefaultRuleVO);
+                    }else if("2".equals(freightTemplateDefaultRuleVO.getTransportModel()))
+                    {
+                        freightTemplateVO.setEmsDefaultRule(freightTemplateDefaultRuleVO);
+                    }else if("3".equals(freightTemplateDefaultRuleVO.getTransportModel()))
+                    {
+                        freightTemplateVO.setOrdinaryMailDefaultRule(freightTemplateDefaultRuleVO);
+                    }
+                }
+            }
+
+            //查询快递地区规则
+            FreightTemplateAreaRuleVO queryFreightTemplateAreaRuleVO = new FreightTemplateAreaRuleVO();
+            queryFreightTemplateAreaRuleVO.setTemplateId(freightTemplateVO.getId());
+            queryFreightTemplateAreaRuleVO.setTransportModel("1");
+            List<FreightTemplateAreaRule> expressRules =  freightTemplateAreaRuleService.queryListByVO(queryFreightTemplateAreaRuleVO);
+            if(!CollectionUtils.isEmpty(expressRules))
+            {
+                Map<Long, List<FreightTemplateAreaRule>> expressRuleMap = expressRules.stream().collect(Collectors.groupingBy(FreightTemplateAreaRule::getGroupId));
+                Set<Long> expressRuleKeys = expressRuleMap.keySet();
+                for(Long expressKey:expressRuleKeys)
+                {
+                    FreightTemplateAreaRuleVO freightTemplateAreaRuleVO = new FreightTemplateAreaRuleVO();
+                    List<FreightTemplateAreaRule> rows = expressRuleMap.get(expressKey);
+                    BeanUtils.copyProperties(freightTemplateAreaRuleVO,rows.get(0));
+                    String selectAreas = rows.stream().map(FreightTemplateAreaRule::getCityName).collect(Collectors.joining(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT));
+                    freightTemplateAreaRuleVO.setSelectAreas(selectAreas);
+                    freightTemplateAreaRuleVO.setSelectItems(rows);
+                    freightTemplateVO.getExpressAreaRules().add(freightTemplateAreaRuleVO);
+                }
+            }
+
+
+            //查询EMS地区规则
+            queryFreightTemplateAreaRuleVO.setTransportModel("2");
+            List<FreightTemplateAreaRule> emsRules =  freightTemplateAreaRuleService.queryListByVO(queryFreightTemplateAreaRuleVO);
+            if(!CollectionUtils.isEmpty(emsRules))
+            {
+                Map<Long, List<FreightTemplateAreaRule>> emsRuleMap = emsRules.stream().collect(Collectors.groupingBy(FreightTemplateAreaRule::getGroupId));
+                Set<Long> emsRuleKeys = emsRuleMap.keySet();
+                for(Long expressKey:emsRuleKeys)
+                {
+                    FreightTemplateAreaRuleVO freightTemplateAreaRuleVO = new FreightTemplateAreaRuleVO();
+                    List<FreightTemplateAreaRule> rows = emsRuleMap.get(expressKey);
+                    BeanUtils.copyProperties(freightTemplateAreaRuleVO,rows.get(0));
+                    String selectAreas = rows.stream().map(FreightTemplateAreaRule::getCityName).collect(Collectors.joining(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT));
+                    freightTemplateAreaRuleVO.setSelectAreas(selectAreas);
+                    freightTemplateAreaRuleVO.setSelectItems(rows);
+                    freightTemplateVO.getEmsAreaRules().add(freightTemplateAreaRuleVO);
+                }
+            }
+
+
+
+            //查询平邮地区规则
+            queryFreightTemplateAreaRuleVO.setTransportModel("3");
+            List<FreightTemplateAreaRule> ordinaryMailRules =  freightTemplateAreaRuleService.queryListByVO(queryFreightTemplateAreaRuleVO);
+            if(!CollectionUtils.isEmpty(ordinaryMailRules))
+            {
+                Map<Long, List<FreightTemplateAreaRule>> emsRuleMap = ordinaryMailRules.stream().collect(Collectors.groupingBy(FreightTemplateAreaRule::getGroupId));
+                Set<Long> emsKeys = emsRuleMap.keySet();
+                for(Long expressKey:emsKeys)
+                {
+                    FreightTemplateAreaRuleVO freightTemplateAreaRuleVO = new FreightTemplateAreaRuleVO();
+                    List<FreightTemplateAreaRule> rows = emsRuleMap.get(expressKey);
+                    BeanUtils.copyProperties(freightTemplateAreaRuleVO,rows.get(0));
+                    String selectAreas = rows.stream().map(FreightTemplateAreaRule::getCityName).collect(Collectors.joining(FreightTemplateConstant.VIEW_SELECT_AREA_SPLIT));
+                    freightTemplateAreaRuleVO.setSelectAreas(selectAreas);
+                    freightTemplateAreaRuleVO.setSelectItems(rows);
+                    freightTemplateVO.getOrdinaryMailAreaRules().add(freightTemplateAreaRuleVO);
+                }
+            }
+
+            resultObjectVO.setData(freightTemplateVO);
+
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+        }
+        return resultObjectVO;
+    }
+
 
 
 

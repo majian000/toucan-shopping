@@ -444,6 +444,9 @@ function initProductPublishForm(productApprove)
         $(":checkbox[name='etractMethod'][value='" + productApprove.etractMethod + "']").prop("checked", "checked");
     }
 
+    $("#freightTemplateIdHidden").val(productApprove.freightTemplateId);
+    $("#selectFreightTemplate").val(productApprove.freightTemplateName);
+
     //设置选择店铺分类默认值
     if(productApprove.shopCategoryId!=null) {
         var shopSelectCategoryArray = productApprove.shopCategoryNamePath;
@@ -616,6 +619,15 @@ $(function () {
     });
 
 
+    $("#selectFreightTemplate").bind( 'click' ,function(){
+
+        openSelectFreightTemplateDialog();
+        initFreightTemplatePagination();
+    });
+
+    $(".publishProductButton").bind( 'click' ,function(){
+        window.open(basePath+"/page/freightTemplate/add");
+    });
 
 });
 

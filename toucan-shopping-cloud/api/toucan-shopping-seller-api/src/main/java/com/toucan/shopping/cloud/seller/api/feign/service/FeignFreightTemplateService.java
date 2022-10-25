@@ -52,8 +52,8 @@ public interface FeignFreightTemplateService {
      * @param requestVo
      * @return
      */
-    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
+    @RequestMapping(value="/find/id/userMainId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findByIdAndUserMainId(@RequestBody RequestJsonVO requestVo);
 
 
 
@@ -64,4 +64,17 @@ public interface FeignFreightTemplateService {
      */
     @RequestMapping(value="/delete/id",produces = "application/json;charset=UTF-8",method = RequestMethod.DELETE)
     ResultObjectVO deleteById(@RequestHeader("toucan-sign-header") String signHeader,@RequestBody RequestJsonVO requestJsonVO);
+
+
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findById(@RequestBody RequestJsonVO requestVo);
+
+
+
 }

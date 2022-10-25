@@ -364,7 +364,14 @@
                                             </div>
                                         </div>
 
+
                                         <div style="width:45%;float:left;">
+                                            <div class="field" style="width:100%;text-align:center;" >
+                                                <span class="red">*</span>运费模板：
+                                                <input type="text" id="selectFreightTemplate" lay-verify="required" class="releaseProductInputText"  name="freightTemplateName" style="width:50%" readonly/>
+                                                <input type="hidden" id="freightTemplateIdHidden" name="freightTemplateId">
+                                                <input type="button" class="publishProductButton" value="新增运费模板" />
+                                            </div>
                                         </div>
 
                                     </div>
@@ -448,6 +455,12 @@
 <script src="${basePath}/static/js/seller/product/selectProductCategory/selectCategory.js"></script>
 <script src="${basePath}/static/js/seller/product/selectShopCategory/selectShopCategory.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/common/toucan-uuid.js"></script>
+
+<link rel="stylesheet" href="${basePath}/static/lib/pagination/toPage.css" />
+<link rel="stylesheet" href="${basePath}/static/lib/tableFreeze/tableFreeze.css" />
+<script type="text/javascript" src="${basePath}/static/lib/pagination/toPage.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/tableFreeze/tableFreeze.js"></script>
+<script type="text/javascript" src="${basePath}/static/js/seller/product/freightTemplate.js"></script>
 <script type="text/javascript" src="${basePath}/static/js/seller/product/approve/republish_product.js"></script>
 
 

@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -25,6 +26,7 @@ import com.toucan.shopping.modules.product.page.ShopProductApprovePageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
 import com.toucan.shopping.modules.user.vo.UserVO;
@@ -84,6 +86,9 @@ public class ShopProductApproveApiController extends BaseController {
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
+
+    @Autowired
+    private FeignFreightTemplateService feignFreightTemplateService;
 
 
     private String[] imageExtScope = new String[]{".JPG",".JPEG",".PNG"};
@@ -185,16 +190,14 @@ public class ShopProductApproveApiController extends BaseController {
             resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
-                if(resultObjectVO.getData()!=null)
-                {
+                if(resultObjectVO.getData()!=null) {
                     SellerShopVO sellerShopVORet = resultObjectVO.formatData(SellerShopVO.class);
                     ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
                     shopProductApproveVO.setId(queryShopProductApproveVO.getId());
                     shopProductApproveVO.setShopId(sellerShopVORet.getId());
                     requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), shopProductApproveVO);
                     resultObjectVO = feignShopProductApproveService.queryByProductApproveIdAndShopId(requestJsonVO);
-                    if(resultObjectVO.isSuccess())
-                    {
+                    if (resultObjectVO.isSuccess()) {
                         shopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
                         CategoryVO queryCateogry = new CategoryVO();
                         queryCateogry.setId(shopProductApproveVO.getCategoryId());
@@ -202,22 +205,17 @@ public class ShopProductApproveApiController extends BaseController {
 
                         //查询分类
                         ResultObjectVO resultCategoryObjectVO = feignCategoryService.findIdPathById(requestJsonVO);
-                        if(resultCategoryObjectVO.isSuccess()&&resultCategoryObjectVO.getData()!=null)
-                        {
+                        if (resultCategoryObjectVO.isSuccess() && resultCategoryObjectVO.getData() != null) {
                             CategoryVO categoryVO = resultCategoryObjectVO.formatData(CategoryVO.class);
                             List<String> categoryIdPath = new LinkedList<>();
                             List<String> categoryNamePath = new LinkedList<>();
-                            if(CollectionUtils.isNotEmpty(categoryVO.getIdPath()))
-                            {
-                                for(Long categoryId:categoryVO.getIdPath())
-                                {
+                            if (CollectionUtils.isNotEmpty(categoryVO.getIdPath())) {
+                                for (Long categoryId : categoryVO.getIdPath()) {
                                     categoryIdPath.add(String.valueOf(categoryId));
                                 }
                             }
-                            if(CollectionUtils.isNotEmpty(categoryVO.getNamePaths()))
-                            {
-                                for(String categoryName:categoryVO.getNamePaths())
-                                {
+                            if (CollectionUtils.isNotEmpty(categoryVO.getNamePaths())) {
+                                for (String categoryName : categoryVO.getNamePaths()) {
                                     categoryNamePath.add(String.valueOf(categoryName));
                                 }
                             }
@@ -228,7 +226,7 @@ public class ShopProductApproveApiController extends BaseController {
 
 
                         //查询店铺分类
-                        if(shopProductApproveVO.getShopCategoryId()!=null) {
+                        if (shopProductApproveVO.getShopCategoryId() != null) {
                             ShopCategoryVO queryShopCateogry = new ShopCategoryVO();
                             queryShopCateogry.setId(shopProductApproveVO.getShopCategoryId());
                             requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), queryShopCateogry);
@@ -254,56 +252,47 @@ public class ShopProductApproveApiController extends BaseController {
                         }
 
                     }
-                    if(StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath()))
-                    {
-                        shopProductApproveVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveVO.getMainPhotoFilePath());
+                    if (StringUtils.isNotEmpty(shopProductApproveVO.getMainPhotoFilePath())) {
+                        shopProductApproveVO.setHttpMainPhotoFilePath(imageUploadService.getImageHttpPrefix() + shopProductApproveVO.getMainPhotoFilePath());
                     }
-                    if(CollectionUtils.isNotEmpty(shopProductApproveVO.getPreviewPhotoPaths()))
-                    {
+                    if (CollectionUtils.isNotEmpty(shopProductApproveVO.getPreviewPhotoPaths())) {
                         List<String> httpPreviewPhotos = new LinkedList<>();
-                        for(String previewPhoto:shopProductApproveVO.getPreviewPhotoPaths())
-                        {
-                            httpPreviewPhotos.add(imageUploadService.getImageHttpPrefix()+previewPhoto);
+                        for (String previewPhoto : shopProductApproveVO.getPreviewPhotoPaths()) {
+                            httpPreviewPhotos.add(imageUploadService.getImageHttpPrefix() + previewPhoto);
                         }
                         shopProductApproveVO.setHttpPreviewPhotoPaths(httpPreviewPhotos);
                     }
 
-                    if(CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList())) {
+                    if (CollectionUtils.isNotEmpty(shopProductApproveVO.getProductSkuVOList())) {
                         List<ShopProductApproveSkuAttribute> skuAttributes = new LinkedList<>();
-                        for(ShopProductApproveSkuVO shopProductApproveSkuVO:shopProductApproveVO.getProductSkuVOList())
-                        {
+                        for (ShopProductApproveSkuVO shopProductApproveSkuVO : shopProductApproveVO.getProductSkuVOList()) {
                             //设置商品预览图
-                            if(StringUtils.isNotEmpty(shopProductApproveSkuVO.getProductPreviewPath()))
-                            {
-                                shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix()+shopProductApproveSkuVO.getProductPreviewPath());
+                            if (StringUtils.isNotEmpty(shopProductApproveSkuVO.getProductPreviewPath())) {
+                                shopProductApproveSkuVO.setHttpProductPreviewPath(imageUploadService.getImageHttpPrefix() + shopProductApproveSkuVO.getProductPreviewPath());
                             }
 
-                            Map<String,String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(),Map.class);
+                            Map<String, String> attributeKeyValue = JSONObject.parseObject(shopProductApproveSkuVO.getAttributes(), Map.class);
                             Set<String> keysSet = attributeKeyValue.keySet();
-                            for(String key:keysSet)
-                            {
+                            for (String key : keysSet) {
                                 ShopProductApproveSkuAttribute shopProductApproveSkuAttribute = null;
                                 Optional<ShopProductApproveSkuAttribute> shopProductApproveSkuAttributeOptional = skuAttributes.stream().filter(item -> item.getKey().equals(key)).findFirst();
                                 //如果不存在属性名对象就创建
-                                if(!shopProductApproveSkuAttributeOptional.isPresent())
-                                {
+                                if (!shopProductApproveSkuAttributeOptional.isPresent()) {
                                     shopProductApproveSkuAttribute = new ShopProductApproveSkuAttribute();
                                     shopProductApproveSkuAttribute.setKey(key);
                                     shopProductApproveSkuAttribute.setValues(new LinkedList<>());
                                     skuAttributes.add(shopProductApproveSkuAttribute);
-                                }else{
+                                } else {
                                     shopProductApproveSkuAttribute = shopProductApproveSkuAttributeOptional.get();
                                 }
 
                                 //如果这个属性名没有任何属性值就直接添加
-                                if(CollectionUtils.isEmpty(shopProductApproveSkuAttribute.getValues()))
-                                {
+                                if (CollectionUtils.isEmpty(shopProductApproveSkuAttribute.getValues())) {
                                     shopProductApproveSkuAttribute.getValues().add(attributeKeyValue.get(key));
-                                }else{
+                                } else {
                                     //判断是否有重复
                                     Optional<String> shopProductApproveSkuAttributeValueOptional = shopProductApproveSkuAttribute.getValues().stream().filter(item -> item.equals(attributeKeyValue.get(key))).findFirst();
-                                    if(!shopProductApproveSkuAttributeValueOptional.isPresent())
-                                    {
+                                    if (!shopProductApproveSkuAttributeValueOptional.isPresent()) {
                                         shopProductApproveSkuAttribute.getValues().add(attributeKeyValue.get(key));
                                     }
                                 }
@@ -313,12 +302,23 @@ public class ShopProductApproveApiController extends BaseController {
 
                         shopProductApproveVO.setSkuAttributes(skuAttributes);
                     }
-                    if(shopProductApproveVO.getShopProductApproveDescriptionVO()!=null
-                            &&CollectionUtils.isNotEmpty(shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs()))
+                    if (shopProductApproveVO.getShopProductApproveDescriptionVO() != null
+                            && CollectionUtils.isNotEmpty(shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs())) {
+                        for (ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO : shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs()) {
+                            shopProductApproveDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix() + shopProductApproveDescriptionImgVO.getFilePath());
+                        }
+                    }
+                    FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+                    freightTemplateVO.setId(shopProductApproveVO.getFreightTemplateId());
+                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), freightTemplateVO);
+                    resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+                    if (resultObjectVO.isSuccess())
                     {
-                        for(ShopProductApproveDescriptionImgVO shopProductApproveDescriptionImgVO:shopProductApproveVO.getShopProductApproveDescriptionVO().getProductDescriptionImgs())
+                        freightTemplateVO = resultObjectVO.formatData(FreightTemplateVO.class);
+                        if(freightTemplateVO!=null)
                         {
-                            shopProductApproveDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix()+shopProductApproveDescriptionImgVO.getFilePath());
+                            shopProductApproveVO.setFreightTemplateId(freightTemplateVO.getId());
+                            shopProductApproveVO.setFreightTemplateName(freightTemplateVO.getName());
                         }
                     }
                     resultObjectVO.setData(shopProductApproveVO);

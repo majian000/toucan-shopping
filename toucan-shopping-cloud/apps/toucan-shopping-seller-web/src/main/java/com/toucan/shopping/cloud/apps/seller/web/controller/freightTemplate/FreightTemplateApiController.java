@@ -250,7 +250,7 @@ public class FreightTemplateApiController extends BaseController {
             queryVO.setId(freightTemplateVO.getId());
             queryVO.setUserMainId(Long.parseLong(userMainId));
             RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),queryVO);
-            resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+            resultObjectVO = feignFreightTemplateService.findByIdAndUserMainId(requestJsonVO);
 
         }catch(Exception e)
         {
