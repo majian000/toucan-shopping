@@ -198,7 +198,7 @@ function drawFreightTemplateTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+valuationMethodName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
-            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"selectRow\" style=\"color:blue;cursor: pointer;\">选择</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-name='"+row.name+"' class=\"selectRow\" style=\"color:blue;cursor: pointer;\">选择</a>\n" ;
             tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
@@ -206,5 +206,20 @@ function drawFreightTemplateTable(pageResult)
     }
     $("#freightTemplateTableBody").html(tableHtml);
     $("#freightTemplateTable").FrozenTable(2,0,0);
+
+    bindRowEvent();
+}
+
+function bindRowEvent()
+{
+
+    $(".selectRow").unbind("click");
+    $(".selectRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        var attrName = $(this).attr("attr-name");
+        $("#freightTemplateIdHidden").val(attrId);
+        $("#selectFreightTemplate").val(attrName);
+        layer.close(g_sleectConsigneeAddressDialogHandler);
+    });
 
 }

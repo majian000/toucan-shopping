@@ -243,6 +243,10 @@ $(function () {
         initFreightTemplatePagination();
     });
 
+    $(".publishProductButton").bind( 'click' ,function(){
+        window.open(basePath+"/page/freightTemplate/add");
+    });
+
     appendDescriptionTableRow();
     bindDescriptionTableDeleteRowEvent();
 });
