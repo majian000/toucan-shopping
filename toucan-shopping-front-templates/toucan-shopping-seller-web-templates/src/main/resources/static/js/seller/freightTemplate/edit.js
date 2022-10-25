@@ -224,14 +224,32 @@ function resetexpressTable()
     $("#expressDefaultAppendWeight").removeAttr("lay-verify");
     $("#expressDefaultAppendWeightMoney").val("");
     $("#expressDefaultAppendWeightMoney").removeAttr("lay-verify");
+
+    var selectvaluationMethodVal = $("input[name='valuationMethod']:checked").val();
+    var columnFirstUnit = "";
+    var columnAppendUnit = "";
+    if(selectvaluationMethodVal=="1")
+    {
+        columnFirstUnit="首件数(件)";
+        columnAppendUnit="续件数(件)";
+    }else if(selectvaluationMethodVal=="2")
+    {
+        columnFirstUnit="首重量(kg)";
+        columnAppendUnit="续重量(kg)";
+    }else{
+        columnFirstUnit="首体积(m³)";
+        columnAppendUnit="续体积(m³)";
+    }
+
     $("#expressTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
-        "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">首费(元)</td>\n" +
-        "                                        <td style=\"text-align:center\">续重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">续费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"><a class=\"dynamicUnitRowFirstText\">"+columnFirstUnit+"</a></td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>首费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"><a class=\"dynamicUnitRowAppendText\">"+columnAppendUnit+"</td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>续费(元)</td>\n" +
         "                                        <td style=\"text-align:center\">操作</td>\n" +
         "                                    </tr>");
+
 
 
 
@@ -442,14 +460,32 @@ function resetEmsTable()
     $("#emsDefaultAppendWeight").removeAttr("lay-verify");
     $("#emsDefaultAppendWeightMoney").val("");
     $("#emsDefaultAppendWeightMoney").removeAttr("lay-verify");
+
+    var selectvaluationMethodVal = $("input[name='valuationMethod']:checked").val();
+    var columnFirstUnit = "";
+    var columnAppendUnit = "";
+    if(selectvaluationMethodVal=="1")
+    {
+        columnFirstUnit="首件数(件)";
+        columnAppendUnit="续件数(件)";
+    }else if(selectvaluationMethodVal=="2")
+    {
+        columnFirstUnit="首重量(kg)";
+        columnAppendUnit="续重量(kg)";
+    }else{
+        columnFirstUnit="首体积(m³)";
+        columnAppendUnit="续体积(m³)";
+    }
+
     $("#emsTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
-        "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">首费(元)</td>\n" +
-        "                                        <td style=\"text-align:center\">续重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">续费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"><a class=\"dynamicUnitRowFirstText\">"+columnFirstUnit+"</a></td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>首费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"><a class=\"dynamicUnitRowAppendText\">"+columnAppendUnit+"</td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>续费(元)</td>\n" +
         "                                        <td style=\"text-align:center\">操作</td>\n" +
         "                                    </tr>");
+
 
 
 
@@ -664,14 +700,33 @@ function resetordinaryMailTable()
     $("#ordinaryMailDefaultAppendWeight").removeAttr("lay-verify");
     $("#ordinaryMailDefaultAppendWeightMoney").val("");
     $("#ordinaryMailDefaultAppendWeightMoney").removeAttr("lay-verify");
+
+    var selectvaluationMethodVal = $("input[name='valuationMethod']:checked").val();
+    var columnFirstUnit = "";
+    var columnAppendUnit = "";
+    if(selectvaluationMethodVal=="1")
+    {
+        columnFirstUnit="首件数(件)";
+        columnAppendUnit="续件数(件)";
+    }else if(selectvaluationMethodVal=="2")
+    {
+        columnFirstUnit="首重量(kg)";
+        columnAppendUnit="续重量(kg)";
+    }else{
+        columnFirstUnit="首体积(m³)";
+        columnAppendUnit="续体积(m³)";
+    }
+
     $("#ordinaryMailTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
-        "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">首费(元)</td>\n" +
-        "                                        <td style=\"text-align:center\">续重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">续费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"><a class=\"dynamicUnitRowFirstText\">"+columnFirstUnit+"</a></td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>首费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"><a class=\"dynamicUnitRowAppendText\">"+columnAppendUnit+"</td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>续费(元)</td>\n" +
         "                                        <td style=\"text-align:center\">操作</td>\n" +
         "                                    </tr>");
+
+
 
 
 
@@ -1185,7 +1240,7 @@ $(function () {
                             emsTableAddRowEvent();
                             var tablePos =emsTablePos-1;
                             $("#emsTable_row_"+tablePos+"_areas").html(emsAreaRule.selectAreas);
-                            $("#emsTable_row_"+tablePos+"_areas_hidden").val(expressAreaRule.selectAreas);
+                            $("#emsTable_row_"+tablePos+"_areas_hidden").val(emsAreaRule.selectAreas);
                             $("#emsTable_row_"+tablePos+"_firstWeight").val(emsAreaRule.firstWeight);
                             $("#emsTable_row_"+tablePos+"_firstWeightMoney").val(emsAreaRule.firstWeightMoney);
                             $("#emsTable_row_"+tablePos+"_appendWeight").val(emsAreaRule.appendWeight);
@@ -1225,7 +1280,7 @@ $(function () {
                             ordinaryMailTableAddRowEvent();
                             var tablePos =ordinaryMailTablePos-1;
                             $("#ordinaryMailTable_row_"+tablePos+"_areas").html(ordinaryMailAreaRule.selectAreas);
-                            $("#ordinaryMailTable_row_"+tablePos+"_areas_hidden").val(expressAreaRule.selectAreas);
+                            $("#ordinaryMailTable_row_"+tablePos+"_areas_hidden").val(ordinaryMailAreaRule.selectAreas);
                             $("#ordinaryMailTable_row_"+tablePos+"_firstWeight").val(ordinaryMailAreaRule.firstWeight);
                             $("#ordinaryMailTable_row_"+tablePos+"_firstWeightMoney").val(ordinaryMailAreaRule.firstWeightMoney);
                             $("#ordinaryMailTable_row_"+tablePos+"_appendWeight").val(ordinaryMailAreaRule.appendWeight);

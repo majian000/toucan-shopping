@@ -223,14 +223,33 @@ function resetexpressTable()
     $("#expressDefaultAppendWeight").removeAttr("lay-verify");
     $("#expressDefaultAppendWeightMoney").val("");
     $("#expressDefaultAppendWeightMoney").removeAttr("lay-verify");
+
+    var selectvaluationMethodVal = $("input[name='valuationMethod']:checked").val();
+    var columnFirstUnit = "";
+    var columnAppendUnit = "";
+    if(selectvaluationMethodVal=="1")
+    {
+        columnFirstUnit="首件数(件)";
+        columnAppendUnit="续件数(件)";
+    }else if(selectvaluationMethodVal=="2")
+    {
+        columnFirstUnit="首重量(kg)";
+        columnAppendUnit="续重量(kg)";
+    }else{
+        columnFirstUnit="首体积(m³)";
+        columnAppendUnit="续体积(m³)";
+    }
+
     $("#expressTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
-        "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">首费(元)</td>\n" +
-        "                                        <td style=\"text-align:center\">续重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">续费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"> <font color=\"#ff4e00\">*</font><a class=\"dynamicUnitRowFirstText\">"+columnFirstUnit+"</a></td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>首费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"> <font color=\"#ff4e00\">*</font><a class=\"dynamicUnitRowAppendText\">"+columnAppendUnit+"</td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>续费(元)</td>\n" +
         "                                        <td style=\"text-align:center\">操作</td>\n" +
         "                                    </tr>");
+
+
 
 
 
@@ -441,12 +460,30 @@ function resetEmsTable()
     $("#emsDefaultAppendWeight").removeAttr("lay-verify");
     $("#emsDefaultAppendWeightMoney").val("");
     $("#emsDefaultAppendWeightMoney").removeAttr("lay-verify");
+
+
+    var selectvaluationMethodVal = $("input[name='valuationMethod']:checked").val();
+    var columnFirstUnit = "";
+    var columnAppendUnit = "";
+    if(selectvaluationMethodVal=="1")
+    {
+        columnFirstUnit="首件数(件)";
+        columnAppendUnit="续件数(件)";
+    }else if(selectvaluationMethodVal=="2")
+    {
+        columnFirstUnit="首重量(kg)";
+        columnAppendUnit="续重量(kg)";
+    }else{
+        columnFirstUnit="首体积(m³)";
+        columnAppendUnit="续体积(m³)";
+    }
+
     $("#emsTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
-        "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">首费(元)</td>\n" +
-        "                                        <td style=\"text-align:center\">续重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">续费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"> <font color=\"#ff4e00\">*</font><a class=\"dynamicUnitRowFirstText\">"+columnFirstUnit+"</a></td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>首费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"> <font color=\"#ff4e00\">*</font><a class=\"dynamicUnitRowAppendText\">"+columnAppendUnit+"</td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>续费(元)</td>\n" +
         "                                        <td style=\"text-align:center\">操作</td>\n" +
         "                                    </tr>");
 
@@ -663,12 +700,30 @@ function resetordinaryMailTable()
     $("#ordinaryMailDefaultAppendWeight").removeAttr("lay-verify");
     $("#ordinaryMailDefaultAppendWeightMoney").val("");
     $("#ordinaryMailDefaultAppendWeightMoney").removeAttr("lay-verify");
+
+
+    var selectvaluationMethodVal = $("input[name='valuationMethod']:checked").val();
+    var columnFirstUnit = "";
+    var columnAppendUnit = "";
+    if(selectvaluationMethodVal=="1")
+    {
+        columnFirstUnit="首件数(件)";
+        columnAppendUnit="续件数(件)";
+    }else if(selectvaluationMethodVal=="2")
+    {
+        columnFirstUnit="首重量(kg)";
+        columnAppendUnit="续重量(kg)";
+    }else{
+        columnFirstUnit="首体积(m³)";
+        columnAppendUnit="续体积(m³)";
+    }
+
     $("#ordinaryMailTableBody").html("<tr class=\"tabTh\">\n" +
         "                                        <td style=\"text-align: center;\">运送到</td>\n" +
-        "                                        <td style=\"text-align:center\">首重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">首费(元)</td>\n" +
-        "                                        <td style=\"text-align:center\">续重量(kg)</td>\n" +
-        "                                        <td style=\"text-align:center\">续费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"> <font color=\"#ff4e00\">*</font><a class=\"dynamicUnitRowFirstText\">"+columnFirstUnit+"</a></td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>首费(元)</td>\n" +
+        "                                        <td style=\"text-align:center\"> <font color=\"#ff4e00\">*</font><a class=\"dynamicUnitRowAppendText\">"+columnAppendUnit+"</td>\n" +
+        "                                        <td style=\"text-align:center\"><font color=\"#ff4e00\">*</font>续费(元)</td>\n" +
         "                                        <td style=\"text-align:center\">操作</td>\n" +
         "                                    </tr>");
 
