@@ -1139,7 +1139,7 @@ public class FreightTemplateController {
             return resultObjectVO;
         }
 
-        FreightTemplate freightTemplate = JSONObject.parseObject(requestJsonVO.getEntityJson(), FreightTemplate.class);
+        FreightTemplateVO freightTemplate = JSONObject.parseObject(requestJsonVO.getEntityJson(), FreightTemplateVO.class);
 
         if(freightTemplate.getId()==null)
         {

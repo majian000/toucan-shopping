@@ -55,4 +55,5 @@ public interface ShopProductApproveMapper {
     ShopProductApproveVO findById(Long id);
 
     int updateShopProductId(Long id, Long shopProductId);
+
 }

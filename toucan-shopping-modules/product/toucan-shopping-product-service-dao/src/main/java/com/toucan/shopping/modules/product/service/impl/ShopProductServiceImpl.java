@@ -62,4 +62,9 @@ public class ShopProductServiceImpl implements ShopProductService {
     public List<ShopProductVO> queryList(ShopProductVO shopProductVO) {
         return shopProductMapper.queryList(shopProductVO);
     }
+
+    @Override
+    public ShopProductVO queryOne(ShopProductVO shopProductVO) {
+        return shopProductMapper.queryOne(shopProductVO);
+    }
 }

@@ -2,6 +2,8 @@ package com.toucan.shopping.cloud.apps.seller.web.controller.freightTemplate;
 
 import com.toucan.shopping.cloud.apps.seller.web.controller.BaseController;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignAreaService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.modules.area.vo.AreaVO;
@@ -11,10 +13,13 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
+import com.toucan.shopping.modules.product.vo.ShopProductApproveVO;
+import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.seller.constant.FreightTemplateConstant;
 import com.toucan.shopping.modules.seller.entity.FreightTemplateAreaRule;
 import com.toucan.shopping.modules.seller.entity.SellerShop;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
+import com.toucan.shopping.modules.seller.util.FreightTemplateUtils;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
@@ -49,6 +54,12 @@ public class FreightTemplateApiController extends BaseController {
 
     @Autowired
     private FeignSellerShopService feignSellerShopService;
+
+    @Autowired
+    private FeignShopProductApproveService feignShopProductApproveService;
+
+    @Autowired
+    private FeignShopProductService feignShopProductService;
 
     @Autowired
     private FeignAreaService feignAreaService;
@@ -386,5 +397,90 @@ public class FreightTemplateApiController extends BaseController {
     }
 
 
+    private SellerShopVO queryByShop(String userMainId) throws Exception
+    {
+        SellerShop querySellerShop = new SellerShop();
+        querySellerShop.setUserMainId(Long.parseLong(userMainId));
+        RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), querySellerShop);
+        ResultObjectVO resultObjectVO = feignSellerShopService.findByUser(requestJsonVO.sign(),requestJsonVO);
+        if(resultObjectVO.isSuccess()&&resultObjectVO.getData()!=null) {
+            SellerShopVO sellerShopVO = resultObjectVO.formatData(SellerShopVO.class);
+            return sellerShopVO;
+        }
+        return null;
+    }
+
+    /**
+     * 根据ID删除
+     * @return
+     */
+    @UserAuth
+    @RequestMapping(value="/delete/{id}",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,@PathVariable Long id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(id==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空");
+            return resultObjectVO;
+        }
+        String userMainId="-1";
+        try {
+            userMainId = UserAuthHeaderUtil.getUserMainId(request.getHeader(toucan.getUserAuth().getHttpToucanAuthHeader()));
+
+            SellerShopVO sellerShopVO = queryByShop(userMainId);
+            ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
+            shopProductApproveVO.setFreightTemplateId(id);
+            shopProductApproveVO.setShopId(sellerShopVO.getId());
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductApproveVO);
+            resultObjectVO = feignShopProductApproveService.findOneUnderReviewByFreightTemplateId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    shopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+                    if (shopProductApproveVO != null) {
+
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("无法删除该模板,因为\""+shopProductApproveVO.getName()+"\"正在发布中,您可以删除该商品后重试");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            ShopProductVO shopProductVO = new ShopProductVO();
+            shopProductVO.setFreightTemplateId(id);
+            shopProductVO.setShopId(sellerShopVO.getId());
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
+            resultObjectVO = feignShopProductService.queryOneSaleByFreightTemplateId(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                if(resultObjectVO.getData()!=null) {
+                    shopProductVO = resultObjectVO.formatData(ShopProductVO.class);
+                    if (shopProductApproveVO != null) {
+
+                        resultObjectVO.setCode(ResultObjectVO.FAILD);
+                        resultObjectVO.setMsg("无法删除该模板,因为\""+shopProductVO.getName()+"\"已上架,您可以删除该商品后重试");
+                        return resultObjectVO;
+                    }
+                }
+            }
+
+            FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+            freightTemplateVO.setId(id);
+            freightTemplateVO.setUserMainId(Long.parseLong(userMainId));
+            requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),freightTemplateVO);
+            resultObjectVO = feignFreightTemplateService.deleteById(FreightTemplateUtils.getDeleteSignHeader(userMainId),requestJsonVO);
+
+
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 }

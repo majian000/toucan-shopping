@@ -38,4 +38,7 @@ public interface ShopProductService {
 
     List<ShopProductVO> queryList(ShopProductVO shopProductVO);
 
+
+    ShopProductVO queryOne(ShopProductVO shopProductVO);
+
 }

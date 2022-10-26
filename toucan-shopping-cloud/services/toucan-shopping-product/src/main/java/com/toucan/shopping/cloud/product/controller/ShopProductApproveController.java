@@ -1004,6 +1004,12 @@ public class ShopProductApproveController {
 
             //查询审核状态
             ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductApproveRecordVO.getApproveId());
+            if(shopProductApprove==null)
+            {
+                resultObjectVO.setMsg("该商品已被删除");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
             if(shopProductApprove!=null&&shopProductApprove.getId()!=-1&&shopProductApprove.getApproveStatus().intValue()!=ProductConstant.PROCESSING.intValue()) {
                 resultObjectVO.setMsg("该商品已被审核,不能重复审核");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -1093,6 +1099,12 @@ public class ShopProductApproveController {
 
             //查询审核状态
             ShopProductApprove shopProductApprove = shopProductApproveService.findById(shopProductApproveVO.getId());
+            if(shopProductApprove==null)
+            {
+                resultObjectVO.setMsg("该商品已被删除");
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                return resultObjectVO;
+            }
             if(shopProductApprove!=null&&shopProductApprove.getId()!=-1&&shopProductApprove.getApproveStatus().intValue()!=ProductConstant.PROCESSING.intValue()) {
                 resultObjectVO.setMsg("该商品已被审核,不能重复审核");
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
@@ -1272,6 +1284,54 @@ public class ShopProductApproveController {
     }
 
 
+    /**
+     * 根据运费模板ID查询审核中的信息(一条)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/one/underReview/by/freightTemplateId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO findOneUnderReviewByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestJsonVO == null) {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if (requestJsonVO.getAppCode() == null) {
+            logger.info("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+
+        try {
+            ShopProductApproveVO entity = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductApproveVO.class);
+
+            if(entity.getFreightTemplateId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("运费模板ID不能为空!");
+                return resultObjectVO;
+            }
+
+            if(entity.getShopId()==null)
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            entity.setApproveStatus(ProductConstant.PROCESSING.shortValue());
+            resultObjectVO.setData(shopProductApproveService.queryOne(entity));
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
     /**
      * 根据ID删除

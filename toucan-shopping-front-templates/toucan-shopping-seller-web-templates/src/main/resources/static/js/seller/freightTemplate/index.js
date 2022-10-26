@@ -122,6 +122,7 @@ function drawTable(pageResult)
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">" ;
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"editRow\" style=\"color:blue;cursor: pointer;\">修改</a>\n" ;
             tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" class=\"previewRow\" style=\"color:blue;cursor: pointer;\">查看</a>\n" ;
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-name=\""+row.name+"\" class=\"delwRow\" style=\"color:red;cursor: pointer;\">删除</a>\n" ;
             tableHtml+=    "</div></td>\n" ;
             tableHtml+=    "                        </tr>";
         }
@@ -149,6 +150,43 @@ function bindRowEvent()
         var attrId = $(this).attr("attr-id");
         window.location.href = basePath+"/page/freightTemplate/edit/"+attrId;
     });
+
+    $(".delwRow").unbind("click");
+    $(".delwRow").bind("click", function () {
+        var attrId = $(this).attr("attr-id");
+        var name = $(this).attr("attr-name");
+        layer.confirm('确定删除'+name+'?', {
+            btn: ['确定','关闭'], //按钮
+            title:'提示信息'
+        }, function(index){
+            pagegizationConfigObject.current_page=1;
+            $.ajax({
+                type: "POST",
+                url: basePath+'/api/freightTemplate/delete/'+attrId,
+                contentType: "application/json;charset=utf-8",
+                data:  null,
+                dataType: "json",
+                success: function (data) {
+                    if(data.code==1)
+                    {
+                        doPage();
+                    }else{
+                        $.message({
+                            message: data.msg,
+                            type: 'error'
+                        });
+                    }
+                    layer.close(index);
+                },
+                error: function (result) {
+                    doPage();
+                }
+            });
+        }, function(){
+
+        });
+    });
+
 }
 
 

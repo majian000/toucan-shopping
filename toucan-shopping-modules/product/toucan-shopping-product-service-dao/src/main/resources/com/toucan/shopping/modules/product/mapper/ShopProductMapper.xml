@@ -101,6 +101,17 @@
             </foreach>
         </if>
 
+        <if test="shopId!=null and shopId!=-1">
+            and t.shop_id = #{shopId}
+        </if>
+
+        <if test="freightTemplateId!=null and freightTemplateId!=-1">
+            and t.freight_template_id = #{freightTemplateId}
+        </if>
+
+        <if test="status!=null and status!=-1">
+            and t.status = #{status}
+        </if>
 
         and t.delete_status = 0
     </sql>
@@ -171,5 +182,18 @@
 
         </where>
     </select>
+
+
+
+    <select id="queryOne" resultMap="shopProductVOMap" parameterType="com.toucan.shopping.modules.product.vo.ShopProductVO">
+        select t.* from t_shop_product t
+        <where>
+            1=1
+            <include refid="queryListWhere" ></include>
+        </where>
+        limit 0,1
+    </select>
+
+
 
 </mapper>

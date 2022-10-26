@@ -42,4 +42,7 @@ public interface ShopProductMapper {
 
     int updateStatus(Long id, Long shopId ,Integer status);
 
+
+    ShopProductVO queryOne(ShopProductVO shopProductVO);
+
 }

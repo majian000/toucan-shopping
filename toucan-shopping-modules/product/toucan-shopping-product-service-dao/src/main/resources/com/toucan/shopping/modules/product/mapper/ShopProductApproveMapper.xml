@@ -101,6 +101,15 @@
             and t.shop_id = #{shopId}
         </if>
 
+        <if test="freightTemplateId!=null and freightTemplateId!=-1">
+            and t.freight_template_id = #{freightTemplateId}
+        </if>
+
+
+        <if test="approveStatus!=null and approveStatus!=-1">
+            and t.approve_status = #{approveStatus}
+        </if>
+
     </sql>
 
     <select id="queryAllList" resultMap="shopProductApproveMap" parameterType="com.toucan.shopping.modules.product.entity.ShopProductApprove">

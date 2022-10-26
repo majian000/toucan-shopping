@@ -107,4 +107,15 @@ public interface FeignShopProductApproveService {
     @RequestMapping(value="/query/newest/list/shopId",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryNewestListByShopId(@RequestBody RequestJsonVO requestJsonVO);
 
+
+
+
+    /**
+     * 根据运费模板ID查询审核中的信息(一条)
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/find/one/underReview/by/freightTemplateId",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findOneUnderReviewByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
+
 }

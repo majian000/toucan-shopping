@@ -87,6 +87,7 @@ public class ShopProductApproveServiceImpl implements ShopProductApproveService 
         return shopProductApproveMapper.queryList(shopProductVO);
     }
 
+
     @Override
     public ShopProductApproveVO queryOne(ShopProductApproveVO shopProductVO) {
         return shopProductApproveMapper.queryOne(shopProductVO);

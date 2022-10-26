@@ -397,5 +397,48 @@ public class ShopProductController {
 
 
 
+    /**
+     * 根据运费模板ID查询正在上架的商品
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/one/sale/by/freightTemplateId",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryOneSaleByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO) {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if (requestJsonVO == null) {
+            logger.warn("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if (requestJsonVO.getAppCode() == null) {
+            logger.warn("没有找到应用编码: param:" + JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用编码!");
+            return resultObjectVO;
+        }
+        try {
+            ShopProductVO queryShopProductVO = JSONObject.parseObject(requestJsonVO.getEntityJson(), ShopProductVO.class);
+            if(queryShopProductVO.getFreightTemplateId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("运费模板ID不能为空!");
+                return resultObjectVO;
+            }
+            if(queryShopProductVO.getShopId()==null) {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("店铺ID不能为空!");
+                return resultObjectVO;
+            }
+            queryShopProductVO.setStatus((short)1);
+            resultObjectVO.setData(shopProductService.queryOne(queryShopProductVO));
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改失败");
+        }
+        return  resultObjectVO;
+    }
 
 }
