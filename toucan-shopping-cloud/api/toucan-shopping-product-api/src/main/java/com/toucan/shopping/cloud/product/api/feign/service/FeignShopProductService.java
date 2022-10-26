@@ -55,11 +55,11 @@ public interface FeignShopProductService {
 
 
     /**
-     * 根据运费模板ID查询正在上架的商品
+     * 根据运费模板ID查询关联的商品
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/sale/by/freightTemplateId",produces = "application/json;charset=UTF-8")
-    ResultObjectVO queryOneSaleByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
+    @RequestMapping(value="/query/one/by/freightTemplateId",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryOneByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO);
 
 }

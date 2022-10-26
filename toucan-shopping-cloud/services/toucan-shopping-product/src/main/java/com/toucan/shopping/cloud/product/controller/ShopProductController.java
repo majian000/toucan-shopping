@@ -398,13 +398,13 @@ public class ShopProductController {
 
 
     /**
-     * 根据运费模板ID查询正在上架的商品
+     * 根据运费模板ID查询关联的商品
      * @param requestJsonVO
      * @return
      */
-    @RequestMapping(value="/query/one/sale/by/freightTemplateId",produces = "application/json;charset=UTF-8")
+    @RequestMapping(value="/query/one/by/freightTemplateId",produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResultObjectVO queryOneSaleByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO) {
+    public ResultObjectVO queryOneByFreightTemplateId(@RequestBody RequestJsonVO requestJsonVO) {
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         if (requestJsonVO == null) {
             logger.warn("请求参数为空");
@@ -430,7 +430,6 @@ public class ShopProductController {
                 resultObjectVO.setMsg("店铺ID不能为空!");
                 return resultObjectVO;
             }
-            queryShopProductVO.setStatus((short)1);
             resultObjectVO.setData(shopProductService.queryOne(queryShopProductVO));
         }catch(Exception e)
         {

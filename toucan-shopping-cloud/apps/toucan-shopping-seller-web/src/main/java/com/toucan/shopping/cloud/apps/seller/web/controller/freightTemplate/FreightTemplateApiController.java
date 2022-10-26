@@ -453,7 +453,7 @@ public class FreightTemplateApiController extends BaseController {
             shopProductVO.setFreightTemplateId(id);
             shopProductVO.setShopId(sellerShopVO.getId());
             requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
-            resultObjectVO = feignShopProductService.queryOneSaleByFreightTemplateId(requestJsonVO);
+            resultObjectVO = feignShopProductService.queryOneByFreightTemplateId(requestJsonVO);
             if(resultObjectVO.isSuccess())
             {
                 if(resultObjectVO.getData()!=null) {
@@ -461,7 +461,7 @@ public class FreightTemplateApiController extends BaseController {
                     if (shopProductApproveVO != null) {
 
                         resultObjectVO.setCode(ResultObjectVO.FAILD);
-                        resultObjectVO.setMsg("无法删除该模板,因为\""+shopProductVO.getName()+"\"已上架,您可以删除该商品后重试");
+                        resultObjectVO.setMsg("无法删除该模板,因为已关联商品\""+shopProductVO.getName()+"\",您可以将该商品运费模板更换成其他后重试");
                         return resultObjectVO;
                     }
                 }
