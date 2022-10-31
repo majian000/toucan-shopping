@@ -15,6 +15,10 @@ import java.util.Map;
 @Data
 public class FreightTemplateVO extends FreightTemplate {
 
+
+    //运费规则查询单项 如:3平邮
+    private String oneTransportModel;
+
     //运费规则 1:快递 2:EMS 3:平邮
     private String transportModelExpress; //快递
     private String transportModelEms; //EMS

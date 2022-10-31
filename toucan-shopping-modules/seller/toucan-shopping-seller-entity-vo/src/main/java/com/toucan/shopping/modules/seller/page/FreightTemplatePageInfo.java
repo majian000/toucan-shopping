@@ -36,6 +36,8 @@ public class FreightTemplatePageInfo extends PageInfo<FreightTemplate> {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long shopId;
 
+    private String name; //模板名称
+
     /**
      * 所属用户ID
      */
@@ -43,6 +45,13 @@ public class FreightTemplatePageInfo extends PageInfo<FreightTemplate> {
     @JSONField(serializeUsing = ToStringSerializer.class)
     private Long userMainId;
 
+    //运费规则查询单项 如:3平邮
+    private String oneTransportModel;
+
+
+    private Short freightStatus; //运费状态 1:自定义运费 2:包邮
+
+    private Short valuationMethod; //计价方式 1:按件数 2:按重量 3:按体积
 
     //==============================================
 

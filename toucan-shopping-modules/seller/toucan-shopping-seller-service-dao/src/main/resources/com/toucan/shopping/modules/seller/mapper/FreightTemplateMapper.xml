@@ -41,6 +41,24 @@
             and t.shop_id = #{shopId}
         </if>
 
+
+        <if test="name!=null and name!='' ">
+            and t.name  like concat('%',#{name},'%')
+        </if>
+
+
+        <if test="freightStatus!=null and freightStatus!=-1  ">
+            and t.freight_status = #{freightStatus}
+        </if>
+
+        <if test="oneTransportModel!=null and oneTransportModel!='-1' ">
+            and t.transport_model  like concat('%',#{oneTransportModel},'%')
+        </if>
+
+        <if test="valuationMethod!=null and valuationMethod!=-1  ">
+            and t.valuation_method = #{valuationMethod}
+        </if>
+
     </sql>
 
     <sql id="queryWhere">

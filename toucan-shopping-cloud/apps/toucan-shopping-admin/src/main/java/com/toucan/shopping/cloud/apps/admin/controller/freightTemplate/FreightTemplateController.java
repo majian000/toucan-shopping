@@ -30,6 +30,7 @@ import com.toucan.shopping.modules.message.vo.MessageVO;
 import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
+import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
@@ -100,6 +101,56 @@ public class FreightTemplateController extends UIController {
             logger.warn(e.getMessage(),e);
         }
         return resultObjectVO;
+    }
+
+
+
+
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/listPage",method = RequestMethod.GET)
+    public String listPage(HttpServletRequest request)
+    {
+        //初始化工具条按钮、操作按钮
+        super.initButtons(request,toucan,"/freightTemplate/listPage",feignFunctionService);
+        return "pages/seller/freightTemplate/list.html";
+    }
+
+
+    /**
+     * 查询列表
+     * @param pageInfo
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public TableVO list(HttpServletRequest httpServletRequest,FreightTemplatePageInfo pageInfo)
+    {
+        TableVO tableVO = new TableVO();
+        try{
+            if(pageInfo==null)
+            {
+                pageInfo = new FreightTemplatePageInfo();
+            }
+
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), pageInfo);
+            ResultObjectVO resultObjectVO = feignFreightTemplateService.queryListPage(requestJsonVO);
+            if(resultObjectVO.isSuccess()) {
+                if (resultObjectVO.getData() != null) {
+                    Map<String, Object> resultObjectDataMap = (Map<String, Object>) resultObjectVO.getData();
+                    tableVO.setCount(Long.parseLong(String.valueOf(resultObjectDataMap.get("total") != null ? resultObjectDataMap.get("total") : "0")));
+                    List<FreightTemplateVO> list = JSONArray.parseArray(JSONObject.toJSONString(resultObjectDataMap.get("list")), FreightTemplateVO.class);
+                    tableVO.setData((List)list);
+                }
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            tableVO.setCode(ResultObjectVO.FAILD);
+            tableVO.setMsg("查询失败,请稍后重试");
+        }
+
+        return tableVO;
     }
 
 }
