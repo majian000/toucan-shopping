@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>商城后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.5.5/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+
+    <span th:replace="common_page::common"></span>
+
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <input type="hidden" id="freightTemplateId"  th:value="${freightTemplateId}" />
+    <div class="layui-form-item">
+        <div class="layui-inline" style="width:40%">
+
+            <label class="layui-form-label ">模板名称:</label>
+            <div class="layui-input-block "  id="freightTemplateName" style="padding-top:7px;" >
+                加载中...
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label ">发货地:</label>
+            <div class="layui-input-block " id="deliverPath"  style="padding-top:7px;" >
+                加载中...
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label ">是否包邮:</label>
+            <div class="layui-input-block " id="freightStatusName"  style="padding-top:7px;" >
+                加载中...
+            </div>
+        </div>
+        <div class="layui-inline" style="width:40%">
+            <label class="layui-form-label ">计价方式:</label>
+            <div class="layui-input-block " id="valuationMethodName"  style="padding-top:7px;" >
+                加载中...
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" id="transportModelPanel" style="display: none">
+        <div class="layui-inline">
+            <label class="layui-form-label ">运送方式:</label>
+            <div class="layui-input-block "  id="expressTablePanel" style="padding-top:7px;display:none" >
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>快递</legend>
+                </fieldset>
+                <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline" >
+                            <label class="layui-form-label "> 默认运费:</label>
+                            <div class="layui-input-block "   style="padding-top:7px;" >
+                                <a id="expressDefaultWeight"></a><a class="freightTemplateDefaultUnit"></a>内<a id="expressDefaultWeightMoney"></a>元&nbsp;&nbsp;
+                                每增加<a id="expressDefaultAppendWeight"></a><a class="freightTemplateDefaultUnit"></a>,增加运费<a id="expressDefaultAppendWeightMoney"></a>元
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="width:100%">
+                            <table class="layui-hide" id="freightTemplateExpressTable" ></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-input-block " id="emsTablePanel"  style="padding-top:7px;display:none" >
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>EMS</legend>
+                </fieldset>
+                <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline" >
+                            <label class="layui-form-label "> 默认运费:</label>
+                            <div class="layui-input-block "   style="padding-top:7px;" >
+                                <a id="emsDefaultWeight"></a><a class="freightTemplateDefaultUnit"></a>内<a id="emsDefaultWeightMoney"></a>元&nbsp;&nbsp;
+                                每增加<a id="emsDefaultAppendWeight"></a><a class="freightTemplateDefaultUnit"></a>,增加运费<a id="emsDefaultAppendWeightMoney"></a>元
+
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="width:100%" >
+                            <table class="layui-hide" id="freightTemplateEmsTable" ></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-input-block "  id="ordinaryMailTablePanel" style="padding-top:7px;display:none" >
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>平邮</legend>
+                </fieldset>
+                <div class="layui-form layuimini-form">
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline" >
+                            <label class="layui-form-label "> 默认运费:</label>
+                            <div class="layui-input-block "   style="padding-top:7px;" >
+                                <a id="ordinaryMailDefaultWeight"></a><a class="freightTemplateDefaultUnit"></a>内<a id="ordinaryMailDefaultWeightMoney"></a>元&nbsp;&nbsp;
+                                每增加<a id="ordinaryMailDefaultAppendWeight"></a><a class="freightTemplateDefaultUnit"></a>,增加运费<a id="ordinaryMailDefaultAppendWeightMoney"></a>元
+
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="width:100%" >
+                            <table class="layui-hide" id="freightTemplateOrdinaryMailTable" ></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
+
+<script>
+
+    layui.use(['form','layer','table','upload'], function () {
+        var form = layui.form,
+            table = layui.table,
+            expressTable = layui.table,
+            emsTable = layui.table,
+            ordinaryMailTable = layui.table,
+            layer = layui.layer,
+            $ = layui.jquery;
+        var index;
+        var upload = layui.upload;
+        var loadding;
+
+        var templateId=$("#freightTemplateId").val();
+
+
+
+        //渲染运费模板
+        function loadFreightTemplate() {
+            $.ajax({
+                url: "[[@{/freightTemplate/detail}]]",
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify({id: templateId}),
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        return false;
+                    }
+
+                    var obj = data.data;
+                    $("#freightTemplateName").html(obj.name);
+
+                    var deliverPath="";
+                    if(obj.deliverProvinceName!=null&&obj.deliverProvinceName!="")
+                    {
+                        deliverPath+=obj.deliverProvinceName;
+                    }
+                    if(obj.deliverCityName!=null&&obj.deliverCityName!="")
+                    {
+                        deliverPath+="/"+obj.deliverCityName;
+                    }
+                    if(obj.deliverAreaName!=null&&obj.deliverAreaName!="")
+                    {
+                        deliverPath+="/"+obj.deliverAreaName;
+                    }
+                    $("#deliverPath").html(deliverPath);
+
+
+                    var freightTemplateTableColumnUnit="";
+                    if(obj.valuationMethod==1)
+                    {
+                        $("#valuationMethodName").html("按件数");
+                        freightTemplateTableColumnUnit="件数(件)";
+                    }else if(obj.transportModel==2)
+                    {
+                        $("#valuationMethodName").html("按重量");
+                        freightTemplateTableColumnUnit="重量(kg)";
+                    }
+
+                    if(obj.freightStatus==1)
+                    {
+                        $("#freightStatusName").html("自定义运费");
+                        $("#transportModelPanel").show();
+                        if(obj.expressDefaultRule!=null)
+                        {
+                            $("#expressTablePanel").show();
+                            $("#expressDefaultWeight").html(obj.expressDefaultRule.defaultWeight);
+                            $("#expressDefaultWeightMoney").html(obj.expressDefaultRule.defaultWeightMoney);
+                            $("#expressDefaultAppendWeight").html(obj.expressDefaultRule.defaultAppendWeight);
+                            $("#expressDefaultAppendWeightMoney").html(obj.expressDefaultRule.defaultAppendWeightMoney);
+
+                            expressTable.render({
+                                elem: '#freightTemplateExpressTable',
+                                method:'POST',
+                                cols: [
+                                    [
+                                        {field: 'selectAreas', width:400, title: '运送到'},
+                                        {field: 'firstWeight', width:100, title: '首'+freightTemplateTableColumnUnit},
+                                        {field: 'firstWeightMoney',width:100,  title: '首费(元)'},
+                                        {field: 'appendWeight', width:100,title: '续'+freightTemplateTableColumnUnit},
+                                        {field: 'appendWeightMoney', width:100,title: '续费(元)'}
+                                    ]
+                                ],
+                                data: obj.expressAreaRules,
+                                skin: 'line'
+                            });
+                        }
+
+                        if(obj.emsDefaultRule!=null)
+                        {
+                            $("#emsTablePanel").show();
+                            $("#emsDefaultWeight").html(obj.emsDefaultRule.defaultWeight);
+                            $("#emsDefaultWeightMoney").html(obj.emsDefaultRule.defaultWeightMoney);
+                            $("#emsDefaultAppendWeight").html(obj.emsDefaultRule.defaultAppendWeight);
+                            $("#emsDefaultAppendWeightMoney").html(obj.emsDefaultRule.defaultAppendWeightMoney);
+
+                            emsTable.render({
+                                elem: '#freightTemplateEmsTable',
+                                method:'POST',
+                                cols: [
+                                    [
+                                        {field: 'selectAreas', width:400, title: '运送到'},
+                                        {field: 'firstWeight', width:100, title: '首'+freightTemplateTableColumnUnit},
+                                        {field: 'firstWeightMoney',width:100,  title: '首费(元)'},
+                                        {field: 'appendWeight', width:100,title: '续'+freightTemplateTableColumnUnit},
+                                        {field: 'appendWeightMoney', width:100,title: '续费(元)'}
+                                    ]
+                                ],
+                                data: obj.emsAreaRules,
+                                skin: 'line'
+                            });
+                        }
+
+                        if(obj.ordinaryMailDefaultRule!=null)
+                        {
+                            $("#ordinaryMailTablePanel").show();
+                            $("#ordinaryMailDefaultWeight").html(obj.ordinaryMailDefaultRule.defaultWeight);
+                            $("#ordinaryMailDefaultWeightMoney").html(obj.ordinaryMailDefaultRule.defaultWeightMoney);
+                            $("#ordinaryMailDefaultAppendWeight").html(obj.ordinaryMailDefaultRule.defaultAppendWeight);
+                            $("#ordinaryMailDefaultAppendWeightMoney").html(obj.ordinaryMailDefaultRule.defaultAppendWeightMoney);
+
+                            ordinaryMailTable.render({
+                                elem: '#freightTemplateOrdinaryMailTable',
+                                method:'POST',
+                                cols: [
+                                    [
+                                        {field: 'selectAreas', width:400, title: '运送到'},
+                                        {field: 'firstWeight', width:100, title: '首'+freightTemplateTableColumnUnit},
+                                        {field: 'firstWeightMoney',width:100,  title: '首费(元)'},
+                                        {field: 'appendWeight', width:100,title: '续'+freightTemplateTableColumnUnit},
+                                        {field: 'appendWeightMoney', width:100,title: '续费(元)'}
+                                    ]
+                                ],
+                                data: obj.ordinaryMailAreaRules,
+                                skin: 'line'
+                            });
+                        }
+
+                    }else{
+                        $("#freightStatusName").html("包邮");
+                    }
+
+
+                    if(obj.valuationMethod==1)
+                    {
+                        $(".freightTemplateDefaultUnit").html("件");
+                    }else{
+                        $(".freightTemplateDefaultUnit").html("kg");
+                    }
+
+                },
+                complete: function () {
+                }
+            });
+        }
+
+        loadFreightTemplate();
+
+
+    });
+</script>
+</body>
+</html>

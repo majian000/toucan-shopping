@@ -153,5 +153,21 @@ public class FreightTemplateController extends UIController {
         return tableVO;
     }
 
+
+
+    /**
+     * 查看运费模板
+     * @param request
+     * @param id
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value = "/detailPage/{id}",method = RequestMethod.GET)
+    public String detailPage(HttpServletRequest request,@PathVariable Long id)
+    {
+        request.setAttribute("freightTemplateId",id);
+        return "pages/seller/freightTemplate/detail.html";
+    }
+
 }
 
