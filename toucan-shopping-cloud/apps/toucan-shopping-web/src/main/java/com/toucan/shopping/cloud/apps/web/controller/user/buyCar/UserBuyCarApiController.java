@@ -3,6 +3,7 @@ package com.toucan.shopping.cloud.apps.web.controller.user.buyCar;
 
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
@@ -13,7 +14,13 @@ import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateAreaRuleVO;
+import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
+import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateAreaRuleVO;
+import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateDefaultRuleVO;
+import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +53,9 @@ public class UserBuyCarApiController {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private FeignFreightTemplateService feignFreightTemplateService;
 
     @Autowired
     private Toucan toucan;
@@ -144,16 +154,18 @@ public class UserBuyCarApiController {
                 }
 
                 if(CollectionUtils.isNotEmpty(productSkus)) {
+                    //查询商品信息
                     requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), productSkus);
-
                     ResultObjectVO ResultProductSkuObjectVO = feignProductSkuService.queryByIdList(requestJsonVO.sign(), requestJsonVO);
                     if(ResultProductSkuObjectVO.isSuccess())
                     {
-                        List<ProductSku> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSku.class);
+                        List<Long> freightTemplateIdList = new LinkedList<>();
+                        List<ProductSkuVO> productSkuList = ResultProductSkuObjectVO.formatDataList(ProductSkuVO.class);
                         if(CollectionUtils.isNotEmpty(productSkuList))
                         {
-                            for(ProductSku productSku:productSkuList)
+                            for(ProductSkuVO productSku:productSkuList)
                             {
+                                freightTemplateIdList.add(productSku.getFreightTemplateId());
                                 for(UserBuyCarItemVO ubc:userBuyCarVOList)
                                 {
                                     if(productSku.getId().longValue()==ubc.getShopProductSkuId().longValue()) {
@@ -168,6 +180,10 @@ public class UserBuyCarApiController {
                                         }
                                         ubc.setProductPrice(productSku.getPrice());
                                         ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
+                                        if(productSku.getFreightTemplateId()!=null) {
+                                            ubc.setFreightTemplateId(productSku.getFreightTemplateId());
+                                        }
+                                        ubc.setShopId(productSku.getShopId());
 
                                         StringBuilder attributePreview = new StringBuilder();
                                         HashMap<String,String> attributeMap = JSONObject.parseObject(productSku.getAttributes(), HashMap.class);
@@ -183,9 +199,42 @@ public class UserBuyCarApiController {
                                     }
                                 }
                             }
+
+
+                            //查询运费模板
+                            if(CollectionUtils.isNotEmpty(freightTemplateIdList)) {
+                                FreightTemplateVO queryFreightTemplateVO = new FreightTemplateVO();
+                                queryFreightTemplateVO.setIdList(freightTemplateIdList);
+                                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryFreightTemplateVO);
+                                resultObjectVO = feignFreightTemplateService.findByIdList(requestJsonVO);
+                                if(resultObjectVO.isSuccess())
+                                {
+                                    if(resultObjectVO.getData()!=null)
+                                    {
+                                        List<UBCIFreightTemplateVO> freightTemplateVOS = resultObjectVO.formatDataList(UBCIFreightTemplateVO.class);
+                                        if(CollectionUtils.isNotEmpty(freightTemplateVOS))
+                                        {
+                                            for(UBCIFreightTemplateVO freightTemplateVO:freightTemplateVOS)
+                                            {
+                                                for(UserBuyCarItemVO ubc:userBuyCarVOList)
+                                                {
+                                                    if(ubc.getFreightTemplateId()!=null
+                                                            &&ubc.getFreightTemplateId().longValue()==freightTemplateVO.getId().longValue())
+                                                    {
+                                                        ubc.setFreightTemplateVO(freightTemplateVO);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
                         }
                     }
                 }
+                resultObjectVO.setCode(ResultObjectVO.SUCCESS);
                 resultObjectVO.setData(userBuyCarVOList);
             }
         }catch(Exception e)

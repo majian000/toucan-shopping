@@ -39,6 +39,15 @@ public interface FeignFreightTemplateService {
     ResultObjectVO save(@RequestBody RequestJsonVO requestJsonVO);
 
 
+
+    /**
+     * 根据ID查询
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value="/find/id/list",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO findByIdList(@RequestBody RequestJsonVO requestVo);
+
     /**
      * 修改
      * @param requestJsonVO

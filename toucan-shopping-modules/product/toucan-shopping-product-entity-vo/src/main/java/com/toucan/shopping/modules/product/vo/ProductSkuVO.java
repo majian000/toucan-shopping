@@ -99,5 +99,9 @@ public class ProductSkuVO  extends ProductSku {
      */
     private List<ProductSkuVO> productSkuVOList;
 
+    /**
+     * 运费模板ID
+     */
+    private Long freightTemplateId;
 
 }

@@ -15,6 +15,7 @@ import java.util.Map;
 @Data
 public class FreightTemplateVO extends FreightTemplate {
 
+    private List<Long> idList;
 
     //运费规则查询单项 如:3平邮
     private String oneTransportModel;

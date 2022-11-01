@@ -57,6 +57,21 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
             }
 
             @Override
+            public ResultObjectVO findByIdList(RequestJsonVO requestVo) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestVo==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignSellerLoginHistoryService.findByIdList失败 params{}",JSONObject.toJSONString(requestVo));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("保存失败");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO update(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)

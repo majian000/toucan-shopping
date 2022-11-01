@@ -94,6 +94,7 @@ public class ProductSkuController {
                 if(shopProductVO!=null) {
                     shopProductSkuVO.setProductAttributes(shopProductVO.getAttributes());
                     shopProductSkuVO.setPreviewPhotoPaths(new LinkedList<>());
+                    shopProductSkuVO.setFreightTemplateId(shopProductVO.getFreightTemplateId());
 
                     //查询商品图片
                     ShopProductImgVO shopProductImgVO = new ShopProductImgVO();
@@ -390,12 +391,12 @@ public class ProductSkuController {
             return resultObjectVO;
         }
         try {
-            List<ProductSku> productSkus = JSONArray.parseArray(requestJsonVO.getEntityJson(),ProductSku.class);
+            List<ProductSkuVO> productSkus = JSONArray.parseArray(requestJsonVO.getEntityJson(),ProductSkuVO.class);
             if(!CollectionUtils.isEmpty(productSkus)) {
                 List<ProductSku> productSkuList = new ArrayList<ProductSku>();
-                for(ProductSku productSku:productSkus) {
+                for(ProductSkuVO productSku:productSkus) {
                     if(productSku.getId()!=null) {
-                        ProductSku productSkuEntity = queryProductSkuByCacheOrDB(productSku.getId());
+                        ProductSkuVO productSkuEntity = queryProductSkuByCacheOrDB(productSku.getId());
                         if (productSkuEntity != null) {
                             productSkuList.add(productSkuEntity);
                         }

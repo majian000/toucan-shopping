@@ -150,6 +150,17 @@ function hideLoadding()
     }
 }
 
+function drawFreightTemplate(obj)
+{
+    if(obj.freightStatus==2)
+    {
+        return "包邮";
+    }else{
+
+    }
+
+    return "";
+}
 
 function loadBuyCarPanel(){
     $.ajax({
@@ -161,7 +172,8 @@ function loadBuyCarPanel(){
         success: function (result) {
             if(result.code == 1){
                 var productHtmls=" <tr>\n" +
-                    "                    <td class=\"car_th\" style = \"width:35%\">商品名称</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:15%\">配送方式</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:20%\">商品名称</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:15%\">属性</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:10%\">购买数量</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">小计</td>\n" +
@@ -171,7 +183,9 @@ function loadBuyCarPanel(){
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
+
                     productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
+                        "<td align=\"center\">"+drawFreightTemplate(buyCarItem.freightTemplateVO)+"</td>"+
                         "                <td>\n" +
                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
                         "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
@@ -225,7 +239,8 @@ function loadModifyBuyCarPanel(){
         success: function (result) {
             if(result.code == 1){
                 var productHtmls=" <tr>\n" +
-                    "                    <td class=\"car_th\" style = \"width:35%\">商品名称</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:15%\">配送方式</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:20%\">商品名称</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:15%\">属性</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:10%\">购买数量</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">小计</td>\n" +
@@ -237,6 +252,7 @@ function loadModifyBuyCarPanel(){
                 {
                     var buyCarItem = result.data[i];
                     productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
+                        "<td align=\"center\">"+drawFreightTemplate(buyCarItem.freightTemplateVO)+"</td>"+
                         "                <td>\n" +
                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
                         "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
