@@ -8,6 +8,7 @@ import com.toucan.shopping.cloud.apps.admin.auth.web.controller.base.UIControlle
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignBrandService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductApproveService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignFreightTemplateService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
@@ -31,6 +32,7 @@ import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.seller.page.FreightTemplatePageInfo;
+import com.toucan.shopping.modules.seller.util.FreightTemplateUtils;
 import com.toucan.shopping.modules.seller.vo.FreightTemplateVO;
 import com.toucan.shopping.modules.seller.vo.SellerShopVO;
 import com.toucan.shopping.modules.seller.vo.ShopCategoryVO;
@@ -68,6 +70,13 @@ public class FreightTemplateController extends UIController {
 
     @Autowired
     private FeignFreightTemplateService feignFreightTemplateService;
+
+
+    @Autowired
+    private FeignShopProductApproveService feignShopProductApproveService;
+
+    @Autowired
+    private FeignShopProductService feignShopProductService;
 
     @Autowired
     private IdGenerator idGenerator;
@@ -153,6 +162,84 @@ public class FreightTemplateController extends UIController {
         return tableVO;
     }
 
+
+    /**
+     * 根据ID删除
+     * @return
+     */
+    @AdminAuth(verifyMethod = AdminAuth.VERIFYMETHOD_ADMIN_AUTH,requestType = AdminAuth.REQUEST_FORM)
+    @RequestMapping(value="/delete/{id}",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO deleteById(HttpServletRequest request,@PathVariable Long id)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(id==null)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("ID不能为空");
+            return resultObjectVO;
+        }
+        try {
+            FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+            freightTemplateVO.setId(id);
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),freightTemplateVO);
+            resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+            if(resultObjectVO.isSuccess())
+            {
+                FreightTemplateVO freightTemplateRetVO = resultObjectVO.formatData(FreightTemplateVO.class);
+                ShopProductApproveVO shopProductApproveVO = new ShopProductApproveVO();
+                shopProductApproveVO.setFreightTemplateId(id);
+                shopProductApproveVO.setShopId(freightTemplateRetVO.getShopId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductApproveVO);
+                resultObjectVO = feignShopProductApproveService.findOneUnderReviewByFreightTemplateId(requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    if(resultObjectVO.getData()!=null) {
+                        shopProductApproveVO = resultObjectVO.formatData(ShopProductApproveVO.class);
+                        if (shopProductApproveVO != null) {
+
+                            resultObjectVO.setCode(ResultObjectVO.FAILD);
+                            resultObjectVO.setMsg("无法删除该模板,因为\""+shopProductApproveVO.getName()+"\"正在发布中,您可以删除该商品后重试");
+                            return resultObjectVO;
+                        }
+                    }
+                }
+
+
+
+                ShopProductVO shopProductVO = new ShopProductVO();
+                shopProductVO.setFreightTemplateId(id);
+                shopProductVO.setShopId(freightTemplateRetVO.getShopId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductVO);
+                resultObjectVO = feignShopProductService.queryOneByFreightTemplateId(requestJsonVO);
+                if(resultObjectVO.isSuccess())
+                {
+                    if(resultObjectVO.getData()!=null) {
+                        shopProductVO = resultObjectVO.formatData(ShopProductVO.class);
+                        if (shopProductApproveVO != null) {
+
+                            resultObjectVO.setCode(ResultObjectVO.FAILD);
+                            resultObjectVO.setMsg("无法删除该模板,因为已关联商品\""+shopProductVO.getName()+"\",您可以将该商品运费模板更换成其他后重试");
+                            return resultObjectVO;
+                        }
+                    }
+                }
+
+                freightTemplateVO = new FreightTemplateVO();
+                freightTemplateVO.setId(id);
+                freightTemplateVO.setUserMainId(freightTemplateRetVO.getUserMainId());
+                requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),freightTemplateVO);
+                resultObjectVO = feignFreightTemplateService.deleteById(FreightTemplateUtils.getDeleteSignHeader(String.valueOf(freightTemplateRetVO.getUserMainId())),requestJsonVO);
+
+            }
+        }catch(Exception e)
+        {
+            resultObjectVO.setCode(ResultObjectVO.FAILD);
+            resultObjectVO.setMsg("请稍后重试");
+            logger.warn(e.getMessage(),e);
+        }
+        return resultObjectVO;
+    }
 
 
     /**
