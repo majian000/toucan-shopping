@@ -462,7 +462,7 @@ public class ShopProductController {
             return resultObjectVO;
         }
         try {
-            List<ProductSkuVO>  lists = productSkuService.queryProductSkuListByShopProductUuid(requestJsonVO.getEntityJson());
+            List<ProductSkuVO>  lists = productSkuService.queryProductSkuListByShopProductUuid(requestJsonVO.formatEntity(String.class));
             resultObjectVO.setData(lists);
         }catch(Exception e)
         {
