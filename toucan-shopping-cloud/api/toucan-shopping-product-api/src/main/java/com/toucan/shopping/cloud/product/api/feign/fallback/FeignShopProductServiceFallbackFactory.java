@@ -42,6 +42,21 @@ public class FeignShopProductServiceFallbackFactory implements FallbackFactory<F
             }
 
             @Override
+            public ResultObjectVO queryListByShopProductUuid(RequestJsonVO requestJsonVO) {
+                ResultObjectVO resultObjectVO = new ResultObjectVO();
+                if(requestJsonVO==null)
+                {
+                    resultObjectVO.setCode(ResultObjectVO.FAILD);
+                    resultObjectVO.setMsg("操作失败,请重试");
+                    return resultObjectVO;
+                }
+                logger.warn("FeignShopProductService queryListByShopProductUuid faild  params{}",JSONObject.toJSONString(requestJsonVO));
+                resultObjectVO.setCode(ResultObjectVO.FAILD);
+                resultObjectVO.setMsg("请求失败");
+                return resultObjectVO;
+            }
+
+            @Override
             public ResultObjectVO queryList(RequestJsonVO requestJsonVO) {
                 ResultObjectVO resultObjectVO = new ResultObjectVO();
                 if(requestJsonVO==null)

@@ -44,6 +44,10 @@
         update t_product_sku_stock set stock_num=stock_num-1 where sku_uuid=#{skuUuid} and delete_status=0
     </update>
 
+    <update id="modifyStockNum" parameterType="java.lang.Integer">
+        update t_product_sku_stock set stock_num=#{stockNum} where sku_uuid=#{skuUuid} and delete_status=0
+    </update>
+
     <select id="queryBySkuUuid" resultMap="productSkuStockMap" parameterType="java.lang.String">
         select * from t_product_sku_stock where sku_uuid=#{skuUuid} and delete_status=0
     </select>

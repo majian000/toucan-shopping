@@ -6,7 +6,7 @@ import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
+
 
 
 @Mapper
@@ -51,4 +51,5 @@ public interface ProductSkuMapper {
      */
     Long queryListPageCount(ProductSkuPageInfo pageInfo);
 
+    List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid);
 }

@@ -7,13 +7,11 @@ import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProductSkuServiceImpl implements ProductSkuService {
@@ -54,6 +52,12 @@ public class ProductSkuServiceImpl implements ProductSkuService {
     public List<ProductSkuVO> queryShelvesVOListByShopProductId(Long shopProductId) {
         return productSkuMapper.queryShelvesVOListByShopProductId(shopProductId);
     }
+
+    @Override
+    public List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid) {
+        return productSkuMapper.queryProductSkuListByShopProductUuid(shopProductUuid);
+    }
+
 
     @Override
     public ProductSkuVO queryFirstOneByShopProductId(Long shopProductId) {

@@ -8,10 +8,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
-import com.toucan.shopping.modules.product.entity.ProductSpu;
-import com.toucan.shopping.modules.product.entity.ShopProductApproveDescription;
-import com.toucan.shopping.modules.product.entity.ShopProductDescription;
-import com.toucan.shopping.modules.product.entity.ShopProductImg;
+import com.toucan.shopping.modules.product.entity.*;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.redis.ProductApproveRedisLockKey;
 import com.toucan.shopping.modules.product.redis.ShopProductRedisLockKey;
@@ -438,6 +435,43 @@ public class ShopProductController {
             resultObjectVO.setMsg("修改失败");
         }
         return  resultObjectVO;
+    }
+
+    /**
+     * 根据shop_product_uuid查询
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/list/by/shop/product/uuid",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO queryListByShopProductUuid(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        try {
+            List<ProductSkuVO>  lists = productSkuService.queryProductSkuListByShopProductUuid(requestJsonVO.getEntityJson());
+            resultObjectVO.setData(lists);
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("查询失败!");
+        }
+
+        return resultObjectVO;
     }
 
 }

@@ -24,7 +24,8 @@ public interface FeignShopProductService {
     @RequestMapping(value="/query/list/page",produces = "application/json;charset=UTF-8")
     ResultObjectVO queryListPage(@RequestBody RequestJsonVO requestJsonVO);
 
-
+    @RequestMapping(value="/query/list/by/shop/product/uuid",produces = "application/json;charset=UTF-8")
+    ResultObjectVO queryListByShopProductUuid(@RequestBody RequestJsonVO requestJsonVO);
 
     /**
      * 查询列表

@@ -7,6 +7,7 @@ import com.toucan.shopping.cloud.apps.seller.web.redis.ShopProductRedisKey;
 import com.toucan.shopping.cloud.apps.seller.web.util.VCodeUtil;
 import com.toucan.shopping.cloud.common.data.api.feign.service.FeignCategoryService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignAttributeKeyValueService;
+import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignShopProductService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignSellerShopService;
 import com.toucan.shopping.cloud.seller.api.feign.service.FeignShopCategoryService;
@@ -22,6 +23,7 @@ import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
+import com.toucan.shopping.modules.product.page.ProductSkuPageInfo;
 import com.toucan.shopping.modules.product.page.ShopProductPageInfo;
 import com.toucan.shopping.modules.product.vo.*;
 import com.toucan.shopping.modules.redis.service.ToucanStringRedisService;
@@ -81,7 +83,6 @@ public class ShopProductApiController extends BaseController {
 
     @Autowired
     private ToucanStringRedisService toucanStringRedisService;
-
 
     private String[] imageExtScope = new String[]{".JPG", ".JPEG", ".PNG"};
 
@@ -253,5 +254,24 @@ public class ShopProductApiController extends BaseController {
         return resultObjectVO;
     }
 
+
+    @RequestMapping(value = "/queryProductByShopProductUUID",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultObjectVO queryProductByShopProductUUID(HttpServletRequest request,@RequestBody  String shopProductUUID)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
+        try {
+            RequestJsonVO requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(),shopProductUUID);
+            requestJsonVO.setEntityJson(shopProductUUID);
+            resultObjectVO = feignShopProductService.queryListByShopProductUuid(requestJsonVO);
+            if (resultObjectVO.getCode() == ResultObjectVO.SUCCESS) {
+
+            }
+        }catch(Exception e)
+        {
+
+        }
+        return resultObjectVO;
+    }
 
 }

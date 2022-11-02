@@ -38,6 +38,8 @@ public interface ProductSkuService {
     List<ProductSkuVO> queryShelvesVOListByShopProductId(Long approveId);
 
 
+    List<ProductSkuVO> queryProductSkuListByShopProductUuid(String shopProductUuid);
+
     ProductSkuVO queryFirstOneByShopProductId(Long shopProductId);
 
     /**

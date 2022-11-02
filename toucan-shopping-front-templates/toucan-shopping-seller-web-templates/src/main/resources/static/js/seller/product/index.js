@@ -55,6 +55,7 @@ function drawTable(pageResult)
         "                            <td style=\"width:50px;\" >序号</td>\n" +
         "                            <td style=\"width:100px;\" >商品预览</td>\n" +
         "                            <td style=\"width:300px;\">商品名称</td>\n" +
+        "                            <td style=\"width:75px;\" >库存</td>\n" +
         "                            <td style=\"width:75px;\" >商品分类</td>\n" +
         "                            <td style=\"width:75px;\" >上架状态</td>\n" +
         "                            <td style=\"width:100px;\" >发布时间</td>\n" +
@@ -69,6 +70,7 @@ function drawTable(pageResult)
             tableHtml+=   "                            <td><div class=\"tabTdWrap\">"+(i+1)+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\"><img src=\""+row.httpMainPhotoFilePath+"\" style=\"width:65px;height:65px; margin-top: 4%; margin-bottom: 4%;\"></div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.name+"</div></td>\n" ;
+            tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.stockNum+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.categoryName+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+(row.status==1?"<a style='color:green'>已上架</a>":"<a style='color:red'>已下架</a>")+"</div></td>\n" ;
             tableHtml+=    "                            <td><div class=\"tabTdWrap\">"+row.createDate+"</div></td>\n" ;
@@ -80,6 +82,7 @@ function drawTable(pageResult)
             }else{
                 tableHtml+=     "                                &nbsp;<a attr-id=\""+row.id+"\" attr-status=\""+row.status+"\" class='shelvesBtn' style=\"color:blue;cursor: pointer;\">上架</a>\n" ;
             }
+            tableHtml+=     "                                &nbsp;<a attr-id=\""+row.uuid+"\" attr-name=\""+row.name+"\" class=\"modifyStockBtn\" style=\"color:blue;cursor: pointer;\">修改库存</a>\n" ;
             tableHtml+=     "                                &nbsp;&nbsp;\n" ;
             tableHtml+=    "                            </div></td>\n" ;
             tableHtml+=    "                        </tr>";
@@ -101,6 +104,88 @@ function bindPreviewEvent()
 
         window.open(shoppingPcPath+productDetailPage+attrId);
     });
+
+    $(".modifyStockBtn").bind("click", function () {
+        var uuid = $(this).attr("attr-id");
+        var attrName = $(this).attr("attr-name");
+        openSelectProductSkuTableDialog(attrName);
+        initProductSkuTablePagination(uuid);
+    });
+
+    function  openSelectProductSkuTableDialog(attrName){
+        var productSkuTableHtml="  <div class=\"pageToolbar\" style='margin-top:2%'>\n" +
+        "                    <table id=\"productSkuTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
+        "                        <tbody id=\"productSkuTableBody\">\n" +
+        "                        </tbody>\n" +
+        "                    </table>\n" +
+        "                </div>";
+
+        var index = layer.open({
+            title: attrName + ' 修改库存',
+            //type: 1,
+            shade: 0.2,
+            maxmin: true,
+            area: ['30', '30%'],
+            btn: ["确定", "取消"],
+            content: productSkuTableHtml,//打开produckSKU列表页面
+            yes: function (index, layero) {
+                //todo ajax post 保存库存
+                layer.close(index);
+            },
+            cancel: function (index, layero) {
+                layer.close(index);
+            }
+        });
+    }
+
+
+    function initProductSkuTablePagination(uuid)
+    {
+
+        $(".pageToolbar").html("<table id=\"productSkuTable\" class=\"freezeTable\" border=\"1\" width=\"900\">\n" +
+            "                        <tbody id=\"productSkuTableBody\">\n" +
+            "                        </tbody>\n" +
+            "                    </table>");
+
+        loading.showLoading({
+            type:6,
+            tip:"查询中..."
+        });
+
+        $.ajax({
+            type: "POST",
+            url: basePath+"/api/shop/product/queryProductByShopProductUUID",
+            contentType: "application/json;charset=utf-8",
+            data:  JSON.stringify(uuid),
+            dataType: "json",
+            success: function (result) {
+                if(result.code<=0)
+                {
+                    $.message({
+                        message: "查询失败,请稍后重试",
+                        type: 'error'
+                    });
+                    return ;
+                }
+                if(result.data!=null) {
+
+                    //drawPrductSkuTemplateTable(result.data);
+                }
+            },
+            error: function (result) {
+                $.message({
+                    message: "查询失败,请稍后重试",
+                    type: 'error'
+                });
+            },
+            complete:function()
+            {
+                loading.hideLoading();
+            }
+
+        });
+     }
+
 
     $(".shelvesBtn").unbind("click");
     $(".shelvesBtn").bind("click", function () {

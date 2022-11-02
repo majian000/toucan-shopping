@@ -35,7 +35,61 @@ public class ProductSkuStockController {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 修改库存
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/modify/stock",produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResultObjectVO modifyStock(@RequestBody RequestJsonVO requestJsonVO)
+    {
+        ResultObjectVO resultObjectVO = new ResultObjectVO();
 
+        if(requestJsonVO==null)
+        {
+            logger.info("请求参数为空");
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("请重试!");
+            return resultObjectVO;
+        }
+
+        if(requestJsonVO.getAppCode()==null)
+        {
+            logger.info("没有找到应用: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到应用!");
+            return resultObjectVO;
+        }
+        RestoreStockVo restoreStockVo = JSONObject.parseObject(requestJsonVO.getEntityJson(),RestoreStockVo.class);
+        if(restoreStockVo==null)
+        {
+            logger.info("没有找到请求参数: param:"+ JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到请求参数!");
+            return resultObjectVO;
+        }
+        if(CollectionUtils.isEmpty(restoreStockVo.getProductSkuList()))
+        {
+            logger.info("没有找到商品: param:"+ JSONObject.toJSONString(restoreStockVo));
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("没有找到商品!");
+            return resultObjectVO;
+        }
+
+        try {
+            for (ProductSku productSku : restoreStockVo.getProductSkuList()) {
+                productSkuStockService.restoreStock(productSku.getUuid());
+            }
+        }catch(Exception e)
+        {
+            logger.warn(e.getMessage(),e);
+            resultObjectVO.setCode(ResultVO.FAILD);
+            resultObjectVO.setMsg("修改库存出现异常!");
+        }
+
+        return resultObjectVO;
+    }
 
     /**
      * 还原库存
