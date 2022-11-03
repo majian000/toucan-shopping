@@ -146,11 +146,12 @@ function hideLoadding()
     requestCompleted--;
     if(requestCompleted<=0)
     {
+        requestCompleted=0;
         loading.hideLoading();
     }
 }
 
-function drawFreightTemplate(obj)
+function drawFreightTemplateOption(obj)
 {
     if(obj.freightStatus==2)
     {
@@ -163,7 +164,19 @@ function drawFreightTemplate(obj)
     return "";
 }
 
+function calculateFreight()
+{
+    return "0";
+}
+
+
 function loadBuyCarPanel(){
+
+    loading.showLoading({
+        type:1,
+        tip:"查询中..."
+    });
+
     $.ajax({
         type: "POST",
         url: basePath + "/api/user/buyCar/list",
@@ -173,10 +186,11 @@ function loadBuyCarPanel(){
         success: function (result) {
             if(result.code == 1){
                 var productHtmls=" <tr>\n" +
-                    "                    <td class=\"car_th\" style = \"width:15%\">配送方式</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">配送方式</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">运费(元)</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">商品名称</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:15%\">属性</td>\n" +
-                    "                    <td class=\"car_th\" style = \"width:10%\">购买数量</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:5%\">购买数量</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">小计</td>\n" +
                     "                </tr>";
                 var productPriceTotal = 0;
@@ -186,7 +200,8 @@ function loadBuyCarPanel(){
                     var buyCarItem = result.data[i];
 
                     productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
-                        "<td align=\"center\">"+drawFreightTemplate(buyCarItem.freightTemplateVO)+"</td>"+
+                        "<td align=\"center\">"+drawFreightTemplateOption(buyCarItem.freightTemplateVO)+"</td>"+
+                        "<td align=\"center\">"+calculateFreight()+"</td>"+
                         "                <td>\n" +
                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
                         "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
@@ -240,10 +255,11 @@ function loadModifyBuyCarPanel(){
         success: function (result) {
             if(result.code == 1){
                 var productHtmls=" <tr>\n" +
-                    "                    <td class=\"car_th\" style = \"width:15%\">配送方式</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">配送方式</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:10%\">运费(元)</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">商品名称</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:15%\">属性</td>\n" +
-                    "                    <td class=\"car_th\" style = \"width:10%\">购买数量</td>\n" +
+                    "                    <td class=\"car_th\" style = \"width:5%\">购买数量</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">小计</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">操作</td>\n" +
                     "                </tr>";
@@ -253,7 +269,8 @@ function loadModifyBuyCarPanel(){
                 {
                     var buyCarItem = result.data[i];
                     productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
-                        "<td align=\"center\">"+drawFreightTemplate(buyCarItem.freightTemplateVO)+"</td>"+
+                        "<td align=\"center\">"+drawFreightTemplateOption(buyCarItem.freightTemplateVO)+"</td>"+
+                        "<td align=\"center\">"+calculateFreight()+"</td>"+
                         "                <td>\n" +
                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
                         "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
