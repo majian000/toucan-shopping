@@ -308,17 +308,17 @@ public class ShopProductApproveApiController extends BaseController {
                             shopProductApproveDescriptionImgVO.setHttpFilePath(imageUploadService.getImageHttpPrefix() + shopProductApproveDescriptionImgVO.getFilePath());
                         }
                     }
-                    FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
-                    freightTemplateVO.setId(shopProductApproveVO.getFreightTemplateId());
-                    requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), freightTemplateVO);
-                    resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
-                    if (resultObjectVO.isSuccess())
-                    {
-                        freightTemplateVO = resultObjectVO.formatData(FreightTemplateVO.class);
-                        if(freightTemplateVO!=null)
-                        {
-                            shopProductApproveVO.setFreightTemplateId(freightTemplateVO.getId());
-                            shopProductApproveVO.setFreightTemplateName(freightTemplateVO.getName());
+                    if(shopProductApproveVO.getFreightTemplateId()!=null) {
+                        FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+                        freightTemplateVO.setId(shopProductApproveVO.getFreightTemplateId());
+                        requestJsonVO = RequestJsonVOGenerator.generator(this.getAppCode(), freightTemplateVO);
+                        resultObjectVO = feignFreightTemplateService.findById(requestJsonVO);
+                        if (resultObjectVO.isSuccess()) {
+                            freightTemplateVO = resultObjectVO.formatData(FreightTemplateVO.class);
+                            if (freightTemplateVO != null) {
+                                shopProductApproveVO.setFreightTemplateId(freightTemplateVO.getId());
+                                shopProductApproveVO.setFreightTemplateName(freightTemplateVO.getName());
+                            }
                         }
                     }
                     resultObjectVO.setData(shopProductApproveVO);
