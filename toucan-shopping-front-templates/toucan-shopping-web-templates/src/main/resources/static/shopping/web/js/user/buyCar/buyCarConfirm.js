@@ -174,7 +174,7 @@ function loadBuyCarPanel(){
 
     loading.showLoading({
         type:1,
-        tip:"查询中..."
+        tip:"等待中..."
     });
 
     $.ajax({
@@ -214,7 +214,7 @@ function loadBuyCarPanel(){
                     productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
                 }
                 productHtmls+=" <tr>\n" +
-                    "                    <td colspan=\"5\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
+                    "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
                     "                        商品总价：￥<a id=\"productPriceTotal\">"+productPriceTotal+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
@@ -243,7 +243,7 @@ function loadBuyCarPanel(){
 function loadModifyBuyCarPanel(){
     loading.showLoading({
         type:1,
-        tip:"查询中..."
+        tip:"等待中..."
     });
 
     $.ajax({
@@ -292,7 +292,7 @@ function loadModifyBuyCarPanel(){
                 }
 
                 productHtmls+=" <tr>\n" +
-                    "                    <td colspan=\"5\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
+                    "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
                     "                        商品总价：￥<a id=\"productPriceTotal\">"+productPriceTotal+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
