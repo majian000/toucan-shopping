@@ -157,6 +157,7 @@ function drawFreightTemplate(obj)
         return "包邮";
     }else{
 
+
     }
 
     return "";

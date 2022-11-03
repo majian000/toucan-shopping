@@ -31,10 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用户购物车
@@ -233,7 +230,12 @@ public class UserBuyCarApiController {
 
                         }
                     }
+                    //按照店铺排序,相邻商品在一起
+                    userBuyCarVOList.sort(Comparator.comparing(UserBuyCarItemVO::getShopId).reversed());
+                    //按照运费模板排序,用于合并运送方式
+                    userBuyCarVOList.sort(Comparator.comparing(UserBuyCarItemVO::getFreightTemplateId).reversed());
                 }
+
                 resultObjectVO.setCode(ResultObjectVO.SUCCESS);
                 resultObjectVO.setData(userBuyCarVOList);
             }
