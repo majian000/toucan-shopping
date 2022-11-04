@@ -1102,7 +1102,39 @@ $(function () {
         {
             $(".expressDiv").show();
         }else{
-            $(".expressDiv").hide();
+            layer.confirm('将清空自定义运费,确定要清空吗?', {
+                btn: ['确定','关闭'], //按钮
+                title:'提示信息'
+            }, function(index){
+                if($('#transportModel_express').is(':checked'))
+                {
+                    $('#transportModel_express').prop("checked",false);
+                    $("#expressTableDiv").hide();
+                    resetexpressTable();
+                }
+
+                if($('#transportModel_ems').is(':checked'))
+                {
+                    $('#transportModel_ems').prop("checked",false);
+                    $("#emsTableDiv").hide();
+                    resetEmsTable();
+                }
+
+                if($('#transportModel_ordinaryMail').is(':checked'))
+                {
+                    $('#transportModel_ordinaryMail').prop("checked",false);
+                    $("#ordinaryMailTableDiv").hide();
+                    resetordinaryMailTable();
+                }
+
+                $("#valuationMethod_1").click();
+
+                $(".expressDiv").hide();
+                layer.close(index);
+
+            }, function(){
+                $("#freightStatus_1").prop("checked",true);
+            });
         }
     });
 
@@ -1163,10 +1195,35 @@ $(function () {
 
                 if(retObj.freightStatus==1)
                 {
-                    $("#freightStatus_1").click();
+                    $("#freightStatus_1").prop("checked", true);
+                    $("#freightStatus_2").prop("checked", false);
                     $(".expressDiv").show();
                 }else{
-                    $("#freightStatus_2").click();
+                    $("#freightStatus_1").prop("checked", false);
+                    $("#freightStatus_2").prop("checked", true);
+                    if($('#transportModel_express').is(':checked'))
+                    {
+                        $('#transportModel_express').prop("checked",false);
+                        $("#expressTableDiv").hide();
+                        resetexpressTable();
+                    }
+
+                    if($('#transportModel_ems').is(':checked'))
+                    {
+                        $('#transportModel_ems').prop("checked",false);
+                        $("#emsTableDiv").hide();
+                        resetEmsTable();
+                    }
+
+                    if($('#transportModel_ordinaryMail').is(':checked'))
+                    {
+                        $('#transportModel_ordinaryMail').prop("checked",false);
+                        $("#ordinaryMailTableDiv").hide();
+                        resetordinaryMailTable();
+                    }
+
+                    $("#valuationMethod_1").click();
+
                     $(".expressDiv").hide();
                 }
                 if(retObj.valuationMethod==1)

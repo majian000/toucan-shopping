@@ -169,6 +169,43 @@ function calculateFreight()
     return "0";
 }
 
+/**
+ * 查找出所有要合并行的数据
+ */
+function findMergeRow(datas)
+{
+    if(datas!=null&&datas.length>0)
+    {
+
+        for(var j=0;j<datas.length;j++) {
+            datas[j].isMergeRow=false;
+            datas[j].mergeRowCount=0;
+        }
+        var firstFindPos = 0;
+        for(var i=0;i<datas.length;i++)
+        {
+            var firstRow = datas[firstFindPos];
+            var row = datas[i];
+            //忽略包邮情况
+            if(row.freightTemplateVO!=null&&row.freightTemplateVO.freightStatus==2)
+            {
+                continue;
+            }
+            if(firstRow.id ==row.id)
+            {
+                continue;
+            }
+            if(firstRow.freightTemplateId!=row.freightTemplateId)
+            {
+                firstRow.isMergeRow=true;
+                firstRow.mergeRowCount++; //要合并的行
+            }else{
+                firstFindPos = i;
+            }
+        }
+    }
+    return datas;
+}
 
 function loadBuyCarPanel(){
 
@@ -195,6 +232,8 @@ function loadBuyCarPanel(){
                     "                </tr>";
                 var productPriceTotal = 0;
 
+                result.data = findMergeRow(result.data);
+                console.log(result.data);
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
@@ -272,7 +311,7 @@ function loadModifyBuyCarPanel(){
                         "<td align=\"center\">"+drawFreightTemplateOption(buyCarItem.freightTemplateVO)+"</td>"+
                         "<td align=\"center\">"+calculateFreight()+"</td>"+
                         "                <td>\n" +
-                        "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
+                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
                         "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
                         "                </td>\n" +
                         "                <td align=\"center\">"+buyCarItem.attributePreview+"</td>\n" +

@@ -1081,9 +1081,29 @@ $(function () {
                 btn: ['确定','关闭'], //按钮
                 title:'提示信息'
             }, function(index){
-                resetexpressTable();
-                resetEmsTable();
-                resetordinaryMailTable();
+                if($('#transportModel_express').is(':checked'))
+                {
+                    $('#transportModel_express').prop("checked",false);
+                    $("#expressTableDiv").hide();
+                    resetexpressTable();
+                }
+
+                if($('#transportModel_ems').is(':checked'))
+                {
+                    $('#transportModel_ems').prop("checked",false);
+                    $("#emsTableDiv").hide();
+                    resetEmsTable();
+                }
+
+                if($('#transportModel_ordinaryMail').is(':checked'))
+                {
+                    $('#transportModel_ordinaryMail').prop("checked",false);
+                    $("#ordinaryMailTableDiv").hide();
+                    resetordinaryMailTable();
+                }
+
+                $("#valuationMethod_1").click();
+
                 $(".expressDiv").hide();
                 layer.close(index);
 
