@@ -646,7 +646,7 @@ public class ProductSpuController extends UIController {
                     {
                         CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
                         if(categoryTreeVO!=null) {
-                            productSpuVO.setCategoryName(categoryTreeVO.getPath());
+                            productSpuVO.setCategoryName(categoryTreeVO.getName());
                         }
                     }
 

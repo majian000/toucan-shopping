@@ -193,6 +193,15 @@ public interface FeignCategoryService {
      * @return
      */
     @RequestMapping(value="/query/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
-    public ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
+    ResultObjectVO queryChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
+
+
+    /**
+     * 查询指定节点下一级子节点
+     * @param requestJsonVO
+     * @return
+     */
+    @RequestMapping(value="/query/next/one/level/child/list/by/pid",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+    ResultObjectVO queryNextOneLevelChildListByPid(@RequestBody RequestJsonVO requestJsonVO);
 
 }

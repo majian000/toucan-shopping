@@ -11,6 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/dtree.css}" >
     <link rel="stylesheet" th:href="@{/lib/layui_ext/dtree/font/dtreefont.css}" >
+    <link rel="stylesheet" th:href="@{/lib/zTree/css/zTreeStyle/zTreeStyle.css}" >
     <style>
         body {
             background-color: #ffffff;
@@ -303,6 +304,7 @@
 </div>
 
 <script th:src="@{/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
+<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script>
 
     layui.use(['form','element', 'table','carousel','tree','flow'], function () {
@@ -806,42 +808,71 @@
         });
 
 
+        var setting = {
+            async: {
+                enable: true,
+                url:"[[@{/}]]productSpu/query/category/tree/pid",
+                autoParam:["id", "pid", "name"],
+                dataFilter: filter
+            },
+            data:{
+                simpleData:{
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'parentId',
+                    rootPId: -1
+                }
+            },
+            view:{
+                showIcon: true
+            },
+            callback: {
+                onClick: functionTreeClick
+            }
+        };
+
+
+        function filter(treeId, parentNode, data) {
+            var dataArray = data.data;
+            if(dataArray!=null&&dataArray.length>0)
+            {
+                for(var i=0;i<dataArray.length;i++)
+                {
+                    dataArray[i].url=null;
+                }
+            }
+            return dataArray;
+        }
+        function functionTreeClick(event, treeId, treeNode) {
+            // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
+
+            $("#selectCategoryId").val(treeNode.name);
+            $("#categoryId").val(treeNode.id);
+            layer.close(index);
+        }
+
         $("#selectCategoryId").click(function(){
-            var index = layer.open({
-                title: '选择所属分类',
+
+            index = layer.open({
+                title: '选择分类',
                 type: 1,
                 shade: 0.2,
                 maxmin:true,
 
                 area: ['20%', '60%'],
-                content: "<div id='categoryTree'></div>",
+                content: "<ul id=\"categoryTree\" style='height:90%' class=\"ztree\"></ul>",
                 success:function(layero){
-
                     loadding = layer.load();
+
                     $.ajax({
-                        url:"[[@{/}]]productSpu/query/category/tree",
-                        contentType: "application/json; charset=utf-8",
-                        type:'GET',
-                        data:null,
-                        success:function(data){
-                            if(data.code==1)
-                            {
-                                //渲染
-                                var inst1 = tree.render({
-                                    elem: '#categoryTree'  //绑定元素
-                                    ,data: data.data,
-                                    click: function(obj){
-                                        if(obj.data.id==-1)
-                                        {
-                                            layer.msg("不能选择根节点");
-                                            return;
-                                        }
-                                        $("#selectCategoryId").val(obj.data.path);
-                                        $("#categoryId").val(obj.data.id);
-                                        layer.close(index);
-                                    }
-                                });
-                            }
+                        url:"[[@{/}]]productSpu/query/category/tree/pid",
+                        type:"POST",
+                        dataType: "json",
+                        success: function(data){
+                            var zTreeObj = $.fn.zTree.init($("#categoryTree"),setting, data.data);
+                        },
+                        error: function(){
+
                         },
                         complete:function()
                         {
@@ -855,7 +886,10 @@
                 layer.full(index);
             });
 
+
         });
+
+
 
 
         /**
@@ -906,5 +940,8 @@
 
     });
 </script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.core.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.excheck.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree/js/jquery.ztree.exedit.js}"></script>
 </body>
 </html>
