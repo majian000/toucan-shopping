@@ -111,7 +111,7 @@ public class ProductSpuController extends UIController {
                 {
                     CategoryTreeVO categoryTreeVO = resultObjectVO.formatData(CategoryTreeVO.class);
                     request.setAttribute("categoryId",categoryTreeVO.getId());
-                    request.setAttribute("categoryName",categoryTreeVO.getPath());
+                    request.setAttribute("categoryName",categoryTreeVO.getName());
                 }else{
                     request.setAttribute("categoryId","");
                     request.setAttribute("categoryName","");
