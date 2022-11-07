@@ -845,7 +845,10 @@
         }
         function functionTreeClick(event, treeId, treeNode) {
             // $("#inp").val("id="+treeNode.id + ", name=" + treeNode.name + ",pId=" + treeNode.pId);
-
+            if($("#categoryId").val()!=treeNode.id) {
+                $("#brandId").val("");
+                $("#selectBrand").val("");
+            }
             $("#selectCategoryId").val(treeNode.name);
             $("#categoryId").val(treeNode.id);
             layer.close(index);
