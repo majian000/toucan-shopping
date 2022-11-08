@@ -74,7 +74,7 @@ function loadBuyCarPanel(){
                 }
                 productHtmls+="<tr height=\"70\">\n" +
                     "                <td colspan=\"6\" style=\"font-family:'Microsoft YaHei'; border-bottom:0;\">\n" +
-                    "                    <label class=\"r_rad\" style=\"padding-top: 5px;\"><input type=\"checkbox\" name=\"clear\"  class=\"clear_buy_car\" /></label><label class=\"r_txt\"><a style=\"cursor:pointer;\" class=\"clear_buy_car\" >清空购物车</a></label>\n" +
+                    "                    <label class=\"r_rad\" style=\"padding-top: 5px;\"><input type=\"checkbox\" name=\"clear\"  class=\"clear_buy_car clear_buy_car_ckx\" /></label><label class=\"r_txt\"><a style=\"cursor:pointer;\" class=\"clear_buy_car\" >清空购物车</a></label>\n" +
                     "                    <span class=\"fr\">商品总价：<b style=\"font-size:22px; color:#ff4e00;\">￥<a id=\"productPriceTotal\" style=\"color: #ff4e00;\">"+productPriceTotal+"</a></b></span>\n" +
                     "                </td>\n" +
                     "            </tr>\n" +
@@ -179,6 +179,12 @@ function removeBuyCar()
             loading.hideLoading();
         }
     });
+}
+
+function cancelClearBuyCar()
+{
+    CloseDiv_1('buyCarClear','fadeClear');
+    $(".clear_buy_car_ckx").prop("checked",false);
 }
 
 function clearBuyCar()

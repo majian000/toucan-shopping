@@ -210,7 +210,7 @@ var attributeControl = {
                 td.appendTo(trHead);
             });
             var itemColumHead = $("<th ><span class='red'>*</span>价格</th><th ><span class='red'>*</span>库存</th>  <th  ><span class='red'>*</span>图片预览(点击上传)</th>" +
-                "<th  >毛重(单位kg)</th>" +
+                "<th  ><span class='red'>*</span>毛重(单位kg)</th>" +
                 "<th  ><span class='red'>*</span>净重(单位kg)</th>");
             itemColumHead.appendTo(trHead);
             //var itemColumHead2 = $("<td >商家编码</td><td >商品条形码</td>");
@@ -259,7 +259,7 @@ var attributeControl = {
                         "</div>"+
                         "</td>");
                     td4.appendTo(tr);
-                    var td5=$("<td ><input name=\"productSkuVOList["+g_sku_pos+"].roughWeight\" id=\"productSkuVOList_"+g_sku_pos+"_roughWeight\" class=\"releaseProductInputText roughWeights \"  type=\"text\" value=\"\"  style=\"width:80%\"    placeholder='请输入毛重'></td>");
+                    var td5=$("<td ><input name=\"productSkuVOList["+g_sku_pos+"].roughWeight\" id=\"productSkuVOList_"+g_sku_pos+"_roughWeight\" class=\"releaseProductInputText roughWeights \"  type=\"text\" value=\"\"  lay-verify=\"required|decimal3w\" style=\"width:80%\"    placeholder='请输入毛重'></td>");
                     td5.appendTo(tr);
                     var td6=$("<td ><input name=\"productSkuVOList["+g_sku_pos+"].suttle\" id=\"productSkuVOList_"+g_sku_pos+"_suttle\" class=\"releaseProductInputText suttles\" type=\"text\" value=\"\"  lay-verify=\"required|decimal3w\" style=\"width:80%\"    placeholder='请输入净重'></td>");
                     td6.appendTo(tr);

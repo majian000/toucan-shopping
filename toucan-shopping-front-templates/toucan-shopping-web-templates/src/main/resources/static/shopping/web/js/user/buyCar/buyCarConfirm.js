@@ -173,7 +173,7 @@ function drawFreightTemplateOption(datas)
                         freightTemplateOptionHtml+="<div style='overflow: hidden;'><input id='bcy_fto_"+obj.id+"_1' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='1'  /><label for='bcy_fto_"+obj.id+"_1'>快递</label></div>"
                     }else if(transportModelItem=="2")
                     {
-                        freightTemplateOptionHtml+="<div style='overflow: hidden;'><input id='bcy_fto_"+obj.id+"_2' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='3' /><label for='bcy_fto_"+obj.id+"_2'>EMS</label></div>"
+                        freightTemplateOptionHtml+="<div style='overflow: hidden;'><input id='bcy_fto_"+obj.id+"_2' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='2' /><label for='bcy_fto_"+obj.id+"_2'>EMS</label></div>"
                     }else if(transportModelItem=="3")
                     {
                         freightTemplateOptionHtml+="<div style='overflow: hidden;'><input id='bcy_fto_"+obj.id+"_3' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='3' /><label for='bcy_fto_"+obj.id+"_3'>平邮</label></div>"
@@ -197,16 +197,58 @@ function drawFreightTemplateOption(datas)
     });
     for(var i=0;i<datas.length;i++) {
         var obj =  datas[i];
-        if($("[name='bcy_fto_group_"+obj.id)!=null) {
-            $("[name='bcy_fto_group_" + obj.id + "']:first").click();
+        if($("input[name='bcy_fto_group_"+obj.id+"']")!=null) {
+            $("input[name='bcy_fto_group_" + obj.id + "']:first").click();
         }
     }
 }
 
 function calculateFreight(rid)
 {
-    console.log(g_cache_buy_items);
-    return "0";
+    if(g_cache_buy_items!=null) {
+        for (var i = 0; i < g_cache_buy_items.length; i++) {
+            var obj = g_cache_buy_items[i];
+            //忽略包邮
+            if(obj.freightTemplateVO != null && obj.freightTemplateVO.freightStatus == 2)
+            {
+                continue;
+            }
+            //忽略下架、售罄
+            if(!obj.isAllowedBuy)
+            {
+                continue;
+            }
+            if(obj.isMergeRow)
+            {
+                var freightMoney = 0;
+                var transportModel = $("input[name='bcy_fto_group_"+obj.id+"']:checked").val();
+                //计算同运费模板下相邻的商品
+                for(var j=i+1;j<g_cache_buy_items.length;j++)
+                {
+                    var nextObj = g_cache_buy_items[j];
+                    if(nextObj.freightTemplateId==obj.freightTemplateId)
+                    {
+                        if(obj.freightTemplateVO != null)
+                        {
+                            if(transportModel=="1") //快递
+                            {
+
+                            }else if(transportModel=="2") //EMS
+                            {
+
+                            }else if(transportModel=="3") //平邮
+                            {
+
+                            }
+                        }
+                    }else{
+                        i=j-1; //将运费模板ID不相等的设为下一个分组起始位置
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -277,7 +319,7 @@ function loadBuyCarPanel(){
                 var productPriceTotal = 0;
 
                 result.data = findMergeRow(result.data);
-                console.log(result.data);
+                g_cache_buy_items=result.data;
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
@@ -321,7 +363,6 @@ function loadBuyCarPanel(){
 
                 drawFreightTemplateOption(result.data);
 
-                g_cache_buy_items=result.data;
 
 
                 $(".product_price_total").html("￥"+productPriceTotal);
@@ -362,6 +403,8 @@ function loadModifyBuyCarPanel(){
                     "                    <td class=\"car_th\" style = \"width:20%\">操作</td>\n" +
                     "                </tr>";
                 var productPriceTotal = 0;
+
+                g_cache_buy_items=result.data;
 
                 for(var i=0;i<result.data.length;i++)
                 {
@@ -419,7 +462,6 @@ function loadModifyBuyCarPanel(){
 
                 bindBuyItemNumEvent();
 
-                g_cache_buy_items=result.data;
             }
             loading.hideLoading();
         },

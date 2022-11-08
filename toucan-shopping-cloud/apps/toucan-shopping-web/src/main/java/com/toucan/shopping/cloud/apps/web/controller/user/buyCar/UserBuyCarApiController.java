@@ -189,6 +189,7 @@ public class UserBuyCarApiController {
                                         }
                                         ubc.setProductPrice(productSku.getPrice());
                                         ubc.setSuttle(productSku.getSuttle()); //净重
+                                        ubc.setRoughWeight(productSku.getRoughWeight()); //毛重
                                         ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
                                         if(productSku.getFreightTemplateId()!=null) {
                                             ubc.setFreightTemplateId(productSku.getFreightTemplateId());
