@@ -159,6 +159,7 @@ function drawFreightTemplateOption(datas)
         var obj = datas[i];
         if (obj.freightTemplateVO != null && obj.freightTemplateVO.freightStatus == 2) {
             $(".bif_" + obj.id).html("包邮");
+            $(".bifm_" + obj.id).html("0");
         } else {
             if (obj.isMergeRow == true) {
                 $(".bif_" + obj.id).attr("rowspan", obj.mergeRowCount+1);
