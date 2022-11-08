@@ -191,16 +191,93 @@ function drawFreightTemplateOption(datas)
         }
     }
 
+
+    $(".bcy_fto").unbind();
     $(".bcy_fto").click(function() {
         var attrId = $(this).attr("attr-eid");
         calculateFreight(attrId);
     });
+
     for(var i=0;i<datas.length;i++) {
         var obj =  datas[i];
         if($("input[name='bcy_fto_group_"+obj.id+"']")!=null) {
             $("input[name='bcy_fto_group_" + obj.id + "']:first").click();
         }
     }
+
+
+
+}
+
+/**
+ * 查询运费规则
+ */
+function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
+{
+    if(transportModel=="1") //快递
+    {
+        if(freightTemplate.expressAreaRules!=null&&freightTemplate.expressAreaRules.length>0)
+        {
+            //查询地区规则
+            for(var i=0;i<freightTemplate.expressAreaRules.length;i++){
+                var rowAreaRule = freightTemplate.expressAreaRules[i];
+                if(rowAreaRule.selectItems!=null&&rowAreaRule.selectItems.length>0)
+                {
+                    for(var j=0;j<rowAreaRule.selectItems.length;j++)
+                    {
+                        var areaRule = rowAreaRule.selectItems[j];
+                        if(areaRule.cityCode==cityCode)
+                        {
+                            return areaRule;
+                        }
+                    }
+                }
+            }
+        }
+
+        //查询默认规则
+        return freightTemplate.expressDefaultRule;
+    }else if(transportModel=="2") //EMS
+    {
+        if(freightTemplate.emsAreaRules!=null&&freightTemplate.emsAreaRules.length>0) {
+            //查询地区规则
+            for (var i = 0; i < freightTemplate.emsAreaRules.length; i++) {
+                var rowAreaRule = freightTemplate.emsAreaRules[i];
+                if (rowAreaRule.selectItems != null && rowAreaRule.selectItems.length > 0) {
+                    for (var j = 0; j < rowAreaRule.selectItems.length; j++) {
+                        var areaRule = rowAreaRule.selectItems[j];
+                        if (areaRule.cityCode == cityCode) {
+                            return areaRule;
+                        }
+                    }
+                }
+            }
+        }
+
+        //查询默认规则
+        return freightTemplate.emsDefaultRule;
+
+    }else if(transportModel=="3") //平邮
+    {
+        if(freightTemplate.ordinaryMailAreaRules!=null&&freightTemplate.ordinaryMailAreaRules.length>0) {
+            //查询地区规则
+            for (var i = 0; i < freightTemplate.ordinaryMailAreaRules.length; i++) {
+                var rowAreaRule = freightTemplate.ordinaryMailAreaRules[i];
+                if (rowAreaRule.selectItems != null && rowAreaRule.selectItems.length > 0) {
+                    for (var j = 0; j < rowAreaRule.selectItems.length; j++) {
+                        var areaRule = rowAreaRule.selectItems[j];
+                        if (areaRule.cityCode == cityCode) {
+                            return areaRule;
+                        }
+                    }
+                }
+            }
+        }
+
+        //查询默认规则
+        return freightTemplate.ordinaryMailDefaultRule;
+    }
+    return null;
 }
 
 function calculateFreight(rid)
@@ -208,6 +285,11 @@ function calculateFreight(rid)
     if(g_cache_buy_items!=null) {
         for (var i = 0; i < g_cache_buy_items.length; i++) {
             var obj = g_cache_buy_items[i];
+            //忽略其他购物项分组
+            if(obj.id!=rid)
+            {
+                continue;
+            }
             //忽略包邮
             if(obj.freightTemplateVO != null && obj.freightTemplateVO.freightStatus == 2)
             {
@@ -222,24 +304,28 @@ function calculateFreight(rid)
             {
                 var freightMoney = 0;
                 var transportModel = $("input[name='bcy_fto_group_"+obj.id+"']:checked").val();
+                //如果没有选择运送方式 直接跳过
+                if(transportModel==null)
+                {
+                    continue;
+                }
+                var freightTemplateRule=null; //运费计算规则
+                if(g_consigneeAddress.cityCode==null||g_consigneeAddress.cityCode=="") //直辖市、自治区
+                {
+                    freightTemplateRule = findFreightTemplateRule(transportModel,obj.freightTemplateVO,g_consigneeAddress.provinceCode);
+                }else{
+                    freightTemplateRule = findFreightTemplateRule(transportModel,obj.freightTemplateVO,g_consigneeAddress.cityCode);
+                }
+                console.log(freightTemplateRule);
                 //计算同运费模板下相邻的商品
                 for(var j=i+1;j<g_cache_buy_items.length;j++)
                 {
                     var nextObj = g_cache_buy_items[j];
                     if(nextObj.freightTemplateId==obj.freightTemplateId)
                     {
-                        if(obj.freightTemplateVO != null)
+                        if(freightTemplateRule != null)
                         {
-                            if(transportModel=="1") //快递
-                            {
 
-                            }else if(transportModel=="2") //EMS
-                            {
-
-                            }else if(transportModel=="3") //平邮
-                            {
-
-                            }
                         }
                     }else{
                         i=j-1; //将运费模板ID不相等的设为下一个分组起始位置
