@@ -238,6 +238,10 @@ function findMergeRow(datas)
                     continue;
                 }else{
                     i=j-1; //还原到上一个项,让上面的i++进行移动
+                    if(row.freightTemplateVO!=null&&row.freightTemplateVO.freightStatus!=2)
+                    {
+                        row.isMergeRow=true;
+                    }
                     break;
                 }
             }
@@ -272,6 +276,7 @@ function loadBuyCarPanel(){
                 var productPriceTotal = 0;
 
                 result.data = findMergeRow(result.data);
+                console.log(result.data);
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];

@@ -12,6 +12,7 @@ $(function () {
 });
 
 
+var m_cache_buyItems=null;
 
 
 function loadBuyCarPanel(){
@@ -35,6 +36,7 @@ function loadBuyCarPanel(){
                 {
                     dataLength = result.data.length;
                 }
+                m_cache_buyItems = result.data;
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
@@ -113,6 +115,22 @@ function refershBuyCar(srcType,itemCount)
                 type: 'success'
             });
             return;
+        }
+
+        if(m_cache_buyItems!=null)
+        {
+            for(var i=0;i<m_cache_buyItems.length;i++)
+            {
+                var buyItem = m_cache_buyItems[i];
+                if(!buyItem.isAllowedBuy)
+                {
+                    $.message({
+                        message: buyItem.productSkuName+buyItem.noAllowedBuyDesc+",请删除!",
+                        type: 'error'
+                    });
+                    return;
+                }
+            }
         }
         window.location.href=basePath+"/page/user/buyCar/confirm";
     }
