@@ -99,11 +99,17 @@ public class UserBuyCarApiController {
                                         ubc.setProductSkuName(productSku.getName());
                                         if(productSku.getStatus().intValue()==0)
                                         {
-                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已下架");
+                                            ubc.setProductSkuName(ubc.getProductSkuName());
+                                            ubc.setNoAllowedBuyDesc("已下架");
+                                            ubc.setAllowedBuy(false);
+                                            ubc.setNoAllowedBuyStatus((short)1);
                                         }
                                         if(productSku.getStockNum().longValue()<=0)
                                         {
-                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已售罄");
+                                            ubc.setProductSkuName(ubc.getProductSkuName());
+                                            ubc.setNoAllowedBuyDesc("已售罄");
+                                            ubc.setAllowedBuy(false);
+                                            ubc.setNoAllowedBuyStatus((short)2);
                                         }
                                         ubc.setProductPrice(productSku.getPrice());
                                         ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
@@ -169,13 +175,20 @@ public class UserBuyCarApiController {
                                         ubc.setProductSkuName(productSku.getName());
                                         if(productSku.getStatus().intValue()==0)
                                         {
-                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已下架");
+                                            ubc.setProductSkuName(ubc.getProductSkuName());
+                                            ubc.setNoAllowedBuyDesc("已下架");
+                                            ubc.setAllowedBuy(false);
+                                            ubc.setNoAllowedBuyStatus((short)1);
                                         }
                                         if(productSku.getStockNum().longValue()<=0)
                                         {
-                                            ubc.setProductSkuName(ubc.getProductSkuName()+" 已售罄");
+                                            ubc.setProductSkuName(ubc.getProductSkuName());
+                                            ubc.setNoAllowedBuyDesc("已售罄");
+                                            ubc.setAllowedBuy(false);
+                                            ubc.setNoAllowedBuyStatus((short)2);
                                         }
                                         ubc.setProductPrice(productSku.getPrice());
+                                        ubc.setSuttle(productSku.getSuttle()); //净重
                                         ubc.setHttpProductImgPath(imageUploadService.getImageHttpPrefix()+productSku.getProductPreviewPath());
                                         if(productSku.getFreightTemplateId()!=null) {
                                             ubc.setFreightTemplateId(productSku.getFreightTemplateId());

@@ -38,11 +38,21 @@ function loadBuyCarPanel(){
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
+                    var noAllowedBuyDesc="";
+                    if(!buyCarItem.isAllowedBuy)
+                    {
+                        noAllowedBuyDesc="&nbsp;"+buyCarItem.noAllowedBuyDesc;
+                    }
                     productHtmls+="  <tr>\n" +
                         "                <td>\n" +
-                        "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
-                        "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
-                        "                </td>\n" +
+                        "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" ;
+                        if(!buyCarItem.isAllowedBuy)
+                        {
+                            productHtmls+=    "                    <del>"+buyCarItem.productSkuName+noAllowedBuyDesc+"</del>\n" ;
+                        }else{
+                            productHtmls+=    "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" ;
+                        }
+                        productHtmls+="                </td>\n" +
                         "                <td align=\"center\">"+buyCarItem.attributePreview+"</td>\n" +
                         "                <td align=\"center\">\n" +
                         "                    <div class=\"c_num\">\n" +
@@ -56,7 +66,9 @@ function loadBuyCarPanel(){
                         "                <td align=\"center\"><a onclick=\"showRemoveBuyCar('"+buyCarItem.id+"','"+buyCarItem.productSkuName+"')\">删除</a></td>\n" +
                         "            </tr>\n" +
                         "           ";
-                    productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
+                    if(buyCarItem.isAllowedBuy) {
+                        productPriceTotal += (buyCarItem.productPrice * buyCarItem.buyCount);
+                    }
                 }
                 productHtmls+="<tr height=\"70\">\n" +
                     "                <td colspan=\"6\" style=\"font-family:'Microsoft YaHei'; border-bottom:0;\">\n" +

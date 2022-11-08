@@ -1,5 +1,7 @@
 package com.toucan.shopping.modules.user.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toucan.shopping.modules.user.entity.UserBuyCarItem;
 import com.toucan.shopping.modules.user.vo.freightTemplate.UBCIFreightTemplateVO;
 import lombok.Data;
@@ -32,6 +34,15 @@ public class UserBuyCarItemVO extends UserBuyCarItem {
      * 属性预览
      */
     private String attributePreview;
+
+    private Double suttle; //净重
+
+    @JsonProperty("isAllowedBuy")
+    private boolean isAllowedBuy = true; //是否允许购买
+
+    private Short noAllowedBuyStatus; //不允许购买原因 1:已下架 2:已售罄
+
+    private String noAllowedBuyDesc; //不允许购买描述
 
     /**
      * 店铺ID

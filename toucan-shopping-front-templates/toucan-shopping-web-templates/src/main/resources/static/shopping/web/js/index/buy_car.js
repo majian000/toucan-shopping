@@ -26,12 +26,26 @@ function loadBuyCarPreviewPanel(){
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
+                    var noAllowedBuyDesc="";
+                    if(!buyCarItem.isAllowedBuy)
+                    {
+                        noAllowedBuyDesc="&nbsp;"+buyCarItem.noAllowedBuyDesc;
+                    }
+
                     productHtmls+="<li>\n" +
-                        "                <div class=\"img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\"><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"58\" height=\"58\" /></a></div>\n" +
-                        "                <div class=\"name\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" title=\""+buyCarItem.productSkuName+"\">"+buyCarItem.productSkuName+"</a></div>\n" +
-                        "                <div class=\"price\"><font color=\"#ff4e00\">￥"+buyCarItem.productPrice+"</font> x "+buyCarItem.buyCount+"</div>\n" +
+                        "                <div class=\"img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\"><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"58\" height=\"58\" /></a></div>\n" ;
+                    if(!buyCarItem.isAllowedBuy)
+                    {
+                        productHtmls+=    "                <div class=\"name\"><del>"+buyCarItem.productSkuName+noAllowedBuyDesc+"</del></div>\n" ;
+                    }else{
+                        productHtmls+=    "                <div class=\"name\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" title=\""+buyCarItem.productSkuName+"\">"+buyCarItem.productSkuName+"</a></div>\n" ;
+                    }
+                    productHtmls+=    "                <div class=\"price\"><font color=\"#ff4e00\">￥"+buyCarItem.productPrice+"</font> x "+buyCarItem.buyCount+"</div>\n" +
                         "            </li>";
-                    productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
+
+                    if(buyCarItem.isAllowedBuy) {
+                        productPriceTotal += (buyCarItem.productPrice * buyCarItem.buyCount);
+                    }
                 }
                 $(".cars").html(productHtmls);
                 $("#mcars_price_total_label").html(productPriceTotal);

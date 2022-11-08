@@ -11,6 +11,8 @@ var g_ca_cpage=1; //收货人当前页
 var g_selectConsigneeAddressPageData = null;
 var g_sleectConsigneeAddressDialogHandler = null;
 
+var g_cache_buy_items=null;
+
 $(function () {
     startLoadding();
     loadBuyCarPanel();
@@ -161,21 +163,22 @@ function drawFreightTemplateOption(datas)
             if (obj.isMergeRow == true) {
                 $(".bif_" + obj.id).attr("rowspan", obj.mergeRowCount+1);
                 var transportModelArray = obj.freightTemplateVO.transportModel.split(",");
-                var freightTemplateOptionHtml="";
+                var freightTemplateOptionHtml="<div style='width:100%;height:100%'>";
                 for(var j=0;j<transportModelArray.length;j++)
                 {
                     var transportModelItem = transportModelArray[j];
                     if(transportModelItem=="1")
                     {
-                        freightTemplateOptionHtml+="<input id='bcy_fto_"+obj.id+"_1' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='1'  /><label for='bcy_fto_"+obj.id+"_1'>快递</label><br>"
+                        freightTemplateOptionHtml+="<div style='overflow: hidden;'><input id='bcy_fto_"+obj.id+"_1' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='1'  /><label for='bcy_fto_"+obj.id+"_1'>快递</label></div>"
                     }else if(transportModelItem=="2")
                     {
-                        freightTemplateOptionHtml+="<input id='bcy_fto_"+obj.id+"_2' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='3' /><label for='bcy_fto_"+obj.id+"_2'>EMS</label><br>"
+                        freightTemplateOptionHtml+="<div style='overflow: hidden;'><input id='bcy_fto_"+obj.id+"_2' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='3' /><label for='bcy_fto_"+obj.id+"_2'>EMS</label></div>"
                     }else if(transportModelItem=="3")
                     {
-                        freightTemplateOptionHtml+="<input id='bcy_fto_"+obj.id+"_3' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='3' /><label for='bcy_fto_"+obj.id+"_3'>平邮</label>"
+                        freightTemplateOptionHtml+="<div style='overflow: hidden;'><input id='bcy_fto_"+obj.id+"_3' class='bcy_fto' name='bcy_fto_group_"+obj.id+"' attr-eid='"+obj.id+"' type='radio' value='3' /><label for='bcy_fto_"+obj.id+"_3'>平邮</label></div>"
                     }
                 }
+                freightTemplateOptionHtml+="</div>";
                 $(".bif_" + obj.id).html(freightTemplateOptionHtml);
                 //运费
                 $(".bifm_" + obj.id).attr("rowspan", obj.mergeRowCount+1);
@@ -189,7 +192,7 @@ function drawFreightTemplateOption(datas)
 
     $(".bcy_fto").click(function() {
         var attrId = $(this).attr("attr-eid");
-        console.log(attrId);
+        calculateFreight(attrId);
     });
     for(var i=0;i<datas.length;i++) {
         var obj =  datas[i];
@@ -199,8 +202,9 @@ function drawFreightTemplateOption(datas)
     }
 }
 
-function calculateFreight()
+function calculateFreight(rid)
 {
+    console.log(g_cache_buy_items);
     return "0";
 }
 
@@ -272,19 +276,33 @@ function loadBuyCarPanel(){
                 {
                     var buyCarItem = result.data[i];
 
+                    var noAllowedBuyDesc="";
+                    if(!buyCarItem.isAllowedBuy)
+                    {
+                        noAllowedBuyDesc="&nbsp;"+buyCarItem.noAllowedBuyDesc;
+                    }
+
                     productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
                         "<td class='bif_"+buyCarItem.id+"' align=\"center\"></td>"+
                         "<td class='bifm_"+buyCarItem.id+"' align=\"center\"></td>"+
                         "                <td>\n" +
-                        "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
-                        "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
-                        "                </td>\n" +
+                        "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" ;
+                    if(!buyCarItem.isAllowedBuy)
+                    {
+                        productHtmls+="                    <del>"+buyCarItem.productSkuName+noAllowedBuyDesc+"</del>\n" ;
+                    }else{
+                        productHtmls+="                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" ;
+                    }
+
+                    productHtmls+="                </td>\n" +
                         "                <td align=\"center\">"+buyCarItem.attributePreview+"</td>\n" +
                         "                <td align=\"center\">\n" +buyCarItem.buyCount + "                </td>\n" +
                         "                <td align=\"center\" style=\"color:#ff4e00;\">￥<a id=\"buyItemTotal_"+buyCarItem.id+"\" style=\"color: #ff4e00;\">"+(buyCarItem.buyCount*buyCarItem.productPrice)+"</a></td>\n" +
                         "            </tr>\n" +
                         "           ";
-                    productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
+                    if(buyCarItem.isAllowedBuy) {
+                        productPriceTotal += (buyCarItem.productPrice * buyCarItem.buyCount);
+                    }
                 }
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
@@ -296,6 +314,8 @@ function loadBuyCarPanel(){
                 $(".mcar_tab").html(productHtmls);
 
                 drawFreightTemplateOption(result.data);
+
+                g_cache_buy_items=result.data;
 
 
                 $(".product_price_total").html("￥"+productPriceTotal);
@@ -329,8 +349,6 @@ function loadModifyBuyCarPanel(){
         success: function (result) {
             if(result.code == 1){
                 var productHtmls=" <tr>\n" +
-                    "                    <td class=\"car_th\" style = \"width:10%\">配送方式</td>\n" +
-                    "                    <td class=\"car_th\" style = \"width:10%\">运费(元)</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:20%\">商品名称</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:15%\">属性</td>\n" +
                     "                    <td class=\"car_th\" style = \"width:5%\">购买数量</td>\n" +
@@ -339,18 +357,28 @@ function loadModifyBuyCarPanel(){
                     "                </tr>";
                 var productPriceTotal = 0;
 
-                result.data = findMergeRow(result.data);
-
                 for(var i=0;i<result.data.length;i++)
                 {
                     var buyCarItem = result.data[i];
+
+                    var noAllowedBuyDesc="";
+                    if(!buyCarItem.isAllowedBuy)
+                    {
+                        noAllowedBuyDesc="&nbsp;"+buyCarItem.noAllowedBuyDesc;
+                    }
+
                     productHtmls+="  <tr id=\"tr_"+buyCarItem.id+"\">\n" +
-                        "<td class='bif_"+buyCarItem.id+"' align=\"center\"></td>"+
-                        "<td class='bifm_"+buyCarItem.id+"' align=\"center\"></td>"+
                         "                <td>\n" +
-                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" +
-                        "                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" +
-                        "                </td>\n" +
+                         "                    <div class=\"c_s_img\"><a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank' ><img src=\""+buyCarItem.httpProductImgPath+"\" title=\""+buyCarItem.productSkuName+"\" width=\"73\" height=\"73\" /></a></div>\n" ;
+                    if(!buyCarItem.isAllowedBuy)
+                    {
+                        productHtmls+="                    <del>"+buyCarItem.productSkuName+noAllowedBuyDesc+"</a>\n" ;
+                    }else{
+                        productHtmls+="                    <a href=\""+basePath+"/page/product/detail/"+buyCarItem.shopProductSkuId+"\" target='_blank'>"+buyCarItem.productSkuName+"</a>\n" ;
+                    }
+
+
+                    productHtmls+="                </td>\n" +
                         "                <td align=\"center\">"+buyCarItem.attributePreview+"</td>\n" +
                         "                <td align=\"center\">\n" +
                         "                    <div class=\"c_num\">\n" +
@@ -364,7 +392,10 @@ function loadModifyBuyCarPanel(){
                         "                <td align=\"center\"><a onclick=\"showRemoveBuyCar('"+buyCarItem.id+"','"+buyCarItem.productSkuName+"')\">删除</a></td>\n" +
                         "            </tr>\n" +
                         "           ";
-                    productPriceTotal+=(buyCarItem.productPrice*buyCarItem.buyCount);
+
+                    if(buyCarItem.isAllowedBuy) {
+                        productPriceTotal += (buyCarItem.productPrice * buyCarItem.buyCount);
+                    }
                 }
 
                 productHtmls+=" <tr>\n" +
@@ -376,12 +407,13 @@ function loadModifyBuyCarPanel(){
 
                 $(".mcar_tab").html(productHtmls);
 
-                drawFreightTemplateOption(result.data);
 
                 $(".product_price_total").html("￥"+productPriceTotal);
                 $(".order_price_total").html("￥"+productPriceTotal);
 
                 bindBuyItemNumEvent();
+
+                g_cache_buy_items=result.data;
             }
             loading.hideLoading();
         },
@@ -620,6 +652,11 @@ function updateConsigneeAddress(acobj)
                     g_updateConsigneeAddressStatus=0;
 
                     $(".ca_select").show();
+                }else{
+                    $.message({
+                        message: result.msg,
+                        type: 'error'
+                    });
                 }
             },
             error: function (result) {
