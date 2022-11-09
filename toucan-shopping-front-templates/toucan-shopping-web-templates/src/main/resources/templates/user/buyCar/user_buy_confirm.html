@@ -197,6 +197,16 @@
 
 <div id="pcaDiv">
 </div>
+
+<link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
+<script type="text/javascript" src="${basePath}/static/lib/pagination/underscore.js"></script>
+<script type="text/javascript" src="${basePath}/static/lib/pagination/pagination.build.js"></script>
+
+<link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
+<script type="text/javascript" src="${basePath}/static/lib/bignumber/bignumber.js"></script>
+
+<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/buyCar/buyCarConfirm.js"></script>
+
 <script>
 
     $(function () {
@@ -213,22 +223,15 @@
             loading.hideLoading();
 
             $("#ms_city").click(function (e) {
-                SelCity(this,e);
+                SelCity(this,e,selectProvinceEvent,selectCityEvent);
             });
             $(".msc_l").click(function (e) {
-                SelCity(document.getElementById("ms_city"),e);
+                SelCity(document.getElementById("ms_city"),e,selectProvinceEvent,selectCityEvent);
             });
+            loadBuyCarConfirmPage();
         });
     });
 
 </script>
-
-<link rel="stylesheet" href="${basePath}/static/lib/pagination/pagination.css">
-<script type="text/javascript" src="${basePath}/static/lib/pagination/underscore.js"></script>
-<script type="text/javascript" src="${basePath}/static/lib/pagination/pagination.build.js"></script>
-
-<link rel="stylesheet" href="${basePath}/static/lib/citySet/style.css">
-
-<script type="text/javascript" src="${basePath}/static/shopping/web/js/user/buyCar/buyCarConfirm.js"></script>
 
 </html>

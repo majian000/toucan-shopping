@@ -1,4 +1,13 @@
-function SelCity(obj, e) {
+/**
+ *
+ * @param obj
+ * @param e
+ * @param prlcallback 点击省、直辖市回调
+ * @param citycallback  点击地市回调
+ * @param areacallback 点击区县回调
+ * @constructor
+ */
+function SelCity(obj, e,prlcallback,citycallback,areacallback) {
     var ths = obj;
     var dal = '<div class="_citys"><span title="关闭" id="cColse" >×</span><div id="_citysheng" class="_citys0">请选择省份</div><div id="_citys0" class="_citys1"></div><div style="display:none" id="_citys1" class="_citys1"></div><div style="display:none" id="_citys2" class="_citys1"></div></div>';
     Iput.show({
@@ -40,6 +49,10 @@ function SelCity(obj, e) {
             $("#hcity").val(lev);
             $("#hcity").attr("data-id", $(this).data("id"))
         }
+        if(prlcallback!=null)
+        {
+            prlcallback();
+        }
         $("#_citys1 a").click(function() {
             $("#_citys1 a,#_citys2 a").removeClass("AreaS");
             $(this).addClass("AreaS");
@@ -65,6 +78,10 @@ function SelCity(obj, e) {
             $("#_citys2").append(ar);
             $("._citys1").hide();
             $("._citys1:eq(2)").show();
+            if(citycallback!=null)
+            {
+                citycallback();
+            }
             $("#_citys2 a").click(function() {
                 $("#_citys2 a").removeClass("AreaS");
                 $(this).addClass("AreaS");
@@ -91,6 +108,11 @@ function SelCity(obj, e) {
                 var bp = $("#hproper").val();
                 ths.value = bc + "/" + bp + "/" + $(this).data("name");
                 Iput.colse()
+
+                if(areacallback!=null)
+                {
+                    areacallback();
+                }
             })
         })
     })

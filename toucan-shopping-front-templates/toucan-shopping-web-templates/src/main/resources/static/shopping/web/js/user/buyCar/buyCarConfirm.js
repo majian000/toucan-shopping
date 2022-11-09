@@ -13,19 +13,9 @@ var g_sleectConsigneeAddressDialogHandler = null;
 
 var g_cache_buy_items=null;
 
-var g_freightMoneyTotal = 0;
-
-$(function () {
+function loadBuyCarConfirmPage() {
     startLoadding();
-    loadBuyCarPanel();
     loadDefaultConsigneeAddress();
-
-    $("#ms_city").click(function (e) {
-        SelCity(this,e);
-    });
-    $(".msc_l").click(function (e) {
-        SelCity(document.getElementById("ms_city"),e);
-    });
 
     $(".mcar_remove").click(function(){
         removeBuyCar();
@@ -99,7 +89,7 @@ $(function () {
         queryConsignessAddressList(1);
     });
 
-});
+}
 
 
 /**
@@ -288,6 +278,11 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
     return null;
 }
 
+
+/**
+ * 根据指定运送方式 计算运费
+ * @param rid
+ */
 function calculateFreight(rid)
 {
     if(g_cache_buy_items!=null) {
@@ -319,6 +314,11 @@ function calculateFreight(rid)
                     continue;
                 }
                 var freightTemplateRule=null; //运费计算规则
+                if(g_consigneeAddress==null)
+                {
+                    calculateFreightTotal();
+                    return;
+                }
                 if(g_consigneeAddress.cityCode==null||g_consigneeAddress.cityCode=="") //直辖市、自治区
                 {
                     freightTemplateRule = findFreightTemplateRule(transportModel,obj.freightTemplateVO,g_consigneeAddress.provinceCode);
@@ -369,32 +369,35 @@ function calculateFreight(rid)
                     //按件
                     if(obj.freightTemplateVO.valuationMethod==1)
                     {
-                        if(buyCount<firstWeight)
+                        if(buyCount<=firstWeight)
                         {
                             //默认运费
                             $(".bifm_"+obj.id).html(firstMoney);
-                            g_freightMoneyTotal+=firstMoney;
+                            $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+firstMoney+"'/>");
                         }else{
                             //(续件/(首件-购买数量))*续件金额
                             freightMoney= (appendWight/(buyCount-firstWeight))*appendMoney;
                             freightMoney= freightMoney<0?0:freightMoney;
+                            freightMoney+=firstMoney; //加上首件金额
                             $(".bifm_"+obj.id).html(freightMoney);
+                            $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+freightMoney+"'/>");
                         }
                     }else if(obj.freightTemplateVO.valuationMethod==2) //按重量
                     {
-                        if(roughWeightTotal<firstWeight)
+                        if(roughWeightTotal<=firstWeight)
                         {
                             //默认运费
                             $(".bifm_"+obj.id).html(firstMoney);
-                            g_freightMoneyTotal+=firstMoney;
+                            $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+firstMoney+"'/>");
                         }else{
                             //(续件/(首件-购买数量))*续件金额
                             freightMoney = (appendWight/(roughWeightTotal-firstWeight))*appendMoney;
                             freightMoney= freightMoney<0?0:freightMoney;
+                            freightMoney+=firstMoney; //加上首件金额
                             $(".bifm_"+obj.id).html(freightMoney);
+                            $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+freightMoney+"'/>");
                         }
                     }
-                    g_freightMoneyTotal+=freightMoney;
                 }
                 //清空分组项
                 itemGroups.splice(0,itemGroups.length);
@@ -402,7 +405,48 @@ function calculateFreight(rid)
         }
     }
 
-    $("#freightPriceTotal").html("￥"+g_freightMoneyTotal);
+    calculateFreightTotal();
+
+}
+
+
+
+
+/**
+ * 计算总运费
+ */
+function calculateFreightTotal()
+{
+    var freightMoneyTotal=new BigNumber("0");
+    var bifmms = $(".bifm_money_hids");
+    if(bifmms!=null&&bifmms.length>0)
+    {
+        for(var i=0;i<bifmms.length;i++)
+        {
+            var bifm = parseFloat($(bifmms[i]).val()).toFixed(2);
+            if(bifm!=null) {
+                freightMoneyTotal = freightMoneyTotal.plus(bifm);
+            }
+        }
+    }
+    $("#freightPriceTotal").html("￥"+freightMoneyTotal);
+}
+
+
+/**
+ * 计算所有运费
+ */
+function calculateAllFreight()
+{
+    if(g_cache_buy_items!=null&&g_cache_buy_items.length>0)
+    {
+        g_cache_buy_items.forEach(function (item) {
+            if(item.isMergeRow)
+            {
+                calculateFreight(item.id);
+            }
+        });
+    }
 }
 
 /**
@@ -808,6 +852,9 @@ function loadDefaultConsigneeAddress(){
 
                 g_updateConsigneeAddressStatus=1;
             }
+
+            //载入购物车
+            loadBuyCarPanel();
         },
         error: function (result) {
         },
@@ -885,6 +932,9 @@ function drawReadOnlyConsigneeAddress(obj)
     $("#ca_city_name").html(obj.cityName);
     $("#ca_area_name").html(obj.areaName);
     $("#ca_address").html(obj.address);
+
+
+    calculateAllFreight();
 }
 
 /**
@@ -1089,3 +1139,22 @@ function queryConsignessAddressList(cpage)
     }
 
 }
+
+
+function selectProvinceEvent()
+{
+    if(g_consigneeAddress==null)
+    {
+        g_consigneeAddress = {};
+    }
+    g_consigneeAddress.provinceCode=$("#province_code").val();
+    calculateAllFreight();
+}
+
+
+function selectCityEvent()
+{
+    g_consigneeAddress.cityCode=$("#city_code").val();
+    calculateAllFreight();
+}
+
