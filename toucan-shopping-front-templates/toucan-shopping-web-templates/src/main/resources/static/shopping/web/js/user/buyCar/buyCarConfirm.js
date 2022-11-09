@@ -13,6 +13,8 @@ var g_sleectConsigneeAddressDialogHandler = null;
 
 var g_cache_buy_items=null;
 
+var g_freightMoneyTotal = 0;
+
 $(function () {
     startLoadding();
     loadBuyCarPanel();
@@ -308,7 +310,6 @@ function calculateFreight(rid)
             }
             if(obj.isMergeRow)
             {
-                var freightMoney = 0;
                 var transportModel = $("input[name='bcy_fto_group_"+obj.id+"']:checked").val();
                 var itemGroups = new Array();
                 itemGroups.push(obj);
@@ -364,6 +365,7 @@ function calculateFreight(rid)
                         appendMoney = freightTemplateRule.appendWeightMoney;
                     }
 
+                    var freightMoney=0;
                     //按件
                     if(obj.freightTemplateVO.valuationMethod==1)
                     {
@@ -371,9 +373,10 @@ function calculateFreight(rid)
                         {
                             //默认运费
                             $(".bifm_"+obj.id).html(firstMoney);
+                            g_freightMoneyTotal+=firstMoney;
                         }else{
                             //(续件/(首件-购买数量))*续件金额
-                            var freightMoney = (appendWight/(buyCount-firstWeight))*appendMoney;
+                            freightMoney= (appendWight/(buyCount-firstWeight))*appendMoney;
                             freightMoney= freightMoney<0?0:freightMoney;
                             $(".bifm_"+obj.id).html(freightMoney);
                         }
@@ -383,19 +386,23 @@ function calculateFreight(rid)
                         {
                             //默认运费
                             $(".bifm_"+obj.id).html(firstMoney);
+                            g_freightMoneyTotal+=firstMoney;
                         }else{
                             //(续件/(首件-购买数量))*续件金额
-                            var freightMoney = (appendWight/(roughWeightTotal-firstWeight))*appendMoney;
+                            freightMoney = (appendWight/(roughWeightTotal-firstWeight))*appendMoney;
                             freightMoney= freightMoney<0?0:freightMoney;
                             $(".bifm_"+obj.id).html(freightMoney);
                         }
                     }
+                    g_freightMoneyTotal+=freightMoney;
                 }
                 //清空分组项
                 itemGroups.splice(0,itemGroups.length);
             }
         }
     }
+
+    $("#freightPriceTotal").html("￥"+g_freightMoneyTotal);
 }
 
 /**
@@ -501,7 +508,8 @@ function loadBuyCarPanel(){
                 }
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
-                    "                        商品总价：￥<a id=\"productPriceTotal\">"+productPriceTotal+"</a>\n" +
+                    "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
+                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
 
@@ -596,7 +604,8 @@ function loadModifyBuyCarPanel(){
 
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
-                    "                        商品总价：￥<a id=\"productPriceTotal\">"+productPriceTotal+"</a>\n" +
+                    "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
+                    "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
 
