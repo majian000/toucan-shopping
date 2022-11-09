@@ -228,6 +228,7 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
                         var areaRule = rowAreaRule.selectItems[j];
                         if(areaRule.cityCode==cityCode)
                         {
+                            areaRule.type=2;
                             return areaRule;
                         }
                     }
@@ -236,6 +237,7 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
         }
 
         //查询默认规则
+        freightTemplate.expressDefaultRule.type=1;
         return freightTemplate.expressDefaultRule;
     }else if(transportModel=="2") //EMS
     {
@@ -247,6 +249,7 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
                     for (var j = 0; j < rowAreaRule.selectItems.length; j++) {
                         var areaRule = rowAreaRule.selectItems[j];
                         if (areaRule.cityCode == cityCode) {
+                            areaRule.type=2;
                             return areaRule;
                         }
                     }
@@ -255,6 +258,7 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
         }
 
         //查询默认规则
+        freightTemplate.emsDefaultRule.type=1;
         return freightTemplate.emsDefaultRule;
 
     }else if(transportModel=="3") //平邮
@@ -267,6 +271,7 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
                     for (var j = 0; j < rowAreaRule.selectItems.length; j++) {
                         var areaRule = rowAreaRule.selectItems[j];
                         if (areaRule.cityCode == cityCode) {
+                            areaRule.type=2;
                             return areaRule;
                         }
                     }
@@ -275,6 +280,7 @@ function findFreightTemplateRule(transportModel,freightTemplate,cityCode)
         }
 
         //查询默认规则
+        freightTemplate.ordinaryMailDefaultRule.type=1;
         return freightTemplate.ordinaryMailDefaultRule;
     }
     return null;
@@ -304,6 +310,8 @@ function calculateFreight(rid)
             {
                 var freightMoney = 0;
                 var transportModel = $("input[name='bcy_fto_group_"+obj.id+"']:checked").val();
+                var itemGroups = new Array();
+                itemGroups.push(obj);
                 //如果没有选择运送方式 直接跳过
                 if(transportModel==null)
                 {
@@ -316,22 +324,75 @@ function calculateFreight(rid)
                 }else{
                     freightTemplateRule = findFreightTemplateRule(transportModel,obj.freightTemplateVO,g_consigneeAddress.cityCode);
                 }
-                console.log(freightTemplateRule);
-                //计算同运费模板下相邻的商品
+                //找到同运费模板下相邻的商品
                 for(var j=i+1;j<g_cache_buy_items.length;j++)
                 {
                     var nextObj = g_cache_buy_items[j];
                     if(nextObj.freightTemplateId==obj.freightTemplateId)
                     {
-                        if(freightTemplateRule != null)
-                        {
-
-                        }
+                        itemGroups.push(nextObj);
                     }else{
                         i=j-1; //将运费模板ID不相等的设为下一个分组起始位置
                         break;
                     }
                 }
+                //计算同运费模板下相邻的商品
+                if(freightTemplateRule != null)
+                {
+                    var buyCount=0; //购买总件数
+                    var roughWeightTotal = 0; //毛重总数
+                    itemGroups.forEach(function (item) {
+                        buyCount+=parseInt(item.buyCount);
+                        roughWeightTotal+=(item.buyCount*item.roughWeightTotal); //毛重总量=数量*毛重
+                    });
+
+                    var firstWeight; //首重、首件
+                    var firstMoney; //首件价格
+                    var appendWight; //续重、续件
+                    var appendMoney; //续件价格
+                    //默认运费规则
+                    if(freightTemplateRule.type==1)
+                    {
+                        firstWeight = freightTemplateRule.defaultWeight;
+                        firstMoney = freightTemplateRule.defaultWeightMoney;
+                        appendWight = freightTemplateRule.defaultAppendWeight;
+                        appendMoney = freightTemplateRule.defaultAppendWeightMoney;
+                    }else{ //地区运费规则
+                        firstWeight = freightTemplateRule.firstWeight;
+                        firstMoney = freightTemplateRule.firstWeightMoney;
+                        appendWight = freightTemplateRule.appendWeight;
+                        appendMoney = freightTemplateRule.appendWeightMoney;
+                    }
+
+                    //按件
+                    if(obj.freightTemplateVO.valuationMethod==1)
+                    {
+                        if(buyCount<firstWeight)
+                        {
+                            //默认运费
+                            $(".bifm_"+obj.id).html(firstMoney);
+                        }else{
+                            //(续件/(首件-购买数量))*续件金额
+                            var freightMoney = (appendWight/(buyCount-firstWeight))*appendMoney;
+                            freightMoney= freightMoney<0?0:freightMoney;
+                            $(".bifm_"+obj.id).html(freightMoney);
+                        }
+                    }else if(obj.freightTemplateVO.valuationMethod==2) //按重量
+                    {
+                        if(roughWeightTotal<firstWeight)
+                        {
+                            //默认运费
+                            $(".bifm_"+obj.id).html(firstMoney);
+                        }else{
+                            //(续件/(首件-购买数量))*续件金额
+                            var freightMoney = (appendWight/(roughWeightTotal-firstWeight))*appendMoney;
+                            freightMoney= freightMoney<0?0:freightMoney;
+                            $(".bifm_"+obj.id).html(freightMoney);
+                        }
+                    }
+                }
+                //清空分组项
+                itemGroups.splice(0,itemGroups.length);
             }
         }
     }
