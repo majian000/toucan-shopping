@@ -89,6 +89,18 @@ function loadBuyCarConfirmPage() {
         queryConsignessAddressList(1);
     });
 
+
+    $(".buy_item_pey").click(function(){
+        var buyItemPays = $(".buy_item_pey");
+        for(var i=0;i<buyItemPays.length;i++)
+        {
+            $(buyItemPays[i]).removeClass("checked")
+        }
+        $(this).addClass("checked");
+        console.log($(this).attr("attr-type"));
+    });
+
+
 }
 
 
@@ -505,7 +517,7 @@ function loadBuyCarPanel(){
 
     loading.showLoading({
         type:1,
-        tip:"等待中..."
+        tip:"加载中..."
     });
 
     $.ajax({
@@ -593,7 +605,7 @@ function loadBuyCarPanel(){
 function loadModifyBuyCarPanel(){
     loading.showLoading({
         type:1,
-        tip:"等待中..."
+        tip:"加载中..."
     });
 
     $.ajax({
