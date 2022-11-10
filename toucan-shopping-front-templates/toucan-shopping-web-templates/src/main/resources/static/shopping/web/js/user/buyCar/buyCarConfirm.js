@@ -341,10 +341,12 @@ function calculateFreight(rid)
                 if(freightTemplateRule != null)
                 {
                     var buyCount=0; //购买总件数
-                    var roughWeightTotal = 0; //毛重总数
+                    var roughWeightTotal=new BigNumber("0");
                     itemGroups.forEach(function (item) {
                         buyCount+=parseInt(item.buyCount);
-                        roughWeightTotal+=(item.buyCount*item.roughWeightTotal); //毛重总量=数量*毛重
+                        var itemBuyCountBigNumber=new BigNumber(item.buyCount);
+                        var itemRoughWeightTotalBigNumber=new BigNumber(item.roughWeight!=null?item.roughWeight:0);
+                        roughWeightTotal = roughWeightTotal.plus(itemBuyCountBigNumber.times(itemRoughWeightTotalBigNumber)); //毛重总量=数量*毛重
                     });
 
                     var firstWeight; //首重、首件
@@ -484,6 +486,14 @@ function findMergeRow(datas)
                         row.isMergeRow=true;
                     }
                     break;
+                }
+            }
+            //最后一个项并且为不包邮的运费模板
+            if(i+1>=datas.length)
+            {
+                if(row.freightTemplateVO!=null&&row.freightTemplateVO.freightStatus!=2)
+                {
+                    row.isMergeRow=true;
                 }
             }
         }
