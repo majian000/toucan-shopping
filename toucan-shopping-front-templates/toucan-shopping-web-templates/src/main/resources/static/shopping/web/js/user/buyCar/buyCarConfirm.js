@@ -12,6 +12,8 @@ var g_selectConsigneeAddressPageData = null;
 var g_sleectConsigneeAddressDialogHandler = null;
 
 var g_cache_buy_items=null;
+var g_freight_money = new BigNumber(0); //运费总价
+var g_product_price_money=new BigNumber(0); //商品总价
 
 function loadBuyCarConfirmPage() {
     startLoadding();
@@ -443,7 +445,11 @@ function calculateFreightTotal()
             }
         }
     }
-    $("#freightPriceTotal").html("￥"+freightMoneyTotal.toFixed(2));
+    g_freight_money = new BigNumber(freightMoneyTotal.toFixed(2));
+    $("#freightPriceTotal").html("￥"+g_freight_money);
+    $(".order_freight_total").html("￥"+g_freight_money);
+    $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
+
 }
 
 
@@ -585,9 +591,9 @@ function loadBuyCarPanel(){
                 drawFreightTemplateOption(result.data);
 
 
-
-                $(".product_price_total").html("￥"+productPriceTotal);
-                $(".order_price_total").html("￥"+productPriceTotal);
+                g_product_price_money = new BigNumber(productPriceTotal);
+                $(".product_price_total").html("￥"+g_product_price_money);
+                $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
 
             }
         },
@@ -680,8 +686,9 @@ function loadModifyBuyCarPanel(){
                     bindBuyCarIntInputKeyUp("num_"+result.data[i].id);
                 }
 
-                $(".product_price_total").html("￥"+productPriceTotal);
-                $(".order_price_total").html("￥"+productPriceTotal);
+                g_product_price_money = new BigNumber(productPriceTotal);
+                $(".product_price_total").html("￥"+g_product_price_money);
+                $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
 
                 bindBuyItemNumEvent();
 
@@ -794,8 +801,9 @@ function calculatePriceTotal()
     }
     $("#productPriceTotal").html(productPriceTotal);
 
-    $(".product_price_total").html("￥"+productPriceTotal);
-    $(".order_price_total").html("￥"+productPriceTotal);
+    g_product_price_money = new BigNumber(productPriceTotal);
+    $(".product_price_total").html("￥"+g_product_price_money);
+    $(".order_price_total").html("￥"+g_product_price_money.plus(g_freight_money));
 }
 
 
