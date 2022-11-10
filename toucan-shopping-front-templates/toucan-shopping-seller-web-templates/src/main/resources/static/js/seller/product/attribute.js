@@ -8,9 +8,9 @@
  */
 
 var g_sku_pos=0;
-function stockInputKeyUp(o)
+function bindIntInputKeyUp(id)
 {
-    $(o).keyup(function(){
+    $($("#"+id)).keyup(function(){
         var c=$(this);
         if(/[^\d]/.test(c.val())){//替换非数字字符
             var temp_amount=c.val().replace(/[^\d]/g,'');
@@ -240,7 +240,7 @@ var attributeControl = {
                     sku_attribute_json+="}";
                     var td1 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].price\" id=\"productSkuVOList_"+g_sku_pos+"_price\" class=\"releaseProductInputText\" type=\"text\" value=\"\" lay-verify=\"required|money\" style=\"width:80%\"  placeholder='请输入价格'></td>");
                     td1.appendTo(tr);
-                    var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" id=\"productSkuVOList_"+g_sku_pos+"_stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\" style=\"width:80%\"  onchange='inputStock(this);' onkeyup='stockInputKeyUp(this);' placeholder='请输入库存数量'></td>");
+                    var td2 = $("<td ><input name=\"productSkuVOList["+g_sku_pos+"].stockNum\" id=\"productSkuVOList_"+g_sku_pos+"_stockNum\" class=\"releaseProductInputText skuStockInput\" type=\"text\" value=\"\" lay-verify=\"required|productCount\" style=\"width:80%\"  onchange='inputStock(this);'  placeholder='请输入库存数量'></td>");
                     td2.appendTo(tr);
                     var td3 = $("<input type='file' class='skuTablePhotos skuTableUploadFile' attr-index='"+g_sku_pos+"' style='display: none' name='productSkuVOList["+g_sku_pos+"].mainPhotoFile' id='skuProductProview"+g_sku_pos+"' />");
                     td3.appendTo(tr);
@@ -276,6 +276,8 @@ var attributeControl = {
 
                     $("#productSkuVOList"+g_sku_pos+"_attributes").val(sku_attribute_json);
                     $("#productSkuVOList"+g_sku_pos+"_attributes_value").val(td_array.join("_"));
+
+                    bindIntInputKeyUp("productSkuVOList_"+g_sku_pos+"_stockNum");
 
                     g_sku_pos++;
                     //var td3 = $("<td ><input name=\"Txt_NumberSon\" class=\"l-text\" type=\"text\" value=\"\"></td>");

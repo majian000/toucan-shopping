@@ -62,3 +62,19 @@ function getShopProductPreviewType()
     }
     return 2;
 }
+
+
+/**
+ * 只能输入整数
+ * @param id
+ */
+function bindBuyCarIntInputKeyUp(id)
+{
+    $($("#"+id)).keyup(function(){
+        var c=$(this);
+        if(/[^\d]/.test(c.val())){//替换非数字字符
+            var temp_amount=c.val().replace(/[^\d]/g,'');
+            $(this).val(temp_amount);
+        }
+    });
+}

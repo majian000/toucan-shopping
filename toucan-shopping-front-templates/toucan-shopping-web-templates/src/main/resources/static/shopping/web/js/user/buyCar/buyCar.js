@@ -87,6 +87,10 @@ function loadBuyCarPanel(){
 
                 $(".mcar_tab").append(productHtmls);
 
+                for(var i=0;i<result.data.length;i++) {
+                    bindBuyCarIntInputKeyUp("num_"+result.data[i].id);
+                }
+
                 bindBuyItemNumEvent();
                 bindClearBuyCar();
             }
@@ -263,9 +267,10 @@ function bindBuyItemNumEvent()
     $(".mcar_pn").change(function(){
         var bnum = $(this).val();
         var cid = $(this).attr("attr-cid");
-        if(isNaN(bnum))
-        {
-            bnum = "1";
+        if(/[^\d]/.test(bnum)){//替换非数字字符
+            var temp_amount=bnum.replace(/[^\d]/g,'');
+            $(this).val(temp_amount);
+            bnum = temp_amount;
         }
         updateRow(cid,bnum);
     });

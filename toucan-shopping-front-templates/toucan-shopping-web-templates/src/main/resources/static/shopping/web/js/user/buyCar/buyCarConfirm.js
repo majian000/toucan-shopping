@@ -372,14 +372,14 @@ function calculateFreight(rid)
                         if(buyCount<=firstWeight)
                         {
                             //默认运费
-                            $(".bifm_"+obj.id).html(firstMoney);
+                            $(".bifm_"+obj.id).html(firstMoney.toFixed(2));
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+firstMoney+"'/>");
                         }else{
                             //(续件/(首件-购买数量))*续件金额
                             freightMoney= (appendWight/(buyCount-firstWeight))*appendMoney;
                             freightMoney= freightMoney<0?0:freightMoney;
                             freightMoney+=firstMoney; //加上首件金额
-                            $(".bifm_"+obj.id).html(freightMoney);
+                            $(".bifm_"+obj.id).html(freightMoney.toFixed(2));
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+freightMoney+"'/>");
                         }
                     }else if(obj.freightTemplateVO.valuationMethod==2) //按重量
@@ -387,14 +387,14 @@ function calculateFreight(rid)
                         if(roughWeightTotal<=firstWeight)
                         {
                             //默认运费
-                            $(".bifm_"+obj.id).html(firstMoney);
+                            $(".bifm_"+obj.id).html(firstMoney.toFixed(2));
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+firstMoney+"'/>");
                         }else{
                             //(续件/(首件-购买数量))*续件金额
                             freightMoney = (appendWight/(roughWeightTotal-firstWeight))*appendMoney;
                             freightMoney= freightMoney<0?0:freightMoney;
                             freightMoney+=firstMoney; //加上首件金额
-                            $(".bifm_"+obj.id).html(freightMoney);
+                            $(".bifm_"+obj.id).html(freightMoney.toFixed(2));
                             $(".bifm_"+obj.id).append("<input type='hidden'  id='bifm_money_hids_"+obj.id+"' class='bifm_money_hids' value='"+freightMoney+"'/>");
                         }
                     }
@@ -429,7 +429,7 @@ function calculateFreightTotal()
             }
         }
     }
-    $("#freightPriceTotal").html("￥"+freightMoneyTotal);
+    $("#freightPriceTotal").html("￥"+freightMoneyTotal.toFixed(2));
 }
 
 
@@ -648,14 +648,15 @@ function loadModifyBuyCarPanel(){
 
                 productHtmls+=" <tr>\n" +
                     "                    <td colspan=\"7\" align=\"right\" style=\"font-family:'Microsoft YaHei';\">\n" +
-                    "                        运费：<a id=\"freightPriceTotal\" style='color:#ff4e00'>￥</a>&nbsp;&nbsp;&nbsp;\n" +
                     "                        商品总价：<a id=\"productPriceTotal\" style='color:#ff4e00'>￥"+productPriceTotal+"</a>\n" +
                     "                    </td>\n" +
                     "                </tr>";
 
 
                 $(".mcar_tab").html(productHtmls);
-
+                for(var i=0;i<result.data.length;i++) {
+                    bindBuyCarIntInputKeyUp("num_"+result.data[i].id);
+                }
 
                 $(".product_price_total").html("￥"+productPriceTotal);
                 $(".order_price_total").html("￥"+productPriceTotal);
@@ -680,9 +681,10 @@ function bindBuyItemNumEvent()
     $(".mcar_pn").change(function(){
         var bnum = $(this).val();
         var cid = $(this).attr("attr-cid");
-        if(isNaN(bnum))
-        {
-            bnum = "1";
+        if(/[^\d]/.test(bnum)){//替换非数字字符
+            var temp_amount=bnum.replace(/[^\d]/g,'');
+            $(this).val(temp_amount);
+            bnum = temp_amount;
         }
         updateRow(cid,bnum);
     });
