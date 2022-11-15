@@ -173,24 +173,11 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'id',  title: '商品ID', width: 150},
                     {field: 'name',width: 400,  title: '商品名称',event:'openDetailDialogEvent',
                         templet: function (row) {
                             return "<a href='#'   style='color: blue;text-decoration:underline;'>"+row.name+"</a>";
                         }},
-                    {field: 'uuid',width: 300,  title: '商品UUID'},
                     {field: 'categoryPath',width: 350,  title: '分类路径'},
-                    {field: 'categoryName',width: 150,  title: '分类名称'},
-                    {field: 'brandId',width: 350,  title: '品牌ID'},
-                    {field: 'brandChineseName',width: 150,  title: '品牌中文名称'},
-                    {field: 'brandEnglishName',width: 150,  title: '品牌英文名称'},
-                    {field: 'brandHttpLogo',width:150,  title: '品牌LOGO',
-                        templet: function (row) {
-                            if(row.brandHttpLogo!=null) {
-                                return "<a href='" + row.brandHttpLogo + "' target='_blank'><img src='" + row.brandHttpLogo + "' width='100' height='100'  /></a>";
-                            }
-                            return "";
-                        }},
                     {field: 'status',width: 150,   title: '上架状态',
                         templet: function (row) {
                             if(row.status == null){
@@ -357,7 +344,7 @@
             var data = obj.data;
             if(obj.event=="openDetailDialogEvent")
             {
-                openEditDialog(data.id);
+                openShowDialog(data.id);
             }else if (obj.event == 'delete') {
                 layer.confirm("确定删除"+data.name+"?", function (index) {
                     $.ajax({
@@ -385,6 +372,9 @@
             }else if(obj.event=="edit")
             {
                 openEditDialog(data.id);
+            }else if(obj.event=="show")
+            {
+                openShowDialog(data.id);
             }
         });
 
@@ -407,6 +397,23 @@
         }
 
 
+        function openShowDialog(id)
+        {
+            var index = layer.open({
+                title: '查看平台商品',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+
+                area: ['100%', '100%'],
+                content: '[[@{/}]]productSpu/detailPage/'+id
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+
+        }
 
     });
 </script>
