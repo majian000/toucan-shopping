@@ -102,6 +102,9 @@ function loadBuyCarConfirmPage() {
         console.log($(this).attr("attr-type"));
     });
 
+    $(".confirm_payment_btn").click(function(){
+        paymentEvent();
+    });
 
 }
 
@@ -480,12 +483,17 @@ function findMergeRow(datas)
         for(var j=0;j<datas.length;j++) {
             datas[j].isMergeRow=false;
             datas[j].mergeRowCount=0;
+            datas[j].isFindFirstRow=false; //找到了该分组首行
         }
         for(var i=0;i<datas.length;i++)
         {
             var row = datas[i];
             //忽略包邮情况
             if(row.freightTemplateVO!=null&&row.freightTemplateVO.freightStatus==2)
+            {
+                continue;
+            }
+            if(row.isFindFirstRow)
             {
                 continue;
             }
@@ -496,6 +504,8 @@ function findMergeRow(datas)
                 {
                     row.isMergeRow=true;
                     row.mergeRowCount++; //要合并的行
+                    row.isFindFirstRow = true;
+                    nextRow.isFindFirstRow = true;
                     continue;
                 }else{
                     i=j-1; //还原到上一个项,让上面的i++进行移动
@@ -545,6 +555,7 @@ function loadBuyCarPanel(){
                 var productPriceTotal = 0;
 
                 result.data = findMergeRow(result.data);
+                console.log(result.data );
                 g_cache_buy_items=result.data;
                 for(var i=0;i<result.data.length;i++)
                 {
@@ -1190,3 +1201,7 @@ function selectCityEvent()
     calculateAllFreight();
 }
 
+function paymentEvent()
+{
+    alert(1);
+}
