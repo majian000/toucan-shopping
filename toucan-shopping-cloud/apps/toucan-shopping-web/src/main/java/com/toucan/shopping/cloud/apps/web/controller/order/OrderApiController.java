@@ -2,6 +2,7 @@ package com.toucan.shopping.cloud.apps.web.controller.order;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.toucan.shopping.cloud.apps.web.vo.BuyFailProductVo;
 import com.toucan.shopping.cloud.apps.web.vo.BuyResultVo;
 import com.toucan.shopping.cloud.apps.web.vo.BuyVo;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
@@ -23,6 +24,7 @@ import com.toucan.shopping.modules.common.vo.ResultVO;
 import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.vo.CreateOrderVo;
+import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
@@ -154,7 +156,7 @@ public class OrderApiController {
             //可购买商品列表
             List<ProductSku> releaseProductSkuList = new ArrayList<ProductSku>();
             //库存不够商品列表
-            List<ProductSku> faildProductSkuList = new ArrayList<ProductSku>();
+            List<BuyFailProductVo> buyFailProductVos = new ArrayList<BuyFailProductVo>();
 
 
             //==============================查询商品
@@ -190,9 +192,13 @@ public class OrderApiController {
 
             //判断商品数量
             boolean buyStatus=true; //是否可以购买
-            for (ProductSku productSku : queryProductSkuList) {
+            for (ProductSkuVO productSku : queryProductSkuList) {
                 if (productSku.getStockNum().intValue() <= 0) {
-                    faildProductSkuList.add(productSku);
+                    BuyFailProductVo buyFailProductVo = new BuyFailProductVo();
+                    buyFailProductVo.setProductSkuVO(productSku);
+                    buyFailProductVo.setFailCode(ProductConstant.NO_STOCK);
+                    buyFailProductVo.setFailMsg(productSku.getName()+" 库存不足");
+                    buyFailProductVos.add(buyFailProductVo);
                     continue;
                 }
                 for(UserBuyCarItemVO userBuyCarItemVO:buyVo.getBuyCarItems())
@@ -202,7 +208,11 @@ public class OrderApiController {
                         //购买数量大于库存数量
                         if(userBuyCarItemVO.getBuyCount().intValue()>productSku.getStockNum().intValue()) {
                             buyStatus = false;
-                            faildProductSkuList.add(productSku);
+                            BuyFailProductVo buyFailProductVo = new BuyFailProductVo();
+                            buyFailProductVo.setProductSkuVO(productSku);
+                            buyFailProductVo.setFailCode(ProductConstant.NO_STOCK);
+                            buyFailProductVo.setFailMsg(productSku.getName()+" 库存不足");
+                            buyFailProductVos.add(buyFailProductVo);
                         }
                         break;
                     }
@@ -212,7 +222,88 @@ public class OrderApiController {
                 }
             }
 
+            if(!CollectionUtils.isEmpty(buyFailProductVos))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试!");
+                resultObjectVO.setData(buyFailProductVos);
+                return resultObjectVO;
+            }
+
+
             this.recalculateProductPrice(buyVo);
+
+//            //预扣库存对象
+//            InventoryReductionVo inventoryReductionVo = new InventoryReductionVo();
+//            inventoryReductionVo.setAppCode(appCode);
+//            inventoryReductionVo.setUserId(userId);
+////            inventoryReductionVo.setProductSkuList(buyVo.getProductSkuList());
+//            //预扣库存
+//            logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
+////            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
+//            resultObjectVO = feignProductSkuStockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+//
+//
+//            List<EventProcess> restoreStock = new ArrayList<EventProcess>();
+//            //创建本地补偿事务消息
+//            for (ProductSku productSku : buyVo.getProductSkuList()) {
+//
+//                //还原库存对象
+//                requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
+//                RestoreStockVo restoreStockVo = new RestoreStockVo();
+//                restoreStockVo.setAppCode(appCode);
+//                restoreStockVo.setUserId(userId);
+//                List<ProductSku> productSkuList = new ArrayList<ProductSku>();
+//                productSkuList.add(productSku);
+//                restoreStockVo.setProductSkuList(productSkuList);
+//                requestJsonVO.setEntityJson(JSONObject.toJSONString(restoreStockVo));
+//
+//                EventProcess eventProcess = new EventProcess();
+//                eventProcess.setCreateDate(new Date());
+//                eventProcess.setBusinessId(String.valueOf(productSku.getId()));
+//                eventProcess.setRemark("还原预扣库存 skuId:" + productSku.getId());
+//                eventProcess.setTableName(null);
+//                eventProcess.setTransactionId(globalTransactionId);
+//                eventProcess.setPayload(JSONObject.toJSONString(requestJsonVO));
+//                eventProcess.setStatus((short) 0); //待处理
+//                eventProcess.setType(StockMessageTopicConstant.restore_redis_stock.name());
+//                eventProcessService.insert(eventProcess);
+//
+//                restoreStock.add(eventProcess);
+//            }
+//
+//            //扣库存成功后创建订单
+//            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
+//            CreateOrderVo createOrderVo = new CreateOrderVo();
+//            createOrderVo.setAppCode(appCode);
+//            createOrderVo.setUserId(userId);
+//            createOrderVo.setOrderNo(orderNo);
+//            createOrderVo.setPayMethod(1);
+//            createOrderVo.setProductSkuList(buyVo.getProductSkuList());
+//            createOrderVo.setBuyMap(buyVo.getBuyMap());
+//            requestJsonVO.setEntityJson(JSONObject.toJSONString(createOrderVo));
+//
+//            resultObjectVO = feignOrderService.create(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+//
+//            //如果订单创建成功 将上面回滚事件取消掉
+//            if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
+//                for (EventProcess eventProcess : restoreStock) {
+//                    eventProcess.setStatus((short) 1);
+//                    eventProcessService.updateStatus(eventProcess);
+//                }
+//            }
+
+//            //订单创建失败 将回滚库存
+//            if (resultObjectVO.getCode().intValue() == ResultVO.FAILD.intValue()) {
+//
+//                for (EventProcess eventProcess : restoreStock) {
+//                    ResultObjectVO restoreStockResultObjectVO = feignProductSkuStockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
+//                    if (restoreStockResultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
+//                        eventProcess.setStatus((short) 1);
+//                        eventProcessService.updateStatus(eventProcess);
+//                    }
+//                }
+//            }
 
         }catch(Exception e)
         {

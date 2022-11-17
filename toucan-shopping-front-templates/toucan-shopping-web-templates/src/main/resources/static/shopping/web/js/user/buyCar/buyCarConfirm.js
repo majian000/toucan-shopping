@@ -555,7 +555,6 @@ function loadBuyCarPanel(){
                 var productPriceTotal = 0;
 
                 result.data = findMergeRow(result.data);
-                console.log(result.data );
                 g_cache_buy_items=result.data;
                 for(var i=0;i<result.data.length;i++)
                 {
@@ -1203,5 +1202,24 @@ function selectCityEvent()
 
 function paymentEvent()
 {
-    alert(1);
+    loading.showLoading({
+        type:1,
+        tip:"提交中..."
+    });
+
+    $.ajax({
+        type: "POST",
+        url: basePath + "/api/order/create",
+        contentType: "application/json;charset=utf-8",
+        data: {buyCarItems:g_cache_buy_items},
+        dataType: "json",
+        success: function (result) {
+
+        },
+        error: function (result) {
+        },
+        complete:function(data,status){
+            hideLoadding();
+        }
+    });
 }

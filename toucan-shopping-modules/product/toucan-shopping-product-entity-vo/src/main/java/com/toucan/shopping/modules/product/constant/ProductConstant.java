@@ -25,6 +25,7 @@ public class ProductConstant {
     public static final int PRODUCT_APPROVE_SKU_REDIS_MAX_AGE=1800; //商品审核预览缓存 半小时过期
 
 
+    public static final int NO_STOCK = 30001; //没有库存
 
     public static final int DELETE_REDIS_SLEEP = 1000; //延迟双删,线程休眠时间
 
