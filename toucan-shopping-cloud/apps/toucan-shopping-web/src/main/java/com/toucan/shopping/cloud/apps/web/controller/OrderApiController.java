@@ -19,7 +19,7 @@ import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.stock.vo.InventoryReductionVo;
+import com.toucan.shopping.modules.product.vo.InventoryReductionVo;
 import com.toucan.shopping.cloud.apps.web.service.PayService;
 import com.toucan.shopping.cloud.apps.web.vo.PayVo;
 import org.slf4j.Logger;

@@ -103,4 +103,6 @@ public class ProductSku {
 
     private Double suttle; //净重
 
+    private String lastRestoreTransactionId; //最后恢复库存的事务ID
+
 }

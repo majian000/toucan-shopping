@@ -1,4 +1,4 @@
-package com.toucan.shopping.modules.stock.vo;
+package com.toucan.shopping.modules.product.vo;
 
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import lombok.Data;

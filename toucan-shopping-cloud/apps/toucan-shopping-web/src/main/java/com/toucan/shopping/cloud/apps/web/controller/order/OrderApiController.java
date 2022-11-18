@@ -1,13 +1,10 @@
 package com.toucan.shopping.cloud.apps.web.controller.order;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.toucan.shopping.cloud.apps.web.vo.BuyFailProductVo;
-import com.toucan.shopping.cloud.apps.web.vo.BuyResultVo;
 import com.toucan.shopping.cloud.apps.web.vo.BuyVo;
 import com.toucan.shopping.cloud.order.api.feign.service.FeignOrderService;
 import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuService;
-import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSpuService;
 import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
@@ -15,29 +12,20 @@ import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.modules.common.properties.Toucan;
-import com.toucan.shopping.modules.common.util.DateUtils;
 import com.toucan.shopping.modules.common.util.SignUtil;
 import com.toucan.shopping.modules.common.util.UserAuthHeaderUtil;
 import com.toucan.shopping.modules.common.vo.RequestJsonVO;
 import com.toucan.shopping.modules.common.vo.ResultObjectVO;
 import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.image.upload.service.ImageUploadService;
 import com.toucan.shopping.modules.order.no.OrderNoService;
-import com.toucan.shopping.modules.order.vo.CreateOrderVo;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
-import com.toucan.shopping.modules.product.vo.ProductSpuVO;
-import com.toucan.shopping.modules.product.vo.ShopProductDescriptionImgVO;
-import com.toucan.shopping.modules.product.vo.ShopProductVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
-import com.toucan.shopping.modules.stock.entity.ProductSkuStock;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
-import com.toucan.shopping.modules.stock.vo.InventoryReductionVo;
-import com.toucan.shopping.modules.stock.vo.RestoreStockVo;
+import com.toucan.shopping.modules.product.vo.RestoreStockVo;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,6 +145,8 @@ public class OrderApiController {
             List<ProductSku> releaseProductSkuList = new ArrayList<ProductSku>();
             //库存不够商品列表
             List<BuyFailProductVo> buyFailProductVos = new ArrayList<BuyFailProductVo>();
+            //购买商品信息
+            List<Map> buyProductItems = new LinkedList<>();
 
 
             //==============================查询商品
@@ -214,6 +204,15 @@ public class OrderApiController {
                             buyFailProductVo.setFailMsg(productSku.getName()+" 库存不足");
                             buyFailProductVos.add(buyFailProductVo);
                         }
+
+
+                        Map<String,Object> buyItem = new HashMap<>();
+                        buyItem.put("productName",productSku.getName());
+                        buyItem.put("buyCount",userBuyCarItemVO.getBuyCount());
+                        buyItem.put("price",productSku.getPrice());
+                        buyItem.put("freightTemplate",userBuyCarItemVO.getFreightTemplateVO());
+                        buyProductItems.add(buyItem);
+
                         break;
                     }
                 }
@@ -233,44 +232,42 @@ public class OrderApiController {
 
             this.recalculateProductPrice(buyVo);
 
+            List<EventProcess> restoreStock = new ArrayList<EventProcess>();
+            //创建本地补偿事务消息
+            for (UserBuyCarItemVO userBuyCarItemVO : buyVo.getBuyCarItems()) {
+
+                //还原库存对象
+                RestoreStockVo restoreStockVo = new RestoreStockVo();
+                restoreStockVo.setAppCode(appCode);
+                restoreStockVo.setUserId(userId);
+                restoreStockVo.setBuyProductItems(buyProductItems);  //当前购买的商品列表包含:购买数量、选择的运费、商品名称、单价等
+                requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, restoreStockVo);
+
+                EventProcess eventProcess = new EventProcess();
+                eventProcess.setCreateDate(new Date());
+                eventProcess.setBusinessId(String.valueOf(userBuyCarItemVO.getId()));
+                eventProcess.setRemark("还原预扣库存 skuId:" + userBuyCarItemVO.getId());
+                eventProcess.setTableName(null);
+                eventProcess.setTransactionId(globalTransactionId);
+                eventProcess.setPayload(JSONObject.toJSONString(requestJsonVO));
+                eventProcess.setStatus((short) 0); //待处理
+                eventProcess.setType(StockMessageTopicConstant.restore_redis_stock.name());
+                eventProcessService.insert(eventProcess);
+
+                restoreStock.add(eventProcess);
+            }
+
 //            //预扣库存对象
 //            InventoryReductionVo inventoryReductionVo = new InventoryReductionVo();
 //            inventoryReductionVo.setAppCode(appCode);
 //            inventoryReductionVo.setUserId(userId);
-////            inventoryReductionVo.setProductSkuList(buyVo.getProductSkuList());
+//            inventoryReductionVo.setProductSkuList(buyVo.getProductSkuList());
 //            //预扣库存
 //            logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
-////            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
+//            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
 //            resultObjectVO = feignProductSkuStockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
 //
 //
-//            List<EventProcess> restoreStock = new ArrayList<EventProcess>();
-//            //创建本地补偿事务消息
-//            for (ProductSku productSku : buyVo.getProductSkuList()) {
-//
-//                //还原库存对象
-//                requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
-//                RestoreStockVo restoreStockVo = new RestoreStockVo();
-//                restoreStockVo.setAppCode(appCode);
-//                restoreStockVo.setUserId(userId);
-//                List<ProductSku> productSkuList = new ArrayList<ProductSku>();
-//                productSkuList.add(productSku);
-//                restoreStockVo.setProductSkuList(productSkuList);
-//                requestJsonVO.setEntityJson(JSONObject.toJSONString(restoreStockVo));
-//
-//                EventProcess eventProcess = new EventProcess();
-//                eventProcess.setCreateDate(new Date());
-//                eventProcess.setBusinessId(String.valueOf(productSku.getId()));
-//                eventProcess.setRemark("还原预扣库存 skuId:" + productSku.getId());
-//                eventProcess.setTableName(null);
-//                eventProcess.setTransactionId(globalTransactionId);
-//                eventProcess.setPayload(JSONObject.toJSONString(requestJsonVO));
-//                eventProcess.setStatus((short) 0); //待处理
-//                eventProcess.setType(StockMessageTopicConstant.restore_redis_stock.name());
-//                eventProcessService.insert(eventProcess);
-//
-//                restoreStock.add(eventProcess);
-//            }
 //
 //            //扣库存成功后创建订单
 //            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
