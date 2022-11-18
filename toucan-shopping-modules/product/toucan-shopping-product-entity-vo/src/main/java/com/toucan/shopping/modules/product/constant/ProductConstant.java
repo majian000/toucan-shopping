@@ -26,6 +26,7 @@ public class ProductConstant {
 
 
     public static final int NO_STOCK = 30001; //没有库存
+    public static final int SOLD_OUT = 30002; //下架了
 
     public static final int DELETE_REDIS_SLEEP = 1000; //延迟双删,线程休眠时间
 

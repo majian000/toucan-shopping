@@ -180,6 +180,25 @@ public class OrderApiController {
                 return resultObjectVO;
             }
 
+            //判断商品下架
+            for (ProductSkuVO productSku : queryProductSkuList) {
+                if(productSku.getStatus().intValue()==0) {
+                    BuyFailProductVo buyFailProductVo = new BuyFailProductVo();
+                    buyFailProductVo.setProductSkuVO(productSku);
+                    buyFailProductVo.setFailCode(ProductConstant.SOLD_OUT);
+                    buyFailProductVo.setFailMsg(productSku.getName() + " 已下架");
+                    buyFailProductVos.add(buyFailProductVo);
+                    break;
+                }
+            }
+            if(!CollectionUtils.isEmpty(buyFailProductVos))
+            {
+                resultObjectVO.setCode(ResultVO.FAILD);
+                resultObjectVO.setMsg("请稍后重试!");
+                resultObjectVO.setData(buyFailProductVos);
+                return resultObjectVO;
+            }
+
             //判断商品数量
             boolean buyStatus=true; //是否可以购买
             for (ProductSkuVO productSku : queryProductSkuList) {
@@ -205,14 +224,15 @@ public class OrderApiController {
                             buyFailProductVos.add(buyFailProductVo);
                         }
 
-
-                        Map<String,Object> buyItem = new HashMap<>();
-                        buyItem.put("productName",productSku.getName());
-                        buyItem.put("buyCount",userBuyCarItemVO.getBuyCount());
-                        buyItem.put("price",productSku.getPrice());
-                        buyItem.put("freightTemplate",userBuyCarItemVO.getFreightTemplateVO());
-                        buyProductItems.add(buyItem);
-
+                        //拍下减库存
+                        if(productSku.getBuckleInventoryMethod().intValue()==1) {
+                            Map<String, Object> buyItem = new HashMap<>();
+                            buyItem.put("productName", productSku.getName());
+                            buyItem.put("buyCount", userBuyCarItemVO.getBuyCount());
+                            buyItem.put("price", productSku.getPrice());
+                            buyItem.put("freightTemplate", userBuyCarItemVO.getFreightTemplateVO());
+                            buyProductItems.add(buyItem);
+                        }
                         break;
                     }
                 }
@@ -246,7 +266,7 @@ public class OrderApiController {
                 EventProcess eventProcess = new EventProcess();
                 eventProcess.setCreateDate(new Date());
                 eventProcess.setBusinessId(String.valueOf(userBuyCarItemVO.getId()));
-                eventProcess.setRemark("还原预扣库存 skuId:" + userBuyCarItemVO.getId());
+                eventProcess.setRemark("还原预扣库存");
                 eventProcess.setTableName(null);
                 eventProcess.setTransactionId(globalTransactionId);
                 eventProcess.setPayload(JSONObject.toJSONString(requestJsonVO));

@@ -95,6 +95,7 @@ public class ProductSkuController {
                     shopProductSkuVO.setProductAttributes(shopProductVO.getAttributes());
                     shopProductSkuVO.setPreviewPhotoPaths(new LinkedList<>());
                     shopProductSkuVO.setFreightTemplateId(shopProductVO.getFreightTemplateId());
+                    shopProductSkuVO.setBuckleInventoryMethod(shopProductVO.getBuckleInventoryMethod()); //库存扣减方式
 
                     //查询商品图片
                     ShopProductImgVO shopProductImgVO = new ShopProductImgVO();

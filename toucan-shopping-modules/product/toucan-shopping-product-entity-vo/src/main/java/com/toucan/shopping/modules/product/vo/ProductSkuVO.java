@@ -104,4 +104,9 @@ public class ProductSkuVO  extends ProductSku {
      */
     private Long freightTemplateId;
 
+    private Short buckleInventoryMethod; //库存计数 1:买家拍下减库存 2:买家付款减库存
+
+
+
+
 }
