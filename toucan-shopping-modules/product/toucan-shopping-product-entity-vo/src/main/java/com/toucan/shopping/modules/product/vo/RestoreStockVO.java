@@ -14,12 +14,12 @@ import java.util.Map;
  * @author majian
  */
 @Data
-public class RestoreStockVo {
+public class RestoreStockVO {
 
     private String appCode;
     private String userId;
 
-    private List<Map> buyProductItems;  //购买商品的信息
+    private InventoryReductionVO inventoryReductionVO;  //扣库存对象
 
 
 

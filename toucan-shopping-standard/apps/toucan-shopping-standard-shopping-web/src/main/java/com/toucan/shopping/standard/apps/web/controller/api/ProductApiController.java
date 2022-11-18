@@ -174,7 +174,7 @@ public class ProductApiController {
 //
 //                            //还原库存对象
 //                            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, inventoryReductionVo);
-//                            RestoreStockVo restoreStockVo = new RestoreStockVo();
+//                            RestoreStockVO restoreStockVo = new RestoreStockVO();
 //                            restoreStockVo.setAppCode(appCode);
 //                            restoreStockVo.setUserId(userId);
 //                            List<ProductSku> productSkuList = new ArrayList<ProductSku>();

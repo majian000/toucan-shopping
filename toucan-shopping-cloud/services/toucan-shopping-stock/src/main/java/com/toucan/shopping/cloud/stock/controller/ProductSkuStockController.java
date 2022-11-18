@@ -1,26 +1,10 @@
 package com.toucan.shopping.cloud.stock.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.toucan.shopping.modules.common.vo.RequestJsonVO;
-import com.toucan.shopping.modules.common.vo.ResultObjectVO;
-import com.toucan.shopping.modules.common.vo.ResultVO;
-import com.toucan.shopping.modules.product.entity.ProductSku;
-import com.toucan.shopping.modules.stock.entity.ProductSkuStock;
 import com.toucan.shopping.modules.stock.service.ProductSkuStockService;
-import com.toucan.shopping.modules.stock.util.StockRedisKeyUtil;
-import com.toucan.shopping.modules.product.vo.InventoryReductionVo;
-import com.toucan.shopping.modules.product.vo.RestoreStockVo;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 //@RestController
 //@RequestMapping("/productSkuStock")
@@ -61,7 +45,7 @@ public class ProductSkuStockController {
 //            resultObjectVO.setMsg("没有找到应用!");
 //            return resultObjectVO;
 //        }
-//        RestoreStockVo restoreStockVo = JSONObject.parseObject(requestJsonVO.getEntityJson(),RestoreStockVo.class);
+//        RestoreStockVO restoreStockVo = JSONObject.parseObject(requestJsonVO.getEntityJson(),RestoreStockVO.class);
 //        if(restoreStockVo==null)
 //        {
 //            logger.info("没有找到请求参数: param:"+ JSONObject.toJSONString(requestJsonVO));
@@ -117,7 +101,7 @@ public class ProductSkuStockController {
 //            resultObjectVO.setMsg("没有找到应用!");
 //            return resultObjectVO;
 //        }
-//        RestoreStockVo restoreStockVo = JSONObject.parseObject(requestJsonVO.getEntityJson(),RestoreStockVo.class);
+//        RestoreStockVO restoreStockVo = JSONObject.parseObject(requestJsonVO.getEntityJson(),RestoreStockVO.class);
 //        if(restoreStockVo==null)
 //        {
 //            logger.info("没有找到请求参数: param:"+ JSONObject.toJSONString(requestJsonVO));
