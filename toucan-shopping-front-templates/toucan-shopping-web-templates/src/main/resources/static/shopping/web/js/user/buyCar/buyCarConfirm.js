@@ -349,6 +349,7 @@ function calculateFreight(rid)
                     var nextObj = g_cache_buy_items[j];
                     if(nextObj.freightTemplateId==obj.freightTemplateId)
                     {
+                        nextObj.transportModel = transportModel;//保存选择的运送方式
                         itemGroups.push(nextObj);
                     }else{
                         i=j-1; //将运费模板ID不相等的设为下一个分组起始位置
