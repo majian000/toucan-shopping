@@ -330,6 +330,7 @@ function calculateFreight(rid)
                 {
                     continue;
                 }
+                obj.transportModel = transportModel;//保存选择的运送方式
                 var freightTemplateRule=null; //运费计算规则
                 if(g_consigneeAddress==null)
                 {
@@ -1211,7 +1212,7 @@ function paymentEvent()
         type: "POST",
         url: basePath + "/api/order/create",
         contentType: "application/json;charset=utf-8",
-        data: {buyCarItems:g_cache_buy_items},
+        data: JSON.stringify({buyCarItems:g_cache_buy_items}),
         dataType: "json",
         success: function (result) {
 

@@ -218,22 +218,23 @@ public class UserBuyCarApiController {
                                 queryFreightTemplateVO.setIdList(freightTemplateIdList);
                                 requestJsonVO = RequestJsonVOGenerator.generator(toucan.getAppCode(), queryFreightTemplateVO);
                                 resultObjectVO = feignFreightTemplateService.findByIdList(requestJsonVO);
-                                if(resultObjectVO.isSuccess())
+                                if(!resultObjectVO.isSuccess())
                                 {
-                                    if(resultObjectVO.getData()!=null)
+                                    return resultObjectVO;
+                                }
+                                if(resultObjectVO.getData()!=null)
+                                {
+                                    List<UBCIFreightTemplateVO> freightTemplateVOS = resultObjectVO.formatDataList(UBCIFreightTemplateVO.class);
+                                    if(CollectionUtils.isNotEmpty(freightTemplateVOS))
                                     {
-                                        List<UBCIFreightTemplateVO> freightTemplateVOS = resultObjectVO.formatDataList(UBCIFreightTemplateVO.class);
-                                        if(CollectionUtils.isNotEmpty(freightTemplateVOS))
+                                        for(UBCIFreightTemplateVO freightTemplateVO:freightTemplateVOS)
                                         {
-                                            for(UBCIFreightTemplateVO freightTemplateVO:freightTemplateVOS)
+                                            for(UserBuyCarItemVO ubc:userBuyCarVOList)
                                             {
-                                                for(UserBuyCarItemVO ubc:userBuyCarVOList)
+                                                if(ubc.getFreightTemplateId()!=null
+                                                        &&ubc.getFreightTemplateId().longValue()==freightTemplateVO.getId().longValue())
                                                 {
-                                                    if(ubc.getFreightTemplateId()!=null
-                                                            &&ubc.getFreightTemplateId().longValue()==freightTemplateVO.getId().longValue())
-                                                    {
-                                                        ubc.setFreightTemplateVO(freightTemplateVO);
-                                                    }
+                                                    ubc.setFreightTemplateVO(freightTemplateVO);
                                                 }
                                             }
                                         }

@@ -37,7 +37,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 }
                 logger.warn("FeignSellerLoginHistoryService.save失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存登录历史失败");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -52,7 +52,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 }
                 logger.warn("FeignSellerLoginHistoryService.save失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -67,7 +67,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 }
                 logger.warn("FeignSellerLoginHistoryService.findByIdList失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -82,7 +82,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 }
                 logger.warn("FeignSellerLoginHistoryService.update失败 params{}",JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("保存失败");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -97,7 +97,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 }
                 logger.warn("FeignSellerLoginHistoryService.findByIdAndUserMainId失败 params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询失败");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -112,7 +112,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 }
                 logger.warn("FeignSellerLoginHistoryService.deleteById失败 signHeader{} params{}",signHeader,JSONObject.toJSONString(requestJsonVO));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("删除失败");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
@@ -127,7 +127,7 @@ public class FeignFreightTemplateServiceFallbackFactory implements FallbackFacto
                 }
                 logger.warn("FeignSellerLoginHistoryService.findById失败 signHeader{} params{}",JSONObject.toJSONString(requestVo));
                 resultObjectVO.setCode(ResultObjectVO.FAILD);
-                resultObjectVO.setMsg("查询失败");
+                resultObjectVO.setMsg("请求超时,请稍后重试");
                 return resultObjectVO;
             }
 
