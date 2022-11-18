@@ -16,9 +16,6 @@ import java.util.Map;
 @Data
 public class RestoreStockVo {
 
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private String appCode;
     private String userId;
 

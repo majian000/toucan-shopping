@@ -244,6 +244,7 @@ public class OrderApiController {
                             buyItem.put("buyCount", userBuyCarItemVO.getBuyCount());
                             buyItem.put("price", productSku.getPrice());
                             buyItem.put("freightTemplate", userBuyCarItemVO.getFreightTemplateVO());
+                            buyItem.put("userBuyItemId",userBuyCarItemVO.getId());
                             buyProductItems.add(buyItem);
                         }
                         break;
@@ -267,22 +268,22 @@ public class OrderApiController {
 
             List<EventProcess> restoreStock = new ArrayList<EventProcess>();
             //创建本地补偿事务消息
-            for (UserBuyCarItemVO userBuyCarItemVO : buyVo.getBuyCarItems()) {
+            for (Map buyProductItem : buyProductItems) {
 
                 //还原库存对象
                 RestoreStockVo restoreStockVo = new RestoreStockVo();
                 restoreStockVo.setAppCode(appCode);
                 restoreStockVo.setUserId(userId);
-                restoreStockVo.setBuyProductItems(buyProductItems);  //当前购买的商品列表包含:购买数量、选择的运费、商品名称、单价等
-                requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, userId, restoreStockVo);
-
+                if(!CollectionUtils.isEmpty(buyProductItems)) {
+                    restoreStockVo.setBuyProductItems(buyProductItems);  //当前购买的商品列表包含:购买数量、选择的运费、商品名称、单价等
+                }
                 EventProcess eventProcess = new EventProcess();
                 eventProcess.setCreateDate(new Date());
-                eventProcess.setBusinessId(String.valueOf(userBuyCarItemVO.getId()));
+                eventProcess.setBusinessId(String.valueOf(buyProductItem.get("userBuyItemId")));
                 eventProcess.setRemark("还原预扣库存");
                 eventProcess.setTableName(null);
                 eventProcess.setTransactionId(globalTransactionId);
-                eventProcess.setPayload(JSONObject.toJSONString(requestJsonVO));
+                eventProcess.setPayload(JSONObject.toJSONString(restoreStockVo));
                 eventProcess.setStatus((short) 0); //待处理
                 eventProcess.setType(StockMessageTopicConstant.restore_redis_stock.name());
                 eventProcessService.insert(eventProcess);
