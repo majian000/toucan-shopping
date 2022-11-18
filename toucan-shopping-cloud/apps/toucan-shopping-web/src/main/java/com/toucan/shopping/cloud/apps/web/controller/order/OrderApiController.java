@@ -28,7 +28,7 @@ import com.toucan.shopping.modules.order.vo.QueryOrderVo;
 import com.toucan.shopping.modules.product.constant.ProductConstant;
 import com.toucan.shopping.modules.product.entity.ProductSku;
 import com.toucan.shopping.modules.product.util.ProductRedisKeyUtil;
-import com.toucan.shopping.modules.product.vo.InventoryReductionVo;
+import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
@@ -154,8 +154,8 @@ public class OrderApiController {
                 return resultObjectVO;
             }
 
-            //可购买商品列表
-            List<ProductSku> releaseProductSkuList = new ArrayList<ProductSku>();
+            //扣库存对象
+            List<InventoryReductionVO> inventoryReductions = new LinkedList<>();
             //库存不够商品列表
             List<BuyFailProductVo> buyFailProductVos = new ArrayList<BuyFailProductVo>();
             //购买商品信息
@@ -213,7 +213,6 @@ public class OrderApiController {
             }
 
             //判断商品数量
-            boolean buyStatus=true; //是否可以购买
             for (ProductSkuVO productSku : queryProductSkuList) {
                 if (productSku.getStockNum().intValue() <= 0) {
                     BuyFailProductVo buyFailProductVo = new BuyFailProductVo();
@@ -229,7 +228,6 @@ public class OrderApiController {
                     {
                         //购买数量大于库存数量
                         if(userBuyCarItemVO.getBuyCount().intValue()>productSku.getStockNum().intValue()) {
-                            buyStatus = false;
                             BuyFailProductVo buyFailProductVo = new BuyFailProductVo();
                             buyFailProductVo.setProductSkuVO(productSku);
                             buyFailProductVo.setFailCode(ProductConstant.NO_STOCK);
@@ -246,12 +244,19 @@ public class OrderApiController {
                             buyItem.put("freightTemplate", userBuyCarItemVO.getFreightTemplateVO());
                             buyItem.put("userBuyItemId",userBuyCarItemVO.getId());
                             buyProductItems.add(buyItem);
+
+
+                            //减库存对象
+                            InventoryReductionVO inventoryReductionProduct = new InventoryReductionVO();
+                            inventoryReductionProduct.setAppCode(toucan.getAppCode());
+                            inventoryReductionProduct.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
+                            inventoryReductionProduct.setUserId(userId);
+                            inventoryReductionProduct.setStockNum(userBuyCarItemVO.getBuyCount());
+                            inventoryReductions.add(inventoryReductionProduct);
                         }
                         break;
                     }
-                }
-                if(buyStatus) {
-                    releaseProductSkuList.add(productSku);
+
                 }
             }
 
@@ -291,14 +296,9 @@ public class OrderApiController {
                 restoreStock.add(eventProcess);
             }
 
-//            //预扣库存对象
-//            InventoryReductionVo inventoryReductionVo = new InventoryReductionVo();
-//            inventoryReductionVo.setAppCode(appCode);
-//            inventoryReductionVo.setUserId(userId);
-//            inventoryReductionVo.setProductSkuList(buyVo.getProductSkuList());
-//            //预扣库存
-//            logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
-//            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
+            //预扣库存
+            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,inventoryReductions);
+            logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
 //            resultObjectVO = feignProductSkuStockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
 //
 //
@@ -498,11 +498,11 @@ public class OrderApiController {
 
                 if (resultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
                     //实扣库存对象
-                    InventoryReductionVo inventoryReductionVo = new InventoryReductionVo();
+                    InventoryReductionVO inventoryReductionVo = new InventoryReductionVO();
                     inventoryReductionVo.setAppCode(appCode);
                     inventoryReductionVo.setUserId(payVo.getUserId());
                     List<ProductSku> productSkus = JSONArray.parseArray(JSONArray.toJSONString(resultObjectVO.getData()), ProductSku.class);
-                    inventoryReductionVo.setProductSkuList(productSkus);
+//                    inventoryReductionVo.setProductSkuList(productSkus);
 
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payVo.getUserId(), inventoryReductionVo);
                     resultObjectVO = feignProductSkuStockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);

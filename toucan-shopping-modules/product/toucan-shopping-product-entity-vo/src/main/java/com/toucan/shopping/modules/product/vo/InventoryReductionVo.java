@@ -13,15 +13,12 @@ import java.util.List;
  * @author majian
  */
 @Data
-public class InventoryReductionVo {
+public class InventoryReductionVO {
 
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String appCode;
     private String userId;
-
-    private List<ProductSku> productSkuList;
-
+    private Long productSkuId; //SKU ID
+    private Integer stockNum; //减库存数量
 
 }
