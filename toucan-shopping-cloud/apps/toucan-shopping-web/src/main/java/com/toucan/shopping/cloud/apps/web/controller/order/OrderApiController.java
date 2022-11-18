@@ -11,6 +11,7 @@ import com.toucan.shopping.cloud.product.api.feign.service.FeignProductSkuServic
 import com.toucan.shopping.cloud.stock.api.feign.service.FeignProductSkuStockService;
 import com.toucan.shopping.cloud.user.api.feign.service.FeignUserBuyCarService;
 import com.toucan.shopping.modules.auth.user.UserAuth;
+import com.toucan.shopping.modules.common.generator.IdGenerator;
 import com.toucan.shopping.modules.common.generator.RequestJsonVOGenerator;
 import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
@@ -81,10 +82,11 @@ public class OrderApiController {
     @Autowired
     private FeignUserBuyCarService feignUserBuyCarService;
 
-
     @Autowired
     private PayService payService;
 
+    @Autowired
+    private IdGenerator idGenerator;
 
     /**
      * 创建订单
@@ -95,7 +97,7 @@ public class OrderApiController {
     @UserAuth(requestType = UserAuth.REQUEST_AJAX)
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
-    public ResultObjectVO buy(HttpServletRequest request, @RequestBody BuyVo buyVo){
+    public ResultObjectVO create(HttpServletRequest request, @RequestBody BuyVo buyVo){
         ResultObjectVO resultObjectVO = new ResultObjectVO();
         logger.info("购买商品: param:"+ JSONObject.toJSONString(buyVo));
         if(buyVo==null)
@@ -224,8 +226,10 @@ public class OrderApiController {
 
                         //拍下减库存
                         if(productSku.getBuckleInventoryMethod().intValue()==1) {
+                            inventoryReductionProduct.setType((short)2);
                             realInventoryReductions.add(inventoryReductionProduct); //实扣库存
                         }else{ //支付减库存
+                            inventoryReductionProduct.setType((short)1);
                             predictInventoryReductions.add(inventoryReductionProduct); //预扣库存
                         }
                         break;
@@ -239,6 +243,8 @@ public class OrderApiController {
 
             List<EventProcess> restoreStock = new ArrayList<EventProcess>();
             //创建本地补偿事务消息
+
+            //实际扣库存
             for (InventoryReductionVO inventoryReductionVO : realInventoryReductions) {
 
                 //还原库存对象
@@ -248,6 +254,31 @@ public class OrderApiController {
                 restoreStockVo.setInventoryReductionVO(inventoryReductionVO);
 
                 EventProcess eventProcess = new EventProcess();
+                eventProcess.setId(idGenerator.id());
+                eventProcess.setCreateDate(new Date());
+                eventProcess.setBusinessId("");
+                eventProcess.setRemark("还原实扣库存");
+                eventProcess.setTableName(null);
+                eventProcess.setTransactionId(globalTransactionId);
+                eventProcess.setPayload(JSONObject.toJSONString(restoreStockVo));
+                eventProcess.setStatus((short) 0); //待处理
+                eventProcess.setType(StockMessageTopicConstant.restore_stock.name());
+                eventProcessService.insert(eventProcess);
+
+                restoreStock.add(eventProcess);
+            }
+
+            //预计扣库存
+            for (InventoryReductionVO inventoryReductionVO : predictInventoryReductions) {
+
+                //还原库存对象
+                RestoreStockVO restoreStockVo = new RestoreStockVO();
+                restoreStockVo.setAppCode(appCode);
+                restoreStockVo.setUserId(userId);
+                restoreStockVo.setInventoryReductionVO(inventoryReductionVO);
+
+                EventProcess eventProcess = new EventProcess();
+                eventProcess.setId(idGenerator.id());
                 eventProcess.setCreateDate(new Date());
                 eventProcess.setBusinessId("");
                 eventProcess.setRemark("还原预扣库存");
@@ -304,6 +335,7 @@ public class OrderApiController {
         }catch(Exception e)
         {
             logger.warn(e.getMessage(),e);
+            //TODO:回滚数据
 
             resultObjectVO.setCode(ResultVO.FAILD);
             resultObjectVO.setMsg("购买失败,请重试!");

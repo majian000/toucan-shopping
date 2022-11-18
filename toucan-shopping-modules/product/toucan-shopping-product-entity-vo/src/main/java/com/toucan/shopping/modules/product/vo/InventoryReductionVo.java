@@ -21,4 +21,6 @@ public class InventoryReductionVO {
     private Long productSkuId; //SKU ID
     private Integer stockNum; //减库存数量
 
+    private Short type; //扣库存方式 1:预扣库存 2:实际扣库存
+
 }
