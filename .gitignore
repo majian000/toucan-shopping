@@ -12,3 +12,4 @@ log.path_IS_UNDEFINED/log_debug.log
 log.path_IS_UNDEFINED/log_error.log
 log.path_IS_UNDEFINED/log_info.log
 log.path_IS_UNDEFINED/log_warn.log
+*.rebel.xml.bak
