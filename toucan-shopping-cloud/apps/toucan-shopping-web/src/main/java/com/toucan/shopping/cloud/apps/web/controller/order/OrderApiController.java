@@ -224,6 +224,7 @@ public class OrderApiController {
                         productSkuStockLockVO.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
                         productSkuStockLockVO.setUserMainId(Long.parseLong(userId));
                         productSkuStockLockVO.setStockNum(userBuyCarItemVO.getBuyCount()); //减库存数量
+                        productSkuStockLockVO.setRemark(productSku.getName()+" 锁库存数量:"+userBuyCarItemVO.getBuyCount());
                         productSkuStockLockVO.setCreateDate(new Date());
 
                         //拍下减库存
