@@ -56,8 +56,8 @@
     </update>
 
     <insert id="save" parameterType="com.toucan.shopping.modules.stock.entity.ProductSkuStockLock">
-          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,order_no,stock_num,app_code,delete_status,create_date)
-          values(#{id},#{productSkuId},#{userMainId},#{orderNo},#{stockNum},#{appCode},#{deleteStatus},#{createDate})
+          insert into t_product_sku_stock_lock(id,product_sku_id,user_main_id,order_no,stock_num,app_code,delete_status,create_date,type)
+          values(#{id},#{productSkuId},#{userMainId},#{orderNo},#{stockNum},#{appCode},0,#{createDate},#{type})
     </insert>
 
     <update id="deletes">

@@ -59,32 +59,32 @@ public class FeignMessageProcessScheduler {
         List<EventProcess> eventProcesses =  eventProcessService.queryFaildListByBefore(DateUtils.advanceSecond(new Date(),60*5));
         if(!CollectionUtils.isEmpty(eventProcesses))
         {
-            for(EventProcess eventProcess : eventProcesses)
-            {
-                //恢复库存
-                if(eventProcess.getType().equals(StockMessageTopicConstant.restore_stock.name())) {
-                    logger.info("远程服务重新调用 "+ eventProcess.getType()+" 内容:"+ eventProcess.getPayload());
-                    ResultObjectVO resultObjectVO = feignProductSkuStockLockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
-                    if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
-                    {
-                        eventProcess.setStatus((short)1);
-                        eventProcessService.updateStatus(eventProcess);
-                    }
-                }else if(eventProcess.getType().equals(StockMessageTopicConstant.restore_redis_stock.name())) {  //恢复预扣库存
-                    try {
-                        RequestJsonVO requestJsonVO = JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class);
-                        ResultObjectVO resultObjectVO = feignProductSkuStockLockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
-                        if (resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
-                            eventProcess.setStatus((short) 1);
-                            eventProcessService.updateStatus(eventProcess);
-                        }
-                    }catch(Exception e){
-                        logger.warn(e.getMessage(),e);
-                    }
-                }
-
-
-            }
+//            for(EventProcess eventProcess : eventProcesses)
+//            {
+//                //恢复库存
+//                if(eventProcess.getType().equals(StockMessageTopicConstant.restore_stock.name())) {
+//                    logger.info("远程服务重新调用 "+ eventProcess.getType()+" 内容:"+ eventProcess.getPayload());
+//                    ResultObjectVO resultObjectVO = feignProductSkuStockLockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
+//                    if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue())
+//                    {
+//                        eventProcess.setStatus((short)1);
+//                        eventProcessService.updateStatus(eventProcess);
+//                    }
+//                }else if(eventProcess.getType().equals(StockMessageTopicConstant.restore_redis_stock.name())) {  //恢复预扣库存
+//                    try {
+//                        RequestJsonVO requestJsonVO = JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class);
+//                        ResultObjectVO resultObjectVO = feignProductSkuStockLockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+//                        if (resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
+//                            eventProcess.setStatus((short) 1);
+//                            eventProcessService.updateStatus(eventProcess);
+//                        }
+//                    }catch(Exception e){
+//                        logger.warn(e.getMessage(),e);
+//                    }
+//                }
+//
+//
+//            }
 
         }
         logger.info("处理远程失败的消息 结束=====================");

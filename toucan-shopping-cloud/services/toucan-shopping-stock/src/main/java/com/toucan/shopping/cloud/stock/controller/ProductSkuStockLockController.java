@@ -74,7 +74,7 @@ public class ProductSkuStockLockController {
         }
 
         try {
-            int ret = 0 ;
+            int ret = 0;
             for (ProductSkuStockLockVO productSkuStockLockVO : productSkuStockLocks) {
                 productSkuStockLockVO.setId(idGenerator.id());
                 productSkuStockLockVO.setCreateDate(new Date());

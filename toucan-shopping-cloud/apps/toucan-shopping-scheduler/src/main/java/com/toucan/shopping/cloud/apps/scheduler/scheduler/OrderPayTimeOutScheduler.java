@@ -83,7 +83,7 @@ public class OrderPayTimeOutScheduler {
                             {
                                 List<ProductSku> productSkus = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()),ProductSku.class);
                                 requestJsonVO = RequestJsonVOGenerator.generatorByUser(toucan.getAppCode(), faildOrder.getUserId(), productSkus);
-                                resultObjectVO = feignProductSkuStockLockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
+//                                resultObjectVO = feignProductSkuStockLockService.restoreCacheStock(SignUtil.sign(requestJsonVO.getAppCode(), requestJsonVO.getEntityJson()), requestJsonVO);
                                 if(resultObjectVO.getCode().intValue()==ResultObjectVO.FAILD.intValue())
                                 {
                                     logger.warn("查询订单的商品sku失败 order :{}",JSONObject.toJSONString(faildOrder));

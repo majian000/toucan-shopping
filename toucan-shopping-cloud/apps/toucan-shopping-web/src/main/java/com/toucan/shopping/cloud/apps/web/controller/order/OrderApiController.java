@@ -31,7 +31,9 @@ import com.toucan.shopping.modules.product.vo.InventoryReductionVO;
 import com.toucan.shopping.modules.product.vo.ProductSkuVO;
 import com.toucan.shopping.modules.product.vo.RestoreStockVO;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
+import com.toucan.shopping.modules.stock.entity.ProductSkuStockLock;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
+import com.toucan.shopping.modules.stock.vo.ProductSkuStockLockVO;
 import com.toucan.shopping.modules.user.vo.UserBuyCarItemVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,10 +156,8 @@ public class OrderApiController {
                 return resultObjectVO;
             }
 
-            //实扣库存
-            List<InventoryReductionVO> realInventoryReductions = new LinkedList<>();
-            //预扣库存
-            List<InventoryReductionVO> predictInventoryReductions = new LinkedList<>();
+            //商品库存锁定对象
+            List<ProductSkuStockLockVO> productSkuStockLocks = new LinkedList<>();
 
             //==============================查询商品
             List<ProductSkuVO> productSkuVOS = new LinkedList<>();
@@ -217,21 +217,22 @@ public class OrderApiController {
                             return resultObjectVO;
                         }
 
-                        //减库存对象
-                        InventoryReductionVO inventoryReductionProduct = new InventoryReductionVO();
-                        inventoryReductionProduct.setAppCode(toucan.getAppCode());
-                        inventoryReductionProduct.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
-                        inventoryReductionProduct.setUserId(userId);
-                        inventoryReductionProduct.setStockNum(userBuyCarItemVO.getBuyCount()); //减库存数量
+                        //锁库存对象
+                        ProductSkuStockLockVO productSkuStockLockVO = new ProductSkuStockLockVO();
+                        productSkuStockLockVO.setOrderNo(orderNo);
+                        productSkuStockLockVO.setAppCode(toucan.getAppCode());
+                        productSkuStockLockVO.setProductSkuId(userBuyCarItemVO.getShopProductSkuId());
+                        productSkuStockLockVO.setUserMainId(Long.parseLong(userId));
+                        productSkuStockLockVO.setStockNum(userBuyCarItemVO.getBuyCount()); //减库存数量
+                        productSkuStockLockVO.setCreateDate(new Date());
 
                         //拍下减库存
                         if(productSku.getBuckleInventoryMethod().intValue()==1) {
-                            inventoryReductionProduct.setType((short)2);
-                            realInventoryReductions.add(inventoryReductionProduct); //实扣库存
+                            productSkuStockLockVO.setType((short)2); //实扣库存
                         }else{ //支付减库存
-                            inventoryReductionProduct.setType((short)1);
-                            predictInventoryReductions.add(inventoryReductionProduct); //预扣库存
+                            productSkuStockLockVO.setType((short)1); //预扣库存
                         }
+                        productSkuStockLocks.add(productSkuStockLockVO);
                         break;
                     }
 
@@ -242,60 +243,15 @@ public class OrderApiController {
             this.recalculateProductPrice(buyVo);
 
             List<EventProcess> restoreStock = new ArrayList<EventProcess>();
-            //创建本地补偿事务消息
-
-            //实际扣库存
-            for (InventoryReductionVO inventoryReductionVO : realInventoryReductions) {
-
-                //还原库存对象
-                RestoreStockVO restoreStockVo = new RestoreStockVO();
-                restoreStockVo.setAppCode(appCode);
-                restoreStockVo.setUserId(userId);
-                restoreStockVo.setInventoryReductionVO(inventoryReductionVO);
-
-                EventProcess eventProcess = new EventProcess();
-                eventProcess.setId(idGenerator.id());
-                eventProcess.setCreateDate(new Date());
-                eventProcess.setBusinessId("");
-                eventProcess.setRemark("还原实扣库存");
-                eventProcess.setTableName(null);
-                eventProcess.setTransactionId(globalTransactionId);
-                eventProcess.setPayload(JSONObject.toJSONString(restoreStockVo));
-                eventProcess.setStatus((short) 0); //待处理
-                eventProcess.setType(StockMessageTopicConstant.restore_stock.name());
-                eventProcessService.insert(eventProcess);
-
-                restoreStock.add(eventProcess);
-            }
-
-            //预计扣库存
-            for (InventoryReductionVO inventoryReductionVO : predictInventoryReductions) {
-
-                //还原库存对象
-                RestoreStockVO restoreStockVo = new RestoreStockVO();
-                restoreStockVo.setAppCode(appCode);
-                restoreStockVo.setUserId(userId);
-                restoreStockVo.setInventoryReductionVO(inventoryReductionVO);
-
-                EventProcess eventProcess = new EventProcess();
-                eventProcess.setId(idGenerator.id());
-                eventProcess.setCreateDate(new Date());
-                eventProcess.setBusinessId("");
-                eventProcess.setRemark("还原预扣库存");
-                eventProcess.setTableName(null);
-                eventProcess.setTransactionId(globalTransactionId);
-                eventProcess.setPayload(JSONObject.toJSONString(restoreStockVo));
-                eventProcess.setStatus((short) 0); //待处理
-                eventProcess.setType(StockMessageTopicConstant.restore_redis_stock.name());
-                eventProcessService.insert(eventProcess);
-
-                restoreStock.add(eventProcess);
-            }
 
             //预扣库存
-            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,realInventoryReductions);
-            logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
-//            resultObjectVO = feignProductSkuStockLockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+            requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,productSkuStockLocks);
+            logger.info("开始锁定库存 {}",JSONObject.toJSONString(requestJsonVO));
+            resultObjectVO = feignProductSkuStockLockService.lockStock(requestJsonVO);
+            if(!resultObjectVO.isSuccess())
+            {
+
+            }
 //
 //
 //
@@ -502,7 +458,7 @@ public class OrderApiController {
 //                    inventoryReductionVo.setProductSkuList(productSkus);
 
                     requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payVo.getUserId(), inventoryReductionVo);
-                    resultObjectVO = feignProductSkuStockLockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+//                    resultObjectVO = feignProductSkuStockLockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
 
                     resultObjectVO.setMsg("支付完成!");
                 }
