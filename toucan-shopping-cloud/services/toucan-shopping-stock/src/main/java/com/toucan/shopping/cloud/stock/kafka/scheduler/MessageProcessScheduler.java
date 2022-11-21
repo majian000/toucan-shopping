@@ -5,7 +5,7 @@ import com.toucan.shopping.modules.common.persistence.event.entity.EventProcess;
 import com.toucan.shopping.modules.common.persistence.event.service.EventProcessService;
 import com.toucan.shopping.modules.product.message.InventoryReductionMessage;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
-import com.toucan.shopping.modules.stock.service.ProductSkuStockService;
+import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class MessageProcessScheduler {
     private KafkaTemplate kafkaTemplate;
 
     @Autowired
-    private ProductSkuStockService productSkuStockService;
+    private ProductSkuStockLockService productSkuStockLockService;
 
 
 
@@ -58,7 +58,7 @@ public class MessageProcessScheduler {
                 if(eventProcess.getType().equals(StockMessageTopicConstant.sk_inventory_reduction.name())) {
                     try {
                         InventoryReductionMessage inventoryReductionMessage = JSONObject.parseObject(eventProcess.getPayload(), InventoryReductionMessage.class);
-                        productSkuStockService.inventoryReduction(inventoryReductionMessage.getSkuUuid());
+                        productSkuStockLockService.inventoryReduction(inventoryReductionMessage.getSkuUuid());
                         eventProcess.setStatus((short)1); //已处理
                         eventProcessService.updateStatus(eventProcess);
                     }catch(Exception e)

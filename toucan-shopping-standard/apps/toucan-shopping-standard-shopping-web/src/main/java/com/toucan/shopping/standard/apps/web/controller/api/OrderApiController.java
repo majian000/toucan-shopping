@@ -6,7 +6,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
-import com.toucan.shopping.modules.stock.service.ProductSkuStockService;
+import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import com.toucan.shopping.standard.apps.web.service.PayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class OrderApiController {
     private OrderService orderService;
 
     @Autowired
-    private ProductSkuStockService productSkuStockService;
+    private ProductSkuStockLockService productSkuStockLockService;
 
     @Autowired
     private RedisLock redisLock;
@@ -145,7 +145,7 @@ public class OrderApiController {
 //                                        inventoryReductionVo.setProductSkuList(productSkus);
 //
 //                                        requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode, payVo.getUserId(), inventoryReductionVo);
-//                                        resultObjectVO = productSkuStockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
+//                                        resultObjectVO = productSkuStockLockService.inventoryReduction(SignUtil.sign(appCode, requestJsonVO.getEntityJson()), requestJsonVO);
 //
 //                                        resultObjectVO.setMsg("支付完成!");
 //                                    }

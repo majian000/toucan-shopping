@@ -1,6 +1,6 @@
 package com.toucan.shopping.cloud.stock.controller;
 
-import com.toucan.shopping.modules.stock.service.ProductSkuStockService;
+import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ public class ProductSkuStockController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private ProductSkuStockService productSkuStockService;
+    private ProductSkuStockLockService productSkuStockLockService;
 
 
     @Autowired
@@ -63,7 +63,7 @@ public class ProductSkuStockController {
 //
 //        try {
 //            for (ProductSku productSku : restoreStockVo.getProductSkuList()) {
-//                productSkuStockService.restoreStock(productSku.getUuid());
+//                productSkuStockLockService.restoreStock(productSku.getUuid());
 //            }
 //        }catch(Exception e)
 //        {
@@ -119,7 +119,7 @@ public class ProductSkuStockController {
 //
 //        try {
 //            for (ProductSku productSku : restoreStockVo.getProductSkuList()) {
-//                productSkuStockService.restoreStock(productSku.getUuid());
+//                productSkuStockLockService.restoreStock(productSku.getUuid());
 //            }
 //        }catch(Exception e)
 //        {
@@ -173,7 +173,7 @@ public class ProductSkuStockController {
 //                    if(productStockObject!=null)
 //                    {
 //                        Integer productStock = Integer.parseInt(String.valueOf(productStockObject));
-//                        ProductSkuStock productSkuStock = productSkuStockService.queryBySkuUuid(productSku.getUuid());
+//                        ProductSkuStockLock productSkuStock = productSkuStockLockService.queryBySkuUuid(productSku.getUuid());
 //                        //实际库存大于缓存库存数量才进行恢复,避免redis挂掉重新刷库存时候增加多了预扣库存问题(预扣库存比实际库存多了)
 //                        if(productSkuStock!=null&&productSkuStock.getStockNum()>productStock) {
 //                            productStock++;
@@ -244,7 +244,7 @@ public class ProductSkuStockController {
 //                    throw new IllegalArgumentException(" skuId为空"+JSONObject.toJSONString(inventoryReductionVo));
 //                }
 //                //扣库存
-//                int row = productSkuStockService.inventoryReduction(productSku.getUuid());
+//                int row = productSkuStockLockService.inventoryReduction(productSku.getUuid());
 //                if (row <= 0) {
 //                    logger.info("没有库存了 param:" + JSONObject.toJSONString(inventoryReductionVo));
 //                    resultObjectVO.setCode(ResultVO.FAILD);
@@ -357,9 +357,9 @@ public class ProductSkuStockController {
 //        try {
 //            List<ProductSku> productSkus = JSONArray.parseArray(requestJsonVO.getEntityJson(),ProductSku.class);
 //            if(!CollectionUtils.isEmpty(productSkus)) {
-//                List<ProductSkuStock> productSkuStockList = new ArrayList<ProductSkuStock>();
+//                List<ProductSkuStockLock> productSkuStockList = new ArrayList<ProductSkuStockLock>();
 //                for(ProductSku productSku:productSkus) {
-//                    ProductSkuStock productSkuStockEntity = productSkuStockService.queryBySkuUuid(productSku.getUuid());
+//                    ProductSkuStockLock productSkuStockEntity = productSkuStockLockService.queryBySkuUuid(productSku.getUuid());
 //                    if(productSkuStockEntity!=null) {
 //                        productSkuStockList.add(productSkuStockEntity);
 //                    }
@@ -406,14 +406,14 @@ public class ProductSkuStockController {
 //            List<ProductSku> productSkus = JSONArray.parseArray(requestJsonVO.getEntityJson(),ProductSku.class);
 //
 //            if(!CollectionUtils.isEmpty(productSkus)) {
-//                List<ProductSkuStock> productSkuStockList = new ArrayList<ProductSkuStock>();
+//                List<ProductSkuStockLock> productSkuStockList = new ArrayList<ProductSkuStockLock>();
 //                for(ProductSku productSku:productSkus) {
 //                    String productStockKey = StockRedisKeyUtil.getStockKey(productSku.getAppCode(),productSku.getUuid());
 //                    Object productStockObject = stringRedisTemplate.opsForValue().get(productStockKey);
 //                    //初始化预扣库存数量
 //                    if(productStockObject==null)
 //                    {
-//                        ProductSkuStock productSkuStock = productSkuStockService.queryBySkuUuid(productSku.getUuid());
+//                        ProductSkuStockLock productSkuStock = productSkuStockLockService.queryBySkuUuid(productSku.getUuid());
 //                        if(productSkuStock!=null) {
 //                            stringRedisTemplate.opsForValue().set(productStockKey, String.valueOf(productSkuStock.getStockNum().intValue()));
 //                            productStockObject =productSkuStock.getStockNum();
@@ -421,7 +421,7 @@ public class ProductSkuStockController {
 //                            productStockObject=0;
 //                        }
 //                    }
-//                    ProductSkuStock productSkuStock  = new ProductSkuStock();
+//                    ProductSkuStockLock productSkuStock  = new ProductSkuStockLock();
 //                    productSkuStock.setSkuUuid(productSku.getUuid());
 //                    productSkuStock.setStockNum(Integer.parseInt(String.valueOf(productStockObject)));
 //                    productSkuStockList.add(productSkuStock);

@@ -6,7 +6,7 @@ import com.toucan.shopping.modules.common.properties.Toucan;
 import com.toucan.shopping.modules.order.no.OrderNoService;
 import com.toucan.shopping.modules.order.service.OrderService;
 import com.toucan.shopping.modules.product.service.ProductSkuService;
-import com.toucan.shopping.modules.stock.service.ProductSkuStockService;
+import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class ProductApiController {
     private OrderService orderService;
 
     @Autowired
-    private ProductSkuStockService productSkuStockService;
+    private ProductSkuStockLockService productSkuStockLockService;
 
     @Autowired
     private RedisLock redisLock;
@@ -111,7 +111,7 @@ public class ProductApiController {
 //                if(!CollectionUtils.isEmpty(queryProductSkuList))
 //                {
 //                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,queryProductSkuList);
-//                    resultObjectVO = productSkuStockService.queryStockCacheBySkuUuidList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+//                    resultObjectVO = productSkuStockLockService.queryStockCacheBySkuUuidList(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
 //                    //如果查询库存缓存失败 商品数量全部设置为0
 //                    if(resultObjectVO.getCode().intValue()==ResultObjectVO.FAILD.intValue())
 //                    {
@@ -119,11 +119,11 @@ public class ProductApiController {
 //                            productSku.setStockNum(0);
 //                        }
 //                    }else{
-//                        List<ProductSkuStock> productSkuStocks = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ProductSkuStock.class);
+//                        List<ProductSkuStockLock> productSkuStocks = JSONArray.parseArray(JSONObject.toJSONString(resultObjectVO.getData()), ProductSkuStockLock.class);
 //                        if(!CollectionUtils.isEmpty(productSkuStocks))
 //                        {
 //                            //设置预扣库存
-//                            for(ProductSkuStock productSkuStock:productSkuStocks)
+//                            for(ProductSkuStockLock productSkuStock:productSkuStocks)
 //                            {
 //                                if(productSkuStock!=null&&StringUtils.isNotEmpty(productSkuStock.getSkuUuid()))
 //                                {
@@ -165,7 +165,7 @@ public class ProductApiController {
 //                    //预扣库存
 //                    logger.info("开始预扣库存 {}",JSONObject.toJSONString(requestJsonVO));
 //                    requestJsonVO = RequestJsonVOGenerator.generatorByUser(appCode,userId,buyVo.getProductSkuList());
-//                    resultObjectVO = productSkuStockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
+//                    resultObjectVO = productSkuStockLockService.deductCacheStock(SignUtil.sign(appCode,requestJsonVO.getEntityJson()),requestJsonVO);
 //                    if(resultObjectVO.getCode().intValue()==ResultObjectVO.SUCCESS.intValue()) {
 //
 //                        List<EventProcess> restoreStock = new ArrayList<EventProcess>();
@@ -221,7 +221,7 @@ public class ProductApiController {
 //                        if (resultObjectVO.getCode().intValue() == ResultVO.FAILD.intValue()) {
 //
 //                            for (EventProcess eventProcess : restoreStock) {
-//                                ResultObjectVO restoreStockResultObjectVO = productSkuStockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
+//                                ResultObjectVO restoreStockResultObjectVO = productSkuStockLockService.restoreStock(JSONObject.parseObject(eventProcess.getPayload(), RequestJsonVO.class));
 //                                if (restoreStockResultObjectVO.getCode().intValue() == ResultVO.SUCCESS.intValue()) {
 //                                    eventProcess.setStatus((short) 1);
 //                                    eventProcessService.updateStatus(eventProcess);

@@ -2,16 +2,13 @@ package com.toucan.shopping.modules.stock.service;
 
 
 
-import com.toucan.shopping.modules.stock.entity.ProductSkuStock;
-
-import java.util.List;
-import java.util.Map;
+import com.toucan.shopping.modules.stock.entity.ProductSkuStockLock;
 
 
 /**
  * 库存服务
  */
-public interface ProductSkuStockService {
+public interface ProductSkuStockLockService {
 
     /**
      * 删减库存
@@ -31,6 +28,6 @@ public interface ProductSkuStockService {
 
 
 
-    ProductSkuStock queryBySkuUuid(String skuUuid);
+    ProductSkuStockLock queryBySkuUuid(String skuUuid);
 
 }

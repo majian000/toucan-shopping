@@ -6,7 +6,7 @@ import com.toucan.shopping.modules.common.persistence.event.service.EventProcess
 import com.toucan.shopping.modules.product.message.InventoryReductionMessage;
 import com.toucan.shopping.modules.skylark.lock.service.SkylarkLock;
 import com.toucan.shopping.modules.stock.kafka.constant.StockMessageTopicConstant;
-import com.toucan.shopping.modules.stock.service.ProductSkuStockService;
+import com.toucan.shopping.modules.stock.service.ProductSkuStockLockService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class InventoryReductionListener {
     private EventProcessService eventProcessService;
 
     @Autowired
-    private ProductSkuStockService productSkuStockService;
+    private ProductSkuStockLockService productSkuStockLockService;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -72,7 +72,7 @@ public class InventoryReductionListener {
             eventProcessService.insert(eventProcess);
 
             //扣库存
-            productSkuStockService.inventoryReduction(skuUuid);
+            productSkuStockLockService.inventoryReduction(skuUuid);
 
             //修改为已处理
             eventProcess.setStatus((short)1); //已处理
